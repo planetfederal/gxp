@@ -1,15 +1,11 @@
 /**
- * Copyright (c) 2008 The Open Planning Project
+ * Copyright (c) 2009 The Open Planning Project
  *
  */
 
 /**
- * @requires GeoExplorer.js
- */
-
-/**
  * api: (define)
- * module = GeoExplorer
+ * module = gxp
  * class = FeatureGrid(config)
  * extends = Ext.grid.GridPanel
  */
@@ -22,81 +18,81 @@
  * :class:`GeoExt.data.FeatureStore` .
  */
 
-Ext.namespace("GeoExplorer");
-GeoExplorer.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
+Ext.namespace("gxp.grid");
+gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
 
-    /** api: property[attributesStore]
-     *  :class:`GeoExt.data.AttributesStore` If provided, the fields for the
-     *  store and the column model will be derived from the information of
-     *  this store. Otherwise, a DescribeFeatureType request needs to be
-     *  issued.
+    /** api: config[map]
+     *  ``OpenLayers.Map`` If provided, a layer with the features from this
+     *  grid will be added to the map.
      */
-    attributesStore: null,
+    map: null,
 
-    /**
-     * api: property[layer]
-     * An ``OpenLayers.Layer`` on which features of this grid will also be
-     * displayed (and selection synced), if provided.
+    /** api: config[ignoreFields]
+     *  ``Array`` of field names from the store's records that should not be
+     *  displayed in the grid.
      */
-    layer : null,
+    ignoreFields: null,
 
-    /** api: property[url]
-     * A :class:`String` containing an OWS URL to which the
-     * WFS DescribeFeatureType and GetFeature requests are sent.  Necessary if
-     * not both store and attributesStore are passed in as a configuration
-     * options.
+    /** private: property[layer]
+     *  ``OpenLayers.Layer.Vector`` layer displaying features from this grid's
+     *  store
      */
-    url: null,
+    layer: null,
     
-    /** api: config[featureType]
-     *  ``String`` the feature type to issue WFS requests for
-     */
-    featureType: null,
-
     /** api: method[initComponent]
      * 
-     * Initializes the FeatureGrid. If attributesStore is provided, the grid
-     * will be created right away with the final columnModel. Otherwise, a
-     * DescribeFeatureType needs to be issued first to determine the fields,
-     * and the initial grid will be configured with a temporary columnModel.
+     * Initializes the FeatureGrid.
      */
     initComponent: function(){
-        
-        var fields;
-        if(this.attributesStore) {
-            this.attributesStore.records.each(function(f) {
-                fields.push({
-                    //TODO make sure that this is what we have in the records
-                    name: f.get("name"),
-                    type: f.get("type")
+        this.ignoreFields = ["feature", "state", "fid"].concat(this.ignoreFields);
+        this.cm = this.createColumnModel(this.store);        
+        this.viewConfig = Ext.apply(this.viewConfig || {}, {forceFit: true});
+        if(this.map) {
+            this.layer = new OpenLayers.Layer.Vector(this.id + "_layer");
+            this.map.addLayer(this.layer);
+            this.sm = new GeoExt.grid.FeatureSelectionModel({
+                layerFromStore: false,
+                layer: this.layer
+            });
+            this.store.bind(this.layer);
+        }
+
+        gxp.grid.FeatureGrid.superclass.initComponent.call(this);       
+    },
+    
+    /** api: method[setStore]
+     *  :param store: ``GeoExt.data.FeatureStore``
+     *  
+     *  Sets the store for this grid, reconfiguring the column model
+     */
+    setStore: function(store) {
+        if(this.layer) {
+            this.store.unbind();
+            this.layer.destroyFeatures();
+            store.bind(this.layer);
+        }
+        this.reconfigure(store, this.createColumnModel(store));
+    },
+    
+    /** private: method[createColumnModel]
+     *  :param store: ``GeoExt.data.LayerStore``
+     *  :return: ``Ext.grid.ColumnModel``
+     */
+    createColumnModel: function(store) {
+        var columns = [];
+        store.fields.each(function(f) {
+            var name = f.name;
+            if(this.ignoreFields.indexOf(name) === -1) {
+                columns.push({
+                    dataIndex: f.name,
+                    header: f.name,
+                    sortable: true
                 });
-            });
-        } else {
-            //TODO do a DescribeFeatureType and reconfigure the grid when the
-            // results are available
-        }
-
-        if(!this.store){
-            this.store = new GeoExt.data.FeatureStore({
-                layer: this.layer,
-                //TODO what happens if fields is null/undefined?
-                fields: fields,
-                proxy: new GeoExt.data.ProtocolProxy({
-                    protocol: new OpenLayers.Protocol.WFS({
-                        url: this.url,
-                        //TODO configure the format
-                        format: new OpenLayers.Format.WFS()
-                    })
-                }),
-                autoLoad: true
-            });
-        }
-
-        this.cm = new Ext.grid.ColumnModel([
-            //TODO configure the ColumnModel
-        ]);
-
-        GeoExplorer.FeatureGrid.superclass.initComponent.call(this);       
+            }
+        }, this);
+        return new Ext.grid.ColumnModel(columns);
     }
-
 });
+
+/** api: xtype = gx_featuregrid */
+Ext.reg('gx_featuregrid', gxp.grid.FeatureGrid); 

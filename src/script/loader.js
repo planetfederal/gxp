@@ -6,7 +6,8 @@
         "widgets/FilterPanel.js",
         "widgets/FilterBuilder.js",
         "widgets/QueryPanel.js",
-        "widgets/form/ComparisonComboBox.js"
+        "widgets/form/ComparisonComboBox.js",
+        "widgets/grid/FeatureGrid.js"
     );
     
     var scripts = document.getElementsByTagName("script");
