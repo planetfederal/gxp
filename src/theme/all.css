@@ -1,0 +1,13 @@
+
+.x-btn .add {
+    background-image: url(img/add.png);
+}
+
+.x-btn .delete {
+    background-image: url(img/delete.png);
+}
+
+.gxp-filterbuilder .x-toolbar {
+    background: transparent;
+    border: none !important;
+}
