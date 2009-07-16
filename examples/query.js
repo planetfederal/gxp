@@ -6,8 +6,34 @@
  * of the license.
  */
 
-var panel, map;
 
+var feWin = null;
+var format = new OpenLayers.Format.Filter();
+function showFE() {
+    var filter = panel.getComponent(0).getFilter();
+    var node = format.write(filter);
+    var text = OpenLayers.Format.XML.prototype.write.apply(format, [node]);
+    if(!feWin) {
+        feWin = new Ext.Window({
+            title: "Filter Encoding",
+            layout: "fit",
+            closeAction: "hide",
+            height: 300,
+            width: 450,
+            plain: true,
+            modal: true,
+            items: [{
+                xtype: "textarea",
+                value: text
+            }]
+        });
+    } else {
+        feWin.items.items[0].setValue(text);
+    }
+    feWin.show();
+}
+
+var panel, map;
 Ext.onReady(function() {
     
     var map = new OpenLayers.Map("map");
@@ -48,7 +74,7 @@ Ext.onReady(function() {
         bbar: ["->", {
             text: "Query",
             handler: function() {
-                // show filter encoding
+                showFE();
             }
         }]
     });

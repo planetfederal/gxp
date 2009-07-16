@@ -27,6 +27,28 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
      */
     layout: "form",
     
+    /** api: config[spatialQuery]
+     *  ``Boolean``
+     *  Initial state of "query by location" checkbox.  Default is true.
+     */
+    
+    /** api: property[spatialQuery]
+     *  ``Boolean``
+     *  Query by extent.
+     */
+    spatialQuery: true,
+    
+    /** api: config[attributeQuery]
+     *  ``Boolean``
+     *  Initial state of "query by attribute" checkbox.  Default is true.
+     */
+    
+    /** api: property[attributeQuery]
+     *  ``Boolean``
+     *  Query by attributes.
+     */
+    attributeQuery: true,
+    
     /** private: method[initComponent]
      */
     initComponent: function() {
@@ -40,6 +62,11 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
         this.map.events.on({
             moveend: this.updateMapExtent,
             scope: this
+        });
+        
+        this.filterBuilder = new gxp.FilterBuilder({
+            allowGroups: false,
+            attributes: this.attributes // this will change with layer selection
         });
 
         this.items = [{
@@ -58,22 +85,60 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
             xtype: "fieldset",
             title: "Query by location",
             checkboxToggle: true,
+            collapsed: !this.spatialQuery,
             autoHeight: true,
-            items: [this.mapExtentField]
+            items: [this.mapExtentField],
+            listeners: {
+                collapse: function() {
+                    this.spatialQuery = false;
+                },
+                expand: function() {
+                    this.spatialQuery = true;
+                },
+                scope: this
+            }
         }, {
             xtype: "fieldset",
             title: "Query by attributes",
             checkboxToggle: true,
+            collpased: !this.attributeQuery,
             autoHeight: true,
-            items: [{
-                xtype: "gxp_filterbuilder",
-                allowGroups: false,
-                attributes: this.attributes // this will change with layer selection
-            }]
+            items: [this.filterBuilder],
+            listeners: {
+                collapse: function() {
+                    this.attributeQuery = false;
+                },
+                expand: function() {
+                    this.attributeQuery = true;
+                },
+                scope: this
+            }            
         }];
 
         gxp.QueryPanel.superclass.initComponent.apply(this, arguments);
 
+    },
+    
+    /** api: method[getFilter]
+     *  Get the filter representing the conditions in the panel.  Returns false
+     *  if neither spatial nor attribute query is checked.
+     */
+    getFilter: function() {
+        var attributeFilter = this.attributeQuery && this.filterBuilder.getFilter();
+        var spatialFilter = this.spatialQuery && new OpenLayers.Filter.Spatial({
+            type: OpenLayers.Filter.Spatial.BBOX,
+            value: this.map.getExtent()
+        });
+        var filter;
+        if(attributeFilter && spatialFilter) {
+            filter = new OpenLayers.Filter.Logical({
+                type: OpenLayers.Filter.Logical.AND,
+                filters: [spatialFilter, attributeFilter]
+            });
+        } else {
+            filter = attributeFilter || spatialFilter;
+        }
+        return filter;
     },
     
     getFormattedMapExtent: function() {
