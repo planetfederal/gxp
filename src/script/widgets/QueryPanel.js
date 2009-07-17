@@ -14,11 +14,11 @@
 Ext.namespace("gxp");
 gxp.QueryPanel = Ext.extend(Ext.Panel, {
 
-    /** api: config[layers]
-     *  ``Ext.Store``
+    /** api: config[layerStore]
+     *  ``Ext.data.Store``
      *  A store with records representing each WFS layer to be queried. Records
-     *  must have ``schema`` (schema url), ``title``, ``name`` (feature type),
-     *  and ``namespace`` (namespace URI) fields.
+     *  must have ``title``, ``name`` (feature type), ``namespace`` (namespace
+     *  URI), ``url`` (wfs url), and ``schema`` (schema url) fields.
      */    
     
     /** api: config[layout]
@@ -40,7 +40,12 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
     
     /** api: config[attributeQuery]
      *  ``Boolean``
-     *  Initial state of "query by attribute" checkbox.  Default is true.
+     *  Initial state of "query by attribute" checkbox.  Default is false.
+     *  
+     *  TODO: If false, the filter builder is not rendered until the fieldset
+     *  is collapsed.  An Ext bug keeps the combos from propertly rendering when
+     *  this happens.  If we are going to support attributeQuery false in the
+     *  config, this needs to be addressed.
      */
     
     /** api: property[attributeQuery]
@@ -48,6 +53,32 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
      *  Query by attributes.
      */
     attributeQuery: true,
+    
+    /** private: property[selectedLayer]
+     *  ``Ext.data.Record``
+     *  The currently selected record in the layers combo.
+     */
+    selectedLayer: null,
+    
+    /** private: property[featureStore]
+     *  ``GeoExt.data.FeatureStore``
+     *  After a query has been issued, this will be a store with records based
+     *  on the return from the query.
+     */
+    featureStore: null,
+    
+    /** private: property[attributesStore]
+     *  ``gxp.data.AttributeStore``
+     *  The attributes associated with the currently selected layer.
+     */
+    attributesStore: null,
+
+    /** private: property[geometryName]
+     *  ``String``
+     *  Name of the first geometry attribute found when the attributes store
+     *  loads.
+     */
+    geometryName: null,
     
     /** private: method[initComponent]
      */
@@ -64,23 +95,26 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
             scope: this
         });
         
-        this.filterBuilder = new gxp.FilterBuilder({
-            allowGroups: false,
-            attributes: this.attributes // this will change with layer selection
-        });
-
+        this.createFilterBuilder(this.layerStore.getAt(0));
+        
         this.items = [{
             xtype: "combo",
             name: "layer",
             fieldLabel: "Layer",
-            store: this.layers,
-            value: this.layers.getAt(0).get("name"),
+            store: this.layerStore,
+            value: this.layerStore.getAt(0).get("name"),
             displayField: "title",
             valueField: "name",
             mode: "local",
             allowBlank: true,
             editable: false,
-            triggerAction: "all"
+            triggerAction: "all",
+            listeners: {
+                select: function(combo, record, index) {
+                    this.createFilterBuilder(record);
+                },
+                scope: this
+            }
         }, {
             xtype: "fieldset",
             title: "Query by location",
@@ -101,7 +135,7 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
             xtype: "fieldset",
             title: "Query by attributes",
             checkboxToggle: true,
-            collpased: !this.attributeQuery,
+            collapsed: !this.attributeQuery,
             autoHeight: true,
             items: [this.filterBuilder],
             listeners: {
@@ -119,26 +153,48 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
 
     },
     
-    /** api: method[getFilter]
-     *  Get the filter representing the conditions in the panel.  Returns false
-     *  if neither spatial nor attribute query is checked.
+    /** private: method[createFilterBuilder]
+     *  :param record: ``Ext.data.Record``  A record representing the feature
+     *      type.
+     *  
+     *  Remove any existing filter builder and create a new one.  This method
+     *  also sets the currently selected layer and stores the name for the
+     *  first geometry attribute found when the attribute store loads.
      */
-    getFilter: function() {
-        var attributeFilter = this.attributeQuery && this.filterBuilder.getFilter();
-        var spatialFilter = this.spatialQuery && new OpenLayers.Filter.Spatial({
-            type: OpenLayers.Filter.Spatial.BBOX,
-            value: this.map.getExtent()
-        });
-        var filter;
-        if(attributeFilter && spatialFilter) {
-            filter = new OpenLayers.Filter.Logical({
-                type: OpenLayers.Filter.Logical.AND,
-                filters: [spatialFilter, attributeFilter]
-            });
-        } else {
-            filter = attributeFilter || spatialFilter;
+    createFilterBuilder: function(record) {
+        this.selectedLayer = record;
+        var owner = this.filterBuilder && this.filterBuilder.ownerCt;
+        if (owner) {
+            owner.remove(this.filterBuilder, true);
         }
-        return filter;
+
+        this.attributesStore = new gxp.data.AttributesStore({
+            url: record.get("schema"),
+            listeners: {
+                load: function(store) {
+                    this.geometryName = null;
+                    store.filterBy(function(r) {
+                        var match = r.get("type").match(/gml:.*(Point|Line|Polygon|Curve|Surface).*/);
+                        if (match && !this.geometryName) {
+                            this.geometryName = r.get("name");
+                        }
+                        return !match;
+                    });
+                }
+            },
+            autoLoad: true
+        });
+
+        this.filterBuilder = new gxp.FilterBuilder({
+            attributes: this.attributesStore,
+            allowGroups: false
+        });
+        
+        if (owner) {
+            owner.add(this.filterBuilder);
+            owner.doLayout();
+        }
+        
     },
     
     getFormattedMapExtent: function() {
@@ -151,11 +207,68 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
         this.mapExtentField.setValue(this.getFormattedMapExtent());
     },
     
+    /** api: method[getFilter]
+     *  Get the filter representing the conditions in the panel.  Returns false
+     *  if neither spatial nor attribute query is checked.
+     */
+    getFilter: function() {
+        var attributeFilter = this.attributeQuery && this.filterBuilder.getFilter();
+        var spatialFilter = this.spatialQuery && new OpenLayers.Filter.Spatial({
+            type: OpenLayers.Filter.Spatial.BBOX,
+            value: this.map.getExtent()
+        });
+        var filter;
+        if (attributeFilter && spatialFilter) {
+            filter = new OpenLayers.Filter.Logical({
+                type: OpenLayers.Filter.Logical.AND,
+                filters: [spatialFilter, attributeFilter]
+            });
+        } else {
+            filter = attributeFilter || spatialFilter;
+        }
+        return filter;
+    },
+    
+    /** api: method[query]
+     *  Issue a request for features.
+     */
+    query: function() {
+        
+        var fields = [];
+        this.attributesStore.each(function(record) {
+            fields.push({
+                name: record.get("name"),
+                type: record.get("type") // TODO: confirm we want to do this for all types
+            });
+        });
+        
+        var layer = this.selectedLayer;
+        
+        this.featureStore = new GeoExt.data.FeatureStore({
+            fields: fields,
+            proxy: new GeoExt.data.ProtocolProxy({
+                protocol: new OpenLayers.Protocol.WFS({
+                    version: "1.1.0",
+                    srsName: this.map.getProjection(),
+                    url: this.selectedLayer.get("url"),
+                    featureType: layer.get("name"),
+                    featureNS :  layer.get("namespace"),
+                    geometryName: this.geometryName,
+                    schema: layer.get("schema"),
+                    filter: this.getFilter()
+                })
+            }),
+            autoLoad: true
+        });
+        var filter = this.getFilter();        
+        
+    },
+
     /** private: method[beforeDestroy]
      *  Private method called during the destroy sequence.
      */
     beforeDestroy: function() {
-        if(this.map && this.map.events) {
+        if (this.map && this.map.events) {
             this.map.events.un({
                 moveend: this.updateMapExtent,
                 scope: this

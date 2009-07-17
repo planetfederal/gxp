@@ -6,32 +6,7 @@
  * of the license.
  */
 
-
-var feWin = null;
-var format = new OpenLayers.Format.Filter();
-function showFE() {
-    var filter = panel.getComponent(0).getFilter();
-    var node = format.write(filter);
-    var text = OpenLayers.Format.XML.prototype.write.apply(format, [node]);
-    if(!feWin) {
-        feWin = new Ext.Window({
-            title: "Filter Encoding",
-            layout: "fit",
-            closeAction: "hide",
-            height: 300,
-            width: 450,
-            plain: true,
-            modal: true,
-            items: [{
-                xtype: "textarea",
-                value: text
-            }]
-        });
-    } else {
-        feWin.items.items[0].setValue(text);
-    }
-    feWin.show();
-}
+OpenLayers.ProxyHost = "/proxy/?url=";
 
 var panel, map;
 Ext.onReady(function() {
@@ -45,36 +20,35 @@ Ext.onReady(function() {
     map.addLayer(layer);
     map.setCenter(new OpenLayers.LonLat(5, 45), 3);
 
-    panel = new Ext.Panel({
+    panel = new gxp.QueryPanel({
         title: "Query Panel",
         renderTo: "query",
         width: 380,
         bodyStyle: "padding: 10px",
-        items: [{
-            xtype: "gxp_querypanel",
-            border: false,
-            layers: new Ext.data.JsonStore({
-                data: {
-                    layers: [{
-                        name: "layer_one", title: "Layer One"
-                    }, {
-                        name: "layer_two", title: "Layer Two"
-                    }]
-                },
-                root: "layers",
-                fields: ["title", "name"]
-            }),
-            map: map,
-            // this will soon come from the layer record
-            attributes: new gxp.data.AttributesStore({
-                url: "data/describe_feature_type.xml",
-                ignore: {name: "the_geom"}
-            })
-        }],
+        map: map,
+        layerStore: new Ext.data.JsonStore({
+            data: {
+                layers: [{
+                    title: "US States",
+                    name: "states",
+                    namespace: "http://www.openplans.org/topp",
+                    url: "http://demo.opengeo.org/geoserver/wfs",
+                    schema: "http://demo.opengeo.org/geoserver/wfs?version=1.1.0&request=DescribeFeatureType&typeName=topp:states"
+                }, {
+                    title: "Archaeological Sites",
+                    name: "archsites",
+                    namespace: "http://opengeo.org",
+                    url: "http://demo.opengeo.org/geoserver/wfs",
+                    schema: "http://demo.opengeo.org/geoserver/wfs?version=1.1.0&request=DescribeFeatureType&typeName=og:archsites"
+                }]
+            },
+            root: "layers",
+            fields: ["title", "name", "namespace", "url", "schema"]
+        }),
         bbar: ["->", {
             text: "Query",
             handler: function() {
-                showFE();
+                panel.query();
             }
         }]
     });
