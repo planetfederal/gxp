@@ -142,7 +142,8 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
      *
      * Returns:
      * {OpenLayers.Filter} A filter that can be serialized with the filter
-     *     format.
+     *     format.  Returns false if the filter or any child filter does not
+     *     have a type, property, or value.
      */
     getFilter: function() {
         var filter;
@@ -164,7 +165,8 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
      *
      * Returns:
      * {OpenLayers.Filter} An equivalent filter to the input, where all
-     *     binary logical filters have more than one child filter.
+     *     binary logical filters have more than one child filter.  Returns
+     *     false if a filter doesn't have non-null type, property, or value.
      */
     cleanFilter: function(filter) {
         if(filter instanceof OpenLayers.Filter.Logical) {
@@ -177,8 +179,17 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
                     child = filter.filters[i];
                     if(child instanceof OpenLayers.Filter.Logical) {
                         filter.filters[i] = this.cleanFilter(child)
+                    } else if(!child || child.type === null ||
+                              child.property === null || child.value === null) {
+                        filter = false;
+                        break;
                     }
                 }
+            }
+        } else {
+            if(!filter || filter.type === null || filter.property === null ||
+               filter.value === null) {
+                filter = false;
             }
         }
         return filter;
