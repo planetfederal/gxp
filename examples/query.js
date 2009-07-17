@@ -12,12 +12,13 @@ var panel, map;
 Ext.onReady(function() {
     
     var map = new OpenLayers.Map("map");
-    var layer = new OpenLayers.Layer.WMS(
+    var wms = new OpenLayers.Layer.WMS(
         "Global Imagery",
         "http://demo.opengeo.org/geoserver/wms",
         {layers: 'bluemarble'}
     );
-    map.addLayer(layer);
+    var vector = new OpenLayers.Layer.Vector();    
+    map.addLayers([wms, vector]);
     map.setCenter(new OpenLayers.LonLat(5, 45), 3);
 
     panel = new gxp.QueryPanel({
@@ -50,7 +51,17 @@ Ext.onReady(function() {
             handler: function() {
                 panel.query();
             }
-        }]
+        }],
+        listeners: {
+            storeload: function(panel, store) {
+                vector.destroyFeatures();
+                var features = [];
+                store.each(function(record) {
+                    features.push(record.get("feature"));
+                });
+                vector.addFeatures(features);
+            }
+        }
     });
 
 });

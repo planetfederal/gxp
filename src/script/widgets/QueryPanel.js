@@ -84,6 +84,50 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
      */
     initComponent: function() {
         
+        this.addEvents(
+
+            /** api: events[layerchange]
+             *  Fires when a new layer is selected.
+             *
+             *  Listener arguments:
+             *  * panel - :class:`gxp.QueryPanel` This query panel.
+             *  * record - ``Ext.data.Record`` Record representing the selected
+             *      layer.
+             */
+            "layerchange",
+
+            /** api: events[beforequery]
+             *  Fires before a query for features is issued.  If any listener
+             *  returns false, the query will not be issued.
+             *
+             *  Listener arguments:
+             *  * panel - :class:`gxp.QueryPanel` This query panel.
+             */
+            "query",
+
+            /** api: events[query]
+             *  Fires when a query for features is issued.
+             *
+             *  Listener arguments:
+             *  * panel - :class:`gxp.QueryPanel` This query panel.
+             *  * store - ``GeoExt.data.FeatureStore`` The feature store.
+             */
+            "query",
+
+            /** api: events[storeload]
+             *  Fires when the feature store loads.
+             *
+             *  Listener arguments:
+             *  * panel - :class:`gxp.QueryPanel` This query panel.
+             *  * store - ``GeoExt.data.FeatureStore`` The feature store.
+             *  * records - ``Array(Ext.data.Record)`` The records that were
+             *      loaded.
+             *  * options - ``Object`` The loading options that were specified.
+             */
+            "storeload"
+
+        );        
+        
         this.mapExtentField = new Ext.form.TextField({
             fieldLabel: "Current extent",
             disabled: true,
@@ -162,6 +206,7 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
      *  first geometry attribute found when the attribute store loads.
      */
     createFilterBuilder: function(record) {
+        this.fireEvent("layerchange", this, record);
         this.selectedLayer = record;
         var owner = this.filterBuilder && this.filterBuilder.ownerCt;
         if (owner) {
@@ -174,12 +219,12 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
                 load: function(store) {
                     this.geometryName = null;
                     store.filterBy(function(r) {
-                        var match = r.get("type").match(/gml:.*(Point|Line|Polygon|Curve|Surface).*/);
+                        var match = /gml:.*(Point|Line|Polygon|Curve|Surface).*/.test(r.get("type"));
                         if (match && !this.geometryName) {
                             this.geometryName = r.get("name");
                         }
                         return !match;
-                    });
+                    }, this);
                 }
             },
             autoLoad: true
@@ -229,38 +274,64 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
         return filter;
     },
     
+    /** private: method[getFieldType]
+     *  :param attrType: ``String`` Attribute type.
+     *  :returns: ``String`` Field type
+     *
+     *  Given a feature attribute type, return an Ext field type if possible.
+     *  
+     *  TODO: this should go elsewhere (AttributesReader)
+     */
+    getFieldType: function(attrType) {
+        return ({
+            "xsd:string": "string",
+            "xsd:double": "float"
+        })[attrType];
+    },
+    
     /** api: method[query]
      *  Issue a request for features.
      */
     query: function() {
         
-        var fields = [];
-        this.attributesStore.each(function(record) {
-            fields.push({
-                name: record.get("name"),
-                type: record.get("type") // TODO: confirm we want to do this for all types
+        if (this.fireEvent("beforequery", this) !== false) {
+        
+            var fields = [];
+            this.attributesStore.each(function(record) {
+                fields.push({
+                    name: record.get("name"),
+                    type: this.getFieldType(record.get("type"))
+                });
+            }, this);
+            
+            var layer = this.selectedLayer;
+            
+            this.featureStore = new GeoExt.data.FeatureStore({
+                fields: fields,
+                proxy: new GeoExt.data.ProtocolProxy({
+                    protocol: new OpenLayers.Protocol.WFS({
+                        version: "1.1.0",
+                        srsName: this.map.getProjection(),
+                        url: this.selectedLayer.get("url"),
+                        featureType: layer.get("name"),
+                        featureNS :  layer.get("namespace"),
+                        geometryName: this.geometryName,
+                        schema: layer.get("schema"),
+                        filter: this.getFilter()
+                    })
+                }),
+                autoLoad: true,
+                listeners: {
+                    load: function(store, records, options) {
+                        this.fireEvent("storeload", this, store, records, options);
+                    },
+                    scope: this
+                }
             });
-        });
-        
-        var layer = this.selectedLayer;
-        
-        this.featureStore = new GeoExt.data.FeatureStore({
-            fields: fields,
-            proxy: new GeoExt.data.ProtocolProxy({
-                protocol: new OpenLayers.Protocol.WFS({
-                    version: "1.1.0",
-                    srsName: this.map.getProjection(),
-                    url: this.selectedLayer.get("url"),
-                    featureType: layer.get("name"),
-                    featureNS :  layer.get("namespace"),
-                    geometryName: this.geometryName,
-                    schema: layer.get("schema"),
-                    filter: this.getFilter()
-                })
-            }),
-            autoLoad: true
-        });
-        var filter = this.getFilter();        
+    
+            this.fireEvent("query", this, this.featureStore);
+            
+        }
         
     },
 
