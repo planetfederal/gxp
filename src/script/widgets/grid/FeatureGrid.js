@@ -46,7 +46,6 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
     initComponent: function(){
         this.ignoreFields = ["feature", "state", "fid"].concat(this.ignoreFields);
         this.cm = this.createColumnModel(this.store);        
-        this.viewConfig = Ext.apply(this.viewConfig || {}, {forceFit: true});
         if(this.map) {
             this.layer = new OpenLayers.Layer.Vector(this.id + "_layer");
             this.map.addLayer(this.layer);
