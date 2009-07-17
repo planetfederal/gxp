@@ -45,15 +45,22 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
      */
     initComponent: function(){
         this.ignoreFields = ["feature", "state", "fid"].concat(this.ignoreFields);
-        this.cm = this.createColumnModel(this.store);        
-        if(this.map) {
-            this.layer = new OpenLayers.Layer.Vector(this.id + "_layer");
-            this.map.addLayer(this.layer);
-            this.sm = new GeoExt.grid.FeatureSelectionModel({
-                layerFromStore: false,
-                layer: this.layer
+        if(this.store) {
+            this.cm = this.createColumnModel(this.store);        
+            if(this.map) {
+                this.layer = new OpenLayers.Layer.Vector(this.id + "_layer");
+                this.map.addLayer(this.layer);
+                this.sm = new GeoExt.grid.FeatureSelectionModel({
+                    layerFromStore: false,
+                    layer: this.layer
+                });
+                this.store.bind(this.layer);
+            }
+        } else {
+            this.store = new Ext.data.Store();
+            this.cm = new Ext.grid.ColumnModel({
+                columns: []
             });
-            this.store.bind(this.layer);
         }
 
         gxp.grid.FeatureGrid.superclass.initComponent.call(this);       
