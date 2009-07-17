@@ -482,28 +482,28 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
                     tooltip: "remove condition",
                     cls: 'x-btn-icon',
                     iconCls: "delete",
-                    handler: function(btn) {
-                        /**
-                         * Calling btn.destroy causes failures if quick tips are
-                         * not initialized (see http://extjs.com/forum/showthread.php?t=59121).
-                         * This happens in 2.2.1 and 3.0.0.
-                         *
-                         * TODO: remove the beforeDestroy override after 3.0.0.
-                         */
-                        btn.beforeDestroy = function() {
-                            if(btn.rendered){
-                                var btnEl = btn.el.child(btn.buttonSelector);
-                                if(btnEl){
-                                    if(typeof btn.tooltip == 'object'){
-                                        Ext.QuickTips.unregister(btnEl);
-                                    }
-                                    btnEl.removeAllListeners();
+                    /**
+                     * Calling btn.destroy causes failures if quick tips are
+                     * not initialized (see http://extjs.com/forum/showthread.php?t=59121).
+                     * This happens in 2.2.1 and 3.0.0.
+                     *
+                     * TODO: remove the beforeDestroy override after 3.0.0.
+                     */
+                    beforeDestroy: function() {
+                        if (this.rendered) {
+                            var btnEl = this.el.child(this.buttonSelector);
+                            if (btnEl) {
+                                if (typeof this.tooltip == 'object') {
+                                    Ext.QuickTips.unregister(btnEl);
                                 }
+                                btnEl.removeAllListeners();
                             }
-                            if(btn.menu){
-                                Ext.destroy(btn.menu);
-                            }
-                        };
+                        }
+                        if (this.menu) {
+                            Ext.destroy(this.menu);
+                        }
+                    },
+                    handler: function(btn) {
                         this.removeCondition(panel, filterPanel.filter);
                     },
                     scope: this
