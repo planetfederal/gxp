@@ -1,6 +1,7 @@
 (function() {
 
     var jsfiles = new Array(
+        "util.js",
         "data/AttributesReader.js",
         "data/AttributesStore.js",
         "widgets/FilterPanel.js",
