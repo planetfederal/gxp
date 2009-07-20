@@ -45,7 +45,6 @@ Ext.onReady(function() {
         store: store,
         ignoreFields: ["the_geom"],
         map: map,
-        autoExpandColumn: "name",
         renderTo: "grid",
         height: 300,
         width: 350
