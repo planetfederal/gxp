@@ -1,12 +1,11 @@
 /**
  * Copyright (c) 2009 The Open Planning Project
- *
  */
 
 /**
  * api: (define)
- * module = gxp
- * class = FeatureGrid(config)
+ * module = gxp.grid
+ * class = FeatureGrid
  * extends = Ext.grid.GridPanel
  */
 
@@ -17,7 +16,6 @@
  * Create a new grid displaying the contents of a 
  * :class:`GeoExt.data.FeatureStore` .
  */
-
 Ext.namespace("gxp.grid");
 gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
 
