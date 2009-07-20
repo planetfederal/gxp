@@ -178,7 +178,13 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
                 for(var i=0, len=filter.filters.length; i<len; ++i) {
                     child = filter.filters[i];
                     if(child instanceof OpenLayers.Filter.Logical) {
-                        filter.filters[i] = this.cleanFilter(child)
+                        child = this.cleanFilter(child);
+                        if(child) {
+                            filter.filters[i] = child;
+                        } else {
+                            filter = child;
+                            break;
+                        }
                     } else if(!child || child.type === null ||
                               child.property === null || child.value === null) {
                         filter = false;
