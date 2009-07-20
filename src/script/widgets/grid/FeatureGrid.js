@@ -32,6 +32,12 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
      *  displayed in the grid.
      */
     ignoreFields: null,
+    
+    /** api: config[layer]
+     *  ``OpenLayers.Layer.Vector``
+     *  The vector layer that will be synchronized with the layer store.
+     *  If the ``map`` config property is provided, this value will be ignored.
+     */
 
     /** private: property[layer]
      *  ``OpenLayers.Layer.Vector`` layer displaying features from this grid's
@@ -40,16 +46,19 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
     layer: null,
     
     /** api: method[initComponent]
-     * 
-     * Initializes the FeatureGrid.
+     *  Initializes the FeatureGrid.
      */
     initComponent: function(){
         this.ignoreFields = ["feature", "state", "fid"].concat(this.ignoreFields);
         if(this.store) {
-            this.cm = this.createColumnModel(this.store);        
+            this.cm = this.createColumnModel(this.store);
+            // layer automatically added if map provided, otherwise check for
+            // layer in config
             if(this.map) {
                 this.layer = new OpenLayers.Layer.Vector(this.id + "_layer");
                 this.map.addLayer(this.layer);
+            }
+            if(this.layer) {
                 this.sm = new GeoExt.grid.FeatureSelectionModel({
                     layerFromStore: false,
                     layer: this.layer
@@ -66,14 +75,29 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
         gxp.grid.FeatureGrid.superclass.initComponent.call(this);       
     },
     
+    /** private: method[onDestroy]
+     *  Clean up anything created here before calling super onDestroy.
+     */
+    onDestroy: function() {
+        if(this.initialConfig && this.initialConfig.map
+           && !this.initialConfig.layer) {
+            // we created the layer, let's destroy it
+            this.layer.destroy();
+            delete this.layer;
+        }
+        gxp.grid.FeatureGrid.superclass.onDestroy.apply(this, arguments);
+    },
+    
     /** api: method[setStore]
      *  :param store: ``GeoExt.data.FeatureStore``
      *  
      *  Sets the store for this grid, reconfiguring the column model
      */
     setStore: function(store) {
-        if(this.layer) {
+        if(this.store && this.store.unbind) {
             this.store.unbind();
+        }
+        if(this.layer) {
             this.layer.destroyFeatures();
             store.bind(this.layer);
         }
