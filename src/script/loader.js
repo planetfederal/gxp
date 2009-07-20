@@ -7,6 +7,7 @@
         "widgets/FilterBuilder.js",
         "widgets/QueryPanel.js",
         "widgets/form/ComparisonComboBox.js",
+        "widgets/grid/CapabilitiesGrid.js",
         "widgets/grid/FeatureGrid.js"
     );
     
