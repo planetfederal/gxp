@@ -58,7 +58,7 @@ Ext.onReady(function() {
             xtype: "gxp_filterbuilder",
             filter: filter.clone(),
             attributes: new gxp.data.AttributesStore({
-                url: "../externals/geoext/examples/data/describe_feature_type.xml",
+                url: "data/describe_feature_type.xml",
                 ignore: {name: "the_geom"}
             })
         }],
@@ -79,7 +79,7 @@ Ext.onReady(function() {
             allowGroups: false,
             filter: filter.clone(),
             attributes: new gxp.data.AttributesStore({
-                url: "../externals/geoext/examples/data/describe_feature_type.xml",
+                url: "data/describe_feature_type.xml",
                 ignore: {name: "the_geom"}
             })
         }],
