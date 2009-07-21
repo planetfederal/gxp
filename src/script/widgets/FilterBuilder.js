@@ -13,46 +13,72 @@
  */
 Ext.namespace("gxp");
 
+/** api: constructor
+ *  .. class:: FilterPanel(config)
+ *   
+ *      Create a panel for assembling a filter.
+ */
 gxp.FilterBuilder = Ext.extend(Ext.Panel, {
 
-    /**
-     * Property: builderTypeNames
-     * {Array} A list of labels for that correspond to builder type constants.
-     *     These will be the option names available in the builder type combo.
-     *     Default is ["any", "all", "none", "not all"].
+    /** api: config[builderTypeNames]
+     *  ``Array``
+     *  A list of labels for that correspond to builder type constants.
+     *  These will be the option names available in the builder type combo.
+     *  Default is ``["any", "all", "none", "not all"]``.
      */
     builderTypeNames: ["any", "all", "none", "not all"],
     
-    /**
-     * Property: allowedBuilderTypes
-     * {Array} List of builder type constants.  Default is
-     *     [ANY_OF, ALL_OF, NONE_OF].
+    /** api: config[allowedBuilderTypes]
+     *  ``Array``
+     *  List of builder type constants.  Default is
+     *  ``[ANY_OF, ALL_OF, NONE_OF]``.
      */
     allowedBuilderTypes: null,
     
+    /** api: config[rowHeight]
+     *  ``Number``
+     *  Row height in pixels.  Default is ``25``.
+     */
     rowHeight: 25,
 
-    builderType: null,
-
-    childFiltersPanel: null,
-    
-    customizeFilterOnInit: true,
-    
+    /** api: config[preComboText]
+     *  ``String``
+     *  String to display before filter type combo.  Default is ``"Match"``.
+     */
     preComboText: "Match",
+
+    /** api: config[postComboText]
+     *  ``String``
+     *  String to display before filter type combo.  Default is
+     *  ``"of the following:"``.
+     */
     postComboText: "of the following:",
-    
+
     /** api: config[cls]
      *  ``String``
      *  The CSS class to be added to this panel's element (defaults to
      *  'gxp-filterbuilder').
      */
     cls: "gxp-filterbuilder",
+
+    /** private: property[builderType]
+     */
+    builderType: null,
+
+    /** private: property[childFiltersPanel]
+     */
+    childFiltersPanel: null,
     
-    /**
-     * Property: allowGroups
-     * {Boolean} Allow groups of conditions to be added.  Default is true.
-     *     If false, only individual conditions (non-logical filters) can
-     *     be added.
+    /** private: property[customizeFilterOnInit]
+     */
+    customizeFilterOnInit: true,
+    
+    
+    /** api: config[allowGroups]
+     *  ``Boolean``
+     *  Allow groups of conditions to be added.  Default is ``true``.
+     *  If ``false``, only individual conditions (non-logical filters) can
+     *  be added.
      */
     allowGroups: true,
 
@@ -106,7 +132,7 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
              *
              * Listener arguments:
              * builder - {gxp.FilterBuilder} This filter builder.  Call
-             *     <getFilter> to get the updated filter.
+             *     ``getFilter`` to get the updated filter.
              */
             "change"
         ); 
@@ -114,8 +140,7 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
         gxp.FilterBuilder.superclass.initComponent.call(this);
     },
     
-    /**
-     * Method: createToolBar
+    /** private: method[createToolBar]
      */
     createToolBar: function() {
         var bar = [{
@@ -139,16 +164,13 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
         return bar;
     },
     
-    /**
-     * APIMethod: getFilter
-     * Returns a filter that fits the model in the Filter Encoding
-     *     specification.  Use this method instead of directly accessing
-     *     the <filter> property.
-     *
-     * Returns:
-     * {OpenLayers.Filter} A filter that can be serialized with the filter
-     *     format.  Returns false if the filter or any child filter does not
-     *     have a type, property, or value.
+    /** api: method[getFilter]
+     *  :return: ``OpenLayers.Filter``
+     *  
+     *  Returns a filter that fits the model in the Filter Encoding
+     *  specification.  Use this method instead of directly accessing
+     *  the ``filter`` property.  Return will be ``false`` if any child
+     *  filter does not have a type, property, or value.
      */
     getFilter: function() {
         var filter;
@@ -161,17 +183,13 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
         return filter;
     },
     
-    /**
-     * Method: cleanFilter
-     * Ensures that binary logical filters have more than one child.
-     *
-     * Parameters:
-     * filter - {OpenLayers.Filter.Logical} A logical filter.
-     *
-     * Returns:
-     * {OpenLayers.Filter} An equivalent filter to the input, where all
-     *     binary logical filters have more than one child filter.  Returns
-     *     false if a filter doesn't have non-null type, property, or value.
+    /** private: method[cleanFilter]
+     *  :arg filter: ``OpenLayers.Filter.Logical``
+     *  :return: ``OpenLayers.Filter`` An equivalent filter to the input, where
+     *      all binary logical filters have more than one child filter.  Returns
+     *      false if a filter doesn't have non-null type, property, or value.
+     *  
+     *  Ensures that binary logical filters have more than one child.
      */
     cleanFilter: function(filter) {
         if(filter instanceof OpenLayers.Filter.Logical) {
@@ -206,21 +224,18 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
         return filter;
     },
     
-    /**
-     * Method: customizeFilter
-     * Create a filter that fits the model for this filter builder.  This filter
-     *     will not necessarily meet the Filter Encoding specification.  In
-     *     particular, filters representing binary logical operators may not
-     *     have two child filters.  Use the <getFilter> method to return a
-     *     filter that meets the encoding spec.
-     *
-     * Parameters:
-     * filter - {OpenLayers.Filter} The input filter.  This filter will not
-     *     be modified.  Register for events to receive an updated filter, or
-     *     call <getFilter>.
-     *
-     * Returns:
-     * {OpenLayers.Filter} A filter that fits the model used by this builder.
+    /** private: method[customizeFilter]
+     *  :arg filter: ``OpenLayers.Filter``  This filter will not
+     *      be modified.  Register for events to receive an updated filter, or
+     *      call ``getFilter``.
+     *  :return: ``OpenLayers.Filter``  A filter that fits the model used by
+     *      this builder.
+     *  
+     *  Create a filter that fits the model for this filter builder.  This filter
+     *  will not necessarily meet the Filter Encoding specification.  In
+     *  particular, filters representing binary logical operators may not
+     *  have two child filters.  Use the <getFilter> method to return a
+     *  filter that meets the encoding spec.
      */
     customizeFilter: function(filter) {
         if(!filter) {
@@ -306,16 +321,12 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
         return new OpenLayers.Filter.Comparison();
     },
     
-    /**
-     * Method: wrapFilter
-     * Given a non-logical filter, this creates parent filters depending on
-     *     the <defaultBuilderType>.
-     *
-     * Parameters:
-     * filter - {OpenLayers.Filter} A non-logical filter.
-     *
-     * Returns:
-     * {OpenLayers.Filter} A wrapped version of the input filter.
+    /** private: method[wrapFilter]
+     *  :arg filter: ``OpenLayers.Filter`` A non-logical filter.
+     *  :return: ``OpenLayers.Filter`` A wrapped version of the input filter.
+     *  
+     *  Given a non-logical filter, this creates parent filters depending on
+     *  the ``defaultBuilderType``.
      */
     wrapFilter: function(filter) {
         var type;
@@ -334,11 +345,10 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
         });
     },
     
-    /**
-     * Method: addCondition
-     * Add a new condition or group of conditions to the builder.  This
-     *     modifies the filter and adds a panel representing the new condition
-     *     or group of conditions.
+    /** private: method[addCondition]
+     *  Add a new condition or group of conditions to the builder.  This
+     *  modifies the filter and adds a panel representing the new condition
+     *  or group of conditions.
      */
     addCondition: function(group) {
         var filter, type;
@@ -366,11 +376,10 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
         this.childFiltersPanel.doLayout();
     },
     
-    /**
-     * Method: removeCondition
-     * Remove a condition or group of conditions from the builder.  This
-     *     modifies the filter and removes the panel representing the condition
-     *     or group of conditions.
+    /** private: method[removeCondition]
+     *  Remove a condition or group of conditions from the builder.  This
+     *  modifies the filter and removes the panel representing the condition
+     *  or group of conditions.
      */
     removeCondition: function(panel, filter) {
         var parent = this.filter.filters[0].filters;
@@ -415,12 +424,10 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
         };
     },
     
-    /**
-     * Method: changeBuilderType
-     * Alter the filter types when the filter type combo changes.
-     *
-     * Parameters:
-     * type - {Integer} One of the filter type constants.
+    /** private: method[changeBuilderType]
+     *  :arg type: ``Integer`` One of the filter type constants.
+     *  
+     *  Alter the filter types when the filter type combo changes.
      */
     changeBuilderType: function(type) {
         if(type !== this.builderType) {
@@ -447,15 +454,13 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
         }
     },
     
-    /**
-     * Method: createChildFiltersPanel
-     * Create the panel that holds all conditions and condition groups.  Since
-     *     this is called after this filter has been customized, we always
-     *     have a logical filter with one child filter - that child is also
-     *     a logical filter.
-     *
-     * Returns:
-     * {Ext.Panel} A child filters panel.
+    /** private: method[createChildFiltersPanel]
+     *  :return: ``Ext.Panel``
+     *  
+     *  Create the panel that holds all conditions and condition groups.  Since
+     *  this is called after this filter has been customized, we always
+     *  have a logical filter with one child filter - that child is also
+     *  a logical filter.
      */
     createChildFiltersPanel: function() {
         this.childFiltersPanel = new Ext.Panel({
@@ -482,14 +487,13 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
         return this.childFiltersPanel;
     },
 
-    /**
-     * Method: newRow
-     * Generate a "row" for the child filters panel.  This couples another
-     *     filter panel or filter builder with a component that allows for
-     *     condition removal.
-     *
-     * Returns:
-     * {Ext.Panel} A panel that serves as a row in a child filters panel.
+    /** private: method[newRow]
+     *  :return: ``Ext.Panel`` A panel that serves as a row in a child filters
+     *      panel.
+     *  
+     *  Generate a "row" for the child filters panel.  This couples another
+     *  filter panel or filter builder with a component that allows for
+     *  condition removal.
      */
     newRow: function(filterPanel) {
         var panel = new Ext.Panel({
@@ -539,12 +543,9 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
         return panel;
     },
 
-    /**
-     * Method: getBuilderType
-     * Determine the builder type based on this filter.
-     *
-     * Returns:
-     * {Integer} One of the builder type constants.
+    /** private: method[getBuilderType]
+     *  :return: ``Integer``  One of the builder type constants.
+     *  Determine the builder type based on this filter.
      */
     getBuilderType: function() {
         var type = this.defaultBuilderType;
@@ -583,4 +584,5 @@ gxp.FilterBuilder.ALL_OF = 1;
 gxp.FilterBuilder.NONE_OF = 2;
 gxp.FilterBuilder.NOT_ALL_OF = 3;
 
+/** api: xtype = gxp_filterbuilder */
 Ext.reg('gxp_filterbuilder', gxp.FilterBuilder); 
