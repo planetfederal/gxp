@@ -13,30 +13,22 @@
  */
 Ext.namespace("gxp.data");
 
-/**
- * Class: gxp.data.AttributesReader
- * Data reader class to provide an array of {Ext.data.Record} objects given
- *     a WFS DescribeFeatureType response for use by an {Ext.data.Store}
- *     object.
+/** api: constructor
+ *  .. class:: AttributesReader(meta, recordType)
+ *  
+ *      :arg meta: ``Object`` Reader configuration.
+ *      :arg recordType: ``Array or Ext.data.Record`` An array of field
+ *          configuration objects or a record object.
  *
- * Extends: Ext.data.DataReader
- */
-
-/**
- * Constructor: gxp.data.AttributesReader
- * Create a new attributes reader object.
- *
- * Parameters:
- * meta - {Object} Reader configuration.
- * recordType - {Array | Ext.data.Record} An array of field configuration
- *     objects or a record object.
- *
- * Configuration options (meta properties):
- * format - {OpenLayers.Format} A parser for transforming the XHR response
- *     into an array of objects representing attributes.  Defaults to
- *     an {OpenLayers.Format.WFSDescribeFeatureType} parser.
- * ignore - {Object} Properties of the ignore object should be field names.
- *     Values are either arrays or regular expressions.
+ *      Create a new attributes reader object.
+ *      
+ *      Valid meta properties:
+ *      
+ *      * format - ``OpenLayers.Format`` A parser for transforming the XHR response
+ *        into an array of objects representing attributes.  Defaults to
+ *        an ``OpenLayers.Format.WFSDescribeFeatureType`` parser.
+ *      * ignore - ``Object`` Properties of the ignore object should be field names.
+ *        Values are either arrays or regular expressions.
  */
 gxp.data.AttributesReader = function(meta, recordType) {
     meta = meta || {};
@@ -50,18 +42,13 @@ gxp.data.AttributesReader = function(meta, recordType) {
 
 Ext.extend(gxp.data.AttributesReader, Ext.data.DataReader, {
 
-    /**
-     * Method: read
-     * This method is only used by a DataProxy which has retrieved data from a
-     *     remote server.
-     *
-     * Parameters:
-     * request - {Object} The XHR object which contains the parsed XML
-     *     document.
-     * 
-     * Returns:
-     * {Object} A data block which is used by an {Ext.data.Store} as a cache
-     *     of Ext.data.Records.
+    /** private: method[read]
+     *  :arg request: ``Object`` The XHR object that contains the parsed doc.
+     *  :return: ``Object``  A data block which is used by an ``Ext.data.Store``
+     *      as a cache of ``Ext.data.Records``.
+     *  
+     *  This method is only used by a DataProxy which has retrieved data from a
+     *  remote server.
      */
     read: function(request) {
         var data = request.responseXML;
@@ -71,19 +58,16 @@ Ext.extend(gxp.data.AttributesReader, Ext.data.DataReader, {
         return this.readRecords(data);
     },
     
-    /**
-     * Method: readRecords
-     * Create a data block containing Ext.data.Records from an XML document.
-     *
-     * Parameters:
-     * data - {DOMElement | String | Array} A document element or XHR response
-     *     string.  As an alternative to fetching attributes data from a remote
-     *     source, an array of attribute objects can be provided given that
-     *     the properties of each attribute object map to a provided field name.
-     *
-     * Returns:
-     * {Object} A data block which is used by an {Ext.data.Store} as a cache of
-     *     Ext.data.Records.
+    /** private: method[readRecords]
+     *  :arg data: ``DOMElement or String or Array`` A document element or XHR
+     *      response string.  As an alternative to fetching attributes data from
+     *      a remote source, an array of attribute objects can be provided given
+     *      that the properties of each attribute object map to a provided field
+     *      name.
+     *  :return: ``Object`` A data block which is used by an ``Ext.data.Store``
+     *      as a cache of ``Ext.data.Records``.
+     *  
+     *  Create a data block containing Ext.data.Records from an XML document.
      */
     readRecords: function(data) {
         var attributes;
