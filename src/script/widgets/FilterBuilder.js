@@ -6,6 +6,11 @@
  * @include widgets/FilterPanel.js
  */
 
+/** api: (define)
+ *  module = gxp
+ *  class = FilterBuilder
+ *  base_link = `Ext.Panel <http://extjs.com/deploy/dev/docs/?class=Ext.Panel>`_
+ */
 Ext.namespace("gxp");
 
 gxp.FilterBuilder = Ext.extend(Ext.Panel, {

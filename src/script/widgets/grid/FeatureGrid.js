@@ -2,11 +2,10 @@
  * Copyright (c) 2009 The Open Planning Project
  */
 
-/**
- * api: (define)
- * module = gxp.grid
- * class = FeatureGrid
- * extends = Ext.grid.GridPanel
+/** api: (define)
+ *  module = gxp.grid
+ *  class = FeatureGrid
+ *  extends = Ext.grid.GridPanel
  */
 
 /** api: constructor

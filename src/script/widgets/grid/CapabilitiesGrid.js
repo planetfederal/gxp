@@ -3,20 +3,18 @@
  *
  */
 
-/**
- * api: (define)
- * module = gxp.grid
- * class = CapabilitiesGrid
- * extends = Ext.grid.GridPanel
+/** api: (define)
+ *  module = gxp.grid
+ *  class = CapabilitiesGrid
+ *  extends = Ext.grid.GridPanel
  */
 
 /** api: constructor
  *  ..class:: CapabilitiesGrid(config)
- *  :param: config: A configuration :class:`Object`
- *
- *  Create a new grid displaying the WMS cabilities of a URL, or the contents of 
- *  a :class:`GeoExt.data.WMSCapabilitiesStore`\ .  The user can add layers to a
- *  passed-in :class:`GeoExt.MapPanel` from the grid.
+ */
+/*      Create a new grid displaying the WMS cabilities of a URL, or the
+ *      contents of a ``GeoExt.data.WMSCapabilitiesStore``\ .  The user can
+ *      add layers to a passed-in ``GeoExt.MapPanel`` from the grid.
  */
 Ext.namespace("gxp.grid");
 gxp.grid.CapabilitiesGrid = Ext.extend(Ext.grid.GridPanel, {
