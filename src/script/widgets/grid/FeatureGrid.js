@@ -9,11 +9,10 @@
  */
 
 /** api: constructor
- * ..class:: FeatureGrid(config)
- * :param: config: A configuration :class:`Object`
+ *  .. class:: FeatureGrid(config)
  *
- * Create a new grid displaying the contents of a 
- * :class:`GeoExt.data.FeatureStore` .
+ *      Create a new grid displaying the contents of a 
+ *      ``GeoExt.data.FeatureStore`` .
  */
 Ext.namespace("gxp.grid");
 gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {

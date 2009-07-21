@@ -10,34 +10,38 @@
  */
 
 /** api: constructor
- *  ..class:: CapabilitiesGrid(config)
- */
-/*      Create a new grid displaying the WMS cabilities of a URL, or the
+ *  .. class:: CapabilitiesGrid(config)
+ *  
+ *      Create a new grid displaying the WMS cabilities of a URL, or the
  *      contents of a ``GeoExt.data.WMSCapabilitiesStore``\ .  The user can
  *      add layers to a passed-in ``GeoExt.MapPanel`` from the grid.
  */
 Ext.namespace("gxp.grid");
 gxp.grid.CapabilitiesGrid = Ext.extend(Ext.grid.GridPanel, {
 
+    /** api: config[store]
+     *  ``GeoExt.data.LayerStore``
+     */
     store: null,
 
     cm: null,
 
-    /** api: property[mapPanel]
-     *  A :class:`GeoExt.MapPanel` to which layers can be added via this grid.
+    /** config: config[mapPanel]
+     *  ``GeoExt.MapPanel``
+     *  Map panel to which layers can be added via this grid.
      */
     mapPanel : null,
 
-    /** api: property[url]
-     *  A :class:`String` containing an OWS URL to which the GetCapabilities 
-     *  request is sent.  Necessary if a store is not passed in as a 
-     *  configuration option.
+    /** api: config[url]
+     *  ``String``
+     *  The  OWS URL to which the GetCapabilities request is sent.  Necessary if
+     *  a store is not passed in as a configuration option.
      */
     url: null,
 
     autoExpandColumn: "title",
 
-    /** api: method[initComponent]
+    /** private: method[initComponent]
      *  Initializes the CapabilitiesGrid. Creates and loads a WMS Capabilities 
      *  store from the url property if one is not passed as a configuration 
      *  option. 

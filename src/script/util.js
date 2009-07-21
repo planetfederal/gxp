@@ -7,7 +7,7 @@ Ext.namespace("gxp");
 
 gxp.util = {
 
-    /** api: function(dispatch)
+    /** api: function[dispatch]
      *  :param functions: ``Array(Function)`` List of functions to be called.
      *      All functions will be called with two arguments - a callback to
      *      call when the sequence is done and a storage object.

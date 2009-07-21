@@ -12,6 +12,12 @@
  *  base_link = `Ext.Panel <http://extjs.com/deploy/dev/docs/?class=Ext.Panel>`_
  */
 Ext.namespace("gxp");
+
+/** api: constructor
+ *  .. class:: QueryPanel(config)
+ *   
+ *      Create a panel for assembling and issuing feature requests.
+ */
 gxp.QueryPanel = Ext.extend(Ext.Panel, {
 
     /** api: config[layerStore]
