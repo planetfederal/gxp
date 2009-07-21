@@ -24,9 +24,28 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
      */
     border: false,
     
+    /** api: config[imageFormats]
+     *  ``RegEx`` Regular expression used to test browser friendly formats for
+     *  GetMap requests.  The formats displayed will those from the record that
+     *  match this expression.  Default is ``/png|gif|jpe?g/i``.
+     */
+    imageFormats: /png|gif|jpe?g/i,
+    
     initComponent: function() {
+        
+        this.items = [
+            this.createAboutPanel(),
+            this.createDisplayPanel()
+        ];
 
-        this.items = [{
+        gxp.WMSLayerPanel.superclass.initComponent.call(this);
+    },
+    
+    /** private: createAboutPanel
+     *  Creates the about panel.
+     */
+    createAboutPanel: function() {
+        return {
             title: "About",
             defaults: {
                 border: false
@@ -65,25 +84,77 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                     readOnly: true
                 }]
             }]
-        }, {
-            title: "Display",
-            html: "Display properties"
-        }];
-        
-        this.addEvents(
-            /** api: event[change]
-             *  Fires when properties are updated.
-             *
-             *  Listener arguments:
-             *  * panel - :class:`gxp.WMSLayerPanel` This panel.
-             *  * layer - ``OpenLayers.Layer.WMS` The target layer.
-             */
-            "change"
-        ); 
-
-        gxp.WMSLayerPanel.superclass.initComponent.call(this);
-    }
+        };
+    },
     
+    /** private: createDisplayPanel
+     *  Creates the display panel.
+     */
+    createDisplayPanel: function() {
+        var record = this.layerRecord;
+        var layer = record.get("layer");
+        var opacity = layer.opacity;
+        if(opacity == null) {
+            opacity = 1;
+        }
+        var formats = [];
+        var currentFormat = layer.params["FORMAT"].toLowerCase();
+        Ext.each(this.layerRecord.get("formats"), function(format) {
+            if(this.imageFormats.test(format)) {
+                formats.push(format.toLowerCase());
+            }
+        }, this);
+        if(formats.indexOf(currentFormat) === -1) {
+            formats.push(currentFormat);
+        }
+        var transparent = (layer.params["TRANSPARENT"] === "true");
+        
+        return {
+            title: "Display",
+            layout: "form",
+            labelWidth: 70,
+            items: [{
+                xtype: "slider",
+                name: "opacity",
+                fieldLabel: "Opacity",
+                value: opacity * 100,
+                anchor: "99%",
+                isFormField: true,
+                listeners: {
+                    change: function(slider, value) {
+                        layer.setOpacity(value / 100);
+                    }
+                }
+            }, {
+                xtype: "combo",
+                fieldLabel: "Format",
+                store: formats,
+                value: currentFormat,
+                mode: "local",
+                triggerAction: "all",
+                editable: false,
+                anchor: "99%",
+                listeners: {
+                    select: function(combo) {
+                        layer.mergeNewParams({
+                            format: combo.getValue()
+                        });
+                    }
+                }
+            }, {
+                xtype: "checkbox",
+                fieldLabel: "Transparent",
+                checked: transparent,
+                listeners: {
+                    check: function(checkbox, checked) {
+                        layer.mergeNewParams({
+                            transparent: checked ? "true" : "false"
+                        });
+                    }
+                }
+            }]
+        };
+    }    
 
 });
 
