@@ -57,9 +57,9 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
     /** api: config[cls]
      *  ``String``
      *  The CSS class to be added to this panel's element (defaults to
-     *  'gxp-filterbuilder').
+     *  ``"gx-filterbuilder"``).
      */
-    cls: "gxp-filterbuilder",
+    cls: "gx-filterbuilder",
 
     /** private: property[builderType]
      */
@@ -353,10 +353,10 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
     addCondition: function(group) {
         var filter, type;
         if(group) {
-            type = "gxp_filterbuilder";
+            type = "gx_filterbuilder";
             filter = this.wrapFilter(this.createDefaultFilter());
         } else {
-            type = "gxp_filterpanel";
+            type = "gx_filterpanel";
             filter = this.createDefaultFilter();
         }
         var newChild = this.newRow({
@@ -473,7 +473,7 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
             grandchild = grandchildren[i];
             this.childFiltersPanel.add(this.newRow({
                 xtype: (grandchild instanceof OpenLayers.Filter.Logical) ?
-                    "gxp_filterbuilder" : "gxp_filterpanel",
+                    "gx_filterbuilder" : "gx_filterpanel",
                 filter: grandchild,
                 attributes: this.attributes,
                 listeners: {
@@ -584,5 +584,5 @@ gxp.FilterBuilder.ALL_OF = 1;
 gxp.FilterBuilder.NONE_OF = 2;
 gxp.FilterBuilder.NOT_ALL_OF = 3;
 
-/** api: xtype = gxp_filterbuilder */
-Ext.reg('gxp_filterbuilder', gxp.FilterBuilder); 
+/** api: xtype = gx_filterbuilder */
+Ext.reg('gx_filterbuilder', gxp.FilterBuilder); 

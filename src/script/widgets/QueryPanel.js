@@ -356,5 +356,5 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
 
 });
 
-/** api: xtype = gxp_querypanel */
-Ext.reg('gxp_querypanel', gxp.QueryPanel); 
+/** api: xtype = gx_querypanel */
+Ext.reg('gx_querypanel', gxp.QueryPanel); 

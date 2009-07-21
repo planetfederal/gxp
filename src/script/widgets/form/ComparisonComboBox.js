@@ -41,4 +41,4 @@ gxp.form.ComarisonComboBox = Ext.extend(Ext.form.ComboBox, {
     }
 });
 
-Ext.reg("gxp_comparisoncombo", gxp.form.ComarisonComboBox);
+Ext.reg("gx_comparisoncombo", gxp.form.ComarisonComboBox);

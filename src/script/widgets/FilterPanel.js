@@ -109,7 +109,7 @@ gxp.FilterPanel = Ext.extend(Ext.Panel, {
                 items: [this.attributesComboConfig]
             }, {
                 items: [{
-                    xtype: "gxp_comparisoncombo",
+                    xtype: "gx_comparisoncombo",
                     value: this.filter.type,
                     listeners: {
                         select: function(combo, record) {
@@ -139,4 +139,4 @@ gxp.FilterPanel = Ext.extend(Ext.Panel, {
 
 });
 
-Ext.reg('gxp_filterpanel', gxp.FilterPanel); 
+Ext.reg('gx_filterpanel', gxp.FilterPanel); 

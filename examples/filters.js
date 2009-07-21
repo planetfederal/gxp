@@ -55,7 +55,7 @@ Ext.onReady(function() {
         renderTo: "panel1",
         width: 370,
         items: [{
-            xtype: "gxp_filterbuilder",
+            xtype: "gx_filterbuilder",
             filter: filter.clone(),
             attributes: new gxp.data.AttributeStore({
                 url: "data/describe_feature_type.xml",
@@ -75,7 +75,7 @@ Ext.onReady(function() {
         renderTo: "panel2",
         width: 250,
         items: [{
-            xtype: "gxp_filterbuilder",
+            xtype: "gx_filterbuilder",
             allowGroups: false,
             filter: filter.clone(),
             attributes: new gxp.data.AttributeStore({
