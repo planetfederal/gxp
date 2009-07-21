@@ -61,11 +61,11 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
             });
         }
         if(this.layer) {
-            this.sm = new GeoExt.grid.FeatureSelectionModel({
+            this.sm = this.sm || new GeoExt.grid.FeatureSelectionModel({
                 layerFromStore: false,
                 layer: this.layer
             });
-            if(this.store instanceof GeoExt.data.LayerStore) {
+            if(this.store instanceof GeoExt.data.FeatureStore) {
                 this.store.bind(this.layer);
             }
         }
@@ -92,7 +92,7 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
      *  Sets the store for this grid, reconfiguring the column model
      */
     setStore: function(store) {
-        if(this.store instanceof GeoExt.data.LayerStore) {
+        if(this.store instanceof GeoExt.data.FeatureStore) {
             this.store.unbind();
         }
         if(this.layer) {
@@ -103,7 +103,7 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
     },
     
     /** private: method[createColumnModel]
-     *  :param store: ``GeoExt.data.LayerStore``
+     *  :param store: ``GeoExt.data.FeatureStore``
      *  :return: ``Ext.grid.ColumnModel``
      */
     createColumnModel: function(store) {
