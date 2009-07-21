@@ -54,18 +54,20 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
                 this.layer = new OpenLayers.Layer.Vector(this.id + "_layer");
                 this.map.addLayer(this.layer);
             }
-            if(this.layer) {
-                this.sm = new GeoExt.grid.FeatureSelectionModel({
-                    layerFromStore: false,
-                    layer: this.layer
-                });
-                this.store.bind(this.layer);
-            }
         } else {
             this.store = new Ext.data.Store();
             this.cm = new Ext.grid.ColumnModel({
                 columns: []
             });
+        }
+        if(this.layer) {
+            this.sm = new GeoExt.grid.FeatureSelectionModel({
+                layerFromStore: false,
+                layer: this.layer
+            });
+            if(this.store instanceof GeoExt.data.LayerStore) {
+                this.store.bind(this.layer);
+            }
         }
 
         gxp.grid.FeatureGrid.superclass.initComponent.call(this);       
@@ -90,7 +92,7 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
      *  Sets the store for this grid, reconfiguring the column model
      */
     setStore: function(store) {
-        if(this.store && this.store.unbind) {
+        if(this.store instanceof GeoExt.data.LayerStore) {
             this.store.unbind();
         }
         if(this.layer) {
