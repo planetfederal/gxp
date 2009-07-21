@@ -13,7 +13,14 @@
         <mkdir dir="${build}"/>
     </target>
     
-    <target name="doc" depends="init" description="build documentation">
+    <target name="parsedocs" description="parse docs source from scripts">
+        <echo>Parsing doc sources.</echo>
+        <exec executable="jst" failonerror="true">
+            <arg value="jst.cfg"/>
+        </exec>
+    </target>
+    
+    <target name="doc" depends="init, parsedocs" description="build documentation">
         <echo>Building docs.</echo>
         <exec executable="sphinx-build" failonerror="true">
             <arg line="-b html"/>
