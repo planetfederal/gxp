@@ -136,7 +136,7 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
         
         this.mapExtentField = new Ext.form.TextField({
             fieldLabel: "Current extent",
-            disabled: true,
+            readOnly: true,
             anchor: "95%",
             value: this.getFormattedMapExtent()
         });
