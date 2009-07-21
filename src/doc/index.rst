@@ -1,7 +1,7 @@
 .. _api-reference:
 
-GXP API Reference
-=================
+API Reference
+=============
 
 GXP components and data utility classes extend map related functionality to
 equivalent classes in Ext.  The API reference here documents the properties,
