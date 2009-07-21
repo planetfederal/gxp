@@ -10,7 +10,7 @@ var store;
 Ext.onReady(function() {
     
     // create a new attributes store
-    store = new gxp.data.AttributesStore({
+    store = new gxp.data.AttributeStore({
         url: "data/describe_feature_type.xml"
     });
     store.load();

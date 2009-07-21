@@ -73,11 +73,11 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
      */
     featureStore: null,
     
-    /** private: property[attributesStore]
+    /** private: property[attributeStore]
      *  ``gxp.data.AttributeStore``
      *  The attributes associated with the currently selected layer.
      */
-    attributesStore: null,
+    attributeStore: null,
 
     /** private: property[geometryName]
      *  ``String``
@@ -219,7 +219,7 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
             owner.remove(this.filterBuilder, true);
         }
 
-        this.attributesStore = new gxp.data.AttributesStore({
+        this.attributeStore = new gxp.data.AttributeStore({
             url: record.get("schema"),
             listeners: {
                 load: function(store) {
@@ -237,7 +237,7 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
         });
 
         this.filterBuilder = new gxp.FilterBuilder({
-            attributes: this.attributesStore,
+            attributes: this.attributeStore,
             allowGroups: false
         });
         
@@ -286,7 +286,7 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
      *
      *  Given a feature attribute type, return an Ext field type if possible.
      *  
-     *  TODO: this should go elsewhere (AttributesReader)
+     *  TODO: this should go elsewhere (AttributeReader)
      */
     getFieldType: function(attrType) {
         return ({
@@ -303,7 +303,7 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
         if (this.fireEvent("beforequery", this) !== false) {
         
             var fields = [];
-            this.attributesStore.each(function(record) {
+            this.attributeStore.each(function(record) {
                 fields.push({
                     name: record.get("name"),
                     type: this.getFieldType(record.get("type"))

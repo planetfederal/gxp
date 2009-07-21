@@ -8,13 +8,13 @@
 
 /** api: (define)
  *  module = gxp.data
- *  class = AttributesReader
+ *  class = AttributeReader
  *  base_link = `Ext.data.DataReader <http://extjs.com/deploy/dev/docs/?class=Ext.data.DataReader>`_
  */
 Ext.namespace("gxp.data");
 
 /** api: constructor
- *  .. class:: AttributesReader(meta, recordType)
+ *  .. class:: AttributeReader(meta, recordType)
  *  
  *      :arg meta: ``Object`` Reader configuration.
  *      :arg recordType: ``Array or Ext.data.Record`` An array of field
@@ -30,17 +30,17 @@ Ext.namespace("gxp.data");
  *      * ignore - ``Object`` Properties of the ignore object should be field names.
  *        Values are either arrays or regular expressions.
  */
-gxp.data.AttributesReader = function(meta, recordType) {
+gxp.data.AttributeReader = function(meta, recordType) {
     meta = meta || {};
     if(!meta.format) {
         meta.format = new OpenLayers.Format.WFSDescribeFeatureType();
     }
-    gxp.data.AttributesReader.superclass.constructor.call(
+    gxp.data.AttributeReader.superclass.constructor.call(
         this, meta, recordType || meta.fields
     );
 };
 
-Ext.extend(gxp.data.AttributesReader, Ext.data.DataReader, {
+Ext.extend(gxp.data.AttributeReader, Ext.data.DataReader, {
 
     /** private: method[read]
      *  :arg request: ``Object`` The XHR object that contains the parsed doc.

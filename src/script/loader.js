@@ -2,8 +2,8 @@
 
     var jsfiles = new Array(
         "util.js",
-        "data/AttributesReader.js",
-        "data/AttributesStore.js",
+        "data/AttributeReader.js",
+        "data/AttributeStore.js",
         "widgets/FilterPanel.js",
         "widgets/FilterBuilder.js",
         "widgets/QueryPanel.js",

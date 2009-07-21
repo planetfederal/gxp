@@ -7,22 +7,22 @@
  */
 
 /**
- * @include data/AttributesReader.js
+ * @include data/AttributeReader.js
  */
 
 /** api: (define)
  *  module = gxp.data
- *  class = AttributesStore
+ *  class = AttributeStore
  *  base_link = `Ext.data.DataStore <http://extjs.com/deploy/dev/docs/?class=Ext.data.DataStore>`_
  */
 Ext.namespace("gxp.data");
 
 /** api: constructor
- *  .. class:: AttributesStore(config)
+ *  .. class:: AttributeStore(config)
  *  
  *      Small helper class to make creating stores for remotely-loaded attributes
- *      data easier. AttributesStore is pre-configured with a built-in
- *      ``Ext.data.HttpProxy`` and :class:`gxp.data.AttributesReader`.  The
+ *      data easier. AttributeStore is pre-configured with a built-in
+ *      ``Ext.data.HttpProxy`` and :class:`gxp.data.AttributeReader`.  The
  *      HttpProxy is configured to allow caching (disableCaching: false) and
  *      uses GET. If you require some other proxy/reader combination then you'll
  *      have to configure this with your own proxy or create a basic
@@ -42,18 +42,18 @@ Ext.namespace("gxp.data");
  *  ``Ext.data.Record.create``, or a record constructor created using
  *  ``Ext.data.Record.create``.  Defaults to ``["name", "type"]``. 
  */
-gxp.data.AttributesStore = function(c) {
-    gxp.data.AttributesStore.superclass.constructor.call(
+gxp.data.AttributeStore = function(c) {
+    gxp.data.AttributeStore.superclass.constructor.call(
         this,
         Ext.apply(c, {
             proxy: c.proxy || (!c.data ?
                 new Ext.data.HttpProxy({url: c.url, disableCaching: false, method: "GET"}) :
                 undefined
             ),
-            reader: new gxp.data.AttributesReader(
+            reader: new gxp.data.AttributeReader(
                 c, c.fields || ["name", "type"]
             )
         })
     );
 };
-Ext.extend(gxp.data.AttributesStore, Ext.data.Store);
+Ext.extend(gxp.data.AttributeStore, Ext.data.Store);
