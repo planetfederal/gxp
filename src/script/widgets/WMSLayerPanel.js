@@ -61,7 +61,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                     listeners: {
                         change: function(field) {
                             this.layerRecord.set("title", field.getValue());
-                            this.layerRecord.store.commitChanges();
+                            this.layerRecord.commit();
                         },
                         scope: this
                     }
