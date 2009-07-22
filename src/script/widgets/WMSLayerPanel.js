@@ -61,6 +61,8 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                     listeners: {
                         change: function(field) {
                             this.layerRecord.set("title", field.getValue());
+                            //TODO revisit when discussion on
+                            // http://trac.geoext.org/ticket/110 is complete
                             this.layerRecord.commit();
                         },
                         scope: this
