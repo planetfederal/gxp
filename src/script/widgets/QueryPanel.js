@@ -194,6 +194,7 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
                 },
                 expand: function() {
                     this.attributeQuery = true;
+                    this.filterBuilder.ownerCt.doLayout();
                 },
                 scope: this
             }            
@@ -243,7 +244,6 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
         
         if (owner) {
             owner.add(this.filterBuilder);
-            owner.doLayout();
         }
         
     },
