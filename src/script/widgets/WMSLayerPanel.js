@@ -110,8 +110,9 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
         if(formats.indexOf(currentFormat) === -1) {
             formats.push(currentFormat);
         }
-        var transparent = (layer.params["TRANSPARENT"] === "true");
-        
+        var transparent = layer.params["TRANSPARENT"];
+        transparent = (transparent === "true" || transparent === true);
+
         return {
             title: "Display",
             layout: "form",
