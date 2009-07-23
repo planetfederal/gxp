@@ -37,7 +37,8 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                 listeners: {
                     "beforeedit": function() {
                         return this.editing;
-                    }
+                    },
+                    scope: this
                 }
             })
         ];
