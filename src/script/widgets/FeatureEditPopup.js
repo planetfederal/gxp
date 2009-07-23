@@ -21,6 +21,10 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
     editing: false,
     
     feature: null,
+        
+    grid: null,
+    
+    modifyControl: null,
     
     layout: "fit",
     
@@ -30,39 +34,97 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
         if(!this.title && feature.fid) {
             this.title = feature.fid;
         }
+        
+        this.editButton = new Ext.Button({
+            text: "Edit",
+            tooltip: "Make this feature editable",
+            handler: function() {
+                this.startEditing();
+            },
+            scope: this
+        });
+        
+        this.cancelButton = new Ext.Button({
+            text: "Cancel",
+            tooltip: "Stop editing, discard changes",
+            hidden: true,
+            handler: function() {
+                this.stopEditing();
+            },
+            scope: this
+        });
+        
+        this.grid = new Ext.grid.PropertyGrid({
+            source: feature.attributes,
+            listeners: {
+                "beforeedit": function() {
+                    return this.editing;
+                },
+                scope: this
+            }
+        });
 
         this.items = [
-            new Ext.grid.PropertyGrid({
-                source: feature.attributes,
-                listeners: {
-                    "beforeedit": function() {
-                        return this.editing;
-                    },
-                    scope: this
-                }
-            })
+            this.grid
         ];
-        var modifyControl = new OpenLayers.Control.ModifyFeature(feature.layer);
+
+        this.bbar = new Ext.Toolbar({
+            items: [
+                "->",
+                this.editButton,
+                this.cancelButton
+            ]
+        });
         
         gxp.FeatureEditPopup.superclass.initComponent.call(this);
         
         this.on({
             "show": function() {
                 if(this.editing) {
-                    feature.layer.map.addControl(modifyControl);
-                    modifyControl.selectFeature(feature);
+                    this.startEditing();
                 }
             },
             "close": function() {
-                if(this.editing) {
-                    modifyControl.unselectFeature(feature);
-                    feature.layer.map.removeControl(modifyControl);
-                    modifyControl.selectControl.select(feature);
-                    modifyControl.destroy();
-                }
+                this.stopEditing();
             },
             scope: this
         });
+    },
+    
+    startEditing: function() {
+        if(!this.editing) {
+            this.editing = true;
 
+            this.editButton.hide();
+            this.cancelButton.show();
+            
+            this.geometry = this.feature.geometry.clone();
+            this.attributes = Ext.apply({}, this.feature.attributes);
+
+            this.modifyControl = new OpenLayers.Control.ModifyFeature(
+                this.feature.layer);
+            this.feature.layer.map.addControl(this.modifyControl);
+            this.modifyControl.selectFeature(this.feature);
+        }
+    },
+    
+    stopEditing: function() {
+        if(this.editing) {
+            this.modifyControl.unselectFeature(this.feature);
+            this.feature.layer.map.removeControl(this.modifyControl);
+            this.modifyControl.destroy();
+            
+            var layer = this.feature.layer;
+            layer.drawFeature(this.feature, {display: "none"});
+            this.feature.geometry = this.geometry;
+            this.feature.attributes = this.attributes;
+            this.grid.setSource(this.feature.attributes);
+            layer.drawFeature(this.feature);
+
+            this.cancelButton.hide();
+            this.editButton.show();
+            
+            this.editing = false;
+        }
     }
 });
