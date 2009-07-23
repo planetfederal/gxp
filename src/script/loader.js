@@ -4,6 +4,7 @@
         "util.js",
         "data/AttributeReader.js",
         "data/AttributeStore.js",
+        "widgets/FeatureEditPopup.js",
         "widgets/FilterPanel.js",
         "widgets/FilterBuilder.js",
         "widgets/QueryPanel.js",
