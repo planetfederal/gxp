@@ -244,6 +244,9 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
         
         if (owner) {
             owner.add(this.filterBuilder);
+            if(!owner.collapsed) {
+                owner.doLayout();
+            }
         }
         
     },
