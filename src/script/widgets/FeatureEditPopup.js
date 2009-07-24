@@ -30,7 +30,6 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
     
     /** private config overrides **/
     layout: "fit",
-    border: false,
 
     /** api: config[feature]
      *  ``OpenLayers.Feature.Vector`` The feature to edit and display.
@@ -103,6 +102,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
         this.editButton = new Ext.Button({
             text: this.editButtonText,
             tooltip: this.editButtonTooltip,
+            iconCls: "edit",
             handler: function() {
                 this.startEditing();
             },
@@ -112,6 +112,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
         this.cancelButton = new Ext.Button({
             text: this.cancelButtonText,
             tooltip: this.cancelButtonTooltip,
+            iconCls: "cancel",
             hidden: true,
             handler: function() {
                 this.stopEditing(false);
@@ -122,6 +123,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
         this.saveButton = new Ext.Button({
             text: this.saveButtonText,
             tooltip: this.saveButtonTooltip,
+            iconCls: "save",
             hidden: true,
             handler: function() {
                 this.stopEditing(true);
@@ -130,6 +132,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
         });
         
         this.grid = new Ext.grid.PropertyGrid({
+            border: false,
             source: feature.attributes,
             listeners: {
                 "beforeedit": function() {
@@ -149,7 +152,6 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
         this.bbar = new Ext.Toolbar({
             items: [
                 this.saveButton,
-                "->",
                 this.editButton,
                 this.cancelButton
             ]
@@ -179,7 +181,8 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                             }
                         },
                         scope: this,
-                        icon: Ext.MessageBox.QUESTION
+                        icon: Ext.MessageBox.QUESTION,
+                        animEl: this.getEl()
                     });
                     return false;
                 } else {

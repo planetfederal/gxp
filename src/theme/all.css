@@ -7,6 +7,18 @@
     background-image: url(img/delete.png);
 }
 
+.x-btn .save {
+    background-image: url(img/accept.png);
+}
+
+.x-btn .cancel {
+    background-image: url(img/decline.png);
+}
+
+.x-btn .edit {
+    background-image: url(img/pencil.png);
+}
+
 .gx-filterbuilder .x-toolbar {
     background: transparent;
     border: none !important;
