@@ -18,17 +18,82 @@
 Ext.namespace("gxp");
 gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
     
+    /** i18n **/
+    closeMsgTitle: 'Save Changes?',
+    closeMsg: 'This feature has unsaved changes. Would you like to save your changes?',
+    editButtonText: 'Edit',
+    editButtonTooltip: 'Make this feature editable',
+    cancelButtonText: 'Cancel',
+    cancelButtonTooltip: 'Stop editing, discard changes',
+    saveButtonText: 'Save',
+    saveButtonTooltip: 'Save changes',
+    
+    /** private config overrides **/
+    layout: "fit",
+    border: false,
+
+    /** api: config[feature]
+     *  ``OpenLayers.Feature.Vector`` The feature to edit and display.
+     */
+        
+    /** private: property[editing]
+     *  ``Boolean`` If we are in editing mode, this will be true.
+     */
     editing: false,
     
-    feature: null,
-        
+    /** private: property[grid]
+     *  ``Ext.grid.PropertyGrid``
+     */
     grid: null,
     
+    /** private: property[modifyControl]
+     *  ``OpenLayers.Control.ModifyFeature`` If in editing mode, we will have
+     *  this control for editing the geometry.
+     */
     modifyControl: null,
     
-    layout: "fit",
+    /** private: property[geometry]
+     *  ``OpenLayers.Geometry`` The original geometry of the feature we are
+     *  editing.
+     */
+    geometry: null,
     
+    /** private: property[attributes]
+     *  ``Object`` The original attributes of the feature we are editing.
+     */
+    attributes: null,
+    
+    /** private: property[cancelButton]
+     *  ``Ext.Button``
+     */
+    cancelButton: null,
+    
+    /** private: property[saveButton]
+     *  ``Ext.Button``
+     */
+    saveButton: null,
+    
+    /** private: property[editButton]
+     *  ``Ext.Button``
+     */
+    editButton: null,
+    
+    
+    /** private: method[initComponent]
+     */
     initComponent: function() {
+        this.addEvents(
+            /** api: events[featuremodified]
+             *  Fires when the feature associated witht this popup has been
+             *  modified (i.e. when the user clicks "Save" on the popup).
+             *
+             *  Listener arguments:
+             *  * panel - :class:`gxp.FeatureEditPopup` This popup.
+             *  * feature - ``OpenLayers.Feature`` The modified feature.
+             */
+            "featuremodified"
+        );
+        
         var feature = this.feature;
         
         if(!this.title && feature.fid) {
@@ -36,8 +101,8 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
         }
         
         this.editButton = new Ext.Button({
-            text: "Edit",
-            tooltip: "Make this feature editable",
+            text: this.editButtonText,
+            tooltip: this.editButtonTooltip,
             handler: function() {
                 this.startEditing();
             },
@@ -45,11 +110,21 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
         });
         
         this.cancelButton = new Ext.Button({
-            text: "Cancel",
-            tooltip: "Stop editing, discard changes",
+            text: this.cancelButtonText,
+            tooltip: this.cancelButtonTooltip,
             hidden: true,
             handler: function() {
-                this.stopEditing();
+                this.stopEditing(false);
+            },
+            scope: this
+        });
+        
+        this.saveButton = new Ext.Button({
+            text: this.saveButtonText,
+            tooltip: this.saveButtonTooltip,
+            hidden: true,
+            handler: function() {
+                this.stopEditing(true);
             },
             scope: this
         });
@@ -59,6 +134,9 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             listeners: {
                 "beforeedit": function() {
                     return this.editing;
+                },
+                "propertychange": function() {
+                    this.feature.state = OpenLayers.State.UPDATE;
                 },
                 scope: this
             }
@@ -70,6 +148,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
 
         this.bbar = new Ext.Toolbar({
             items: [
+                this.saveButton,
                 "->",
                 this.editButton,
                 this.cancelButton
@@ -84,18 +163,42 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                     this.startEditing();
                 }
             },
-            "close": function() {
-                this.stopEditing();
+            "beforeclose": function() {
+                if(!this.editing) {
+                    return;
+                }
+                if(this.feature.state === OpenLayers.State.UPDATE) {
+                    Ext.Msg.show({
+                        title: this.closeMsgTitle,
+                        msg: this.closeMsg,
+                        buttons: Ext.Msg.YESNOCANCEL,
+                        fn: function(button) {
+                            if(button && button !== "cancel") {
+                                this.stopEditing(button === "yes");
+                                this.close();
+                            }
+                        },
+                        scope: this,
+                        icon: Ext.MessageBox.QUESTION
+                    });
+                    return false;
+                } else {
+                    this.stopEditing(false);
+                }
             },
             scope: this
         });
     },
     
+    /** private: method[startEditing]
+     */
     startEditing: function() {
         if(!this.editing) {
             this.editing = true;
+            this.anc && this.unanchorPopup();
 
             this.editButton.hide();
+            this.saveButton.show();
             this.cancelButton.show();
             
             this.geometry = this.feature.geometry.clone();
@@ -104,24 +207,45 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             this.modifyControl = new OpenLayers.Control.ModifyFeature(
                 this.feature.layer);
             this.feature.layer.map.addControl(this.modifyControl);
+            // we only activate the keyboard handler, not the whole control.
+            // otherwise the modifyControl's selectControl would interfer with
+            // other select controls that the application might have
+            //TODO handlers.keyboard is not an API property
+            this.modifyControl.handlers.keyboard.activate();
+            //TODO selectFeature is not an API method
             this.modifyControl.selectFeature(this.feature);
         }
     },
     
-    stopEditing: function() {
+    /** private: method[stopEditing]
+     *  :param save: ``Boolean`` If set to true, changes will be saved and the
+     *      ``featuremodified`` event will be fired.
+     */
+    stopEditing: function(save) {
         if(this.editing) {
+            //TODO unselectFeature is not an API method
             this.modifyControl.unselectFeature(this.feature);
+            //TODO handlers.keyboard is not an API property
+            this.modifyControl.handlers.keyboard.deactivate();
             this.feature.layer.map.removeControl(this.modifyControl);
             this.modifyControl.destroy();
             
-            var layer = this.feature.layer;
-            layer.drawFeature(this.feature, {display: "none"});
-            this.feature.geometry = this.geometry;
-            this.feature.attributes = this.attributes;
-            this.grid.setSource(this.feature.attributes);
-            layer.drawFeature(this.feature);
+            if(this.feature.state === OpenLayers.State.UPDATE) {
+                if(save === true) {
+                    this.fireEvent("featuremodified", this, this.feature);
+                } else {
+                    var layer = this.feature.layer;
+                    layer.drawFeature(this.feature, {display: "none"});
+                    this.feature.geometry = this.geometry;
+                    this.feature.attributes = this.attributes;
+                    this.feature.state = null;
+                    this.grid.setSource(this.feature.attributes);
+                    layer.drawFeature(this.feature);
+                }
+            }
 
             this.cancelButton.hide();
+            this.saveButton.hide();
             this.editButton.show();
             
             this.editing = false;
