@@ -207,15 +207,22 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             this.geometry = this.feature.geometry.clone();
             this.attributes = Ext.apply({}, this.feature.attributes);
 
+            //TODO When http://trac.openlayers.org/ticket/2199 is resolved,
+            // the 2 lines below can be replaced with
+            // this.modifyControl = new OpenLayers.Control.ModifyFeature(
+            //     this.feature.layer, {standalone: true});
             this.modifyControl = new OpenLayers.Control.ModifyFeature(
                 this.feature.layer);
             this.feature.layer.map.addControl(this.modifyControl);
-            // we only activate the keyboard handler, not the whole control.
-            // otherwise the modifyControl's selectControl would interfer with
-            // other select controls that the application might have
-            //TODO handlers.keyboard is not an API property
+            //TODO handlers.keyboard is not an API property. When
+            // http://trac.openlayers.org/ticket/2199 is resolved, the line
+            // below can be replaced with
+            // this.modifyControl.activate();
+            // For now, we only activate the keyboard handler, not the whole
+            // control. Otherwise the modifyControl's selectControl would
+            // interfer with other select controls that the application might
+            // have
             this.modifyControl.handlers.keyboard.activate();
-            //TODO selectFeature is not an API method
             this.modifyControl.selectFeature(this.feature);
         }
     },
@@ -226,9 +233,11 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
      */
     stopEditing: function(save) {
         if(this.editing) {
-            //TODO unselectFeature is not an API method
             this.modifyControl.unselectFeature(this.feature);
-            //TODO handlers.keyboard is not an API property
+            //TODO handlers.keyboard is not an API property. When
+            // http://trac.openlayers.org/ticket/2199 is resolved, the line
+            // below can be replaced with
+            // this.modifyControl.deactivate();
             this.modifyControl.handlers.keyboard.deactivate();
             this.feature.layer.map.removeControl(this.modifyControl);
             this.modifyControl.destroy();
