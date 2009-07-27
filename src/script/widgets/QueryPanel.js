@@ -317,17 +317,14 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
             
             this.featureStore = new GeoExt.data.FeatureStore({
                 fields: fields,
-                proxy: new GeoExt.data.ProtocolProxy({
-                    protocol: new OpenLayers.Protocol.WFS({
-                        version: "1.1.0",
-                        srsName: this.map.getProjection(),
-                        url: this.selectedLayer.get("url"),
-                        featureType: layer.get("name"),
-                        featureNS :  layer.get("namespace"),
-                        geometryName: this.geometryName,
-                        schema: layer.get("schema"),
-                        filter: this.getFilter()
-                    })
+                proxy: new gxp.data.WFSProtocolProxy({
+                    srsName: this.map.getProjection(),
+                    url: this.selectedLayer.get("url"),
+                    featureType: layer.get("name"),
+                    featureNS :  layer.get("namespace"),
+                    geometryName: this.geometryName,
+                    schema: layer.get("schema"),
+                    filter: this.getFilter()
                 }),
                 autoLoad: true,
                 listeners: {
