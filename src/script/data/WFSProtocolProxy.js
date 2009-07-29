@@ -99,7 +99,7 @@ gxp.data.WFSProtocolProxy = Ext.extend(GeoExt.data.ProtocolProxy, {
                 action: action,
                 records: records,
                 callback: callback,
-                scope: scope,
+                scope: scope
             };
 
             this.protocol.commit(features, {
