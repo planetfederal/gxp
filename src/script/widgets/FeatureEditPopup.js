@@ -230,6 +230,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
      */
     stopEditing: function(save) {
         if(this.editing) {
+            this.modifyControl.deactivate();
             this.modifyControl.destroy();
             
             if(this.feature.state === OpenLayers.State.UPDATE) {
