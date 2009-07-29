@@ -92,6 +92,17 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
         
         this.addEvents(
 
+            /** api: events[beforelayerchange]
+             *  Fires before a new layer is selected.  Return false to stop the
+             *  layer selection from changing.
+             *
+             *  Listener arguments:
+             *  * panel - :class:`gxp.QueryPanel` This query panel.
+             *  * record - ``Ext.data.Record`` Record representing the newly
+             *      selected layer.
+             */
+            "beforelayerchange",
+
             /** api: events[layerchange]
              *  Fires when a new layer is selected.
              *
@@ -109,7 +120,7 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
              *  Listener arguments:
              *  * panel - :class:`gxp.QueryPanel` This query panel.
              */
-            "query",
+            "beforequery",
 
             /** api: events[query]
              *  Fires when a query for features is issued.
@@ -160,6 +171,9 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
             editable: false,
             triggerAction: "all",
             listeners: {
+                beforeselect: function(combo, record, index) {
+                    return this.fireEvent("beforelayerchange", this, record);
+                },
                 select: function(combo, record, index) {
                     this.createFilterBuilder(record);
                 },
