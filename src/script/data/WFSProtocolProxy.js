@@ -13,37 +13,52 @@
  */
 Ext.namespace("gxp.data");
 
-gxp.data.WFSProtocolProxy = function(config) {
-    gxp.data.WFSProtocolProxy.superclass.constructor.call(this);
-    Ext.apply(this, config);
-    if(!this.protocol) {
-        this.protocol = new OpenLayers.Protocol.WFS({
-            version: this.version,
-            srsName: this.srsName,
-            url: this.url,
-            featureType: this.featureType,
-            featureNS :  this.featureNS,
-            geometryName: this.geometryName,
-            schema: this.schema,
-            filter: this.filter
-        });
-    }
-};
-
-/** api: constructor
- *  .. class:: WFSProtocolProxy
- *      A data proxy for use with ``OpenLayers.Protocol.WFS`` objects.
- *      
- *      This is mainly to extend Ext 3.0 functionality to the
- *      GeoExt.data.ProtocolProxy and the class should probably be removed
- *      when GeoExt supports data writers.
- */
-Ext.extend(gxp.data.WFSProtocolProxy, GeoExt.data.ProtocolProxy, {
-
-    /** api: config[version]
-     *  ``String`` WFS version.  Default is "1.1.0".
+gxp.data.WFSProtocolProxy = Ext.extend(GeoExt.data.ProtocolProxy, {
+    
+    /** api: constructor
+     *  .. class:: WFSProtocolProxy
+     *      A data proxy for use with ``OpenLayers.Protocol.WFS`` objects.
+     *      
+     *      This is mainly to extend Ext 3.0 functionality to the
+     *      GeoExt.data.ProtocolProxy.  This could be simplified by having
+     *      the ProtocolProxy support writers (implement doRequest).
      */
-    version: "1.1.0",
+    constructor: function(config) {
+
+        Ext.applyIf(config, {
+
+            /** api: config[version]
+             *  ``String``
+             *  WFS version.  Default is "1.1.0".
+             */
+            version: "1.1.0"
+
+            /** api: config[maxFeatures]
+             *  ``Number``
+             *  Optional limit for number of features requested in a read.  No
+             *  limit set by default.
+             */
+
+        });
+        
+        // create the protocol if none provided
+        if(!this.protocol) {
+            config.protocol = new OpenLayers.Protocol.WFS({
+                version: config.version,
+                srsName: config.srsName,
+                url: config.url,
+                featureType: config.featureType,
+                featureNS :  config.featureNS,
+                geometryName: config.geometryName,
+                schema: config.schema,
+                filter: config.filter,
+                maxFeatures: config.maxFeatures
+            });
+        }
+
+        gxp.data.WFSProtocolProxy.superclass.constructor.apply(this, arguments);
+    },
+
 
     /** private: method[doRequest]
      *  :arg action: ``String`` The crud action type (create, read, update,
@@ -63,6 +78,10 @@ Ext.extend(gxp.data.WFSProtocolProxy, GeoExt.data.ProtocolProxy, {
      */
     doRequest: function(action, records, params, reader, callback, scope, arg) {
         
+        // remove the xaction param tagged on because we're using a single url
+        // for all actions
+        delete params.xaction;
+        
         if (action === Ext.data.Api.actions.read) {
             this.load(params, reader, callback, scope, arg);
         } else {
@@ -74,6 +93,7 @@ Ext.extend(gxp.data.WFSProtocolProxy, GeoExt.data.ProtocolProxy, {
             Ext.each(records, function(r, i) {
                 features[i] = r.get("feature");
             }, this);
+
             
             var o = {
                 action: action,
@@ -83,31 +103,67 @@ Ext.extend(gxp.data.WFSProtocolProxy, GeoExt.data.ProtocolProxy, {
             };
 
             this.protocol.commit(features, {
-                callback: this.commitResponse.createDelegate(this, [o], 0),
+                callback: function(response) {
+                    this.onProtocolCommit(response, o);
+                },
                 scope: this
             });
         }
         
     },
     
-    commitResponse: function(o, response) {
-        
+    
+    /** private: method[onCommit]
+     *  Callback for the protocol.commit method.  Called with an additional
+     *  object containing references to arguments to the doRequest method.
+     */
+    onProtocolCommit: function(response, o) {        
         if(response.success()) {
-            if(o.callback) {
-                o.callback.call(
-                    o.scope
-                ); // TODO: determine what args are needed here
+            var features = response.reqFeatures;
+            // deal with inserts, updates, and deletes
+            var state, feature;
+            var destroys = [];
+            var insertIds = response.insertIds || [];
+            var j = 0;
+            for(var i=0, len=features.length; i<len; ++i) {
+                feature = features[i];
+                state = feature.state;
+                /**
+                 * TODO: Determine why state is null here.
+                 */
+                if(state) {
+                    if(state == OpenLayers.State.DELETE) {
+                        destroys.push(feature);
+                    } else if(state == OpenLayers.State.INSERT) {
+                        feature.fid = insertIds[j];
+                        ++j;
+                    }
+                    feature.state = null;
+                }
             }
+            // TODO: deal with destroys - may be handled by doRequest callback
+            
+            /**
+             * TODO: Update the FeatureStore to work with callbacks from 3.0.
+             * 
+             * The callback here is the result of store.createCallback.  The
+             * signature should be what is expected by the anonymous function
+             * created in store.createCallback: (data, response, success).
+             *
+             * If the server returns data that is different than what we've
+             * got, we need to implement extractValues on the FeatureReader.
+             */
+            var data = new Array(o.records.length);
+            Ext.each(o.records, function(r, i) {
+                data[i] = r.data;
+            });
+            o.callback.call(o.scope, data, response.priv, true);
         } else {
             // TODO: determine from response if exception was "response" or "remote"
             this.fireEvent("exception", this, "response", o.action, o, response);
-            o.callback.call(
-                o.request.scope
-            ); // TODO: determine what args are needed here
+            o.callback.call(o.scope, [], response.priv, false);
         }
         
     }
-    
-
 
 });

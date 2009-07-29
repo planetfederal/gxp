@@ -30,6 +30,13 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
     
     /** private config overrides **/
     layout: "fit",
+    
+    /** api: config[featureStore]
+     *  ``GeoExt.data.FeatureStore``
+     *  Optional store that contains a reference to the feature.  If provided,
+     *  the appropriate record will be updated when the use clicks the save
+     *  button.
+     */
 
     /** api: config[feature]
      *  ``OpenLayers.Feature.Vector`` The feature to edit and display.
@@ -207,22 +214,12 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             this.geometry = this.feature.geometry.clone();
             this.attributes = Ext.apply({}, this.feature.attributes);
 
-            //TODO When http://trac.openlayers.org/ticket/2199 is resolved,
-            // the 2 lines below can be replaced with
-            // this.modifyControl = new OpenLayers.Control.ModifyFeature(
-            //     this.feature.layer, {standalone: true});
             this.modifyControl = new OpenLayers.Control.ModifyFeature(
-                this.feature.layer);
+                this.feature.layer,
+                {standalone: true}
+            );
             this.feature.layer.map.addControl(this.modifyControl);
-            //TODO handlers.keyboard is not an API property. When
-            // http://trac.openlayers.org/ticket/2199 is resolved, the line
-            // below can be replaced with
-            // this.modifyControl.activate();
-            // For now, we only activate the keyboard handler, not the whole
-            // control. Otherwise the modifyControl's selectControl would
-            // interfer with other select controls that the application might
-            // have
-            this.modifyControl.handlers.keyboard.activate();
+            this.modifyControl.activate();
             this.modifyControl.selectFeature(this.feature);
         }
     },
@@ -233,17 +230,33 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
      */
     stopEditing: function(save) {
         if(this.editing) {
-            this.modifyControl.unselectFeature(this.feature);
-            //TODO handlers.keyboard is not an API property. When
-            // http://trac.openlayers.org/ticket/2199 is resolved, the line
-            // below can be replaced with
-            // this.modifyControl.deactivate();
-            this.modifyControl.handlers.keyboard.deactivate();
-            this.feature.layer.map.removeControl(this.modifyControl);
             this.modifyControl.destroy();
             
             if(this.feature.state === OpenLayers.State.UPDATE) {
                 if(save === true) {
+                    if(this.featureStore) {
+                        var index = this.featureStore.findBy(function(r) {
+                            return r.get("feature") === this.feature;
+                        }, this);
+                        if(index > -1) {
+                            var record = this.featureStore.getAt(index);
+                            /**
+                             * TODO: remove the _updating flag when
+                             * http://trac.geoext.org/ticket/132 is closed.
+                             */
+                            this.featureStore._updating = true;
+                            record.beginEdit();
+                            for(var key in this.feature.attributes) {
+                                record.set(key, this.feature.attributes[key]);
+                            }
+                            record.endEdit();
+                            /**
+                             * TODO: remove the _updating flag when
+                             * http://trac.geoext.org/ticket/132 is closed.
+                             */
+                            delete this.featureStore._updating;
+                        }
+                    }
                     this.fireEvent("featuremodified", this, this.feature);
                 } else {
                     var layer = this.feature.layer;

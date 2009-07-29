@@ -315,17 +315,15 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
             
             var layer = this.selectedLayer;
             
-            this.featureStore = new GeoExt.data.FeatureStore({
+            this.featureStore = new gxp.data.WFSFeatureStore({
                 fields: fields,
-                proxy: new gxp.data.WFSProtocolProxy({
-                    srsName: this.map.getProjection(),
-                    url: this.selectedLayer.get("url"),
-                    featureType: layer.get("name"),
-                    featureNS :  layer.get("namespace"),
-                    geometryName: this.geometryName,
-                    schema: layer.get("schema"),
-                    filter: this.getFilter()
-                }),
+                srsName: this.map.getProjection(),
+                url: this.selectedLayer.get("url"),
+                featureType: layer.get("name"),
+                featureNS:  layer.get("namespace"),
+                geometryName: this.geometryName,
+                schema: layer.get("schema"),
+                ogcFilter: this.getFilter(),
                 autoLoad: true,
                 listeners: {
                     load: function(store, records, options) {
