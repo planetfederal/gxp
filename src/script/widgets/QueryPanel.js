@@ -232,7 +232,8 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
                         }
                         return !match;
                     }, this);
-                }
+                },
+                scope: this
             },
             autoLoad: true
         });
