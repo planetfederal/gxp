@@ -326,6 +326,7 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
                 schema: layer.get("schema"),
                 ogcFilter: this.getFilter(),
                 autoLoad: true,
+                autoSave: false,
                 listeners: {
                     load: function(store, records, options) {
                         this.fireEvent("storeload", this, store, records, options);
