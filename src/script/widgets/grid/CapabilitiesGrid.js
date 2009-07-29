@@ -93,8 +93,8 @@ gxp.grid.CapabilitiesGrid = Ext.extend(Ext.grid.GridPanel, {
             record = records[i].copy(Ext.data.Record.AUTO_ID);
 
             layer = record.get("layer").clone();
-            record.set("layer", null); //need to do this because record.set compares String(value) to determine equality (dumb)
-            record.set("layer", layer);
+            record.data["layer"] = layer;
+            record.commit(true);
 
             /*
              * TODO: deal with srs and maxExtent
