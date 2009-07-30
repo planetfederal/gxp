@@ -25,7 +25,13 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
      *  A store with records representing each WFS layer to be queried. Records
      *  must have ``title``, ``name`` (feature type), ``namespace`` (namespace
      *  URI), ``url`` (wfs url), and ``schema`` (schema url) fields.
-     */    
+     */
+    
+    /** api: config[maxFeatures]
+     *  ``Number``
+     *  Optional limit for number of features requested in a query.  No limit
+     *  set by default.
+     */
     
     /** api: config[layout]
      *  ``String``
@@ -47,11 +53,6 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
     /** api: config[attributeQuery]
      *  ``Boolean``
      *  Initial state of "query by attribute" checkbox.  Default is false.
-     *  
-     *  TODO: If false, the filter builder is not rendered until the fieldset
-     *  is collapsed.  An Ext bug keeps the combos from propertly rendering when
-     *  this happens.  If we are going to support attributeQuery false in the
-     *  config, this needs to be addressed.
      */
     
     /** api: property[attributeQuery]
@@ -338,6 +339,7 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
                 featureNS:  layer.get("namespace"),
                 geometryName: this.geometryName,
                 schema: layer.get("schema"),
+                maxFeatures: this.maxFeatures,
                 ogcFilter: this.getFilter(),
                 autoLoad: true,
                 autoSave: false,
