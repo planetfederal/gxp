@@ -170,10 +170,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                     return this.editing;
                 },
                 "propertychange": function() {
-                    this.feature.state = OpenLayers.State.UPDATE;
-                    this.feature.layer.events.triggerEvent("featuremodified", {
-                        feature: this.feature
-                    });
+                    this.setFeatureState(OpenLayers.State.UPDATE);
                 },
                 scope: this
             }
@@ -270,7 +267,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                     layer.drawFeature(this.feature, {display: "none"});
                     this.feature.geometry = this.geometry;
                     this.feature.attributes = this.attributes;
-                    this.feature.state = null;
+                    this.setFeatureState(null);
                     this.grid.setSource(this.feature.attributes);
                     layer.drawFeature(this.feature);
                 }
@@ -292,10 +289,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             buttons: Ext.Msg.YESNO,
             fn: function(button) {
                 if(button === "yes") {
-                    this.feature.state = OpenLayers.State.DELETE;
-                    this.feature.layer.events.triggerEvent("featuremodified", {
-                        feature: this.feature
-                    });
+                    this.setFeatureState(OpenLayers.State.DELETE);
                     this.fireEvent("featuremodified", this, this.feature);
                     this.close();
                 }
@@ -303,6 +297,18 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             scope: this,
             icon: Ext.MessageBox.QUESTION,
             animEl: this.getEl()
+        });
+    },
+    
+    /** private: method[setFeatureState]
+     *  Set the state of this popup's feature and trigger a featuremodified
+     *  event on the feature's layer.
+     */
+    setFeatureState: function(state) {
+        this.feature.state = state;
+        var layer = this.feature.layer;
+        layer && layer.events.triggerEvent("featuremodified", {
+            feature: this.feature
         });
     }
 });
