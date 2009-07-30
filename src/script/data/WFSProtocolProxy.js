@@ -141,7 +141,12 @@ gxp.data.WFSProtocolProxy = Ext.extend(GeoExt.data.ProtocolProxy, {
                     feature.state = null;
                 }
             }
-            // TODO: deal with destroys - may be handled by doRequest callback
+            
+            var feature;
+            for(var i=0, len=destroys.length; i<len; ++i) {
+                feature = destroys[i];
+                feature.layer && feature.layer.destroyFeatures([feature]);
+            }
             
             /**
              * TODO: Update the FeatureStore to work with callbacks from 3.0.

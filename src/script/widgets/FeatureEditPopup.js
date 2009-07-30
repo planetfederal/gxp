@@ -21,8 +21,12 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
     /** i18n **/
     closeMsgTitle: 'Save Changes?',
     closeMsg: 'This feature has unsaved changes. Would you like to save your changes?',
+    deleteMsgTitle: 'Delete Feature?',
+    deleteMsg: 'Are you sure you want to delete this feature?',
     editButtonText: 'Edit',
     editButtonTooltip: 'Make this feature editable',
+    deleteButtonText: 'Delete',
+    deleteButtonTooltip: 'Delete this feature',
     cancelButtonText: 'Cancel',
     cancelButtonTooltip: 'Stop editing, discard changes',
     saveButtonText: 'Save',
@@ -31,16 +35,20 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
     /** private config overrides **/
     layout: "fit",
     
-    /** api: config[featureStore]
-     *  ``GeoExt.data.FeatureStore``
-     *  Optional store that contains a reference to the feature.  If provided,
-     *  the appropriate record will be updated when the use clicks the save
-     *  button.
-     */
-
     /** api: config[feature]
      *  ``OpenLayers.Feature.Vector`` The feature to edit and display.
      */
+    
+    /** api: property[feature]
+     *  ``OpenLayers.Feature.Vector`` The feature being edited/displayed.
+     */
+    feature: null,
+    
+    /** api: config[allowDelete]
+     *  ``Boolean`` Set to true to provide a Delete button for deleting the
+     *  feature. Default is false.
+     */
+    allowDelete: false,
         
     /** private: property[editing]
      *  ``Boolean`` If we are in editing mode, this will be true.
@@ -84,14 +92,19 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
      */
     editButton: null,
     
+    /** private: property[deleteButton]
+     *  ``Ext.Button``
+     */
+    deleteButton: null,
     
     /** private: method[initComponent]
      */
     initComponent: function() {
         this.addEvents(
             /** api: events[featuremodified]
-             *  Fires when the feature associated witht this popup has been
-             *  modified (i.e. when the user clicks "Save" on the popup).
+             *  Fires when the feature associated with this popup has been
+             *  modified (i.e. when the user clicks "Save" on the popup) or
+             *  deleted (i.e. when the user clicks "Delete" on the popup).
              *
              *  Listener arguments:
              *  * panel - :class:`gxp.FeatureEditPopup` This popup.
@@ -112,6 +125,17 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             iconCls: "edit",
             handler: function() {
                 this.startEditing();
+            },
+            scope: this
+        });
+        
+        this.deleteButton = new Ext.Button({
+            text: this.deleteButtonText,
+            tooltip: this.deleteButtonTooltip,
+            iconCls: "delete",
+            hidden: !this.allowDelete,
+            handler: function() {
+                this.deleteFeature();
             },
             scope: this
         });
@@ -147,6 +171,9 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                 },
                 "propertychange": function() {
                     this.feature.state = OpenLayers.State.UPDATE;
+                    this.feature.layer.events.triggerEvent("featuremodified", {
+                        feature: this.feature
+                    });
                 },
                 scope: this
             }
@@ -158,8 +185,9 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
 
         this.bbar = new Ext.Toolbar({
             items: [
-                this.saveButton,
                 this.editButton,
+                this.deleteButton,
+                this.saveButton,
                 this.cancelButton
             ]
         });
@@ -208,6 +236,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             this.anc && this.unanchorPopup();
 
             this.editButton.hide();
+            this.deleteButton.hide();
             this.saveButton.show();
             this.cancelButton.show();
             
@@ -235,29 +264,6 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             
             if(this.feature.state === OpenLayers.State.UPDATE) {
                 if(save === true) {
-                    if(this.featureStore) {
-                        var index = this.featureStore.findBy(function(r) {
-                            return r.get("feature") === this.feature;
-                        }, this);
-                        if(index > -1) {
-                            var record = this.featureStore.getAt(index);
-                            /**
-                             * TODO: remove the _updating flag when
-                             * http://trac.geoext.org/ticket/132 is closed.
-                             */
-                            this.featureStore._updating = true;
-                            record.beginEdit();
-                            for(var key in this.feature.attributes) {
-                                record.set(key, this.feature.attributes[key]);
-                            }
-                            record.endEdit();
-                            /**
-                             * TODO: remove the _updating flag when
-                             * http://trac.geoext.org/ticket/132 is closed.
-                             */
-                            delete this.featureStore._updating;
-                        }
-                    }
                     this.fireEvent("featuremodified", this, this.feature);
                 } else {
                     var layer = this.feature.layer;
@@ -273,8 +279,30 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             this.cancelButton.hide();
             this.saveButton.hide();
             this.editButton.show();
+            this.allowDelete && this.deleteButton.show();
             
             this.editing = false;
         }
+    },
+    
+    deleteFeature: function() {
+        Ext.Msg.show({
+            title: this.deleteMsgTitle,
+            msg: this.deleteMsg,
+            buttons: Ext.Msg.YESNO,
+            fn: function(button) {
+                if(button === "yes") {
+                    this.feature.state = OpenLayers.State.DELETE;
+                    this.feature.layer.events.triggerEvent("featuremodified", {
+                        feature: this.feature
+                    });
+                    this.fireEvent("featuremodified", this, this.feature);
+                    this.close();
+                }
+            },
+            scope: this,
+            icon: Ext.MessageBox.QUESTION,
+            animEl: this.getEl()
+        });
     }
 });
