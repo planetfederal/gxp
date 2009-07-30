@@ -6,6 +6,10 @@
  * of the license.
  */
 
+/**
+ * @include data/WFSProtocolProxy.js
+ */
+
 /** api: (define)
  *  module = gxp.data
  *  class = WFSFeatureStore
