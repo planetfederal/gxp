@@ -256,6 +256,8 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
      */
     stopEditing: function(save) {
         if(this.editing) {
+            //TODO remove the line below when
+            // http://trac.openlayers.org/ticket/2210 is fixed.
             this.modifyControl.deactivate();
             this.modifyControl.destroy();
             
