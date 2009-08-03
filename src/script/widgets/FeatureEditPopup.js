@@ -44,6 +44,13 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
      */
     feature: null,
     
+    /** api: config[schema]
+     *  :class:`gxp.data.AttributeStore` Optional. If provided, available
+     *  feature attributes will be determined from the schema instead of using
+     *  the attributes that the feature has currently set.
+     */
+    schema: null,
+    
     /** api: config[allowDelete]
      *  ``Boolean`` Set to true to provide a Delete button for deleting the
      *  feature. Default is false.
@@ -110,10 +117,55 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
              *  * panel - :class:`gxp.FeatureEditPopup` This popup.
              *  * feature - ``OpenLayers.Feature`` The modified feature.
              */
-            "featuremodified"
+            "featuremodified",
+            
+            /** api: events[canceledit]
+             *  Fires when the user exits the editing mode by pressing the
+             *  "Cancel" button or selecting "No" in the popup's close dialog.
+             *  
+             *  Listener arguments:
+             *  * panel - :class:`gxp.FeatureEditPopup` This popup.
+             *  * feature - ``OpenLayers.Feature`` The feature.
+             */
+            "canceledit"
         );
         
         var feature = this.feature;
+        
+        var customEditors = {};
+        if(this.schema) {
+            var attributes = {};
+            var name, type, value;
+            this.schema.data.each(function(r) {
+                type = r.get("type").split(":").pop();
+                name = r.get("name");
+                value = feature.attributes[name];
+                switch(type) {
+                    case "string":
+                        break;
+                    case "boolean":
+                        //TODO nodata handling for Boolean
+                        value = Boolean(value);
+                    default:
+                        // Ext.PropertyGrid determines the appropriate editor
+                        // with a typeof check. This means if we would set
+                        // value to Number(value) here, the value would be 0
+                        // (which we don't want for nodata values). If we
+                        // would set value to Number(value || undefined) we
+                        // would have NaN, which would look ugly in the
+                        // editor. So instead, we set a custom editor with a
+                        // plain NumberField.
+                        customEditors[name] = new Ext.grid.GridEditor(
+                            new Ext.form.NumberField({
+                                selectOnFocus: true,
+                                style: 'text-align:left;'
+                            })
+                        );
+                }
+                attributes[name] = value;
+            });
+            feature.attributes = attributes;
+        }
         
         if(!this.title && feature.fid) {
             this.title = feature.fid;
@@ -165,6 +217,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
         this.grid = new Ext.grid.PropertyGrid({
             border: false,
             source: feature.attributes,
+            customEditors: customEditors,
             listeners: {
                 "beforeedit": function() {
                     return this.editing;
@@ -272,6 +325,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                     this.setFeatureState(null);
                     this.grid.setSource(this.feature.attributes);
                     layer.drawFeature(this.feature);
+                    this.fireEvent("canceledit", this, this.feature);
                 }
             }
 
