@@ -74,11 +74,18 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
      */
     featureStore: null,
     
-    /** private: property[attributeStore]
-     *  ``gxp.data.AttributeStore``
+    /** api: property[attributeStore]
+     *  :class:`gxp.data.AttributeStore`
      *  The attributes associated with the currently selected layer.
      */
     attributeStore: null,
+    
+    /** api: property[geometryType]
+     *  ``String`` (Point|Line|Polygon|Curve|Surface) The geometry type of
+     *  features of the selected layer. If the layer has multiple geometry
+     *  fields, the type of the first geometry field will be returned.
+     */
+    geometryType: null,
 
     /** private: property[geometryName]
      *  ``String``
@@ -105,7 +112,8 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
             "beforelayerchange",
 
             /** api: events[layerchange]
-             *  Fires when a new layer is selected.
+             *  Fires when a new layer is selected, as soon as this panel's
+             *  ``attributesStore`` and ``geometryType`` attributes are set.
              *
              *  Listener arguments:
              *  * panel - :class:`gxp.QueryPanel` This query panel.
@@ -228,7 +236,6 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
      *  first geometry attribute found when the attribute store loads.
      */
     createFilterBuilder: function(record) {
-        this.fireEvent("layerchange", this, record);
         this.selectedLayer = record;
         var owner = this.filterBuilder && this.filterBuilder.ownerCt;
         if (owner) {
@@ -241,9 +248,11 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
                 load: function(store) {
                     this.geometryName = null;
                     store.filterBy(function(r) {
-                        var match = /gml:.*(Point|Line|Polygon|Curve|Surface).*/.test(r.get("type"));
+                        var match = /gml:.*(Point|Line|Polygon|Curve|Surface).*/.exec(r.get("type"));
                         if (match && !this.geometryName) {
                             this.geometryName = r.get("name");
+                            this.geometryType = match[1];
+                            this.fireEvent("layerchange", this, record);
                         }
                         return !match;
                     }, this);
