@@ -56,6 +56,11 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
      *  feature. Default is false.
      */
     allowDelete: false,
+    
+    /** api: config[editing]
+     *  ``Boolean`` Set to true to open the popup in editing mode.
+     *  Default is false.
+     */
         
     /** private: property[editing]
      *  ``Boolean`` If we are in editing mode, this will be true.
@@ -104,6 +109,11 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
      */
     deleteButton: null,
     
+    /** private: property[dirtyState]
+     *  ``String``
+     */
+    dirtyState: null,
+    
     /** private: method[initComponent]
      */
     initComponent: function() {
@@ -131,6 +141,11 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
         );
         
         var feature = this.feature;
+        
+        this.anchored = !this.editing;
+        
+        this.dirtyState = this.feature.state === OpenLayers.State.INSERT ?
+            this.feature.state : OpenLayers.State.UPDATE;
         
         var customEditors = {};
         if(this.schema) {
@@ -175,9 +190,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             text: this.editButtonText,
             tooltip: this.editButtonTooltip,
             iconCls: "edit",
-            handler: function() {
-                this.startEditing();
-            },
+            handler: this.startEditing,
             scope: this
         });
         
@@ -186,9 +199,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             tooltip: this.deleteButtonTooltip,
             iconCls: "delete",
             hidden: !this.allowDelete,
-            handler: function() {
-                this.deleteFeature();
-            },
+            handler: this.deleteFeature,
             scope: this
         });
         
@@ -223,7 +234,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                     return this.editing;
                 },
                 "propertychange": function() {
-                    this.setFeatureState(OpenLayers.State.UPDATE);
+                    this.setFeatureState(this.dirtyState);
                 },
                 scope: this
             }
@@ -247,6 +258,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
         this.on({
             "show": function() {
                 if(this.editing) {
+                    this.editing = null;
                     this.startEditing();
                 }
             },
@@ -254,7 +266,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                 if(!this.editing) {
                     return;
                 }
-                if(this.feature.state === OpenLayers.State.UPDATE) {
+                if(this.feature.state === this.dirtyState) {
                     Ext.Msg.show({
                         title: this.closeMsgTitle,
                         msg: this.closeMsg,
@@ -314,18 +326,23 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             this.modifyControl.deactivate();
             this.modifyControl.destroy();
             
-            if(this.feature.state === OpenLayers.State.UPDATE) {
+            var feature = this.feature;
+            if(feature.state === this.dirtyState) {
                 if(save === true) {
                     this.fireEvent("featuremodified", this, this.feature);
+                } else if(feature.state === OpenLayers.State.INSERT) {
+                    this.editing = false;
+                    feature.layer.destroyFeatures([feature]);
+                    this.close();
                 } else {
-                    var layer = this.feature.layer;
-                    layer.drawFeature(this.feature, {display: "none"});
-                    this.feature.geometry = this.geometry;
-                    this.feature.attributes = this.attributes;
+                    var layer = feature.layer;
+                    layer.drawFeature(feature, {display: "none"});
+                    feature.geometry = this.geometry;
+                    feature.attributes = this.attributes;
                     this.setFeatureState(null);
-                    this.grid.setSource(this.feature.attributes);
-                    layer.drawFeature(this.feature);
-                    this.fireEvent("canceledit", this, this.feature);
+                    this.grid.setSource(feature.attributes);
+                    layer.drawFeature(feature);
+                    this.fireEvent("canceledit", this, feature);
                 }
             }
 
