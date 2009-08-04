@@ -75,7 +75,7 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
     featureStore: null,
     
     /** api: property[attributeStore]
-     *  :class:`gxp.data.AttributeStore`
+     *  ``GeoExt.data.AttributeStore``
      *  The attributes associated with the currently selected layer.
      */
     attributeStore: null,
@@ -242,7 +242,7 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
             owner.remove(this.filterBuilder, true);
         }
 
-        this.attributeStore = new gxp.data.AttributeStore({
+        this.attributeStore = new GeoExt.data.AttributeStore({
             url: record.get("schema"),
             listeners: {
                 load: function(store) {

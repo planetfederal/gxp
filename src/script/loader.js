@@ -2,8 +2,6 @@
 
     var jsfiles = new Array(
         "util.js",
-        "data/AttributeReader.js",
-        "data/AttributeStore.js",
         "data/WFSFeatureStore.js",
         "data/WFSProtocolProxy.js",
         "widgets/FeatureEditPopup.js",

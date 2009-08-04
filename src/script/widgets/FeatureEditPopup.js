@@ -45,7 +45,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
     feature: null,
     
     /** api: config[schema]
-     *  :class:`gxp.data.AttributeStore` Optional. If provided, available
+     *  ``GeoExt.data.AttributeStore`` Optional. If provided, available
      *  feature attributes will be determined from the schema instead of using
      *  the attributes that the feature has currently set.
      */

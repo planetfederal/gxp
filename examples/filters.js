@@ -57,7 +57,7 @@ Ext.onReady(function() {
         items: [{
             xtype: "gx_filterbuilder",
             filter: filter.clone(),
-            attributes: new gxp.data.AttributeStore({
+            attributes: new GeoExt.data.AttributeStore({
                 url: "data/describe_feature_type.xml",
                 ignore: {name: "the_geom"}
             })
@@ -78,7 +78,7 @@ Ext.onReady(function() {
             xtype: "gx_filterbuilder",
             allowGroups: false,
             filter: filter.clone(),
-            attributes: new gxp.data.AttributeStore({
+            attributes: new GeoExt.data.AttributeStore({
                 url: "data/describe_feature_type.xml",
                 ignore: {name: "the_geom"}
             })

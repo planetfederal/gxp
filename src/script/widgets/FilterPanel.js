@@ -19,7 +19,7 @@ gxp.FilterPanel = Ext.extend(Ext.Panel, {
     
     /**
      * Property: attributes
-     * {gxp.data.AttributeStore} A configured attributes store for use in
+     * {GeoExt.data.AttributeStore} A configured attributes store for use in
      *     the filter property combo.
      */
     attributes: null,
@@ -42,7 +42,7 @@ gxp.FilterPanel = Ext.extend(Ext.Panel, {
             this.filter = this.createDefaultFilter();
         }
         if(!this.attributes) {
-            this.attributes = new gxp.data.AttributeStore();
+            this.attributes = new GeoExt.data.AttributeStore();
         }
 
         var defAttributesComboConfig = {
