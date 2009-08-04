@@ -258,9 +258,15 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
                 load: function(store) {
                     this.geometryName = null;
                     store.filterBy(function(r) {
+                        // TODO: To be more generic, we would look for GeometryPropertyType as well.
                         var match = /gml:.*(Point|Line|Polygon|Curve|Surface).*/.exec(r.get("type"));
                         if (match && !this.geometryName) {
                             this.geometryName = r.get("name");
+                            /**
+                             * TODO: Create a lookup for geometry types.  We need to handle multis.
+                             * Curve and Surface should be handled.
+                             * http://projects.opengeo.org/mmmtike/ticket/38
+                             */
                             this.geometryType = match[1];
                             this.fireEvent("layerchange", this, record);
                         }
