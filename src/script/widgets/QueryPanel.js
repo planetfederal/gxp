@@ -106,6 +106,7 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
              *
              *  Listener arguments:
              *  * panel - :class:`gxp.QueryPanel` This query panel.
+             *  * store - ``GeoExt.data.FeatureStore`` The feature store.
              */
             "ready",
 
@@ -367,7 +368,7 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
                 scope: this
             }
         });
-        this.fireEvent("ready", this);
+        this.fireEvent("ready", this, this.featureStore);
     },
     
     /** api: method[query]
