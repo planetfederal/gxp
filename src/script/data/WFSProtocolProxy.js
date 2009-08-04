@@ -15,6 +15,16 @@ Ext.namespace("gxp.data");
 
 gxp.data.WFSProtocolProxy = Ext.extend(GeoExt.data.ProtocolProxy, {
     
+    /** api: method[setFilter]
+     *  :arg filter: ``OpenLayers.Filter`` Filter to be set on the WFS protocol.
+     *  Does not trigger anything on the protocol (for now).
+     */
+    setFilter: function(filter) {
+        this.protocol.filter = filter;
+        // TODO: The protocol could use a setFilter method.
+        this.protocol.options.filter = filter;
+    },
+    
     /** api: constructor
      *  .. class:: WFSProtocolProxy
      *      A data proxy for use with ``OpenLayers.Protocol.WFS`` objects.

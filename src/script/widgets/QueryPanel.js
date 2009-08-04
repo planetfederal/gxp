@@ -99,6 +99,15 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
     initComponent: function() {
         
         this.addEvents(
+            
+            /** api: events[ready]
+             *  Fires when the panel is ready to issue queries (after the
+             *  internal attribute store has loaded).
+             *
+             *  Listener arguments:
+             *  * panel - :class:`gxp.QueryPanel` This query panel.
+             */
+            "ready",
 
             /** api: events[beforelayerchange]
              *  Fires before a new layer is selected.  Return false to stop the
@@ -256,6 +265,7 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
                         }
                         return !match;
                     }, this);
+                    this.createFeatureStore();
                 },
                 scope: this
             },
@@ -323,47 +333,55 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
         })[attrType];
     },
     
+    /** private: method[createFeatureStore]
+     *  Create the feature store for the selected layer.  Queries cannot be
+     *  issued until this store has been created.  This method is called
+     *  when the required attribute store loads.
+     */
+    createFeatureStore: function() {
+        var fields = [];
+        this.attributeStore.each(function(record) {
+            fields.push({
+                name: record.get("name"),
+                type: this.getFieldType(record.get("type"))
+            });
+        }, this);
+        
+        var layer = this.selectedLayer;
+        
+        this.featureStore = new gxp.data.WFSFeatureStore({
+            fields: fields,
+            srsName: this.map.getProjection(),
+            url: layer.get("url"),
+            featureType: layer.get("name"),
+            featureNS:  layer.get("namespace"),
+            geometryName: this.geometryName,
+            schema: layer.get("schema"),
+            maxFeatures: this.maxFeatures,
+            autoLoad: false,
+            autoSave: false,
+            listeners: {
+                load: function(store, records, options) {
+                    this.fireEvent("storeload", this, store, records, options);
+                },
+                scope: this
+            }
+        });
+        this.fireEvent("ready", this);
+    },
+    
     /** api: method[query]
-     *  Issue a request for features.
+     *  Issue a request for features.  Should not be called until the "ready"
+     *  event has fired.  If called before ready, no query will be issued.
      */
     query: function() {
-        
-        if (this.fireEvent("beforequery", this) !== false) {
-        
-            var fields = [];
-            this.attributeStore.each(function(record) {
-                fields.push({
-                    name: record.get("name"),
-                    type: this.getFieldType(record.get("type"))
-                });
-            }, this);
-            
-            var layer = this.selectedLayer;
-            
-            this.featureStore = new gxp.data.WFSFeatureStore({
-                fields: fields,
-                srsName: this.map.getProjection(),
-                url: this.selectedLayer.get("url"),
-                featureType: layer.get("name"),
-                featureNS:  layer.get("namespace"),
-                geometryName: this.geometryName,
-                schema: layer.get("schema"),
-                maxFeatures: this.maxFeatures,
-                ogcFilter: this.getFilter(),
-                autoLoad: true,
-                autoSave: false,
-                listeners: {
-                    load: function(store, records, options) {
-                        this.fireEvent("storeload", this, store, records, options);
-                    },
-                    scope: this
-                }
-            });
-    
-            this.fireEvent("query", this, this.featureStore);
-            
+        if (this.featureStore) {
+            if (this.fireEvent("beforequery", this) !== false) {
+                this.featureStore.setOgcFilter(this.getFilter());
+                this.featureStore.load();
+                this.fireEvent("query", this, this.featureStore);
+            }
         }
-        
     },
 
     /** private: method[beforeDestroy]

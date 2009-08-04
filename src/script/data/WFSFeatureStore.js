@@ -25,6 +25,20 @@ gxp.data.WFSFeatureStore = Ext.extend(GeoExt.data.FeatureStore, {
      *  set by default.
      */
     
+    /** api: config[ogcFilter]
+     *  ``OpenLayers.Filter``
+     *  Optional filter to set on the WFSProtocolProxy.
+     */
+    
+    /** api: method[setOgcFilter]
+     *  :arg ogcFilter: ``OpenLayers.Filter`` Update the filter used by the
+     *      protocol proxy.  You must manually call load or reload to trigger
+     *      loading.
+     */
+    setOgcFilter: function(ogcFilter) {
+        this.proxy.setFilter(ogcFilter);
+    },
+    
     /** private */
     constructor: function(config) {
         if(!config.proxy) {
