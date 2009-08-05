@@ -151,8 +151,8 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
         if(this.schema) {
             var attributes = {};
             var name, type, value;
-            this.schema.data.each(function(r) {
-                type = r.get("type").split(":").pop();
+            this.schema.each(function(r) {
+                type = this.getFieldType(r.get("type"));
                 name = r.get("name");
                 value = feature.attributes[name];
                 switch(type) {
@@ -178,7 +178,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                         );
                 }
                 attributes[name] = value;
-            });
+            }, this);
             feature.attributes = attributes;
         }
         
@@ -290,6 +290,29 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
         });
     },
     
+    /** private: method[getFieldType]
+     *  :param attrType: ``String`` Attribute type.
+     *  :returns: ``String`` Field type
+     *
+     *  Given a feature attribute type, return an Ext field type if possible.
+     *  Note that there are many unhandled xsd types here.
+     *  
+     *  TODO: this should go elsewhere (AttributeReader)
+     */
+    getFieldType: function(attrType) {
+        return ({
+            "xsd:boolean": "boolean",
+            "xsd:int": "int",
+            "xsd:integer": "int",
+            "xsd:short": "int",
+            "xsd:long": "int",
+            "xsd:date": "date",
+            "xsd:string": "string",
+            "xsd:float": "float",
+            "xsd:double": "float"
+        })[attrType];
+    },
+
     /** private: method[startEditing]
      */
     startEditing: function() {
@@ -329,7 +352,17 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             var feature = this.feature;
             if(feature.state === this.dirtyState) {
                 if(save === true) {
-                    this.fireEvent("featuremodified", this, this.feature);
+                    /**
+                     * TODO: Remove this when the following ticket is closed:
+                     * http://trac.openlayers.org/ticket/2222
+                     */
+                    for(var k in feature.attributes) {
+                        if(feature.attributes[k] === undefined) {
+                            delete this.feature.attributes[k];
+                        }
+                    }
+                    // Remove above, leave below.
+                    this.fireEvent("featuremodified", this, feature);
                 } else if(feature.state === OpenLayers.State.INSERT) {
                     this.editing = false;
                     feature.layer.destroyFeatures([feature]);
