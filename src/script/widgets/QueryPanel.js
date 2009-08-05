@@ -325,11 +325,18 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
      *  :returns: ``String`` Field type
      *
      *  Given a feature attribute type, return an Ext field type if possible.
+     *  Note that there are many unhandled xsd types here.
      *  
      *  TODO: this should go elsewhere (AttributeReader)
      */
     getFieldType: function(attrType) {
         return ({
+            "xsd:boolean": "boolean",
+            "xsd:int": "int",
+            "xsd:integer": "int",
+            "xsd:short": "int",
+            "xsd:long": "int",
+            "xsd:date": "date",
             "xsd:string": "string",
             "xsd:double": "float"
         })[attrType];
