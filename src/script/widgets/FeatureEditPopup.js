@@ -137,7 +137,16 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
              *  * panel - :class:`gxp.FeatureEditPopup` This popup.
              *  * feature - ``OpenLayers.Feature`` The feature.
              */
-            "canceledit"
+            "canceledit",
+            
+            /** api: events[cancelclose]
+             *  Fires when the user answers "Cancel" to the dialog that
+             *  appears when a popup with unsaved changes is closed.
+             *  
+             *  Listener arguments:
+             *  * panel - :class:`gxp.FeatureEditPopup` This popup.
+             */
+            "cancelclose"
         );
         
         var feature = this.feature;
@@ -275,6 +284,8 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                             if(button && button !== "cancel") {
                                 this.stopEditing(button === "yes");
                                 this.close();
+                            } else {
+                                this.fireEvent("cancelclose", this);
                             }
                         },
                         scope: this,
