@@ -338,6 +338,7 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
             "xsd:long": "int",
             "xsd:date": "date",
             "xsd:string": "string",
+            "xsd:float": "float",
             "xsd:double": "float"
         })[attrType];
     },
