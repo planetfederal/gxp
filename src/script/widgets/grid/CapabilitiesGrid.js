@@ -92,10 +92,6 @@ gxp.grid.CapabilitiesGrid = Ext.extend(Ext.grid.GridPanel, {
             Ext.data.Record.AUTO_ID++;
             record = records[i].copy(Ext.data.Record.AUTO_ID);
 
-            layer = record.get("layer").clone();
-            record.data["layer"] = layer;
-            record.commit(true);
-
             /*
              * TODO: deal with srs and maxExtent
              * At this point, we need to think about SRS if we want the layer to
@@ -104,10 +100,31 @@ gxp.grid.CapabilitiesGrid = Ext.extend(Ext.grid.GridPanel, {
              * other srs.
              */
             if (this.alignToGrid) {
+                layer = record.get("layer").clone();
                 layer.maxExtent = new OpenLayers.Bounds(-180, -90, 180, 90);
             } else {
-                layer.maxExtent = OpenLayers.Bounds.fromArray(record.get("llbbox"));
+                layer = record.get("layer");
+                /**
+                 * TODO: The WMSCapabilitiesReader should allow for creation
+                 * of layers in different SRS.
+                 */
+                layer = new OpenLayers.Layer.WMS(
+                    layer.name, layer.url,
+                    {layers: layer.params["LAYERS"]},
+                    {
+                        attribution: layer.attribution,
+                        maxExtent: OpenLayers.Bounds.fromArray(
+                            record.get("llbbox")
+                        ).transform(
+                            new OpenLayers.Projection("EPSG:4326"),
+                            this.mapPanel.map.getProjectionObject()
+                        )
+                    }
+                );
             }
+
+            record.data["layer"] = layer;
+            record.commit(true);
             
             newRecords.push(record);
         }
