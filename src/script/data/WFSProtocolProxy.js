@@ -156,19 +156,45 @@ gxp.data.WFSProtocolProxy = Ext.extend(GeoExt.data.ProtocolProxy, {
             }
             
             /**
-             * TODO: Update the FeatureStore to work with callbacks from 3.0.
+             * TODO: Update the FeatureStore and FeatureReader to work with
+             * callbacks from 3.0.
              * 
              * The callback here is the result of store.createCallback.  The
              * signature should be what is expected by the anonymous function
-             * created in store.createCallback: (data, response, success).
+             * created in store.createCallback: (data, response, success).  The
+             * callback is a wrapped version of store.onCreateRecords etc.
              *
-             * If the server returns data that is different than what we've
-             * got, we need to implement extractValues on the FeatureReader.
+             * The onCreateRecords method calls reader.realize, which expects a
+             * primary key in the data.  Though it *feels* like the job of the
+             * reader, we need to create valid record data here (eventually to
+             * be passed to reader.realize).  The reader.realize method calls
+             * reader.extractValues - which seems like a nice place to grab the
+             * fids from the features.  However, we need the fid in the data
+             * object *before* extractValues is called.  So, we create a basic
+             * data object with just the fid (mapping determined by
+             * reader.meta.idProperty).
+             *
+             * After the reader.realize method determines that the data is valid
+             * (determined by reader.isValid(data)), then extractValues gets
+             * called - where it will create values objects (to be set as
+             * record.data) from data.features.
+             *
+             * An important thing to note here is that though we may have "batch"
+             * set to true, the store.save sequence issues one request per action.
+             * So, we should *never* be here with a mix of features (deleted,
+             * updated, created).
+             *
+             * Bottom line (based on my current understanding): we need to
+             * implement extractValues for the FeatureReader.
              */
-            var data = new Array(o.records.length);
-            Ext.each(o.records, function(r, i) {
-                data[i] = r.data;
-            });
+            var len = features.length;
+            var data = new Array(len);
+            var f;
+            for (var i=0; i<len; ++i) {
+                f = features[i];
+                data[i] = {fid: f.fid, feature: f};
+            }
+
             o.callback.call(o.scope, data, response.priv, true);
         } else {
             // TODO: determine from response if exception was "response" or "remote"

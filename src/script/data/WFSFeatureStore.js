@@ -65,13 +65,16 @@ gxp.data.WFSFeatureStore = Ext.extend(GeoExt.data.FeatureStore, {
          * TODO: Determine what needs to be done to the feature reader to
          * properly fit the 3.0 DataReader inteface.
          *
-         * For now, we implement a simple extractValues method that doesn't
-         * change the record data.  I think the assumption here is that the
-         * server might return something that we don't already have.
-         * Certainly important for feature id, but that is handled elsewhere.
+         * This method gets called with the data that goes to the reader.realize
+         * method.  This method requires that the data has a property with the
+         * same name as reader.meta.idProperty.  The WFSProtocolProxy prepares
+         * a data object for each feature, with a fid and feature property.  The
+         * return from this method will be applied to record.data.  So it makes
+         * sense that it looks very much like what reader.readRecords does.
          */
         this.reader.extractValues = function(data, items, length) {
-            return data;
+            var obj = this.reader.readRecords([data.feature]);
+            return obj.records[0].data;
         };
         
         /**
