@@ -123,7 +123,7 @@ gxp.data.WFSProtocolProxy = Ext.extend(GeoExt.data.ProtocolProxy, {
     },
     
     
-    /** private: method[onCommit]
+    /** private: method[onProtocolCommit]
      *  Callback for the protocol.commit method.  Called with an additional
      *  object containing references to arguments to the doRequest method.
      */
@@ -138,9 +138,6 @@ gxp.data.WFSProtocolProxy = Ext.extend(GeoExt.data.ProtocolProxy, {
             for(var i=0, len=features.length; i<len; ++i) {
                 feature = features[i];
                 state = feature.state;
-                /**
-                 * TODO: Determine why state is null here.
-                 */
                 if(state) {
                     if(state == OpenLayers.State.DELETE) {
                         destroys.push(feature);
