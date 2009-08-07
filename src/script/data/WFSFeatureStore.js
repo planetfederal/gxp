@@ -72,10 +72,10 @@ gxp.data.WFSFeatureStore = Ext.extend(GeoExt.data.FeatureStore, {
          * return from this method will be applied to record.data.  So it makes
          * sense that it looks very much like what reader.readRecords does.
          */
-        this.reader.extractValues = function(data, items, length) {
-            var obj = this.reader.readRecords([data.feature]);
+        this.reader.extractValues = (function(data, items, length) {
+            var obj = this.readRecords([data.feature]);
             return obj.records[0].data;
-        };
+        }).createDelegate(this.reader);
         
         /**
          * TODO: Determine how the reader.meta.idProperty should be set.
