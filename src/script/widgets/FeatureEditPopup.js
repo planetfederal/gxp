@@ -109,11 +109,6 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
      */
     deleteButton: null,
     
-    /** private: property[dirtyState]
-     *  ``String``
-     */
-    dirtyState: null,
-    
     /** private: method[initComponent]
      */
     initComponent: function() {
@@ -152,9 +147,6 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
         var feature = this.feature;
         
         this.anchored = !this.editing;
-        
-        this.dirtyState = this.feature.state === OpenLayers.State.INSERT ?
-            this.feature.state : OpenLayers.State.UPDATE;
         
         var customEditors = {};
         if(this.schema) {
@@ -243,7 +235,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                     return this.editing;
                 },
                 "propertychange": function() {
-                    this.setFeatureState(this.dirtyState);
+                    this.setFeatureState(this.getDirtyState());
                 },
                 scope: this
             }
@@ -275,7 +267,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                 if(!this.editing) {
                     return;
                 }
-                if(this.feature.state === this.dirtyState) {
+                if(this.feature.state === this.getDirtyState()) {
                     Ext.Msg.show({
                         title: this.closeMsgTitle,
                         msg: this.closeMsg,
@@ -299,6 +291,16 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             },
             scope: this
         });
+    },
+    
+    /** private: method[getDirtyState]
+     *  Get the appropriate OpenLayers.State value to indicate a dirty feature.
+     *  We don't cache this value because the popup may remain open through
+     *  several state changes.
+     */
+    getDirtyState: function() {
+        return this.feature.state === OpenLayers.State.INSERT ?
+            this.feature.state : OpenLayers.State.UPDATE;
     },
     
     /** private: method[getFieldType]
@@ -361,7 +363,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             this.modifyControl.destroy();
             
             var feature = this.feature;
-            if(feature.state === this.dirtyState) {
+            if(feature.state === this.getDirtyState()) {
                 if(save === true) {
                     /**
                      * TODO: Remove this when the following ticket is closed:
