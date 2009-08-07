@@ -365,16 +365,6 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             var feature = this.feature;
             if(feature.state === this.getDirtyState()) {
                 if(save === true) {
-                    /**
-                     * TODO: Remove this when the following ticket is closed:
-                     * http://trac.openlayers.org/ticket/2222
-                     */
-                    for(var k in feature.attributes) {
-                        if(feature.attributes[k] === undefined) {
-                            delete this.feature.attributes[k];
-                        }
-                    }
-                    // Remove above, leave below.
                     this.fireEvent("featuremodified", this, feature);
                 } else if(feature.state === OpenLayers.State.INSERT) {
                     this.editing = false;
