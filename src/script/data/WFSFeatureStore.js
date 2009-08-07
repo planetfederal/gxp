@@ -78,11 +78,13 @@ gxp.data.WFSFeatureStore = Ext.extend(GeoExt.data.FeatureStore, {
         }).createDelegate(this.reader);
         
         /**
-         * TODO: Determine how the reader.meta.idProperty should be set.
-         * For now, setting this to fid forces all records to have their
-         * id set to feature.fid in reader.realize.
+         * TODO: Determine the appropriate meta.idProperty value.
+         * If this is set to fid, then we can't use store.getById given a feature
+         * until after the feature has been saved.  If this is set to id, then
+         * we better never have to create a new feature that represents the
+         * same record.
          */
-        this.reader.meta.idProperty = "fid";
+        this.reader.meta.idProperty = "id";
         
         
     }

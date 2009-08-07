@@ -192,7 +192,7 @@ gxp.data.WFSProtocolProxy = Ext.extend(GeoExt.data.ProtocolProxy, {
             var f;
             for (var i=0; i<len; ++i) {
                 f = features[i];
-                data[i] = {fid: f.fid, feature: f};
+                data[i] = {id: f.id, feature: f};
             }
 
             o.callback.call(o.scope, data, response.priv, true);
