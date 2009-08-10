@@ -4,6 +4,7 @@
 
 /**
  * @include widgets/FilterBuilder.js
+ * @include data/WFSFeatureStore.js
  */
 
 /** api: (define)
