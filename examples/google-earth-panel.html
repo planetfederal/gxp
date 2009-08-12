@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <title>GoogleEarthPanel</title>
+
+        <script src="http://extjs.cachefly.net/ext-3.0.0/adapter/ext/ext-base.js"></script>
+        <script src="http://extjs.cachefly.net/ext-3.0.0/ext-all-debug.js"></script>
+        <link rel="stylesheet" type="text/css" href="http://extjs.cachefly.net/ext-3.0.0/resources/css/ext-all.css" />
+        <link rel="stylesheet" type="text/css" href="http://extjs.cachefly.net/ext-3.0.0/examples/shared/examples.css" />
+        <script src="http://openlayers.org/api/2.8/OpenLayers.js"></script>
+
+        <!-- Google Earth resources-->
+        <!-- Note: We should change this key on final deploy! -->
+        <script src="http://www.google.com/jsapi?key="></script>
+        <script type="text/javascript">
+            google.load("earth", "1");
+        </script>
+
+        <script src="../../geoext/lib/GeoExt.js"></script>
+        <script type="text/javascript" src="../src/script/loader.js"></script>
+
+        <script type="text/javascript" src="google-earth-panel.js"></script>
+
+    </head>
+    <body>
+        <h1>GoogleEarthPanel</h1>
+        <p>The GoogleEarthPanel makes it easy to switch to a 3D view of a GeoExt MapPanel
+        that shows all the WMS layers overlayed onto a Google Earth globe.</p>
+        <p>This depends on the <a href="http://code.google.com/apis/earth/">Google Earth API</a>, and
+        to get this example to work you will need to configure it with a valid Google API key.</p>
+
+        <p>The js is not minified so it is readable.
+        See <a href="google-earth-panel.js">google-earth-panel.js</a>.</p>
+        
+        <div id="container"></div>
+
+    </body>
+</html>

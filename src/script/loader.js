@@ -11,7 +11,8 @@
         "widgets/WMSLayerPanel.js",
         "widgets/form/ComparisonComboBox.js",
         "widgets/grid/CapabilitiesGrid.js",
-        "widgets/grid/FeatureGrid.js"
+        "widgets/grid/FeatureGrid.js",
+        "widgets/GoogleEarthPanel.js"
     );
     
     var scripts = document.getElementsByTagName("script");
