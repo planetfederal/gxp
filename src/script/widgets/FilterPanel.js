@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009 OpenGeo
+ * Copyright (c) 2009 The Open Planning Project
  */
 
 /**
@@ -33,8 +33,11 @@ gxp.FilterPanel = Ext.extend(Ext.Panel, {
     initComponent: function() {
         
         var defConfig = {
-            plain: true,
-            border: false
+            layout: "column",
+            border: false,
+            defaults: {
+                hideMode: "offsets"
+            }
         };
         Ext.applyIf(this, defConfig);
         
@@ -50,7 +53,6 @@ gxp.FilterPanel = Ext.extend(Ext.Panel, {
             store: this.attributes,
             editable: false,
             triggerAction: "all",
-            hideLabel: true,
             allowBlank: false,
             displayField: "name",
             valueField: "name",
@@ -100,30 +102,26 @@ gxp.FilterPanel = Ext.extend(Ext.Panel, {
      */
     createFilterItems: function() {
         
-        return [{
-            layout: "column",
-            border: false,
-            defaults: {border: false},
-            items: [{
-                width: this.attributesComboConfig.width, 
-                items: [this.attributesComboConfig]
+        return [
+            this.attributesComboConfig, {
+                xtype: "gx_comparisoncombo",
+                value: this.filter.type,
+                listeners: {
+                    select: function(combo, record) {
+                        this.filter.type = record.get("value");
+                        this.fireEvent("change", this.filter);
+                    },
+                    scope: this
+                }
             }, {
-                items: [{
-                    xtype: "gx_comparisoncombo",
-                    value: this.filter.type,
-                    listeners: {
-                        select: function(combo, record) {
-                            this.filter.type = record.get("value");
-                            this.fireEvent("change", this.filter);
-                        },
-                        scope: this
-                    }
-                }]
-            }, {
+                xtype: "container",
+                layout: "anchor",
+                columnWidth: this.attributesComboConfig.width ? 1 :
+                    1 - (this.attributesComboConfig.columnWidth || 0.5),
                 items: [{
                     xtype: "textfield",
-                    width: 120,
                     value: this.filter.value,
+                    anchor: "100%",
                     allowBlank: false,
                     listeners: {
                         change: function(el, value) {
@@ -133,8 +131,8 @@ gxp.FilterPanel = Ext.extend(Ext.Panel, {
                         scope: this
                     }
                 }]
-            }]
-        }];
+            }
+        ];
     }
 
 });

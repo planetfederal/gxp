@@ -168,7 +168,7 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
         this.mapExtentField = new Ext.form.TextField({
             fieldLabel: "Current extent",
             readOnly: true,
-            anchor: "95%",
+            anchor: "100%",
             value: this.getFormattedMapExtent()
         });
         this.map.events.on({
@@ -204,7 +204,6 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
             title: "Query by location",
             checkboxToggle: true,
             collapsed: !this.spatialQuery,
-            autoHeight: true,
             items: [this.mapExtentField],
             listeners: {
                 collapse: function() {
@@ -220,7 +219,6 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
             title: "Query by attributes",
             checkboxToggle: true,
             collapsed: !this.attributeQuery,
-            autoHeight: true,
             items: [this.filterBuilder],
             listeners: {
                 collapse: function() {
@@ -228,12 +226,11 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
                 },
                 expand: function() {
                     this.attributeQuery = true;
-                    this.filterBuilder.ownerCt.doLayout();
                 },
                 scope: this
             }            
         }];
-
+        
         gxp.QueryPanel.superclass.initComponent.apply(this, arguments);
 
     },
@@ -276,15 +273,14 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
         });
 
         this.filterBuilder = new gxp.FilterBuilder({
+            //anchor: "-8px",
             attributes: this.attributeStore,
             allowGroups: false
         });
         
-        if (owner) {
+        if(owner) {
             owner.add(this.filterBuilder);
-            if(!owner.collapsed) {
-                owner.doLayout();
-            }
+            owner.doLayout();
         }
         
     },

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009 OpenGeo
+ * Copyright (c) 2009 The Open Planning Project
  */
 
 /**
@@ -35,12 +35,6 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
      */
     allowedBuilderTypes: null,
     
-    /** api: config[rowHeight]
-     *  ``Number``
-     *  Row height in pixels.  Default is ``25``.
-     */
-    rowHeight: 25,
-
     /** api: config[preComboText]
      *  ``String``
      *  String to display before filter type combo.  Default is ``"Match"``.
@@ -98,26 +92,25 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
         
         this.items = [
             {
-                xtype: "panel",
-                border: false,
+                xtype: "container",
                 items: [{
-                    xtype: "panel",
-                    border: false,
+                    xtype: "container",
                     layout: "column",
                     style: "margin-top: 0.25em;",
                     defaults: {
-                        border: false
+                        // make form fields behave in tabs and fieldsets
+                        hideMode: "offsets"
                     },
                     items: [{
-                        html: this.preComboText,
+                        xtype: "label",
+                        text: this.preComboText,
                         cls: "x-form-item",
-                        style: "padding: 0.3em 0.5em 0;" // TODO: replace with css
-                    }, {
-                        items: [this.createBuilderTypeCombo()]
-                    }, {
-                        html: this.postComboText,
+                        style: "padding: 0.3em 0.3em 0;" // TODO: replace with css
+                    }, this.createBuilderTypeCombo(), {
+                        xtype: "label",
+                        text: this.postComboText,
                         cls: "x-form-item",
-                        style: "padding: 0.3em 0.5em 0;" // TODO: replace with css
+                        style: "padding: 0.3em 0.3em 0;" // TODO: replace with css
                     }]
                 }]
             }, this.createChildFiltersPanel()
@@ -455,7 +448,7 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
     },
     
     /** private: method[createChildFiltersPanel]
-     *  :return: ``Ext.Panel``
+     *  :return: ``Ext.Container``
      *  
      *  Create the panel that holds all conditions and condition groups.  Since
      *  this is called after this filter has been customized, we always
@@ -463,10 +456,7 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
      *  a logical filter.
      */
     createChildFiltersPanel: function() {
-        this.childFiltersPanel = new Ext.Panel({
-            border: false,
-            defaults: {border: false}
-        });
+        this.childFiltersPanel = new Ext.Container();
         var grandchildren = this.filter.filters[0].filters;
         var grandchild;
         for(var i=0, len=grandchildren.length; i<len; ++i) {
@@ -488,25 +478,23 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
     },
 
     /** private: method[newRow]
-     *  :return: ``Ext.Panel`` A panel that serves as a row in a child filters
-     *      panel.
+     *  :return: ``Ext.Container`` A container that serves as a row in a child
+     *  filters panel.
      *  
      *  Generate a "row" for the child filters panel.  This couples another
      *  filter panel or filter builder with a component that allows for
      *  condition removal.
      */
     newRow: function(filterPanel) {
-        var panel = new Ext.Panel({
+        var panel = new Ext.Container({
             layout: "column",
-            defaults: {border: false},
-            style: "padding: 0.5em 0.25em;",
+            style: "padding: 0.5em 0 0.3em 0;",
             items: [{
-                border: false,
-                columnWidth: 0.1,
+                xtype: "container",
+                style: "padding: 0 0.5em 0 2px;",
                 items: [{
                     xtype: "button",
                     tooltip: "remove condition",
-                    cls: 'x-btn-icon',
                     iconCls: "delete",
                     /**
                      * Calling btn.destroy causes failures if quick tips are
@@ -535,9 +523,9 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
                     scope: this
                 }]
             }, {
-                items: [filterPanel],
-                border: false,
-                columnWidth: 0.9
+                xtype: "container",
+                columnWidth: 1,
+                items: [filterPanel]
             }]
         });
         return panel;
