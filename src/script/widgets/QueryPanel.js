@@ -204,6 +204,7 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
             title: "Query by location",
             checkboxToggle: true,
             collapsed: !this.spatialQuery,
+            anchor: "95%",
             items: [this.mapExtentField],
             listeners: {
                 collapse: function() {
@@ -219,6 +220,7 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
             title: "Query by attributes",
             checkboxToggle: true,
             collapsed: !this.attributeQuery,
+            anchor: "95%",
             items: [this.filterBuilder],
             listeners: {
                 collapse: function() {
