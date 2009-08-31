@@ -41,6 +41,11 @@ gxp.grid.CapabilitiesGrid = Ext.extend(Ext.grid.GridPanel, {
 
     autoExpandColumn: "title",
 
+    /** String literals for translation **/
+    nameHeaderText : "Name",
+    titleHeaderText : "Title",
+    queryableHeaderText : "Queryable",
+
     /** private: method[initComponent]
      *  Initializes the CapabilitiesGrid. Creates and loads a WMS Capabilities 
      *  store from the url property if one is not passed as a configuration 
@@ -64,9 +69,9 @@ gxp.grid.CapabilitiesGrid = Ext.extend(Ext.grid.GridPanel, {
 
         this.cm = new Ext.grid.ColumnModel([
             expander,
-            {header: "Name", dataIndex: "name", width: 180, sortable: true},
-            {id: "title", header: "Title", dataIndex: "title", sortable: true},
-            {header: "Queryable", dataIndex: "queryable"}
+            {header: this.nameHeaderText, dataIndex: "name", width: 180, sortable: true},
+            {id: "title", header: this.titleHeaderText, dataIndex: "title", sortable: true},
+            {header: this.queryableHeaderText, dataIndex: "queryable"}
         ]);
 
         gxp.grid.CapabilitiesGrid.superclass.initComponent.call(this);       
