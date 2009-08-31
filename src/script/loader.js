@@ -10,6 +10,7 @@
         "widgets/FilterBuilder.js",
         "widgets/QueryPanel.js",
         "widgets/WMSLayerPanel.js",
+        "widgets/NewSourceWindow.js",
         "widgets/form/ComparisonComboBox.js",
         "widgets/grid/CapabilitiesGrid.js",
         "widgets/grid/FeatureGrid.js",

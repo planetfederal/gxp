@@ -3,6 +3,8 @@
  *
  */
 
+// @include widgets/NewSourceWindow.js
+
 /** api: (define)
  *  module = gxp.grid
  *  class = CapabilitiesGrid
@@ -24,7 +26,40 @@ gxp.grid.CapabilitiesGrid = Ext.extend(Ext.grid.GridPanel, {
      */
     store: null,
 
+    /** api: config[metaStore]
+     * ``Ext.data.Store``
+     * A Store containing the alternative stores that are available for this 
+     * GridPanel.  Stores added using the grid toolbar's 'add sources' button
+     * will be added to this store.
+     *
+     * The store must provide at least the following fields:
+     * 
+     * .. list-table::
+     *     :widths: 20 80
+     * 
+     *     * - ``name``
+     *       - the display name for the store
+     *     * - ``store`` 
+     *       - the ``WMSCapabilitiesStore`` instance
+     *     * - ``identifier``
+     *       - an id string that layers may use to associate themselves with a 
+     *         source (useful for serialization)
+     *     * - ``url``
+     *       - the root URL to the source's OWS service
+     */
+
+    /** api: config[cm]
+     * ``Ext.grid.ColumnModel`` or Array[Object]
+     * The ColumnModel as normally specified in Ext Grids
+     */
     cm: null,
+
+    /**
+     * api: property[expander]
+     * A plugin, such as a :class:'RowExpander', which displays more
+     * information about a capability record.
+     */
+    expander: null,
 
     /** config: config[mapPanel]
      *  ``GeoExt.MapPanel``
@@ -39,14 +74,35 @@ gxp.grid.CapabilitiesGrid = Ext.extend(Ext.grid.GridPanel, {
      */
     url: null,
 
+    /** api: config[url]
+     * The id of the column to auto-expand.  Unlike the standard ExtJS 
+     * ``GridPanel``, this class provides a default value of 'title'.
+     */
     autoExpandColumn: "title",
 
-    /** String literals for translation **/
+    /** api: config[allowNewSources]
+     * ``Boolean``
+     * Use this property (set it to false) to force the widget to hide the option to add new sources
+     * even when a proxy is set up. Defaults to true.
+     */
+    allowNewSources: true,
+
+    /** api: i18n[keys]
+     * - nameHeaderText 
+     * - titleHeaderText 
+     * - queryableHeaderText 
+     * - layerSelectionLabel
+     * - layerAdditionLabel
+     */
     nameHeaderText : "Name",
     titleHeaderText : "Title",
     queryableHeaderText : "Queryable",
+    layerSelectionLabel: "View available data from:",
+    layerAdditionLabel: "or add a new server.",
+
 
     /** private: method[initComponent]
+     *
      *  Initializes the CapabilitiesGrid. Creates and loads a WMS Capabilities 
      *  store from the url property if one is not passed as a configuration 
      *  option. 
@@ -61,37 +117,145 @@ gxp.grid.CapabilitiesGrid = Ext.extend(Ext.grid.GridPanel, {
             this.store.load();
         }
 
-        var expander = new Ext.grid.RowExpander({
-            tpl : new Ext.Template(
-                '<p><b>Abstract:</b> {abstract}</p>')});
+        if (!("expander" in this)){
+            this.expander = new Ext.grid.RowExpander({
+                tpl : new Ext.Template(
+                    '<p><b>Abstract:</b> {abstract}</p>')});
+        }
 
-        this.plugins = expander;
+        if(!this.plugins && this.expander){
+            this.plugins = this.expander;
+        }
 
-        this.cm = new Ext.grid.ColumnModel([
-            expander,
-            {header: this.nameHeaderText, dataIndex: "name", width: 180, sortable: true},
-            {id: "title", header: this.titleHeaderText, dataIndex: "title", sortable: true},
-            {header: this.queryableHeaderText, dataIndex: "queryable"}
-        ]);
+        if(!this.cm){
+            var cm = [
+                {id: "title", header: this.titleHeaderText, dataIndex: "title", sortable: true},
+                {header: this.nameHeaderText, dataIndex: "name", width: 180, sortable: true},
+                {header: this.queryableHeaderText, dataIndex: "queryable", width: 70,
+                    renderer: function(value, metaData, record, rowIndex, colIndex, store) {
+                        metaData.css = 'x-btn';
+                        var css = 'x-btn cancel';
+                        if (value) {
+                            css = 'x-btn add';
+                        }
+                        return '<div style="background-repeat: no-repeat; ' +
+                            'background-position: 50% 0%; ' +
+                            'height: 16px;" ' +
+                            'class="' + css + '">&nbsp;</div>';
+                    }
+                }
+            ];
+            if (this.expander) {
+                cm.unshift(this.expander);
+            }
+            this.cm = new Ext.grid.ColumnModel(cm);
+        }
+
+        if (!('allowNewSources' in this)) {
+            this.allowNewSources = !!this.metaStore;
+        }
+
+        if (this.allowNewSources || (this.metaStore && this.metaStore.getCount() > 1)) {
+            this.sourceComboBox = new Ext.form.ComboBox({
+                store: this.metaStore,
+                valueField: "identifier",
+                displayField: "name",
+                triggerAction: "all",
+                editable: false,
+                allowBlank: false,
+                forceSelection: true,
+                mode: "local",
+                value: this.metaStore.getAt(this.metaStore.findBy(function(record) {
+                    return record.get("store") == this.store;
+                }, this)).get("identifier"),
+                listeners: {
+                    select: function(combo, record, index) {
+                        this.reconfigure(record.data.store, this.getColumnModel());
+                        if (this.expander) this.expander.ows = record.get("url");
+                    },
+                    scope: this
+                }
+            });
+
+            this.metaStore.on("add", function(store, records, index) {
+                this.sourceComboBox.onSelect(records[0], index);
+            }, this);
+
+            this.tbar = this.tbar || [];
+            this.tbar.push("" + this.layerSelectionLabel);
+            this.tbar.push(this.sourceComboBox);
+        }
+
+        if (this.allowNewSources) {
+            var grid = this;
+            if (!this.newSourceWindow) {
+                this.newSourceWindow = new gxp.NewSourceWindow({
+                    modal: true,
+                    metaStore: this.metaStore,
+                    addSource: function() { 
+                        grid.addSource.apply(grid, arguments); 
+                    }
+                });
+            }
+
+            this.tbar.push(new Ext.Button({
+                text: this.layerAdditionLabel,
+                handler: function() {
+                    this.newSourceWindow.show();
+                },
+                scope: this
+            }));
+        }
 
         gxp.grid.CapabilitiesGrid.superclass.initComponent.call(this);       
     },
 
-    /** api: method[addLayers]
-     *  :param: base: a boolean indicating whether or not to make the new layer 
-     *      a base layer.
-     * 
-     *  Adds a layer to the :class:`GeoExt.MapPanel` of this instance.
-     */    
-    addLayers : function(base){
+    /** api: config[addSource]
+     * A callback method that will be called when a url is entered into this 
+     * grid's NewLayerWindow. It should expect the following parameters:
+     *
+     * .. list-table::
+     *     :widths: 20 80
+     *
+     *     * - ``url`` 
+     *       - the URL that the user entered
+     *     * - ``success`` 
+     *       - a callback to call after the successful addition of a source
+     *     * - ``failure``
+     *       - a callback to call after a failure to add a source
+     *     * - ``scope`` 
+     *       - the scope in which to run the callbacks
+     *
+     * If this is not provided, a default implementation will be used.  It is 
+     * recommended that client code use handlers for the 'add' event on the 
+     * metaStore rather than overriding this method.
+     */
+    addSource: function(url, success, failure, scope) {
+        scope = scope || this;
+        var layerStore = new GeoExt.data.WMSCapabilitiesStore({url:url, autoLoad: true});
+        this.metaStore.add(new this.metaStore.recordType({
+            url: url,
+            store: layerStore,
+            identifier: url,
+            name: url
+        }));
+        success.apply(scope);
+    },
 
+    /** api: method[addLayers]
+     * :param: base: a boolean indicating whether or not to make the new layer
+     *     a base layer.
+     *
+     * Adds a layer to the :class:`GeoExt.MapPanel` of this instance.
+     */
+    addLayers : function(base){
         var sm = this.getSelectionModel();
 
         //for now just use the first selected record
         //TODO: force single selection (until we allow
         //adding group layers)
         var records = sm.getSelections();
-        
+
         var record, layer, newRecords = [];
         for(var i = 0; i < records.length; i++){
             Ext.data.Record.AUTO_ID++;
@@ -152,10 +316,8 @@ gxp.grid.CapabilitiesGrid = Ext.extend(Ext.grid.GridPanel, {
                 this.mapPanel.layers.add(newRecords);
             }
         }
-
     }
 });
-
 
 /** api: xtype = gx_capabilitiesgrid */
 Ext.reg('gx_capabilitiesgrid', gxp.grid.CapabilitiesGrid); 
