@@ -18,7 +18,7 @@ gxp.Lang = {
 
     /**
      * private: locale
-     *  Current language code to use in translation.  Use <Lang.setLocale>
+     *  Current language code to use in translation.  Use <gxp.Lang.setLocale>
      * method to set.
      */
     locale: null,
@@ -34,7 +34,7 @@ gxp.Lang = {
 
     /**
      * private: events
-     * An Observable that allows Lang to have events.
+     * An Observable that allows gxp.Lang to have events.
      */
     events : function(){
         var events = new Ext.util.Observable();
@@ -48,10 +48,10 @@ gxp.Lang = {
      * :arg locale: ''String'' These codes follow the IETF recommendations at
      *     http://www.ietf.org/rfc/rfc3066.txt, or try to.  If no value is set, the
      *     browser's language setting will be tested. If no locale is found,
-     *     the <String.defaultLang> will be used.
+     *     the <String.defaultgxp.Lang> will be used.
      *
      * Set the language code for string translation.  This code is used by
-     *     the <Lang.localize> method.
+     *     the <gxp.Lang.localize> method.
      *
      * Gets code from a source in this order: an argument passed into the
      *     function, a 'locale' parameter in the
@@ -71,11 +71,11 @@ gxp.Lang = {
 
         if(!locale) {
             locale = Ext.isIE ?
-                navigator.userLanguage : navigator.language;
+                navigator.usergxp.Language : navigator.language;
         }
 
         if(!locale){
-            locale = Lang.defaultLocale;
+            locale = gxp.Lang.defaultLocale;
         }
 
         /*  TODO: Deal with regional extensions correctly */
@@ -88,23 +88,23 @@ gxp.Lang = {
         /*
         // check for regional extensions
         if(parts[1]) {
-            var testLang = parts[0] + '_' + parts[1].toUpperCase();
-            if(typeof Lang[testLang] == "object") {
-                lang = testLang;
+            var testgxp.Lang = parts[0] + '_' + parts[1].toUpperCase();
+            if(typeof gxp.Lang[testgxp.Lang] == "object") {
+                lang = testgxp.Lang;
             }
         }
 
         if(!lang) {
             console.warn(
-                'Failed to find Lang.' + parts.join("-") +
+                'Failed to find gxp.Lang.' + parts.join("-") +
                 ' dictionary, falling back to default language'
             );
-            lang = Lang.defaultCode;
+            lang = gxp.Lang.defaultCode;
         }
         */
 
 
-        Lang.locale = locale;
+        gxp.Lang.locale = locale;
 
         return locale;
     },
@@ -119,7 +119,7 @@ gxp.Lang = {
      *  
      */
     on: function(events){
-        Lang.events.on.apply(Lang.events, arguments);
+        gxp.Lang.events.on.apply(gxp.Lang.events, arguments);
     },
 
 
@@ -164,10 +164,10 @@ gxp.Lang = {
                     url: src,
                     success: function(response, options) {
                         eval(response.responseText);
-                        Lang.ready();
+                        gxp.Lang.ready();
                     },
                     failure: function() {
-                        Lang.ready();
+                        gxp.Lang.ready();
                     }
                 });
             } else /* Firefox, etc. */ {
@@ -175,7 +175,7 @@ gxp.Lang = {
                     tag:'script',
                     type:'text/javascript',
                     src: src,
-                    onload: 'Lang.ready()'
+                    onload: 'gxp.Lang.ready()'
                 });
             }
         }
