@@ -6,6 +6,11 @@
 Ext.namespace("gxp");
 
 gxp.util = {
+    
+    /** private: property[_loadCallbacks]
+     *  ``Array`` callbacks for script onload handler in :meth:`loadScript`
+     */
+    _loadCallbacks: [],
 
     /** api: function[dispatch]
      *  :param functions: ``Array(Function)`` List of functions to be called.
@@ -42,6 +47,29 @@ gxp.util = {
         for(var i=0; i<requests; ++i) {
             trigger(i);
         }
+    },
+    
+    /** api: function[loadScript]
+     *  :param url: ``String`` url of the script file.
+     *  :param complete:  ``Function`` Optional function that will be called
+     *      when the script file is loaded.
+     *  :param scope: ``Object`` Optional object to be set as the scope for
+     *      the complete function.
+     *      
+     *  Allows dynamic loading of javascript resources.
+     */
+    loadScript: function(url, complete, scope) {
+        var onload = "";
+        if(complete) {
+            var i = gxp.util._loadCallbacks.length;
+            onload = "onload='gxp.util._loadCallbacks[" + i +
+                "]()' onreadystatechange='if(this.readyState==\"complete\") gxp.util._loadCallbacks[" +
+                i + "]()' ";
+            gxp.util._loadCallbacks.push(function() {
+                complete.call(scope || window);
+            });
+        }
+        document.write("<script " + onload + "src='" + url + "'></script>");
     }
 
 };
