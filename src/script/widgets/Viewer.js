@@ -59,17 +59,9 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         this.createMapPanel();
         
         // initialize all layer source plugins
-        var config, plugin;
-        for (var key in this.sources) {
-            config = this.sources[key];
-            plugin = Ext.ComponentMgr.createPlugin(config, this.defaultSourceType)
-            this.layerSources[key] = plugin.init(this);
-        }
-        
-        // create stores for all services
         var queue = [];
-        for (var key in this.layerSource) {
-            queue.push(this.createServiceCallback(this.layerSource[key]));
+        for (var key in this.sources) {
+            queue.push(this.createSourceLoader(key));
         }
         
         // create portal when dom is ready
@@ -78,21 +70,18 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                 this.createPortal();
                 done();
             }, this);
-        })
+        });
         
         gxp.util.dispatch(queue, this.activate, this);
         
     },
     
-    createServiceCallback: function(service) {
-        var serviceType = this.serviceTypes[service.type];
+    createSourceLoader: function(key) {
         return function(done) {
-            serviceType.createStore(Ext.apply({
-                callback: function(store) {
-                    service.store = store;
-                    done();
-                }
-            }, service));
+            var config = Ext.applyIf({listeners: {ready: done}}, this.sources[key]);
+            var source = Ext.ComponentMgr.createPlugin(config, this.defaultSourceType);
+            this.layerSources[key] = source;
+            source.init();
         };
     },
     
@@ -249,7 +238,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             } else {
                 this.map.zoomToMaxExtent();
             }
-            
+        }
         
     }
     
