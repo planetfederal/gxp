@@ -1,21 +1,31 @@
 Ext.namespace("gxp.plugins");
 
-gxp.plugins.LayerSource = function() {};
-
-gxp.plugins.LayerSource.prototype = {
+gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
     
-    /** api: property[type]
-     *  ``String``
-     *  An identifying string for this service type.  Must be provided by 
-     *  subclasses.
+    /** private: method[constructor]
      */
+    constructor: function(config) {
+        this.initialConfig = Ext.apply({}, config);
+        Ext.apply(this, config);
+        
+        this.addEvents(
+            /** api: event[ready]
+             *  Fires when the layer source is ready for action.
+             */
+             "ready"
+        );
+        
+    },
     
     /** api: method[init]
      *  :arg app: :class:`gxp.Viewer`
      *
-     *  Registers the service type with the application.
+     *  Calls :method:`createStore` with a callback that fires the 'ready' event.
      */
     init: function(app) {
+        this.createStore(
+            (function() {this.fireEvent("ready", this)}).createDelegate(this)
+        );
         return this;
     },
     
@@ -24,7 +34,8 @@ gxp.plugins.LayerSource.prototype = {
      *
      *  Creates a store of layer records.
      */
-    createStore: function(config) {
+    createStore: function(callback) {
+        callback();
     }
     
-};
+});
