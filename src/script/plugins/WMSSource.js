@@ -4,13 +4,10 @@
 
 Ext.namespace("gxp.plugins");
 
-gxp.plugins.WMSSource = Ext.extend(gxp.plugins.ServiceType, {
+gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
 
-    type: "wms",
-
-    createStore: function(config) {
-        
-        var parts = config.url.split("?");
+    createStore: function(callback) {
+        var parts = this.url.split("?");
         var params = Ext.apply(parts[1] && Ext.urlDecode(parts[1]) || {}, {
             SERVICE: "WMS",
             REQUEST: "GetCapabilities"
@@ -21,13 +18,12 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.ServiceType, {
             url: url,
             autoLoad: true,
             listeners: {
-                load: function() {
-                    config.callback(store);
-                }
+                load: callback
             }
         });
     }
     
 });
 
+/** api: ptype = gx-wmssource */
 Ext.preg("gx-wmssource", gxp.plugins.WMSSource)
