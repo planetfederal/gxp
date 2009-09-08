@@ -6,9 +6,9 @@ Ext.onReady(function() {
             width: 500,
             height: 300
         },
+        defaultSourceType: "gx-wmssource",
         sources: {
             local: {
-                ptype: "gx-layersource-wms",
                 url: "/geoserver/wms"
             }
         },
