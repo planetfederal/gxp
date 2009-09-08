@@ -11,10 +11,13 @@
         "widgets/QueryPanel.js",
         "widgets/WMSLayerPanel.js",
         "widgets/NewSourceWindow.js",
+        "widgets/Viewer.js",
         "widgets/form/ComparisonComboBox.js",
         "widgets/grid/CapabilitiesGrid.js",
         "widgets/grid/FeatureGrid.js",
-        "widgets/GoogleEarthPanel.js"
+        "widgets/GoogleEarthPanel.js",
+        "plugins/LayerSource.js",
+        "plugins/WMSSource.js"
     );
     
     var scripts = document.getElementsByTagName("script");
