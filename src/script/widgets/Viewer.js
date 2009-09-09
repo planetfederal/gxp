@@ -81,7 +81,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             var config = Ext.applyIf({listeners: {ready: done}}, this.sources[key]);
             var source = Ext.ComponentMgr.createPlugin(config, this.defaultSourceType);
             this.layerSources[key] = source;
-            source.init();
+            source.init(this);
         };
     },
     
@@ -92,7 +92,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         this.mapPanel = new GeoExt.MapPanel({
             map: {
                 theme: null,
-                allOverlays: true,
+                allOverlays: false,
                 controls: [
                     new OpenLayers.Control.PanPanel(),
                     new OpenLayers.Control.ZoomPanel()
@@ -139,83 +139,13 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
     addLayers: function() {
         var mapConfig = this.initialConfig.map;
         if(mapConfig && mapConfig.layers) {
-            var projection = mapConfig.projection || "EPSG:4326";
-            var records = [];
-            
+            var conf, source, record, records = [];            
             for (var i=0; i<mapConfig.layers.length; ++i) {
-                var conf = mapConfig.layers[i];
-                var serviceType = this.layerSources[conf.type];                
-                records.push(serviceType.createLayer(conf));
-                
-                // load wms layers
-                
-                var index = this.layerSources.find("identifier", conf.wms);
-                
-                if (index == -1) {
-                    continue;
-                }
-                
-                var storeRecord = this.layerSources.getAt(index);
-                var store = storeRecord.data.store;
-
-                var id = store.find("name", conf.name);
-                
-                var record;
-                var base;
-                if (id >= 0) {
-                    /**
-                     * If the same layer is added twice, it will get replaced
-                     * unless we give each record a unique id.  In addition, we
-                     * need to clone the layer so that the map doesn't assume
-                     * the layer has already been added.  Finally, we can't
-                     * simply set the record layer to the cloned layer because
-                     * record.set compares String(value) to determine equality.
-                     * 
-                     * TODO: suggest record.clone
-                     */
-                    Ext.data.Record.AUTO_ID++;
-                    record = store.getAt(id).copy(Ext.data.Record.AUTO_ID);
-                    layer = record.get("layer").clone();
-                    record.set("layer", null);
-                    record.set("layer", layer);
-                    
-                    // set layer max extent from capabilities
-                    //TODO SRS handling should be done in WMSCapabilitiesReader
-                    layer.restrictedExtent = OpenLayers.Bounds.fromArray(record.get("llbbox")).transform(
-                        new OpenLayers.Projection("EPSG:4326"),
-                        new OpenLayers.Projection(projection)
-                    );
-                    
-                    if (this.alignToGrid) {
-                        layer.maxExtent = new OpenLayers.Bounds(-180, -90, 180, 90).transform(
-                            new OpenLayers.Projection("EPSG:4326"),
-                            new OpenLayers.Projection(projection)
-                        );
-                    } else {
-                        layer.maxExtent = layer.restrictedExtent;
-                    }
-
-
-                    // set layer visibility from config
-                    layer.visibility = ("visibility" in conf) ? conf.visibility : true;
-                    
-                    // set layer title from config
-                    if (conf.title) {
-                        /**
-                         * Because the layer title data is duplicated, we have
-                         * to set it in both places.  After records have been
-                         * added to the store, the store handles this
-                         * synchronization.
-                         */
-                        layer.setName(conf.title);
-                        record.set("title", conf.title);
-                    }
-
-                    record.set("group", conf.group);
-                    
-                    // set any other layer configuration
-
-                    records.push(record);
+                conf = mapConfig.layers[i];
+                source = this.layerSources[conf.source];                
+                record = source.createLayerRecord(conf);
+                if (record) {
+                    records.push(record);                    
                 }
             }
             
@@ -227,19 +157,23 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                     (aGroup == "background" ? -1 : 1);
             });
             
-            this.layers.add(records);
+            var panel = this.mapPanel;
+            var map = panel.map;
+            
+            if (records.length) {
+                panel.layers.add(records);
 
-            // set map center
-            if(this.mapPanel.center) {
-                // zoom does not have to be defined
-                this.map.setCenter(this.mapPanel.center, this.mapPanel.zoom);
-            } else if (this.mapPanel.extent) {
-                this.map.zoomToExtent(this.mapPanel.extent);
-            } else {
-                this.map.zoomToMaxExtent();
+                // set map center
+                if(panel.center) {
+                    // zoom does not have to be defined
+                    map.setCenter(panel.center, panel.zoom);
+                } else if (panel.extent) {
+                    map.zoomToExtent(panel.extent);
+                } else {
+                    map.zoomToMaxExtent();
+                }
             }
-        }
-        
+        }        
     }
     
 });

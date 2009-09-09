@@ -2,6 +2,11 @@ Ext.namespace("gxp.plugins");
 
 gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
     
+    /** private: property[target]
+     *  ``Object``
+     *  The object that this plugin is plugged into.
+     */
+    
     /** private: method[constructor]
      */
     constructor: function(config) {
@@ -18,11 +23,12 @@ gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
     },
     
     /** api: method[init]
-     *  :arg app: :class:`gxp.Viewer`
+     *  :arg target: ``Object`` The object initializing this plugin.
      *
      *  Calls :method:`createStore` with a callback that fires the 'ready' event.
      */
-    init: function(app) {
+    init: function(target) {
+        this.target = target;
         var callback = function() {
             this.fireEvent("ready", this);
         }
@@ -36,6 +42,16 @@ gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
      */
     createStore: function(callback) {
         callback();
+    },
+
+    /** api: method[createLayerRecord]
+     *  :arg config:  ``Object``  The application config for this layer.
+     *  :returns: ``GeoExt.data.LayerRecord``
+     *
+     *  Create a layer record given the config.
+     */
+    createLayerRecord: function(config) {
     }
+
     
 });
