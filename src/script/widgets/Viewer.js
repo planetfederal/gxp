@@ -40,7 +40,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         });
 
         this.applyConfig(config);
-
+        gxp.Viewer.superclass.constructor.apply(this, arguments);
     },
     
     applyConfig: function(config) {
@@ -144,7 +144,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             
             for (var i=0; i<mapConfig.layers.length; ++i) {
                 var conf = mapConfig.layers[i];
-                var serviceType = this.serviceType[conf.type];                
+                var serviceType = this.layerSources[conf.type];                
                 records.push(serviceType.createLayer(conf));
                 
                 // load wms layers

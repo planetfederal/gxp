@@ -14,7 +14,7 @@ gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
              */
              "ready"
         );
-        
+        gxp.plugins.LayerSource.superclass.constructor.apply(this, arguments);
     },
     
     /** api: method[init]
@@ -23,10 +23,10 @@ gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
      *  Calls :method:`createStore` with a callback that fires the 'ready' event.
      */
     init: function(app) {
-        this.createStore(
-            (function() {this.fireEvent("ready", this)}).createDelegate(this)
-        );
-        return this;
+        var callback = function() {
+            this.fireEvent("ready", this);
+        }
+        this.createStore(callback.createDelegate(this));
     },
     
     /** api: method[createStore]

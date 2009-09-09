@@ -17,9 +17,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         var store = new GeoExt.data.WMSCapabilitiesStore({
             url: url,
             autoLoad: true,
-            listeners: {
-                load: callback
-            }
+            listeners: {load: callback}
         });
     }
     
