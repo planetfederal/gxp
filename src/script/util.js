@@ -56,7 +56,7 @@ gxp.util = {
      *  :param scope: ``Object`` Optional object to be set as the scope for
      *      the complete function.
      *  :param attributes: ``Object`` Key-value pairs of additional attributes
-     *      for the script tag (e.g. encoding)
+     *      for the script tag (e.g. charset)
      *      
      *  Allows dynamic loading of javascript resources.
      */
