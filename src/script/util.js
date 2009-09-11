@@ -61,25 +61,23 @@ gxp.util = {
      *  Allows dynamic loading of javascript resources.
      */
     loadScript: function(url, complete, scope, attributes) {
-        var attrs = "";
+        var script = document.createElement("script");
+        script.src = url;
+        if(complete) {
+            script.onload = complete.createDelegate(scope || window);
+            script.onreadystatechange = function() {
+                if(this.readyState == "complete") {
+                    complete.call(scope || window);
+                }
+            }
+        }
         if(attributes) {
             for(a in attributes) {
-                attrs += a + "='" + attributes[a] + "' ";
+                script[a] = attributes[a];
             }
         }
 
-        var onload = "";
-        if(complete) {
-            var i = gxp.util._loadCallbacks.length;
-            onload = "onload='gxp.util._loadCallbacks[" + i +
-                "]()' onreadystatechange='if(this.readyState==\"complete\") gxp.util._loadCallbacks[" +
-                i + "]()' ";
-            gxp.util._loadCallbacks.push(function() {
-                complete.call(scope || window);
-            });
-        }
-        
-        document.write("<script " + onload + attrs + "src='" + url + "'></script>");
+        document.getElementsByTagName("head")[0].appendChild(script);
     }
 
 };
