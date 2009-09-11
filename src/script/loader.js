@@ -17,7 +17,8 @@
         "widgets/grid/FeatureGrid.js",
         "widgets/GoogleEarthPanel.js",
         "plugins/LayerSource.js",
-        "plugins/WMSSource.js"
+        "plugins/WMSSource.js",
+        "plugins/GoogleSource.js"
     );
     
     var scripts = document.getElementsByTagName("script");
