@@ -59,16 +59,19 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
              * TODO: The WMSCapabilitiesReader should allow for creation
              * of layers in different SRS.
              */
+            var projection = this.target.map.projection || "EPSG:4326";
             layer = new OpenLayers.Layer.WMS(
-                layer.name, layer.url,
-                {layers: layer.params["LAYERS"]},
+                layer.name, layer.url, {
+                    layers: layer.params["LAYERS"],
+                    transparent: ("transparent" in config) ? config.transparent : true
+                },
                 {
                     attribution: layer.attribution,
                     maxExtent: OpenLayers.Bounds.fromArray(
                         record.get("llbbox")
                     ).transform(
                         new OpenLayers.Projection("EPSG:4326"),
-                        this.target.mapPanel.map.getProjectionObject()
+                        new OpenLayers.Projection(projection)
                     ),
                     visibility: ("visibility" in config) ? config.visibility : true
                 }
