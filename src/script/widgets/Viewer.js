@@ -95,7 +95,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         this.mapPanel = new GeoExt.MapPanel({
             map: {
                 theme: null,
-                allOverlays: false,
+                allOverlays: true,
                 controls: [
                     new OpenLayers.Control.PanPanel(),
                     new OpenLayers.Control.ZoomPanel()
