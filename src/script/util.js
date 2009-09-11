@@ -55,10 +55,19 @@ gxp.util = {
      *      when the script file is loaded.
      *  :param scope: ``Object`` Optional object to be set as the scope for
      *      the complete function.
+     *  :param attributes: ``Object`` Key-value pairs of additional attributes
+     *      for the script tag (e.g. encoding)
      *      
      *  Allows dynamic loading of javascript resources.
      */
-    loadScript: function(url, complete, scope) {
+    loadScript: function(url, complete, scope, attributes) {
+        var attrs = "";
+        if(attributes) {
+            for(a in attributes) {
+                attrs += a + "='" + attributes[a] + "' ";
+            }
+        }
+
         var onload = "";
         if(complete) {
             var i = gxp.util._loadCallbacks.length;
@@ -69,7 +78,8 @@ gxp.util = {
                 complete.call(scope || window);
             });
         }
-        document.write("<script " + onload + "src='" + url + "'></script>");
+        
+        document.write("<script " + onload + attrs + "src='" + url + "'></script>");
     }
 
 };
