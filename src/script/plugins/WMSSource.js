@@ -1,5 +1,5 @@
 /**
- * @require plugins/ServiceType.js
+ * @require plugins/LayerSource.js
  */
 
 Ext.namespace("gxp.plugins");
