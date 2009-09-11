@@ -78,8 +78,11 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
     
     createSourceLoader: function(key) {
         return function(done) {
-            var config = Ext.applyIf({listeners: {ready: done}}, this.sources[key]);
+            var config = this.sources[key];
             var source = Ext.ComponentMgr.createPlugin(config, this.defaultSourceType);
+            source.on({
+                "ready": done
+            })
             this.layerSources[key] = source;
             source.init(this);
         };
@@ -142,7 +145,8 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             var conf, source, record, records = [];            
             for (var i=0; i<mapConfig.layers.length; ++i) {
                 conf = mapConfig.layers[i];
-                source = this.layerSources[conf.source];                
+                source = this.layerSources[conf.source];
+                // TODO: deal with required record fields (e.g. "group")                 
                 record = source.createLayerRecord(conf);
                 if (record) {
                     records.push(record);                    

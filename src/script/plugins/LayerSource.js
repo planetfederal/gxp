@@ -10,7 +10,7 @@ gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
     /** private: method[constructor]
      */
     constructor: function(config) {
-        this.initialConfig = Ext.apply({}, config);
+        this.initialConfig = config;
         Ext.apply(this, config);
         
         this.addEvents(
