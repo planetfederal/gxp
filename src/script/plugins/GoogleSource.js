@@ -24,37 +24,33 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
     
     /** api: method[createStore]
      *  :arg callback: ``Function``  Called when the store is loaded.
-     *  :arg scriptLoading: ``Boolean`` True if we are loading the script
-     *      already.
      *
      *  Create a store of layers.  Calls the provided callback when the 
      *  store has loaded.
      */
-    createStore: function(callback, scriptLoading) {
-        if(!window.G_NORMAL_MAP) {
-            if(scriptLoading !== true) {
-                if(!this.initialConfig.apiKey &&
-                                window.location.hostname !== "localhost") {
-                    Ext.Msg.prompt("Google API Key",
-                        this.apiKeyPrompt + window.location.hostname +
-                            " <sup><a target='_blank' href='http://code.google.com/apis/maps/'>?</a></sup>",
-                        function(btn, key) {
-                            if(btn === "ok") {
-                                this.initialConfig.apiKey = key;
-                                this.loadScript();
-                            } else {
-                                return false;
-                            }
-                        }, this
-                    );
-                } else {
-                    this.loadScript();
-                }
+    createStore: function(callback) {        
+        if (gxp.plugins.GoogleSource.monitor.ready) {
+            this.syncCreateStore(callback);
+        } else {
+            gxp.plugins.GoogleSource.monitor.on({
+                ready: function() {
+                    this.syncCreateStore(callback);
+                },
+                scope: this
+            });
+            if (!gxp.plugins.GoogleSource.monitor.loading) {
+                this.loadScript(callback);
             }
-            window.setTimeout(this.createStore.createDelegate(this, [callback, true]), 50);
-            return;
         }
-
+    },
+    
+    /** private: method[syncCreateStore]
+     *  :arg callback: ``Function`` Called when the store is loaded.
+     *
+     *  Creates a store of layers.  This requires that the API script has already
+     *  loaded.
+     */
+    syncCreateStore: function(callback) {
         var mapTypes = [G_NORMAL_MAP, G_SATELLITE_MAP, G_HYBRID_MAP, G_PHYSICAL_MAP];
         var len = mapTypes.length;
         var layers = new Array(len);
@@ -122,29 +118,74 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
     },
     
     loadScript: function() {
-        // The initial google script uses document.write to add additional
-        // scripts. When we load the google script after the document is
-        // loaded, the document will be overwritten. So we have to replace
-        // document.write temporarily with a function that loads our script
-        // into the DOM instead.
-        var _write = document.write;
-        document.write = function(html){
-            if(html.substring(1, 7) == "script") {
-                gxp.util.loadScript(/src=\"(.[^\"]*)\"/.exec(html)[1]);
-            } else {
-                _write(html);
-            }
+
+        if(!this.initialConfig.apiKey && window.location.hostname !== "localhost") {
+            Ext.Msg.prompt("Google API Key",
+                this.apiKeyPrompt + window.location.hostname +
+                    " <sup><a target='_blank' href='http://code.google.com/apis/maps/'>?</a></sup>",
+                function(btn, key) {
+                    if(btn === "ok") {
+                        this.initialConfig.apiKey = key;
+                        this.loadScript(callback);
+                    } else {
+                        return false;
+                    }
+                }, this
+            );
+            return;
         }
-        gxp.util.loadScript(
-            "http://maps.google.com/maps?file=api&amp;v=2&amp;key=" +
-            this.initialConfig.apiKey, function() {
-                // restore the original document.write function right after
-                // the initial google script is loaded.
-                document.write = _write;
-            }, null, {charset: "UTF-8"}
-        );
+        
+        var key = this.initialConfig.apiKey;
+        
+        Ext.onReady(function() {            
+            var script = document.createElement("script");
+            script.charset = "UTF-8";
+            // the async and callback params are appropriate for scripts appended to the body only
+            script.src = "http://maps.google.com/maps?file=api&amp;async=2&amp;v=2&amp;callback=gxp.plugins.GoogleSource.monitor.onScriptLoad&amp;sensor=false&amp;key=" + key;
+            //document.body.appendChild(script);            
+        });
+
     }    
 });
+
+/**
+ * Create a monitor singleton that all plugin instances can use.
+ */
+gxp.plugins.GoogleSource.monitor = new (Ext.extend(Ext.util.Observable, {
+
+    /** private: property[ready]
+     *  ``Boolean``
+     *  This plugin type is ready to use.
+     */
+    ready: !!window.G_NORMAL_MAP,
+
+    /** private: property[loading]
+     *  ``Boolean``
+     *  The resources for this plugin type are loading.
+     */
+    loading: false,
+    
+    constructor: function() {
+        this.addEvents(
+            /** private: event[ready]
+             *  Fires when this plugin type is ready.
+             */
+             "ready"
+        );
+    },
+    
+    /** private: method[onScriptLoad]
+     *  Called when all resources required by this plugin type have loaded.
+     */
+    onScriptLoad: function() {
+        if (!this.ready) {
+            this.ready = true;
+            this.loading = false;
+            this.fireEvent("ready");
+        }
+    }
+
+}))();
 
 /** api: ptype = gx-wmssource */
 Ext.preg("gx-googlesource", gxp.plugins.GoogleSource);
