@@ -135,15 +135,21 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
             return;
         }
         
-        var key = this.initialConfig.apiKey;
+        var params = {
+            key: this.initialConfig.apiKey,
+            autoload: Ext.encode({
+                modules: [{
+                    name: "maps",
+                    version: "2.X",
+                    nocss: "true",
+                    callback: "gxp.plugins.GoogleSource.monitor.onScriptLoad"
+                }]
+            })
+        };
         
-        Ext.onReady(function() {            
-            var script = document.createElement("script");
-            script.charset = "UTF-8";
-            // the async and callback params are appropriate for scripts appended to the body only
-            script.src = "http://maps.google.com/maps?file=api&amp;async=2&amp;v=2&amp;callback=gxp.plugins.GoogleSource.monitor.onScriptLoad&amp;sensor=false&amp;key=" + key;
-            //document.body.appendChild(script);            
-        });
+        var script = document.createElement("script");
+        script.src = "http://www.google.com/jsapi?" + Ext.urlEncode(params);
+        document.getElementsByTagName("head")[0].appendChild(script);
 
     }    
 });
@@ -178,10 +184,12 @@ gxp.plugins.GoogleSource.monitor = new (Ext.extend(Ext.util.Observable, {
      *  Called when all resources required by this plugin type have loaded.
      */
     onScriptLoad: function() {
-        if (!this.ready) {
-            this.ready = true;
-            this.loading = false;
-            this.fireEvent("ready");
+        // the google loader calls this in the window scope
+        var monitor = gxp.plugins.GoogleSource.monitor;
+        if (!monitor.ready) {
+            monitor.ready = true;
+            monitor.loading = false;
+            monitor.fireEvent("ready");
         }
     }
 
