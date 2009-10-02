@@ -95,7 +95,6 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         this.mapPanel = new GeoExt.MapPanel({
             map: {
                 theme: null,
-                allOverlays: true,
                 controls: [
                     new OpenLayers.Control.PanPanel(),
                     new OpenLayers.Control.ZoomPanel()
@@ -177,6 +176,12 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                     map.zoomToMaxExtent();
                 }
             }
+            
+            /**
+             * TODO: remove this when http://trac.openlayers.org/ticket/2290 is closed
+             */
+            map.baseLayer.redraw();
+            
         }        
     }
     
