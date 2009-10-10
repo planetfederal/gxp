@@ -5,6 +5,7 @@
         "Lang.js",
         "data/WFSFeatureStore.js",
         "data/WFSProtocolProxy.js",
+        "menu/LayerMenu.js",
         "widgets/FeatureEditPopup.js",
         "widgets/FilterPanel.js",
         "widgets/FilterBuilder.js",
