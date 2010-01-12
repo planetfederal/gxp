@@ -63,6 +63,10 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             var projection = this.target.mapPanel.map.getProjectionObject() ||
                 (projConfig && new OpenLayers.Projection(projConfig)) ||
                 new OpenLayers.Projection("EPSG:4326");
+            var nativeExtent = record.get("bbox")[projection.getCode()]
+            var maxExtent = 
+                (nativeExtent && OpenLayers.Bounds.fromArray(nativeExtent.bbox)) || 
+                OpenLayers.Bounds.fromArray(record.get("llbbox")).transform(new OpenLayers.Projection("EPSG:4326"), projection);
             layer = new OpenLayers.Layer.WMS(
                 layer.name, layer.url, {
                     layers: layer.params["LAYERS"],
@@ -70,12 +74,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 },
                 {
                     attribution: layer.attribution,
-                    maxExtent: OpenLayers.Bounds.fromArray(
-                        record.get("llbbox")
-                    ).transform(
-                        new OpenLayers.Projection("EPSG:4326"),
-                        projection
-                    ),
+                    maxExtent: maxExtent,
                     visibility: ("visibility" in config) ? config.visibility : true
                 }
             );
