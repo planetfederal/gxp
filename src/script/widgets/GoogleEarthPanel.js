@@ -65,7 +65,17 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
     /** private: method[initComponent]
      *  Initializes the Google Earth panel. 
      */
-    initComponent: function(){
+    initComponent: function() {
+
+        this.addEvents(
+            /** api: event[beforeadd]
+             *  Fires before a layer is added to the 3D view.  If a listener
+             *  returns ``false``, the layer will not be added.  Listeners
+             *  will be called with a single argument: the layer record.
+             */
+            "beforeadd"
+        );
+
         gxp.GoogleEarthPanel.superclass.initComponent.call(this);
 
         if (!this.map) {
@@ -166,31 +176,32 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
     
     addLayer: function(layer, order) {
         if (this.earth) {
-            var name = layer.get("layer").id;
+            var add = this.fireEvent("beforeadd", layer);
+            if (add !== false) {
+                var name = layer.get("layer").id;
 
-            if (this.layerCache[name]) {
-                var networkLink = this.layerCache[name];
-            } else {
-                var link = this.earth.createLink('kl_' + name);
-                var ows = layer.get("layer").url;
-                ows = ows.replace(/\?.*/, '');
-                var kmlPath = '/kml?mode=refresh&layers=' + layer.get("layer").params.LAYERS;
-                link.setHref(ows + kmlPath);
-                var networkLink = this.earth.createNetworkLink('nl_' + name);
-                networkLink.setName(name);
-                networkLink.set(link, false, false);
-                this.layerCache[name] = networkLink;
-            }
+                if (this.layerCache[name]) {
+                    var networkLink = this.layerCache[name];
+                } else {
+                    var link = this.earth.createLink('kl_' + name);
+                    var ows = layer.get("layer").url;
+                    ows = ows.replace(/\?.*/, '');
+                    var kmlPath = '/kml?mode=refresh&layers=' + layer.get("layer").params.LAYERS;
+                    link.setHref(ows + kmlPath);
+                    var networkLink = this.earth.createNetworkLink('nl_' + name);
+                    networkLink.setName(name);
+                    networkLink.set(link, false, false);
+                    this.layerCache[name] = networkLink;
+                }
 
-            networkLink.setVisibility(layer.get("layer").getVisibility());
+                networkLink.setVisibility(layer.get("layer").getVisibility());
 
-            if (order !== undefined && 
-                order < this.earth.getFeatures().getChildNodes().getLength())
-            {
-                this.earth.getFeatures().
-                    insertBefore(this.earth.getFeatures().getChildNodes().item(order));
-            } else { 
-                this.earth.getFeatures().appendChild(networkLink);
+                if (order !== undefined && order < this.earth.getFeatures().getChildNodes().getLength()) {
+                    this.earth.getFeatures().
+                        insertBefore(this.earth.getFeatures().getChildNodes().item(order));
+                } else { 
+                    this.earth.getFeatures().appendChild(networkLink);
+                }
             }
         }
     },
