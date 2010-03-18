@@ -73,7 +73,7 @@ Ext.onReady(function() {
     var panel2 = new Ext.Panel({
         title: "Filter Builder (no groups)",
         renderTo: "panel2",
-        width: 250,
+        width: 290,
         items: [{
             xtype: "gx_filterbuilder",
             allowGroups: false,

@@ -7,7 +7,7 @@
         "data/WFSProtocolProxy.js",
         "menu/LayerMenu.js",
         "widgets/FeatureEditPopup.js",
-        "widgets/FilterPanel.js",
+        "widgets/FilterContainer.js",
         "widgets/FilterBuilder.js",
         "widgets/QueryPanel.js",
         "widgets/WMSLayerPanel.js",

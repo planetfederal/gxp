@@ -3,7 +3,7 @@
  */
 
 /**
- * @include widgets/FilterPanel.js
+ * @include widgets/FilterContainer.js
  */
 
 /** api: (define)
@@ -463,7 +463,7 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
             grandchild = grandchildren[i];
             this.childFiltersPanel.add(this.newRow({
                 xtype: (grandchild instanceof OpenLayers.Filter.Logical) ?
-                    "gx_filterbuilder" : "gx_filterpanel",
+                    "gx_filterbuilder" : "gx_filtercontainer",
                 filter: grandchild,
                 attributes: this.attributes,
                 listeners: {
@@ -485,13 +485,13 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
      *  filter panel or filter builder with a component that allows for
      *  condition removal.
      */
-    newRow: function(filterPanel) {
+    newRow: function(filterContainer) {
         var panel = new Ext.Container({
             layout: "column",
-            style: "padding: 0.5em 0 0.3em 0;",
+            style: "margin: 6px;",
             items: [{
                 xtype: "container",
-                style: "padding: 0 0.5em 0 2px;",
+                style: "padding: 0 4px 0 0;",
                 items: [{
                     xtype: "button",
                     tooltip: "remove condition",
@@ -518,14 +518,14 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
                         }
                     },
                     handler: function(btn) {
-                        this.removeCondition(panel, filterPanel.filter);
+                        this.removeCondition(panel, filterContainer.filter);
                     },
                     scope: this
                 }]
             }, {
                 xtype: "container",
                 columnWidth: 1,
-                items: [filterPanel]
+                items: [filterContainer]
             }]
         });
         return panel;

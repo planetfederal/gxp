@@ -7,7 +7,7 @@
  */
 
 Ext.namespace("gxp");
-gxp.FilterPanel = Ext.extend(Ext.Panel, {
+gxp.FilterContainer = Ext.extend(Ext.Container, {
     
     /**
      * Property: filter
@@ -33,9 +33,10 @@ gxp.FilterPanel = Ext.extend(Ext.Panel, {
     initComponent: function() {
         
         var defConfig = {
-            layout: "column",
-            border: false,
+            layout: "hbox",
+            autoEl: "div",
             defaults: {
+                autoEl: "div",
                 hideMode: "offsets"
             }
         };
@@ -82,7 +83,7 @@ gxp.FilterPanel = Ext.extend(Ext.Panel, {
             "change"
         ); 
 
-        gxp.FilterPanel.superclass.initComponent.call(this);
+        gxp.FilterContainer.superclass.initComponent.call(this);
     },
     
     /**
@@ -114,27 +115,22 @@ gxp.FilterPanel = Ext.extend(Ext.Panel, {
                     scope: this
                 }
             }, {
-                xtype: "container",
-                layout: "anchor",
-                columnWidth: this.attributesComboConfig.width ? 1 :
-                    1 - (this.attributesComboConfig.columnWidth || 0.5),
-                items: [{
-                    xtype: "textfield",
-                    value: this.filter.value,
-                    anchor: "100%",
-                    allowBlank: false,
-                    listeners: {
-                        change: function(el, value) {
-                            this.filter.value = value;
-                            this.fireEvent("change", this.filter);
-                        },
-                        scope: this
-                    }
-                }]
+                flex: 1,
+                xtype: "textfield",
+                value: this.filter.value,
+                anchor: "100%",
+                allowBlank: false,
+                listeners: {
+                    change: function(el, value) {
+                        this.filter.value = value;
+                        this.fireEvent("change", this.filter);
+                    },
+                    scope: this
+                }
             }
         ];
     }
 
 });
 
-Ext.reg('gx_filterpanel', gxp.FilterPanel); 
+Ext.reg('gx_filtercontainer', gxp.FilterContainer);
