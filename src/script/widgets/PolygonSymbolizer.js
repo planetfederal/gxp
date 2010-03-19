@@ -1,8 +1,8 @@
 /**
  * Copyright (c) 2008 The Open Planning Project
  * 
- * @include Styler/widgets/FillSymbolizer.js
- * @include Styler/widgets/StrokeSymbolizer.js
+ * @include widgets/FillSymbolizer.js
+ * @include widgets/StrokeSymbolizer.js
  */
 
 /** api: (define)
@@ -10,14 +10,14 @@
  *  class = PolygonSymbolizer
  *  base_link = `Ext.Panel <http://extjs.com/deploy/dev/docs/?class=Ext.Panel>`_
  */
-Ext.namespace("Styler");
+Ext.namespace("gxp");
 
 /** api: constructor
  *  .. class:: PolygonSymbolizer(config)
  *   
  *      Form for configuring a polygon symbolizer.
  */
-Styler.PolygonSymbolizer = Ext.extend(Ext.Panel, {
+gxp.PolygonSymbolizer = Ext.extend(Ext.Panel, {
 
     /** api: config[symbolizer]
      *  ``Object``
@@ -61,7 +61,7 @@ Styler.PolygonSymbolizer = Ext.extend(Ext.Panel, {
             "change"
         ); 
 
-        Styler.PolygonSymbolizer.superclass.initComponent.call(this);
+        gxp.PolygonSymbolizer.superclass.initComponent.call(this);
 
     }
     
@@ -69,4 +69,4 @@ Styler.PolygonSymbolizer = Ext.extend(Ext.Panel, {
 });
 
 /** api: xtype = gx_linesymbolizer */
-Ext.reg('gx_polygonsymbolizer', Styler.PolygonSymbolizer);
+Ext.reg('gx_polygonsymbolizer', gxp.PolygonSymbolizer);
