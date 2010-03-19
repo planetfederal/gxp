@@ -17,6 +17,7 @@
         "widgets/PointSymbolizer.js",
         "widgets/LineSymbolizer.js",
         "widgets/PolygonSymbolizer.js",
+        "widgets/TextSymbolizer.js",
         "widgets/Viewer.js",
         "widgets/form/ComparisonComboBox.js",
         "widgets/form/ColorField.js",
