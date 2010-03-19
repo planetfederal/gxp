@@ -14,6 +14,7 @@
         "widgets/NewSourceWindow.js",
         "widgets/Viewer.js",
         "widgets/form/ComparisonComboBox.js",
+        "widgets/form/ColorField.js",
         "widgets/grid/CapabilitiesGrid.js",
         "widgets/grid/FeatureGrid.js",
         "widgets/GoogleEarthPanel.js",
