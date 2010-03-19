@@ -1,0 +1,71 @@
+/**
+ * Copyright (c) 2008-2010 The Open Planning Project
+ */
+
+/** api: (define)
+ *  module = gxp.form
+ *  class = FontComboBox
+ *  base_link = `Ext.form.ComboBox <http://extjs.com/deploy/dev/docs/?class=Ext.form.ComboBox>`_
+ */
+Ext.namespace("gxp.form");
+
+/** api: constructor
+ *  .. class:: FontComboBox(config)
+ *   
+ *      A combo box for selecting a font.
+ */
+gxp.form.FontComboBox = Ext.extend(Ext.form.ComboBox, {
+    
+    /** api: property[fonts]
+     *  ``Array``
+     *  List of font families to choose from.  Default is ["Arial",
+     *  "Courier New", "Tahoma", "Times New Roman", "Verdana"].
+     */
+    fonts: [
+        "Arial",
+        "Courier New",
+        "Tahoma",
+        "Times New Roman",
+        "Verdana"
+    ],
+    
+    /** api: property[defaultFont]
+     *  ``String``
+     *  The ``fonts`` item to select by default.
+     */
+    defaultFont: "Tahoma",
+
+    allowBlank: false,
+
+    mode: "local",
+
+    triggerAction: "all",
+
+    editable: false,
+  
+    initComponent: function() {
+        var fonts = this.fonts || gxp.form.FontComboBox.prototype.fonts;
+        var defaultFont = this.defaultFont;
+        if (fonts.indexOf(this.defaultFont) === -1) {
+            defaultFont = fonts[0];
+        }
+        var defConfig = {
+            displayField: "field1",
+            valueField: "field1",
+            store: fonts,
+            value: defaultFont,
+            tpl: new Ext.XTemplate(
+                '<tpl for=".">' +
+                    '<div class="x-combo-list-item">' +
+                    '<span style="font-family: {field1};">{field1}</span>' +
+                '</div></tpl>'
+            )
+        };
+        Ext.applyIf(this, defConfig);
+        
+        gxp.form.FontComboBox.superclass.initComponent.call(this);
+    }
+});
+
+/** api: xtype = gx_fontcombo */
+Ext.reg("gx_fontcombo", gxp.form.FontComboBox);
