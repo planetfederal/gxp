@@ -53,7 +53,7 @@ Ext.onReady(function() {
     var panel1 = new Ext.Panel({
         title: "Filter Builder (with groups)",
         renderTo: "panel1",
-        width: 370,
+        width: 320,
         items: [{
             xtype: "gx_filterbuilder",
             filter: filter.clone(),
@@ -73,7 +73,7 @@ Ext.onReady(function() {
     var panel2 = new Ext.Panel({
         title: "Filter Builder (no groups)",
         renderTo: "panel2",
-        width: 290,
+        width: 320,
         items: [{
             xtype: "gx_filterbuilder",
             allowGroups: false,
