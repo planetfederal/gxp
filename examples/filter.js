@@ -44,8 +44,10 @@ Ext.onReady(function() {
         closable: false,
         bodyStyle: {padding: 10},
         width: 370,
+        layout: "anchor",
         items: [{
             xtype: "gx_filtercontainer",
+            anchor: "100%",
             filter: filter,
             attributes: new GeoExt.data.AttributeStore({
                 url: "data/describe_feature_type.xml",

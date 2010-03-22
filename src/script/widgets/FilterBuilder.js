@@ -59,9 +59,9 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
      */
     builderType: null,
 
-    /** private: property[childFiltersPanel]
+    /** private: property[childFilterContainer]
      */
-    childFiltersPanel: null,
+    childFilterContainer: null,
     
     /** private: property[customizeFilterOnInit]
      */
@@ -364,9 +364,9 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
                 scope: this
             }
         });
-        this.childFiltersPanel.add(newChild);
+        this.childFilterContainer.add(newChild);
         this.filter.filters[0].filters.push(filter);
-        this.childFiltersPanel.doLayout();
+        this.childFilterContainer.doLayout();
     },
     
     /** private: method[removeCondition]
@@ -374,11 +374,11 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
      *  modifies the filter and removes the panel representing the condition
      *  or group of conditions.
      */
-    removeCondition: function(panel, filter) {
+    removeCondition: function(item, filter) {
         var parent = this.filter.filters[0].filters;
         if(parent.length > 1) {
             parent.remove(filter);
-            this.childFiltersPanel.remove(panel, true);
+            this.childFilterContainer.remove(item, true);
         }
         this.fireEvent("change", this);
     },
@@ -456,12 +456,17 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
      *  a logical filter.
      */
     createChildFiltersPanel: function() {
-        this.childFiltersPanel = new Ext.Container();
+        this.childFilterContainer = new Ext.Container({
+            layout: "anchor",
+            defaults: {
+                anchor: "100%"
+            }
+        });
         var grandchildren = this.filter.filters[0].filters;
         var grandchild;
         for(var i=0, len=grandchildren.length; i<len; ++i) {
             grandchild = grandchildren[i];
-            this.childFiltersPanel.add(this.newRow({
+            this.childFilterContainer.add(this.newRow({
                 xtype: (grandchild instanceof OpenLayers.Filter.Logical) ?
                     "gx_filterbuilder" : "gx_filtercontainer",
                 filter: grandchild,
@@ -474,7 +479,7 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
                 }
             }));
         }
-        return this.childFiltersPanel;
+        return this.childFilterContainer;
     },
 
     /** private: method[newRow]
@@ -486,7 +491,7 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
      *  condition removal.
      */
     newRow: function(filterContainer) {
-        var panel = new Ext.Container({
+        var ct = new Ext.Container({
             layout: "column",
             style: "margin: 6px;",
             items: [{
@@ -496,29 +501,8 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
                     xtype: "button",
                     tooltip: "remove condition",
                     iconCls: "delete",
-                    /**
-                     * Calling btn.destroy causes failures if quick tips are
-                     * not initialized (see http://extjs.com/forum/showthread.php?t=59121).
-                     * This happens in 2.2.1 and 3.0.0.
-                     *
-                     * TODO: remove the beforeDestroy override after 3.0.0.
-                     */
-                    beforeDestroy: function() {
-                        if (this.rendered) {
-                            var btnEl = this.el.child(this.buttonSelector);
-                            if (btnEl) {
-                                if (typeof this.tooltip == 'object') {
-                                    Ext.QuickTips.unregister(btnEl);
-                                }
-                                btnEl.removeAllListeners();
-                            }
-                        }
-                        if (this.menu) {
-                            Ext.destroy(this.menu);
-                        }
-                    },
                     handler: function(btn) {
-                        this.removeCondition(panel, filterContainer.filter);
+                        this.removeCondition(ct, filterContainer.filter);
                     },
                     scope: this
                 }]
@@ -528,7 +512,7 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
                 items: [filterContainer]
             }]
         });
-        return panel;
+        return ct;
     },
 
     /** private: method[getBuilderType]

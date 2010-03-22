@@ -51,11 +51,12 @@ function showFE(panel) {
 Ext.onReady(function() {
 
     var panel1 = new Ext.Panel({
-        title: "Filter Builder (with groups)",
+        title: "Filter Builder (no groups)",
         renderTo: "panel1",
         width: 320,
         items: [{
             xtype: "gx_filterbuilder",
+            allowGroups: false,
             filter: filter.clone(),
             attributes: new GeoExt.data.AttributeStore({
                 url: "data/describe_feature_type.xml",
@@ -71,12 +72,11 @@ Ext.onReady(function() {
     });
 
     var panel2 = new Ext.Panel({
-        title: "Filter Builder (no groups)",
+        title: "Filter Builder (with groups)",
         renderTo: "panel2",
         width: 320,
         items: [{
             xtype: "gx_filterbuilder",
-            allowGroups: false,
             filter: filter.clone(),
             attributes: new GeoExt.data.AttributeStore({
                 url: "data/describe_feature_type.xml",
@@ -90,4 +90,5 @@ Ext.onReady(function() {
             }
         }]
     });
+
 });

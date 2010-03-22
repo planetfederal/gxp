@@ -35,7 +35,6 @@ gxp.FilterContainer = Ext.extend(Ext.Container, {
         var defConfig = {
             layout: "column",
             autoEl: "div",
-            width: "100%",
             defaults: {
                 hideMode: "offsets"
             }
