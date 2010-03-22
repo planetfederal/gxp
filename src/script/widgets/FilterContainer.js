@@ -33,8 +33,9 @@ gxp.FilterContainer = Ext.extend(Ext.Container, {
     initComponent: function() {
         
         var defConfig = {
-            layout: "hbox",
+            layout: "column",
             autoEl: "div",
+            width: "100%",
             defaults: {
                 autoEl: "div",
                 hideMode: "offsets"
@@ -115,7 +116,6 @@ gxp.FilterContainer = Ext.extend(Ext.Container, {
                     scope: this
                 }
             }, {
-                flex: 1,
                 xtype: "textfield",
                 value: this.filter.value,
                 anchor: "100%",
