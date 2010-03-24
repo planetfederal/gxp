@@ -122,6 +122,8 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                 name: "opacity",
                 fieldLabel: "Opacity",
                 value: opacity * 100,
+                //TODO remove the line below when switching to Ext 3.2 final
+                values: [opacity * 100],
                 anchor: "99%",
                 isFormField: true,
                 listeners: {
