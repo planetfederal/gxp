@@ -32,8 +32,7 @@ Ext.onReady(function() {
             handler: function() {
                 var record = grid.getSelectionModel().getSelected();
                 if(record) {
-                    var copy = record.copy();
-                    copy.set("layer", record.get("layer"));
+                    var copy = record.clone();
                     copy.get("layer").mergeNewParams({
                         format: "image/png",
                         transparent: "true"
@@ -105,4 +104,4 @@ function showProp(record) {
         }]
     });
     prop.show();
-};
+}
