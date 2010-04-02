@@ -103,5 +103,10 @@ function showProp(record) {
             defaults: {style: "padding: 10px"}
         }]
     });
+    prop.items.get(0).add(new gxp.WMSStylesDialog({
+        title: "Styles",
+        layerRecord: record,
+        autoScroll: true
+    }));
     prop.show();
 }

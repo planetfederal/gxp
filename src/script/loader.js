@@ -11,6 +11,7 @@
         "widgets/FilterBuilder.js",
         "widgets/QueryPanel.js",
         "widgets/WMSLayerPanel.js",
+        "widgets/WMSStylesDialog",
         "widgets/NewSourceWindow.js",
         "widgets/FillSymbolizer.js",
         "widgets/StrokeSymbolizer.js",
