@@ -6,8 +6,8 @@
  * @include widgets/form/ComparisonComboBox.js
  */
 
-Ext.namespace("gxp");
-gxp.FilterContainer = Ext.extend(Ext.Container, {
+Ext.namespace("gxp.form");
+gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
     
     /**
      * Property: filter
@@ -31,16 +31,7 @@ gxp.FilterContainer = Ext.extend(Ext.Container, {
     attributesComboConfig: null,
 
     initComponent: function() {
-        
-        var defConfig = {
-            layout: "column",
-            autoEl: "div",
-            defaults: {
-                hideMode: "offsets"
-            }
-        };
-        Ext.applyIf(this, defConfig);
-        
+                
         if(!this.filter) {
             this.filter = this.createDefaultFilter();
         }
@@ -82,7 +73,7 @@ gxp.FilterContainer = Ext.extend(Ext.Container, {
             "change"
         ); 
 
-        gxp.FilterContainer.superclass.initComponent.call(this);
+        gxp.form.FilterField.superclass.initComponent.call(this);
     },
     
     /**
@@ -134,4 +125,4 @@ gxp.FilterContainer = Ext.extend(Ext.Container, {
 
 });
 
-Ext.reg('gx_filtercontainer', gxp.FilterContainer);
+Ext.reg('gx_filterfield', gxp.form.FilterField);
