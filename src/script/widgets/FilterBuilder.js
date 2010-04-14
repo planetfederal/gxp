@@ -14,7 +14,7 @@
 Ext.namespace("gxp");
 
 /** api: constructor
- *  .. class:: FilterPanel(config)
+ *  .. class:: FilterBuilder(config)
  *   
  *      Create a panel for assembling a filter.
  */
@@ -349,7 +349,7 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
             type = "gx_filterbuilder";
             filter = this.wrapFilter(this.createDefaultFilter());
         } else {
-            type = "gx_filterpanel";
+            type = "gx_filtercontainer";
             filter = this.createDefaultFilter();
         }
         var newChild = this.newRow({
