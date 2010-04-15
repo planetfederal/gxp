@@ -213,6 +213,15 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                 },
                 expand: function() {
                     Ext.apply(this.symbolizer, this.haloCache);
+                    /**
+                     * Start workaround for
+                     * http://projects.opengeo.org/suite/ticket/676
+                     */
+                    this.doLayout();
+                    /**
+                     * End workaround for
+                     * http://projects.opengeo.org/suite/ticket/676
+                     */                    
                     this.fireEvent("change", this.symbolizer);
                 },
                 scope: this
