@@ -44,9 +44,10 @@ Ext.onReady(function() {
         closable: false,
         bodyStyle: {padding: 10},
         width: 370,
-        layout: "anchor",
+        layout: "form",
+        hideLabels: true,
         items: [{
-            xtype: "gx_filtercontainer",
+            xtype: "gx_filterfield",
             anchor: "100%",
             filter: filter,
             attributes: new GeoExt.data.AttributeStore({
