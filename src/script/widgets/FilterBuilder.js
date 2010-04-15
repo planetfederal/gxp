@@ -18,7 +18,7 @@ Ext.namespace("gxp");
  *   
  *      Create a panel for assembling a filter.
  */
-gxp.FilterBuilder = Ext.extend(Ext.Panel, {
+gxp.FilterBuilder = Ext.extend(Ext.Container, {
 
     /** api: config[builderTypeNames]
      *  ``Array``
@@ -78,9 +78,6 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
 
     initComponent: function() {
         var defConfig = {
-            layout: "form",
-            hideLabels: true,
-            border: false,
             defaultBuilderType: gxp.FilterBuilder.ANY_OF
         };
         Ext.applyIf(this, defConfig);
@@ -91,8 +88,12 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
         
         this.builderType = this.getBuilderType();
         
-        this.items = [
-            {
+        this.items = [{
+            xtype: "container",
+            layout: "form",
+            defaults: {anchor: "100%"},
+            hideLabels: true,
+            items: [{
                 xtype: "compositefield",
                 style: "padding-left: 2px",
                 items: [{
@@ -104,11 +105,13 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
                     style: "padding-top: 0.3em",
                     text: this.postComboText
                 }]
-            }, this.createChildFiltersPanel()
-        ];
+            }, this.createChildFiltersPanel(), {
+                xtype: "toolbar",
+                items: this.createToolBar()
+            }]
         
-        this.bbar = this.createToolBar();
-
+        }];
+        
         this.addEvents(
             /**
              * Event: change
@@ -346,6 +349,7 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
         var newChild = this.newRow({
             xtype: type,
             filter: filter,
+            columnWidth: 1,
             attributes: this.attributes,
             customizeFilterOnInit: group && false,
             listeners: {
@@ -447,20 +451,14 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
      *  a logical filter.
      */
     createChildFiltersPanel: function() {
-        this.childFilterContainer = new Ext.Container({
-            layout: "form",
-            anchor: "100%",
-            defaults: {
-                anchor: "100%"
-            }
-        });
+        this.childFilterContainer = new Ext.Container();
         var grandchildren = this.filter.filters[0].filters;
         var grandchild;
         for(var i=0, len=grandchildren.length; i<len; ++i) {
             grandchild = grandchildren[i];
-            this.childFilterContainer.add(this.newRow({
-                xtype: (grandchild instanceof OpenLayers.Filter.Logical) ?
-                    "gx_filterbuilder" : "gx_filterfield",
+            var fieldCfg = {
+                xtype: "gx_filterfield",
+                columnWidth: 1,
                 filter: grandchild,
                 attributes: this.attributes,
                 listeners: {
@@ -469,7 +467,19 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
                     },
                     scope: this
                 }
-            }));
+            };
+            var containerCfg = Ext.applyIf(
+                grandchild instanceof OpenLayers.Filter.Logical ?
+                    {
+                        xtype: "gx_filterbuilder"
+                    } : {
+                        xtype: "container",
+                        layout: "form",
+                        hideLabels: true,
+                        items: fieldCfg
+                    }, fieldCfg);
+                
+            this.childFilterContainer.add(this.newRow(containerCfg));
         }
         return this.childFilterContainer;
     },
@@ -484,27 +494,20 @@ gxp.FilterBuilder = Ext.extend(Ext.Panel, {
      */
     newRow: function(filterContainer) {
         var ct = new Ext.Container({
-            style: "padding-bottom: .3em;",
-            layout: "table",
-            layoutConfig: {
-                columns: 2,
-                tableAttrs: {
-                    style: "width: 100%;"
-                }
-            },
+            layout: "column",
             items: [{
                 xtype: "container",
-                cellCls: "deletebutton",
-                items: [{
+                width: 28,
+                style: "padding-left: 2px",
+                items: {
                     xtype: "button",
-                    style: "padding-left: 2px",
                     tooltip: "remove condition",
                     iconCls: "delete",
-                    handler: function(btn) {
+                    handler: function(btn){
                         this.removeCondition(ct, filterContainer.filter);
                     },
                     scope: this
-                }]
+                }
             }, filterContainer]
         });
         return ct;

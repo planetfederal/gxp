@@ -23,8 +23,3 @@
     background: transparent;
     border: none !important;
 }
-
-.gx-filterbuilder .x-table-layout-cell.deletebutton {
-    vertical-align: top;
-    width: 30px;
-}
