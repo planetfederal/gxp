@@ -47,18 +47,21 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         
         gxp.WMSStylesDialog.superclass.initComponent.apply(this, arguments);
         
-        this.rulesFieldSet = new Ext.form.FieldSet({
-            title: "Rules"
-        });
-
-        this.rulesFieldSet.add(this.createLegendImage());
-
         this.add({
             xtype: "fieldset",
             title: "Styles",
             labelWidth: 75,
             items: this.createStylesCombo()
-        }, this.rulesFieldSet);
+        });
+
+        var legendImage = this.createLegendImage();
+        if(legendImage) {
+            this.rulesFieldSet = new Ext.form.FieldSet({
+                title: "Rules"
+            });
+            this.rulesFieldSet.add(this.createLegendImage());
+            this.add(this.rulesFieldSet);
+        }
     },
     
     /** private: method[createStylesCombo]
@@ -80,8 +83,9 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             fieldLabel: "Choose style",
             store: store,
             displayField: "name",
-            value: this.layerRecord.get("layer").styles ||
-                styles[0].name,
+            value: this.layerRecord.get("layer").params.STYLES ||
+                styles.length ? styles[0].name : "default",
+            disabled: !styles.length,
             mode: "local",
             typeAhead: true,
             triggerAction: "all",
@@ -95,6 +99,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     },
     
     /** private: method[createLegendImage]
+     *  :return: ``GeoExt.LegendImage`` or undefined if none available.
      * 
      *  Creates a legend image for the first style of the current layer. This
      *  is used when GetStyles is not available from the layer's WMS.
@@ -103,20 +108,22 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         var styleIndex = 0;
         var styleName = this.layerRecord.get("layer").params.STYLES;
         var styles = this.layerRecord.get("styles");
+        if(styles.length) {
         var style;
-        for(var i=0, len=styles.length; i<len; ++i) {
-            style = styles[i];
-            if(style.name === styleName) {
-                styleIndex = i;
-                break;
+            for(var i=0, len=styles.length; i<len; ++i) {
+                style = styles[i];
+                if(style.name === styleName) {
+                    styleIndex = i;
+                    break;
+                }
             }
+            var legendImage = new GeoExt.LegendImage({
+                url: this.layerRecord.get("styles")[styleIndex].legend.href +
+                    // workaround for incomplete legend url in geoserver caps
+                    "&style=" + styleName
+            });
+            return legendImage;
         }
-        var legendImage = new GeoExt.LegendImage({
-            url: this.layerRecord.get("styles")[styleIndex].legend.href +
-                // workaround for incomplete legend url in geoserver caps
-                "&style=" + styleName
-        });
-        return legendImage;
     },
     
     /** private: method[changeStyle]
