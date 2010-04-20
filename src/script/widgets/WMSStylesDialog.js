@@ -25,11 +25,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      */
     layerRecord: null,
     
-    /** private: property[sldStyle]
-     *  ``OpenLayers.Style`` The style from the sld. Only available if the
-     *  GetStyles request was successful.
-     */
-    sldStyle: null,
+    styles: null,
     
     /** private: property[rulesFieldSet]
      *  ``Ext.form.FieldSet`` The fieldset with the rules. If GetStyles works
@@ -84,18 +80,15 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         try {
             var sld = new OpenLayers.Format.SLD().read(data);
             var layer = this.layerRecord.get("layer").params.LAYERS;
-            this.sldStyle = sld.namedLayers[layer].userStyles[0];
+            
+            this.styles = sld.namedLayers[layer].userStyles;
+            
+            //TODO use the default style instead of the 1st one
+            var style = this.styles[0];
+            
             this.createRulesFieldSet();
-            // use the symbolizer type of the 1st rule
-            //TODO make VectorLegend support multiple symbolTypes
-            for(var symbolType in this.sldStyle.rules[0].symbolizer) {
-                break;
-            }
-            var legend = new GeoExt.VectorLegend({
-                rules: this.sldStyle.rules,
-                symbolType: symbolType
-            });
-            this.rulesFieldSet.add(legend);
+            
+            this.addVectorLegend(style.rules);
         }
         catch(e) {
             var legendImage = this.createLegendImage();
@@ -147,26 +140,10 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      *  is used when GetStyles is not available from the layer's WMS.
      */
     createLegendImage: function() {
-        var styleIndex = 0;
-        var styleName = this.layerRecord.get("layer").params.STYLES;
-        var styles = this.layerRecord.get("styles");
-        if(styles.length) {
-            var style;
-            for(var i=0, len=styles.length; i<len; ++i) {
-                style = styles[i];
-                if(style.name === styleName) {
-                    styleIndex = i;
-                    break;
-                }
-            }
-            var legendImage = new GeoExt.LegendImage({
-                url: this.layerRecord.get("styles")[styleIndex].legend.href +
-                    // workaround for incomplete legend url in geoserver caps
-                    "&style=" + styleName
-            });
-            this.createRulesFieldSet();
-            return legendImage;
-        }
+        return new GeoExt.WMSLegend({
+            showTitle: false,
+            layerRecord: this.layerRecord
+        });
     },
     
     /** private: method[changeStyle]
@@ -178,13 +155,46 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      */
     changeStyle: function(field, value) {
         var styleName = value.get("name");
-        this.layerRecord.get("layer").mergeNewParams({styles: styleName});
-        if(!this.sldStyle) {
-            var url = value.get("legend").href +
-                // workaround for incomplete legend url in geoserver capabilities
-                "&style=" + styleName;
-            this.rulesFieldSet.items.get(0).setUrl(url);
+        var layer = this.layerRecord.get("layer");
+        
+        //TODO remove when http://jira.codehaus.org/browse/GEOS-3921 is fixed
+        var styles = this.layerRecord.get("styles");
+        if(styles) {
+            var style;
+            for(var i=0, len=styles.length; i<len; ++i) {
+                style = styles[i];
+                if(style.name === styleName) {
+                    break;
+                }
+            }
+            var urlParts = value.get("legend").href.split("?");
+            var params = Ext.urlDecode(urlParts[1]);
+            params.STYLE = styleName;
+            urlParts[1] = Ext.urlEncode(params);
+            style.legend.href = urlParts.join("?");
         }
+        //TODO end remove
+        
+        layer.mergeNewParams({styles: styleName});
+        if(this.styles) {
+            var style = this.styles[i];
+            this.rulesFieldSet.remove(this.rulesFieldSet.items.get(0));
+            this.addVectorLegend(style.rules);
+        }
+    },
+    
+    addVectorLegend: function(rules) {
+        // use the symbolizer type of the 1st rule
+        for(var symbolType in rules[0].symbolizer) {
+            break;
+        }
+        this.rulesFieldSet.add({
+            xtype: "gx_vectorlegend",
+            showTitle: false,
+            rules: rules,
+            symbolType: symbolType
+        });
+        this.rulesFieldSet.doLayout();
     }
 });
 
