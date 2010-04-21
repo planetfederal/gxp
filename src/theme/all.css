@@ -7,6 +7,10 @@
     background-image: url(img/delete.png);
 }
 
+.x-btn .duplicate {
+    background-image: url(img/silk/arrow_divide.png);
+}
+
 .x-btn .save {
     background-image: url(img/accept.png);
 }

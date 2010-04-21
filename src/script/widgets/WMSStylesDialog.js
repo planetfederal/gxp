@@ -52,7 +52,26 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             xtype: "fieldset",
             title: "Styles",
             labelWidth: 75,
+            style: "margin-bottom: 0;",
             items: this.createStylesCombo()
+        }, {
+            xtype: "toolbar",
+            style: "border-width: 0 1px 1px 1px; margin-bottom: 10px;",
+            items: [
+                {
+                    xtype: "button",
+                    iconCls: "add",
+                    text: "Add"
+                }, {
+                    xtype: "button",
+                    iconCls: "delete",
+                    text: "Remove"
+                }, {
+                    xtype: "button",
+                    iconCls: "duplicate",
+                    text: "Duplicate"
+                }
+            ]
         });
 
         var layer = this.layerRecord.get("layer");
@@ -101,7 +120,6 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             var style = this.styles[0];
             
             this.addRulesFieldSet();
-            
             this.addVectorLegend(style.rules);
         }
         catch(e) {
@@ -154,9 +172,21 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      *  is used when GetStyles is not available from the layer's WMS.
      */
     createLegendImage: function() {
+        var self = this;
         return new GeoExt.WMSLegend({
             showTitle: false,
-            layerRecord: this.layerRecord
+            layerRecord: this.layerRecord,
+            defaults: {
+                listeners: {
+                    // remove rulesFieldSet if legend image cannot be loaded
+                    "render": function() {
+                        this.getEl().on("error", function() {
+                            self.remove(self.rulesFieldSet);
+                            self.doLayout();
+                        });
+                    }
+                }
+            }
         });
     },
     
