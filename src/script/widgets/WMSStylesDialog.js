@@ -42,37 +42,44 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      */
     initComponent: function() {
         var defConfig = {
-            layout: "form"
+            layout: "form",
+            items: [{
+                xtype: "fieldset",
+                title: "Styles",
+                labelWidth: 75,
+                style: "margin-bottom: 0;",
+                items: this.createStylesCombo()
+            }, {
+                xtype: "toolbar",
+                style: "border-width: 0 1px 1px 1px; margin-bottom: 10px;",
+                items: [
+                    {
+                        xtype: "button",
+                        iconCls: "add",
+                        text: "Add"
+                    }, {
+                        xtype: "button",
+                        iconCls: "delete",
+                        text: "Remove"
+                    }, {
+                        xtype: "button",
+                        iconCls: "edit",
+                        text: "Edit"
+                    }, {
+                        xtype: "button",
+                        iconCls: "duplicate",
+                        text: "Duplicate"
+                    }
+                ]
+            }]
         };
         Ext.applyIf(this, defConfig);
         
         gxp.WMSStylesDialog.superclass.initComponent.apply(this, arguments);
         
-        this.add({
-            xtype: "fieldset",
-            title: "Styles",
-            labelWidth: 75,
-            style: "margin-bottom: 0;",
-            items: this.createStylesCombo()
-        }, {
-            xtype: "toolbar",
-            style: "border-width: 0 1px 1px 1px; margin-bottom: 10px;",
-            items: [
-                {
-                    xtype: "button",
-                    iconCls: "add",
-                    text: "Add"
-                }, {
-                    xtype: "button",
-                    iconCls: "delete",
-                    text: "Remove"
-                }, {
-                    xtype: "button",
-                    iconCls: "duplicate",
-                    text: "Duplicate"
-                }
-            ]
-        });
+        // disable styles toolbar if we have no styles
+        this.layerRecord.get("styles").length ||
+            this.items.get(1).disable();
 
         var layer = this.layerRecord.get("layer");
         Ext.Ajax.request({
@@ -93,9 +100,41 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      */
     addRulesFieldSet: function() {
         this.rulesFieldSet = new Ext.form.FieldSet({
-            title: "Rules"
+            title: "Rules",
+            autoScroll: true,
+            style: "margin-bottom: 0;"
         });
-        this.add(this.rulesFieldSet);
+        this.add(this.rulesFieldSet, {
+            xtype: "toolbar",
+            style: "border-width: 0 1px 1px 1px;",
+            items: [
+                {
+                    xtype: "button",
+                    iconCls: "add",
+                    text: "Add"
+                }, {
+                    xtype: "button",
+                    iconCls: "delete",
+                    text: "Remove"
+                }, {
+                    xtype: "button",
+                    iconCls: "edit",
+                    text: "Edit"
+                }, {
+                    xtype: "button",
+                    iconCls: "duplicate",
+                    text: "Duplicate"
+                }
+            ]
+        });
+    },
+    
+    /** private: method[removeRulesFieldSet[
+     */
+    removeRulesFieldSet: function() {
+        this.remove(this.rulesFieldSet);
+        this.remove(this.items.get(2));
+        this.doLayout();
     },
 
     /** private: method[parseSLD]
@@ -127,6 +166,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             if(legendImage) {
                 this.addRulesFieldSet();
                 this.rulesFieldSet.add(legendImage);
+                // disable the rules toolbar
+                this.items.get(3).disable();
             }
         }
     },
@@ -180,10 +221,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 listeners: {
                     // remove rulesFieldSet if legend image cannot be loaded
                     "render": function() {
-                        this.getEl().on("error", function() {
-                            self.remove(self.rulesFieldSet);
-                            self.doLayout();
-                        });
+                        this.getEl().on("error", self.removeRulesFieldSet, self);
                     }
                 }
             }
