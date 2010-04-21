@@ -12,7 +12,7 @@ Ext.namespace("gxp");
 /** api: constructor
  *  .. class:: WMSStylesDialog(config)
  *   
- *      Create a dialog for selecting and modifying feature styles.
+ *      Create a dialog for selecting and modifying layer styles.
  */
 gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     
@@ -25,6 +25,10 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      */
     layerRecord: null,
     
+    /** private: property[styles]
+     *  ``Array(OpenLayers.Style)`` The style objects for the ``NamedLayer``
+     *  of this ``layerRecord``
+     */
     styles: null,
     
     /** private: property[rulesFieldSet]
@@ -65,13 +69,23 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         });
     },
     
-    createRulesFieldSet: function() {
+    /** private: method[addRulesFieldSet]
+     *  Creates the ``rulesFieldSet`` and adds it to this container.
+     */
+    addRulesFieldSet: function() {
         this.rulesFieldSet = new Ext.form.FieldSet({
             title: "Rules"
         });
         this.add(this.rulesFieldSet);
     },
 
+    /** private: method[parseSLD]
+     *  :param response: ``Object``
+     *  :param options: ``Object``
+     *  
+     *  Success handler for the GetStyles response. Includes a fallback
+     *  to GetLegendGraphic if no valid SLD is returned.
+     */
     parseSLD: function(response, options) {
         var data = response.responseXML;
         if(!data || !data.documentElement) {
@@ -86,14 +100,14 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             //TODO use the default style instead of the 1st one
             var style = this.styles[0];
             
-            this.createRulesFieldSet();
+            this.addRulesFieldSet();
             
             this.addVectorLegend(style.rules);
         }
         catch(e) {
             var legendImage = this.createLegendImage();
             if(legendImage) {
-                this.createRulesFieldSet();
+                this.addRulesFieldSet();
                 this.rulesFieldSet.add(legendImage);
             }
         }
@@ -183,6 +197,12 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         }
     },
     
+    /** private: method[addVectorLegend]
+     *  :param rules: ``Array``
+     *
+     *  Creates the vector legend for the provided rules and adds it to the
+     *  ``rulesFieldSet``.
+     */
     addVectorLegend: function(rules) {
         // use the symbolizer type of the 1st rule
         for(var symbolType in rules[0].symbolizer) {
