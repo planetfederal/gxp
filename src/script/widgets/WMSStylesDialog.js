@@ -293,7 +293,9 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             xtype: "gx_vectorlegend",
             showTitle: false,
             rules: rules,
-            symbolType: symbolType
+            symbolType: symbolType,
+            selectOnClick: true,
+            enableDD: true
         });
         this.rulesFieldSet.doLayout();
     }
