@@ -33,6 +33,13 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
     
     initComponent: function() {
         
+        this.addEvents(
+            /** api: event[change]
+             *  Fires when the ``layerRecord`` is changed using this dialog.
+             */
+            "change"
+        );
+
         this.items = [
             this.createAboutPanel(),
             this.createDisplayPanel()
@@ -64,6 +71,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                             //TODO revisit when discussion on
                             // http://trac.geoext.org/ticket/110 is complete
                             this.layerRecord.commit();
+                            this.fireEvent("change");
                         },
                         scope: this
                     }
@@ -129,7 +137,9 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                 listeners: {
                     change: function(slider, value) {
                         layer.setOpacity(value / 100);
-                    }
+                        this.fireEvent("change");
+                    },
+                    scope: this
                 }
             }, {
                 xtype: "combo",
@@ -145,7 +155,9 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                         layer.mergeNewParams({
                             format: combo.getValue()
                         });
-                    }
+                        this.fireEvent("change");
+                    },
+                    scope: this
                 }
             }, {
                 xtype: "checkbox",
@@ -156,7 +168,9 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                         layer.mergeNewParams({
                             transparent: checked ? "true" : "false"
                         });
-                    }
+                        this.fireEvent("change");
+                    },
+                    scope: this
                 }
             }]
         };

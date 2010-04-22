@@ -75,6 +75,13 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         };
         Ext.applyIf(this, defConfig);
         
+        this.addEvents(
+            /** api: event[change]
+             *  Fires when the ``layerRecord`` is changed using this dialog.
+             */
+            "change"
+        );
+        
         gxp.WMSStylesDialog.superclass.initComponent.apply(this, arguments);
         
         // disable styles toolbar if we have no styles
@@ -130,9 +137,11 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     },
     
     /** private: method[removeRulesFieldSet[
+     *  Removes rulesFieldSet when the legend image cannot be loaded
      */
     removeRulesFieldSet: function() {
         this.remove(this.rulesFieldSet);
+        // remove the rules toolbar
         this.remove(this.items.get(2));
         this.doLayout();
     },
@@ -219,9 +228,12 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             layerRecord: this.layerRecord,
             defaults: {
                 listeners: {
-                    // remove rulesFieldSet if legend image cannot be loaded
                     "render": function() {
-                        this.getEl().on("error", self.removeRulesFieldSet, self);
+                        this.getEl().on({
+                            "load": self.doLayout,
+                            "error": self.removeRulesFieldSet,
+                            scope: self
+                        });
                     }
                 }
             }
@@ -263,6 +275,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             this.rulesFieldSet.remove(this.rulesFieldSet.items.get(0));
             this.addVectorLegend(style.rules);
         }
+        this.fireEvent("change");
     },
     
     /** private: method[addVectorLegend]
