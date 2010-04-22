@@ -38,6 +38,17 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      */
     rulesFieldSet: null,
     
+    /** private: property[rulesToolbar]
+     *  ``Ext.Toolbar`` The toolbar for the ``rulesFieldSet``.
+     */
+    rulesToolbar: null,
+    
+    /** private: property[selectedRule]
+     *  ``OpenLayers.Rule`` The currently selected rule, or null if none
+     *  selected.
+     */
+    selectedRule: null,
+    
     /** private: method[initComponent]
      */
     initComponent: function() {
@@ -111,8 +122,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             autoScroll: true,
             style: "margin-bottom: 0;"
         });
-        this.add(this.rulesFieldSet, {
-            xtype: "toolbar",
+        this.rulesToolbar = new Ext.Toolbar({
             style: "border-width: 0 1px 1px 1px;",
             items: [
                 {
@@ -122,18 +132,22 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 }, {
                     xtype: "button",
                     iconCls: "delete",
-                    text: "Remove"
+                    text: "Remove",
+                    disabled: true
                 }, {
                     xtype: "button",
                     iconCls: "edit",
-                    text: "Edit"
+                    text: "Edit",
+                    disabled: true
                 }, {
                     xtype: "button",
                     iconCls: "duplicate",
-                    text: "Duplicate"
+                    text: "Duplicate",
+                    disabled: true
                 }
             ]
         });
+        this.add(this.rulesFieldSet, this.rulesToolbar);
     },
     
     /** private: method[removeRulesFieldSet[
@@ -141,8 +155,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      */
     removeRulesFieldSet: function() {
         this.remove(this.rulesFieldSet);
-        // remove the rules toolbar
-        this.remove(this.items.get(2));
+        this.remove(this.rulesToolbar);
         this.doLayout();
     },
 
@@ -175,8 +188,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             if(legendImage) {
                 this.addRulesFieldSet();
                 this.rulesFieldSet.add(legendImage);
-                // disable the rules toolbar
-                this.items.get(3).disable();
+                this.rulesToolbar.disable();
             }
         }
     },
@@ -295,7 +307,24 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             rules: rules,
             symbolType: symbolType,
             selectOnClick: true,
-            enableDD: true
+            enableDD: true,
+            listeners: {
+                "ruleselected": function(cmp, rule) {
+                    var tbItems = this.rulesToolbar.items;
+                    this.selectedRule = rule;
+                    tbItems.get(1).enable();
+                    tbItems.get(2).enable();
+                    tbItems.get(3).enable();
+                },
+                "ruleunselected": function(cmp, rule) {
+                    var tbItems = this.rulesToolbar.items;
+                    this.selectedRule = null;
+                    tbItems.get(1).disable();
+                    tbItems.get(2).disable();
+                    tbItems.get(3).disable();
+                },
+                scope: this
+            }
         });
         this.rulesFieldSet.doLayout();
     }
