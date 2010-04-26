@@ -1,12 +1,12 @@
 <html>
     <head>
-        <title>Layer Properties Panel</title>
+        <title>Layer Properties Panel and Styles Dialog</title>
 
         <script src="http://extjs.cachefly.net/ext-3.2.0/adapter/ext/ext-base.js"></script>
         <script src="http://extjs.cachefly.net/ext-3.2.0/ext-all-debug.js"></script>
         <link rel="stylesheet" type="text/css" href="http://extjs.cachefly.net/ext-3.2.0/resources/css/ext-all.css" />
         <link rel="stylesheet" type="text/css" href="http://extjs.cachefly.net/ext-3.2.0/examples/shared/examples.css" />
-        <script src="http://openlayers.org/api/2.8/OpenLayers.js"></script>
+        <script src="http://openlayers.org/api/2.9/OpenLayers.js"></script>
         <script src="../../geoext/lib/GeoExt.js"></script>
         <script src="../../geoext/lib/GeoExt/adapter/override-ext-ajax.js"></script>
         <link rel="stylesheet" type="text/css" href="../src/theme/all.css" />
@@ -29,12 +29,14 @@
         </style>
     </head>
     <body>
-        <h1>Layer Properties Panel</h1>
+        <h1>Layer Properties Panel and Styles Dialog</h1>
         <p>This example shows the use of a WMSLayerPanel in an Ext.Window.  Add
         layers to the map using the grid on the left.  Select a layer node in the
         layer tree and click the "Show Properties" button to launch the layer
         properties dialog.  Change the layer title and display options and see
-        the result in the map and layer tree.<p>
+        the result in the map and layer tree.</p>
+        <p>The WMSLayerPanel in this example has an extra tab, the WMSStylesDialog.
+        This dialog is used to manage and edit the style of the layer.</p>
         <p>The js is not minified so it is readable. See <a href="layer-properties.js">layer-properties.js</a>.</p>
         <div id="capgrid"></div>
         <div id="tree"></div>

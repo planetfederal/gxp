@@ -94,8 +94,8 @@ function showProp(record) {
     }
     prop = new Ext.Window({
         title: "Properties: " + record.get("title"),
-        width: 250,
-        height: 250,
+        width: 280,
+        height: 350,
         layout: "fit",
         items: [{
             xtype: "gx_wmslayerpanel",
