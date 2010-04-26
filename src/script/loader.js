@@ -17,6 +17,7 @@
         "widgets/PointSymbolizer.js",
         "widgets/LineSymbolizer.js",
         "widgets/PolygonSymbolizer.js",
+        "widgets/RulePanel.js",
         "widgets/ScaleLimitPanel.js",
         "widgets/TextSymbolizer.js",
         "widgets/Viewer.js",
