@@ -166,6 +166,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     handler: function() {
                         var rule = this.selectedRule;
                         var origSymbolizer = Ext.decode(Ext.encode(rule.symbolizer));
+                        var origTitle = rule.title;
                         var ruleDlg = new Ext.Window({
                             title: "Style Rule: " + rule.title || rule.name,
                             width: 330,
@@ -188,6 +189,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                                 text: "Cancel",
                                 handler: function() {
                                     rule.symbolizer = origSymbolizer;
+                                    rule.title = origTitle;
                                     ruleDlg.close();
                                 }
                             }, {
@@ -196,6 +198,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                                     this.rulesFieldSet.items.get(0).update();
                                     origSymbolizer = Ext.decode(Ext.encode(
                                         rule.symbolizer));
+                                    origTitle = rule.title;
                                 },
                                 scope: this
                             }, {
