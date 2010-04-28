@@ -99,13 +99,6 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         };
         Ext.applyIf(this, defConfig);
         
-        this.addEvents(
-            /** api: event[change]
-             *  Fires when the ``layerRecord`` is changed using this dialog.
-             */
-            "change"
-        );
-        
         gxp.WMSStylesDialog.superclass.initComponent.apply(this, arguments);
         
         // disable styles toolbar if we have no styles
@@ -135,25 +128,25 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             autoScroll: true,
             style: "margin-bottom: 0;"
         });
-        var wfsUrl = this.wfsUrl;
-        if (!wfsUrl) {
-            var wmsUrl = this.layerRecord.get("layer").url;
-            var urlParts = wmsUrl.split("?");
-            var params = Ext.urlDecode(urlParts[urlParts.length - 1]);
-            delete params[""];
-            Ext.apply(params, {
-                "SERVICE": "WFS",
-                "REQUEST": "DescribeFeatureType"
-            });
-            wfsUrl = Ext.urlAppend(urlParts[0], Ext.urlEncode(params));
-        }
         this.rulesToolbar = new Ext.Toolbar({
             style: "border-width: 0 1px 1px 1px;",
             items: [
                 {
                     xtype: "button",
                     iconCls: "add",
-                    text: "Add"
+                    text: "Add",
+                    handler: function() {
+                        var symbolizer = {};
+                        symbolizer[this.symbolType] = {};
+                        this.selectedRule = new OpenLayers.Rule({
+                            name: gxp.RulePanel.prototype.uniqueRuleName.call(this),
+                            symbolizer: symbolizer
+                        });
+                        var legend = this.rulesFieldSet.items.get(0);
+                        legend.rules.push(this.selectedRule);
+                        legend.update();
+                    },
+                    scope: this
                 }, {
                     xtype: "button",
                     iconCls: "delete",
@@ -163,55 +156,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     xtype: "button",
                     iconCls: "edit",
                     text: "Edit",
-                    handler: function() {
-                        var rule = this.selectedRule;
-                        var origSymbolizer = Ext.decode(Ext.encode(rule.symbolizer));
-                        var origTitle = rule.title;
-                        var ruleDlg = new Ext.Window({
-                            title: "Style Rule: " + rule.title || rule.name,
-                            width: 330,
-                            autoHeight: true,
-                            items: [{
-                                xtype: "gx_rulepanel",
-                                symbolType: this.symbolType,
-                                rule: rule,
-                                attributes: new GeoExt.data.AttributeStore({
-                                    url: wfsUrl
-                                }),
-                                bodyStyle: "padding: 10px",
-                                border: false,
-                                defaults: {
-                                    autoHeight: true,
-                                    hideMode: "offsets"
-                                }
-                            }],
-                            buttons: [{
-                                text: "Cancel",
-                                handler: function() {
-                                    rule.symbolizer = origSymbolizer;
-                                    rule.title = origTitle;
-                                    ruleDlg.close();
-                                }
-                            }, {
-                                text: "Apply",
-                                handler: function() {
-                                    this.rulesFieldSet.items.get(0).update();
-                                    origSymbolizer = Ext.decode(Ext.encode(
-                                        rule.symbolizer));
-                                    origTitle = rule.title;
-                                },
-                                scope: this
-                            }, {
-                                text: "Save",
-                                handler: function() {
-                                    this.rulesFieldSet.items.get(0).update();
-                                    ruleDlg.close();
-                                },
-                                scope: this
-                            }]
-                        });
-                        ruleDlg.show();
-                    },
+                    handler: this.editRule,
                     scope: this,
                     disabled: true
                 }, {
@@ -223,6 +168,76 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             ]
         });
         this.add(this.rulesFieldSet, this.rulesToolbar);
+    },
+    
+    editRule: function() {
+        var rule = this.selectedRule;
+        var origProperties;
+        var saveOrigProperties = function() {
+            origProperties = {
+                title: rule.title,
+                symbolizer: Ext.decode(Ext.encode(rule.symbolizer)),
+                filter: rule.filter ? rule.filter.clone(): null,
+                minScaleDenominator: rule.minScaleDenominator,
+                maxScaleDenominator: rule.maxScaleDenominator
+            };
+        }
+        saveOrigProperties();
+
+        var wfsUrl = this.initialConfig.wfsUrl;
+        if (!wfsUrl) {
+            var wmsUrl = this.layerRecord.get("layer").url;
+            var urlParts = wmsUrl.split("?");
+            var params = Ext.urlDecode(urlParts[urlParts.length - 1]);
+            delete params[""];
+            Ext.apply(params, {
+                "SERVICE": "WFS",
+                "REQUEST": "DescribeFeatureType"
+            });
+            wfsUrl = Ext.urlAppend(urlParts[0], Ext.urlEncode(params));
+        }
+
+        var ruleDlg = new Ext.Window({
+            title: "Style Rule: " + (rule.title || rule.name),
+            width: 340,
+            autoHeight: true,
+            items: [{
+                xtype: "gx_rulepanel",
+                symbolType: this.symbolType,
+                rule: rule,
+                attributes: new GeoExt.data.AttributeStore({
+                    url: wfsUrl
+                }),
+                bodyStyle: "padding: 10px",
+                border: false,
+                defaults: {
+                    autoHeight: true,
+                    hideMode: "offsets"
+                }
+            }],
+            buttons: [{
+                text: "Cancel",
+                handler: function() {
+                    Ext.apply(rule, origProperties);
+                    ruleDlg.close();
+                }
+            }, {
+                text: "Apply",
+                handler: function() {
+                    this.rulesFieldSet.items.get(0).update();
+                    saveOrigProperties();
+                },
+                scope: this
+            }, {
+                text: "Save",
+                handler: function() {
+                    this.rulesFieldSet.items.get(0).update();
+                    ruleDlg.close();
+                },
+                scope: this
+            }]
+        });
+        ruleDlg.show();
     },
     
     /** private: method[removeRulesFieldSet[
@@ -362,7 +377,6 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             this.rulesFieldSet.remove(this.rulesFieldSet.items.get(0));
             this.addVectorLegend(style.rules);
         }
-        this.fireEvent("change");
     },
     
     /** private: method[addVectorLegend]
