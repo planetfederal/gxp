@@ -4,7 +4,7 @@
  * @ include widgets/ScaleLimitPanel.js
  */
 
-Ext.namespace("Styler");
+Ext.namespace("gxp");
 gxp.RulePanel = Ext.extend(Ext.TabPanel, {
     
     /**
@@ -285,7 +285,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
              * Fires when any rule property changes.
              *
              * Listener arguments:
-             * panel - {Styler.RulePanel} This panel.
+             * panel - {gxp.RulePanel} This panel.
              * rule - {OpenLayers.Rule} The updated rule.
              */
             "change"
