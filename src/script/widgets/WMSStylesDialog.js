@@ -138,12 +138,11 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     handler: function() {
                         var symbolizer = {};
                         symbolizer[this.symbolType] = {};
-                        this.selectedRule = new OpenLayers.Rule({
+                        var legend = this.rulesFieldSet.items.get(0);
+                        legend.rules.push(new OpenLayers.Rule({
                             name: gxp.RulePanel.prototype.uniqueRuleName.call(this),
                             symbolizer: symbolizer
-                        });
-                        var legend = this.rulesFieldSet.items.get(0);
-                        legend.rules.push(this.selectedRule);
+                        }));
                         legend.update();
                     },
                     scope: this
@@ -151,6 +150,14 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     xtype: "button",
                     iconCls: "delete",
                     text: "Remove",
+                    handler: function() {
+                        var rule = this.selectedRule;
+                        var legend = this.rulesFieldSet.items.get(0);
+                        legend.unselect();
+                        legend.rules.remove(rule);
+                        legend.update();
+                    },
+                    scope: this,
                     disabled: true
                 }, {
                     xtype: "button",
@@ -163,6 +170,12 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     xtype: "button",
                     iconCls: "duplicate",
                     text: "Duplicate",
+                    handler: function() {
+                        var legend = this.rulesFieldSet.items.get(0);
+                        legend.rules.push(this.selectedRule.clone());
+                        legend.update();
+                    },
+                    scope: this,
                     disabled: true
                 }
             ]
@@ -172,7 +185,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     
     editRule: function() {
         var rule = this.selectedRule;
-        var origProperties;
+        var origRule = rule.clone();
         var saveOrigProperties = function() {
             origProperties = {
                 title: rule.title,
