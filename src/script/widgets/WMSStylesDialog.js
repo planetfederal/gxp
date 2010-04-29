@@ -101,10 +101,6 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         
         gxp.WMSStylesDialog.superclass.initComponent.apply(this, arguments);
         
-        // disable styles toolbar if we have no styles
-        this.layerRecord.get("styles").length ||
-            this.items.get(1).disable();
-
         var layer = this.layerRecord.get("layer");
         Ext.Ajax.request({
             method: "GET",
@@ -287,12 +283,12 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             this.addVectorLegend(style.rules);
         }
         catch(e) {
+            // disable styles toolbar
+            this.items.get(1).disable();
             var legendImage = this.createLegendImage();
-            if (legendImage) {
-                this.addRulesFieldSet();
-                this.rulesFieldSet.add(legendImage);
-                this.rulesToolbar.disable();
-            }
+            this.addRulesFieldSet();
+            this.rulesFieldSet.add(legendImage);
+            this.rulesToolbar.disable();
         }
     },
     
