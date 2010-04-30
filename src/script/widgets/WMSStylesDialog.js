@@ -56,6 +56,14 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      */
     symbolType: null,
     
+    /** private: property[selectedStyle]
+     *  ``OpenLayers.Style`` The currently selected style, or null if the WMS
+     *  does not support GetStyles.
+     */
+    selectedStyle: null,
+    
+    modifiedStyles: undefined,
+    
     /** private: property[selectedRule]
      *  ``OpenLayers.Rule`` The currently selected rule, or null if none
      *  selected.
@@ -92,14 +100,55 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     }, {
                         xtype: "button",
                         iconCls: "duplicate",
-                        text: "Duplicate"
+                        text: "Duplicate",
+                        handler: function() {
+                            var combo = this.items.get(0).items.get(0);
+                            var newStyle = this.selectedStyle.clone();
+                            newStyle.name = "Copy of " +
+                                this.selectedStyle.name;
+                            this.styles.push(newStyle);
+                            var store = combo.store;
+                            store.add(new store.recordType({
+                                name: "* " + newStyle.name,
+                                title: newStyle.title,
+                                abstract: newStyle.description
+                            }));
+                        },
+                        scope: this
                     }
                 ]
-            }]
+            }],
+            modifiedStyles: {}
         };
         Ext.applyIf(this, defConfig);
         
         gxp.WMSStylesDialog.superclass.initComponent.apply(this, arguments);
+        
+        this.addEvents(
+            /** api: event[stylemodified]
+             *  Fires when a style is modified.
+             *
+             *  Listener arguments:
+             *  * comp - :class:`gxp.WMSStylesDialog`` This component.
+             *  * rule - ``OpenLayers.Style`` The style that was modified.
+             */
+            "stylemodified"
+        );
+        this.on({
+            "stylemodified": function() {
+                var style = this.selectedStyle;
+                this.modifiedStyles[style.id] = true;
+                var combo = this.items.get(0).items.get(0);
+                var index = combo.store.findExact("name", combo.getValue());
+                var name = "* " + style.name;
+                combo.store.getAt(index).set("name", name);
+                combo.setValue(name);
+                
+                //TODO don't allow the name to be the same as the name of one
+                // of the other styles.
+            },
+            scope: this
+        });
         
         var layer = this.layerRecord.get("layer");
         Ext.Ajax.request({
@@ -222,6 +271,13 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 defaults: {
                     autoHeight: true,
                     hideMode: "offsets"
+                },
+                listeners: {
+                    "change": function(cmp, rule) {
+                        this.fireEvent("stylemodified", this,
+                            this.selectedStyle);
+                    },
+                    scope: this
                 }
             }],
             buttons: [{
@@ -277,10 +333,10 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             this.styles = sld.namedLayers[layer].userStyles;
             
             //TODO use the default style instead of the 1st one
-            var style = this.styles[0];
+            this.selectedStyle = this.styles[0];
             
             this.addRulesFieldSet();
-            this.addVectorLegend(style.rules);
+            this.addVectorLegend(this.selectedStyle.rules);
         }
         catch(e) {
             // disable styles toolbar
@@ -364,7 +420,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         
         //TODO remove when http://jira.codehaus.org/browse/GEOS-3921 is fixed
         var styles = this.layerRecord.get("styles");
-        if (styles) {
+        var legend = value.get("legend");
+        if (styles && legend) {
             var style;
             for (var i=0, len=styles.length; i<len; ++i) {
                 style = styles[i];
@@ -382,7 +439,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         
         layer.mergeNewParams({styles: styleName});
         if (this.styles) {
-            var style = this.styles[i];
+            var style = this.styles[value.store.indexOf(value)];
             this.rulesFieldSet.remove(this.rulesFieldSet.items.get(0));
             this.addVectorLegend(style.rules);
         }
@@ -421,6 +478,9 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     tbItems.get(1).disable();
                     tbItems.get(2).disable();
                     tbItems.get(3).disable();
+                },
+                "rulemoved": function() {
+                    this.fireEvent("stylemodified", this, this.selectedStyle);
                 },
                 scope: this
             }
