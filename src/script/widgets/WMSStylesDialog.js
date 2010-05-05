@@ -109,9 +109,9 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                             this.styles.push(newStyle);
                             var store = combo.store;
                             store.add(new store.recordType({
-                                name: "* " + newStyle.name,
-                                title: newStyle.title,
-                                abstract: newStyle.description
+                                "name": "* " + newStyle.name,
+                                "title": newStyle.title,
+                                "abstract": newStyle.description
                             }));
                         },
                         scope: this
