@@ -5,7 +5,7 @@
 /** api: (define)
  *  module = gxp
  *  class = WMSStylesDialog
- *  base_link = `Ext.Panel <http://extjs.com/deploy/dev/docs/?class=Ext.Container>`_
+ *  base_link = `Ext.Container <http://extjs.com/deploy/dev/docs/?class=Ext.Container>`_
  */
 Ext.namespace("gxp");
 
@@ -112,7 +112,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                         handler: function() {
                             var newStyle = this.selectedStyle.get(
                                 "userStyle").clone();
-                            newStyle.name = this.uniqueName(newStyle.name);
+                            newStyle.name = this.uniqueName(
+                                newStyle.name + " (copy)");
                             var store = this.stylesStore;
                             store.add(new store.recordType({
                                 "name": newStyle.name,
@@ -131,6 +132,25 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         gxp.WMSStylesDialog.superclass.initComponent.apply(this, arguments);
         
         this.createStylesStore();
+    },
+    
+    /** api: method[createSLD]
+     *  :return: ``String`` The current SLD for the NamedLayer.
+     */
+    createSLD: function() {
+        var sld = {
+            version: "1.0.0",
+            namedLayers: {}
+        };
+        var layerName = this.layerRecord.get("layer").name;
+        sld.namedLayers[layerName] = {
+            name: layerName,
+            userStyles: []
+        };
+        this.stylesStore.each(function(r) {
+            sld.namedLayes[layerName].userStyles.push(r.get("userStyle"));
+        });
+        return new OpenLayers.Format.SLD().write(sld);
     },
     
     /** private: method[updateStyleRemoveButton]
@@ -214,7 +234,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                         var legend = this.items.get(2).items.get(0);
                         var newRule = this.selectedRule.clone();
                         newRule.name = this.uniqueName(
-                            (newRule.title || newRule.name));
+                            (newRule.title || newRule.name) + " (copy)");
                         delete newRule.title;
                         this.selectedStyle.get("userStyle").addRules(
                             [newRule]);
