@@ -104,7 +104,24 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     }, {
                         xtype: "button",
                         iconCls: "edit",
-                        text: "Edit"
+                        text: "Edit",
+                        handler: function() {
+                            var userStyle = this.selectedStyle.get("userStyle");
+                            new Ext.Window({
+                                title: "Properties: " + userStyle.name,
+                                autoHeight: true,
+                                defaults: {autoHeight: true},
+                                width: 300,
+                                modal: true,
+                                items: {
+                                    xtype: "gx_styleproperties",
+                                    userStyle: userStyle,
+                                    style: "padding: 10px;",
+                                    defaults: {autoHeight: true}
+                                }
+                            }).show()
+                        },
+                        scope: this
                     }, {
                         xtype: "button",
                         iconCls: "duplicate",
