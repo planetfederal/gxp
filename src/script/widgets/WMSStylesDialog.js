@@ -116,7 +116,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                                 items: {
                                     border: false,
                                     items: {
-                                        xtype: "gx_styleproperties",
+                                        xtype: "gx_stylepropertiesdialog",
                                         userStyle: userStyle,
                                         style: "padding: 10px;"
                                     }

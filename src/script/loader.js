@@ -9,7 +9,7 @@
         "widgets/FeatureEditPopup.js",
         "widgets/FilterBuilder.js",
         "widgets/QueryPanel.js",
-        "widgets/StyleProperties.js",
+        "widgets/StylePropertiesDialog.js",
         "widgets/WMSLayerPanel.js",
         "widgets/WMSStylesDialog.js",
         "widgets/NewSourceWindow.js",

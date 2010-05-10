@@ -4,17 +4,17 @@
 
 /** api: (define)
  *  module = gxp
- *  class = StyleProperties
+ *  class = StylePropertiesDialog
  *  base_link = `Ext.Panel <http://extjs.com/deploy/dev/docs/?class=Ext.Container>`_
  */
 Ext.namespace("gxp");
 
 /** api: constructor
- *  .. class:: StyleProperties(config)
+ *  .. class:: StylePropertiesDialog(config)
  *   
  *      Create a dialog for editing properties of a UserStyle.
  */
-gxp.StyleProperties = Ext.extend(Ext.Container, {
+gxp.StylePropertiesDialog = Ext.extend(Ext.Container, {
     
     /** api: config[userStyle]
      *  ``OpenLayers.Style``
@@ -63,9 +63,9 @@ gxp.StyleProperties = Ext.extend(Ext.Container, {
         };
         Ext.applyIf(this, defConfig);
         
-        gxp.StyleProperties.superclass.initComponent.apply(this, arguments);
+        gxp.StylePropertiesDialog.superclass.initComponent.apply(this, arguments);
     }
 });
 
 /** api: xtype = gx_styleproperties */
-Ext.reg('gx_styleproperties', gxp.StyleProperties);
+Ext.reg('gx_stylepropertiesdialog', gxp.StylePropertiesDialog);
