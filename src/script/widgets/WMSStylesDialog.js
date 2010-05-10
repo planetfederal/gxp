@@ -109,15 +109,17 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                             var userStyle = this.selectedStyle.get("userStyle");
                             new Ext.Window({
                                 title: "Properties: " + userStyle.name,
+                                bodyBorder: false,
                                 autoHeight: true,
-                                defaults: {autoHeight: true},
                                 width: 300,
                                 modal: true,
                                 items: {
-                                    xtype: "gx_styleproperties",
-                                    userStyle: userStyle,
-                                    style: "padding: 10px;",
-                                    defaults: {autoHeight: true}
+                                    border: false,
+                                    items: {
+                                        xtype: "gx_styleproperties",
+                                        userStyle: userStyle,
+                                        style: "padding: 10px;"
+                                    }
                                 }
                             }).show()
                         },
@@ -608,9 +610,11 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      *  :return: ``String`` a unique name based on ``name``
      */
     uniqueName: function(name) {
-        var regEx = / [0-9]$/;
+        var regEx = / [0-9]*$/;
         var key = name.replace(regEx, "");
-        var count = this.uniqueNames[key] || Number(regEx.exec(name));
+        var regExResult = regEx.exec(name);
+        var count = this.uniqueNames[key] ||
+            (regExResult instanceof Array ? Number(regExResult[0]) : undefined);
         var newName = key;
         if(count !== undefined) {
             count++;
