@@ -5,6 +5,12 @@
  */
 
 Ext.namespace("gxp");
+
+/** api: (define)
+ *  module = gxp
+ *  class = RulePanel
+ *  base_link = `Ext.TabPanel <http://extjs.com/deploy/dev/docs/?class=Ext.TabPanel>`_
+ */
 gxp.RulePanel = Ext.extend(Ext.TabPanel, {
     
     /** api: property[fonts]
