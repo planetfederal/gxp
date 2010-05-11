@@ -31,6 +31,7 @@ gxp.StylePropertiesDialog = Ext.extend(Ext.Container, {
         var listeners = {
             "change": function(field, value) {
                 this.userStyle[field.name] = value;
+                this.fireEvent("change", this, this.userStyle);
             },
             scope: this
         };
@@ -63,6 +64,17 @@ gxp.StylePropertiesDialog = Ext.extend(Ext.Container, {
         };
         Ext.applyIf(this, defConfig);
         
+        this.addEvents(
+            /** api: events[change]
+             *  Fires when any style property changes.
+             *
+             *  Listener arguments:
+             *  * component - ``gxp.StylePropertiesDialog`` This dialog.
+             *  * userStyle - ``OpenLayers.Style`` The updated style.
+             */
+            "change"
+        ); 
+
         gxp.StylePropertiesDialog.superclass.initComponent.apply(this, arguments);
     }
 });
