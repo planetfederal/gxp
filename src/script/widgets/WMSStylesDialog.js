@@ -107,8 +107,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                         text: "Edit",
                         handler: function() {
                             var userStyle = this.selectedStyle.get("userStyle");
-                            new Ext.Window({
-                                title: "Properties: " + userStyle.name,
+                            var styleProperties = new Ext.Window({
+                                title: "User Style: " + userStyle.name,
                                 bodyBorder: false,
                                 autoHeight: true,
                                 width: 300,
@@ -117,11 +117,28 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                                     border: false,
                                     items: {
                                         xtype: "gx_stylepropertiesdialog",
-                                        userStyle: userStyle,
+                                        userStyle: userStyle.clone(),
                                         style: "padding: 10px;"
                                     }
-                                }
-                            }).show()
+                                },
+                                buttons: [{
+                                    text: "Cancel",
+                                    handler: function() {
+                                        styleProperties.close();
+                                    }
+                                }, {
+                                    text: "Save",
+                                    handler: function() {
+                                        var userStyle = 
+                                        this.selectedStyle.set(
+                                            "userStyle",
+                                            styleProperties.items.get(0).items.get(0).userStyle);
+                                        styleProperties.close();
+                                    },
+                                    scope: this
+                                }]
+                            });
+                            styleProperties.show();
                         },
                         scope: this
                     }, {
@@ -406,9 +423,40 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     },
     
     /** private: method[stylesStoreReady]
-     *  Triggers the ``load`` event of the ``styleStore``.
+     *  Adds listeners and triggers the ``load`` event of the ``styleStore``.
      */
     stylesStoreReady: function() {
+        this.stylesStore.on({
+            "load": function() {
+                this.addStylesCombo();
+                this.updateStyleRemoveButton();
+            },
+            "add": function(store, records, index) {
+                this.updateStyleRemoveButton();
+            },
+            "remove": function(store, record, index) {
+                var newIndex =  Math.min(index, store.getCount() - 1);
+                this.selectedStyle = store.getAt(newIndex);
+                this.updateStyleRemoveButton();
+                // update the "Choose style" combo's value
+                var combo = this.items.get(0).items.get(0);
+                combo.setValue(this.selectedStyle.get("name"));
+                combo.fireEvent("select", combo, this.selectedStyle, newIndex);
+            },
+            "update": function(store, record) {
+                var userStyle = record.get("userStyle");
+                Ext.applyIf(record.data, {
+                    "name": userStyle.name,
+                    "title": userStyle.title,
+                    "abstract": userStyle.description
+                });
+                this.changeStyle(record);
+                // update the combo's value with the new name
+                this.items.get(0).items.get(0).setValue(userStyle.name);
+            },
+            scope: this
+        });
+
         this.stylesStore.fireEvent("load", this.stylesStore,
             this.stylesStore.getRange())
     },
@@ -431,25 +479,6 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             // object if GetStyles is supported by the WMS
             fields: ["name", "title", "abstract", "legend", "userStyle"]
         }); 
-        this.stylesStore.on({
-            "load": function() {
-                this.addStylesCombo();
-                this.updateStyleRemoveButton();
-            },
-            "add": function(store, records, index) {
-                this.updateStyleRemoveButton();
-            },
-            "remove": function(store, record, index) {
-                var newIndex =  Math.min(index, store.getCount() - 1);
-                this.selectedStyle = store.getAt(newIndex);
-                this.updateStyleRemoveButton();
-                // update the "Choose style" combo's value
-                var combo = this.items.get(0).items.get(0);
-                combo.setValue(this.selectedStyle.get("name"));
-                combo.fireEvent("select", combo, this.selectedStyle, newIndex);
-            },
-            scope: this
-        });
             
         var layer = this.layerRecord.get("layer");
         Ext.Ajax.request({
@@ -488,7 +517,9 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             forceSelection: true,
             anchor: "100%",
             listeners: {
-                "select": this.changeStyle,
+                "select": function(combo, record) {
+                    this.changeStyle(record)
+                },
                 scope: this
             }
         });
@@ -523,13 +554,12 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     },
     
     /** private: method[changeStyle]
-     *  :param field: ``Ext.form.Field``
      *  :param value: ``Ext.data.Record``
      * 
-     *  Handler for the stylesCombo's ``select`` event. Updates the layer and
-     *  the rules fieldset.
+     *  Handler for the stylesCombo's ``select`` and the store's ``update``
+     *  event. Updates the layer and the rules fieldset.
      */
-    changeStyle: function(combo, record, index) {
+    changeStyle: function(record) {
         this.selectedStyle = record;
         var styleName = record.get("name");
         var layer = this.layerRecord.get("layer");
