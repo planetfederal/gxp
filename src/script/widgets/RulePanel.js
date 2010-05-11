@@ -4,111 +4,104 @@
  * @ include widgets/ScaleLimitPanel.js
  */
 
-Ext.namespace("Styler");
+Ext.namespace("gxp");
 gxp.RulePanel = Ext.extend(Ext.TabPanel, {
     
-    /**
-     * APIProperty: fonts
-     * {Array(String)} List of fonts for the font combo.  If not set, defaults
-     *     to the list provided by the <Styler.FontComboBox>.
+    /** api: property[fonts]
+     *  ``Array(String)`` List of fonts for the font combo.  If not set,
+     *      defaults  to the list provided by the <Styler.FontComboBox>.
      */
     fonts: undefined,
 
-    /**
-     * Property: symbolType
-     * {String} One of "Point", "Line", or "Polygon".  Default is "Point".
+    /** api: property[symbolType]
+     *  ``String`` One of "Point", "Line", or "Polygon".  Default is "Point".
      */
     symbolType: "Point",
 
-    /**
-     * Property: rule
-     * {OpenLayers.Rule} Optional rule provided in the initial configuration.
+    /** private: property[rule]
+     *  ``OpenLayers.Rule`` Optional rule provided in the initial
+     *  configuration.
      */
     rule: null,
     
-    /**
-     * Property: attributes
-     * {GeoExt.data.AttributeStore} A configured attributes store for use in
-     *     the filter property combo.
+    /** private: property[attributes]
+     *  ``GeoExt.data.AttributeStore`` A configured attributes store for use
+     *  in the filter property combo.
      */
     attributes: null,
     
-    /**
-     * Property: pointGraphics
-     * {Array} A list of objects to be used as the root of the data for a
-     *     JsonStore.  These will become records used in the selection of
-     *     a point graphic.  If an object in the list has no "value" property,
-     *     the user will be presented with an input to provide their own URL
-     *     for an external graphic.  By default, names of well-known marks are
-     *     provided.  In addition, the default list will produce a record with
-     *     display of "external" that create an input for an external graphic
-     *     URL.
+    /** private: property[pointGraphics]
+     *  ``Array`` A list of objects to be used as the root of the data for a
+     *  JsonStore.  These will become records used in the selection of
+     *  a point graphic.  If an object in the list has no "value" property,
+     *  the user will be presented with an input to provide their own URL
+     *  for an external graphic.  By default, names of well-known marks are
+     *  provided.  In addition, the default list will produce a record with
+     *  display of "external" that create an input for an external graphic
+     *  URL.
      *
-     * Fields:
-     * display - {String} The name to be displayed to the user.
-     * preview - {String} URL to a graphic for preview.
-     * value - {String} Value to be sent to the server.
-     * mark - {Boolean} The value is a well-known name for a mark.  If false,
-     *     the value will be assumed to be a url for an external graphic.
+     *  Fields:
+     * 
+     *  * display - ``String`` The name to be displayed to the user.
+     *  * preview - ``String`` URL to a graphic for preview.
+     *  * value - ``String`` Value to be sent to the server.
+     *  * mark - ``Boolean`` The value is a well-known name for a mark.  If
+     *    false, the value will be assumed to be a url for an external graphic.
      */
 
-    /**
-     * Property: nestedFilters
-     * {Boolean} Allow addition of nested logical filters.  This sets the
-     *     allowGroups property of the filter builder.  Default is true.
+    /** private: property[nestedFilters]
+     *  ``Boolean`` Allow addition of nested logical filters.  This sets the
+     *  allowGroups property of the filter builder.  Default is true.
      */
     nestedFilters: true,
     
-    /**
-     * Property: minScaleDenominatorLimit
-     * {Number} Lower limit for scale denominators.  Default is what you get when
-     *     you assume 20 zoom levels starting with the world in Spherical
-     *     Mercator on a single 256 x 256 tile at zoom 0 where the zoom factor
-     *     is 2.
+    /** private: property[minScaleDenominatorLimit]
+     *  ``Number`` Lower limit for scale denominators.  Default is what you get
+     *  when  you assume 20 zoom levels starting with the world in Spherical
+     *  Mercator on a single 256 x 256 tile at zoom 0 where the zoom factor is
+     *  2.
      */
     minScaleDenominatorLimit: Math.pow(0.5, 19) * 40075016.68 * 39.3701 * OpenLayers.DOTS_PER_INCH / 256,
 
-    /**
-     * Property: maxScaleDenominatorLimit
-     * {Number} Upper limit for scale denominators.  Default is what you get
-     *     when you project the world in Spherical Mercator onto a single
-     *     256 x 256 pixel tile and assume OpenLayers.DOTS_PER_INCH (this
-     *     corresponds to zoom level 0 in Google Maps).
+    /** private: property[maxScaleDenominatorLimit]
+     *  ``Number`` Upper limit for scale denominators.  Default is what you get
+     *  when you project the world in Spherical Mercator onto a single
+     *  256 x 256 pixel tile and assume OpenLayers.DOTS_PER_INCH (this
+     *  corresponds to zoom level 0 in Google Maps).
      */
     maxScaleDenominatorLimit: 40075016.68 * 39.3701 * OpenLayers.DOTS_PER_INCH / 256,
     
-    /**
-     * Property: scaleLevels
-     * {Number} Number of scale levels to assume.  This is only for scaling
-     *     values exponentially along the slider.  Scale values are not
-     *     required to one of the discrete levels.  Default is 20.
+    /** private: property [scaleLevels]
+     *  ``Number`` Number of scale levels to assume.  This is only for scaling
+     *  values exponentially along the slider.  Scale values are not
+     *  required to one of the discrete levels.  Default is 20.
      */
     scaleLevels: 20,
     
-    /**
-     * Property: scaleSliderTemplate
-     * {String} Template for the tip displayed by the scale threshold slider.
+    /** private: property[scaleSliderTemplate]
+     *  ``String`` Template for the tip displayed by the scale threshold slider.
      *
-     * Can be customized using the following keywords in curly braces:
-     * zoom - the zoom level
-     * scale - the scale denominator
-     * type - "Max" or "Min" denominator
-     * scaleType - "Min" or "Max" scale (sense is opposite of type)
+     *  Can be customized using the following keywords in curly braces:
+     *  
+     *  * zoom - the zoom level
+     *  * scale - the scale denominator
+     *  * type - "Max" or "Min" denominator
+     *  * scaleType - "Min" or "Max" scale (sense is opposite of type)
      *
-     * Default is "{scaleType} Scale 1:{scale}".
+     *  Default is "{scaleType} Scale 1:{scale}".
      */
     scaleSliderTemplate: "{scaleType} Scale 1:{scale}",
     
-    /**
-     * Method: modifyScaleTipContext
-     * Called from the multi-slider tip's getText function.  The function
-     *     will receive two arguments - a reference to the panel and a data
-     *     object.  The data object will have scale, zoom, and type properties
-     *     already calculated.  Other properties added to the data object
-     *     are available to the <scaleSliderTemplate>.
+    /** private: method[modifyScaleTipContext]
+     *  Called from the multi-slider tip's getText function.  The function
+     *  will receive two arguments - a reference to the panel and a data
+     *  object.  The data object will have scale, zoom, and type properties
+     *  already calculated.  Other properties added to the data object
+     *  are available to the <scaleSliderTemplate>.
      */
     modifyScaleTipContext: Ext.emptyFn,
 
+    /** private */
     initComponent: function() {
         
         var defConfig = {
@@ -280,13 +273,12 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
         this.items[0].autoHeight = true;
 
         this.addEvents(
-            /**
-             * Event: change
-             * Fires when any rule property changes.
+            /** api: events[change]
+             *  Fires when any rule property changes.
              *
-             * Listener arguments:
-             * panel - {Styler.RulePanel} This panel.
-             * rule - {OpenLayers.Rule} The updated rule.
+             *  Listener arguments:
+             *  * panel - :class:`gxp.RulePanel` This panel.
+             *  * rule - ``OpenLayers.Rule`` The updated rule.
              */
             "change"
         ); 
@@ -301,20 +293,18 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
         gxp.RulePanel.superclass.initComponent.call(this);
     },
     
-    /**
-     * Method: uniqueRuleName
-     * Generate a unique rule name.  This name will only be unique for this
-     *     session assuming other names are created by the same method.  If
-     *     name needs to be unique given some other context, override it.
+    /** private: method[uniqueRuleName]
+     *  Generate a unique rule name.  This name will only be unique for this
+     *  session assuming other names are created by the same method.  If
+     *  name needs to be unique given some other context, override it.
      */
     uniqueRuleName: function() {
         return OpenLayers.Util.createUniqueID("rule_");
     },
     
-    /**
-     * Method: createHeaderPanel
-     * Creates a panel config containing rule name, symbolizer, and scale
-     *     constraints.
+    /** private: method[createHeaderPanel]
+     *  Creates a panel config containing rule name, symbolizer, and scale
+     *  constraints.
      */
     createHeaderPanel: function() {
         this.symbolizerSwatch = new GeoExt.FeatureRenderer({
@@ -360,8 +350,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
         };
     },
 
-    /**
-     * Method: createSymbolizerPanel
+    /** private: method[createSymbolizerPanel]
      */
     createSymbolizerPanel: function() {
         return {
@@ -388,4 +377,5 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
 
 });
 
+/** api: xtype = gx_rulepanel */
 Ext.reg('gx_rulepanel', gxp.RulePanel); 
