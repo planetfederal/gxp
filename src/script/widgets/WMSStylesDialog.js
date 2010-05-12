@@ -424,7 +424,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      *  Adds listeners and triggers the ``load`` event of the ``styleStore``.
      */
     stylesStoreReady: function() {
-        //TODO update this.layerRecord
+        var styles = this.layerRecord.get("styles");
         this.stylesStore.on({
             "load": function() {
                 this.addStylesCombo();
@@ -432,6 +432,20 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             },
             "add": function(store, records, index) {
                 this.updateStyleRemoveButton();
+                // add the style to the layerRecord's styles object
+                if(styles) {
+                    var record;
+                    for (var i=0, len=records.length; i<len; ++i) {
+                        record = records[i];
+                        var userStyle = record.get("userStyle");
+                        styles.push({
+                            "id": record.id,
+                            "name": userStyle.name,
+                            "title": userStyle.title,
+                            "abstract": userStyle.description 
+                        });
+                    };
+                }
             },
             "remove": function(store, record, index) {
                 var newIndex =  Math.min(index, store.getCount() - 1);
@@ -441,18 +455,38 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 var combo = this.items.get(0).items.get(0);
                 combo.setValue(this.selectedStyle.get("name"));
                 combo.fireEvent("select", combo, this.selectedStyle, newIndex);
+                // delete the style from the layerRecord's styles object
+                if (styles) {
+                    for(var i=0, len=styles.length; i<len; ++i) {
+                        if(styles[i].id === record.id) {
+                            styles.remove(styles[i]);
+                            break;
+                        }
+                    }
+                }
             },
             "update": function(store, record) {
                 var userStyle = record.get("userStyle");
-                Ext.apply(record.data, {
+                var data = {
                     "name": userStyle.name,
                     "title": userStyle.title,
                     "abstract": userStyle.description
-                });
+                };
+                Ext.apply(record.data, data);
                 // make sure that the legend gets updated
                 this.changeStyle(record);
                 // update the combo's value with the new name
                 this.items.get(0).items.get(0).setValue(userStyle.name);
+                // update the style in the layerRecord's styles object
+                if (styles) {
+                    for (var i=0, len=styles.length; i<len; ++i) {
+                        if (styles[i].id === record.id) {
+                            Ext.apply(styles[i], data);
+                            delete styles[i].legend;
+                            break;
+                        }
+                    }
+                }
             },
             scope: this
         });
