@@ -49,7 +49,8 @@ gxp.StylePropertiesDialog = Ext.extend(Ext.Container, {
                 items: [{
                     fieldLabel: "Name",
                     name: "name",
-                    value: this.userStyle.name
+                    value: this.userStyle.name,
+                    maskRe: /[A-Za-z0-9_]/
                 }, {
                     fieldLabel: "Title",
                     name: "title",
