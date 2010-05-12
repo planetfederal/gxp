@@ -27,3 +27,8 @@
     background: transparent;
     border: none !important;
 }
+
+/* fixes textarea scrollbar issue in FF on OSX */
+.ext-gecko.ext-mac textarea.x-form-field {
+    padding: 1px 2px;
+}
