@@ -164,10 +164,10 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             }]
         };
         Ext.applyIf(this, defConfig);
-        
-        gxp.WMSStylesDialog.superclass.initComponent.apply(this, arguments);
-        
+                
         this.createStylesStore();
+
+        gxp.WMSStylesDialog.superclass.initComponent.apply(this, arguments);
     },
     
     /** api: method[createSLD]
@@ -424,6 +424,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      *  Adds listeners and triggers the ``load`` event of the ``styleStore``.
      */
     stylesStoreReady: function() {
+        //TODO update this.layerRecord
         this.stylesStore.on({
             "load": function() {
                 this.addStylesCombo();
