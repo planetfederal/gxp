@@ -84,7 +84,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                         handler: function() {
                             var store = this.stylesStore;
                             var newStyle = new OpenLayers.Style(null, {
-                                name: this.uniqueName("New Style"),
+                                name: this.uniqueName("New_Style", "_"),
                                 rules: [this.createRule()]
                             });
                             store.add(new store.recordType({
@@ -149,7 +149,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                             var newStyle = this.selectedStyle.get(
                                 "userStyle").clone();
                             newStyle.name = this.uniqueName(
-                                newStyle.name + " (copy)");
+                                newStyle.name + "_copy", "_");
                             var store = this.stylesStore;
                             store.add(new store.recordType({
                                 "name": newStyle.name,
@@ -289,18 +289,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     /** private: method[editRule]
      */
     editRule: function() {
-        var rule = this.selectedRule;
-        var origRule = rule.clone();
-        var saveOrigProperties = function() {
-            origProperties = {
-                title: rule.title,
-                symbolizer: Ext.decode(Ext.encode(rule.symbolizer)),
-                filter: rule.filter ? rule.filter.clone(): null,
-                minScaleDenominator: rule.minScaleDenominator,
-                maxScaleDenominator: rule.maxScaleDenominator
-            };
-        }
-        saveOrigProperties();
+        var origRule = this.selectedRule;
+        var rule = origRule.clone();
 
         var wfsUrl = this.initialConfig.wfsUrl;
         if (!wfsUrl) {
@@ -313,6 +303,16 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 "REQUEST": "DescribeFeatureType"
             });
             wfsUrl = Ext.urlAppend(urlParts[0], Ext.urlEncode(params));
+        }
+        
+        var style = this.selectedStyle;
+        var save = function() {
+            var userStyle = style.get("userStyle");
+            var i = userStyle.rules.indexOf(origRule);
+            userStyle.rules[i] = rule;
+            // clone the style, to make sure that stlye.set triggers an update
+            // event.
+            style.set("userStyle", userStyle.clone());
         }
 
         var ruleDlg = new Ext.Window({
@@ -336,22 +336,19 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             buttons: [{
                 text: "Cancel",
                 handler: function() {
-                    Ext.apply(rule, origProperties);
                     ruleDlg.close();
                 }
             }, {
                 text: "Apply",
                 handler: function() {
-                    // update vector legend
-                    this.items.get(2).items.get(0).update();
-                    saveOrigProperties();
+                    save();
+                    origRule = rule;
                 },
                 scope: this
             }, {
                 text: "Save",
                 handler: function() {
-                    // update vector legend
-                    this.items.get(2).items.get(0).update();
+                    save();
                     ruleDlg.close();
                 },
                 scope: this
@@ -383,9 +380,14 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         if (!data || !data.documentElement) {
             data = new OpenLayers.Format.XML().read(response.responseText);
         }
+        var layerParams = this.layerRecord.get("layer").params;
+        //TODO use the default style instead of the 1st one if layer has
+        // no STYLES param
+        this.selectedStyle = this.stylesStore.getAt(layerParams.STYLES ?
+            this.stylesStore.findExact("name", layerParams.STYLES) : 0);
+        
         try {
             var sld = new OpenLayers.Format.SLD().read(data);
-            var layerParams = this.layerRecord.get("layer").params;
             
             // add userStyle objects to the stylesStore
             //TODO this only works if the LAYERS param contains one layer
@@ -395,14 +397,10 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 userStyle = userStyles[i];
                 var index = this.stylesStore.findExact("name", userStyle.name);
                 record = this.stylesStore.getAt(index);
-                record.set("userStyle", userStyle);
-                record.commit(true);
+                // we don't want the record to be listed as modified, so we set
+                // the userStyle directly instead of using the set method
+                record.data["userStyle"] = userStyle;
             }
-            
-            //TODO use the default style instead of the 1st one if layer has
-            // no STYLES param
-            this.selectedStyle = this.stylesStore.getAt(layerParams.STYLES ?
-                this.stylesStore.findExact("name", layerParams.STYLES) : 0);
             
             this.addRulesFieldSet();
             this.addVectorLegend(this.selectedStyle.get("userStyle").rules);
@@ -445,11 +443,12 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             },
             "update": function(store, record) {
                 var userStyle = record.get("userStyle");
-                Ext.applyIf(record.data, {
+                Ext.apply(record.data, {
                     "name": userStyle.name,
                     "title": userStyle.title,
                     "abstract": userStyle.description
                 });
+                // make sure that the legend gets updated
                 this.changeStyle(record);
                 // update the combo's value with the new name
                 this.items.get(0).items.get(0).setValue(userStyle.name);
@@ -535,22 +534,23 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      *  is used when GetStyles is not available from the layer's WMS.
      */
     createLegendImage: function() {
-        var self = this;
-        return new GeoExt.WMSLegend({
+        var legend = new GeoExt.WMSLegend({
             showTitle: false,
             layerRecord: this.layerRecord,
             defaults: {
                 listeners: {
                     "render": function() {
                         this.getEl().on({
-                            "load": self.doLayout,
-                            "error": self.removeRulesFieldSet,
-                            scope: self
+                            "load": this.doLayout,
+                            "error": this.removeRulesFieldSet,
+                            scope: this
                         });
-                    }
+                    },
+                    scope: this
                 }
             }
         });
+        return legend;
     },
     
     /** private: method[changeStyle]
@@ -585,11 +585,14 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         //TODO end remove
         
         var userStyle = record.get("userStyle");
+        var fieldset = this.items.get(2);
         if (userStyle) {
             // remove legend from rulesFieldSet
-            var fieldset = this.items.get(2);
             fieldset.remove(fieldset.items.get(0));
             this.addVectorLegend(userStyle.rules);
+        } else {
+            this.layerRecord.get("layer").mergeNewParams(
+                {styles: styleName});
         }
     },
     
@@ -637,18 +640,21 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     
     /** private: method[uniqueName]
      *  :param name: ``String`` The name to make unique
+     *  :param delimiter: ``Char`` Optional. Delimiter for appending the
+     *      number that makes the new name unique. Defaults to " " (blank).
      *  :return: ``String`` a unique name based on ``name``
      */
-    uniqueName: function(name) {
-        var regEx = / [0-9]*$/;
+    uniqueName: function(name, delimiter) {
+        delimiter = delimiter || " ";
+        var regEx = new RegExp(delimiter + "[0-9]*$");
         var key = name.replace(regEx, "");
         var regExResult = regEx.exec(name);
-        var count = this.uniqueNames[key] ||
+        var count = this.uniqueNames[key] !== undefined ? this.uniqueNames[key] :
             (regExResult instanceof Array ? Number(regExResult[0]) : undefined);
         var newName = key;
         if(count !== undefined) {
             count++;
-            newName += " " + count;
+            newName += delimiter + count;
         }
         this.uniqueNames[key] = count || 0;
         return newName;
