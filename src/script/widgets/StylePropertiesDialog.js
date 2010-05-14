@@ -25,6 +25,11 @@ gxp.StylePropertiesDialog = Ext.extend(Ext.Container, {
      */
     userStyle: null,
     
+    /** api: config[nameEditable]
+     *  ``Boolean`` Set to false if the name of the style should not be
+     *  editable.
+     */
+    
     /** private: method[initComponent]
      */
     initComponent: function() {
@@ -50,6 +55,7 @@ gxp.StylePropertiesDialog = Ext.extend(Ext.Container, {
                     fieldLabel: "Name",
                     name: "name",
                     value: this.userStyle.name,
+                    disabled: this.initialConfig.nameEditable === false,
                     maskRe: /[A-Za-z0-9_]/
                 }, {
                     fieldLabel: "Title",
