@@ -12,7 +12,11 @@ Ext.namespace("gxp");
 /** api: constructor
  *  .. class:: WMSStylesDialog(config)
  *   
- *      Create a dialog for selecting and modifying layer styles.
+ *      Create a dialog for selecting and layer styles. If the WMS supports
+ *      GetStyles, styles can also be edited. The dialog does not provide any
+ *      means of writing modified styles back to the server. To save styles,
+ *      configure the dialog with a :class:`gxp.plugins.StyleWriter` and use
+ *      the plugin's ``write`` method.
  */
 gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     
@@ -118,6 +122,10 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                                     items: {
                                         xtype: "gx_stylepropertiesdialog",
                                         userStyle: userStyle.clone(),
+                                        // styles that came from the server
+                                        // have a name that we don't change
+                                        nameEditable: this.selectedStyle.id !==
+                                            userStyle.name,
                                         style: "padding: 10px;"
                                     }
                                 },
@@ -439,7 +447,6 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                         record = records[i];
                         var userStyle = record.get("userStyle");
                         styles.push({
-                            "id": record.id,
                             "name": userStyle.name,
                             "title": userStyle.title,
                             "abstract": userStyle.description 
@@ -507,6 +514,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             data: {
                 styles: styles
             },
+            idProperty: "name",
             root: "styles",
             // add a userStyle field (not included in styles from
             // GetCapabilities), which will be populated with the userStyle
