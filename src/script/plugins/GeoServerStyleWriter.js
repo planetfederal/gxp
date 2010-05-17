@@ -2,6 +2,12 @@
  * Copyright (c) 2010 OpenPlans
  */
 
+/**
+ * @require plugins/StyleWriter.js
+ */
+
+Ext.namespace("gxp.plugins");
+
 /** api: (define)
  *  module = gxp.plugins
  *  class = GeoServerStyleWriter
@@ -10,7 +16,7 @@
 /** api: (extends)
  * srcipt/plugins/StyleWriter.js
  */
-Ext.namespace("gxp.plugins");
+
 
 /** api: constructor
  *  .. class:: GeoServerStyleWriter(config)
