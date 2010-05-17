@@ -125,7 +125,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                                         // styles that came from the server
                                         // have a name that we don't change
                                         nameEditable: this.selectedStyle.id !==
-                                            userStyle.name,
+                                            this.selectedStyle.get("name"),
                                         style: "padding: 10px;"
                                     }
                                 },
@@ -179,20 +179,29 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     },
     
     /** api: method[createSLD]
+     *  :arg options: ``Object``
      *  :return: ``String`` The current SLD for the NamedLayer.
+     *  
+     *  Supported ``options``:
+     *  * userStyles - ``Array(String)`` list of userStyles (by name) that are
+     *    to be included in the SLD. By default, all will be included.
      */
-    createSLD: function() {
+    createSLD: function(options) {
+        options = options || {};
         var sld = {
             version: "1.0.0",
             namedLayers: {}
         };
-        var layerName = this.layerRecord.get("layer").name;
+        var layerName = this.layerRecord.get("name");
         sld.namedLayers[layerName] = {
             name: layerName,
             userStyles: []
         };
         this.stylesStore.each(function(r) {
-            sld.namedLayes[layerName].userStyles.push(r.get("userStyle"));
+            if(!options.userStyles ||
+                    options.userStyles.indexOf(r.get("name")) !== -1) {
+                sld.namedLayers[layerName].userStyles.push(r.get("userStyle"));
+            }
         });
         return new OpenLayers.Format.SLD().write(sld);
     },
@@ -203,7 +212,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      */
     updateStyleRemoveButton: function() {
         this.items.get(1).items.get(1).setDisabled(
-            this.stylesStore.getCount() <= 1);
+            this.stylesStore.getCount() <= 1 ||
+            this.selectedStyle.get("userStyle").isDefault === true);
     },
     
     /** private: method[updateRuleRemoveButton]
@@ -327,6 +337,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             title: "Style Rule: " + (rule.title || rule.name),
             width: 340,
             autoHeight: true,
+            modal: true,
             items: [{
                 xtype: "gx_rulepanel",
                 symbolType: this.symbolType,
@@ -391,8 +402,10 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         var layerParams = this.layerRecord.get("layer").params;
         //TODO use the default style instead of the 1st one if layer has
         // no STYLES param
-        this.selectedStyle = this.stylesStore.getAt(layerParams.STYLES ?
-            this.stylesStore.findExact("name", layerParams.STYLES) : 0);
+        if (layerParams.STYLES) {
+            this.selectedStyle = this.stylesStore.getAt(
+                this.stylesStore.findExact("name", layerParams.STYLES));
+        }
         
         try {
             var sld = new OpenLayers.Format.SLD().read(data);
@@ -408,6 +421,10 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 // we don't want the record to be listed as modified, so we set
                 // the userStyle directly instead of using the set method
                 record.data["userStyle"] = userStyle;
+                // set the default style if no STYLES param is set on the layer
+                if (!this.selectedStyle && userStyle.isDefault === true) {
+                    this.selectedStyle = record;
+                }
             }
             
             this.addRulesFieldSet();
@@ -465,7 +482,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 // delete the style from the layerRecord's styles object
                 if (styles) {
                     for(var i=0, len=styles.length; i<len; ++i) {
-                        if(styles[i].id === record.id) {
+                        if(styles[i].name === record.id) {
                             styles.remove(styles[i]);
                             break;
                         }
@@ -487,7 +504,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 // update the style in the layerRecord's styles object
                 if (styles) {
                     for (var i=0, len=styles.length; i<len; ++i) {
-                        if (styles[i].id === record.id) {
+                        if (styles[i].name === record.id) {
                             Ext.apply(styles[i], data);
                             delete styles[i].legend;
                             break;
@@ -506,10 +523,6 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      */
     createStylesStore: function() {
         var styles = this.layerRecord.get("styles");
-        // give each style a unique id for this session
-        for(var i=0, len=styles.length; i<len; ++i) {
-            styles[i].id = Ext.data.Record.AUTO_ID++;
-        }
         this.stylesStore = new Ext.data.JsonStore({
             data: {
                 styles: styles
@@ -547,8 +560,6 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             fieldLabel: "Choose style",
             store: store,
             displayField: "name",
-            //TODO start with the default style instead of the first one if
-            // STYLES param is not set
             value: this.selectedStyle ?
                 this.selectedStyle.get("name") :
                 this.layerRecord.get("layer").params.STYLES || "default",
@@ -604,21 +615,12 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      */
     changeStyle: function(record) {
         this.selectedStyle = record;
+        this.updateStyleRemoveButton();
         var styleName = record.get("name");
-        var layer = this.layerRecord.get("layer");
         
         //TODO remove when http://jira.codehaus.org/browse/GEOS-3921 is fixed
-        var styles = this.layerRecord.get("styles");
         var legend = record.get("legend");
-        if (styles && legend) {
-            var style;
-            for (var i=0, len=styles.length; i<len; ++i) {
-                style = styles[i];
-                if (style.name === styleName) {
-                    break;
-                }
-            }
-            var legend = record.get("legend");
+        if (legend) {
             var urlParts = legend.href.split("?");
             var params = Ext.urlDecode(urlParts[1]);
             params.STYLE = styleName;
