@@ -32,7 +32,9 @@
         "widgets/tips/SliderTip.js",
         "plugins/LayerSource.js",
         "plugins/WMSSource.js",
-        "plugins/GoogleSource.js"
+        "plugins/GoogleSource.js",
+        "plugins/StyleWriter.js",
+        "plugins/GeoServerStyleWriter.js"
     );
     
     var scripts = document.getElementsByTagName("script");
