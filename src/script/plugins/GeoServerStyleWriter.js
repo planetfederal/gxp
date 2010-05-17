@@ -86,6 +86,15 @@ gxp.plugins.GeoServerStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
         }
     },
     
+    /** private: method[writeStyle] 
+     *  :arg styleRec: ``Ext.data.Record`` the record from the target's
+     *      ``stylesStore`` to write
+     *  :arg dispatchQueue: ``Array(Function)`` the dispatch queue the write
+     *      funciton is added to.
+     * 
+     *  This method does not actually write styles, it just adds a function to
+     *  the provided ``dispatchQueue`` that will do so.
+     */
     writeStyle: function(styleRec, dispatchQueue) {
         var styleName = styleRec.get("userStyle").name;
         dispatchQueue.push(function(callback, storage) {
@@ -118,6 +127,11 @@ gxp.plugins.GeoServerStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
         });
     },
 
+    /** private: method[assignStyles]
+     *  :arg defaultStyle: ``String`` The default style. Optional.
+     *  :arg callback: ``Function`` The function to call when all operations
+     *      succeeded. Will be called in the scope of this instance. Optional.
+     */
     assignStyles: function(defaultStyle, callback) {
         var styles = [];
         this.target.stylesStore.each(function(rec) {
@@ -149,6 +163,9 @@ gxp.plugins.GeoServerStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
         });
     },
     
+    /** private: method[deleteStyles]
+     *  Deletes styles that are no longer assigned to the layer.
+     */
     deleteStyles: function() {
         for (var i=0, len=this.deletedStyles.length; i<len; ++i) {
             Ext.Ajax.request({
