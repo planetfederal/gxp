@@ -5,7 +5,7 @@
 /** api: (define)
  *  module = gxp
  *  class = StylePropertiesDialog
- *  base_link = `Ext.Panel <http://extjs.com/deploy/dev/docs/?class=Ext.Container>`_
+ *  base_link = `Ext.Container <http://extjs.com/deploy/dev/docs/?class=Ext.Container>`_
  */
 Ext.namespace("gxp");
 
