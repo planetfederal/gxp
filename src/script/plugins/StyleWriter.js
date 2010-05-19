@@ -65,7 +65,9 @@ gxp.plugins.StyleWriter = Ext.extend(Ext.util.Observable, {
      *
      *  Saves the styles of the target's ``layerRecord``. To be implemented by
      *  subclasses. Subclasses should make sure to commit changes to the
-     *  target's stylesStore.
+     *  target's stylesStore. It is the responsibility of the application to
+     *  update displayed layers with the new style set in the target's
+     *  ``selectedStyle`` record.
      */
     write: function(config) {
     }

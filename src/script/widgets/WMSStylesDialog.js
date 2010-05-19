@@ -46,13 +46,15 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     /** api: property[stylesStore]
      *  ``Ext.data.Store`` A store representing the styles returned from
      *  GetCapabilities and GetStyles. It has "name", "title", "abstract",
-     *  "legend" and "userStyle" fields.
+     *  "legend" and "userStyle" fields. If the WMS supports GetStyles, the
+     *  "legend" field will not be available. If it does not, the "userStyle"
+     *  field will not be available.
      */
     stylesStore: null,
     
-    /** private: property[selectedStyle]
+    /** api: property[selectedStyle]
      *  ``Ext.data.Record`` The currently selected style from the
-     *  ``stylesStore``, or null if the WMS does not support GetStyles.
+     *  ``stylesStore``.
      */
     selectedStyle: null,
     
@@ -61,12 +63,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      *  selected.
      */
     selectedRule: null,
-    
-    /** private: property[uniqueNames]
-     *  ``Object`` cache that keeps track of unique names
-     */
-    uniqueNames: {},
-    
+        
     /** private: method[initComponent]
      */
     initComponent: function() {
@@ -88,7 +85,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                         handler: function() {
                             var store = this.stylesStore;
                             var newStyle = new OpenLayers.Style(null, {
-                                name: this.uniqueName("New_Style", "_"),
+                                name: gxp.util.uniqueName("New_Style", "_"),
                                 rules: [this.createRule()]
                             });
                             store.add(new store.recordType({
@@ -156,7 +153,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                         handler: function() {
                             var newStyle = this.selectedStyle.get(
                                 "userStyle").clone();
-                            newStyle.name = this.uniqueName(
+                            newStyle.isDefault = false;
+                            newStyle.name = gxp.util.uniqueName(
                                 newStyle.name + "_copy", "_");
                             var store = this.stylesStore;
                             store.add(new store.recordType({
@@ -231,7 +229,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         var symbolizer = {};
         symbolizer[this.symbolType] = {};
         return new OpenLayers.Rule({
-            name: this.uniqueName("New Rule"),
+            name: gxp.util.uniqueName("New Rule"),
             symbolizer: symbolizer
         });
     },
@@ -287,7 +285,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     handler: function() {
                         var legend = this.items.get(2).items.get(0);
                         var newRule = this.selectedRule.clone();
-                        newRule.name = this.uniqueName(
+                        newRule.name = gxp.util.uniqueName(
                             (newRule.title || newRule.name) + " (copy)");
                         delete newRule.title;
                         this.selectedStyle.get("userStyle").addRules(
@@ -413,16 +411,23 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             // add userStyle objects to the stylesStore
             //TODO this only works if the LAYERS param contains one layer
             var userStyles = sld.namedLayers[layerParams.LAYERS].userStyles;
+            
+            // our stylesStore comes from the layerRecord's styles - clear it
+            // and repopulate from GetStyles
+            this.stylesStore.removeAll();
             var userStyle, record;
             for (var i=0, len=userStyles.length; i<len; ++i) {
                 userStyle = userStyles[i];
-                var index = this.stylesStore.findExact("name", userStyle.name);
-                record = this.stylesStore.getAt(index);
-                // we don't want the record to be listed as modified, so we set
-                // the userStyle directly instead of using the set method
-                record.data["userStyle"] = userStyle;
+                record = new this.stylesStore.recordType({
+                    "name": userStyle.name,
+                    "title": userStyle.title,
+                    "abstract": userStyle.description,
+                    "userStyle": userStyle
+                });
+                this.stylesStore.add(record);
                 // set the default style if no STYLES param is set on the layer
-                if (!this.selectedStyle && userStyle.isDefault === true) {
+                if (this.layerRecord.get("layer").params.STYLES ===
+                            userStyle.name || userStyle.isDefault === true) {
                     this.selectedStyle = record;
                 }
             }
@@ -449,7 +454,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      *  Adds listeners and triggers the ``load`` event of the ``styleStore``.
      */
     stylesStoreReady: function() {
-        var styles = this.layerRecord.get("styles");
+        // start with a clean store
+        this.stylesStore.commitChanges();
         this.stylesStore.on({
             "load": function() {
                 this.addStylesCombo();
@@ -457,19 +463,6 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             },
             "add": function(store, records, index) {
                 this.updateStyleRemoveButton();
-                // add the style to the layerRecord's styles object
-                if(styles) {
-                    var record;
-                    for (var i=0, len=records.length; i<len; ++i) {
-                        record = records[i];
-                        var userStyle = record.get("userStyle");
-                        styles.push({
-                            "name": userStyle.name,
-                            "title": userStyle.title,
-                            "abstract": userStyle.description 
-                        });
-                    };
-                }
             },
             "remove": function(store, record, index) {
                 var newIndex =  Math.min(index, store.getCount() - 1);
@@ -479,15 +472,6 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 var combo = this.items.get(0).items.get(0);
                 combo.setValue(this.selectedStyle.get("name"));
                 combo.fireEvent("select", combo, this.selectedStyle, newIndex);
-                // delete the style from the layerRecord's styles object
-                if (styles) {
-                    for(var i=0, len=styles.length; i<len; ++i) {
-                        if(styles[i].name === record.id) {
-                            styles.remove(styles[i]);
-                            break;
-                        }
-                    }
-                }
             },
             "update": function(store, record) {
                 var userStyle = record.get("userStyle");
@@ -501,16 +485,6 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 this.changeStyle(record);
                 // update the combo's value with the new name
                 this.items.get(0).items.get(0).setValue(userStyle.name);
-                // update the style in the layerRecord's styles object
-                if (styles) {
-                    for (var i=0, len=styles.length; i<len; ++i) {
-                        if (styles[i].name === record.id) {
-                            Ext.apply(styles[i], data);
-                            delete styles[i].legend;
-                            break;
-                        }
-                    }
-                }
             },
             scope: this
         });
@@ -618,7 +592,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         this.updateStyleRemoveButton();
         var styleName = record.get("name");
         
-        //TODO remove when http://jira.codehaus.org/browse/GEOS-3921 is fixed
+        //TODO remove when support for GeoServer < 2.0.2 is dropped. See
+        // http://jira.codehaus.org/browse/GEOS-3921
         var legend = record.get("legend");
         if (legend) {
             var urlParts = legend.href.split("?");
@@ -636,6 +611,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             fieldset.remove(fieldset.items.get(0));
             this.addVectorLegend(userStyle.rules);
         } else {
+            // if GetStyles is not supported, we instantly update the layer
             this.layerRecord.get("layer").mergeNewParams(
                 {styles: styleName});
         }
@@ -681,28 +657,6 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             }
         });
         this.doLayout();
-    },
-    
-    /** private: method[uniqueName]
-     *  :param name: ``String`` The name to make unique
-     *  :param delimiter: ``Char`` Optional. Delimiter for appending the
-     *      number that makes the new name unique. Defaults to " " (blank).
-     *  :return: ``String`` a unique name based on ``name``
-     */
-    uniqueName: function(name, delimiter) {
-        delimiter = delimiter || " ";
-        var regEx = new RegExp(delimiter + "[0-9]*$");
-        var key = name.replace(regEx, "");
-        var regExResult = regEx.exec(name);
-        var count = this.uniqueNames[key] !== undefined ? this.uniqueNames[key] :
-            (regExResult instanceof Array ? Number(regExResult[0]) : undefined);
-        var newName = key;
-        if(count !== undefined) {
-            count++;
-            newName += delimiter + count;
-        }
-        this.uniqueNames[key] = count || 0;
-        return newName;
     }
 });
 

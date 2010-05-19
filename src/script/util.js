@@ -7,10 +7,10 @@ Ext.namespace("gxp");
 
 gxp.util = {
     
-    /** private: property[_loadCallbacks]
-     *  ``Array`` callbacks for script onload handler in :meth:`loadScript`
+    /** private: property[_uniqueNames]
+     *  ``Object`` cache that keeps track of unique names
      */
-    _loadCallbacks: [],
+    _uniqueNames: {},
 
     /** api: function[dispatch]
      *  :param functions: ``Array(Function)`` List of functions to be called.
@@ -101,5 +101,32 @@ gxp.util = {
                 }
             }
         }
+    },
+
+    /** api: method[uniqueName]
+     *  :param name: ``String`` The name to make unique across this session.
+     *  :param delimiter: ``Char`` Optional. Delimiter for appending the
+     *      number that makes the new name unique. Defaults to " " (blank).
+     *  :return: ``String`` a unique name based on ``name``
+     *  
+     *  Appends a delimiter and a number to make the passed ``name`` unique
+     *  in the current session.
+     */
+    uniqueName: function(name, delimiter) {
+        delimiter = delimiter || " ";
+        var regEx = new RegExp(delimiter + "[0-9]*$");
+        var key = name.replace(regEx, "");
+        var regExResult = regEx.exec(name);
+        var count = this._uniqueNames[key] !== undefined ?
+            this._uniqueNames[key] :
+            (regExResult instanceof Array ? Number(regExResult[0]) : undefined);
+        var newName = key;
+        if(count !== undefined) {
+            count++;
+            newName += delimiter + count;
+        }
+        this._uniqueNames[key] = count || 0;
+        return newName;
     }
+
 };
