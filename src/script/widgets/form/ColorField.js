@@ -146,7 +146,7 @@ gxp.form.ColorField = Ext.extend(Ext.form.TextField,  {
      */
     colorToHex: function(color) {
         var hex;
-        if(color.match(/^#[0-9a-f]{6}$/i)) {
+        if (color.match(/^#[0-9a-f]{6}$/i)) {
             hex = color;
         } else {
             hex = this.cssColors[color.toLowerCase()] || null;
@@ -158,7 +158,7 @@ gxp.form.ColorField = Ext.extend(Ext.form.TextField,  {
      */
     hexToColor: function(hex) {
         var color = hex;
-        for (c in this.cssColors) {
+        for (var c in this.cssColors) {
             if (this.cssColors[c] == color.toUpperCase()) {
                 color = c;
                 break;
