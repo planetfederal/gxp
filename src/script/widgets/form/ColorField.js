@@ -115,10 +115,9 @@ gxp.form.ColorField = Ext.extend(Ext.form.TextField,  {
      *  except for the case when the value has not been changed.
      */
     getValue: function() {
-        var v = gxp.form.ColorField.superclass.getValue.apply(this, arguments);
-        v = v ? this.colorToHex(v): v;
+        var v = this.getHexValue();
         var o = this.initialConfig.value;
-        if (v && v === this.hexToColor(o)) {
+        if (v === this.hexToColor(o)) {
             v = o;
         }
         return v;
@@ -133,7 +132,7 @@ gxp.form.ColorField = Ext.extend(Ext.form.TextField,  {
      */
     setValue: function(value) {
         gxp.form.ColorField.superclass.setValue.apply(this,
-            [value ? this.hexToColor(value) : value]);
+            [this.hexToColor(value)]);
     },
     
     /** private: method[colorToHex]
@@ -145,6 +144,9 @@ gxp.form.ColorField = Ext.extend(Ext.form.TextField,  {
      *  returned.  If a RGB hex string is supplied, the same will be returned.
      */
     colorToHex: function(color) {
+        if (!color) {
+            return color;
+        }
         var hex;
         if (color.match(/^#[0-9a-f]{6}$/i)) {
             hex = color;
@@ -157,6 +159,9 @@ gxp.form.ColorField = Ext.extend(Ext.form.TextField,  {
     /** private: method[hexToColor]
      */
     hexToColor: function(hex) {
+        if (!hex) {
+            return hex;
+        }
         var color = hex;
         for (var c in this.cssColors) {
             if (this.cssColors[c] == color.toUpperCase()) {
