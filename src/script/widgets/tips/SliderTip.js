@@ -11,19 +11,20 @@ Ext.namespace("gxp.slider");
  */
 gxp.slider.Tip = Ext.extend(Ext.slider.Tip, {
 
-    /**
-     * APIProperty: hover
-     * {Boolean} Display the tip when hovering over a thumb.  If false, tip
+    /** api: config[hover]
+     *  ``Boolean`` Display the tip when hovering over a thumb.  If false, tip
      *     will only be displayed while dragging.  Default is true.
      */
     hover: true,
     
-    /**
-     * Property: dragging
-     * {Boolean} A thumb is currently being dragged.
+    /** private: property[dragging]
+     * ``Boolean`` A thumb is currently being dragged.
      */
     dragging: false,
 
+    /** private: method[init]
+     *  :param slider: ``Object``
+     */
     init: function(slider) {
         if(this.hover) {
             slider.on("render", this.registerThumbListeners, this);
@@ -32,6 +33,8 @@ gxp.slider.Tip = Ext.extend(Ext.slider.Tip, {
         gxp.slider.Tip.superclass.init.apply(this, arguments);
     },
     
+    /** private: method[registerThumbListeners]
+     */
     registerThumbListeners: function() {
         for(var i=0, len=this.slider.thumbs.length; i<len; ++i) {
             this.slider.thumbs[i].el.on({
@@ -46,6 +49,8 @@ gxp.slider.Tip = Ext.extend(Ext.slider.Tip, {
         }
     },
     
+    /** private: method[createHoverListener]
+     */
     createHoverListener: function(index) {
         return (function() {
             this.onSlide(this.slider, {}, this.slider.thumbs[index]);
@@ -53,6 +58,8 @@ gxp.slider.Tip = Ext.extend(Ext.slider.Tip, {
         }).createDelegate(this);
     },
 
+    /** private: method[onSlide]
+     */
     onSlide: function(slider, e, thumb) {
         this.dragging = true;
         gxp.slider.Tip.superclass.onSlide.apply(this, arguments);

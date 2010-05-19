@@ -10,101 +10,92 @@ Ext.namespace("gxp");
 
 gxp.ScaleLimitPanel = Ext.extend(Ext.Panel, {
     
-    /**
-     * Property: maxScaleDenominatorLimit
-     * {Number} Upper limit for scale denominators.  Default is what you get
+    /** api: config[maxScaleDenominatorLimit]
+     *  ``Number`` Upper limit for scale denominators.  Default is what you get
      *     when you project the world in Spherical Mercator onto a single
      *     256 x 256 pixel tile and assume OpenLayers.DOTS_PER_INCH (this
      *     corresponds to zoom level 0 in Google Maps).
      */
     maxScaleDenominatorLimit: 40075016.68 * 39.3701 * OpenLayers.DOTS_PER_INCH / 256,
     
-    /**
-     * Property: limitMaxScaleDenominator
-     * {Boolean} Limit the maximum scale denominator.  If false, no upper
+    /** api: config[limitMaxScaleDenominator]
+     *  ``Boolean` Limit the maximum scale denominator.  If false, no upper
      *     limit will be imposed.
      */
     limitMaxScaleDenominator: true,
 
-    /**
-     * Property: maxScaleDenominator
-     * {Number} The initial maximum scale denominator.  If <limitMaxScaleDenominator> is
+    /** api: config[maxScaleDenominator]
+     *  ``Number`` The initial maximum scale denominator.  If <limitMaxScaleDenominator> is
      *     true and no minScaleDenominator is provided, <maxScaleDenominatorLimit> will
      *     be used.
      */
     maxScaleDenominator: undefined,
 
-    /**
-     * Property: minScaleDenominatorLimit
-     * {Number} Lower limit for scale denominators.  Default is what you get when
+    /** api: config[minScaleDenominatorLimit]
+     *  ``Number`` Lower limit for scale denominators.  Default is what you get when
      *     you assume 20 zoom levels starting with the world in Spherical
      *     Mercator on a single 256 x 256 tile at zoom 0 where the zoom factor
      *     is 2.
      */
     minScaleDenominatorLimit: Math.pow(0.5, 19) * 40075016.68 * 39.3701 * OpenLayers.DOTS_PER_INCH / 256,
 
-    /**
-     * Property: limitMinScaleDenominator
-     * {Boolean} Limit the minimum scale denominator.  If false, no lower
+    /** api: config[limitMinScaleDenominator]
+     *  ``Boolean`` Limit the minimum scale denominator.  If false, no lower
      *     limit will be imposed.
      */
     limitMinScaleDenominator: true,
 
-    /**
-     * Property: minScaleDenominator
-     * {Number} The initial minimum scale denominator.  If <limitMinScaleDenominator> is
+    /** api: config[minScaleDenominator]
+     *  ``Number`` The initial minimum scale denominator.  If <limitMinScaleDenominator> is
      *     true and no minScaleDenominator is provided, <minScaleDenominatorLimit> will
      *     be used.
      */
     minScaleDenominator: undefined,
     
-    /**
-     * Property: scaleLevels
-     * {Number} Number of scale levels to assume.  This is only for scaling
+    /** api: config[scaleLevels]
+     *  ``Number`` Number of scale levels to assume.  This is only for scaling
      *     values exponentially along the slider.  Scale values are not
      *     required to one of the discrete levels.  Default is 20.
      */
     scaleLevels: 20,
     
-    /**
-     * Property: scaleSliderTemplate
-     * {String} Template for the tip displayed by the scale threshold slider.
+    /** api: config[scaleSliderTemplate]
+     *  ``String`` Template for the tip displayed by the scale threshold slider.
      *
-     * Can be customized using the following keywords in curly braces:
-     * zoom - the zoom level
-     * scale - the scale denominator
-     * type - "Max" or "Min" denominator
-     * scaleType - "Min" or "Max" scale (sense is opposite of type)
+     *  Can be customized using the following keywords in curly braces:
+     *  * zoom - the zoom level
+     *  * scale - the scale denominator
+     *  * type - "Max" or "Min" denominator
+     *  * scaleType - "Min" or "Max" scale (sense is opposite of type)
      *
      * Default is "{scaleType} Scale 1:{scale}".
      */
     scaleSliderTemplate: "{scaleType} Scale 1:{scale}",
     
-    /**
-     * Method: modifyScaleTipContext
-     * Called from the multi-slider tip's getText function.  The function
-     *     will receive two arguments - a reference to the panel and a data
-     *     object.  The data object will have scale, zoom, and type properties
-     *     already calculated.  Other properties added to the data object
-     *     are available to the <scaleSliderTemplate>.
+    /** api: config[modifyScaleTipContext]
+     *  ``Function`` Called from the multi-slider tip's getText function.  The
+     *     function will receive two arguments - a reference to the panel and
+     *     a data object.  The data object will have scale, zoom, and type
+     *     properties already calculated.  Other properties added to the data
+     *     object  are available to the <scaleSliderTemplate>.
      */
     modifyScaleTipContext: Ext.emptyFn,
 
-    /**
-     * Property: scaleFactor
-     * {Number} Calculated base for determining exponential scaling of values
+    /** private: property[scaleFactor]
+     *  ``Number`` Calculated base for determining exponential scaling of values
      *     for the slider.
      */
     scaleFactor: null,
     
-    /**
-     * Property: changing
-     * {Boolean} The panel is updating itself.
+    /** private: property[changing]
+     *  ``Boolean`` The panel is updating itself.
      */
     changing: false,
     
     border: false,
     
+    /** private: method[initComponent]
+     */
     initComponent: function() {
         
         this.layout = "column";
@@ -293,8 +284,7 @@ gxp.ScaleLimitPanel = Ext.extend(Ext.Panel, {
         
     },
     
-    /**
-     * Method: updateScaleValues
+    /** private: method[updateScaleValues]
      */
     updateScaleValues: function(slider) {
         if(!this.changing) {
@@ -332,8 +322,7 @@ gxp.ScaleLimitPanel = Ext.extend(Ext.Panel, {
         }
     },
     
-    /**
-     * Method: updateSliderValues
+    /** private: method[updateSliderValues]
      */
     updateSliderValues: function() {
         if(!this.changing) {
@@ -352,16 +341,12 @@ gxp.ScaleLimitPanel = Ext.extend(Ext.Panel, {
         }
     },
 
-    /**
-     * Method: sliderValuesToScale
-     * Given two values between 0 and 100, generate the min and max scale
-     *     denominators.  Assuming exponential scaling with <scaleFactor>.
-     *
-     * Parameters:
-     * values - {Array} Values from the scale slider.
-     *
-     * Returns:
-     * {Array} A two item array of min and max scale denominators.
+    /** private: method[sliderValuesToScale]
+     *  :param values: ``Array`` Values from the scale slider.
+     *  :return: ``Array`` A two item array of min and max scale denominators.
+     *  
+     *  Given two values between 0 and 100, generate the min and max scale
+     *  denominators.  Assuming exponential scaling with <scaleFactor>.
      */
     sliderValuesToScale: function(values) {
         var interval = 100 / (this.scaleLevels - 1);
@@ -369,8 +354,7 @@ gxp.ScaleLimitPanel = Ext.extend(Ext.Panel, {
                 Math.round(Math.pow(this.scaleFactor, (100 - values[1]) / interval) * this.minScaleDenominatorLimit)];
     },
     
-    /**
-     * Method: scaleToSliderValues
+    /** private: method[scaleToSliderValues]
      */
     scaleToSliderValues: function(scales) {
         var interval = 100 / (this.scaleLevels - 1);
@@ -380,4 +364,5 @@ gxp.ScaleLimitPanel = Ext.extend(Ext.Panel, {
     
 });
 
+/** api: xtype = gx_scalelimitpanel */
 Ext.reg('gx_scalelimitpanel', gxp.ScaleLimitPanel); 

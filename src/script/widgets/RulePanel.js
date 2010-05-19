@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2010 The Open Planning Project
  * 
- * @ include widgets/ScaleLimitPanel.js
+ * @include widgets/ScaleLimitPanel.js
  */
 
 Ext.namespace("gxp");
@@ -201,7 +201,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                 }
             }]
         }];
-        if (gxp.util.getSymbolTypeFromRule(this.rule) || this.symbolType) {
+        if (this.getSymbolTypeFromRule(this.rule) || this.symbolType) {
             this.items = [{
                 title: "Basic",
                 autoScroll: true,
@@ -379,6 +379,25 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                 scope: this
             }
         };
+    },
+
+    /** api: function[getSymbolTypeFromRule]
+     *  :arg rule: ``OpenLayers.Rule``
+     *  :return: ``String` "Point", "Line" or "Polygon" (or undefined if none
+     *  of the three)
+     *
+     *  Determines the symbol type of the first symbolizer of a rule that is
+     *  not a text symbolizer
+     */
+    getSymbolTypeFromRule: function(rule){
+        var symbolizer = rule.symbolizer;
+        if (symbolizer["Line"] || symbolizer["Point"] || symbolizer["Polygon"]) {
+            for (var type in symbolizer) {
+                if (type != "Text") {
+                    return type;
+                }
+            }
+        }
     }
 
 });
