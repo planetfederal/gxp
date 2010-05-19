@@ -47,6 +47,9 @@ gxp.form.ColorField = Ext.extend(Ext.form.TextField,  {
      *  Override
      */
     initComponent: function() {
+        if (this.value) {
+            this.value = this.hexToColor(this.value);
+        }
         gxp.form.ColorField.superclass.initComponent.call(this);
         
         // Add the colorField listener to color the field.
@@ -83,11 +86,10 @@ gxp.form.ColorField = Ext.extend(Ext.form.TextField,  {
      *  Set the background and font color for the field.
      */
     colorField: function() {
-        var color = this.getValue();
-        var hex = this.colorToHex(color) || "#ffffff";
+        var color = this.colorToHex(this.getValue()) || "#ffffff";
         this.getEl().setStyle({
-            "background": hex,
-            "color": this.isDark(hex) ? "#ffffff" : "#000000"
+            "background": color,
+            "color": this.isDark(color) ? "#ffffff" : "#000000"
         });
     },
     
@@ -100,7 +102,38 @@ gxp.form.ColorField = Ext.extend(Ext.form.TextField,  {
      *  in the field (given a named color or a hex string).
      */
     getHexValue: function() {
-        return this.colorToHex(this.getValue());
+        return this.colorToHex(
+            gxp.form.ColorField.superclass.getValue.apply(this, arguments));
+    },
+
+    /** api: method[getValue]
+     *  :returns: ``String`` The RGB hex string for the field's value (prefixed
+     *      with '#').
+     *  
+     *  This method always returns the RGB hex string representation of the
+     *  current value in the field (given a named color or a hex string),
+     *  except for the case when the value has not been changed.
+     */
+    getValue: function() {
+        var v = gxp.form.ColorField.superclass.getValue.apply(this, arguments);
+        v = v ? this.colorToHex(v): v;
+        var o = this.initialConfig.value;
+        if (v && v === this.hexToColor(o)) {
+            v = o;
+        }
+        return v;
+    },
+    
+    /** api: method[setValue]
+     *  :param value: ``Object``
+     *  
+     *  Sets the value of the field. If the value matches one of the well known
+     *  colors in ``cssColors``, a human readable value will be displayed
+     *  instead of the hex code.
+     */
+    setValue: function(value) {
+        gxp.form.ColorField.superclass.setValue.apply(this,
+            [value ? this.hexToColor(value) : value]);
     },
     
     /** private: method[colorToHex]
@@ -119,6 +152,19 @@ gxp.form.ColorField = Ext.extend(Ext.form.TextField,  {
             hex = this.cssColors[color.toLowerCase()] || null;
         }
         return hex;
+    },
+    
+    /** private: method[hexToColor]
+     */
+    hexToColor: function(hex) {
+        var color = hex;
+        for (c in this.cssColors) {
+            if (this.cssColors[c] == color.toUpperCase()) {
+                color = c;
+                break;
+            }
+        }
+        return color;
     }
     
 });
