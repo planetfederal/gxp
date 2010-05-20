@@ -16,7 +16,9 @@ Ext.namespace("gxp");
  *      GetStyles, styles can also be edited. The dialog does not provide any
  *      means of writing modified styles back to the server. To save styles,
  *      configure the dialog with a :class:`gxp.plugins.StyleWriter` and use
- *      the plugin's ``write`` method.
+ *      the plugin's ``write`` method. If the WMS does not support GetStyles,
+ *      the selected style will be applied to the layer provided as
+ *      ``layerRecord`` instantly.
  */
 gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     
@@ -424,6 +426,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     "abstract": userStyle.description,
                     "userStyle": userStyle
                 });
+                record.phantom = false;
                 this.stylesStore.add(record);
                 // set the default style if no STYLES param is set on the layer
                 if (this.layerRecord.get("layer").params.STYLES ===
