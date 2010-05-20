@@ -211,9 +211,10 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      *  the last style.
      */
     updateStyleRemoveButton: function() {
-        this.items.get(1).items.get(1).setDisabled(
-            this.stylesStore.getCount() <= 1 ||
-            this.selectedStyle.get("userStyle").isDefault === true);
+        var userStyle = this.selectedStyle &&
+            this.selectedStyle.get("userStyle");
+        this.items.get(1).items.get(1).setDisabled(!userStyle ||
+            this.stylesStore.getCount() <= 1 ||  userStyle.isDefault === true);
     },
     
     /** private: method[updateRuleRemoveButton]
@@ -221,8 +222,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      *  the last rule.
      */
     updateRuleRemoveButton: function() {
-        this.items.get(3).items.get(1).setDisabled(
-            this.selectedStyle.get("userStyle").rules.length <= 1);
+        this.items.get(3).items.get(1).setDisabled(!this.selectedRule ||
+            this.items.get(2).items.get(0).rules.length <= 1);
     },
     
     /** private: method[createRule]
@@ -253,10 +254,12 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     iconCls: "add",
                     text: "Add",
                     handler: function() {
-                        this.selectedStyle.get("userStyle").addRules(
-                            [this.createRule()]);
-                        // update the legend
-                        this.items.get(2).items.get(0).update();
+                        var legend = this.items.get(2).items.get(0);
+                        this.isRaster ?
+                            legend.rules.push(this.createPseudoRule()) :
+                            this.selectedStyle.get("userStyle").addRules(
+                                [this.createRule()]);
+                        legend.update();
                         this.updateRuleRemoveButton();
                     },
                     scope: this
@@ -268,7 +271,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                         var rule = this.selectedRule;
                         var legend = this.items.get(2).items.get(0);
                         legend.unselect();
-                        this.selectedStyle.get("userStyle").rules.remove(rule);
+                        legend.rules.remove(rule);
                         legend.update();
                     },
                     scope: this,
@@ -277,7 +280,11 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     xtype: "button",
                     iconCls: "edit",
                     text: "Edit",
-                    handler: this.editRule,
+                    handler: function() {
+                        this.isRaster ?
+                            this.editPseudoRule() :
+                            this.editRule();
+                    },
                     scope: this,
                     disabled: true
                 }, {
@@ -286,12 +293,21 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     text: "Duplicate",
                     handler: function() {
                         var legend = this.items.get(2).items.get(0);
-                        var newRule = this.selectedRule.clone();
-                        newRule.name = gxp.util.uniqueName(
-                            (newRule.title || newRule.name) + " (copy)");
-                        delete newRule.title;
-                        this.selectedStyle.get("userStyle").addRules(
-                            [newRule]);
+                        if(this.isRaster) {
+                            legend.rules.push(this.createPseudoRule({
+                                quantity: this.selectedRule.name,
+                                label: this.selectedRule.title,
+                                color: this.selectedRule.symbolizer.Point.fillColor,
+                                opacity: this.selectedRule.symbolizer.Point.fillOpacity
+                            }));
+                        } else {
+                            var newRule = this.selectedRule.clone();
+                            newRule.name = gxp.util.uniqueName(
+                                (newRule.title || newRule.name) + " (copy)");
+                            delete newRule.title;
+                            this.selectedStyle.get("userStyle").addRules(
+                                [newRule]);
+                        }
                         legend.update();
                         this.updateRuleRemoveButton();
                     },
@@ -302,6 +318,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         });
         this.add(rulesFieldSet, rulesToolbar);
         this.doLayout();
+        return rulesFieldSet;
     },
     
     /** private: method[editRule]
@@ -376,6 +393,9 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         ruleDlg.show();
     },
     
+    editPseudoRule: function() {
+    },
+    
     /** private: method[removeRulesFieldSet[
      *  Removes rulesFieldSet when the legend image cannot be loaded
      */
@@ -400,8 +420,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             data = new OpenLayers.Format.XML().read(response.responseText);
         }
         var layerParams = this.layerRecord.get("layer").params;
-        //TODO use the default style instead of the 1st one if layer has
-        // no STYLES param
+
         if (layerParams.STYLES) {
             this.selectedStyle = this.stylesStore.getAt(
                 this.stylesStore.findExact("name", layerParams.STYLES));
@@ -435,15 +454,22 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 }
             }
             
-            this.addRulesFieldSet();
-            this.addVectorLegend(this.selectedStyle.get("userStyle").rules);
+            var rulesFieldSet = this.addRulesFieldSet();
+            var rules = this.selectedStyle.get("userStyle").rules;
+            if (rules[0] && rules[0].symbolizer["Raster"]) {
+                rulesFieldSet.setTitle("Color Map Entries");
+                this.isRaster = true;
+                this.addRasterLegend(rules);
+            } else {
+                rulesFieldSet.setTitle("Rules");
+                this.isRaster = false;
+                this.addVectorLegend(rules);
+            }
         }
         catch(e) {
             // disable styles toolbar
             this.items.get(1).disable();
-            var legendImage = this.createLegendImage();
-            this.addRulesFieldSet();
-            this.items.get(2).add(legendImage);
+            this.addRulesFieldSet().add(this.createLegendImage());
             this.doLayout();
             // disable rules toolbar
             this.items.get(3).disable();
@@ -612,7 +638,11 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         if (userStyle) {
             // remove legend from rulesFieldSet
             fieldset.remove(fieldset.items.get(0));
-            this.addVectorLegend(userStyle.rules);
+            if (this.isRaster) {
+                this.addRasterLegend(userStyle.rules)
+            } else {
+                this.addVectorLegend(userStyle.rules);
+            }
         } else {
             // if GetStyles is not supported, we instantly update the layer
             this.layerRecord.get("layer").mergeNewParams(
@@ -660,7 +690,39 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             }
         });
         this.doLayout();
+    },
+    
+    addRasterLegend: function(rules) {
+        var symbolizer = rules[0].symbolizer["Raster"];
+        var colorMap = symbolizer.colorMap || [];
+        var pseudoRules = [];
+        var colorMapEntry;
+        for (var i=0, len=colorMap.length; i<len; i++) {
+            pseudoRules.push(this.createPseudoRule(colorMap[i]));
+        }
+        this.addVectorLegend(pseudoRules);
+    },
+    
+    createPseudoRule: function(colorMapEntry) {
+        colorMapEntry = Ext.applyIf(colorMapEntry || {}, {
+            quantity: 0,
+            color: "#000000",
+            opacity: 1
+        });
+        return new OpenLayers.Rule({
+            title: colorMapEntry.label,
+            name: colorMapEntry.quantity + "",
+            symbolizer: {
+                "Point": {
+                    fillColor: colorMapEntry.color,
+                    fillOpacity: colorMapEntry.opacity,
+                    pointRadius: 5,
+                    stroke: false
+                }
+            }
+        });
     }
+    
 });
 
 /** api: xtype = gx_wmsstylesdialog */
