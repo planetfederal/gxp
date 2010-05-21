@@ -416,7 +416,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             pseudoRule = pseudoRules[i];
             symbolizer.colorMap[i] = {
                 quantity: parseFloat(pseudoRule.name),
-                label: pseudoRule.title,
+                label: pseudoRule.title || undefined,
                 opacity: pseudoRule.symbolizer.Polygon.fillOpacity,
                 color: pseudoRule.symbolizer.Polygon.fillColor
             }
@@ -426,8 +426,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     
     updateSelectedRule: function(rule) {
         var legend = this.items.get(2).items.get(0);
-         // mark the style as modified
-        this.selectedStyle.store.modified["userStyle"] = this.selectedStyle;
+        // mark the style as modified
+        this.selectedStyle.store.afterEdit(this.selectedStyle);
         // dirty, but saves us effort elsewhere
         legend.selectedRule = this.selectedRule = rule;
         legend.update();
