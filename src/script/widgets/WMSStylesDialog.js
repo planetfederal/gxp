@@ -223,7 +223,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      */
     updateRuleRemoveButton: function() {
         this.items.get(3).items.get(1).setDisabled(!this.selectedRule ||
-            this.items.get(2).items.get(0).rules.length <= 1);
+            (this.isRaster === false &&
+            this.items.get(2).items.get(0).rules.length <= 1));
     },
     
     /** private: method[createRule]
@@ -275,7 +276,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                         var legend = this.items.get(2).items.get(0);
                         legend.unselect();
                         legend.rules.remove(rule);
-                        legend.update();
+                        this.isRaster ? this.savePseudoRules() : legend.update();
                     },
                     scope: this,
                     disabled: true
@@ -403,7 +404,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         var userStyle = style.get("userStyle");
         var pseudoRules = legend.rules;
         var symbolizer = userStyle.rules[0].symbolizer["Raster"];
-        symbolizer.colorMap = new Array(pseudoRules.length);
+        symbolizer.colorMap = pseudoRules.length > 0 ?
+            new Array(pseudoRules.length) : undefined;
         var pseudoRule;
         for (var i=0, len=pseudoRules.length; i<len; ++i) {
             pseudoRule = pseudoRules[i];
@@ -560,7 +562,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 this.stylesStore.findExact("name", layerParams.STYLES));
         }
         
-        try {
+        //try {
             var sld = new OpenLayers.Format.SLD().read(data);
             
             // add userStyle objects to the stylesStore
@@ -599,7 +601,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 this.isRaster = false;
                 this.addVectorLegend(rules);
             }
-        }
+        /*}
         catch(e) {
             // disable styles toolbar
             this.items.get(1).disable();
@@ -608,9 +610,9 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             // disable rules toolbar
             this.items.get(3).disable();
         }
-        finally {
+        finally {*/
             this.stylesStoreReady();
-        }
+        //}
     },
     
     /** private: method[stylesStoreReady]
@@ -786,17 +788,24 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     
     /** private: method[addVectorLegend]
      *  :param rules: ``Array``
+     *  :return: ``GeoExt.VectorLegend`` the legend that was created
      *
      *  Creates the vector legend for the provided rules and adds it to the
      *  rules fieldset.
      */
     addVectorLegend: function(rules) {
-        // use the symbolizer type of the 1st rule
-        for (var symbolType in rules[0].symbolizer) {
-            break;
+        var symbolType;
+        if (this.isRaster) {
+            // symbolizer type for pseudo rules
+            symbolType = "Polygon";
+        } else {
+            // use the symbolizer type of the 1st rule
+            for (var symbolType in rules[0].symbolizer) {
+                break;
+            }
         }
         this.symbolType = symbolType;
-        this.items.get(2).add({
+        var legend = this.items.get(2).add({
             xtype: "gx_vectorlegend",
             showTitle: false,
             rules: rules,
@@ -824,6 +833,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             }
         });
         this.doLayout();
+        return legend;
     },
     
     addRasterLegend: function(rules) {
@@ -834,7 +844,16 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         for (var i=0, len=colorMap.length; i<len; i++) {
             pseudoRules.push(this.createPseudoRule(colorMap[i]));
         }
-        this.addVectorLegend(pseudoRules);
+        var legend = this.addVectorLegend(pseudoRules);
+        legend.on({
+            "rulemoved": function() {
+                legend.suspendEvents();
+                this.savePseudoRules();
+                legend.resumeEvents();
+            },
+            scope: this
+        });
+        return legend;
     },
     
     createPseudoRule: function(colorMapEntry) {
