@@ -78,6 +78,16 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                     visibility: ("visibility" in config) ? config.visibility : true
                 }
             );
+
+            // set layer opacity from config
+            if ("opacity" in config) {
+                layer.opacity = config.opacity;
+            }
+            
+            // set layer format from config
+            if ("format" in config) {
+                layer.params["FORMAT"] = config.format;
+            }
             
             // set layer title from config
             if (config.title) {
