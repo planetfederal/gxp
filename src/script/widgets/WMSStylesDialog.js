@@ -255,11 +255,14 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     text: "Add",
                     handler: function() {
                         var legend = this.items.get(2).items.get(0);
-                        this.isRaster ?
-                            legend.rules.push(this.createPseudoRule()) :
+                        if (this.isRaster) {
+                            legend.rules.push(this.createPseudoRule());
+                            this.savePseudoRules();
+                        } else {
                             this.selectedStyle.get("userStyle").addRules(
                                 [this.createRule()]);
-                        legend.update();
+                            legend.update();
+                        }
                         this.updateRuleRemoveButton();
                     },
                     scope: this
@@ -297,9 +300,10 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                             legend.rules.push(this.createPseudoRule({
                                 quantity: this.selectedRule.name,
                                 label: this.selectedRule.title,
-                                color: this.selectedRule.symbolizer.Point.fillColor,
-                                opacity: this.selectedRule.symbolizer.Point.fillOpacity
+                                color: this.selectedRule.symbolizer.Polygon.fillColor,
+                                opacity: this.selectedRule.symbolizer.Polygon.fillOpacity
                             }));
+                            this.savePseudoRules();
                         } else {
                             var newRule = this.selectedRule.clone();
                             newRule.name = gxp.util.uniqueName(
@@ -307,8 +311,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                             delete newRule.title;
                             this.selectedStyle.get("userStyle").addRules(
                                 [newRule]);
+                            legend.update();
                         }
-                        legend.update();
                         this.updateRuleRemoveButton();
                     },
                     scope: this,
@@ -393,7 +397,137 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         ruleDlg.show();
     },
     
+    savePseudoRules: function() {
+        var style = this.selectedStyle;
+        var legend = this.items.get(2).items.get(0);
+        var userStyle = style.get("userStyle");
+        var pseudoRules = legend.rules;
+        var symbolizer = userStyle.rules[0].symbolizer["Raster"];
+        symbolizer.colorMap = new Array(pseudoRules.length);
+        var pseudoRule;
+        for (var i=0, len=pseudoRules.length; i<len; ++i) {
+            pseudoRule = pseudoRules[i];
+            symbolizer.colorMap[i] = {
+                quantity: parseFloat(pseudoRule.name),
+                label: pseudoRule.title,
+                opacity: pseudoRule.symbolizer.Polygon.fillOpacity,
+                color: pseudoRule.symbolizer.Polygon.fillColor
+            }
+        }
+        style.set("userStyle", userStyle.clone());
+    },
+    
     editPseudoRule: function() {
+        var rule = this.selectedRule;
+
+        var pseudoRuleDlg = new Ext.Window({
+            title: "Color Map Entry: " + rule.name,
+            width: 340,
+            autoHeight: true,
+            modal: true,
+            items: [{
+                bodyStyle: "padding-top: 5px",
+                border: false,
+                defaults: {
+                    autoHeight: true,
+                    hideMode: "offsets"
+                },
+                items: [{
+                    xtype: "form",
+                    border: false,
+                    labelAlign: "top",
+                    defaults: {border: false},
+                    style: {"padding": "0.3em 0 0 1em"},
+                    items: [{
+                        layout: "column",
+                        defaults: {
+                            border: false,
+                            style: {"padding-right": "1em"}
+                        },
+                        items: [{
+                            layout: "form",
+                            width: 70,
+                            items: [{
+                                xtype: "numberfield",
+                                anchor: "95%",
+                                value: rule.name,
+                                fieldLabel: "Quantity",
+                                listeners: {
+                                    change: function(el, value) {
+                                        rule.name = value;
+                                    }
+                                }
+                            }]
+                        }, {
+                            layout: "form",
+                            width: 130,
+                            items: [{
+                                xtype: "textfield",
+                                fieldLabel: "Label",
+                                anchor: "95%",
+                                value: rule.title,
+                                listeners: {
+                                    change: function(el, value) {
+                                        rule.title = value;
+                                    }
+                                }
+                            }]
+                        }, {
+                            layout: "form",
+                            width: 70,
+                            items: [new GeoExt.FeatureRenderer({
+                                symbolType: this.symbolType,
+                                isFormField: true,
+                                fieldLabel: "Appearance"
+                            })]
+                        }]
+                    }]
+                }, {
+                    xtype: "gx_polygonsymbolizer",
+                    symbolizer: rule.symbolizer[this.symbolType],
+                    bodyStyle: {"padding": "10px"},
+                    border: false,
+                    labelWidth: 70,
+                    defaults: {
+                        labelWidth: 70
+                    },
+                    listeners: {
+                        change: function(symbolizer) {
+                            var symbolizerSwatch = pseudoRuleDlg.findByType(GeoExt.FeatureRenderer)[0];
+                            symbolizerSwatch.setSymbolizers(
+                                [symbolizer], {draw: symbolizerSwatch.rendered}
+                            );
+                        },
+                        scope: this
+                    }
+                }]
+            }],
+            buttons: [{
+                text: "Cancel",
+                handler: function() {
+                    pseudoRuleDlg.close();
+                }
+            }, {
+                text: "Apply",
+                handler: function() {
+                    this.savePseudoRules();
+                    origRule = rule;
+                },
+                scope: this
+            }, {
+                text: "Save",
+                handler: function() {
+                    this.savePseudoRules();
+                    pseudoRuleDlg.close();
+                },
+                scope: this
+            }]
+        });
+        // remove stroke fieldset
+        var strokeSymbolizer = pseudoRuleDlg.findByType("gx_strokesymbolizer")[0];
+        strokeSymbolizer.ownerCt.remove(strokeSymbolizer);
+        
+        pseudoRuleDlg.show();
     },
     
     /** private: method[removeRulesFieldSet[
@@ -713,10 +847,9 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             title: colorMapEntry.label,
             name: colorMapEntry.quantity + "",
             symbolizer: {
-                "Point": {
+                "Polygon": {
                     fillColor: colorMapEntry.color,
                     fillOpacity: colorMapEntry.opacity,
-                    pointRadius: 5,
                     stroke: false
                 }
             }
