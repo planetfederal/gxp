@@ -141,28 +141,25 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
     addLayers: function() {
         var mapConfig = this.initialConfig.map;
         if(mapConfig && mapConfig.layers) {
-            var conf, source, record, records = [];            
+            var conf, source, record, baseRecords = [], overlayRecords = [];
             for (var i=0; i<mapConfig.layers.length; ++i) {
                 conf = mapConfig.layers[i];
                 source = this.layerSources[conf.source];
                 // TODO: deal with required record fields (e.g. "group")                 
                 record = source.createLayerRecord(conf);
                 if (record) {
-                    records.push(record);                    
+                    if (record.get("group") === "background") {
+                        baseRecords.push(record);
+                    } else {
+                        overlayRecords.push(record);
+                    }
                 }
             }
-            
-            // ensures that background layers are on the bottom
-            records.sort(function(a, b) {
-                var aGroup = a.get("group");
-                var bGroup = b.get("group");
-                return (aGroup == bGroup) ? 0 : 
-                    (aGroup == "background" ? -1 : 1);
-            });
             
             var panel = this.mapPanel;
             var map = panel.map;
             
+            var records = baseRecords.concat(overlayRecords);
             if (records.length) {
                 panel.layers.add(records);
 
