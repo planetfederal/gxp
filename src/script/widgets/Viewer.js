@@ -103,9 +103,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                 units: mapConfig.units,
                 maxResolution: mapConfig.maxResolution
             },
-            // TODO: update the OpenLayers.Map constructor to accept an initial center
             center: mapConfig.center && new OpenLayers.LonLat(mapConfig.center[0], mapConfig.center[1]),
-            // TODO: update the OpenLayers.Map constructor to accept an initial zoom
             zoom: mapConfig.zoom,
             items: this.mapItems
         });
@@ -173,11 +171,6 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                     map.zoomToMaxExtent();
                 }
             }
-            
-            /**
-             * TODO: remove this when http://trac.openlayers.org/ticket/2290 is closed
-             */
-            map.baseLayer.redraw();
             
         }        
     }
