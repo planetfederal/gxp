@@ -39,8 +39,18 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             portalItems: []
         });
 
-        this.applyConfig(config);
+        this.loadConfig(config, this.applyConfig);
         gxp.Viewer.superclass.constructor.apply(this, arguments);
+    },
+    
+    /** api: method[loadConfig]
+     *  :arg config: ``Object`` The config object passed to the constructor.
+     *
+     *  Subclasses that load config asynchronously can override this to load
+     *  any configuration before applyConfig is called.
+     */
+    loadConfig: function(config) {
+        this.applyConfig(config);
     },
     
     applyConfig: function(config) {
@@ -67,7 +77,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         // create portal when dom is ready
         queue.push(function(done) {
             Ext.onReady(function() {
-                this.createPortal();
+                this.initPortal();
                 done();
             }, this);
         });
@@ -112,7 +122,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
 
     },
 
-    createPortal: function() {
+    initPortal: function() {
         
         var config = this.portalConfig || {};
         var Constructor = config.renderTo ? Ext.Panel : Ext.Viewport;
@@ -135,7 +145,13 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
     },
     
     activate: function() {
+        // add any layers from config
         this.addLayers();
+
+        // initialize tooltips
+        Ext.QuickTips.init();
+        
+        this.fireEvent("ready");
     },
     
     addLayers: function() {
