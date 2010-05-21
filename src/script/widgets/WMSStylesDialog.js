@@ -65,6 +65,11 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      *  selected.
      */
     selectedRule: null,
+    
+    /** private: property[isRaster]
+     *  ``Boolean`` Are we dealing with a raster layer with RasterSymbolizer?
+     */
+    isRaster: null,
         
     /** private: method[initComponent]
      */
@@ -387,52 +392,9 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         ruleDlg.show();
     },
     
-    saveRule: function(rule) {
-        var style = this.selectedStyle;
-        var legend = this.items.get(2).items.get(0);
-        var userStyle = style.get("userStyle");
-        var i = userStyle.rules.indexOf(this.selectedRule);
-        userStyle.rules[i] = rule;
-        this.updateSelectedRule(rule);
-    },
-    
-    savePseudoRules: function() {
-        var style = this.selectedStyle;
-        var legend = this.items.get(2).items.get(0);
-        var userStyle = style.get("userStyle");
-        
-        var pseudoRules = legend.rules;
-        pseudoRules.sort(function(a,b) {
-            var left = parseFloat(a.name);
-            var right = parseFloat(b.name);
-            return left === right ? 0 : (left < right ? -1 : 1);
-        });
-        
-        var symbolizer = userStyle.rules[0].symbolizer["Raster"];
-        symbolizer.colorMap = pseudoRules.length > 0 ?
-            new Array(pseudoRules.length) : undefined;
-        var pseudoRule;
-        for (var i=0, len=pseudoRules.length; i<len; ++i) {
-            pseudoRule = pseudoRules[i];
-            symbolizer.colorMap[i] = {
-                quantity: parseFloat(pseudoRule.name),
-                label: pseudoRule.title || undefined,
-                opacity: pseudoRule.symbolizer.Polygon.fillOpacity,
-                color: pseudoRule.symbolizer.Polygon.fillColor
-            }
-        }
-        this.updateSelectedRule(this.selectedRule);
-    },
-    
-    updateSelectedRule: function(rule) {
-        var legend = this.items.get(2).items.get(0);
-        // mark the style as modified
-        this.selectedStyle.store.afterEdit(this.selectedStyle);
-        // dirty, but saves us effort elsewhere
-        legend.selectedRule = this.selectedRule = rule;
-        legend.update();
-    },
-    
+    /** private: method[editPseudoRule]
+     *  Edit a pseudo rule of a RasterSymbolizer's ColorMap.
+     */
     editPseudoRule: function() {
         var rule = this.selectedRule;
 
@@ -544,6 +506,64 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         strokeSymbolizer.ownerCt.remove(strokeSymbolizer);
         
         pseudoRuleDlg.show();
+    },
+    
+    /** private: method[saveRule]
+     *  :arg rule: the rule to save back to the userStyle
+     */
+    saveRule: function(rule) {
+        var style = this.selectedStyle;
+        var legend = this.items.get(2).items.get(0);
+        var userStyle = style.get("userStyle");
+        var i = userStyle.rules.indexOf(this.selectedRule);
+        userStyle.rules[i] = rule;
+        this.afterRuleChange(rule);
+    },
+    
+    /** private: method[savePseudoRules]
+     *  Takes the pseudo rules from the legend and adds them as
+     *  RasterSymbolizer ColorMap back to the userStyle.
+     */
+    savePseudoRules: function() {
+        var style = this.selectedStyle;
+        var legend = this.items.get(2).items.get(0);
+        var userStyle = style.get("userStyle");
+        
+        var pseudoRules = legend.rules;
+        pseudoRules.sort(function(a,b) {
+            var left = parseFloat(a.name);
+            var right = parseFloat(b.name);
+            return left === right ? 0 : (left < right ? -1 : 1);
+        });
+        
+        var symbolizer = userStyle.rules[0].symbolizer["Raster"];
+        symbolizer.colorMap = pseudoRules.length > 0 ?
+            new Array(pseudoRules.length) : undefined;
+        var pseudoRule;
+        for (var i=0, len=pseudoRules.length; i<len; ++i) {
+            pseudoRule = pseudoRules[i];
+            symbolizer.colorMap[i] = {
+                quantity: parseFloat(pseudoRule.name),
+                label: pseudoRule.title || undefined,
+                opacity: pseudoRule.symbolizer.Polygon.fillOpacity,
+                color: pseudoRule.symbolizer.Polygon.fillColor
+            }
+        }
+        this.afterRuleChange(this.selectedRule);
+    },
+    
+    /** private: method[afterRuleChange]
+     *  :arg rule: the rule to set as selectedRule
+     *  
+     *  Performs actions that are required to update the selectedRule and
+     *  selectedStyle after a rule was changed.
+     */
+    afterRuleChange: function(rule) {
+        var legend = this.items.get(2).items.get(0);
+        // dirty, but saves us effort elsewhere
+        legend.selectedRule = this.selectedRule = rule;
+        // mark the style as modified
+        this.selectedStyle.store.afterEdit(this.selectedStyle);
     },
     
     /** private: method[removeRulesFieldSet[
