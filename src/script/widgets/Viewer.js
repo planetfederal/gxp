@@ -56,7 +56,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             OpenLayers.ProxyHost = this.proxy;
         }
         
-        this.createMapPanel();
+        this.initMapPanel();
         
         // initialize all layer source plugins
         var queue = [];
@@ -88,20 +88,22 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         };
     },
     
-    createMapPanel: function() {
+    initMapPanel: function() {
         
         var mapConfig = this.initialConfig.map || {};
 
         this.mapPanel = new GeoExt.MapPanel({
             map: {
-                theme: null,
+                theme: mapConfig.theme || null,
                 controls: [
+                    new OpenLayers.Control.Navigation({zoomWheelEnabled: false}),
                     new OpenLayers.Control.PanPanel(),
                     new OpenLayers.Control.ZoomPanel()
                 ],
                 projection: mapConfig.projection,
                 units: mapConfig.units,
-                maxResolution: mapConfig.maxResolution
+                maxResolution: mapConfig.maxResolution,
+                numZoomLevels: mapConfig.numZoomLevels || 20
             },
             center: mapConfig.center && new OpenLayers.LonLat(mapConfig.center[0], mapConfig.center[1]),
             zoom: mapConfig.zoom,
