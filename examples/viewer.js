@@ -27,7 +27,7 @@ Ext.onReady(function() {
                 group: "background"
             }, {
                 source: "local",
-                name: "topp:states"
+                name: "usa:states"
             }]
         }
     });
