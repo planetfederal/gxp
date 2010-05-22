@@ -236,7 +236,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      */
     createRule: function() {
         var symbolizer = {};
-        symbolizer[this.symbolType] = {};
+        symbolizer[this.isRaster ? "Raster" : this.symbolType] = {};
         return new OpenLayers.Rule({
             name: gxp.util.uniqueName("New Rule"),
             symbolizer: symbolizer
@@ -546,7 +546,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 quantity: parseFloat(pseudoRule.name),
                 label: pseudoRule.title || undefined,
                 opacity: pseudoRule.symbolizer.Polygon.fillOpacity,
-                color: pseudoRule.symbolizer.Polygon.fillColor
+                color: pseudoRule.symbolizer.Polygon.fillColor || undefined
             }
         }
         this.afterRuleChange(this.selectedRule);
@@ -787,27 +787,34 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      *  event. Updates the layer and the rules fieldset.
      */
     changeStyle: function(record) {
+        var legend = this.items.get(2).items.get(0);
+        if(record === this.selectedStyle) {
+            legend.update();
+            return;
+        }
         this.selectedStyle = record;
-        this.updateStyleRemoveButton();
+        this.updateStyleRemoveButton();            
         var styleName = record.get("name");
         
         //TODO remove when support for GeoServer < 2.0.2 is dropped. See
         // http://jira.codehaus.org/browse/GEOS-3921
-        var legend = record.get("legend");
-        if (legend) {
-            var urlParts = legend.href.split("?");
+        var wmsLegend = record.get("legend");
+        if (wmsLegend) {
+            var urlParts = wmsLegend.href.split("?");
             var params = Ext.urlDecode(urlParts[1]);
             params.STYLE = styleName;
             urlParts[1] = Ext.urlEncode(params);
-            legend.href = urlParts.join("?");
+            wmsLegend.href = urlParts.join("?");
         }
         //TODO end remove
         
         var userStyle = record.get("userStyle");
-        var fieldset = this.items.get(2);
         if (userStyle) {
-            // update the legend
-            fieldset.items.get(0).update();
+            // replace the legend
+            legend.ownerCt.remove(legend);
+            this.isRaster ?
+                this.addRasterLegend(userStyle.rules) :
+                this.addVectorLegend(userStyle.rules);
         } else {
             // if GetStyles is not supported, we instantly update the layer
             this.layerRecord.get("layer").mergeNewParams(
