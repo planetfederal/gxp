@@ -101,7 +101,7 @@ gxp.plugins.GeoServerStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
             Ext.Ajax.request({
                 method: styleRec.phantom === true ? "POST" : "PUT",
                 url: this.baseUrl + "/styles" + (styleRec.phantom === true ?
-                    "" : "/" + styleName),
+                    "" : "/" + styleName + ".xml"),
                 headers: {
                     "Content-Type": "application/vnd.ogc.sld+xml; charset=UTF-8"
                 },
@@ -112,7 +112,7 @@ gxp.plugins.GeoServerStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
                     Ext.Ajax.request({
                         method: "POST",
                         url: this.baseUrl + "/layers/" +
-                            this.target.layerRecord.get("name") + "/styles",
+                            this.target.layerRecord.get("name") + "/styles.json",
                         jsonData: {
                             "style": {
                                 "name": styleName
@@ -146,7 +146,7 @@ gxp.plugins.GeoServerStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
         Ext.Ajax.request({
             method: "PUT",
             url: this.baseUrl + "/layers/" +
-                this.target.layerRecord.get("name"),
+                this.target.layerRecord.get("name") + ".json",
             jsonData: {
                 "layer": {
                     "defaultStyle": {
