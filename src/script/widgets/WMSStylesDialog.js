@@ -68,6 +68,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     
     /** private: property[isRaster]
      *  ``Boolean`` Are we dealing with a raster layer with RasterSymbolizer?
+     *  This is needed because we create pseudo rules from a RasterSymbolizer's
+     *  ColorMap, and for this we need special treatment in some places.
      */
     isRaster: null,
         
@@ -872,7 +874,17 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         return legend;
     },
     
+    /** private: method[addRasterLegend]
+     *  :param rules: ``Array``
+     *  :return: ``GeoExt.VectorLegend`` the legend that was created
+     *
+     *  Creates the vector legend for the pseudo rules that are created from
+     *  the RasterSymbolizer of the first rule and adds it to the rules
+     *  fieldset.
+     */  
     addRasterLegend: function(rules) {
+        //TODO raster styling support is currently limited to one rule, and
+        // we can only handle a color map. No band selection and other stuff.
         var symbolizer = rules[0].symbolizer["Raster"];
         var colorMap = symbolizer.colorMap || [];
         var pseudoRules = [];
@@ -883,6 +895,11 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         return this.addVectorLegend(pseudoRules);
     },
     
+    /** private: method[createPseudoRule]
+     *  :arg colorMapEntry: ``Object``
+     *  
+     *  Creates a pseudo rule from a ColorMapEntry.
+     */
     createPseudoRule: function(colorMapEntry) {
         colorMapEntry = Ext.applyIf(colorMapEntry || {}, {
             quantity: 0,
