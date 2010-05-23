@@ -3,7 +3,7 @@
  */
 
 /**
- * @require plugins/StyleWriter.js
+ * @requires plugins/StyleWriter.js
  */
 
 Ext.namespace("gxp.plugins");
