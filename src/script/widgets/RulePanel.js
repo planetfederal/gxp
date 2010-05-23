@@ -1,7 +1,14 @@
 /**
  * Copyright (c) 2008-2010 The Open Planning Project
- * 
+ */
+
+/**
  * @include widgets/ScaleLimitPanel.js
+ * @include widgets/TextSymbolizer.js
+ * @include widgets/PolygonSymbolizer.js
+ * @include widgets/LineSymbolizer.js
+ * @include widgets/PointSymbolizer.js
+ * @include widgets/FilterBuilder.js
  */
 
 Ext.namespace("gxp");
