@@ -2,6 +2,11 @@
  * Copyright (c) 2010 The Open Planning Project
  */
 
+/**
+ * @include widgets/RulePanel.js
+ * @include widgets/StylePropertiesDialog.js
+ */
+
 /** api: (define)
  *  module = gxp
  *  class = WMSStylesDialog
