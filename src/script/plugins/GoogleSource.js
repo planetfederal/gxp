@@ -96,6 +96,8 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
         // only return layer if app does not have it already
         if(this.target.mapPanel.layers.findBy(cmp) == -1) {
             record = this.store.getAt(this.store.findBy(cmp));
+            // records can be in only one store
+            record = record.copy(Ext.data.Record.id({}));
             var layer = record.get("layer");
             // set layer title from config
             if (config.title) {
