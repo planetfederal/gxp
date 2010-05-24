@@ -7,6 +7,12 @@ gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
      *  The object that this plugin is plugged into.
      */
      
+    /** api: property[title]
+     *  ``String``
+     *  A descriptive title for this layer source.
+     */
+    title: "",
+    
     /** private: method[constructor]
      */
     constructor: function(config) {
