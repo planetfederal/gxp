@@ -60,7 +60,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             var nativeExtent = original.get("bbox")[projection.getCode()]
             var maxExtent = 
                 (nativeExtent && OpenLayers.Bounds.fromArray(nativeExtent.bbox)) || 
-                OpenLayers.Bounds.fromArray(record.get("llbbox")).transform(new OpenLayers.Projection("EPSG:4326"), projection);
+                OpenLayers.Bounds.fromArray(original.get("llbbox")).transform(new OpenLayers.Projection("EPSG:4326"), projection);
 
             layer = new OpenLayers.Layer.WMS(
                 config.title || layer.name, 
