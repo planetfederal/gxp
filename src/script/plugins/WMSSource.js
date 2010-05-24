@@ -61,6 +61,13 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             var maxExtent = 
                 (nativeExtent && OpenLayers.Bounds.fromArray(nativeExtent.bbox)) || 
                 OpenLayers.Bounds.fromArray(original.get("llbbox")).transform(new OpenLayers.Projection("EPSG:4326"), projection);
+            
+            // make sure maxExtent is valid (transform does not succeed for all llbbox)    
+            if (!(1 / maxExtent.getHeight() > 0) || !(1 / maxExtent.getWidth() > 0)) {
+                // maxExtent has infinite or non-numeric width or height
+                // in this case, the map maxExtent must be specified in the config
+                maxExtent = undefined;
+            } 
 
             layer = new OpenLayers.Layer.WMS(
                 config.title || layer.name, 
@@ -81,7 +88,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             var data = Ext.applyIf({
                 title: layer.name,
                 group: config.group,
-                source: this.id,
+                source: config.source,
                 layer: layer
             }, original.data);
             
@@ -102,17 +109,18 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         return record;
     },
     
+    /** api: method[getConfigForRecord]
+     *  :arg record: :class:`GeoExt.data.LayerRecord`
+     *  :returns: ``Object``
+     *
+     *  Create a config object that can be used to recreate the given record.
+     */
     getConfigForRecord: function(record) {
+        var config = gxp.plugins.WMSSource.superclass.getConfigForRecord.apply(this, arguments);
         var layer = record.get("layer");
-        return {
-            name: record.get("name"),
-            title: record.get("title"),
-            visibility: layer.getVisibility(),
-            format: layer.params.FORMAT,
-            opacity: layer.opacity || undefined,
-            group: record.get("group"),
-            source: this.id
-        };
+        return Ext.apply(config, {
+            format: layer.params.FORMAT
+        });
     }
     
 });
