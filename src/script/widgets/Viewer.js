@@ -89,6 +89,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
     createSourceLoader: function(key) {
         return function(done) {
             var config = this.sources[key];
+            config.id = key;
             var source = Ext.ComponentMgr.createPlugin(config, this.defaultSourceType);
             source.on({
                 "ready": done
@@ -191,6 +192,39 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             }
             
         }        
-    }
+    },
+
+    /** private: method[getState]
+     *  :returns: ``Object`` Representation of the app's current state.
+     */ 
+    getState: function() {
+
+        var center = this.mapPanel.map.getCenter();        
+        var state = {
+            sources: {},
+            map: {
+                center: [center.lon, center.lat],
+                zoom: this.mapPanel.map.zoom,
+                layers: []
+            }
+        };
+        
+        this.mapPanel.layers.each(function(record){
+            var layer = record.get("layer");
+            if (layer.displayInLayerSwitcher) {
+                var id = record.get("source");
+                var source = this.layerSources[id];
+                if (!source) {
+                    throw new Error("Could not find source for layer '" + record.get("name") + "'");
+                }
+                // add layer
+                state.map.layers.push(source.getConfigForRecord(record));                
+                // add source
+                state.sources[source.id] = source.initialConfig;                    
+            }
+        }, this);
+        
+        return state;
+    },
     
 });
