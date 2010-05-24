@@ -69,7 +69,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         this.initMapPanel();
         
         // initialize all layer source plugins
-        var queue = [];
+        var config, queue = [];
         for (var key in this.sources) {
             queue.push(this.createSourceLoader(key));
         }
@@ -89,13 +89,28 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
     createSourceLoader: function(key) {
         return function(done) {
             var config = this.sources[key];
-            var source = Ext.ComponentMgr.createPlugin(config, this.defaultSourceType);
-            source.on({
-                "ready": done
-            })
-            this.layerSources[key] = source;
-            source.init(this);
+            this.addLayerSource({
+                id: key,
+                config: config,
+                callback: done
+            });
         };
+    },
+    
+    addLayerSource: function(options) {
+        var id = options.id || OpenLayers.Util.createUniqueID("source");
+        var source = Ext.ComponentMgr.createPlugin(
+            options.config, this.defaultSourceType
+        );
+        source.on({
+            ready: function() {
+                var callback = options.callback || Ext.emptyFn;
+                callback.call(this, id);
+            },
+            scope: options.scope || this
+        })
+        this.layerSources[id] = source;
+        source.init(this);
     },
     
     initMapPanel: function() {
