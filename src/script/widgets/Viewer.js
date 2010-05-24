@@ -89,7 +89,6 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
     createSourceLoader: function(key) {
         return function(done) {
             var config = this.sources[key];
-            config.id = key;
             var source = Ext.ComponentMgr.createPlugin(config, this.defaultSourceType);
             source.on({
                 "ready": done
@@ -113,6 +112,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                 ],
                 projection: mapConfig.projection,
                 units: mapConfig.units,
+                maxExtent: mapConfig.maxExtent && OpenLayers.Bounds.fromArray(mapConfig.maxExtent),
                 maxResolution: mapConfig.maxResolution,
                 numZoomLevels: mapConfig.numZoomLevels || 20
             },
@@ -199,15 +199,16 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
      */ 
     getState: function() {
 
-        var center = this.mapPanel.map.getCenter();        
-        var state = {
-            sources: {},
-            map: {
-                center: [center.lon, center.lat],
-                zoom: this.mapPanel.map.zoom,
-                layers: []
-            }
-        };
+        // start with what was originally given
+        var state = Ext.apply({}, this.initialConfig);
+        
+        // update anything that can change
+        var center = this.mapPanel.map.getCenter();
+        Ext.apply(state.map, {
+            center: [center.lon, center.lat],
+            zoom: this.mapPanel.map.zoom,
+            layers: []
+        });
         
         this.mapPanel.layers.each(function(record){
             var layer = record.get("layer");
@@ -219,8 +220,6 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                 }
                 // add layer
                 state.map.layers.push(source.getConfigForRecord(record));                
-                // add source
-                state.sources[source.id] = source.initialConfig;                    
             }
         }, this);
         
