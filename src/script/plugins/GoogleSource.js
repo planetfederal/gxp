@@ -72,7 +72,8 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
                 {name: "source", type: "string"},
                 {name: "name", type: "string"},
                 {name: "abstract", type: "string"},
-                {name: "group", type: "string"}
+                {name: "group", type: "string"},
+                {name: "fixed", type: "boolean", defaultValue: true}
             ]
         });
         this.store.each(function(l) {
