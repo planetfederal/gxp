@@ -81,7 +81,8 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                     maxExtent: maxExtent,
                     restrictedExtent: maxExtent,
                     visibility: ("visibility" in config) ? config.visibility : true,
-                    opacity: ("opacity" in config) ? config.opacity : 1
+                    opacity: ("opacity" in config) ? config.opacity : 1,
+                    buffer: ("buffer" in config) ? config.buffer : 1
                 }
             );
 
