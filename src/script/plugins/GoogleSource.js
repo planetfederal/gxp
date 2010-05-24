@@ -17,6 +17,12 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
      *  ``GeoExt.data.LayerStore``
      */
     
+    /** api: property[title]
+     *  ``String``
+     *  A descriptive title for this layer source.  Default is "Google Layers".
+     */
+    title: "Google Layers",
+
     constructor: function(config) {
         this.config = config;
         gxp.plugins.GoogleSource.superclass.constructor.apply(this, arguments);
@@ -51,15 +57,17 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
      *  loaded.
      */
     syncCreateStore: function(callback) {
-        var mapTypes = [G_NORMAL_MAP, G_SATELLITE_MAP, G_HYBRID_MAP, G_PHYSICAL_MAP];
-        var len = mapTypes.length;
+        var mapTypeNames = ["G_NORMAL_MAP", "G_SATELLITE_MAP", "G_HYBRID_MAP", "G_PHYSICAL_MAP"];
+        var len = mapTypeNames.length;
         var layers = new Array(len);
-        var mapType;
+        var name, mapType;
         for(var i=0; i<len; ++i) {
-            mapType = mapTypes[i];
+            name = mapTypeNames[i];
+            mapType = window[name];
             layers[i] = new OpenLayers.Layer.Google(
                 "Google " + mapType.getName(), {
                     type: mapType,
+                    typeName: name,
                     sphericalMercator: true,
                     maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
                     restrictedExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34)
@@ -70,7 +78,7 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
             layers: layers,
             fields: [
                 {name: "source", type: "string"},
-                {name: "name", type: "string"},
+                {name: "name", type: "string", mapping: "typeName"},
                 {name: "abstract", type: "string"},
                 {name: "group", type: "string"},
                 {name: "fixed", type: "boolean", defaultValue: true}
@@ -92,7 +100,7 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
     createLayerRecord: function(config) {
         var record;
         var cmp = function(l) {
-            return l.get("layer").type == window[config.name];
+            return l.get("name") === config.name;
         };
         // only return layer if app does not have it already
         if(this.target.mapPanel.layers.findBy(cmp) == -1) {
@@ -118,7 +126,9 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
             
             record.set("source", config.source);
             record.set("name", config.name);
-            record.set("group", config.group);
+            if ("group" in config) {
+                record.set("group", config.group);
+            }
             record.commit();
         };
         return record;
