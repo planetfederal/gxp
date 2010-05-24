@@ -62,12 +62,12 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 (nativeExtent && OpenLayers.Bounds.fromArray(nativeExtent.bbox)) || 
                 OpenLayers.Bounds.fromArray(original.get("llbbox")).transform(new OpenLayers.Projection("EPSG:4326"), projection);
             
-            // make sure maxExtent is valid (transform does not succeed for all llbbox)    
+            // make sure maxExtent is valid (transform does not succeed for all llbbox)
             if (!(1 / maxExtent.getHeight() > 0) || !(1 / maxExtent.getWidth() > 0)) {
                 // maxExtent has infinite or non-numeric width or height
                 // in this case, the map maxExtent must be specified in the config
                 maxExtent = undefined;
-            } 
+            }
 
             layer = new OpenLayers.Layer.WMS(
                 config.title || layer.name, 
@@ -79,6 +79,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 }, {
                     attribution: layer.attribution,
                     maxExtent: maxExtent,
+                    restrictedExtent: maxExtent,
                     visibility: ("visibility" in config) ? config.visibility : true,
                     opacity: ("opacity" in config) ? config.opacity : 1
                 }
@@ -89,15 +90,16 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 title: layer.name,
                 group: config.group,
                 source: config.source,
+                properties: "gx_wmslayerpanel",
                 layer: layer
             }, original.data);
             
             // add a field for the source id and group
-            var fields = [{
-                name: "source", type: "string"
-            }, {
-                name: "group", type: "string"
-            }];
+            var fields = [
+                {name: "source", type: "string"}, 
+                {name: "group", type: "string"},
+                {name: "properties", type: "string"}
+            ];
             original.fields.each(function(field) {
                 fields.push(field);
             });
