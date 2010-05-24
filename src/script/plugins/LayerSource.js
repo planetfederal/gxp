@@ -7,11 +7,6 @@ gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
      *  The object that this plugin is plugged into.
      */
      
-    /** api: config[id]
-     *  ``String``
-     *  Identifier for this source.
-     */
-    
     /** private: method[constructor]
      */
     constructor: function(config) {
@@ -56,7 +51,26 @@ gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
      *  Create a layer record given the config.
      */
     createLayerRecord: function(config) {
+    },
+
+    /** api: method[getConfigForRecord]
+     *  :arg record: :class:`GeoExt.data.LayerRecord`
+     *  :returns: ``Object``
+     *
+     *  Create a config object that can be used to recreate the given record.
+     */
+    getConfigForRecord: function(record) {
+        var layer = record.get("layer");
+        return {
+            source: record.get("source"),
+            name: record.get("name"),
+            title: record.get("title"),
+            visibility: layer.getVisibility(),
+            opacity: layer.opacity || undefined,
+            group: record.get("group")
+        };
     }
+    
 
     
 });
