@@ -69,6 +69,8 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
         this.store = new GeoExt.data.LayerStore({
             layers: layers,
             fields: [
+                {name: "source", type: "string"},
+                {name: "name", type: "string"},
                 {name: "abstract", type: "string"},
                 {name: "group", type: "string"}
             ]
@@ -111,6 +113,8 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
                 layer.visibility = config.visibility
             }
             
+            record.set("source", config.source);
+            record.set("name", config.name);
             record.set("group", config.group);
             record.commit();
         };
