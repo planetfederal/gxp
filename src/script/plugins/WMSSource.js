@@ -5,6 +5,9 @@
 Ext.namespace("gxp.plugins");
 
 gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
+    
+    /** api: ptype = gx-wmssource */
+    ptype: "gx-wmssource",
 
     /** api: property[store]
      *  ``GeoExt.data.LayerStore``
@@ -41,20 +44,10 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         var record;
         var index = this.store.findExact("name", config.name);
         if (index > -1) {
-            /**
-             * If the same layer is added twice, it will get replaced
-             * unless we give each record a unique id.  In addition, we
-             * need to clone the layer so that the map doesn't assume
-             * the layer has already been added.  Finally, we can't
-             * simply set the record layer to the cloned layer because
-             * record.set compares String(value) to determine equality.
-             * 
-             * TODO: suggest record.clone
-             */
-            Ext.data.Record.AUTO_ID++;
-            record = this.store.getAt(index).copy(Ext.data.Record.AUTO_ID);
+            var original = this.store.getAt(index);
 
-            var layer = record.get("layer");
+            var layer = original.get("layer");
+
             /**
              * TODO: The WMSCapabilitiesReader should allow for creation
              * of layers in different SRS.
@@ -63,56 +56,65 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             var projection = this.target.mapPanel.map.getProjectionObject() ||
                 (projConfig && new OpenLayers.Projection(projConfig)) ||
                 new OpenLayers.Projection("EPSG:4326");
-            var nativeExtent = record.get("bbox")[projection.getCode()]
+
+            var nativeExtent = original.get("bbox")[projection.getCode()]
             var maxExtent = 
                 (nativeExtent && OpenLayers.Bounds.fromArray(nativeExtent.bbox)) || 
                 OpenLayers.Bounds.fromArray(record.get("llbbox")).transform(new OpenLayers.Projection("EPSG:4326"), projection);
+
             layer = new OpenLayers.Layer.WMS(
-                layer.name, layer.url, {
-                    layers: layer.params["LAYERS"],
-                    transparent: ("transparent" in config) ? config.transparent : true
-                },
+                config.title || layer.name, 
+                layer.url, 
                 {
+                    layers: layer.params["LAYERS"],
+                    format: ("format" in config) ? config.format : layer.params["FORMAT"],
+                    transparent: ("transparent" in config) ? config.transparent : true
+                }, {
                     attribution: layer.attribution,
                     maxExtent: maxExtent,
-                    visibility: ("visibility" in config) ? config.visibility : true
+                    visibility: ("visibility" in config) ? config.visibility : true,
+                    opacity: ("opacity" in config) ? config.opacity : 1
                 }
             );
 
-            // set layer opacity from config
-            if ("opacity" in config) {
-                layer.opacity = config.opacity;
-            }
+            // data for the new record
+            var data = Ext.applyIf({
+                title: layer.name,
+                group: config.group,
+                source: this.id,
+                layer: layer
+            }, original.data);
             
-            // set layer format from config
-            if ("format" in config) {
-                layer.params["FORMAT"] = config.format;
-            }
-            
-            // set layer title from config
-            if (config.title) {
-                /**
-                 * Because the layer title data is duplicated, we have
-                 * to set it in both places.  After records have been
-                 * added to the store, the store handles this
-                 * synchronization.
-                 */
-                layer.setName(config.title);
-                record.set("title", config.title);
-            }
-            
-            /**
-             * TODO: record field values must be serializable, push this to the record
-             */
-            record.data.layer = layer;
+            // add a field for the source id and group
+            var fields = [{
+                name: "source", type: "string"
+            }, {
+                name: "group", type: "string"
+            }];
+            original.fields.each(function(field) {
+                fields.push(field);
+            });
 
-            record.set("group", config.group);
-            record.commit();
+            var Record = GeoExt.data.LayerRecord.create(fields);
+            record = new Record(data, layer.id);
+
         }
         return record;
+    },
+    
+    getConfigForRecord: function(record) {
+        var layer = record.get("layer");
+        return {
+            name: record.get("name"),
+            title: record.get("title"),
+            visibility: layer.getVisibility(),
+            format: layer.params.FORMAT,
+            opacity: layer.opacity || undefined,
+            group: record.get("group"),
+            source: this.id
+        };
     }
     
 });
 
-/** api: ptype = gx-wmssource */
-Ext.preg("gx-wmssource", gxp.plugins.WMSSource);
+Ext.preg(gxp.plugins.WMSSource.prototype.ptype, gxp.plugins.WMSSource);
