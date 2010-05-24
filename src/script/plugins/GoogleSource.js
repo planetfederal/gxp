@@ -109,7 +109,7 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
                 record.set("title", config.title);
             }
             // set visibility from config
-            if(config.visibility) {
+            if ("visibility" in config) {
                 layer.visibility = config.visibility
             }
             
