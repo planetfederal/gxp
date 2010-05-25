@@ -44,12 +44,16 @@ gxp.plugins.OSMSource = Ext.extend(gxp.plugins.LayerSource, {
                 "http://tile.openstreetmap.org/${z}/${x}/${y}.png",
                 OpenLayers.Util.applyDefaults({                
                     attribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
-                    type: "OpenStreetMap"
+                    type: "openstreetmap"
                 }, options)
             ),
             new OpenLayers.Layer.XYZ(
                 "OpenStreetMap Tiles@home",
-                "http://tah.openstreetmap.org/Tiles/tile/${z}/${x}/${y}.png",
+                [
+                    "http://a.tah.openstreetmap.org/Tiles/tile/${z}/${x}/${y}.png",
+                    "http://b.tah.openstreetmap.org/Tiles/tile/${z}/${x}/${y}.png",
+                    "http://c.tah.openstreetmap.org/Tiles/tile/${z}/${x}/${y}.png"
+                ],
                 OpenLayers.Util.applyDefaults({                
                     attribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
                     type: "osmarender"
