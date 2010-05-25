@@ -113,6 +113,8 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                     attribution: layer.attribution,
                     maxExtent: maxExtent,
                     restrictedExtent: maxExtent,
+                    singleTile: ("tiled" in config) ? !config.tiled : false,
+                    ratio: config.ratio || 1,
                     visibility: ("visibility" in config) ? config.visibility : true,
                     opacity: ("opacity" in config) ? config.opacity : 1,
                     buffer: ("buffer" in config) ? config.buffer : 1
