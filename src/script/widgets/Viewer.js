@@ -123,7 +123,8 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                 controls: [
                     new OpenLayers.Control.Navigation({zoomWheelEnabled: false}),
                     new OpenLayers.Control.PanPanel(),
-                    new OpenLayers.Control.ZoomPanel()
+                    new OpenLayers.Control.ZoomPanel(),
+                    new OpenLayers.Control.Attribution()
                 ],
                 projection: mapConfig.projection,
                 units: mapConfig.units,
