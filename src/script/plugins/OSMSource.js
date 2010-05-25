@@ -6,8 +6,8 @@ Ext.namespace("gxp.plugins");
 
 gxp.plugins.OSMSource = Ext.extend(gxp.plugins.LayerSource, {
     
-    /** api: ptype = gx-osmsource */
-    ptype: "gx-osmsource",
+    /** api: ptype = gx_osmsource */
+    ptype: "gx_osmsource",
 
     /** api: property[store]
      *  ``GeoExt.data.LayerStore``
@@ -42,14 +42,18 @@ gxp.plugins.OSMSource = Ext.extend(gxp.plugins.LayerSource, {
         var layers = [
             new OpenLayers.Layer.XYZ(
                 "OpenStreetMap",
-                "http://tile.openstreetmap.org/${z}/${x}/${y}.png",
+                [
+                    "http://a.tile.openstreetmap.org/${z}/${x}/${y}.png",
+                    "http://b.tile.openstreetmap.org/${z}/${x}/${y}.png",
+                    "http://c.tile.openstreetmap.org/${z}/${x}/${y}.png"
+                ],
                 OpenLayers.Util.applyDefaults({                
                     attribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
-                    type: "openstreetmap"
+                    type: "mapnik"
                 }, options)
             ),
             new OpenLayers.Layer.XYZ(
-                "OpenStreetMap Tiles@home",
+                "Tiles@home",
                 [
                     "http://a.tah.openstreetmap.org/Tiles/tile/${z}/${x}/${y}.png",
                     "http://b.tah.openstreetmap.org/Tiles/tile/${z}/${x}/${y}.png",
@@ -68,7 +72,8 @@ gxp.plugins.OSMSource = Ext.extend(gxp.plugins.LayerSource, {
                 {name: "source", type: "string"},
                 {name: "name", type: "string", mapping: "type"},
                 {name: "abstract", type: "string", mapping: "attribution"},
-                {name: "group", type: "string"}
+                {name: "group", type: "string", defaultValue: "background"},
+                {name: "fixed", type: "boolean", defaultValue: true}
             ]
         });
         this.store.each(function(l) {
