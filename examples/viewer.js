@@ -6,13 +6,13 @@ Ext.onReady(function() {
             width: 500,
             height: 300
         },
-        defaultSourceType: "gx-wmssource",
+        defaultSourceType: "gx_wmssource",
         sources: {
             local: {
                 url: "/geoserver/wms"
             },
             google: {
-                ptype: "gx-googlesource"
+                ptype: "gx_googlesource"
             }
         },
         map: {

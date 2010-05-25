@@ -31,8 +31,8 @@ Ext.namespace("gxp.plugins");
 
 gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
     
-    /** api: ptype = gx-wmssource */
-    ptype: "gx-wmssource",
+    /** api: ptype = gx_wmssource */
+    ptype: "gx_wmssource",
 
     /** api: property[store]
      *  ``GeoExt.data.LayerStore``

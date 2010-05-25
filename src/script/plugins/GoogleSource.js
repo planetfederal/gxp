@@ -6,6 +6,9 @@ Ext.namespace("gxp.plugins");
 
 gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
     
+    /** api: ptype = gx_googlesource */
+    ptype: "gx_googlesource",
+    
     //i18n
     apiKeyPrompt: "Please enter the Google API key for ",
 
@@ -211,5 +214,4 @@ gxp.plugins.GoogleSource.monitor = new (Ext.extend(Ext.util.Observable, {
 
 }))();
 
-/** api: ptype = gx-wmssource */
-Ext.preg("gx-googlesource", gxp.plugins.GoogleSource);
+Ext.preg(gxp.plugins.GoogleSource.prototype.ptype, gxp.plugins.GoogleSource);
