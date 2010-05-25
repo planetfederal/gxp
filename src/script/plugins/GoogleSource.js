@@ -80,12 +80,11 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
                 {name: "source", type: "string"},
                 {name: "name", type: "string", mapping: "typeName"},
                 {name: "abstract", type: "string"},
-                {name: "group", type: "string"},
+                {name: "group", type: "string", defaultValue: "background"},
                 {name: "fixed", type: "boolean", defaultValue: true}
             ]
         });
         this.store.each(function(l) {
-            l.set("group", "background");
             l.set("abstract", l.get("layer").type.getAlt());
         });
         callback();
