@@ -2,6 +2,31 @@
  * @require plugins/LayerSource.js
  */
 
+/**
+ * The WMSCapabilities format parses the document and passes the raw data to
+ * the WMSCapabilitiesReader.  There, records are created from layer data.
+ * The rest of the data is lossed.  It makes sense to store this raw data
+ * somewhere - either on the OpenLayers format or the GeoExt reader.  Until
+ * there is a better solution, we'll override the reader's readRecords method
+ * here so that we can have access to the raw data later.
+ * 
+ * The purpose of all of this is to get the service title later.
+ * TODO: push this to OpenLayers or GeoExt
+ */
+(function() {
+    var proto = GeoExt.data.WMSCapabilitiesReader.prototype;
+    var original = proto.readRecords;
+    proto.readRecords = function(data) {
+        if (typeof data === "string" || data.nodeType) {
+            data = this.meta.format.read(data);
+        }
+        // here is the new part
+        this.raw = data;
+        // continue with the original
+        return original.call(this, data);
+    };
+})();
+
 Ext.namespace("gxp.plugins");
 
 gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
@@ -30,7 +55,15 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         this.store = new GeoExt.data.WMSCapabilitiesStore({
             url: url,
             autoLoad: true,
-            listeners: {load: callback}
+            listeners: {
+                load: function() {
+                    if (!this.title) {
+                        this.title = this.store.reader.raw.service.title;                        
+                    }
+                    callback();
+                },
+                scope: this
+            }
         });
     },
     
