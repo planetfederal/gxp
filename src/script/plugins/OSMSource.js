@@ -36,6 +36,7 @@ gxp.plugins.OSMSource = Ext.extend(gxp.plugins.LayerSource, {
             maxResolution: 156543.0339,
             numZoomLevels: 19,
             units: "m",
+            buffer: 1
         };
         
         var layers = [
