@@ -240,6 +240,6 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         }, this);
         
         return state;
-    },
+    }
     
 });
