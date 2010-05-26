@@ -92,7 +92,14 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             this.addLayerSource({
                 id: key,
                 config: config,
-                callback: done
+                callback: done,
+                fallback: function() {
+                    // TODO: log these issues somewhere that the app can display
+                    // them after loading.
+                    // console.log(arguments);
+                    done();
+                },
+                scope: this
             });
         };
     },
@@ -106,6 +113,11 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             ready: function() {
                 var callback = options.callback || Ext.emptyFn;
                 callback.call(this, id);
+            },
+            failure: function() {
+                var fallback = options.fallback || Ext.emptyFn;
+                delete this.layerSources[id];
+                fallback.apply(this, arguments);
             },
             scope: options.scope || this
         })

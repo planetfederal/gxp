@@ -23,7 +23,11 @@ gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
             /** api: event[ready]
              *  Fires when the layer source is ready for action.
              */
-             "ready"
+            "ready",
+            /** api: event[failure]
+             *  Fires if the layer source fails to load.
+             */
+            "failure"
         );
         gxp.plugins.LayerSource.superclass.constructor.apply(this, arguments);
     },
@@ -38,15 +42,20 @@ gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
         var callback = function() {
             this.fireEvent("ready", this);
         }
-        this.createStore(callback.createDelegate(this));
+        var fallback = function(msg, details) {
+            this.fireEvent("failure", msg, details);
+        }
+        // TODO: have subclasses fire these events
+        this.createStore(callback.createDelegate(this), fallback.createDelegate(this));
     },
     
     /** api: method[createStore]
-     *  :arg config: ``Object``
+     *  :arg callback: ``Function`` Called when store is loaded.
+     *  :arg fallback: ``Function`` Called if store loading or creation fails.
      *
      *  Creates a store of layer records.
      */
-    createStore: function(callback) {
+    createStore: function(callback, fallback) {
         callback();
     },
 

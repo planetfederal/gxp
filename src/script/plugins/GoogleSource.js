@@ -32,12 +32,13 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
     },
     
     /** api: method[createStore]
-     *  :arg callback: ``Function``  Called when the store is loaded.
+     *  :arg callback: ``Function`` Called when store is loaded.
+     *  :arg fallback: ``Function`` Called if store loading or creation fails.
      *
      *  Create a store of layers.  Calls the provided callback when the 
      *  store has loaded.
      */
-    createStore: function(callback) {        
+    createStore: function(callback, fallback) {        
         if (gxp.plugins.GoogleSource.monitor.ready) {
             this.syncCreateStore(callback);
         } else {
