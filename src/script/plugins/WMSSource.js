@@ -118,6 +118,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 layer.url, 
                 {
                     layers: layer.params["LAYERS"],
+                    styles: ("styles" in config) ? config.styles : layer.params["STYLES"],
                     format: ("format" in config) ? config.format : layer.params["FORMAT"],
                     transparent: ("transparent" in config) ? config.transparent : true
                 }, {
@@ -168,7 +169,8 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         var config = gxp.plugins.WMSSource.superclass.getConfigForRecord.apply(this, arguments);
         var layer = record.get("layer");
         return Ext.apply(config, {
-            format: layer.params.FORMAT
+            format: layer.params.FORMAT,
+            styles: layer.params.STYLES
         });
     }
     
