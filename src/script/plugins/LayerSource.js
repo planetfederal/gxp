@@ -2,6 +2,11 @@ Ext.namespace("gxp.plugins");
 
 gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
     
+    /** api: property[store]
+     *  ``GeoExt.data.LayerStore``
+     */
+    store: null,
+
     /** private: property[target]
      *  ``Object``
      *  The object that this plugin is plugged into.
@@ -82,7 +87,8 @@ gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
             title: record.get("title"),
             visibility: layer.getVisibility(),
             opacity: layer.opacity || undefined,
-            group: record.get("group")
+            group: record.get("group"),
+            fixed: record.get("fixed")
         };
     }
     

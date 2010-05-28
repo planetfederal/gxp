@@ -33,10 +33,6 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
     
     /** api: ptype = gx_wmssource */
     ptype: "gx_wmssource",
-
-    /** api: property[store]
-     *  ``GeoExt.data.LayerStore``
-     */
     
     /** api: method[createStore]
      *  :arg callback: ``Function`` Called when store is loaded.
