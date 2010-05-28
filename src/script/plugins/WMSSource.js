@@ -35,13 +35,10 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
     ptype: "gx_wmssource",
     
     /** api: method[createStore]
-     *  :arg callback: ``Function`` Called when store is loaded.
-     *  :arg fallback: ``Function`` Called if store loading or creation fails.
      *
-     *  Create a store of layers.  Calls the provided callback when the 
-     *  store has loaded.
+     *  Creates a store of layer records.  Fires "ready" when store is loaded.
      */
-    createStore: function(callback, fallback) {
+    createStore: function() {
         var parts = this.url.split("?");
         var params = Ext.apply(parts[1] && Ext.urlDecode(parts[1]) || {}, {
             SERVICE: "WMS",
@@ -57,17 +54,18 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                     if (!this.title) {
                         this.title = this.store.reader.raw.service.title;                        
                     }
-                    callback();
+                    this.fireEvent("ready", this);
                 },
                 exception: function(proxy, type, action, options, response, arg) {
+                    delete this.store;
                     var msg;
                     if (type === "response") {
                         msg = "Invalid response from server: Status " + response.status; 
                     } else {
                         msg = "Trouble creating layer store from response.";
                     }
-                    // TODO: decide on signature for fallback listeners
-                    fallback(msg, Array.slice(arguments));
+                    // TODO: decide on signature for failure listeners
+                    this.fireEvent("failure", msg, Array.slice(arguments));
                 },
                 scope: this
             }

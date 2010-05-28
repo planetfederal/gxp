@@ -11,6 +11,14 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
     
     //i18n
     apiKeyPrompt: "Please enter the Google API key for ",
+    
+    /** config: property[timeout]
+     *  ``Number``
+     *  The time (in milliseconds) to wait before giving up on the Google Maps
+     *  script loading.  This layer source will not be availble if the script
+     *  does not load within the given timeout.  Default is 7000 (seven seconds).
+     */
+    timeout: 7000,
 
     /** config: property[apiKey]
      *  ``String`` The API key required for adding the Google Maps script
@@ -32,35 +40,31 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
     },
     
     /** api: method[createStore]
-     *  :arg callback: ``Function`` Called when store is loaded.
-     *  :arg fallback: ``Function`` Called if store loading or creation fails.
      *
-     *  Create a store of layers.  Calls the provided callback when the 
-     *  store has loaded.
+     *  Creates a store of layer records.  Fires "ready" when store is loaded.
      */
-    createStore: function(callback, fallback) {        
+    createStore: function() {        
         if (gxp.plugins.GoogleSource.monitor.ready) {
-            this.syncCreateStore(callback);
+            this.syncCreateStore();
         } else {
             gxp.plugins.GoogleSource.monitor.on({
                 ready: function() {
-                    this.syncCreateStore(callback);
+                    this.syncCreateStore();
                 },
                 scope: this
             });
             if (!gxp.plugins.GoogleSource.monitor.loading) {
-                this.loadScript(callback);
+                this.loadScript();
             }
         }
     },
     
     /** private: method[syncCreateStore]
-     *  :arg callback: ``Function`` Called when the store is loaded.
      *
      *  Creates a store of layers.  This requires that the API script has already
-     *  loaded.
+     *  loaded.  Fires the "ready" event when the store is loaded.
      */
-    syncCreateStore: function(callback) {
+    syncCreateStore: function() {
         var mapTypeNames = ["G_NORMAL_MAP", "G_SATELLITE_MAP", "G_HYBRID_MAP", "G_PHYSICAL_MAP"];
         var len = mapTypeNames.length;
         var layers = new Array(len);
@@ -91,7 +95,7 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
         this.store.each(function(l) {
             l.set("abstract", l.get("layer").type.getAlt());
         });
-        callback();
+        this.fireEvent("ready", this);
     },
     
     /** api: method[createLayerRecord]
@@ -145,7 +149,7 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
                 function(btn, key) {
                     if(btn === "ok") {
                         this.initialConfig.apiKey = key;
-                        this.loadScript(callback);
+                        this.loadScript();
                     } else {
                         return false;
                     }
@@ -168,9 +172,37 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
         
         var script = document.createElement("script");
         script.src = "http://www.google.com/jsapi?" + Ext.urlEncode(params);
+
+        // cancel loading if monitor is not ready within timeout
+        window.setTimeout(
+            (function() {
+                if (!gxp.plugins.GoogleSource.monitor.ready) {
+                    this.abortScriptLoad(script);
+                }
+            }).createDelegate(this), 
+            this.timeout
+        );
+        
         document.getElementsByTagName("head")[0].appendChild(script);
 
-    }    
+    },
+    
+    /** private: method[abortScriptLoad]
+     *  :arg script: ``HTMLScriptElement``
+     *
+     *  Aborts the Google Maps script loading by removing the script from the 
+     *  document.  Fires the "failure" event.  Called if the script does not 
+     *  load within the timeout.
+     */
+    abortScriptLoad: function(script) {
+        document.getElementsByTagName("head")[0].removeChild(script);
+        delete this.store;
+        this.fireEvent(
+            "failure", 
+            "The Google Maps script failed to load within the provided timeout (" + (this.timeout / 1000) + " s)."
+        );
+    }
+
 });
 
 /**

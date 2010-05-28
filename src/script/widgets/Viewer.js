@@ -190,13 +190,15 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             for (var i=0; i<mapConfig.layers.length; ++i) {
                 conf = mapConfig.layers[i];
                 source = this.layerSources[conf.source];
-                // TODO: deal with required record fields (e.g. "group")                 
-                record = source.createLayerRecord(conf);
-                if (record) {
-                    if (record.get("group") === "background") {
-                        baseRecords.push(record);
-                    } else {
-                        overlayRecords.push(record);
+                // source may not have loaded properly (failure handled elsewhere)
+                if (source) {
+                    record = source.createLayerRecord(conf);
+                    if (record) {
+                        if (record.get("group") === "background") {
+                            baseRecords.push(record);
+                        } else {
+                            overlayRecords.push(record);
+                        }
                     }
                 }
             }

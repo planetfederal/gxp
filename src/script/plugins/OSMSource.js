@@ -20,12 +20,10 @@ gxp.plugins.OSMSource = Ext.extend(gxp.plugins.LayerSource, {
     title: "OpenStreetMap Layers",
 
     /** api: method[createStore]
-     *  :arg callback: ``Function``  Called when the store is loaded.
      *
-     *  Create a store of layers.  Calls the provided callback when the 
-     *  store has loaded.
+     *  Creates a store of layer records.  Fires "ready" when store is loaded.
      */
-    createStore: function(callback) {
+    createStore: function() {
         
         var options = {
             projection: "EPSG:900913",
@@ -79,7 +77,7 @@ gxp.plugins.OSMSource = Ext.extend(gxp.plugins.LayerSource, {
         this.store.each(function(l) {
             l.set("group", "background");
         });
-        callback();
+        this.fireEvent("ready", this);
 
     },
     

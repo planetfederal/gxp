@@ -40,28 +40,22 @@ gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
     /** api: method[init]
      *  :arg target: ``Object`` The object initializing this plugin.
      *
-     *  Calls :method:`createStore` with a callback that fires the 'ready' event.
+     *  Calls :meth:`createStore` with a callback that fires the 'ready' event.
      */
     init: function(target) {
         this.target = target;
-        var callback = function() {
-            this.fireEvent("ready", this);
-        }
         var fallback = function(msg, details) {
             this.fireEvent("failure", msg, details);
         }
-        // TODO: have subclasses fire these events
-        this.createStore(callback.createDelegate(this), fallback.createDelegate(this));
+        this.createStore();
     },
     
     /** api: method[createStore]
-     *  :arg callback: ``Function`` Called when store is loaded.
-     *  :arg fallback: ``Function`` Called if store loading or creation fails.
      *
-     *  Creates a store of layer records.
+     *  Creates a store of layer records.  Fires "ready" when store is loaded.
      */
-    createStore: function(callback, fallback) {
-        callback();
+    createStore: function() {
+        this.fireEvent("ready", this);
     },
 
     /** api: method[createLayerRecord]
