@@ -199,6 +199,7 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
         delete this.store;
         this.fireEvent(
             "failure", 
+            this,
             "The Google Maps script failed to load within the provided timeout (" + (this.timeout / 1000) + " s)."
         );
     }
