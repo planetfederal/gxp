@@ -112,8 +112,8 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 layer.url, 
                 {
                     layers: layer.params["LAYERS"],
-                    styles: ("styles" in config) ? config.styles : layer.params["STYLES"],
-                    format: ("format" in config) ? config.format : layer.params["FORMAT"],
+                    styles: (("styles" in config) ? config.styles : layer.params["STYLES"]) || undefined,
+                    format: (("format" in config) ? config.format : layer.params["FORMAT"]) || undefined,
                     transparent: ("transparent" in config) ? config.transparent : true
                 }, {
                     attribution: layer.attribution,
