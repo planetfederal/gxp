@@ -36,11 +36,17 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      */
     layerRecord: null,
     
-    /** api: config[wfsUrl]
-     *  ``String`` Optional wfs url for issuing a DescribeFeatureType request
-     *  to. Only required if the layer (WMS) url does not provide
-     *  ``SERVICE=WFS``
+    /** api: config[layerDescription]
+     *  ``Object`` Array entry of a DescribeLayer response as read by
+     *      ``OpenLayers.Format.WMSDescribeLayer``. Optional. If not provided,
+     *      a DescribeLayer request will be issued to the WMS.
      */
+    
+    /** private: property[layerDescription]
+     *  ``Object`` Array entry of a DescribeLayer response as read by
+     *      ``OpenLayers.Format.WMSDescribeLayer``.
+     */
+    layerDescription: null,
     
     /** private: property[symbolType]
      *  ``Point`` or ``Line`` or ``Polygon`` - the primary symbol type for the
@@ -83,6 +89,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     initComponent: function() {
         var defConfig = {
             layout: "form",
+            disabled: true,
             items: [{
                 xtype: "fieldset",
                 title: "Styles",
@@ -184,8 +191,12 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             }]
         };
         Ext.applyIf(this, defConfig);
-                
+        
         this.createStylesStore();
+                
+        gxp.util.dispatch([this.getStyles, this.describeLayer], function() {
+            this.enable();
+        }, this)
 
         gxp.WMSStylesDialog.superclass.initComponent.apply(this, arguments);
     },
@@ -343,18 +354,11 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     editRule: function() {
         var rule = this.selectedRule.clone();
 
-        var wfsUrl = this.initialConfig.wfsUrl;
-        if (!wfsUrl) {
-            var wmsUrl = this.layerRecord.get("layer").url;
-            var urlParts = wmsUrl.split("?");
-            var params = Ext.urlDecode(urlParts[urlParts.length - 1]);
-            delete params[""];
-            Ext.apply(params, {
-                "SERVICE": "WFS",
-                "REQUEST": "DescribeFeatureType"
-            });
-            wfsUrl = Ext.urlAppend(urlParts[0], Ext.urlEncode(params));
-        }
+        wfsUrl = Ext.urlAppend(this.layerDescription.owsURL, Ext.urlEncode({
+            "SERVICE": this.layerDescription.owsType,
+            "REQUEST": "DescribeFeatureType",
+            "TYPENAME": this.layerDescription.typeName
+        }));
         
         var ruleDlg = new Ext.Window({
             title: "Style Rule: " + (rule.title || rule.name),
@@ -701,7 +705,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     
     /** private: method[createStylesStore]
      */
-    createStylesStore: function() {
+    createStylesStore: function(callback) {
         var styles = this.layerRecord.get("styles");
         this.stylesStore = new Ext.data.JsonStore({
             data: {
@@ -713,8 +717,14 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             // GetCapabilities), which will be populated with the userStyle
             // object if GetStyles is supported by the WMS
             fields: ["name", "title", "abstract", "legend", "userStyle"]
-        }); 
-            
+        });
+    },
+    
+    /** private: method[getStyles]
+     *  :arg callback: ``Function`` function that will be called when the
+     *      request result was returned.
+     */
+    getStyles: function(callback) {
         var layer = this.layerRecord.get("layer");
         Ext.Ajax.request({
             method: "GET",
@@ -725,6 +735,31 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             },
             success: this.parseSLD,
             failure: this.stylesStoreReady,
+            callback: callback,
+            scope: this
+        });
+    },
+    
+    /** private: method[describeLayer]
+     *  :arg callback: ``Function`` function that will be called when the
+     *      request result was returned.
+     */
+    describeLayer: function(callback) {
+        var layer = this.layerRecord.get("layer");
+        Ext.Ajax.request({
+            url: Ext.urlAppend(layer.url, Ext.urlEncode({
+                "VERSION": layer.params["VERSION"],
+                "REQUEST": "DescribeLayer",
+                "LAYERS": [layer.params["LAYERS"]].join()
+            })),
+            disableCaching: false,
+            success: function(response) {
+                var result = new OpenLayers.Format.WMSDescribeLayer().read(
+                    response.responseXML && response.responseXML.documentElement ?
+                        response.responseXML : response.responseText);
+                this.layerDescription = result[0];
+            },
+            callback: callback,
             scope: this
         });
     },
