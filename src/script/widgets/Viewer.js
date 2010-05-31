@@ -123,6 +123,8 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         })
         this.layerSources[id] = source;
         source.init(this);
+        
+        return source;
     },
     
     initMapPanel: function() {
