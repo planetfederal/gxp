@@ -727,11 +727,10 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     getStyles: function(callback) {
         var layer = this.layerRecord.get("layer");
         Ext.Ajax.request({
-            method: "GET",
             url: layer.url,
             params: {
-                request: "GetStyles",
-                layers: layer.params.LAYERS
+                "REQUEST": "GetStyles",
+                "LAYERS": layer.params.LAYERS
             },
             success: this.parseSLD,
             failure: this.stylesStoreReady,
@@ -745,13 +744,18 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      *      request result was returned.
      */
     describeLayer: function(callback) {
+        if(this.layerDescription) {
+            callback.call(this);
+            return;
+        }
         var layer = this.layerRecord.get("layer");
         Ext.Ajax.request({
-            url: Ext.urlAppend(layer.url, Ext.urlEncode({
+            url: layer.url,
+            params: {
                 "VERSION": layer.params["VERSION"],
                 "REQUEST": "DescribeLayer",
                 "LAYERS": [layer.params["LAYERS"]].join()
-            })),
+            },
             disableCaching: false,
             success: function(response) {
                 var result = new OpenLayers.Format.WMSDescribeLayer().read(
