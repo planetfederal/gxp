@@ -754,7 +754,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             params: {
                 "VERSION": layer.params["VERSION"],
                 "REQUEST": "DescribeLayer",
-                "LAYERS": [layer.params["LAYERS"]].join()
+                "LAYERS": [layer.params["LAYERS"]].join(",")
             },
             disableCaching: false,
             success: function(response) {
