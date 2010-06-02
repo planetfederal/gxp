@@ -186,7 +186,9 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
                     var link = this.earth.createLink('kl_' + name);
                     var ows = layer.get("layer").url;
                     ows = ows.replace(/\?.*/, '');
-                    var kmlPath = '/kml?mode=refresh&layers=' + layer.get("layer").params.LAYERS;
+                    var params = layer.get("layer").params
+                    var kmlPath = '/kml?mode=refresh&layers=' + params.LAYERS +
+                        "&styles=" + params.STYLES;
                     link.setHref(ows + kmlPath);
                     var networkLink = this.earth.createNetworkLink('nl_' + name);
                     networkLink.setName(name);
