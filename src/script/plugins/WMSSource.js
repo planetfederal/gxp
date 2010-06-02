@@ -133,14 +133,16 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 group: config.group,
                 source: config.source,
                 properties: "gx_wmslayerpanel",
+                fixed: config.fixed,
                 layer: layer
             }, original.data);
             
-            // add a field for the source id and group
+            // add additional fields
             var fields = [
                 {name: "source", type: "string"}, 
                 {name: "group", type: "string"},
-                {name: "properties", type: "string"}
+                {name: "properties", type: "string"},
+                {name: "fixed", type: "boolean"}
             ];
             original.fields.each(function(field) {
                 fields.push(field);
