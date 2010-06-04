@@ -57,6 +57,7 @@ gxp.plugins.OLSource = Ext.extend(gxp.plugins.LayerSource, {
             ]);
             var data = {
                 layer: layer,
+                title: layer.name,
                 source: config.source,
                 group: config.group,
                 fixed: ("fixed" in config) ? config.fixed : false,
