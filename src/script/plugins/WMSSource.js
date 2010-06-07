@@ -106,16 +106,18 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 // in this case, the map maxExtent must be specified in the config
                 maxExtent = undefined;
             }
+            
+            // use all params from original
+            var params = Ext.apply({}, layer.params);
 
             layer = new OpenLayers.Layer.WMS(
                 config.title || layer.name, 
                 layer.url, 
-                {
-                    layers: layer.params["LAYERS"],
-                    styles: (("styles" in config) ? config.styles : layer.params["STYLES"]) || undefined,
-                    format: (("format" in config) ? config.format : layer.params["FORMAT"]) || undefined,
-                    transparent: ("transparent" in config) ? config.transparent : true
-                }, {
+                Ext.applyIf(params, {
+                    styles: config.styles,
+                    format: config.format,
+                    transparent: config.transparent
+                }), {
                     attribution: layer.attribution,
                     maxExtent: maxExtent,
                     restrictedExtent: maxExtent,
@@ -164,9 +166,11 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
     getConfigForRecord: function(record) {
         var config = gxp.plugins.WMSSource.superclass.getConfigForRecord.apply(this, arguments);
         var layer = record.get("layer");
+        var params = layer.params;
         return Ext.apply(config, {
-            format: layer.params.FORMAT,
-            styles: layer.params.STYLES
+            format: params.FORMAT,
+            styles: params.STYLES,
+            transparent: params.TRANSPARENT
         });
     }
     
