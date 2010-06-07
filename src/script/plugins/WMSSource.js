@@ -60,7 +60,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                     delete this.store;
                     var msg;
                     if (type === "response") {
-                        msg = "Invalid response from server: Status " + response.status; 
+                        msg = arg || "Invalid response from server.";
                     } else {
                         msg = "Trouble creating layer store from response.";
                     }
