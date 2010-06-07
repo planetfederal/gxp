@@ -78,7 +78,8 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
                     typeName: name,
                     sphericalMercator: true,
                     maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
-                    restrictedExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34)
+                    restrictedExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
+                    projection: this.projection
                 }
             )
         }

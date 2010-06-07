@@ -89,6 +89,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
     createSourceLoader: function(key) {
         return function(done) {
             var config = this.sources[key];
+            config.projection = this.initialConfig.map.projection;
             this.addLayerSource({
                 id: key,
                 config: config,
