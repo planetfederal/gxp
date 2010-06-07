@@ -250,6 +250,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             layers: []
         });
         
+        // include all layer config (and add new sources)
         this.mapPanel.layers.each(function(record){
             var layer = record.get("layer");
             if (layer.displayInLayerSwitcher) {
@@ -259,7 +260,10 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                     throw new Error("Could not find source for layer '" + record.get("name") + "'");
                 }
                 // add layer
-                state.map.layers.push(source.getConfigForRecord(record));                
+                state.map.layers.push(source.getConfigForRecord(record));
+                if (!state.sources[id]) {
+                    state.sources[id] = Ext.apply({}, source.initialConfig);
+                }
             }
         }, this);
         
