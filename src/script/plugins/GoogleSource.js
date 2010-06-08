@@ -144,18 +144,25 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
     loadScript: function() {
 
         if(!this.initialConfig.apiKey && window.location.hostname !== "localhost") {
-            Ext.Msg.prompt("Google API Key",
-                this.apiKeyPrompt + window.location.hostname +
-                    " <sup><a target='_blank' href='http://code.google.com/apis/maps/'>?</a></sup>",
-                function(btn, key) {
-                    if(btn === "ok") {
-                        this.initialConfig.apiKey = key;
-                        this.loadScript();
-                    } else {
-                        return false;
-                    }
-                }, this
-            );
+            var prompt = function() {
+                Ext.Msg.prompt("Google API Key",
+                    this.apiKeyPrompt + window.location.hostname +
+                        " <sup><a target='_blank' href='http://code.google.com/apis/maps/'>?</a></sup>",
+                    function(btn, key) {
+                        if(btn === "ok") {
+                            this.initialConfig.apiKey = key;
+                            this.loadScript();
+                        } else {
+                            return false;
+                        }
+                    }, this
+                );
+            }
+            if (Ext.isReady) {
+                prompt.call(this);
+            } else {
+                Ext.onReady(prompt, this);
+            }
             return;
         }
         
