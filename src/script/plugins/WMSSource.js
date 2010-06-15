@@ -51,10 +51,18 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             autoLoad: true,
             listeners: {
                 load: function() {
-                    if (!this.title) {
-                        this.title = this.store.reader.raw.service.title;                        
+                    // The load event is fired even if a bogus capabilities doc 
+                    // is read (http://trac.geoext.org/ticket/295).
+                    // Until this changes, we duck type a bad capabilities 
+                    // object and fire failure if found.
+                    if (!this.store.reader.raw || !this.store.reader.raw.service) {
+                        this.fireEvent("failure", this, "Invalid capabilities document.");
+                    } else {
+                        if (!this.title) {
+                            this.title = this.store.reader.raw.service.title;                        
+                        }
+                        this.fireEvent("ready", this);
                     }
-                    this.fireEvent("ready", this);
                 },
                 exception: function(proxy, type, action, options, response, arg) {
                     delete this.store;
