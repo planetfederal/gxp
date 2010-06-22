@@ -676,12 +676,11 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             },
             "remove": function(store, record, index) {
                 var newIndex =  Math.min(index, store.getCount() - 1);
-                this.selectedStyle = store.getAt(newIndex);
                 this.updateStyleRemoveButton();
                 // update the "Choose style" combo's value
                 var combo = this.items.get(0).items.get(0);
+                combo.fireEvent("select", combo, store.getAt(newIndex), newIndex);
                 combo.setValue(this.selectedStyle.get("name"));
-                combo.fireEvent("select", combo, this.selectedStyle, newIndex);
             },
             "update": function(store, record) {
                 var userStyle = record.get("userStyle");
@@ -834,10 +833,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      */
     changeStyle: function(record) {
         var legend = this.items.get(2).items.get(0);
-        if(record === this.selectedStyle) {
-            legend.update();
-            return;
-        }
+        var ruleIdx = legend.rules.indexOf(legend.selectedRule);
         this.selectedStyle = record;
         this.updateStyleRemoveButton();            
         var styleName = record.get("name");
@@ -865,6 +861,12 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             // if GetStyles is not supported, we instantly update the layer
             this.layerRecord.get("layer").mergeNewParams(
                 {styles: styleName});
+        }
+        
+        // restore selected rule
+        if(ruleIdx && ruleIdx !== -1) {
+            legend.selectedRule = legend.rules[ruleIdx];
+            legend.update();
         }
     },
     
