@@ -39,15 +39,12 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      *  Creates a store of layer records.  Fires "ready" when store is loaded.
      */
     createStore: function() {
-        var parts = this.url.split("?");
-        var params = Ext.apply(parts[1] && Ext.urlDecode(parts[1]) || {}, {
-            SERVICE: "WMS",
-            REQUEST: "GetCapabilities"
-        });
-        var url = Ext.urlAppend(parts[0], Ext.urlEncode(params));
-        
         this.store = new GeoExt.data.WMSCapabilitiesStore({
-            url: url,
+            url: this.url,
+            baseParams: {
+                SERVICE: "WMS",
+                REQUEST: "GetCapabilities"
+            },
             autoLoad: true,
             listeners: {
                 load: function() {
