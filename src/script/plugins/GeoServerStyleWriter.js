@@ -152,9 +152,9 @@ gxp.plugins.GeoServerStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
                     "defaultStyle": {
                         "name": defaultStyle
                     },
-                    "styles": {
+                    "styles": styles.length > 0 ? {
                         "style": styles
-                    },
+                    } : {},
                     "enabled": true
                 }
             },

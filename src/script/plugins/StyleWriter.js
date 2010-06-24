@@ -54,7 +54,8 @@ gxp.plugins.StyleWriter = Ext.extend(Ext.util.Observable, {
             "remove": function(store, record, index) {
                 var styleName = record.get("name");
                 // only proceed if the style comes from the server
-                record.id === styleName && this.deletedStyles.push(styleName);
+                record.get("name") === styleName &&
+                    this.deletedStyles.push(styleName);
             },
             scope: this
         });
