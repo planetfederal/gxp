@@ -673,6 +673,10 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             },
             "add": function(store, records, index) {
                 this.updateStyleRemoveButton();
+                // update the "Choose style" combo's value
+                var combo = this.items.get(0).items.get(0);
+                combo.fireEvent("select", combo, store.getAt(index), index);
+                combo.setValue(this.selectedStyle.get("name"));
             },
             "remove": function(store, record, index) {
                 var newIndex =  Math.min(index, store.getCount() - 1);
