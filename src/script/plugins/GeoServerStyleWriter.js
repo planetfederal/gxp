@@ -66,11 +66,10 @@ gxp.plugins.GeoServerStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
      *  * scope - ``Object`` A scope to call the ``success`` function with.
      */
     write: function(options) {
-        var modifiedRecs = this.target.stylesStore.getModifiedRecords();
         var dispatchQueue = [];
-        for (var i=0, len=modifiedRecs.length; i<len; ++i) {
-            this.writeStyle(modifiedRecs[i], dispatchQueue);
-        }
+        this.target.stylesStore.each(function(rec) {
+            (rec.dirty || rec.phantom) && this.writeStyle(rec, dispatchQueue);
+        }, this);
         var success = function() {
             // we don't need any callbacks for deleting styles.
             this.deleteStyles();
