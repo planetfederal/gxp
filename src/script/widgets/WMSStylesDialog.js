@@ -781,6 +781,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         var combo = new Ext.form.ComboBox({
             fieldLabel: "Choose style",
             store: store,
+            editable: false,
             displayField: "name",
             value: this.selectedStyle ?
                 this.selectedStyle.get("name") :
