@@ -67,8 +67,10 @@ gxp.plugins.GeoServerStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
      */
     write: function(options) {
         var dispatchQueue = [];
-        this.target.stylesStore.each(function(rec) {
-            (rec.dirty || rec.phantom) && this.writeStyle(rec, dispatchQueue);
+        var store = this.target.stylesStore;
+        store.each(function(rec) {
+            (rec.phantom || store.modified.indexOf(rec) !== -1) &&
+                this.writeStyle(rec, dispatchQueue);
         }, this);
         var success = function() {
             // we don't need any callbacks for deleting styles.
