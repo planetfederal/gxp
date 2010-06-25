@@ -170,8 +170,9 @@ gxp.plugins.GeoServerStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
         for (var i=0, len=this.deletedStyles.length; i<len; ++i) {
             Ext.Ajax.request({
                 method: "DELETE",
-                url: this.baseUrl + "/styles/" + this.deletedStyles[i],
-                params: {"purge": true}
+                url: this.baseUrl + "/styles/" + this.deletedStyles[i] +
+                    // cannot use params for PUT requests without jsonData
+                    "?purge=true"
             });
         }
     }
