@@ -26,12 +26,6 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
      */
     symbolizer: null,
     
-    /** api: config[defaultSymbolizer]
-     *  ``Object``
-     *  Default symbolizer properties to be used where none provided.
-     */
-    defaultSymbolizer: null,
-    
     /** api: config[colorManager]
      *  ``Function``
      *  Optional color manager constructor to be used as a plugin for the color
@@ -45,8 +39,7 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
         
         if(!this.symbolizer) {
             this.symbolizer = {};
-        }        
-        Ext.applyIf(this.symbolizer, this.defaultSymbolizer);
+        }
         
         var colorFieldPlugins;
         if (this.colorManager) {
