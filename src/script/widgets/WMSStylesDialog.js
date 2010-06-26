@@ -296,10 +296,13 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     text: "Remove",
                     handler: function() {
                         var rule = this.selectedRule;
+                        this.selectedStyle.get("userStyle").rules.remove(rule);
                         var legend = this.items.get(2).items.get(0);
-                        legend.unselect();
-                        legend.rules.remove(rule);
+                        // dirty, but saves us effort elsewhere
+                        this.selectedRule = legend.selectedRule = null;
                         this.isRaster ? this.savePseudoRules() : legend.update();
+                        // mark the style as modified
+                        this.selectedStyle.store.afterEdit(this.selectedStyle);
                     },
                     scope: this,
                     disabled: true
@@ -870,8 +873,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         
         // restore selected rule
         if(ruleIdx && ruleIdx !== -1) {
-            legend.selectedRule = legend.rules[ruleIdx];
-            legend.update();
+            legend.selectRuleEntry(userStyle.rules[ruleIdx]);
         }
     },
     
