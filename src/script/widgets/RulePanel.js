@@ -366,10 +366,9 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
     /** private: method[createSymbolizerPanel]
      */
     createSymbolizerPanel: function() {
-        return {
+        symbolizerConfig = {
             xtype: "gx_" + this.symbolType.toLowerCase() + "symbolizer",
             symbolizer: this.rule.symbolizer[this.symbolType],
-            pointGraphics: (this.symbolType === "Point") ? this.pointGraphics : undefined,
             bodyStyle: {"padding": "10px"},
             border: false,
             labelWidth: 70,
@@ -386,6 +385,11 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                 scope: this
             }
         };
+        if (this.symbolType === "Point" && this.pointGraphics) {
+            symbolizerConfig.pointGraphics = this.pointGraphics;
+        }
+
+        return symbolizerConfig;
     },
 
     /** api: function[getSymbolTypeFromRule]
