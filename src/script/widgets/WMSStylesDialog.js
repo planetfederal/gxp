@@ -286,6 +286,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                             this.selectedStyle.get("userStyle").addRules(
                                 [this.createRule()]);
                             legend.update();
+                            // mark the style as modified
+                            this.selectedStyle.store.afterEdit(this.selectedStyle);
                         }
                         this.updateRuleRemoveButton();
                     },
@@ -296,13 +298,16 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     text: "Remove",
                     handler: function() {
                         var rule = this.selectedRule;
-                        this.selectedStyle.get("userStyle").rules.remove(rule);
                         var legend = this.items.get(2).items.get(0);
-                        // dirty, but saves us effort elsewhere
-                        this.selectedRule = legend.selectedRule = null;
-                        this.isRaster ? this.savePseudoRules() : legend.update();
-                        // mark the style as modified
-                        this.selectedStyle.store.afterEdit(this.selectedStyle);
+                        if(this.isRaster) {
+                            legend.unselect();
+                            legend.rules.remove(rule);
+                            this.savePseudoRules();
+                        } else {
+                            this.selectedStyle.get("userStyle").rules.remove(rule);
+                            // mark the style as modified
+                            this.afterRuleChange();
+                        }
                     },
                     scope: this,
                     disabled: true
@@ -567,15 +572,14 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     },
     
     /** private: method[afterRuleChange]
-     *  :arg rule: the rule to set as selectedRule
+     *  :arg rule: the rule to set as selectedRule, can be null
      *  
      *  Performs actions that are required to update the selectedRule and
      *  selectedStyle after a rule was changed.
      */
     afterRuleChange: function(rule) {
         var legend = this.items.get(2).items.get(0);
-        // dirty, but saves us effort elsewhere
-        legend.selectedRule = this.selectedRule = rule;
+        this.selectedRule = rule;
         // mark the style as modified
         this.selectedStyle.store.afterEdit(this.selectedStyle);
     },
@@ -841,7 +845,6 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      */
     changeStyle: function(record) {
         var legend = this.items.get(2).items.get(0);
-        var ruleIdx = legend.rules.indexOf(legend.selectedRule);
         this.selectedStyle = record;
         this.updateStyleRemoveButton();            
         var styleName = record.get("name");
@@ -860,20 +863,18 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         
         var userStyle = record.get("userStyle");
         if (userStyle) {
+            var ruleIdx = legend.rules.indexOf(this.selectedRule);
             // replace the legend
             legend.ownerCt.remove(legend);
             this.isRaster ?
-                this.addRasterLegend(userStyle.rules) :
+                this.addRasterLegend(userStyle.rules, {
+                    selectedRuleIndex: ruleIdx
+                }) :
                 this.addVectorLegend(userStyle.rules);
         } else {
             // if GetStyles is not supported, we instantly update the layer
             this.layerRecord.get("layer").mergeNewParams(
                 {styles: styleName});
-        }
-        
-        // restore selected rule
-        if(ruleIdx && ruleIdx !== -1) {
-            legend.selectRuleEntry(userStyle.rules[ruleIdx]);
         }
     },
     
@@ -920,6 +921,14 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     tbItems.get(2).disable();
                     tbItems.get(3).disable();
                 },
+                "afterlayout": function() {
+                    // restore selection
+                    if(this.selectedRule !== legend.selectedRule) {
+                        legend.selectedRule = null;
+                        this.selectedRule && legend.selectRuleEntry(
+                            this.selectedRule);
+                    }
+                },
                 scope: this
             }
         });
@@ -929,13 +938,19 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     
     /** private: method[addRasterLegend]
      *  :param rules: ``Array``
+     *  :param options: ``Object`` Additional options for this method.
      *  :return: ``GeoExt.VectorLegend`` the legend that was created
      *
      *  Creates the vector legend for the pseudo rules that are created from
      *  the RasterSymbolizer of the first rule and adds it to the rules
      *  fieldset.
+     *  
+     *  Supported options:
+     *  * selectedRuleIndex: ``Number`` The index of a pseudo rule to select
+     *    in the legend.
      */  
-    addRasterLegend: function(rules) {
+    addRasterLegend: function(rules, options) {
+        options = options || {};
         //TODO raster styling support is currently limited to one rule, and
         // we can only handle a color map. No band selection and other stuff.
         var symbolizer = rules[0].symbolizer["Raster"];
@@ -945,6 +960,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         for (var i=0, len=colorMap.length; i<len; i++) {
             pseudoRules.push(this.createPseudoRule(colorMap[i]));
         }
+        this.selectedRule = options.selectedRuleIndex ?
+            pseudoRules[options.selectedRuleIndex] : null;
         return this.addVectorLegend(pseudoRules);
     },
     
