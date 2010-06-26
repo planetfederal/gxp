@@ -55,6 +55,22 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
         {display: "external"}
     ],
     
+    /** api: config[defaultSymbolizer]
+     *  ``Object``
+     *  Default symbolizer properties to be used where none provided.
+     */
+    defaultSymbolizer: {
+        "graphicName": "circle",
+        "rotation": 0,
+        "pointRadius": 3,
+        "fillColor": "#ffffff",
+        "fillOpacity": 1,
+        "strokeDashstyle": "solid",
+        //"strokeColor": "#666666",
+        //"strokeWidth": 1,
+        "strokeOpacity": 1
+    },
+
     /** api: config[colorManager]
      *  ``Function``
      *  Optional color manager constructor to be used as a plugin for the color
@@ -78,6 +94,7 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
         if(!this.symbolizer) {
             this.symbolizer = {};
         }        
+        Ext.applyIf(this.symbolizer, this.defaultSymbolizer);
         
         this.external = !!this.symbolizer["externalGraphic"];
 
