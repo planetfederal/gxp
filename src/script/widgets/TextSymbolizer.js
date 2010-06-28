@@ -153,6 +153,9 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
         }, {
             xtype: "gx_fillsymbolizer",
             symbolizer: this.symbolizer,
+            defaultColor: OpenLayers.Renderer.defaultSymbolizer["fontColor"],
+            checkboxToggle: false,
+            autoHeight: true,
             width: 213,
             labelWidth: 70,
             plugins: this.colorManager && [new this.colorManager()],
@@ -187,6 +190,8 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                     fillColor: this.symbolizer.haloColor,
                     fillOpacity: this.symbolizer.haloOpacity
                 },
+                defaultColor: OpenLayers.Renderer.defaultSymbolizer["haloColor"],
+                checkboxToggle: false,
                 width: 190,
                 labelWidth: 60,
                 plugins: this.colorManager && [new this.colorManager()],
@@ -210,6 +215,11 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                     delete this.symbolizer.haloColor;
                     delete this.symbolizer.haloOpacity;
                     this.fireEvent("change", this.symbolizer)
+                },
+                render: function() {
+                    // workaround for Fill fieldset not being visible after
+                    // the first expand
+                    this.doLayout();
                 },
                 expand: function() {
                     Ext.apply(this.symbolizer, this.haloCache);

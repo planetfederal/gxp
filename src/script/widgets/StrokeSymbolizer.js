@@ -33,6 +33,20 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
      */
     colorManager: null,
     
+    /** api: config[checkboxToggle]
+     *  ``Boolean`` Set to false if the "Fill" fieldset should not be
+     *  toggleable. Default is true.
+     */
+    checkboxToggle: true,
+    
+    /** api: config[defaultColor]
+     *  ``String`` Default background color for the Color field. This
+     *  color will be displayed when no strokeColor value for the symbolizer
+     *  is available. Defaults to the ``strokeColor`` property of
+     *  ``OpenLayers.Renderer.defaultSymbolizer``.
+     */
+    defaultColor: null,
+
     /** api: config[dashStyles]
      *  ``Array(Array)``
      *  A list of [value, name] pairs for stroke dash styles.
@@ -59,6 +73,10 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
             xtype: "fieldset",
             title: "Stroke",
             autoHeight: true,
+            checkboxToggle: this.checkboxToggle,
+            collapsed: this.checkboxToggle === true &&
+                this.symbolizer["stroke"] === false,
+            hideMode: "offsets",
             defaults: {
                 width: 100 // TODO: move to css
             },
@@ -89,6 +107,8 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
                 name: "color",
                 fieldLabel: "Color",
                 value: this.symbolizer["strokeColor"],
+                defaultBackground: this.defaultColor ||
+                    OpenLayers.Renderer.defaultSymbolizer["strokeColor"],
                 plugins: colorFieldPlugins,
                 listeners: {
                     valid: function(field) {
@@ -129,7 +149,18 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
                         }
                     })
                 ]
-            }]
+            }],
+            listeners: {
+                "collapse": function() {
+                    this.symbolizer["stroke"] = false;
+                    this.fireEvent("change", this.symbolizer);
+                },
+                "expand": function() {
+                    this.symbolizer["stroke"] = true;
+                    this.fireEvent("change", this.symbolizer);
+                },
+                scope: this
+            }
         }];
 
         this.addEvents(

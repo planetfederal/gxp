@@ -32,6 +32,20 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
      *  field.
      */
     colorManager: null,
+    
+    /** api: config[checkboxToggle]
+     *  ``Boolean`` Set to false if the "Fill" fieldset should not be
+     *  toggleable. Default is true.
+     */
+    checkboxToggle: true,
+    
+    /** api: config[defaultColor]
+     *  ``String`` Default background color for the Color field. This
+     *  color will be displayed when no fillColor value for the symbolizer
+     *  is available. Defaults to the ``fillColor`` property of
+     *  ``OpenLayers.Renderer.defaultSymbolizer``.
+     */
+    defaultColor: null,
 
     border: false,
     
@@ -50,6 +64,10 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
             xtype: "fieldset",
             title: "Fill",
             autoHeight: true,
+            checkboxToggle: this.checkboxToggle,
+            collapsed: this.checkboxToggle === true &&
+                this.symbolizer["fill"] === false,
+            hideMode: "offsets",
             defaults: {
                 width: 100 // TODO: move to css
             },
@@ -58,6 +76,8 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
                 fieldLabel: "Color",
                 name: "color",
                 value: this.symbolizer["fillColor"],
+                defaultBackground: this.defaultColor ||
+                    OpenLayers.Renderer.defaultSymbolizer["fillColor"],
                 plugins: colorFieldPlugins,
                 listeners: {
                     valid: function(field) {
@@ -86,7 +106,18 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
                         }
                     })
                 ]
-            }]
+            }],
+            listeners: {
+                "collapse": function() {
+                    this.symbolizer["fill"] = false;
+                    this.fireEvent("change", this.symbolizer);
+                },
+                "expand": function() {
+                    this.symbolizer["fill"] = true;
+                    this.fireEvent("change", this.symbolizer);
+                },
+                scope: this
+            }
         }];
 
         this.addEvents(

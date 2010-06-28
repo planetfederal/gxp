@@ -41,7 +41,13 @@ gxp.form.ColorField = Ext.extend(Ext.form.TextField,  {
         teal: "#008080",
         white: "#FFFFFF",
         yellow: "#FFFF00"
-    },    
+    },
+    
+    /** api: config[defaultBackground]
+     *  The default background color if the symbolizer has no fillColor set.
+     *  Defaults to #ffffff.
+     */
+    defaultBackground: "#ffffff",
 
     /** private: method[initComponent]
      *  Override
@@ -54,6 +60,7 @@ gxp.form.ColorField = Ext.extend(Ext.form.TextField,  {
         
         // Add the colorField listener to color the field.
         this.on({
+            render: this.colorField,
             valid: this.colorField,
             scope: this
         });
@@ -86,7 +93,7 @@ gxp.form.ColorField = Ext.extend(Ext.form.TextField,  {
      *  Set the background and font color for the field.
      */
     colorField: function() {
-        var color = this.colorToHex(this.getValue()) || "#ffffff";
+        var color = this.colorToHex(this.getValue()) || this.defaultBackground;
         this.getEl().setStyle({
             "background": color,
             "color": this.isDark(color) ? "#ffffff" : "#000000"
