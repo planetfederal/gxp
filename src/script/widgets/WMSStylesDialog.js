@@ -77,6 +77,18 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      */
     selectedRule: null,
     
+    /** api: config[editable]
+     *  ``Boolean`` Set to false if styles should not be editable. Default is
+     *  true.
+     */
+    
+    /** api: property[editable]
+     *  ``Boolean`` Read-only. True if this component could gather enough
+     *  information to allow styles being edited, false otherwise. This is
+     *  not supposed to be used before the  ``ready`` event is fired.
+     */
+    editable: true,
+    
     /** private: property[isRaster]
      *  ``Boolean`` Are we dealing with a raster layer with RasterSymbolizer?
      *  This is needed because we create pseudo rules from a RasterSymbolizer's
@@ -192,6 +204,13 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         };
         Ext.applyIf(this, defConfig);
         
+        this.addEvents([
+            /** api: event[ready]
+             *  Fires when this component is ready for user interaction.
+             */
+            "ready"
+        ]);
+
         this.createStylesStore();
                 
         gxp.util.dispatch([this.getStyles, this.describeLayer], function() {
@@ -653,18 +672,26 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 this.isRaster = false;
                 this.addVectorLegend(rules);
             }
+            this.stylesStoreReady();
+            this.fireEvent("ready");
         }
         catch(e) {
-            // disable styles toolbar
-            this.items.get(1).disable();
-            this.addRulesFieldSet().add(this.createLegendImage());
-            this.doLayout();
-            // disable rules toolbar
-            this.items.get(3).disable();
+            this.setupNonEditable();
         }
-        finally {
-            this.stylesStoreReady();
-        }
+    },
+    
+    /** private: methos[setNonEditable]
+     */
+    setupNonEditable: function() {
+        this.editable = false;
+        // disable styles toolbar
+        this.items.get(1).disable();
+        this.addRulesFieldSet().add(this.createLegendImage());
+        this.doLayout();
+        // disable rules toolbar
+        this.items.get(3).disable();
+        this.stylesStoreReady();
+        this.fireEvent("ready");
     },
     
     /** private: method[stylesStoreReady]
@@ -736,17 +763,21 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      */
     getStyles: function(callback) {
         var layer = this.layerRecord.get("layer");
-        Ext.Ajax.request({
-            url: layer.url,
-            params: {
-                "REQUEST": "GetStyles",
-                "LAYERS": layer.params.LAYERS
-            },
-            success: this.parseSLD,
-            failure: this.stylesStoreReady,
-            callback: callback,
-            scope: this
-        });
+        if(this.editable === true) {
+            Ext.Ajax.request({
+                url: layer.url,
+                params: {
+                    "REQUEST": "GetStyles",
+                    "LAYERS": layer.params.LAYERS
+                },
+                success: this.parseSLD,
+                failure: this.setupNonEditable,
+                callback: callback,
+                scope: this
+            });            
+        } else {
+            this.setupNonEditable();
+        }
     },
     
     /** private: method[describeLayer]
