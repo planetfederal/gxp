@@ -113,16 +113,16 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             }
             
             // use all params from original
-            var params = Ext.apply({}, layer.params);
+            var params = Ext.applyIf({
+                STYLES: config.styles,
+                FORMAT: config.format,
+                TRANSPARENT: config.transparent
+            }, layer.params);
 
             layer = new OpenLayers.Layer.WMS(
                 config.title || layer.name, 
                 layer.url, 
-                Ext.applyIf(params, {
-                    STYLES: config.styles,
-                    FORMAT: config.format,
-                    TRANSPARENT: config.transparent
-                }), {
+                params, {
                     attribution: layer.attribution,
                     maxExtent: maxExtent,
                     restrictedExtent: maxExtent,
