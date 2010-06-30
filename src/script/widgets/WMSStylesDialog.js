@@ -20,10 +20,10 @@ Ext.namespace("gxp");
  *      Create a dialog for selecting and layer styles. If the WMS supports
  *      GetStyles, styles can also be edited. The dialog does not provide any
  *      means of writing modified styles back to the server. To save styles,
- *      configure the dialog with a :class:`gxp.plugins.StyleWriter` and use
- *      the plugin's ``write`` method. If the WMS does not support GetStyles,
- *      the selected style will be applied to the layer provided as
- *      ``layerRecord`` instantly.
+ *      configure the dialog with a :class:`gxp.plugins.StyleWriter` plugin
+ *      and use the plugin's ``write`` method. As long as styles are not
+ *      modified, the style selected from this dialog's Styles combo box will
+ *      be applied to the layer provided as ``layerRecord`` instantly.
  */
 gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     
@@ -95,10 +95,38 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      *  ColorMap, and for this we need special treatment in some places.
      */
     isRaster: null,
+    
+    /** private: property[modified]
+     *  ``Boolean`` Will be true if styles were modified. Initial state is
+     *  false.
+     */
+    modified: false,
         
     /** private: method[initComponent]
      */
     initComponent: function() {
+        this.addEvents([
+            /** api: event[ready]
+             *  Fires when this component is ready for user interaction.
+             */
+            "ready",
+            
+            /** api: event[modified]
+             *  Fires on the first style modification.
+             */
+            "modified",
+            
+            /** api: event[styleselected]
+             *  Fires whenever a style is selected from this dialog's Style
+             *  combo box.
+             *  
+             *  Listener arguments:
+             *  * :class:`gxp.WMSStylesDialog` this component
+             *  * ``String`` the name of the selected style
+             */
+            "styleselected"
+        ]);
+
         var defConfig = {
             layout: "form",
             disabled: true,
@@ -204,13 +232,6 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         };
         Ext.applyIf(this, defConfig);
         
-        this.addEvents([
-            /** api: event[ready]
-             *  Fires when this component is ready for user interaction.
-             */
-            "ready"
-        ]);
-
         this.createStylesStore();
                 
         gxp.util.dispatch([this.getStyles, this.describeLayer], function() {
@@ -709,6 +730,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 this.updateStyleRemoveButton();
                 // update the "Choose style" combo's value
                 var combo = this.items.get(0).items.get(0);
+                this.markModified();
                 combo.fireEvent("select", combo, store.getAt(index), index);
                 combo.setValue(this.selectedStyle.get("name"));
             },
@@ -717,6 +739,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 this.updateStyleRemoveButton();
                 // update the "Choose style" combo's value
                 var combo = this.items.get(0).items.get(0);
+                this.markModified();
                 combo.fireEvent("select", combo, store.getAt(newIndex), newIndex);
                 combo.setValue(this.selectedStyle.get("name"));
             },
@@ -732,12 +755,22 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 this.changeStyle(record);
                 // update the combo's value with the new name
                 this.items.get(0).items.get(0).setValue(userStyle.name);
+                this.markModified();
             },
             scope: this
         });
 
         this.stylesStore.fireEvent("load", this.stylesStore,
             this.stylesStore.getRange())
+    },
+    
+    /** private: method[markModified]
+     */
+    markModified: function() {
+        if(this.modified === false) {
+            this.modified = true;
+            this.fireEvent("modified");
+        }
     },
     
     /** private: method[createStylesStore]
@@ -832,7 +865,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             anchor: "100%",
             listeners: {
                 "select": function(combo, record) {
-                    this.changeStyle(record)
+                    this.changeStyle(record);
+                    this.fireEvent("styleselected", this, record.get("name"));
                 },
                 scope: this
             }
@@ -892,8 +926,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         }
         //TODO end remove
         
-        var userStyle = record.get("userStyle");
-        if (userStyle) {
+        if (this.editable === true) {
+            var userStyle = record.get("userStyle");
             var ruleIdx = legend.rules.indexOf(this.selectedRule);
             // replace the legend
             legend.ownerCt.remove(legend);
@@ -902,8 +936,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     selectedRuleIndex: ruleIdx
                 }) :
                 this.addVectorLegend(userStyle.rules);
-        } else {
-            // if GetStyles is not supported, we instantly update the layer
+        }
+        if(this.modified === false) {
             this.layerRecord.get("layer").mergeNewParams(
                 {styles: styleName});
         }
