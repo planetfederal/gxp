@@ -8,6 +8,15 @@
 
 Ext.onReady(function() {
     
+    // If /geoserver/ is proxied from http://demo.opengeo.org/geoserver/, we
+    // replace the url
+    Ext.util.Observable.observeClass(Ext.data.Connection);
+    Ext.data.Connection.on({
+        "beforerequest": function(conn, options) {
+            options.url = options.url.replace("http://demo.opengeo.org/geoserver/", "/geoserver/");
+        }
+    });
+
     // create a new WMS capabilities store
     var store = new GeoExt.data.WMSCapabilitiesStore({
         url: "/geoserver/wms?request=GetCapabilities"
