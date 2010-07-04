@@ -17,6 +17,20 @@ Ext.onReady(function() {
         }
     });
 
+    // set SLD defaults for symbolizer
+    OpenLayers.Renderer.defaultSymbolizer = {
+        fillColor: "#808080",
+        fillOpacity: 1,
+        strokeColor: "#000000",
+        strokeOpacity: 1,
+        strokeWidth: 1,
+        strokeDashstyle: "solid",
+        pointRadius: 3,
+        graphicName: "square",
+        haloColor: "#FFFFFF",
+        fontColor: "#000000"
+    };
+        
     // create a new WMS capabilities store
     var store = new GeoExt.data.WMSCapabilitiesStore({
         url: "/geoserver/wms?request=GetCapabilities"
