@@ -988,10 +988,11 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 },
                 "afterlayout": function() {
                     // restore selection
-                    if(this.selectedRule !== legend.selectedRule) {
-                        legend.selectedRule = null;
-                        this.selectedRule && legend.selectRuleEntry(
-                            this.selectedRule);
+                    //TODO QA: avoid accessing private properties/methods
+                    if (this.selectedRule !== null &&
+                            legend.selectedRule === null &&
+                            legend.rules.indexOf(this.selectedRule) !== -1) {
+                        legend.selectRuleEntry(this.selectedRule);
                     }
                 },
                 scope: this
@@ -1025,7 +1026,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         for (var i=0, len=colorMap.length; i<len; i++) {
             pseudoRules.push(this.createPseudoRule(colorMap[i]));
         }
-        this.selectedRule = options.selectedRuleIndex ?
+        this.selectedRule = options.selectedRuleIndex != null ?
             pseudoRules[options.selectedRuleIndex] : null;
         return this.addVectorLegend(pseudoRules);
     },
