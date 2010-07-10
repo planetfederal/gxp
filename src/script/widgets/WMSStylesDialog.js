@@ -928,6 +928,9 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         
         if (this.editable === true) {
             var userStyle = record.get("userStyle");
+            if (userStyle.isDefault === true) {
+                styleName = "";
+            }
             var ruleIdx = legend.rules.indexOf(this.selectedRule);
             // replace the legend
             legend.ownerCt.remove(legend);
@@ -937,9 +940,10 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 }) :
                 this.addVectorLegend(userStyle.rules);
         }
-        if(this.modified === false) {
-            this.layerRecord.get("layer").mergeNewParams(
-                {styles: styleName});
+        var layer = this.layerRecord.get("layer");
+        var oldStyleName = layer.params.STYLES;
+        if(oldStyleName !== styleName && this.modified === false) {
+            layer.mergeNewParams({styles: styleName});
         }
     },
     
