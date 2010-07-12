@@ -9,9 +9,6 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
     /** api: ptype = gx_googlesource */
     ptype: "gx_googlesource",
     
-    //i18n
-    apiKeyPrompt: "Please enter the Google API key for ",
-    
     /** config: property[timeout]
      *  ``Number``
      *  The time (in milliseconds) to wait before giving up on the Google Maps
@@ -20,10 +17,6 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
      */
     timeout: 7000,
 
-    /** config: property[apiKey]
-     *  ``String`` The API key required for adding the Google Maps script
-     */
-    
     /** api: property[store]
      *  ``GeoExt.data.LayerStore``
      */
@@ -65,18 +58,31 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
      *  loaded.  Fires the "ready" event when the store is loaded.
      */
     syncCreateStore: function() {
-        var mapTypeNames = ["G_NORMAL_MAP", "G_SATELLITE_MAP", "G_HYBRID_MAP", "G_PHYSICAL_MAP"];
+        var mapTypeNames = ["ROADMAP", "SATELLITE", "HYBRID", "TERRAIN"];
+
+        // TODO: These "alt" properties should be derived from the MapType
+        // objects themselves.  It doesn't look like there is currently a way to
+        // get the default map types before creating a map object.
+        // http://code.google.com/p/gmaps-api-issues/issues/detail?id=2562
+        var abstracts = {
+            ROADMAP: "Show street map",
+            SATELLITE: "Show satellite imagery",
+            HYBRID: "Show imagery with street names",
+            TERRAIN: "Show street map with terrain"
+        }
+
         var len = mapTypeNames.length;
         var layers = new Array(len);
         var name, mapType;
         for(var i=0; i<len; ++i) {
             name = mapTypeNames[i];
-            mapType = window[name];
+            mapType = google.maps.MapTypeId[name];
             layers[i] = new OpenLayers.Layer.Google(
-                "Google " + mapType.getName(), {
+                // TODO: get MapType object name
+                // http://code.google.com/p/gmaps-api-issues/issues/detail?id=2562
+                "Google " + mapType.replace(/\w/, function(c) {return c.toUpperCase()}), {
                     type: mapType,
                     typeName: name,
-                    sphericalMercator: true,
                     maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
                     restrictedExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
                     projection: this.projection
@@ -94,7 +100,7 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
             ]
         });
         this.store.each(function(l) {
-            l.set("abstract", l.get("layer").type.getAlt());
+            l.set("abstract", abstracts[l.get("name")]);
         });
         this.fireEvent("ready", this);
     },
@@ -111,7 +117,7 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
             return l.get("name") === config.name;
         };
         // only return layer if app does not have it already
-        if(this.target.mapPanel.layers.findBy(cmp) == -1) {
+        if (this.target.mapPanel.layers.findBy(cmp) == -1) {
             // records can be in only one store
             record = this.store.getAt(this.store.findBy(cmp)).clone();
             var layer = record.get("layer");
@@ -143,37 +149,14 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
     
     loadScript: function() {
 
-        if(!this.initialConfig.apiKey && window.location.hostname !== "localhost") {
-            var prompt = function() {
-                Ext.Msg.prompt("Google API Key",
-                    this.apiKeyPrompt + window.location.hostname +
-                        " <sup><a target='_blank' href='http://code.google.com/apis/maps/'>?</a></sup>",
-                    function(btn, key) {
-                        if(btn === "ok") {
-                            this.initialConfig.apiKey = key;
-                            this.loadScript();
-                        } else {
-                            return false;
-                        }
-                    }, this
-                );
-            }
-            if (Ext.isReady) {
-                prompt.call(this);
-            } else {
-                Ext.onReady(prompt, this);
-            }
-            return;
-        }
-        
         var params = {
-            key: this.initialConfig.apiKey,
             autoload: Ext.encode({
                 modules: [{
                     name: "maps",
-                    version: "2.X",
+                    version: 3,
                     nocss: "true",
-                    callback: "gxp.plugins.GoogleSource.monitor.onScriptLoad"
+                    callback: "gxp.plugins.GoogleSource.monitor.onScriptLoad",
+                    other_params: "sensor=false"
                 }]
             })
         };
@@ -223,7 +206,7 @@ gxp.plugins.GoogleSource.monitor = new (Ext.extend(Ext.util.Observable, {
      *  ``Boolean``
      *  This plugin type is ready to use.
      */
-    ready: !!window.G_NORMAL_MAP,
+    ready: !!(google && google.maps),
 
     /** private: property[loading]
      *  ``Boolean``
