@@ -206,7 +206,7 @@ gxp.plugins.GoogleSource.monitor = new (Ext.extend(Ext.util.Observable, {
      *  ``Boolean``
      *  This plugin type is ready to use.
      */
-    ready: !!(google && google.maps),
+    ready: !!(window.google && google.maps),
 
     /** private: property[loading]
      *  ``Boolean``
