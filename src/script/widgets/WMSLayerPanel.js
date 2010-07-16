@@ -54,6 +54,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
     createAboutPanel: function() {
         return {
             title: "About",
+            style: {"padding": "10px"},
             defaults: {
                 border: false
             },
@@ -123,6 +124,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
 
         return {
             title: "Display",
+            style: {"padding": "10px"},
             layout: "form",
             labelWidth: 70,
             items: [{
