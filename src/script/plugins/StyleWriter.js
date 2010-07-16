@@ -59,18 +59,26 @@ gxp.plugins.StyleWriter = Ext.extend(Ext.util.Observable, {
             },
             scope: this
         });
+        
+        target.on({
+            "beforesaved": this.write,
+            scope: this
+        });
     },
     
-    /** api: method[write]
-     *  :arg config: ``Object``
+    /** private: method[write]
+     *  :arg target: :class:`gxp.WMSStylesDialog`
+     *  :arg options: ``Object``
      *
-     *  Saves the styles of the target's ``layerRecord``. To be implemented by
-     *  subclasses. Subclasses should make sure to commit changes to the
-     *  target's stylesStore. It is the responsibility of the application to
-     *  update displayed layers with the new style set in the target's
+     *  Listener for the target's ``beforesaved`` event. Saves the styles of
+     *  the target's ``layerRecord``. To be implemented by subclasses.
+     *  Subclasses should make sure to commit changes to the target's
+     *  stylesStore. It is the responsibility of the application to update
+     *  displayed layers with the new style set in the target's
      *  ``selectedStyle`` record.
      */
-    write: function(config) {
+    write: function(target, options) {
+        target.fireEvent("saved");
     }
 
 });

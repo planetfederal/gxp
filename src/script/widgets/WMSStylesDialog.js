@@ -21,11 +21,14 @@ Ext.namespace("gxp");
  *      GetStyles, styles can also be edited. The dialog does not provide any
  *      means of writing modified styles back to the server. To save styles,
  *      configure the dialog with a :class:`gxp.plugins.StyleWriter` plugin
- *      and use the plugin's ``write`` method. As long as styles are not
- *      modified, the style selected from this dialog's Styles combo box will
- *      be applied to the layer provided as ``layerRecord`` instantly.
+ *      and use the plugin's ``write`` method.
  */
 gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
+
+    //TODO create a StylesStore which can read styles using GetStyles. Create
+    // subclasses for that store with writing capabilities, e.g.
+    // for GeoServer's RESTconfig API. This should replace the current
+    // StyleWriter plugins.
     
     /** api: config[layerRecord]
      *  ``GeoExt.data.LayerRecord`` The layer to edit/select styles for.
@@ -35,6 +38,22 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      *  ``GeoExt.data.LayerRecord`` The layer to edit/select styles for.
      */
     layerRecord: null,
+    
+    /** api: config[styleName]
+     *  ``String`` A style's name to select in the styles combo box. Optional.
+     *  If not provided, the layer's current style will be selected.
+     */
+     
+    /** api: config[applySelectedStyle]
+     *  ``Boolean`` If set to true, the style selected in the styles combo
+     *  will be applied to the layer. Note that once the selected style has
+     *  been modified, it will no longer be applied. Default is false.
+     */
+    
+    /** api: config[stylesComboOptions]
+     *  ``Object`` configuration options to pass to the styles combo of this
+     *  dialog. Optional.
+     */
     
     /** api: config[layerDescription]
      *  ``Object`` Array entry of a DescribeLayer response as read by
@@ -105,7 +124,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     /** private: method[initComponent]
      */
     initComponent: function() {
-        this.addEvents([
+        this.addEvents(
             /** api: event[ready]
              *  Fires when this component is ready for user interaction.
              */
@@ -124,8 +143,24 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
              *  * :class:`gxp.WMSStylesDialog` this component
              *  * ``String`` the name of the selected style
              */
-            "styleselected"
-        ]);
+            "styleselected",
+            
+            /** api: event[beforesaved]
+             *  Fires before the styles are saved (using a
+             *  :class:`gxp.plugins.StyleWriter` plugin)
+             *
+             *  Listener arguments:
+             *  * :class:`gxp.WMSStylesDialog` this component
+             *  * ``Object`` options for the ``write`` method of the
+             *    :class:`gxp.plugins.StyleWriter`
+             */
+            "beforesaved",
+            
+            /** api: event[saved]
+             *  Fires when a style was successfully saved.
+             */
+            "saved"            
+        );
 
         var defConfig = {
             layout: "form",
@@ -143,17 +178,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                         xtype: "button",
                         iconCls: "add",
                         text: "Add",
-                        handler: function() {
-                            var store = this.stylesStore;
-                            var newStyle = new OpenLayers.Style(null, {
-                                name: gxp.util.uniqueName("New_Style", "_"),
-                                rules: [this.createRule()]
-                            });
-                            store.add(new store.recordType({
-                                "name": newStyle.name,
-                                "userStyle": newStyle
-                            }));
-                        },
+                        handler: this.addStyle,
                         scope: this
                     }, {
                         xtype: "button",
@@ -241,6 +266,24 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         gxp.WMSStylesDialog.superclass.initComponent.apply(this, arguments);
     },
     
+    /** api: method[addStyle]
+     *  Creates a new style and selects it in the styles combo.
+     */
+    addStyle: function() {
+        if(!this._ready) {
+            this.on("ready", this.addStyle, this);
+        }
+        var store = this.stylesStore;
+        var newStyle = new OpenLayers.Style(null, {
+            name: gxp.util.uniqueName("New_Style", "_"),
+            rules: [this.createRule()]
+        });
+        store.add(new store.recordType({
+            "name": newStyle.name,
+            "userStyle": newStyle
+        }));
+    },
+    
     /** api: method[createSLD]
      *  :arg options: ``Object``
      *  :return: ``String`` The current SLD for the NamedLayer.
@@ -267,6 +310,14 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             }
         });
         return new OpenLayers.Format.SLD().write(sld);
+    },
+    
+    /** api: method[saveStyles]
+     *  :arg options: ``Object`` Options to pass to the
+     *      :class:`gxp.plugins.StyleWriter` plugin
+     */
+    saveStyles: function(options) {
+        this.fireEvent("beforesaved", this, options);
     },
     
     /** private: method[updateStyleRemoveButton]
@@ -420,7 +471,6 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 attributes: new GeoExt.data.AttributeStore({
                     url: wfsUrl
                 }),
-                bodyStyle: "padding: 10px",
                 border: false,
                 defaults: {
                     autoHeight: true,
@@ -636,8 +686,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     },
 
     /** private: method[parseSLD]
-     *  :param response: ``Object``
-     *  :param options: ``Object``
+     *  :arg response: ``Object``
+     *  :arg options: ``Object``
      *  
      *  Success handler for the GetStyles response. Includes a fallback
      *  to GetLegendGraphic if no valid SLD is returned.
@@ -649,9 +699,10 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         }
         var layerParams = this.layerRecord.get("layer").params;
 
-        if (layerParams.STYLES) {
+        var initialStyle = this.initialConfig.styleName || layerParams.STYLES;
+        if (initialStyle) {
             this.selectedStyle = this.stylesStore.getAt(
-                this.stylesStore.findExact("name", layerParams.STYLES));
+                this.stylesStore.findExact("name", initialStyle));
         }
         
         try {
@@ -676,8 +727,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 record.phantom = false;
                 this.stylesStore.add(record);
                 // set the default style if no STYLES param is set on the layer
-                if (this.layerRecord.get("layer").params.STYLES ===
-                            userStyle.name || userStyle.isDefault === true) {
+                if (initialStyle === userStyle.name ||
+                                                userStyle.isDefault === true) {
                     this.selectedStyle = record;
                 }
             }
@@ -694,7 +745,6 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 this.addVectorLegend(rules);
             }
             this.stylesStoreReady();
-            this.fireEvent("ready");
         }
         catch(e) {
             this.setupNonEditable();
@@ -712,7 +762,6 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         // disable rules toolbar
         this.items.get(3).disable();
         this.stylesStoreReady();
-        this.fireEvent("ready");
     },
     
     /** private: method[stylesStoreReady]
@@ -762,6 +811,9 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
 
         this.stylesStore.fireEvent("load", this.stylesStore,
             this.stylesStore.getRange())
+
+        this._ready = true;
+        this.fireEvent("ready");
     },
     
     /** private: method[markModified]
@@ -849,7 +901,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      */
     addStylesCombo: function() {
         var store = this.stylesStore;
-        var combo = new Ext.form.ComboBox({
+        var combo = new Ext.form.ComboBox(Ext.apply({
             fieldLabel: "Choose style",
             store: store,
             editable: false,
@@ -870,7 +922,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 },
                 scope: this
             }
-        });
+        }, this.initialConfig.stylesComboOptions));
         // add combo to the styles fieldset
         this.items.get(0).add(combo);
         this.doLayout();
@@ -903,7 +955,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     },
     
     /** private: method[changeStyle]
-     *  :param value: ``Ext.data.Record``
+     *  :arg value: ``Ext.data.Record``
      * 
      *  Handler for the stylesCombo's ``select`` and the store's ``update``
      *  event. Updates the layer and the rules fieldset.
@@ -942,13 +994,14 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         }
         var layer = this.layerRecord.get("layer");
         var oldStyleName = layer.params.STYLES;
-        if(oldStyleName !== styleName && this.modified === false) {
+        if(this.initialConfig.applySelectedStyle === true &&
+                    oldStyleName !== styleName && this.modified === false) {
             layer.mergeNewParams({styles: styleName});
         }
     },
     
     /** private: method[addVectorLegend]
-     *  :param rules: ``Array``
+     *  :arg rules: ``Array``
      *  :return: ``GeoExt.VectorLegend`` the legend that was created
      *
      *  Creates the vector legend for the provided rules and adds it to the
@@ -1007,8 +1060,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     },
     
     /** private: method[addRasterLegend]
-     *  :param rules: ``Array``
-     *  :param options: ``Object`` Additional options for this method.
+     *  :arg rules: ``Array``
+     *  :arg options: ``Object`` Additional options for this method.
      *  :return: ``GeoExt.VectorLegend`` the legend that was created
      *
      *  Creates the vector legend for the pseudo rules that are created from
