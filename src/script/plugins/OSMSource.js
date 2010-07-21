@@ -38,7 +38,7 @@ gxp.plugins.OSMSource = Ext.extend(gxp.plugins.LayerSource, {
         };
         
         var layers = [
-            new OpenLayers.Layer.XYZ(
+            new OpenLayers.Layer.OSM(
                 "OpenStreetMap",
                 [
                     "http://a.tile.openstreetmap.org/${z}/${x}/${y}.png",
@@ -50,7 +50,7 @@ gxp.plugins.OSMSource = Ext.extend(gxp.plugins.LayerSource, {
                     type: "mapnik"
                 }, options)
             ),
-            new OpenLayers.Layer.XYZ(
+            new OpenLayers.Layer.OSM(
                 "Tiles@home",
                 [
                     "http://a.tah.openstreetmap.org/Tiles/tile/${z}/${x}/${y}.png",
