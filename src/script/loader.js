@@ -6,6 +6,7 @@
         "data/WFSFeatureStore.js",
         "data/WFSProtocolProxy.js",
         "menu/LayerMenu.js",
+        "widgets/EmbedMapDialog.js",
         "widgets/FeatureEditPopup.js",
         "widgets/FilterBuilder.js",
         "widgets/QueryPanel.js",

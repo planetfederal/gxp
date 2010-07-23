@@ -104,6 +104,26 @@ gxp.util = {
         }
         this._uniqueNames[key] = count || 0;
         return newName;
-    }
+    },
 
+    /** api: function[getAbsoluteUrl]
+     *  :param url: ``String``
+     *  :return: ``String``
+     *  
+     *  Converts the provided url to an absolute url.
+     */
+    getAbsoluteUrl: function(url) {
+        var a;
+        if(Ext.isIE) {
+            a = document.createElement("<a href='" + url + "'/>");
+            a.style.display = "none";
+            document.body.appendChild(a);
+            a.href = a.href;
+            document.body.removeChild(a);
+        } else {
+            a = document.createElement("a");
+            a.href = url;
+        }
+        return a.href;
+    }
 };

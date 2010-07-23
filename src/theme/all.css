@@ -28,6 +28,17 @@
     border: none !important;
 }
 
+/* gx_embedmapdialog */
+.gx-field-label {
+    font-weight: bold;
+    margin: 4px;
+    vertical-align: baseline;
+}
+.gx-export-section {
+    padding: 10px 10px 5px 10px;
+    margin-bottom: 0;
+}
+
 /* fixes textarea scrollbar issue in FF on OSX */
 .ext-gecko.ext-mac textarea.x-form-field {
     padding: 1px 2px;
