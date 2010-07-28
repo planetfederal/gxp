@@ -58,36 +58,35 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
      *  loaded.  Fires the "ready" event when the store is loaded.
      */
     syncCreateStore: function() {
-        var mapTypeNames = ["ROADMAP", "SATELLITE", "HYBRID", "TERRAIN"];
-
-        // TODO: These "alt" properties should be derived from the MapType
-        // objects themselves.  It doesn't look like there is currently a way to
-        // get the default map types before creating a map object.
+        // TODO: The abstracts ("alt" properties) should be derived from the
+        // MapType objects themselves.  It doesn't look like there is currently
+        // a way to get the default map types before creating a map object.
         // http://code.google.com/p/gmaps-api-issues/issues/detail?id=2562
-        var abstracts = {
-            ROADMAP: "Show street map",
-            SATELLITE: "Show satellite imagery",
-            HYBRID: "Show imagery with street names",
-            TERRAIN: "Show street map with terrain"
-        }
-
-        var len = mapTypeNames.length;
-        var layers = new Array(len);
+        // TODO: We may also be able to determine the MAX_ZOOM_LEVEL for each
+        // layer type. If not, consider setting them on the OpenLayers level.
+        var mapTypes = {
+            "ROADMAP": {abstract: "Show street map", MAX_ZOOM_LEVEL: 20},
+            "SATELLITE": {abstract: "Show satellite imagery"},
+            "HYBRID": {abstract: "Show imagery with street names"},
+            "TERRAIN": {abstract: "Show street map with terrain", MAX_ZOOM_LEVEL: 15}
+        };
+        
+        var layers = [];
         var name, mapType;
-        for(var i=0; i<len; ++i) {
-            name = mapTypeNames[i];
+        for(var name in mapTypes) {
             mapType = google.maps.MapTypeId[name];
-            layers[i] = new OpenLayers.Layer.Google(
+            layers.push(new OpenLayers.Layer.Google(
                 // TODO: get MapType object name
                 // http://code.google.com/p/gmaps-api-issues/issues/detail?id=2562
                 "Google " + mapType.replace(/\w/, function(c) {return c.toUpperCase()}), {
                     type: mapType,
                     typeName: name,
+                    MAX_ZOOM_LEVEL: mapTypes[name].MAX_ZOOM_LEVEL,
                     maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
                     restrictedExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
                     projection: this.projection
                 }
-            )
+            ))
         }
         this.store = new GeoExt.data.LayerStore({
             layers: layers,
@@ -100,7 +99,7 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
             ]
         });
         this.store.each(function(l) {
-            l.set("abstract", abstracts[l.get("name")]);
+            l.set("abstract", mapTypes[l.get("name")].abstract);
         });
         this.fireEvent("ready", this);
     },
