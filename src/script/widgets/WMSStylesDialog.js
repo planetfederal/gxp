@@ -168,7 +168,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             items: [{
                 xtype: "fieldset",
                 title: "Styles",
-                labelWidth: 80,
+                labelWidth: 85,
                 style: "margin-bottom: 0;"
             }, {
                 xtype: "toolbar",
