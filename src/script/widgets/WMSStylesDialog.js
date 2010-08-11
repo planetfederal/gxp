@@ -1008,22 +1008,24 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      *  rules fieldset.
      */
     addVectorLegend: function(rules) {
-        var symbolType;
+        var typeHierarchy = ["Point", "Line", "Polygon"];
+        var highest;
         if (this.isRaster) {
-            // symbolizer type for pseudo rules
-            symbolType = "Polygon";
+            // Polygon symbolizer type for pseudo rules
+            highest = 2;
         } else {
-            // use the symbolizer type of the 1st rule
+            // use the highest symbolizer type of the 1st rule
+            var highest = 0;
             for (var symbolType in rules[0].symbolizer) {
-                break;
+                highest = Math.max(highest, typeHierarchy.indexOf(symbolType));
             }
         }
-        this.symbolType = symbolType;
+        this.symbolType = typeHierarchy[highest];
         var legend = this.items.get(2).add({
             xtype: "gx_vectorlegend",
             showTitle: false,
             rules: rules,
-            symbolType: symbolType,
+            symbolType: this.symbolType,
             selectOnClick: true,
             enableDD: !this.isRaster,
             listeners: {
