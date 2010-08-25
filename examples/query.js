@@ -6,7 +6,7 @@
  * of the license.
  */
 
-OpenLayers.ProxyHost = "/~ahocevar/projects/openlayers/examples/proxy.cgi/?url=";
+OpenLayers.ProxyHost = "/proxy/?url=";
 
 var panel, map;
 Ext.onReady(function() {
@@ -14,7 +14,7 @@ Ext.onReady(function() {
     var map = new OpenLayers.Map("map");
     var wms = new OpenLayers.Layer.WMS(
         "Global Imagery",
-        "http://demo.opengeo.org/geoserver/wms",
+        "/geoserver/wms",
         {layers: 'bluemarble'}
     );
     var vector = new OpenLayers.Layer.Vector();    
@@ -33,14 +33,14 @@ Ext.onReady(function() {
                     title: "US States",
                     name: "states",
                     namespace: "http://www.openplans.org/topp",
-                    url: "http://demo.opengeo.org/geoserver/wfs",
-                    schema: "http://demo.opengeo.org/geoserver/wfs?version=1.1.0&request=DescribeFeatureType&typeName=topp:states"
+                    url: "/geoserver/wfs",
+                    schema: "/geoserver/wfs?version=1.1.0&request=DescribeFeatureType&typeName=topp:states"
                 }, {
                     title: "Archaeological Sites",
                     name: "archsites",
                     namespace: "http://opengeo.org",
-                    url: "http://demo.opengeo.org/geoserver/wfs",
-                    schema: "http://demo.opengeo.org/geoserver/wfs?version=1.1.0&request=DescribeFeatureType&typeName=og:archsites"
+                    url: "/geoserver/wfs",
+                    schema: "/geoserver/wfs?version=1.1.0&request=DescribeFeatureType&typeName=og:archsites"
                 }]
             },
             root: "layers",
