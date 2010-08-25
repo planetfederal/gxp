@@ -272,6 +272,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     addStyle: function() {
         if(!this._ready) {
             this.on("ready", this.addStyle, this);
+            return;
         }
         var store = this.stylesStore;
         var newStyle = new OpenLayers.Style(null, {
