@@ -192,45 +192,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                         xtype: "button",
                         iconCls: "edit",
                         text: "Edit",
-                        handler: function() {
-                            var userStyle = this.selectedStyle.get("userStyle");
-                            var styleProperties = new Ext.Window({
-                                title: "User Style: " + userStyle.name,
-                                bodyBorder: false,
-                                autoHeight: true,
-                                width: 300,
-                                modal: true,
-                                items: {
-                                    border: false,
-                                    items: {
-                                        xtype: "gx_stylepropertiesdialog",
-                                        userStyle: userStyle.clone(),
-                                        // styles that came from the server
-                                        // have a name that we don't change
-                                        nameEditable: this.selectedStyle.id !==
-                                            this.selectedStyle.get("name"),
-                                        style: "padding: 10px;"
-                                    }
-                                },
-                                buttons: [{
-                                    text: "Cancel",
-                                    handler: function() {
-                                        styleProperties.close();
-                                    }
-                                }, {
-                                    text: "Save",
-                                    handler: function() {
-                                        var userStyle = 
-                                        this.selectedStyle.set(
-                                            "userStyle",
-                                            styleProperties.items.get(0).items.get(0).userStyle);
-                                        styleProperties.close();
-                                    },
-                                    scope: this
-                                }]
-                            });
-                            styleProperties.show();
-                        },
+                        handler: this.editStyle,
                         scope: this
                     }, {
                         xtype: "button",
@@ -283,6 +245,50 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             "name": newStyle.name,
             "userStyle": newStyle
         }));
+        this.editStyle();
+    },
+    
+    /** api: method[addStyle]
+     *  Edit the currently selected style.
+     */
+    editStyle: function() {
+        var userStyle = this.selectedStyle.get("userStyle");
+        var styleProperties = new Ext.Window({
+            title: "User Style: " + userStyle.name,
+            bodyBorder: false,
+            autoHeight: true,
+            width: 300,
+            modal: true,
+            items: {
+                border: false,
+                items: {
+                    xtype: "gx_stylepropertiesdialog",
+                    userStyle: userStyle.clone(),
+                    // styles that came from the server
+                    // have a name that we don't change
+                    nameEditable: this.selectedStyle.id !==
+                        this.selectedStyle.get("name"),
+                    style: "padding: 10px;"
+                }
+            },
+            buttons: [{
+                text: "Cancel",
+                handler: function() {
+                    styleProperties.close();
+                }
+            }, {
+                text: "Save",
+                handler: function() {
+                    var userStyle = 
+                    this.selectedStyle.set(
+                        "userStyle",
+                        styleProperties.items.get(0).items.get(0).userStyle);
+                    styleProperties.close();
+                },
+                scope: this
+            }]
+        });
+        styleProperties.show();
     },
     
     /** api: method[createSLD]
