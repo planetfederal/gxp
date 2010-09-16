@@ -192,7 +192,9 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                         xtype: "button",
                         iconCls: "edit",
                         text: "Edit",
-                        handler: this.editStyle,
+                        handler: function() {
+                            this.editStyle();
+                        },
                         scope: this
                     }, {
                         xtype: "button",
@@ -252,7 +254,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     },
     
     /** api: method[editStyle]
-     *  :arg prevStyle: ``Boolean``
+     *  :arg prevStyle: ``Ext.data.Record``
      *  Edit the currently selected style.
      */
     editStyle: function(prevStyle) {
