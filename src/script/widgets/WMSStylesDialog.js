@@ -44,12 +44,6 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      *  If not provided, the layer's current style will be selected.
      */
      
-    /** api: config[applySelectedStyle]
-     *  ``Boolean`` If set to true, the style selected in the styles combo
-     *  will be applied to the layer. Note that once the selected style has
-     *  been modified, it will no longer be applied. Default is false.
-     */
-    
     /** api: config[stylesComboOptions]
      *  ``Object`` configuration options to pass to the styles combo of this
      *  dialog. Optional.
@@ -131,7 +125,11 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             "ready",
             
             /** api: event[modified]
-             *  Fires on the first style modification.
+             *  Fires on every style modification.
+             *
+             *  Listener arguments:
+             *  * :class:`gxp.WMSStylesDialog` this component
+             *  * ``String`` the name of the modified style
              */
             "modified",
             
@@ -496,27 +494,11 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 defaults: {
                     autoHeight: true,
                     hideMode: "offsets"
-                }
-            }],
-            buttons: [{
-                text: "Cancel",
-                handler: function() {
-                    ruleDlg.close();
-                }
-            }, {
-                text: "Apply",
-                handler: function() {
-                    this.saveRule(rule);
-                    origRule = rule;
                 },
-                scope: this
-            }, {
-                text: "Save",
-                handler: function() {
-                    this.saveRule(rule);
-                    ruleDlg.close();
-                },
-                scope: this
+                listeners: {
+                    "change": this.saveRule,
+                    scope: this
+                }
             }]
         });
         ruleDlg.show();
@@ -639,9 +621,10 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     },
     
     /** private: method[saveRule]
+     *  :arg cmp:
      *  :arg rule: the rule to save back to the userStyle
      */
-    saveRule: function(rule) {
+    saveRule: function(cmp, rule) {
         var style = this.selectedStyle;
         var legend = this.items.get(2).items.get(0);
         var userStyle = style.get("userStyle");
@@ -839,8 +822,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     markModified: function() {
         if(this.modified === false) {
             this.modified = true;
-            this.fireEvent("modified");
         }
+        this.fireEvent("modified", this, this.selectedStyle.get("name"));
     },
     
     /** private: method[createStylesStore]
