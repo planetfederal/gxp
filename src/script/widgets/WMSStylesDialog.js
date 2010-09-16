@@ -21,7 +21,7 @@ Ext.namespace("gxp");
  *      GetStyles, styles can also be edited. The dialog does not provide any
  *      means of writing modified styles back to the server. To save styles,
  *      configure the dialog with a :class:`gxp.plugins.StyleWriter` plugin
- *      and use the plugin's ``write`` method.
+ *      and call the ``saveStyles`` method.
  */
 gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
 
@@ -199,7 +199,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                         iconCls: "duplicate",
                         text: "Duplicate",
                         handler: function() {
-                            var newStyle = this.selectedStyle.get(
+                            var prevStyle = this.selectedStyle
+                            var newStyle = prevStyle.get(
                                 "userStyle").clone();
                             newStyle.isDefault = false;
                             newStyle.name = gxp.util.uniqueName(
@@ -211,6 +212,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                                 "abstract": newStyle.description,
                                 "userStyle": newStyle
                             }));
+                            this.editStyle(prevStyle);
                         },
                         scope: this
                     }
@@ -236,6 +238,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             this.on("ready", this.addStyle, this);
             return;
         }
+        var prevStyle = this.selectedStyle;
         var store = this.stylesStore;
         var newStyle = new OpenLayers.Style(null, {
             name: gxp.util.uniqueName("New_Style", "_"),
@@ -245,13 +248,14 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             "name": newStyle.name,
             "userStyle": newStyle
         }));
-        this.editStyle();
+        this.editStyle(prevStyle);
     },
     
-    /** api: method[addStyle]
+    /** api: method[editStyle]
+     *  :arg prevStyle: ``Boolean``
      *  Edit the currently selected style.
      */
-    editStyle: function() {
+    editStyle: function(prevStyle) {
         var userStyle = this.selectedStyle.get("userStyle");
         var styleProperties = new Ext.Window({
             title: "User Style: " + userStyle.name,
@@ -275,7 +279,12 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 text: "Cancel",
                 handler: function() {
                     styleProperties.close();
-                }
+                    if (prevStyle) {
+                        this.stylesStore.remove(this.selectedStyle);
+                        this.changeStyle(prevStyle, true);
+                    }
+                },
+                scope: this
             }, {
                 text: "Save",
                 handler: function() {
@@ -322,6 +331,9 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     /** api: method[saveStyles]
      *  :arg options: ``Object`` Options to pass to the
      *      :class:`gxp.plugins.StyleWriter` plugin
+     *
+     *  Saves the styles. Without a :class:`gxp.plugins.StyleWriter` plugin
+     *  configured for this instance, nothing will happen.
      */
     saveStyles: function(options) {
         this.fireEvent("beforesaved", this, options);
@@ -808,10 +820,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 };
                 Ext.apply(record.data, data);
                 // make sure that the legend gets updated
-                this.changeStyle(record);
-                // update the combo's value with the new name
-                this.items.get(0).items.get(0).setValue(userStyle.name);
-                this.markModified();
+                this.changeStyle(record, true);
             },
             scope: this
         });
@@ -963,11 +972,13 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     
     /** private: method[changeStyle]
      *  :arg value: ``Ext.data.Record``
+     *  :arg updateCombo: ``Boolean`` Set to true to update the combo and
+     *      fire a modified event. Default is false.
      * 
      *  Handler for the stylesCombo's ``select`` and the store's ``update``
      *  event. Updates the layer and the rules fieldset.
      */
-    changeStyle: function(record) {
+    changeStyle: function(record, updateCombo) {
         var legend = this.items.get(2).items.get(0);
         this.selectedStyle = record;
         this.updateStyleRemoveButton();            
@@ -999,11 +1010,10 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 }) :
                 this.addVectorLegend(userStyle.rules);
         }
-        var layer = this.layerRecord.get("layer");
-        var oldStyleName = layer.params.STYLES;
-        if(this.initialConfig.applySelectedStyle === true &&
-                    oldStyleName !== styleName && this.modified === false) {
-            layer.mergeNewParams({styles: styleName});
+        if (updateCombo === true) {
+            // update the combo's value with the new name
+            this.items.get(0).items.get(0).setValue(userStyle.name);
+            this.markModified();
         }
     },
     
