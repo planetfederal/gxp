@@ -421,16 +421,19 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
         // use first symbolizer that matches symbolType
         var candidate, symbolizer;
         var Type = OpenLayers.Symbolizer[this.symbolType];
+        var existing = false;
         if (Type) {
             for (var i=0, ii=this.rule.symbolizers.length; i<ii; ++i) {
                 candidate = this.rule.symbolizers[i];
                 if (candidate instanceof Type) {
+                    existing = true;
                     symbolizer = candidate;
                     break;
                 }
             }
             if (!symbolizer) {
-                throw new Error("Rule does not contain symbolizer of appropriate type: " + this.symbolType);
+                // allow addition of new symbolizer
+                symbolizer = new Type({fill: false, stroke: false});
             }
         } else {
             throw new Error("Appropriate symbolizer type not included in build: " + this.symbolType);
@@ -450,6 +453,10 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                     this.symbolizerSwatch.setSymbolizers(
                         [symbolizer], {draw: this.symbolizerSwatch.rendered}
                     );
+                    if (!existing) {
+                        this.rule.symbolizers.push(symbolizer);
+                        existing = true;
+                    }
                     this.fireEvent("change", this, this.rule);
                 },
                 scope: this

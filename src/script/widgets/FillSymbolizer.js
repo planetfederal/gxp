@@ -75,7 +75,8 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
                 xtype: "gx_colorfield",
                 fieldLabel: "Color",
                 name: "color",
-                value: ("fillColor" in this.symbolizer) ? this.symbolizer.fillColor : OpenLayers.Renderer.defaultSymbolizer.fillColor,
+                emptyText: OpenLayers.Renderer.defaultSymbolizer.fillColor,
+                value: this.symbolizer.fillColor,
                 defaultBackground: this.defaultColor ||
                     OpenLayers.Renderer.defaultSymbolizer.fillColor,
                 plugins: colorFieldPlugins,
@@ -109,8 +110,10 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
             }],
             listeners: {
                 "collapse": function() {
-                    this.symbolizer.fill = false;
-                    this.fireEvent("change", this.symbolizer);
+                    if (this.symbolizer.fill !== false) {
+                        this.symbolizer.fill = false;
+                        this.fireEvent("change", this.symbolizer);
+                    }
                 },
                 "expand": function() {
                     this.symbolizer.fill = true;
