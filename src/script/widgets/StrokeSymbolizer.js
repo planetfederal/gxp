@@ -118,9 +118,10 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
                     scope: this
                 }
             }, {
-                xtype: "textfield",
+                xtype: "numberfield",
                 name: "width",
                 fieldLabel: "Width",
+                allowNegative: false,
                 value: ("strokeWidth" in this.symbolizer) ? this.symbolizer.strokeWidth : OpenLayers.Renderer.defaultSymbolizer.strokeWidth,
                 listeners: {
                     change: function(field, value) {

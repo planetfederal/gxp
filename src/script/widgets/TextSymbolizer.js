@@ -115,7 +115,8 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                 xtype: "tbtext",
                 text: "Size: "
             }, {
-                xtype: "textfield",
+                xtype: "numberfield",
+                allowNegative: false,
                 value: this.symbolizer.fontSize,
                 width: 30,
                 listeners: {
@@ -173,9 +174,10 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
             autoHeight: true,
             labelWidth: 50,
             items: [{
-                xtype: "textfield",
+                xtype: "numberfield",
                 fieldLabel: "Size",
                 anchor: "89%",
+                allowNegative: false,
                 value: this.symbolizer.haloRadius,
                 listeners: {
                     valid: function(field) {
