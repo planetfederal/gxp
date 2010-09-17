@@ -122,10 +122,10 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
                 name: "width",
                 fieldLabel: "Width",
                 allowNegative: false,
-                value: ("strokeWidth" in this.symbolizer) ? this.symbolizer.strokeWidth : OpenLayers.Renderer.defaultSymbolizer.strokeWidth,
+                emptyText: OpenLayers.Renderer.defaultSymbolizer.strokeWidth,
+                value: this.symbolizer.strokeWidth,
                 listeners: {
                     change: function(field, value) {
-                        // TODO: add a validator that allows "" or number
                         value = parseFloat(value);
                         if (isNaN(value)) {
                             delete this.symbolizer.strokeWidth;

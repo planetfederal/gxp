@@ -117,11 +117,17 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
             }, {
                 xtype: "numberfield",
                 allowNegative: false,
-                value: ("fontSize" in this.symbolizer) ? this.symbolizer.fontSize : OpenLayers.Renderer.defaultSymbolizer.fontSize,
+                emptyText: OpenLayers.Renderer.defaultSymbolizer.fontSize,
+                value: this.symbolizer.fontSize,
                 width: 30,
                 listeners: {
-                    valid: function(field) {
-                        this.symbolizer.fontSize = Number(field.getValue());
+                    change: function(field, value) {
+                        value = parseFloat(value);
+                        if (isNaN(value)) {
+                            delete this.symbolizer.fontSize;
+                        } else {
+                            this.symbolizer.fontSize = value;
+                        }
                         this.fireEvent("change", this.symbolizer);
                     },
                     scope: this
@@ -178,10 +184,16 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                 fieldLabel: "Size",
                 anchor: "89%",
                 allowNegative: false,
-                value: ("haloRadius" in this.symbolizer) ? this.symbolizer.haloRadius : OpenLayers.Renderer.defaultSymbolizer.haloRadius,
+                emptyText: OpenLayers.Renderer.defaultSymbolizer.haloRadius,
+                value: this.symbolizer.haloRadius,
                 listeners: {
-                    valid: function(field) {
-                        this.symbolizer.haloRadius = field.getValue();
+                    change: function(field, value) {
+                        value = parseFloat(value);
+                        if (isNaN(value)) {
+                            delete this.symbolizer.haloRadius;
+                        } else {
+                            this.symbolizer.haloRadius = value;
+                        }
                         this.fireEvent("change", this.symbolizer);
                     },
                     scope: this
