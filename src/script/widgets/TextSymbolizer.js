@@ -106,7 +106,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                 value: this.symbolizer.fontFamily,
                 listeners: {
                     select: function(combo, record) {
-                        this.symbolizer.fontFamily = record.get("text");
+                        this.symbolizer.fontFamily = record.get("field1");
                         this.fireEvent("change", this.symbolizer);
                     },
                     scope: this
