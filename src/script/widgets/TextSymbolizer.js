@@ -117,7 +117,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
             }, {
                 xtype: "numberfield",
                 allowNegative: false,
-                value: this.symbolizer.fontSize,
+                value: ("fontSize" in this.symbolizer) ? this.symbolizer.fontSize : OpenLayers.Renderer.defaultSymbolizer.fontSize,
                 width: 30,
                 listeners: {
                     valid: function(field) {
@@ -178,7 +178,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                 fieldLabel: "Size",
                 anchor: "89%",
                 allowNegative: false,
-                value: this.symbolizer.haloRadius,
+                value: ("haloRadius" in this.symbolizer) ? this.symbolizer.haloRadius : OpenLayers.Renderer.defaultSymbolizer.haloRadius,
                 listeners: {
                     valid: function(field) {
                         this.symbolizer.haloRadius = field.getValue();
@@ -189,8 +189,8 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
             }, {
                 xtype: "gx_fillsymbolizer",
                 symbolizer: {
-                    fillColor: this.symbolizer.haloColor,
-                    fillOpacity: this.symbolizer.haloOpacity
+                    fillColor: ("haloColor" in this.symbolizer) ? this.symbolizer.haloColor : OpenLayers.Renderer.defaultSymbolizer.haloColor,
+                    fillOpacity: ("haloOpacity" in this.symbolizer) ? this.symbolizer.haloOpacity : OpenLayers.Renderer.defaultSymbolizer.haloOpacity
                 },
                 defaultColor: OpenLayers.Renderer.defaultSymbolizer.haloColor,
                 checkboxToggle: false,
