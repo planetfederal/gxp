@@ -152,11 +152,15 @@ gxp.ScaleLimitPanel = Ext.extend(Ext.Panel, {
             })]
         });
         
-        this.maxScaleDenominatorInput = new Ext.form.TextField({
+        this.maxScaleDenominatorInput = new Ext.form.NumberField({
+            allowNegative: false,
             width: 100,
             fieldLabel: "1",
             value: Math.round(this.maxScaleDenominator),
             disabled: !this.limitMaxScaleDenominator,
+            validator: (function(value) {
+                return !this.limitMinScaleDenominator || (value > this.minScaleDenominator);
+            }).createDelegate(this),
             listeners: {
                 valid: function(field) {
                     var value = Number(field.getValue());
@@ -182,11 +186,15 @@ gxp.ScaleLimitPanel = Ext.extend(Ext.Panel, {
             }
         });
 
-        this.minScaleDenominatorInput = new Ext.form.TextField({
+        this.minScaleDenominatorInput = new Ext.form.NumberField({
+            allowNegative: false,
             width: 100,
             fieldLabel: "1",
             value: Math.round(this.minScaleDenominator),
             disabled: !this.limitMinScaleDenominator,
+            validator: (function(value) {
+                return !this.limitMaxScaleDenominator || (value < this.maxScaleDenominator);
+            }).createDelegate(this),
             listeners: {
                 valid: function(field) {
                     var value = Number(field.getValue());
