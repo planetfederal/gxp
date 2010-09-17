@@ -66,7 +66,7 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
             autoHeight: true,
             checkboxToggle: this.checkboxToggle,
             collapsed: this.checkboxToggle === true &&
-                this.symbolizer["fill"] === false,
+                this.symbolizer.fill === false,
             hideMode: "offsets",
             defaults: {
                 width: 100 // TODO: move to css
@@ -75,13 +75,13 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
                 xtype: "gx_colorfield",
                 fieldLabel: "Color",
                 name: "color",
-                value: this.symbolizer["fillColor"],
+                value: ("fillColor" in this.symbolizer) ? this.symbolizer.fillColor : OpenLayers.Renderer.defaultSymbolizer.fillColor,
                 defaultBackground: this.defaultColor ||
-                    OpenLayers.Renderer.defaultSymbolizer["fillColor"],
+                    OpenLayers.Renderer.defaultSymbolizer.fillColor,
                 plugins: colorFieldPlugins,
                 listeners: {
                     valid: function(field) {
-                        this.symbolizer["fillColor"] = field.getValue();
+                        this.symbolizer.fillColor = field.getValue();
                         this.fireEvent("change", this.symbolizer);
                     },
                     scope: this
@@ -90,11 +90,11 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
                 xtype: "slider",
                 fieldLabel: "Opacity",
                 name: "opacity",
-                values: [(this.symbolizer["fillOpacity"] == null) ? 100 : this.symbolizer["fillOpacity"] * 100],
+                values: [(("fillOpacity" in this.symbolizer) ? this.symbolizer.fillOpacity : OpenLayers.Renderer.defaultSymbolizer.fillOpacity) * 100],
                 isFormField: true,
                 listeners: {
                     changecomplete: function(slider, value) {
-                        this.symbolizer["fillOpacity"] = value / 100;
+                        this.symbolizer.fillOpacity = value / 100;
                         this.fireEvent("change", this.symbolizer);
                     },
                     scope: this
@@ -109,11 +109,11 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
             }],
             listeners: {
                 "collapse": function() {
-                    this.symbolizer["fill"] = false;
+                    this.symbolizer.fill = false;
                     this.fireEvent("change", this.symbolizer);
                 },
                 "expand": function() {
-                    this.symbolizer["fill"] = true;
+                    this.symbolizer.fill = true;
                     this.fireEvent("change", this.symbolizer);
                 },
                 scope: this

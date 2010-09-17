@@ -75,7 +75,7 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
             autoHeight: true,
             checkboxToggle: this.checkboxToggle,
             collapsed: this.checkboxToggle === true &&
-                this.symbolizer["stroke"] === false,
+                this.symbolizer.stroke === false,
             hideMode: "offsets",
             defaults: {
                 width: 100 // TODO: move to css
@@ -90,14 +90,14 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
                 }),
                 displayField: "display",
                 valueField: "value",
-                value: this.getDashArray(this.symbolizer["strokeDashstyle"]) || "solid",
+                value: this.getDashArray(this.symbolizer.strokeDashstyle) || OpenLayers.Renderer.defaultSymbolizer.strokeDashstyle,
                 mode: "local",
                 allowBlank: true,
                 triggerAction: "all",
                 editable: false,
                 listeners: {
                     select: function(combo, record) {
-                        this.symbolizer["strokeDashstyle"] = record.get("value");
+                        this.symbolizer.strokeDashstyle = record.get("value");
                         this.fireEvent("change", this.symbolizer);
                     },
                     scope: this
@@ -106,13 +106,13 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
                 xtype: "gx_colorfield",
                 name: "color",
                 fieldLabel: "Color",
-                value: this.symbolizer["strokeColor"],
+                value: ("strokeColor" in this.symbolizer) ? this.symbolizer.strokeColor : OpenLayers.Renderer.defaultSymbolizer.strokeColor,
                 defaultBackground: this.defaultColor ||
-                    OpenLayers.Renderer.defaultSymbolizer["strokeColor"],
+                    OpenLayers.Renderer.defaultSymbolizer.strokeColor,
                 plugins: colorFieldPlugins,
                 listeners: {
                     valid: function(field) {
-                        this.symbolizer["strokeColor"] = field.getValue();
+                        this.symbolizer.strokeColor = field.getValue();
                         this.fireEvent("change", this.symbolizer);
                     },
                     scope: this
@@ -121,7 +121,7 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
                 xtype: "textfield",
                 name: "width",
                 fieldLabel: "Width",
-                value: this.symbolizer["strokeWidth"],
+                value: ("strokeWidth" in this.symbolizer) ? this.symbolizer.strokeWidth : OpenLayers.Renderer.defaultSymbolizer.strokeWidth,
                 listeners: {
                     change: function(field, value) {
                         // TODO: add a validator that allows "" or number
@@ -139,11 +139,11 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
                 xtype: "slider",
                 name: "opacity",
                 fieldLabel: "Opacity",
-                values: [(this.symbolizer["strokeOpacity"] == null) ? 100 : this.symbolizer["strokeOpacity"] * 100],
+                values: [(("strokeOpacity" in this.symbolizer) ? this.symbolizer.strokeOpacity : OpenLayers.Renderer.defaultSymbolizer.strokeOpacity) * 100],
                 isFormField: true,
                 listeners: {
                     changecomplete: function(slider, value) {
-                        this.symbolizer["strokeOpacity"] = value / 100;
+                        this.symbolizer.strokeOpacity = value / 100;
                         this.fireEvent("change", this.symbolizer);
                     },
                     scope: this
@@ -158,11 +158,11 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
             }],
             listeners: {
                 "collapse": function() {
-                    this.symbolizer["stroke"] = false;
+                    this.symbolizer.stroke = false;
                     this.fireEvent("change", this.symbolizer);
                 },
                 "expand": function() {
-                    this.symbolizer["stroke"] = true;
+                    this.symbolizer.stroke = true;
                     this.fireEvent("change", this.symbolizer);
                 },
                 scope: this
