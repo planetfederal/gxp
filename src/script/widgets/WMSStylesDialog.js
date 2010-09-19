@@ -199,7 +199,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                         iconCls: "duplicate",
                         text: "Duplicate",
                         handler: function() {
-                            var prevStyle = this.selectedStyle
+                            var prevStyle = this.selectedStyle;
                             var newStyle = prevStyle.get(
                                 "userStyle").clone();
                             newStyle.isDefault = false;
@@ -225,7 +225,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 
         gxp.util.dispatch([this.getStyles, this.describeLayer], function() {
             this.enable();
-        }, this)
+        }, this);
 
         gxp.WMSStylesDialog.superclass.initComponent.apply(this, arguments);
     },
@@ -325,7 +325,9 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 sld.namedLayers[layerName].userStyles.push(r.get("userStyle"));
             }
         });
-        return new OpenLayers.Format.SLD().write(sld);
+        return new OpenLayers.Format.SLD({
+            multipleSymbolizers: true
+        }).write(sld);
     },
     
     /** api: method[saveStyles]
@@ -363,11 +365,12 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     /** private: method[createRule]
      */
     createRule: function() {
-        var symbolizer = {};
-        symbolizer[this.isRaster ? "Raster" : this.symbolType] = {};
+        var symbolizers = [
+            new OpenLayers.Symbolizer[this.isRaster ? "Raster" : this.symbolType]
+        ];
         return new OpenLayers.Rule({
             name: gxp.util.uniqueName("New Rule"),
-            symbolizer: symbolizer
+            symbolizers: symbolizers
         });
     },
     
@@ -393,8 +396,9 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                             legend.rules.push(this.createPseudoRule());
                             this.savePseudoRules();
                         } else {
-                            this.selectedStyle.get("userStyle").addRules(
-                                [this.createRule()]);
+                            this.selectedStyle.get("userStyle").rules.push(
+                                this.createRule()
+                            );
                             legend.update();
                             // mark the style as modified
                             this.selectedStyle.store.afterEdit(this.selectedStyle);
@@ -442,8 +446,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                             legend.rules.push(this.createPseudoRule({
                                 quantity: this.selectedRule.name,
                                 label: this.selectedRule.title,
-                                color: this.selectedRule.symbolizer.Polygon.fillColor,
-                                opacity: this.selectedRule.symbolizer.Polygon.fillOpacity
+                                color: this.selectedRule.symbolizers[0].fillColor,
+                                opacity: this.selectedRule.symbolizers[0].fillOpacity
                             }));
                             this.savePseudoRules();
                         } else {
@@ -451,8 +455,9 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                             newRule.name = gxp.util.uniqueName(
                                 (newRule.title || newRule.name) + " (copy)");
                             delete newRule.title;
-                            this.selectedStyle.get("userStyle").addRules(
-                                [newRule]);
+                            this.selectedStyle.get("userStyle").rules.push(
+                                newRule
+                            );
                             legend.update();
                         }
                         this.updateRuleRemoveButton();
@@ -541,11 +546,14 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                                 xtype: "numberfield",
                                 anchor: "95%",
                                 value: rule.name,
+                                allowBlank: false,
                                 fieldLabel: "Quantity",
                                 listeners: {
-                                    change: function(el, value) {
-                                        rule.name = String(value);
-                                    }
+                                    valid: function(cmp) {
+                                        this.selectedRule.name = String(cmp.getValue());
+                                        this.savePseudoRules();
+                                    },
+                                    scope: this
                                 }
                             }]
                         }, {
@@ -557,9 +565,11 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                                 anchor: "95%",
                                 value: rule.title,
                                 listeners: {
-                                    change: function(el, value) {
-                                        rule.title = value;
-                                    }
+                                    valid: function(cmp) {
+                                        this.selectedRule.title = cmp.getValue();
+                                        this.savePseudoRules();
+                                    },
+                                    scope: this
                                 }
                             }]
                         }, {
@@ -574,7 +584,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     }]
                 }, {
                     xtype: "gx_polygonsymbolizer",
-                    symbolizer: rule.symbolizer[this.symbolType],
+                    symbolizer: rule.symbolizers[0],
                     bodyStyle: {"padding": "10px"},
                     border: false,
                     labelWidth: 70,
@@ -587,30 +597,12 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                             symbolizerSwatch.setSymbolizers(
                                 [symbolizer], {draw: symbolizerSwatch.rendered}
                             );
+                            this.selectedRule.symbolizers[0] = symbolizer;
+                            this.savePseudoRules();
                         },
                         scope: this
                     }
                 }]
-            }],
-            buttons: [{
-                text: "Cancel",
-                handler: function() {
-                    pseudoRuleDlg.close();
-                }
-            }, {
-                text: "Apply",
-                handler: function() {
-                    this.savePseudoRules();
-                    origRule = rule;
-                },
-                scope: this
-            }, {
-                text: "Save",
-                handler: function() {
-                    this.savePseudoRules();
-                    pseudoRuleDlg.close();
-                },
-                scope: this
             }]
         });
         // remove stroke fieldset
@@ -649,7 +641,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             return left === right ? 0 : (left < right ? -1 : 1);
         });
         
-        var symbolizer = userStyle.rules[0].symbolizer["Raster"];
+        var symbolizer = userStyle.rules[0].symbolizers[0];
         symbolizer.colorMap = pseudoRules.length > 0 ?
             new Array(pseudoRules.length) : undefined;
         var pseudoRule;
@@ -658,9 +650,10 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             symbolizer.colorMap[i] = {
                 quantity: parseFloat(pseudoRule.name),
                 label: pseudoRule.title || undefined,
-                opacity: pseudoRule.symbolizer.Polygon.fillOpacity,
-                color: pseudoRule.symbolizer.Polygon.fillColor || undefined
-            }
+                color: pseudoRule.symbolizers[0].fillColor || undefined,
+                opacity: pseudoRule.symbolizers[0].fill == false ? 0 :
+                    pseudoRule.symbolizers[0].fillOpacity
+            };
         }
         this.afterRuleChange(this.selectedRule);
     },
@@ -710,7 +703,9 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         }
         
         try {
-            var sld = new OpenLayers.Format.SLD().read(data);
+            var sld = new OpenLayers.Format.SLD({
+                multipleSymbolizers: true
+            }).read(data);
             
             // add userStyle objects to the stylesStore
             //TODO this only works if the LAYERS param contains one layer
@@ -739,7 +734,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             
             var rulesFieldSet = this.addRulesFieldSet();
             var rules = this.selectedStyle.get("userStyle").rules;
-            if (rules[0] && rules[0].symbolizer["Raster"]) {
+            var R = OpenLayers.Symbolizer.Raster;
+            if (R && rules[0] && rules[0].symbolizers[0] instanceof R) {
                 rulesFieldSet.setTitle("Color Map Entries");
                 this.isRaster = true;
                 this.addRasterLegend(rules);
@@ -811,7 +807,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         });
 
         this.stylesStore.fireEvent("load", this.stylesStore,
-            this.stylesStore.getRange())
+            this.stylesStore.getRange()
+        );
 
         this._ready = true;
         this.fireEvent("ready");
@@ -1017,8 +1014,10 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             highest = 2;
         } else {
             // use the highest symbolizer type of the 1st rule
-            var highest = 0;
-            for (var symbolType in rules[0].symbolizer) {
+            highest = 0;
+            var symbolizers = rules[0].symbolizers, symbolType;
+            for (var i=symbolizers.length-1; i>=0; i--) {
+                symbolType = symbolizers[i].CLASS_NAME.split(".").pop();
                 highest = Math.max(highest, typeHierarchy.indexOf(symbolType));
             }
         }
@@ -1080,7 +1079,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         options = options || {};
         //TODO raster styling support is currently limited to one rule, and
         // we can only handle a color map. No band selection and other stuff.
-        var symbolizer = rules[0].symbolizer["Raster"];
+        var symbolizer = rules[0].symbolizers[0];
         var colorMap = symbolizer.colorMap || [];
         var pseudoRules = [];
         var colorMapEntry;
@@ -1106,16 +1105,14 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         return new OpenLayers.Rule({
             title: colorMapEntry.label,
             name: String(colorMapEntry.quantity),
-            symbolizer: {
-                "Polygon": {
-                    fillColor: colorMapEntry.color,
-                    fillOpacity: colorMapEntry.opacity,
-                    stroke: false
-                }
-            }
+            symbolizers: [new OpenLayers.Symbolizer.Polygon({
+                fillColor: colorMapEntry.color,
+                fillOpacity: colorMapEntry.opacity,
+                stroke: false,
+                fill: colorMapEntry.opacity !== 0
+            })]
         });
-    }
-    
+    }    
 });
 
 /** api: xtype = gx_wmsstylesdialog */
