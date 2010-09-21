@@ -152,8 +152,8 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
                 },
                 plugins: [
                     new GeoExt.SliderTip({
-                        getText: function(slider) {
-                            return slider.getValue() + "%";
+                        getText: function(thumb) {
+                            return thumb.value + "%";
                         }
                     })
                 ]

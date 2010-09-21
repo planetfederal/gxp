@@ -146,8 +146,8 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
                 },
                 plugins: [
                     new GeoExt.SliderTip({
-                        getText: function(slider) {
-                            return slider.getValue() + "%";
+                        getText: function(thumb) {
+                            return thumb.value + "%";
                         }
                     })
                 ],
