@@ -23,7 +23,7 @@ gxp.form.FontComboBox = Ext.extend(Ext.form.ComboBox, {
      */
     fonts: [
         "Serif",
-        "Sans-Serif",
+        "SansSerif",
         "Arial",
         "Courier New",
         "Tahoma",
