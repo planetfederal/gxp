@@ -230,11 +230,6 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                     delete this.symbolizer.haloOpacity;
                     this.fireEvent("change", this.symbolizer)
                 },
-                render: function() {
-                    // workaround for Fill fieldset not being visible after
-                    // the first expand
-                    this.doLayout();
-                },
                 expand: function() {
                     Ext.apply(this.symbolizer, this.haloCache);
                     /**
