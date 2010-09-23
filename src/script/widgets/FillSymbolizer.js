@@ -82,8 +82,10 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
                 plugins: colorFieldPlugins,
                 listeners: {
                     valid: function(field) {
-                        this.symbolizer.fillColor = field.getValue();
-                        this.fireEvent("change", this.symbolizer);
+                        var newValue = field.getValue();
+                        var modified = this.symbolizer.fillColor != newValue; 
+                        this.symbolizer.fillColor = newValue;
+                        modified && this.fireEvent("change", this.symbolizer);
                     },
                     scope: this
                 }

@@ -113,8 +113,10 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
                 plugins: colorFieldPlugins,
                 listeners: {
                     valid: function(field) {
-                        this.symbolizer.strokeColor = field.getValue();
-                        this.fireEvent("change", this.symbolizer);
+                        var newValue = field.getValue();
+                        var modified = this.symbolizer.strokeColor != newValue;
+                        this.symbolizer.strokeColor = newValue;
+                        modified && this.fireEvent("change", this.symbolizer);
                     },
                     scope: this
                 }
