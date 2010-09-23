@@ -374,7 +374,6 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
     createHeaderPanel: function() {
         this.symbolizerSwatch = new GeoExt.FeatureRenderer({
             symbolType: this.symbolType,
-            symbolizers: this.rule.symbolizers,
             isFormField: true,
             fieldLabel: "Symbol"
         });
@@ -438,6 +437,9 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
         } else {
             throw new Error("Appropriate symbolizer type not included in build: " + this.symbolType);
         }
+        this.symbolizerSwatch.setSymbolizers([symbolizer],
+            {draw: this.symbolizerSwatch.rendered}
+        );
         var cfg = {
             xtype: "gx_" + this.symbolType.toLowerCase() + "symbolizer",
             symbolizer: symbolizer,
