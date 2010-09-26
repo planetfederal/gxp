@@ -702,21 +702,33 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 this.stylesStore.findExact("name", initialStyle));
         }
         
+        var format = new OpenLayers.Format.SLD({multipleSymbolizers: true});
+        
         try {
-            var sld = new OpenLayers.Format.SLD({
-                multipleSymbolizers: true
-            }).read(data);
-            
+            var sld = format.read(data);
+
             // add userStyle objects to the stylesStore
             //TODO this only works if the LAYERS param contains one layer
             var userStyles = sld.namedLayers[layerParams.LAYERS].userStyles;
+
+            // add styles from the layer's SLD_BODY *after* the userStyles
+            var inlineStyles;
+            if (layerParams.SLD_BODY) {
+                var sldBody = format.read(layerParams.SLD_BODY);
+                inlineStyles = sldBody.namedLayers[layerParams.LAYERS].userStyles;
+                Array.prototype.push.apply(userStyles, inlineStyles);
+            }            
             
             // our stylesStore comes from the layerRecord's styles - clear it
             // and repopulate from GetStyles
             this.stylesStore.removeAll();
-            var userStyle, record;
+            var userStyle, record, index;
             for (var i=0, len=userStyles.length; i<len; ++i) {
                 userStyle = userStyles[i];
+                // remove existing record - this way we replace styles from
+                // userStyles with inline styles.
+                var index = this.stylesStore.find("name", userStyle.name)
+                index !== -1 && this.stylesStore.removeAt(index);
                 record = new this.stylesStore.recordType({
                     "name": userStyle.name,
                     "title": userStyle.title,
@@ -727,7 +739,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 this.stylesStore.add(record);
                 // set the default style if no STYLES param is set on the layer
                 if (initialStyle === userStyle.name ||
-                                                userStyle.isDefault === true) {
+                   (inlineStyles && inlineStyles.indexOf(userStyle) !== -1) ||
+                   userStyle.isDefault === true) {
                     this.selectedStyle = record;
                 }
             }
