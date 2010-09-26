@@ -758,6 +758,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 this.addVectorLegend(rules);
             }
             this.stylesStoreReady();
+            layerParams.SLD_BODY && this.markModified();
         }
         catch(e) {
             this.setupNonEditable();
