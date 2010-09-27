@@ -46,7 +46,6 @@ gxp.plugins.GeoServerStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
     },
     
     /** api: method[write]
-     *  :arg target: :class:`gxp.WMSStylesDialog`
      *  :arg options: ``Object``
      *
      *  Saves the styles of the target's ``layerRecord`` using GeoServer's
@@ -58,9 +57,9 @@ gxp.plugins.GeoServerStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
      *    written successfully.
      *  * scope - ``Object`` A scope to call the ``success`` function with.
      */
-    write: function(target, options) {
+    write: function(options) {
         var dispatchQueue = [];
-        var store = target.stylesStore;
+        var store = this.target.stylesStore;
         store.each(function(rec) {
             (rec.phantom || store.modified.indexOf(rec) !== -1) &&
                 this.writeStyle(rec, dispatchQueue);
@@ -68,9 +67,9 @@ gxp.plugins.GeoServerStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
         var success = function() {
             // we don't need any callbacks for deleting styles.
             this.deleteStyles();
-            target.stylesStore.commitChanges();
+            this.target.stylesStore.commitChanges();
             options.success && options.success.call(options.scope);
-            target.fireEvent("saved");
+            this.target.fireEvent("saved");
         }
         if(dispatchQueue.length > 0) {
             gxp.util.dispatch(dispatchQueue, function() {

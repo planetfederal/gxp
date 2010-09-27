@@ -281,7 +281,10 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     styleProperties.close();
                     if (prevStyle) {
                         this.stylesStore.remove(this.selectedStyle);
-                        this.changeStyle(prevStyle, true);
+                        this.changeStyle(prevStyle, {
+                            updateCombo: true,
+                            markModified: true
+                        });
                     }
                 },
                 scope: this
@@ -338,7 +341,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      *  configured for this instance, nothing will happen.
      */
     saveStyles: function(options) {
-        this.fireEvent("beforesaved", this, options);
+        this.modified === true && this.fireEvent("beforesaved", this, options);
     },
     
     /** private: method[updateStyleRemoveButton]
@@ -722,6 +725,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             // our stylesStore comes from the layerRecord's styles - clear it
             // and repopulate from GetStyles
             this.stylesStore.removeAll();
+            this.selectedStyle = null;
+            
             var userStyle, record, index;
             for (var i=0, len=userStyles.length; i<len; ++i) {
                 userStyle = userStyles[i];
@@ -738,9 +743,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 record.phantom = false;
                 this.stylesStore.add(record);
                 // set the default style if no STYLES param is set on the layer
-                if (initialStyle === userStyle.name ||
-                   (inlineStyles && inlineStyles.indexOf(userStyle) !== -1) ||
-                   userStyle.isDefault === true) {
+                if (!this.selectedStyle && (initialStyle === userStyle.name ||
+                            (!initialStyle && userStyle.isDefault === true))) {
                     this.selectedStyle = record;
                 }
             }
@@ -815,7 +819,10 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 };
                 Ext.apply(record.data, data);
                 // make sure that the legend gets updated
-                this.changeStyle(record, true);
+                this.changeStyle(record, {
+                    updateCombo: true,
+                    markModified: true
+                });
             },
             scope: this
         });
@@ -966,15 +973,19 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         return legend;
     },
     
-    /** private: method[changeStyle]
+    /** api: method[changeStyle]
      *  :arg value: ``Ext.data.Record``
-     *  :arg updateCombo: ``Boolean`` Set to true to update the combo and
-     *      fire a modified event. Default is false.
-     * 
+     *  :arg options: ``Object`` Additional options for this method.
+     *
+     *  Available options:
+     *  * updateCombo - ``Boolean`` set to true to update the combo box
+     *  * markModified - ``Boolean`` set to true to mark the dialog modified
+     *
      *  Handler for the stylesCombo's ``select`` and the store's ``update``
      *  event. Updates the layer and the rules fieldset.
      */
-    changeStyle: function(record, updateCombo) {
+    changeStyle: function(record, options) {
+        options = options || {}
         var legend = this.items.get(2).items.get(0);
         this.selectedStyle = record;
         this.updateStyleRemoveButton();            
@@ -1006,10 +1017,10 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 }) :
                 this.addVectorLegend(userStyle.rules);
         }
-        if (updateCombo === true) {
+        if (options.updateCombo === true) {
             // update the combo's value with the new name
             this.items.get(0).items.get(0).setValue(userStyle.name);
-            this.markModified();
+            options.markModified === true && this.markModified();
         }
     },
     

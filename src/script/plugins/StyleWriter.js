@@ -61,7 +61,7 @@ gxp.plugins.StyleWriter = Ext.extend(Ext.util.Observable, {
         });
         
         target.on({
-            "beforesaved": this.write,
+            "beforesaved": function(cmp, options) { this.write(options); },
             scope: this
         });
     },
