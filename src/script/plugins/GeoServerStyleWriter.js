@@ -173,5 +173,5 @@ gxp.plugins.GeoServerStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
 
 });
 
-/** api: ptype = gx-geoserverstylewriter */
-Ext.preg("gx-geoserverstylewriter", gxp.plugins.GeoServerStyleWriter);
+/** api: ptype = gx_geoserverstylewriter */
+Ext.preg("gx_geoserverstylewriter", gxp.plugins.GeoServerStyleWriter);
