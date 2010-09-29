@@ -28,6 +28,9 @@ gxp.plugins.WMSRasterStylesDialog = {
         var legend = this.items.get(2).items.get(0);
         if (this.isRaster) {
             legend.rules.push(this.createPseudoRule());
+            // we need either zero or at least two rules
+            legend.rules.length == 1 &&
+                legend.rules.push(this.createPseudoRule());
             this.savePseudoRules();
         } else {
             this.selectedStyle.get("userStyle").rules.push(
@@ -48,6 +51,8 @@ gxp.plugins.WMSRasterStylesDialog = {
             var rule = this.selectedRule;
             legend.unselect();
             legend.rules.remove(rule);
+            // we need either zero or at least two rules
+            legend.rules.length == 1 && legend.rules.remove(legend.rules[0]);
             this.savePseudoRules();
         } else {
             gxp.WMSStylesDialog.prototype.removeRule.apply(this, arguments);
@@ -88,6 +93,7 @@ gxp.plugins.WMSRasterStylesDialog = {
      *  Edit a pseudo rule of a RasterSymbolizer's ColorMap.
      */
     editPseudoRule: function() {
+        var me = this;
         var rule = this.selectedRule;
 
         var pseudoRuleDlg = new Ext.Window({
@@ -123,6 +129,15 @@ gxp.plugins.WMSRasterStylesDialog = {
                                 value: rule.name,
                                 allowBlank: false,
                                 fieldLabel: "Quantity",
+                                validator: function(value) {
+                                    var rules = me.items.get(2).items.get(0).rules;
+                                    for (var i=rules.length-1; i>=0; i--) {
+                                        if (rule !== rules[i] && rules[i].name == value) {
+                                            return "Quantity " + value + " is already defined";
+                                        }
+                                    }
+                                    return true;
+                                },
                                 listeners: {
                                     valid: function(cmp) {
                                         this.selectedRule.name = String(cmp.getValue());
@@ -275,8 +290,18 @@ gxp.plugins.WMSRasterStylesDialog = {
      *  Creates a pseudo rule from a ColorMapEntry.
      */
     createPseudoRule: function(colorMapEntry) {
+        var quantity = -1;
+        if (!colorMapEntry) {
+            var fieldset = this.items.get(2);
+            if (fieldset.items) {
+                rules = fieldset.items.get(0).rules;
+                for (var i=rules.length-1; i>=0; i--) {
+                    quantity = Math.max(quantity, parseFloat(rules[i].name))
+                }            
+            }
+        }
         colorMapEntry = Ext.applyIf(colorMapEntry || {}, {
-            quantity: 0,
+            quantity: ++quantity,
             color: "#000000",
             opacity: 1
         });
