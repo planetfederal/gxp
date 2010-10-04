@@ -140,16 +140,6 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         
         var mapConfig = this.initialConfig.map || {};
 
-        var tbar, bbar, tools = this.tools;
-        if (tools) {
-            var tool;
-            for (var i=tools.length-1; i>=0; i--) {
-                tool = tools[i];
-                tool.actions && tool.actionTarget == "map.bbar" && (bbar = true);
-                tool.actions && tool.actionTarget == "map.tbar" && (tbar = true);
-            }
-        }
-
         this.mapPanel = new GeoExt.MapPanel({
             map: {
                 theme: mapConfig.theme || null,
