@@ -37,7 +37,8 @@
         "plugins/OLSource.js",
         "plugins/StyleWriter.js",
         "plugins/GeoServerStyleWriter.js",
-        "plugins/WMSRasterStylesDialog.js"
+        "plugins/WMSRasterStylesDialog.js",
+        "plugins/Tool.js"
     );
     
     var scripts = document.getElementsByTagName("script");

@@ -10,6 +10,14 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
      *  ``Array(Ext.Component)``
      *  Any items to be added to the map panel.
      */
+    
+    /** api: config[tools]
+     *  ``Array(gxp.plugins.Tool)``
+     *  Any tools to be added to the viewer. Tools are plugins that will be
+     *  plugged into this viewer's ``portal``. The portal`s ``map`` property
+     *  references this viewer's map panel. The ``tools`` array also accepts
+     *  configuration objects for plugins. The default ptype is ``gx_tool``.
+     */
      
     /** api: config[defaultSourceType]
      *  ``String``
@@ -132,10 +140,20 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         
         var mapConfig = this.initialConfig.map || {};
 
+        var tbar, bbar, tools = this.tools;
+        if (tools) {
+            var tool;
+            for (var i=tools.length-1; i>=0; i--) {
+                tool = tools[i];
+                tool.actions && tool.actionTarget == "map.bbar" && (bbar = true);
+                tool.actions && tool.actionTarget == "map.tbar" && (tbar = true);
+            }
+        }
+
         this.mapPanel = new GeoExt.MapPanel({
             map: {
                 theme: mapConfig.theme || null,
-                controls: [
+                controls: mapConfig.controls || [
                     new OpenLayers.Control.Navigation({zoomWheelEnabled: false}),
                     new OpenLayers.Control.PanPanel(),
                     new OpenLayers.Control.ZoomPanel(),
@@ -149,7 +167,10 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             },
             center: mapConfig.center && new OpenLayers.LonLat(mapConfig.center[0], mapConfig.center[1]),
             zoom: mapConfig.zoom,
-            items: this.mapItems
+            items: this.mapItems,
+            ref: "../map",
+            bbar: {hidden: true},
+            tbar: {hidden: true}
         });
 
     },
@@ -164,6 +185,16 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             this.portalItems.push(this.mapPanel);
         }
         
+        if (this.tools && this.tools.length > 0) {
+            var tool;
+            for (var i=this.tools.length-1; i>=0; i--) {
+                tool = this.tools[i];
+                if (!(tool instanceof gxp.plugins.Tool) && !tool.ptype) {
+                    tool.ptype = "gx_tool";
+                }
+            }
+        }
+        
         this.portal = new Constructor(Ext.applyIf(this.portalConfig || {}, {
             layout: "fit",
             hideBorders: true,
@@ -171,7 +202,8 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                 layout: "border",
                 deferredRender: false,
                 items: this.portalItems
-            }
+            },
+            plugins: this.tools
         }));
         
     },

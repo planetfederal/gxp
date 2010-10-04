@@ -7,6 +7,9 @@ Ext.onReady(function() {
             height: 300
         },
         defaultSourceType: "gx_wmssource",
+        tools: [{
+            actions: ["Read me", "-", {text: "Click me"}]
+        }],
         sources: {
             local: {
                 url: "/geoserver/wms"
@@ -23,7 +26,7 @@ Ext.onReady(function() {
             zoom: 3,
             layers: [{
                 source: "google",
-                name: "G_PHYSICAL_MAP",
+                name: "TERRAIN",
                 group: "background"
             }, {
                 source: "local",
