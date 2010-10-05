@@ -4,12 +4,16 @@ Ext.onReady(function() {
         portalConfig: {
             renderTo: document.body,
             width: 500,
-            height: 300
+            height: 300,
+            bbar: []
         },
-        defaultSourceType: "gx_wmssource",
         tools: [{
-            actions: ["Read me", "-", {text: "Click me"}]
+            actions: ["Read me - I'm a tool on the mapPanel's tbar"]
+        }, {
+            actionTarget: ".bbar",
+            actions: [{text: "Click me - I'm a tool on the portal's bbar"}]
         }],
+        defaultSourceType: "gx_wmssource",
         sources: {
             local: {
                 url: "/geoserver/wms"

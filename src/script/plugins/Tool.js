@@ -14,20 +14,16 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
      */
     
     /** api: config[outputTarget]
-     *  ``String`` Where to place the tool's output? This can be any string
-     *  that references an ``Ext.Container`` property on the portal. If this
-     *  tool has to render an output and no ``outputTarget`` is provided, it
-     *  will be rendered to a window which can be configured using the
-     *  ``outputWindowCfg`` config option. 
+     *  ``String`` Where to add the tool's output container? This can be any
+     *  string that references an ``Ext.Container`` property on the portal. If
+     *  not provided, the portal is assumed. 
      */
      
-    /** api: config[outputWindowCfg]
-     *  ``Object`` If no ``outputTarget`` is provided, this config option can
-     *  be used to configure the window that will be used for this tool's
-     *  output. Note that the tool may use the configuration for a default
-     *  xtype other than "window" (e.g. "gx_popup"), but if an xtype is
-     *  provided here, it will override the tool's default xtype for the
-     *  output window.
+    /** api: config[outputConfig]
+     *  ``Object`` Optional configuration for the output container. This may
+     *  be useful to override the xtype (e.g. "window" instead of "gx_popup"),
+     *  or to provide layout configurations when rendering to an
+     *  ``outputTarget``.
 
     /** private: property[target]
      *  ``Object``
@@ -55,13 +51,14 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
     /** api: method[addActions]
      */
     addActions: function() {
-        var match = this.initialConfig.actionTarget.match(/^(.*)\.([tb]bar)$/);
+        var actionTarget = this.initialConfig.actionTarget;
+        var match = actionTarget.match(/^(.*)\.([tb]bar)$/);
         var ct;
         if (match) {
             var meth = match[2] == "tbar" ? "getTopToolbar" : "getBottomToolbar";
-            ct = this.target[match[1]][meth]();
+            ct = (match[1] ? this.target[match[1]] : this.target)[meth]();
         } else {
-            ct = this.target[this.initialConfig.actionTarget];
+            ct = actionTarget ? this.target[actionTarget] : this.target;
         }
         ct.add.apply(ct, this.actions);
         ct.rendered ? ct.doLayout() : ct.show();
