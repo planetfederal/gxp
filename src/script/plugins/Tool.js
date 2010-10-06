@@ -45,12 +45,13 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
      */
     init: function(target) {
         this.target = target;
-        this.actions && this.addActions();
+        var actions = this.initialConfig.actions;
+        actions && (this.actions = this.addActions(actions));
     },
     
     /** api: method[addActions]
      */
-    addActions: function() {
+    addActions: function(actions) {
         var actionTarget = this.initialConfig.actionTarget;
         var match = actionTarget.match(/^(.*)\.([tb]bar)$/);
         var ct;
@@ -60,9 +61,23 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
         } else {
             ct = actionTarget ? this.target[actionTarget] : this.target;
         }
-        ct.add.apply(ct, this.actions);
+        actions = ct.add.apply(ct, actions);
+        // call ct.show() in case the container was previously hidden (e.g.
+        // the mapPanel's bbar or tbar which are initially hidden)
         ct.rendered ? ct.doLayout() : ct.show();
-    }
+        return actions;
+    },
+    
+    /** api: method[addOutput]
+     */
+    addOutput: function(config) {
+        var outputTarget = this.initialConfig.outputTarget;
+        var ct = (outputTarget ? this.target[outputTarget] : this.target);
+        Ext.apply(config, this.outputConfig);
+        var cmp = ct.add(config);
+        cmp instanceof Ext.Window ? cmp.show() : ct.doLayout();
+        return cmp;
+    },
     
 });
 

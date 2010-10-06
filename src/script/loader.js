@@ -38,7 +38,8 @@
         "plugins/StyleWriter.js",
         "plugins/GeoServerStyleWriter.js",
         "plugins/WMSRasterStylesDialog.js",
-        "plugins/Tool.js"
+        "plugins/Tool.js",
+        "plugins/WMSGetFeatureInfo.js"
     );
     
     var scripts = document.getElementsByTagName("script");

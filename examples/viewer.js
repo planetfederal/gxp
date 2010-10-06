@@ -8,6 +8,12 @@ Ext.onReady(function() {
             bbar: []
         },
         tools: [{
+            ptype: "gx_wmsgetfeatureinfo",
+            outputConfig: {
+                width: 400,
+                height: 200
+            }
+        },{
             actions: ["Read me - I'm a tool on the mapPanel's tbar"]
         }, {
             actionTarget: ".bbar",
