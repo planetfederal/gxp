@@ -13,9 +13,9 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
      *  config option is only relevant for subclasses that have actions.
      */
     
-    /** api: config[toolGroup]
+    /** api: config[toggleGroup]
      *  ``String`` If a subclass has group tools, this string identifies the
-     *  ``toggleGroup``. Default is toolGroup.
+     *  ``toggleGroup``. Default is toggleGroup.
     
     /** api: config[outputTarget]
      *  ``String`` Where to add the tool's output container? This can be any
