@@ -13,6 +13,10 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
      *  config option is only relevant for subclasses that have actions.
      */
     
+    /** api: config[toolGroup]
+     *  ``String`` If a subclass has group tools, this string identifies the
+     *  ``toggleGroup``. Default is toolGroup.
+    
     /** api: config[outputTarget]
      *  ``String`` Where to add the tool's output container? This can be any
      *  string that references an ``Ext.Container`` property on the portal. If
@@ -34,7 +38,8 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
      */
     constructor: function(config) {
         this.initialConfig = Ext.apply({
-            actionTarget: "map.tbar"
+            actionTarget: "map.tbar",
+            toolGroup: "toolGroup"
         }, config);
         Ext.apply(this, config);
         gxp.plugins.Tool.superclass.constructor.apply(this, arguments);
