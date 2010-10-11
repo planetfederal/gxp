@@ -58,6 +58,7 @@ gxp.plugins.GeoServerStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
      *  * scope - ``Object`` A scope to call the ``success`` function with.
      */
     write: function(options) {
+        options = options || {};
         var dispatchQueue = [];
         var store = this.target.stylesStore;
         store.each(function(rec) {
