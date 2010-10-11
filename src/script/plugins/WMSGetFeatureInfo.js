@@ -34,12 +34,12 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
         }]);
         var info = {controls: []};
         var updateInfo = function() {
-            var queryableLayers = this.target.map.layers.queryBy(function(x){
+            var queryableLayers = this.target.mapPanel.layers.queryBy(function(x){
                 return x.get("queryable");
             });
             info.controls = [];
 
-            var map = this.target.map.map;
+            var map = this.target.mapPanel.map;
             var control;
             for (var i = 0, len = info.controls.length; i < len; i++){
                 control = info.controls[i];
@@ -73,9 +73,9 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
 
         };
         
-        this.target.map.layers.on("update", updateInfo, this);
-        this.target.map.layers.on("add", updateInfo, this);
-        this.target.map.layers.on("remove", updateInfo, this);
+        this.target.mapPanel.layers.on("update", updateInfo, this);
+        this.target.mapPanel.layers.on("add", updateInfo, this);
+        this.target.mapPanel.layers.on("remove", updateInfo, this);
     },
 
     /** private: method[displayPopup]
@@ -95,7 +95,7 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
                 title: "Feature Info",
                 layout: "accordion",
                 location: evt.xy,
-                map: this.target.map,
+                map: this.target.mapPanel,
                 width: 250,
                 height: 300,
                 listeners: {

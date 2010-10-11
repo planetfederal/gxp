@@ -11,6 +11,12 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
      *  Any items to be added to the map panel.
      */
     
+    /** api: config[defaultToolType]
+     *  ``String``
+     *  The default tool plugin type. Default is "gx_tool"
+     */
+    defaultToolType: "gx_tool",
+
     /** api: config[tools]
      *  ``Array(gxp.plugins.Tool)``
      *  Any tools to be added to the viewer. Tools are plugins that will be
@@ -158,9 +164,9 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             center: mapConfig.center && new OpenLayers.LonLat(mapConfig.center[0], mapConfig.center[1]),
             zoom: mapConfig.zoom,
             items: this.mapItems,
-            ref: "../map",
             bbar: {hidden: true},
-            tbar: {hidden: true}
+            tbar: {hidden: true},
+            ref: "../map"
         });
 
     },
@@ -175,16 +181,6 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             this.portalItems.push(this.mapPanel);
         }
         
-        if (this.tools && this.tools.length > 0) {
-            var tool;
-            for (var i=this.tools.length-1; i>=0; i--) {
-                tool = this.tools[i];
-                if (!(tool instanceof gxp.plugins.Tool) && !tool.ptype) {
-                    tool.ptype = "gx_tool";
-                }
-            }
-        }
-        
         this.portal = new Constructor(Ext.applyIf(this.portalConfig || {}, {
             layout: "fit",
             hideBorders: true,
@@ -192,10 +188,18 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                 layout: "border",
                 deferredRender: false,
                 items: this.portalItems
-            },
-            plugins: this.tools
+            }
         }));
         
+        if (this.tools && this.tools.length > 0) {
+            var tool;
+            for (var i=this.tools.length-1; i>=0; i--) {
+                tool = Ext.ComponentMgr.createPlugin(
+                    this.tools[i], this.defaultToolType
+                );
+                tool.init(this);
+            }
+        }
     },
     
     activate: function() {
