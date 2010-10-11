@@ -16,12 +16,12 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
         gxp.plugins.WMSGetFeatureInfo.superclass.init.apply(this, arguments);
         this.popupCache = {};
         
-        var infoButton = this.addActions(this.initialConfig.actions = [{
+        var infoButton = this.addActions(this.actions = [{
             tooltip: "Get Feature Info",
             iconCls: "gx-icon-getfeatureinfo",
-            toggleGroup: this.initialConfig.toggleGroup,
+            toggleGroup: this.toggleGroup,
             enableToggle: true,
-            allowDepress: false,
+            allowDepress: !this.toggleGroup,
             toggleHandler: function(button, pressed) {
                 for (var i = 0, len = info.controls.length; i < len; i++){
                     if (pressed) {

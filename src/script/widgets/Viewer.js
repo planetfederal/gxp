@@ -165,8 +165,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             zoom: mapConfig.zoom,
             items: this.mapItems,
             bbar: {hidden: true},
-            tbar: {hidden: true},
-            ref: "../map"
+            tbar: {hidden: true}
         });
 
     },

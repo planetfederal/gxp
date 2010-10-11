@@ -8,14 +8,18 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
     /** api: config[actionTarget]
      *  ``String`` Where to place the tool's actions (e.g. buttons or menus)?
      *  This can be any string that references an ``Ext.Container`` property on
-     *  the portal. To reference the ``tbar`` or ``bbar`` of an ``Ext.Panel``,
-     *  ".tbar" or ".bbar" has to be appended. The default is "map.tbar". This
-     *  config option is only relevant for subclasses that have actions.
+     *  the portal. To reference one of the toolbars of an ``Ext.Panel``,
+     *  ".tbar", ".bbar" or ".fbar" has to be appended. The default is
+     *  "map.tbar". This config option is only relevant for subclasses that
+     *  have actions. The viewer's main MapPanel can always be accessed with
+     *  "map" as actionTarget.
      */
+    actionTarget: "map.tbar",
     
     /** api: config[toggleGroup]
-     *  ``String`` If a subclass has group tools, this string identifies the
-     *  ``toggleGroup``. Default is toggleGroup.
+     *  ``String`` If this tool should be radio-button style toggled with other
+     *  tools, this string is to identify the toggle group.
+     */
     
     /** api: config[outputTarget]
      *  ``String`` Where to add the tool's output container? This can be any
@@ -37,10 +41,7 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
     /** private: method[constructor]
      */
     constructor: function(config) {
-        this.initialConfig = Ext.apply({
-            actionTarget: "map.tbar",
-            toolGroup: "toolGroup"
-        }, config);
+        this.initialConfig = config;
         Ext.apply(this, config);
         gxp.plugins.Tool.superclass.constructor.apply(this, arguments);
     },
@@ -50,22 +51,26 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
      */
     init: function(target) {
         this.target = target;
-        var actions = this.initialConfig.actions;
+        var actions = this.actions;
         actions && (this.actions = this.addActions(actions));
     },
     
     /** api: method[addActions]
      */
     addActions: function(actions) {
-        var actionTarget = this.initialConfig.actionTarget;
-        var portal = this.target.portal;
-        var match = actionTarget.match(/^(.*)\.([tb]bar)$/);
-        var ct;
-        if (match) {
-            var meth = match[2] == "tbar" ? "getTopToolbar" : "getBottomToolbar";
-            ct = (match[1] ? portal[match[1]] : portal)[meth]();
-        } else {
-            ct = actionTarget ? portal[actionTarget] : portal;
+        var actionTarget = this.actionTarget;
+        var parts = actionTarget.split(".");
+        var ref = parts[0], bar = parts.length > 1 && parts[1];
+        var ct = ref ?
+            ref == "map" ? this.target.mapPanel : this.target.portal[ref] :
+            this.target.portal;
+        var meth = bar && {
+            "tbar": "getTopToolbar",
+            "bbar": "getBottomToolbar",
+            "fbar": "getFooterToolbar"
+        }[bar];
+        if (meth) {
+            ct = ct[meth]();
         }
         actions = ct.add.apply(ct, actions);
         // call ct.show() in case the container was previously hidden (e.g.
@@ -77,9 +82,10 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
     /** api: method[addOutput]
      */
     addOutput: function(config) {
-        var outputTarget = this.initialConfig.outputTarget;
-        var portal = this.target.portal;
-        var ct = (outputTarget ? portal[outputTarget] : portal);
+        var ref = this.outputTarget;
+        var ct = ref ?
+            ref == "map" ? this.target.mapPanel : this.target.portal[ref] :
+            this.target.portal;
         Ext.apply(config, this.outputConfig);
         var cmp = ct.add(config);
         cmp instanceof Ext.Window ? cmp.show() : ct.doLayout();
