@@ -13,8 +13,6 @@ Ext.onReady(function() {
                 width: 400,
                 height: 200
             }
-        },{
-            actions: ["Read me - I'm a tool on the mapPanel's tbar"]
         }, {
             actionTarget: ".bbar",
             actions: [{text: "Click me - I'm a tool on the portal's bbar"}]
