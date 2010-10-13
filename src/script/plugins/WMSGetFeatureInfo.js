@@ -37,7 +37,6 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
             var queryableLayers = this.target.mapPanel.layers.queryBy(function(x){
                 return x.get("queryable");
             });
-            info.controls = [];
 
             var map = this.target.mapPanel.map;
             var control;
@@ -47,6 +46,7 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
                 control.destroy();
             }
 
+            info.controls = [];
             queryableLayers.each(function(x){
                 var control = new OpenLayers.Control.WMSGetFeatureInfo({
                     url: x.get("layer").url,
