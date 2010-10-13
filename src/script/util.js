@@ -49,37 +49,6 @@ gxp.util = {
         }
     },
     
-    /** api: function[loadScript]
-     *  :param url: ``String`` url of the script file.
-     *  :param complete:  ``Function`` Optional function that will be called
-     *      when the script file is loaded.
-     *  :param scope: ``Object`` Optional object to be set as the scope for
-     *      the complete function.
-     *  :param attributes: ``Object`` Key-value pairs of additional attributes
-     *      for the script tag (e.g. charset)
-     *      
-     *  Allows dynamic loading of javascript resources.
-     */
-    loadScript: function(url, complete, scope, attributes) {
-        var script = document.createElement("script");
-        script.src = url;
-        if(complete) {
-            script.onload = complete.createDelegate(scope || window);
-            script.onreadystatechange = function() {
-                if(this.readyState == "complete") {
-                    complete.call(scope || window);
-                }
-            }
-        }
-        if(attributes) {
-            for(a in attributes) {
-                script[a] = attributes[a];
-            }
-        }
-
-        document.getElementsByTagName("head")[0].appendChild(script);
-    },
-
     /** api: function[uniqueName]
      *  :param name: ``String`` The name to make unique across this session.
      *  :param delimiter: ``Char`` Optional. Delimiter for appending the
