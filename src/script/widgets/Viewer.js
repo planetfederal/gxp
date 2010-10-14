@@ -120,7 +120,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
     },
     
     addLayerSource: function(options) {
-        var id = options.id || OpenLayers.Util.createUniqueID("source");
+        var id = options.id || Ext.id(null, "gx-source-");
         var source = Ext.ComponentMgr.createPlugin(
             options.config, this.defaultSourceType
         );
