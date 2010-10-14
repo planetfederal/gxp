@@ -51,13 +51,13 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
      */
     init: function(target) {
         this.target = target;
-        var actions = this.actions;
-        actions && (this.actions = this.addActions(actions));
+        this.actions && this.target.on("portalReady", this.addActions, this);
     },
     
     /** api: method[addActions]
      */
     addActions: function(actions) {
+        actions = actions || this.actions;
         var actionTarget = this.actionTarget;
         var parts = actionTarget.split(".");
         var ref = parts[0], bar = parts.length > 1 && parts[1];

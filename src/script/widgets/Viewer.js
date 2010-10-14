@@ -45,7 +45,12 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             /** api: event[ready]
              *  Fires when application is ready for user interaction.
              */
-            "ready"
+            "ready",
+            
+            /** api: event[portalReady]
+             *  Fires when portal is ready for interaction.
+             */
+            "portalReady"
         );
         
         Ext.apply(this, {
@@ -81,6 +86,8 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         }
         
         this.initMapPanel();
+        
+        this.initTools();
         
         // initialize all layer source plugins
         var config, queue = [];
@@ -169,6 +176,18 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         });
 
     },
+    
+    initTools: function() {
+        if (this.tools && this.tools.length > 0) {
+            var tool;
+            for (var i=this.tools.length-1; i>=0; i--) {
+                tool = Ext.ComponentMgr.createPlugin(
+                    this.tools[i], this.defaultToolType
+                );
+                tool.init(this);
+            }
+        }
+    },
 
     initPortal: function() {
         
@@ -190,15 +209,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             }
         }));
         
-        if (this.tools && this.tools.length > 0) {
-            var tool;
-            for (var i=this.tools.length-1; i>=0; i--) {
-                tool = Ext.ComponentMgr.createPlugin(
-                    this.tools[i], this.defaultToolType
-                );
-                tool.init(this);
-            }
-        }
+        this.fireEvent("portalReady")
     },
     
     activate: function() {
