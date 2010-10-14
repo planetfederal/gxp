@@ -13,7 +13,6 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
     /** api: method[addActions]
      */
     addActions: function() {
-        gxp.plugins.WMSGetFeatureInfo.superclass.init.apply(this, arguments);
         this.popupCache = {};
         
         this.actions = [{
