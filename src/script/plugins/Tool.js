@@ -38,6 +38,10 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
      *  The :class:`gxp.Viewer` that this plugin is plugged into.
      */
      
+    /** private: property[actions]
+     *  ``Array`` The actions this tool has added to viewer components.
+     */
+     
     /** private: method[constructor]
      */
     constructor: function(config) {
@@ -60,7 +64,7 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
     /** api: method[addActions]
      *  :param actions: ``Array`` Optional actions to add. If not provided,
      *      this.actions will be added.
-     *  :returns: ``Array`` or ``Ext.Action`` the action(s) added.
+     *  :returns: ``Array`` the actions added.
      */
     addActions: function(actions) {
         actions = actions || this.actions;
