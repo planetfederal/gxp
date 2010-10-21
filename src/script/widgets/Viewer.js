@@ -24,6 +24,11 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
      *  references this viewer's map panel. The ``tools`` array also accepts
      *  configuration objects for plugins. The default ptype is ``gx_tool``.
      */
+    
+    /** api: property[tools]
+     *  ``Object`` Storage of tool instances for this viewer, keyed by id
+     */
+    tools: null,
      
     /** api: config[defaultSourceType]
      *  ``String``
@@ -178,13 +183,15 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
     },
     
     initTools: function() {
-        if (this.tools && this.tools.length > 0) {
+        this.tools = {};
+        if (this.initialConfig.tools && this.initialConfig.tools.length > 0) {
             var tool;
-            for (var i=this.tools.length-1; i>=0; i--) {
+            for (var i=0, len=this.initialConfig.tools.length; i<len; i++) {
                 tool = Ext.ComponentMgr.createPlugin(
-                    this.tools[i], this.defaultToolType
+                    this.initialConfig.tools[i], this.defaultToolType
                 );
                 tool.init(this);
+                this.tools[tool.id] = tool;
             }
         }
     },

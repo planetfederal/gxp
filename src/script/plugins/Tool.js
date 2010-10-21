@@ -32,7 +32,7 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
      *  be useful to override the xtype (e.g. "window" instead of "gx_popup"),
      *  or to provide layout configurations when rendering to an
      *  ``outputTarget``.
-
+    
     /** private: property[target]
      *  ``Object``
      *  The :class:`gxp.Viewer` that this plugin is plugged into.
@@ -43,6 +43,9 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
     constructor: function(config) {
         this.initialConfig = config;
         Ext.apply(this, config);
+        if (!this.id) {
+            this.id = Ext.id();
+        }
         gxp.plugins.Tool.superclass.constructor.apply(this, arguments);
     },
     
@@ -55,6 +58,9 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
     },
     
     /** api: method[addActions]
+     *  :param actions: ``Array`` Optional actions to add. If not provided,
+     *      this.actions will be added.
+     *  :returns: ``Array`` or ``Ext.Action`` the action(s) added.
      */
     addActions: function(actions) {
         actions = actions || this.actions;
@@ -75,10 +81,11 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
         if (meth) {
             ct = ct[meth]();
         }
-        actions = ct.add.apply(ct, actions);
+        actions = ct.add.call(ct, actions);
         // call ct.show() in case the container was previously hidden (e.g.
         // the mapPanel's bbar or tbar which are initially hidden)
         ct.isVisible() ? ct.doLayout() : ct.show();
+        this.actions = actions;
         return actions;
     },
     
