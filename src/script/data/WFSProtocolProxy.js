@@ -171,8 +171,9 @@ gxp.data.WFSProtocolProxy = Ext.extend(GeoExt.data.ProtocolProxy, {
              * reader.extractValues - which seems like a nice place to grab the
              * fids from the features.  However, we need the fid in the data
              * object *before* extractValues is called.  So, we create a basic
-             * data object with just the fid (mapping determined by
-             * reader.meta.idProperty).
+             * data object with just the id (mapping determined by
+             * reader.meta.idProperty or, for Ext > 3.0, reader.getId) and the
+             * state property, which is always reset to null after a commit.
              *
              * After the reader.realize method determines that the data is valid
              * (determined by reader.isValid(data)), then extractValues gets
@@ -192,7 +193,10 @@ gxp.data.WFSProtocolProxy = Ext.extend(GeoExt.data.ProtocolProxy, {
             var f;
             for (var i=0; i<len; ++i) {
                 f = features[i];
-                data[i] = {id: f.id, feature: f};
+                // TODO - check if setting the state to null here is appropriate,
+                // or if feature state handling should rather be done in
+                // GeoExt.data.FeatureStore
+                data[i] = {id: f.id, feature: f, state: null};
             }
 
             o.callback.call(o.scope, data, response.priv, true);

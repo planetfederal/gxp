@@ -86,6 +86,18 @@ gxp.data.WFSFeatureStore = Ext.extend(GeoExt.data.FeatureStore, {
          */
         this.reader.meta.idProperty = "id";
         
+        /**
+         * TODO: Same as above, but it seems that the getId method is responsible
+         * for determining the id in Ext > 3.0. This is crucial after changes
+         * are committed (see WFSProtocolProxy::onProtocolCommit), because the
+         * callback there does an isData check, which involves an attempt to get
+         * the id through this method.
+         */
+        this.reader.getId = function(data) {
+            return data.id;
+        };
+        
+        
         
     }
     
