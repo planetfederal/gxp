@@ -145,6 +145,9 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
         );
         
         var feature = this.feature;
+        if (!this.location) {
+            this.location = feature
+        };
         
         this.anchored = !this.editing;
         
