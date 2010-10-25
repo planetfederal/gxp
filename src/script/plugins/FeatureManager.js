@@ -42,10 +42,11 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
         
         this.addEvents(
             "beforequery",
-            "query"
+            "query",
+            "layerchange"
         );
         
-        this.toolsShowingLayer = 0;
+        this.toolsShowingLayer = [];
 
         this.featureLayer = new OpenLayers.Layer.Vector(Ext.id(), Ext.apply({
             displayInLayerSwitcher: false,
@@ -70,16 +71,19 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
         }
     },
     
-    showLayer: function(need) {
-        if (need === true) {
-            this.toolsShowingLayer++;
-        } else {
-            this.toolsShowingLayer--;
+    showLayer: function(id) {
+        if (this.toolsShowingLayer.indexOf(id) == -1) {
+            this.toolsShowingLayer.push(id);
         }
-        if (this.toolsShowingLayer == 0) {
-            this.target.mapPanel.map.removeLayer(this.featureLayer);
-        } else if (this.toolsShowingLayer == 1) {
+        if (this.toolsShowingLayer.length > 0 && !this.featureLayer.map) {
             this.target.mapPanel.map.addLayer(this.featureLayer);
+        }
+    },
+    
+    hideLayer: function(id) {
+        this.toolsShowingLayer.remove(id);
+        if (this.toolsShowingLayer.length == 0 && this.featureLayer.map) {
+            this.target.mapPanel.map.removeLayer(this.featureLayer);
         }
     },
     
@@ -119,9 +123,10 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
     },
     
     setFeatureStore: function(filter, autoLoad) {
-        var source = this.target.getSource(this.selectedLayer);
-        source && source instanceof gxp.plugins.WMSSource && source.getSchema(
-            this.selectedLayer, function(s) {
+        var rec = this.selectedLayer;
+        var source = this.target.getSource(rec);
+        if (source && source instanceof gxp.plugins.WMSSource) {
+            source.getSchema(rec, function(s) {
                 if (s === false) {
                     this.clearFeatureStore();
                 } else {
@@ -155,7 +160,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                         autoSave: false,
                         listeners: {
                             "save": function() {
-                                this.selectedLayer.getLayer().redraw(true);
+                                rec.getLayer().redraw(true);
                             },
                             "load": function() {
                                 this.fireEvent("query", this, this.featureStore);
@@ -164,13 +169,17 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                         }
                     });
                 }
-            }, this
-        );        
+                this.fireEvent("layerchange", this, rec, s);
+                }, this
+            );
+        } else {
+            this.clearFeatureStore();
+            this.fireEvent("layerchange", this, rec, false);
+        }        
     },
     
     clearFeatureStore: function() {
         this.featureStore = null;
-        this.fireEvent("query", this, null);
     }
 
 });
