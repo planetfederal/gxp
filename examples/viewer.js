@@ -16,12 +16,11 @@ Ext.onReady(function() {
             toggleGroup: "layertools"
         }, {
             ptype: "gx_featuremanager",
-            id: "featuremanager",
-            autoLoadFeatures: true,
-            autoSetLayer: true
+            id: "featuremanager"
         }, {
             ptype: "gx_featureeditor",
             featureManager: "featuremanager",
+            autoLoadFeatures: true,
             outputConfig: {panIn: false},
             toggleGroup: "layertools"
         }, {

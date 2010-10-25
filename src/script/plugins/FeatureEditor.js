@@ -11,6 +11,16 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
      */
     featureManager: null,
     
+    /** api: config[autoLoadFeatures]
+     *  ``Boolean`` Should this tool load features on click? If set to true,
+     *  and if there is no loaded feature at the click position, this tool will
+     *  call loadFeatures on the ``featureManager``, with a ``FeatureId``
+     *  filter created from the id of a feature returned from a WMS
+     *  GetFeatureInfo request at the click position. This feature will then be
+     *  selected immediately. Default is false.
+     */
+    autoLoadFeatures: false,
+    
     /** private: property[selectedLayer]
      */
     selectedLayer: null,
@@ -19,11 +29,31 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
      */
     selectControl: null,
     
+    popup: null,
+    
+    autoLoadedFeature: null,
+    
     /** api: method[addActions]
      */
     addActions: function() {
         var popup;
-        var featureLayer = this.target.tools[this.featureManager].featureLayer;
+        var featureManager = this.target.tools[this.featureManager];
+        var featureLayer = featureManager.featureLayer;
+        featureManager.on("beforequery", function(mgr, filter) {
+            if (popup) {
+                if (popup.editing) {
+                    function query() {
+                        featureManager.featureStore.un("write", query, this);
+                        popup.un("canceledit", query, this);
+                        mgr.query(filter);
+                    };
+                    featureManager.featureStore.on("write", query, this);
+                    popup.on("canceledit", query, this);
+                }
+                popup.close();
+                return !popup.editing;
+            }
+        }, this);
         
         // create a SelectFeature control
         // "fakeKey" will be ignord by the SelectFeature control, so only one
@@ -34,10 +64,18 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
             multipleKey: "fakeKey",
             eventListeners: {
                 "activate": function() {
+                    this.autoLoadFeatures === true &&
+                        this.target.mapPanel.map.events.register("click", this,
+                            this.noFeatureClick
+                        );
                     this.target.tools[this.featureManager].showLayer(true);
                     this.selectControl.unselectAll(popup && popup.editing && {except: popup.feature});
                 },
                 "deactivate": function() {
+                    this.autoLoadFeatures === true &&
+                        this.target.mapPanel.map.events.unregister("click",
+                            this, this.noFeatureClick
+                        );
                     if(popup) {
                         if(popup.editing) {
                             popup.on("cancelclose", function() {
@@ -51,7 +89,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
                 scope: this
             }
         });
-
+        
         featureLayer.events.on({
             "featureunselected": function(evt) {
                 if(popup) {
@@ -90,6 +128,9 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
                                     if(feature.layer && feature.layer.selectedFeatures.indexOf(feature) !== -1) {
                                         this.selectControl.unselect(feature);
                                     }
+                                    if (feature === this.autoLoadedFeature) {
+                                        featureStore.removeAll();
+                                    }
                                 },
                                 "featuremodified": function(popup, feature) {
                                     popup.disable();
@@ -126,6 +167,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
                                 scope: this
                             }
                         }, this.outputConfig));
+                        this.popup = popup;
                         popup.show();
                     }, this);
                 }
@@ -152,6 +194,48 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
         })]);
 
         this.target.on("layerselectionchange", this.onLayerSelectionChange, this);
+    },
+    
+    noFeatureClick: function(evt) {
+        var size = this.target.mapPanel.map.getSize();
+        var layer = this.selectedLayer.getLayer();
+        var store = new GeoExt.data.FeatureStore({
+            fields: {},
+            proxy: new GeoExt.data.ProtocolProxy({
+                protocol: new OpenLayers.Protocol.HTTP({
+                    url: layer.getFullRequestString({
+                        REQUEST: "GetFeatureInfo",
+                        BBOX: this.target.mapPanel.map.getExtent().toBBOX(),
+                        WIDTH: size.w,
+                        HEIGHT: size.h,
+                        X: evt.xy.x,
+                        Y: evt.xy.y,
+                        QUERY_LAYERS: layer.params.LAYERS,
+                        INFO_FORMAT: "application/vnd.ogc.gml",
+                        EXCEPTIONS: "application/vnd.ogc.se_xml",
+                        FEATURE_COUNT: 1
+                    }),
+                    format: new OpenLayers.Format.WMSGetFeatureInfo()
+                })
+            }),
+            autoLoad: true,
+            listeners: {
+                "load": function(store, records) {
+                    if (records.length > 0) {
+                        var filter = new OpenLayers.Filter.FeatureId({
+                            fids: [records[0].get("fid")] 
+                        });
+                        this.target.tools[this.featureManager].loadFeatures(
+                            filter, function(features) {
+                                this.autoLoadedFeature = features[0];
+                                this.selectControl.select(features[0]);
+                            }, this
+                        );
+                    }
+                },
+                scope: this
+            }
+        });
     },
     
     onLayerSelectionChange: function(rec) {
