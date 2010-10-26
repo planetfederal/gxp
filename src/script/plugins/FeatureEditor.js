@@ -6,8 +6,8 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
     ptype: "gx_featureeditor",
 
     /** api: config[featureManager]
-     *  ``String`` The :class:`gxp.plugins.FeatureManager`` to use with this
-     *  tool.
+     *  ``String`` The id of the :class:`gxp.plugins.FeatureManager` to use
+     *  with this tool.
      */
     featureManager: null,
     
@@ -27,7 +27,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
     selectControl: null,
     
     /** private: property[popup]
-     *  ``GeoExt.Popup`` FeatureEditPopup for this tool
+     *  :class:`gxp.FeatureEditPopup` FeatureEditPopup for this tool
      */
     popup: null,
     
@@ -213,6 +213,9 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
         featureManager.on("layerchange", this.onLayerChange, this);
     },
     
+    /** private: method[noFeatureClick]
+     *  :arg evt: ``Object``
+     */
     noFeatureClick: function(evt) {
         var size = this.target.mapPanel.map.getSize();
         var layer = this.target.tools[this.featureManager].selectedLayer.getLayer();
@@ -255,6 +258,11 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
         });
     },
     
+    /** private: method[onLayerChange]
+     *  :arg mgr: :class:`gxp.plugins.FeatureManager`
+     *  :arg layer: ``GeoExt.data.LayerRecord``
+     *  :arg schema: ``GeoExt.data.AttributeStore``
+     */
     onLayerChange: function(mgr, layer, schema) {
         this.schema = schema;
         this.actions[0].setDisabled(!schema);

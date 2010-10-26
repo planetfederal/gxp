@@ -27,12 +27,23 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      */
     autoLoadFeatures: false,
     
-    featureLayer: null,
-    
+    /** api: property[selectedLayer]
+     *  ``GeoExt.data.LayerRecord`` The currently selected layer
     selectedLayer: null,
     
+    /** api: property[featureStore]
+     *  :class:`gxp.data.WFSFeatureStore` The FeatureStore that this tool
+     *  manages.
     featureStore: null,
     
+    /** api: property[featureLayer]
+     *  ``OpenLayers.Layer.Vector`` The layer associated with this tool's
+     *  featureStore.
+     */
+    featureLayer: null,
+    
+    /** private: property[toolsShowingLayer]
+     *  ``Array`` of tool ids that currently need to show the layer.
     toolsShowingLayer: null,
     
     /** api: method[init]
@@ -41,17 +52,52 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
         gxp.plugins.FeatureEditor.superclass.init.apply(this, arguments);
         
         this.addEvents(
+            /** api: event[beforequery]
+             *  Fired before a WFS GetFeature request is issued.
+             *
+             *  Listener arguments:
+             *  * tool   - :class:`gxp.plugins.FeatureManager` this tool
+             *  * filter - ``OpenLayers.Filter`` 
+             */
             "beforequery",
+            
+            /** api: event[query]
+             *  Fired after a WFS GetFeature query, when the results are
+             *  available.
+             *
+             *  Listener arguments:
+             *  * tool  - :class:`gxp.plugins.FeatureManager` this tool
+             *  * store - :class:`gxp.data.WFSFeatureStore
+             */
             "query",
+            
+            /** api: event[beforelayerchange]
+             *  Fired before a layer change results in destruction of the
+             *  current featureStore, and creation of a new one
+             *
+             *  Listener arguments:
+             *  * tool  - :class:`gxp.plugins.FeatureManager` this tool
+             *  * layer - ``GeoExt.data.LayerRecord`` the new layer
+             */
             "beforelayerchange",
+            
+            /** api: event[layerchange]
+             *  Fired after a layer change, as soon as the layer's schema is
+             *  available.
+             *
+             *  Listener arguments:
+             *  * tool   - :class:`gxp.plugins.FeatureManager` this tool
+             *  * layer  - ``GeoExt.data.LayerRecord`` the new layer
+             *  * schema - ``GeoExt.data.AttributeStore`` or false if the
+             *    layer has no associated WFS FeatureType.
+             */
             "layerchange"
         );
         
         this.toolsShowingLayer = [];
 
         this.featureLayer = new OpenLayers.Layer.Vector(Ext.id(), Ext.apply({
-            displayInLayerSwitcher: false,
-            visible: false
+            displayInLayerSwitcher: false
         }, this.layerConfig));
 
         this.autoSetLayer && this.target.on("layerselectionchange",
@@ -59,6 +105,11 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
         );
     },
     
+    /** api: method[setLayer]
+     *  :arg rec: ``GeoExt.data.LayerRecord``
+     *
+     *  Sets the layer for this tool
+     */
     setLayer: function(rec) {
         if (this.fireEvent("beforelayerchange", this, rec) !== false) {
             if (rec !== this.selectedLayer) {
@@ -73,6 +124,10 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
         }
     },
     
+    /** api: method[showLayer]
+     *  :arg id: ``String`` id of a tool that needs to show this tool's
+     *      featureLayer.
+     */
     showLayer: function(id) {
         if (this.toolsShowingLayer.indexOf(id) == -1) {
             this.toolsShowingLayer.push(id);
@@ -82,6 +137,11 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
         }
     },
     
+    /** api: method[hideLayer]
+     *  :arg id: ``String`` id of a tool that no longer needs to show this
+     *      tool's featureLayer. The layer will be hidden if no more tools need
+     *      to show it.
+     */
     hideLayer: function(id) {
         this.toolsShowingLayer.remove(id);
         if (this.toolsShowingLayer.length == 0 && this.featureLayer.map) {
@@ -90,12 +150,12 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
     },
     
     /** api: method[loadFeatures]
-     *  :param filter: ``OpenLayers.Filter`` Optional filter for the GetFeature
+     *  :arg filter: ``OpenLayers.Filter`` Optional filter for the GetFeature
      *      request.
-     *  :param callback: ``Function`` Optional callback to call when the
+     *  :arg callback: ``Function`` Optional callback to call when the
      *      features are loaded. This function will be called with the array
      *      of the laoded features (``OpenLayers.Feature.Vector``) as argument.
-     *  :param scope: ``Object`` Optional scope for the callback function.
+     *  :arg scope: ``Object`` Optional scope for the callback function.
      */
     loadFeatures: function(filter, callback, scope) {
         if (this.fireEvent("beforequery", this, filter) !== false) {
@@ -120,6 +180,10 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
         }
     },
     
+    /** private: method[setFeatureStore]
+     *  :arg filter: ``OpenLayers.Filter``
+     *  :arg autoLoad: ``Boolean``
+     */
     setFeatureStore: function(filter, autoLoad) {
         var rec = this.selectedLayer;
         var source = this.target.getSource(rec);
@@ -176,6 +240,8 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
         }        
     },
     
+    /** private: method[clearFeatureStore]
+     */
     clearFeatureStore: function() {
         if (this.featureStore) {
             //TODO remove when http://trac.geoext.org/ticket/367 is resolved
