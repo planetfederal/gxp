@@ -179,6 +179,8 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
     },
     
     clearFeatureStore: function() {
+        this.featureStore.unbind();
+        this.featureLayer.removeAllFeatures();
         this.featureStore = null;
     }
 
