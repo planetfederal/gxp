@@ -48,21 +48,26 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
         var popup;
         var featureManager = this.target.tools[this.featureManager];
         var featureLayer = featureManager.featureLayer;
-        featureManager.on("beforequery", function(mgr, filter) {
+        function intercept(mgr, param, fn) {
             if (popup) {
                 if (popup.editing) {
-                    function query() {
-                        featureManager.featureStore.un("write", query, this);
-                        popup.un("canceledit", query, this);
-                        mgr.query(filter);
+                    function doIt() {
+                        featureManager.featureStore.un("write", doIt, this);
+                        popup.un("canceledit", doIt, this);
+                        mgr[fn](param);
                     };
-                    featureManager.featureStore.on("write", query, this);
-                    popup.on("canceledit", query, this);
+                    featureManager.featureStore.on("write", doIt, this);
+                    popup.on("canceledit", doIt, this);
                 }
                 popup.close();
                 return !popup.editing;
             }
-        }, this);
+        };
+        featureManager.on({
+            "beforequery": intercept.createDelegate(this, "loadFeatures", true),
+            "beforelayerchange": intercept.createDelegate(this, "setLayer", true),
+            scope: this
+        });
         
         // create a SelectFeature control
         // "fakeKey" will be ignord by the SelectFeature control, so only one

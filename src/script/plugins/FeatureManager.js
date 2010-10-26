@@ -43,6 +43,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
         this.addEvents(
             "beforequery",
             "query",
+            "beforelayerchange",
             "layerchange"
         );
         
@@ -59,14 +60,15 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
     },
     
     setLayer: function(rec) {
-        if (rec !== this.selectedLayer) {
-            this.selectedLayer = rec;
-            if (rec) {
-                this.autoLoadFeatures === true ?
-                    this.loadFeatures() :
-                    this.setFeatureStore();
-            } else {
+        if (this.fireEvent("beforelayerchange", this, rec) !== false) {
+            if (rec !== this.selectedLayer) {
                 this.clearFeatureStore();
+                this.selectedLayer = rec;
+                if (rec) {
+                    this.autoLoadFeatures === true ?
+                        this.loadFeatures() :
+                        this.setFeatureStore();
+                }
             }
         }
     },
@@ -96,30 +98,26 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      *  :param scope: ``Object`` Optional scope for the callback function.
      */
     loadFeatures: function(filter, callback, scope) {
-        callback && this.featureLayer.events.register(
-            "featuresadded", this, function(evt) {
-                if (this._query) {
-                    delete this._query;
-                    this.featureLayer.events.unregister(
-                        "featuresadded", this, arguments.callee
-                    );
-                    callback.call(scope, evt.features);
-                }
-            }
-        );
         if (this.fireEvent("beforequery", this, filter) !== false) {
+            callback && this.featureLayer.events.register(
+                "featuresadded", this, function(evt) {
+                    if (this._query) {
+                        delete this._query;
+                        this.featureLayer.events.unregister(
+                            "featuresadded", this, arguments.callee
+                        );
+                        callback.call(scope, evt.features);
+                    }
+                }
+            );
             this._query = true;
-            this.query(filter);
+            if (!this.featureStore) {
+                this.setFeatureStore(filter, true);
+            } else {
+                this.featureStore.setOgcFilter(filter);
+                this.featureStore.load();
+            };
         }
-    },
-    
-    query: function(filter) {
-        if (!this.featureStore) {
-            this.setFeatureStore(filter, true);
-        } else {
-            this.featureStore.setOgcFilter(filter);
-            this.featureStore.load();
-        };
     },
     
     setFeatureStore: function(filter, autoLoad) {
@@ -159,7 +157,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                         autoLoad: autoLoad,
                         autoSave: false,
                         listeners: {
-                            "save": function() {
+                            "write": function() {
                                 rec.getLayer().redraw(true);
                             },
                             "load": function() {
@@ -179,7 +177,14 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
     },
     
     clearFeatureStore: function() {
-        this.featureStore = null;
+        if (this.featureStore) {
+            //TODO remove when http://trac.geoext.org/ticket/367 is resolved
+            this.featureStore.removeAll();
+            this.featureStore.unbind();
+            // end remove
+            this.featureStore.destroy();
+            this.featureStore = null;
+        }
     }
 
 });
