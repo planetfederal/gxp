@@ -97,7 +97,36 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
         this.toolsShowingLayer = [];
 
         this.featureLayer = new OpenLayers.Layer.Vector(Ext.id(), Ext.apply({
-            displayInLayerSwitcher: false
+            displayInLayerSwitcher: false,
+            styleMap: new OpenLayers.StyleMap({
+                "default": new OpenLayers.Style(null, {
+                    rules: [new OpenLayers.Rule({
+                        symbolizer: {
+                            "Point": {
+                                pointRadius: 4,
+                                graphicName: "square",
+                                fillColor: "white",
+                                fillOpacity: 1,
+                                strokeWidth: 1,
+                                strokeOpacity: 1,
+                                strokeColor: "#333333"
+                            },
+                            "Line": {
+                                strokeWidth: 4,
+                                strokeOpacity: 1,
+                                strokeColor: "#ff9933"
+                            },
+                            "Polygon": {
+                                strokeWidth: 2,
+                                strokeOpacity: 1,
+                                strokeColor: "#ff6633",
+                                fillColor: "white",
+                                fillOpacity: 0.3
+                            }
+                        }
+                    })]
+                })
+            })    
         }, this.layerConfig));
 
         this.autoSetLayer && this.target.on("layerselectionchange",
