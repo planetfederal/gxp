@@ -33,6 +33,7 @@
         "widgets/tips/SliderTip.js",
         "plugins/LayerSource.js",
         "plugins/WMSSource.js",
+        "plugins/OSMSource.js",
         "plugins/GoogleSource.js",
         "plugins/OLSource.js",
         "plugins/StyleWriter.js",
