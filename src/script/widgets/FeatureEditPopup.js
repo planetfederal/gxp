@@ -243,6 +243,13 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                 scope: this
             }
         });
+        
+        /**
+         * TODO: This is a workaround for getting attributes with undefined
+         * values to show up in the property grid.  Decide if this should be 
+         * handled in another way.
+         */
+        this.grid.propStore.isEditableValue = function() {return true};
 
         this.items = [
             this.grid
