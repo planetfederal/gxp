@@ -71,7 +71,8 @@ gxp.plugins.OSMSource = Ext.extend(gxp.plugins.LayerSource, {
                 {name: "name", type: "string", mapping: "type"},
                 {name: "abstract", type: "string", mapping: "attribution"},
                 {name: "group", type: "string", defaultValue: "background"},
-                {name: "fixed", type: "boolean", defaultValue: true}
+                {name: "fixed", type: "boolean", defaultValue: true},
+                {name: "selected", type: "boolean"}
             ]
         });
         this.store.each(function(l) {
@@ -112,6 +113,7 @@ gxp.plugins.OSMSource = Ext.extend(gxp.plugins.LayerSource, {
                 layer.visibility = config.visibility
             }
             
+            record.set("selected", config.selected || false);
             record.set("source", config.source);
             record.set("name", config.name);
             if ("group" in config) {

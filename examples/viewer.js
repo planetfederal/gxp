@@ -12,7 +12,17 @@ Ext.onReady(function() {
             outputConfig: {
                 width: 400,
                 height: 200
-            }
+            },
+            toggleGroup: "layertools"
+        }, {
+            ptype: "gx_featuremanager",
+            id: "featuremanager"
+        }, {
+            ptype: "gx_featureeditor",
+            featureManager: "featuremanager",
+            autoLoadFeatures: true,
+            outputConfig: {panIn: false},
+            toggleGroup: "layertools"
         }, {
             actionTarget: ".bbar",
             actions: [{text: "Click me - I'm a tool on the portal's bbar"}]
@@ -38,7 +48,8 @@ Ext.onReady(function() {
                 group: "background"
             }, {
                 source: "local",
-                name: "usa:states"
+                name: "usa:states",
+                selected: true
             }]
         }
     });

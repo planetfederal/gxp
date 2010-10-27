@@ -44,6 +44,11 @@
     background-image: url(img/silk/information.png);
 }
 
+/* gx_featureeditor */
+.x-btn .gx-icon-editfeature {
+    background-image: url(img/silk/map_edit.png);
+}
+
 /* fixes textarea scrollbar issue in FF on OSX */
 .ext-gecko.ext-mac textarea.x-form-field {
     padding: 1px 2px;

@@ -65,10 +65,10 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
         // TODO: We may also be able to determine the MAX_ZOOM_LEVEL for each
         // layer type. If not, consider setting them on the OpenLayers level.
         var mapTypes = {
-            "ROADMAP": {abstract: "Show street map", MAX_ZOOM_LEVEL: 20},
-            "SATELLITE": {abstract: "Show satellite imagery"},
-            "HYBRID": {abstract: "Show imagery with street names"},
-            "TERRAIN": {abstract: "Show street map with terrain", MAX_ZOOM_LEVEL: 15}
+            "ROADMAP": {'abstract': "Show street map", MAX_ZOOM_LEVEL: 20},
+            "SATELLITE": {'abstract': "Show satellite imagery"},
+            "HYBRID": {'abstract': "Show imagery with street names"},
+            "TERRAIN": {'abstract': "Show street map with terrain", MAX_ZOOM_LEVEL: 15}
         };
         
         var layers = [];
@@ -95,11 +95,12 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
                 {name: "name", type: "string", mapping: "typeName"},
                 {name: "abstract", type: "string"},
                 {name: "group", type: "string", defaultValue: "background"},
-                {name: "fixed", type: "boolean", defaultValue: true}
+                {name: "fixed", type: "boolean", defaultValue: true},
+                {name: "selected", type: "boolean"}
             ]
         });
         this.store.each(function(l) {
-            l.set("abstract", mapTypes[l.get("name")].abstract);
+            l.set("abstract", mapTypes[l.get("name")]["abstract"]);
         });
         this.fireEvent("ready", this);
     },
@@ -136,6 +137,7 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
                 layer.visibility = config.visibility
             }
             
+            record.set("selected", config.selected || false);
             record.set("source", config.source);
             record.set("name", config.name);
             if ("group" in config) {

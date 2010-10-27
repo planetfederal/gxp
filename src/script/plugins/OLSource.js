@@ -52,6 +52,7 @@ gxp.plugins.OLSource = Ext.extend(gxp.plugins.LayerSource, {
                 {name: "source", type: "string"}, 
                 {name: "group", type: "string"},
                 {name: "fixed", type: "boolean"},
+                {name: "selected", type: "boolean"},
                 {name: "type", type: "string"},
                 {name: "args"}
             ]);
@@ -61,6 +62,7 @@ gxp.plugins.OLSource = Ext.extend(gxp.plugins.LayerSource, {
                 source: config.source,
                 group: config.group,
                 fixed: ("fixed" in config) ? config.fixed : false,
+                selected: ("selected" in config) ? config.selected : false,
                 type: config.type,
                 args: config.args
             };
