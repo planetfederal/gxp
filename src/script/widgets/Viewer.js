@@ -163,7 +163,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
     
     initMapPanel: function() {
         
-        var config = Ext.applyIf({}, this.initialConfig.map);
+        var config = Ext.apply({}, this.initialConfig.map);
         var mapConfig = {};
         
         // split initial map configuration into map and panel config
