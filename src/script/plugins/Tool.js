@@ -32,6 +32,7 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
      *  be useful to override the xtype (e.g. "window" instead of "gx_popup"),
      *  or to provide layout configurations when rendering to an
      *  ``outputTarget``.
+     */
     
     /** private: property[target]
      *  ``Object``
@@ -104,7 +105,7 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
         var cmp = ct.add(config);
         cmp instanceof Ext.Window ? cmp.show() : ct.doLayout();
         return cmp;
-    },
+    }
     
 });
 
