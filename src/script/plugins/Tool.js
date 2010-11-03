@@ -8,11 +8,11 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
     /** api: config[actionTarget]
      *  ``String`` Where to place the tool's actions (e.g. buttons or menus)?
      *  This can be any string that references an ``Ext.Container`` property on
-     *  the portal. To reference one of the toolbars of an ``Ext.Panel``,
-     *  ".tbar", ".bbar" or ".fbar" has to be appended. The default is
-     *  "map.tbar". This config option is only relevant for subclasses that
-     *  have actions. The viewer's main MapPanel can always be accessed with
-     *  "map" as actionTarget.
+     *  the portal, or a unique id configured on a component. To reference one
+     *  of the toolbars of an ``Ext.Panel``, ".tbar", ".bbar" or ".fbar" has to
+     *  be appended. The default is "map.tbar". This config option is only
+     *  relevant for subclasses that have actions. The viewer's main MapPanel
+     *  can always be accessed with "map" as actionTarget.
      */
     actionTarget: "map.tbar",
     
@@ -76,7 +76,9 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
         var parts = actionTarget.split(".");
         var ref = parts[0], bar = parts.length > 1 && parts[1];
         var ct = ref ?
-            ref == "map" ? this.target.mapPanel : this.target.portal[ref] :
+            ref == "map" ?
+                this.target.mapPanel :
+                (this.target.portal[ref] || Ext.getCmp(ref)) :
             this.target.portal;
         var meth = bar && {
             "tbar": "getTopToolbar",
@@ -99,7 +101,9 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
     addOutput: function(config) {
         var ref = this.outputTarget;
         var ct = ref ?
-            ref == "map" ? this.target.mapPanel : this.target.portal[ref] :
+            ref == "map" ?
+                this.target.mapPanel :
+                (this.target.portal[ref] || Ext.getCmp(ref)) :
             this.target.portal;
         Ext.apply(config, this.outputConfig);
         var cmp = ct.add(config);

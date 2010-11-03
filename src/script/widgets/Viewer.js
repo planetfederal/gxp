@@ -163,10 +163,24 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
     
     initMapPanel: function() {
         
-        var mapConfig = this.initialConfig.map || {};
+        var config = Ext.applyIf({}, this.initialConfig.map);
+        var mapConfig = {};
+        
+        // split initial map configuration into map and panel config
+        if (this.initialConfig.map) {
+            var props = "theme,controls,projection,units,maxExtent,maxResolution,numZoomLevels".split(",");
+            var prop;
+            for (var i=props.length-1; i>=0; --i) {
+                prop = props[i];
+                if (prop in config) {
+                    mapConfig[prop] = config[prop];
+                    delete config[prop];
+                };
+            }
+        }
 
-        this.mapPanel = new GeoExt.MapPanel({
-            map: {
+        this.mapPanel = new GeoExt.MapPanel(Ext.applyIf({
+            map: Ext.applyIf({
                 theme: mapConfig.theme || null,
                 controls: mapConfig.controls || [
                     new OpenLayers.Control.Navigation({zoomWheelEnabled: false}),
@@ -174,18 +188,14 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                     new OpenLayers.Control.ZoomPanel(),
                     new OpenLayers.Control.Attribution()
                 ],
-                projection: mapConfig.projection,
-                units: mapConfig.units,
                 maxExtent: mapConfig.maxExtent && OpenLayers.Bounds.fromArray(mapConfig.maxExtent),
-                maxResolution: mapConfig.maxResolution,
                 numZoomLevels: mapConfig.numZoomLevels || 20
-            },
-            center: mapConfig.center && new OpenLayers.LonLat(mapConfig.center[0], mapConfig.center[1]),
-            zoom: mapConfig.zoom,
+            }, mapConfig),
+            center: config.center && new OpenLayers.LonLat(config.center[0], config.center[1]),
+            layers: null,
             items: this.mapItems,
-            bbar: {hidden: true},
-            tbar: {hidden: true}
-        });
+            tbar: config.tbar || {hidden: true}
+        }, config));
 
     },
     

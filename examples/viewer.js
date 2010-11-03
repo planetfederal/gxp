@@ -5,14 +5,25 @@ Ext.onReady(function() {
             renderTo: document.body,
             width: 500,
             height: 300,
-            bbar: []
+            bbar: {id: "mybbar"}
         },
+        portalItems: [{
+            xtype: "tabpanel",
+            region: "center",
+            activeTab: 0,
+            items: ["mymap", {
+                xtype: "panel",
+                title: "another tab",
+                html: "I'm just a tab"
+            }]
+        }],
         tools: [{
             ptype: "gx_wmsgetfeatureinfo",
             outputConfig: {
                 width: 400,
                 height: 200
             },
+            actionTarget: "map.tbar", // this is the default
             toggleGroup: "layertools"
         }, {
             ptype: "gx_featuremanager",
@@ -24,7 +35,7 @@ Ext.onReady(function() {
             outputConfig: {panIn: false},
             toggleGroup: "layertools"
         }, {
-            actionTarget: ".bbar",
+            actionTarget: "mybbar", // ".bbar" would also work
             actions: [{text: "Click me - I'm a tool on the portal's bbar"}]
         }],
         defaultSourceType: "gx_wmssource",
@@ -37,6 +48,8 @@ Ext.onReady(function() {
             }
         },
         map: {
+            id: "mymap",
+            title: "map",
             projection: "EPSG:900913",
             units: "m",
             maxResolution: 156543.0339,
