@@ -50,6 +50,29 @@ gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
         this.createStore();
     },
     
+    /** private: method[getMapProjection]
+     *  :returns: ``OpenLayers.Projection``
+     */
+    getMapProjection: function() {
+        var projConfig = this.target.mapPanel.map.projection;
+        return this.target.mapPanel.map.getProjectionObject() ||
+            (projConfig && new OpenLayers.Projection(projConfig)) ||
+            new OpenLayers.Projection("EPSG:4326");
+    },
+    
+    /** api: method[getProjection]
+     *  :arg layerRecord: ``GeoExt.data.LayerRecord`` a record from this
+     *      source's store
+     *  :returns: ``OpenLayers.Projection`` A suitable projection for the
+     *      ``layerRecord``. If the layer is available in the map projection,
+     *      the map projection will be returned. Otherwise an equal projection,
+     *      or null none is available.
+     */
+    getProjection: function(layerRecord) {
+        // to be overridden by subclasses
+        return this.getMapProjection();
+    },
+    
     /** api: method[createStore]
      *
      *  Creates a store of layer records.  Fires "ready" when store is loaded.

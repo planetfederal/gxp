@@ -104,17 +104,12 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
              * TODO: The WMSCapabilitiesReader should allow for creation
              * of layers in different SRS.
              */
-            var projConfig = this.target.mapPanel.map.projection;
-            var projection = this.target.mapPanel.map.getProjectionObject() ||
-                (projConfig && new OpenLayers.Projection(projConfig)) ||
-                new OpenLayers.Projection("EPSG:4326");
+            var projection = this.getMapProjection();
             
             // If the layer is not available in the map projection, find a
             // compatible projection that equals the map projection. This helps
             // us in dealing with the different EPSG codes for web mercator.
-            var compatibleProjection = this.getCompatibleProjection(
-                original, projection
-            );
+            var layerProjection = this.getProjection(original);
 
             var nativeExtent = original.get("bbox")[projection.getCode()]
             var maxExtent = 
@@ -147,7 +142,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                     visibility: ("visibility" in config) ? config.visibility : true,
                     opacity: ("opacity" in config) ? config.opacity : 1,
                     buffer: ("buffer" in config) ? config.buffer : 1,
-                    projection: compatibleProjection
+                    projection: layerProjection
                 }
             );
 
@@ -182,16 +177,16 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         return record;
     },
     
-    /** api: method[getEqualProjection]
+    /** api: method[getProjection]
      *  :arg layerRecord: ``GeoExt.data.LayerRecord`` a record from this
      *      source's store
-     *  :arg projection: ``OpenLayers.Projection`` the projection to find
-     *      an equal one for
-     *  :returns: ``OpenLayers.Projection`` An equal projection. If the
-     *      passed projection is available, it will be returned. If no equal
-     *      projection is found, null will be returned.
+     *  :returns: ``OpenLayers.Projection`` A suitable projection for the
+     *      ``layerRecord``. If the layer is available in the map projection,
+     *      the map projection will be returned. Otherwise an equal projection,
+     *      or null none is available.
      */
-    getCompatibleProjection: function(layerRecord, projection) {
+    getProjection: function(layerRecord) {
+        var projection = this.getMapProjection();
         var compatibleProjection = projection;
         var availableSRS = layerRecord.get("srs");
         if (!availableSRS[projection.getCode()]) {
