@@ -108,6 +108,20 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             var projection = this.target.mapPanel.map.getProjectionObject() ||
                 (projConfig && new OpenLayers.Projection(projConfig)) ||
                 new OpenLayers.Projection("EPSG:4326");
+            
+            // If the layer is not available in the map projection, find a
+            // compatible projection that equals the map projection. This helps
+            // us in dealing with the different EPSG codes for web mercator.
+            var availableSRS = original.get("srs"), compatibleProjection;
+            if (!availableSRS[projection.getCode()]) {
+                var p, srs;
+                for (srs in availableSRS) {
+                    if ((p=new OpenLayers.Projection(srs)).equals(projection)) {
+                        compatibleProjection = p;
+                        break;
+                    }
+                }
+            }
 
             var nativeExtent = original.get("bbox")[projection.getCode()]
             var maxExtent = 
@@ -139,7 +153,8 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                     ratio: config.ratio || 1,
                     visibility: ("visibility" in config) ? config.visibility : true,
                     opacity: ("opacity" in config) ? config.opacity : 1,
-                    buffer: ("buffer" in config) ? config.buffer : 1
+                    buffer: ("buffer" in config) ? config.buffer : 1,
+                    projection: compatibleProjection
                 }
             );
 
