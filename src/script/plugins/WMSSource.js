@@ -112,16 +112,9 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             // If the layer is not available in the map projection, find a
             // compatible projection that equals the map projection. This helps
             // us in dealing with the different EPSG codes for web mercator.
-            var availableSRS = original.get("srs"), compatibleProjection;
-            if (!availableSRS[projection.getCode()]) {
-                var p, srs;
-                for (srs in availableSRS) {
-                    if ((p=new OpenLayers.Projection(srs)).equals(projection)) {
-                        compatibleProjection = p;
-                        break;
-                    }
-                }
-            }
+            var compatibleProjection = this.getCompatibleProjection(
+                original, projection
+            );
 
             var nativeExtent = original.get("bbox")[projection.getCode()]
             var maxExtent = 
@@ -187,6 +180,31 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         }
         
         return record;
+    },
+    
+    /** api: method[getEqualProjection]
+     *  :arg layerRecord: ``GeoExt.data.LayerRecord`` a record from this
+     *      source's store
+     *  :arg projection: ``OpenLayers.Projection`` the projection to find
+     *      an equal one for
+     *  :returns: ``OpenLayers.Projection`` An equal projection. If the
+     *      passed projection is available, it will be returned. If no equal
+     *      projection is found, null will be returned.
+     */
+    getCompatibleProjection: function(layerRecord, projection) {
+        var compatibleProjection = projection;
+        var availableSRS = layerRecord.get("srs");
+        if (!availableSRS[projection.getCode()]) {
+            compatibleProjection = null;
+            var p, srs;
+            for (srs in availableSRS) {
+                if ((p=new OpenLayers.Projection(srs)).equals(projection)) {
+                    compatibleProjection = p;
+                    break;
+                }
+            }
+        }
+        return compatibleProjection;
     },
     
     /** private: method[initDescribeLayerStore]
