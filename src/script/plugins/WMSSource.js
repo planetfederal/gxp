@@ -183,7 +183,11 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      *  :returns: ``OpenLayers.Projection`` A suitable projection for the
      *      ``layerRecord``. If the layer is available in the map projection,
      *      the map projection will be returned. Otherwise an equal projection,
-     *      or null none is available.
+     *      or null if none is available.
+     *
+     *  Get the projection that the source will use for the layer created in
+     *  ``createLayerRecord``. If the layer is not available in a projection
+     *  that fits the map projection, null will be returned.
      */
     getProjection: function(layerRecord) {
         var projection = this.getMapProjection();
