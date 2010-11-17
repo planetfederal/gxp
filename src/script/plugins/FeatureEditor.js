@@ -48,13 +48,17 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
         var popup;
         var featureManager = this.target.tools[this.featureManager];
         var featureLayer = featureManager.featureLayer;
-        function intercept(mgr, param, fn) {
+        function intercept(mgr, fn) {
+            var fnArgs = Array.prototype.slice.call(arguments);
+            // remove mgr and fn, which will leave us with the original
+            // arguments of the intercepted loadFeatures or setLayer function
+            fnArgs.splice(0, 2);
             if (popup) {
                 if (popup.editing) {
                     function doIt() {
                         featureManager.featureStore.un("write", doIt, this);
                         popup.un("canceledit", doIt, this);
-                        mgr[fn](param);
+                        mgr[fn].apply(mgr, fnArgs);
                     };
                     featureManager.featureStore.on("write", doIt, this);
                     popup.on("canceledit", doIt, this);
@@ -63,9 +67,11 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
                 return !popup.editing;
             }
         };
+        // intercept loadFeatures and setLayer calls - allows us to persist
+        // unsaved changes before calling the original function
         featureManager.on({
-            "beforequery": intercept.createDelegate(this, "loadFeatures", true),
-            "beforelayerchange": intercept.createDelegate(this, "setLayer", true),
+            "beforequery": intercept.createDelegate(this, "loadFeatures", 1),
+            "beforelayerchange": intercept.createDelegate(this, "setLayer", 1),
             scope: this
         });
         

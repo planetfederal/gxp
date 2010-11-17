@@ -53,11 +53,18 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
         
         this.addEvents(
             /** api: event[beforequery]
-             *  Fired before a WFS GetFeature request is issued.
+             *  Fired before a WFS GetFeature request is issued. This event
+             *  can be used to abort the loadFeatures method before any action
+             *  is performed, by having a listener return false.
              *
              *  Listener arguments:
              *  * tool   - :class:`gxp.plugins.FeatureManager` this tool
-             *  * filter - ``OpenLayers.Filter`` 
+             *  * filter - ``OpenLayers.Filter`` the filter argument passed to
+             *    the loadFeatures method
+             *  * callback - ``Function`` the callback argument passed to the
+             *    loadFeatures method
+             *  * scope - ``Object`` the scope argument passed to the
+             *    loadFeatures method
              */
             "beforequery",
             
@@ -73,11 +80,14 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
             
             /** api: event[beforelayerchange]
              *  Fired before a layer change results in destruction of the
-             *  current featureStore, and creation of a new one
+             *  current featureStore, and creation of a new one. This event
+             *  can be used to abort the setLayer method before any action is
+             *  performed, by having a listener return false.
              *
              *  Listener arguments:
              *  * tool  - :class:`gxp.plugins.FeatureManager` this tool
-             *  * layer - ``GeoExt.data.LayerRecord`` the new layer
+             *  * layer - ``GeoExt.data.LayerRecord`` the layerRecord argument
+             *    passed to the setLayer method
              */
             "beforelayerchange",
             
@@ -135,16 +145,16 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
     },
     
     /** api: method[setLayer]
-     *  :arg rec: ``GeoExt.data.LayerRecord``
+     *  :arg layerRecord: ``GeoExt.data.LayerRecord``
      *
      *  Sets the layer for this tool
      */
-    setLayer: function(rec) {
-        if (this.fireEvent("beforelayerchange", this, rec) !== false) {
-            if (rec !== this.selectedLayer) {
+    setLayer: function(layerRecord) {
+        if (this.fireEvent("beforelayerchange", this, layerRecord) !== false) {
+            if (layerRecord !== this.selectedLayer) {
                 this.clearFeatureStore();
-                this.selectedLayer = rec;
-                if (rec) {
+                this.selectedLayer = layerRecord;
+                if (layerRecord) {
                     this.autoLoadFeatures === true ?
                         this.loadFeatures() :
                         this.setFeatureStore();
@@ -187,7 +197,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      *  :arg scope: ``Object`` Optional scope for the callback function.
      */
     loadFeatures: function(filter, callback, scope) {
-        if (this.fireEvent("beforequery", this, filter) !== false) {
+        if (this.fireEvent("beforequery", this, filter, callback, scope) !== false) {
             callback && this.featureLayer.events.register(
                 "featuresadded", this, function(evt) {
                     if (this._query) {
