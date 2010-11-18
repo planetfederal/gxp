@@ -130,7 +130,8 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
              *  
              *  Listener arguments:
              *  * panel - :class:`gxp.FeatureEditPopup` This popup.
-             *  * feature - ``OpenLayers.Feature`` The feature.
+             *  * feature - ``OpenLayers.Feature`` The feature. Will be null
+             *    if editing of a feature that was just inserted was cancelled.
              */
             "canceledit",
             
@@ -157,6 +158,10 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             var name, type, value;
             this.schema.each(function(r) {
                 type = this.getFieldType(r.get("type"));
+                if (type.match(/gml:((Multi)?(Point|Line|Polygon|Curve|Surface)).*/)) {
+                    // exclude gml geometries
+                    return;
+                }
                 name = r.get("name");
                 value = feature.attributes[name];
                 switch(type) {
@@ -333,7 +338,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             "xsd:string": "string",
             "xsd:float": "float",
             "xsd:double": "float"
-        })[attrType];
+        })[attrType] || attrType;
     },
 
     /** private: method[startEditing]
@@ -377,9 +382,10 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                 if (save === true) {
                     this.fireEvent("featuremodified", this, feature);
                 } else if(feature.state === OpenLayers.State.INSERT) {
-                    this.fireEvent("canceledit", this, feature);
-                    this.close();
+                    this.editing = false;
                     feature.layer.destroyFeatures([feature]);
+                    this.fireEvent("canceledit", this, null);
+                    this.close();
                 } else {
                     var layer = feature.layer;
                     layer.drawFeature(feature, {display: "none"});
