@@ -24,7 +24,7 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
             iconCls: "gx-icon-getfeatureinfo",
             toggleGroup: this.toggleGroup,
             enableToggle: true,
-            allowDepress: !this.toggleGroup,
+            allowDepress: true,
             toggleHandler: function(button, pressed) {
                 for (var i = 0, len = info.controls.length; i < len; i++){
                     if (pressed) {
