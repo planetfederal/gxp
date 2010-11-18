@@ -1,3 +1,7 @@
+/**
+ * @requires plugins/Tool.js
+ */
+
 Ext.namespace("gxp.plugins");
 
 gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {

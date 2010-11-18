@@ -1,5 +1,5 @@
 /**
- * @require plugins/LayerSource.js
+ * @requires plugins/LayerSource.js
  */
 
 /**
