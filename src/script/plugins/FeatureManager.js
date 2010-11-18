@@ -33,11 +33,13 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
     
     /** api: property[selectedLayer]
      *  ``GeoExt.data.LayerRecord`` The currently selected layer
+     */
     selectedLayer: null,
     
     /** api: property[featureStore]
      *  :class:`gxp.data.WFSFeatureStore` The FeatureStore that this tool
      *  manages.
+     */
     featureStore: null,
     
     /** api: property[featureLayer]
@@ -45,6 +47,11 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      *  featureStore.
      */
     featureLayer: null,
+    
+    /** api: property[geometryType]
+     *  ``String`` The geometry type of the featureLayer
+     */
+    geometryType: null,
     
     /** private: property[toolsShowingLayer]
      *  ``Array`` of tool ids that currently need to show the layer.
@@ -273,6 +280,16 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                             scope: this
                         }
                     });
+                    
+                    // detect the geometry type
+                    s.each(function(r) {
+                        // TODO: To be more generic, we would look for GeometryPropertyType as well.
+                        var match = /gml:((Multi)?(Point|Line|Polygon|Curve|Surface)).*/.exec(r.get("type"));
+                        if (match) {
+                            this.geometryType = match[1];
+                        }
+                        return !match;
+                    }, this);
                 }
                 this.fireEvent("layerchange", this, rec, s);
                 }, this
@@ -293,6 +310,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
             // end remove
             this.featureStore.destroy();
             this.featureStore = null;
+            this.geometryType = null;
         }
     }
 

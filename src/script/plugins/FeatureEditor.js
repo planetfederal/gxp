@@ -25,7 +25,12 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
      */
     autoLoadFeatures: false,
     
-    /** private: property[selectContrl]
+    /** private: property[drawControl]
+     *  ``OpenLayers.Control.DrawFeature``
+     */
+    drawControl: null,
+    
+    /** private: property[selectControl]
      *  ``OpenLayers.Control.SelectFeature``
      */
     selectControl: null,
@@ -52,6 +57,9 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
         var popup;
         var featureManager = this.target.tools[this.featureManager];
         var featureLayer = featureManager.featureLayer;
+
+        // intercept loadFeatures and setLayer calls - allows us to persist
+        // unsaved changes before calling the original function
         function intercept(mgr, fn) {
             var fnArgs = Array.prototype.slice.call(arguments);
             // remove mgr and fn, which will leave us with the original
@@ -71,13 +79,25 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
                 return !popup.editing;
             }
         };
-        // intercept loadFeatures and setLayer calls - allows us to persist
-        // unsaved changes before calling the original function
         featureManager.on({
             "beforequery": intercept.createDelegate(this, "loadFeatures", 1),
             "beforelayerchange": intercept.createDelegate(this, "setLayer", 1),
             scope: this
         });
+        
+        this.drawControl = new OpenLayers.Control.DrawFeature(
+            featureLayer,
+            OpenLayers.Handler.Point, {
+                eventListeners: {
+                    "featureadded": function(evt) {
+                        if (this.autoLoadFeatures === true) {
+                            this.autoLoadedFeature = evt.feature;
+                        }
+                    },
+                    scope: this
+                }
+            }
+        );
         
         // create a SelectFeature control
         // "fakeKey" will be ignord by the SelectFeature control, so only one
@@ -184,7 +204,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
                                      * feature from the layer.
                                      */
                                     featureStore._removing = true; // TODO: remove after http://trac.geoext.org/ticket/141
-                                    featureStore.remove(store.getRecordFromFeature(feature));
+                                    featureStore.remove(featureStore.getRecordFromFeature(feature));
                                     delete featureStore._removing; // TODO: remove after http://trac.geoext.org/ticket/141
                                 }
                                 featureStore.save();
@@ -209,13 +229,23 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
             scope: this
         });
 
+        var toggleGroup = this.toggleGroup || Ext.id();
         gxp.plugins.FeatureEditor.superclass.addActions.call(this, [new GeoExt.Action({
+            tooltip: "Create a new feature",
+            iconCls: "gx-icon-addfeature",
+            disabled: true,
+            toggleGroup: toggleGroup,
+            enableToggle: true,
+            allowDepress: true,
+            control: this.drawControl,
+            map: this.target.mapPanel.map
+        }), new GeoExt.Action({
             tooltip: "Edit existing feature",
             iconCls: "gx-icon-editfeature",
             disabled: true,
-            toggleGroup: this.toggleGroup,
+            toggleGroup: toggleGroup,
             enableToggle: true,
-            allowDepress: !this.toggleGroup,
+            allowDepress: true,
             control: this.selectControl,
             map: this.target.mapPanel.map
         })]);
@@ -276,7 +306,35 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
     onLayerChange: function(mgr, layer, schema) {
         this.schema = schema;
         this.actions[0].setDisabled(!schema);
-        !schema && this.selectControl.deactivate(); 
+        this.actions[1].setDisabled(!schema);
+
+        var control = this.drawControl;
+        var button = this.actions[0];
+        var handlers = {
+            "Point": OpenLayers.Handler.Point,
+            "Line": OpenLayers.Handler.Path,
+            "Curve": OpenLayers.Handler.Path,
+            "Polygon": OpenLayers.Handler.Polygon,
+            "Surface": OpenLayers.Handler.Polygon
+        }        
+        var simpleType = mgr.geometryType.replace("Multi", "");
+        var Handler = handlers[simpleType];
+        if (Handler) {
+            var active = control.active;
+            if(active) {
+                control.deactivate();
+            }
+            control.handler = new Handler(
+                control, control.callbacks,
+                Ext.apply(control.handlerOptions, {multi: (simpleType != mgr.geometryType)})
+            );
+            if(active) {
+                control.activate();
+            }
+            button.enable();
+        } else {
+            button.disable();
+        }
     }
     
 });

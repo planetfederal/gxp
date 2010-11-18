@@ -379,7 +379,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                 } else if(feature.state === OpenLayers.State.INSERT) {
                     this.editing = false;
                     feature.layer.destroyFeatures([feature]);
-                    this.close();
+                    this.fireEvent("canceledit", this, feature);
                 } else {
                     var layer = feature.layer;
                     layer.drawFeature(feature, {display: "none"});
@@ -392,10 +392,12 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                 }
             }
 
-            this.cancelButton.hide();
-            this.saveButton.hide();
-            this.editButton.show();
-            this.allowDelete && this.deleteButton.show();
+            if (!this.isDestroyed) {
+                this.cancelButton.hide();
+                this.saveButton.hide();
+                this.editButton.show();
+                this.allowDelete && this.deleteButton.show();
+            }
             
             this.editing = false;
         }

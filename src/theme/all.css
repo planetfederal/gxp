@@ -45,6 +45,9 @@
 }
 
 /* gx_featureeditor */
+.x-btn .gx-icon-addfeature {
+    background-image: url(img/silk/pencil_add.png);
+}
 .x-btn .gx-icon-editfeature {
     background-image: url(img/silk/map_edit.png);
 }
