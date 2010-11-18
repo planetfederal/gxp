@@ -373,13 +373,13 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             this.modifyControl.destroy();
             
             var feature = this.feature;
-            if(feature.state === this.getDirtyState()) {
-                if(save === true) {
+            if (feature.state === this.getDirtyState()) {
+                if (save === true) {
                     this.fireEvent("featuremodified", this, feature);
                 } else if(feature.state === OpenLayers.State.INSERT) {
-                    this.editing = false;
-                    feature.layer.destroyFeatures([feature]);
                     this.fireEvent("canceledit", this, feature);
+                    this.close();
+                    feature.layer.destroyFeatures([feature]);
                 } else {
                     var layer = feature.layer;
                     layer.drawFeature(feature, {display: "none"});
