@@ -160,7 +160,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      *
      *  Sets the layer for this tool
      */
-    setLayer: function(layerRecord) {
+    setLayer: function(tool, layerRecord) {
         if (this.fireEvent("beforelayerchange", this, layerRecord) !== false) {
             if (layerRecord !== this.selectedLayer) {
                 this.clearFeatureStore();

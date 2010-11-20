@@ -230,7 +230,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
         });
 
         var toggleGroup = this.toggleGroup || Ext.id();
-        gxp.plugins.FeatureEditor.superclass.addActions.call(this, [new GeoExt.Action({
+        var actions = gxp.plugins.FeatureEditor.superclass.addActions.call(this, [new GeoExt.Action({
             tooltip: "Create a new feature",
             iconCls: "gx-icon-addfeature",
             disabled: true,
@@ -251,6 +251,8 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
         })]);
 
         featureManager.on("layerchange", this.onLayerChange, this);
+        
+        return actions;
     },
     
     /** private: method[noFeatureClick]
@@ -307,6 +309,10 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
         this.schema = schema;
         this.actions[0].setDisabled(!schema);
         this.actions[1].setDisabled(!schema);
+        if (!schema) {
+            // not a wfs capable layer
+            return;
+        }
 
         var control = this.drawControl;
         var button = this.actions[0];

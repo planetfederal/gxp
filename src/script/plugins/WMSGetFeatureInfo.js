@@ -19,7 +19,7 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
     addActions: function() {
         this.popupCache = {};
         
-        gxp.plugins.WMSGetFeatureInfo.superclass.addActions.call(this, [{
+        var actions = gxp.plugins.WMSGetFeatureInfo.superclass.addActions.call(this, [{
             tooltip: "Get Feature Info",
             iconCls: "gx-icon-getfeatureinfo",
             toggleGroup: this.toggleGroup,
@@ -81,6 +81,8 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
         this.target.mapPanel.layers.on("update", updateInfo, this);
         this.target.mapPanel.layers.on("add", updateInfo, this);
         this.target.mapPanel.layers.on("remove", updateInfo, this);
+        
+        return actions;
     },
 
     /** private: method[displayPopup]

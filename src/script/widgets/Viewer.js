@@ -58,9 +58,13 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             "portalReady",
             
             /** api: event[layerselectionchange]
-             *  Fired by components that offers layer selection, when a layer
-             *  is selected. Listeners receive the record of the selected layer
-             *  as argument, or null if no layer is selected.
+             *  Fired by tools that offer layer selection, when a layer
+             *  is selected. Listeners arguments:
+             *  * tool - ``gxp.plugins.Tool`` the tool that was used to select
+             *    the layer, or null if fired by this Viewer because one of the
+             *    initial layers was configured with ``selected`` set to true.
+             *  * layerRecord - ``GeoExt.data.LayerRecord`` the record of the
+             *    selected layer, or null if no layer is selected.
              */
             "layerselectionchange"
         );
@@ -263,7 +267,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                             overlayRecords.push(record);
                         }
                         if (record.get("selected") === true) {
-                            this.fireEvent("layerselectionchange", record);
+                            this.fireEvent("layerselectionchange", null, record);
                         }
                     }
                 }
