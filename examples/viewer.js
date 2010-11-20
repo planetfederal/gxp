@@ -9,15 +9,18 @@ Ext.onReady(function() {
         },
         portalItems: [{
             xtype: "tabpanel",
+            id: "maincontent",
             region: "center",
             activeTab: 0,
-            items: ["mymap", {
-                xtype: "panel",
-                title: "another tab",
-                html: "I'm just a tab"
-            }]
+            items: ["mymap"]
         }],
         tools: [{
+            ptype: "gx_layertree",
+            outputConfig: {
+                title: "Layers",
+            },
+            outputTarget: "maincontent"
+        }, {
             ptype: "gx_wmsgetfeatureinfo",
             outputConfig: {
                 width: 400,
@@ -49,7 +52,7 @@ Ext.onReady(function() {
         },
         map: {
             id: "mymap",
-            title: "map",
+            title: "Map",
             projection: "EPSG:900913",
             units: "m",
             maxResolution: 156543.0339,
