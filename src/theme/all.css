@@ -4,7 +4,7 @@
 }
 
 .x-btn .delete {
-    background-image: url(img/delete.png);
+    background-image: url(img/silk/delete.png);
 }
 
 .x-btn .duplicate {
@@ -50,6 +50,11 @@
 }
 .x-btn .gx-icon-editfeature {
     background-image: url(img/silk/map_edit.png);
+}
+
+/* gx_removelayer */
+.x-btn .gx-icon-removelayers, .x-menu-item .gx-icon-removelayers {
+    background-image: url(img/silk/delete.png);
 }
 
 /* fixes textarea scrollbar issue in FF on OSX */

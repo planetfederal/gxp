@@ -260,7 +260,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
      */
     noFeatureClick: function(evt) {
         var size = this.target.mapPanel.map.getSize();
-        var layer = this.target.tools[this.featureManager].selectedLayer.getLayer();
+        var layer = this.target.selectedLayer.getLayer();
         var store = new GeoExt.data.FeatureStore({
             fields: {},
             proxy: new GeoExt.data.ProtocolProxy({

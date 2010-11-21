@@ -32,8 +32,24 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
 
         var getSelectedLayerRecord = function() {
             var node = layerTree.getSelectionModel().getSelectedNode();
-            return getRecordFromNode(node);
+            return node ? getRecordFromNode(node) : null;
         };
+        
+        var target = this.target, me = this;
+        var addListeners = function(node, record) {
+            if (record) {
+                target.on("layerselectionchange", function(tool, rec) {
+                    tool !== me && rec === record && node.select();
+                });
+                record === target.selectedLayer && node.on("rendernode", function() {
+                    node.select();
+                });
+            }
+        };
+        
+        // create our own layer node UI class, using the TreeNodeUIEventMixin
+        var LayerNodeUI = Ext.extend(GeoExt.tree.LayerNodeUI,
+            new GeoExt.tree.TreeNodeUIEventMixin());
         
         var treeRoot = new Ext.tree.TreeNode({
             text: "Layers",
@@ -52,6 +68,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
                         record.get("layer").displayInLayerSwitcher == true;
                 },
                 createNode: function(attr) {
+                    attr.uiProvider = LayerNodeUI;
                     var layer = attr.layer;
                     var store = attr.layerStore;
                     if (layer && store) {
@@ -62,7 +79,9 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
                             attr.iconCls = "gx-tree-rasterlayer-icon";
                         }
                     }
-                    return GeoExt.tree.LayerLoader.prototype.createNode.apply(this, [attr]);
+                    var node = GeoExt.tree.LayerLoader.prototype.createNode.apply(this, [attr]);
+                    addListeners(node, record);
+                    return node;
                 }
             }),
             singleClickExpand: true,
@@ -87,6 +106,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
                         record.get("layer").displayInLayerSwitcher == true;
                 },
                 createNode: function(attr) {
+                    attr.uiProvider = LayerNodeUI;
                     var layer = attr.layer;
                     var store = attr.layerStore;
                     if (layer && store) {
@@ -102,7 +122,9 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
                             }
                         }
                     }
-                    return GeoExt.tree.LayerLoader.prototype.createNode.apply(this, arguments);
+                    var node = GeoExt.tree.LayerLoader.prototype.createNode.apply(this, arguments);
+                    addListeners(node, record);
+                    return node;
                 }
             }),
             singleClickExpand: true,
@@ -136,7 +158,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
                         node.select();
                         var c = node.getOwnerTree().contextMenu;
                         c.contextNode = node;
-                        c.showAt(e.getXY());
+                        c.items.getCount() > 0 && c.showAt(e.getXY());
                     }
                 },
                 beforemovenode: function(tree, node, oldParent, newParent, index) {
@@ -152,9 +174,13 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
                 },                
                 scope: this
             },
-            contextMenu: new Ext.menu.Menu()
+            contextMenu: new Ext.menu.Menu({
+                items: []
+            })
         }, config || {});
+        
         var layerTree = gxp.plugins.LayerTree.superclass.addOutput.call(this, config);
+        
         return layerTree;
     }
         

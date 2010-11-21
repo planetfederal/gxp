@@ -18,8 +18,13 @@ Ext.onReady(function() {
             ptype: "gx_layertree",
             outputConfig: {
                 title: "Layers",
+                id: "tree",
+                tbar: []
             },
             outputTarget: "maincontent"
+        }, {
+            ptype: "gx_removelayer",
+            actionTarget: ["tree.tbar", "tree.contextMenu"]
         }, {
             ptype: "gx_wmsgetfeatureinfo",
             outputConfig: {

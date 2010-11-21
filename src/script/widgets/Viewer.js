@@ -40,6 +40,11 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
      *  Items that make up the portal.
      */
      
+    /** api: property[selectedLayer]
+     *  ``GeoExt.data.LayerRecord`` The currently selected layer
+     */
+    selectedLayer: null,
+     
     /** private: method[constructor]
      *  Construct the viewer.
      */
@@ -61,8 +66,8 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
              *  Fired by tools that offer layer selection, when a layer
              *  is selected. Listeners arguments:
              *  * tool - ``gxp.plugins.Tool`` the tool that was used to select
-             *    the layer, or null if fired by this Viewer because one of the
-             *    initial layers was configured with ``selected`` set to true.
+             *    the layer, or null if fired by this Viewer because a layer
+             *    record with ``selected`` set to true was added/removed.
              *  * layerRecord - ``GeoExt.data.LayerRecord`` the record of the
              *    selected layer, or null if no layer is selected.
              */
@@ -74,8 +79,13 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             portalItems: []
         });
 
+        this.on("layerselectionchange", function(tool, rec) {
+            this.selectedLayer = rec;
+        }, this);
+
         this.loadConfig(config, this.applyConfig);
         gxp.Viewer.superclass.constructor.apply(this, arguments);
+        
     },
     
     /** api: method[loadConfig]
@@ -198,9 +208,26 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             center: config.center && new OpenLayers.LonLat(config.center[0], config.center[1]),
             layers: null,
             items: this.mapItems,
-            tbar: config.tbar || {hidden: true}
+            tbar: config.tbar || {hidden: true},
         }, config));
-
+        
+        this.mapPanel.layers.on({
+            "add": function(store, records) {
+                var record;
+                for (var i=records.length-1; i>= 0; i--) {
+                    record = records[i];
+                    if (record.get("selected") === true) {
+                        this.fireEvent("layerselectionchange", null, record);
+                    }
+                }
+            },
+            "remove": function(store, record) {
+                if (record.get("selected") === true) {
+                    this.fireEvent("layerselectionchange", null, null);
+                }
+            },
+            scope: this
+        });
     },
     
     initTools: function() {
@@ -265,9 +292,6 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                             baseRecords.push(record);
                         } else {
                             overlayRecords.push(record);
-                        }
-                        if (record.get("selected") === true) {
-                            this.fireEvent("layerselectionchange", null, record);
                         }
                     }
                 }

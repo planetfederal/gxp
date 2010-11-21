@@ -31,10 +31,11 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      */
     autoLoadFeatures: false,
     
-    /** api: property[selectedLayer]
-     *  ``GeoExt.data.LayerRecord`` The currently selected layer
+    /** api: property[layerRecord]
+     *  ``GeoExt.data.LayerRecord`` The currently selected layer for this
+     *  FeatureManager
      */
-    selectedLayer: null,
+    layerRecord: null,
     
     /** api: property[featureStore]
      *  :class:`gxp.data.WFSFeatureStore` The FeatureStore that this tool
@@ -110,7 +111,8 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
              *  * tool   - :class:`gxp.plugins.FeatureManager` this tool
              *  * layer  - ``GeoExt.data.LayerRecord`` the new layer
              *  * schema - ``GeoExt.data.AttributeStore`` or false if the
-             *    layer has no associated WFS FeatureType.
+             *    layer has no associated WFS FeatureType, or null if no layer
+             *    is currently selected.
              */
             "layerchange"
         );
@@ -162,13 +164,15 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      */
     setLayer: function(tool, layerRecord) {
         if (this.fireEvent("beforelayerchange", this, layerRecord) !== false) {
-            if (layerRecord !== this.selectedLayer) {
+            if (layerRecord !== this.layerRecord) {
                 this.clearFeatureStore();
-                this.selectedLayer = layerRecord;
+                this.layerRecord = layerRecord;
                 if (layerRecord) {
                     this.autoLoadFeatures === true ?
                         this.loadFeatures() :
                         this.setFeatureStore();
+                } else {
+                    this.fireEvent("layerchange", this, null);
                 }
             }
         }
@@ -235,7 +239,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      *  :arg autoLoad: ``Boolean``
      */
     setFeatureStore: function(filter, autoLoad) {
-        var rec = this.selectedLayer;
+        var rec = this.layerRecord;
         var source = this.target.getSource(rec);
         if (source && source instanceof gxp.plugins.WMSSource) {
             source.getSchema(rec, function(s) {

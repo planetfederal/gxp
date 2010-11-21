@@ -43,7 +43,8 @@
         "plugins/WMSGetFeatureInfo.js",
         "plugins/FeatureEditor.js",
         "plugins/FeatureManager.js",
-        "plugins/LayerTree.js"
+        "plugins/LayerTree.js",
+        "plugins/RemoveLayer.js"
     );
     
     var scripts = document.getElementsByTagName("script");
