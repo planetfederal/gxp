@@ -120,7 +120,6 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
                         this.target.mapPanel.map.events.unregister("click",
                             this, this.noFeatureClick
                         );
-                    var featureManager = this.target.tools[this.featureManager];
                     if (popup) {
                         if (popup.editing) {
                             popup.on("cancelclose", function() {
@@ -160,7 +159,6 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
             },
             "featureselected": function(evt) {
                 var feature = evt.feature;
-                var featureManager = this.target.tools[this.featureManager];
                 var featureStore = featureManager.featureStore;
                 if(this.selectControl.active) {
                     popup = new gxp.FeatureEditPopup(Ext.apply({

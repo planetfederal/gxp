@@ -4,7 +4,7 @@ Ext.onReady(function() {
         portalConfig: {
             renderTo: document.body,
             width: 500,
-            height: 300,
+            height: 450,
             bbar: {id: "mybbar"}
         },
         portalItems: [{
@@ -13,6 +13,12 @@ Ext.onReady(function() {
             region: "center",
             activeTab: 0,
             items: ["mymap"]
+        }, {
+            id: "gridcontainer",
+            region: "south",
+            layout: "fit",
+            border: false,
+            height: 150
         }],
         tools: [{
             ptype: "gx_layertree",
@@ -42,6 +48,10 @@ Ext.onReady(function() {
             autoLoadFeatures: true,
             outputConfig: {panIn: false},
             toggleGroup: "layertools"
+        }, {
+            ptype: "gx_featuregrid",
+            featureManager: "featuremanager",
+            outputTarget: "gridcontainer"
         }, {
             actionTarget: "mybbar", // ".bbar" would also work
             actions: [{text: "Click me - I'm a tool on the portal's bbar"}]

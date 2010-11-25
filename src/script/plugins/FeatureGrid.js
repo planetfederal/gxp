@@ -20,58 +20,80 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
      */
     schema: null,
         
-    /** private: method[onLayerChange]
-     *  :arg mgr: :class:`gxp.plugins.FeatureManager`
-     *  :arg layer: ``GeoExt.data.LayerRecord``
-     *  :arg schema: ``GeoExt.data.AttributeStore``
+    /** api: method[addActions]
      */
-    onLayerChange: function(mgr, layer, schema) {
-        this.schema = schema;
-        this.actions[0].setDisabled(!schema);
-        this.actions[1].setDisabled(!schema);
-
-        var control = this.drawControl;
-        var button = this.actions[0];
-        var handlers = {
-            "Point": OpenLayers.Handler.Point,
-            "Line": OpenLayers.Handler.Path,
-            "Curve": OpenLayers.Handler.Path,
-            "Polygon": OpenLayers.Handler.Polygon,
-            "Surface": OpenLayers.Handler.Polygon
-        }        
-        var simpleType = mgr.geometryType.replace("Multi", "");
-        var Handler = handlers[simpleType];
-        if (Handler) {
-            var active = control.active;
-            if(active) {
-                control.deactivate();
-            }
-            control.handler = new Handler(
-                control, control.callbacks,
-                Ext.apply(control.handlerOptions, {multi: (simpleType != mgr.geometryType)})
-            );
-            if(active) {
-                control.activate();
-            }
-            button.enable();
-        } else {
-            button.disable();
-        }
-    }
-
+    addActions: function() {
+        this.addOutput(this.outputConfig);
+        return gxp.plugins.FeatureGrid.superclass.addActions.apply(this, arguments);
+    },
+    
     /** api: method[addOutput]
      */
     addOutput: function(config) {
-        var ref = this.outputTarget;
-        var ct = ref ?
-            ref == "map" ?
-                this.target.mapPanel :
-                (this.target.portal[ref] || Ext.getCmp(ref)) :
-            this.target.portal;
-        Ext.apply(config, this.outputConfig);
-        var cmp = ct.add(config);
-        cmp instanceof Ext.Window ? cmp.show() : ct.doLayout();
-        return cmp;
+        var featureManager = this.target.tools[this.featureManager];
+        // a minimal SelectFeature control - used just to provide select and
+        // unselect, won't be added to the map
+        var selectControl = new OpenLayers.Control.SelectFeature(this.target.tools[this.featureManager].featureLayer);
+        config = Ext.apply({
+            xtype: "gx_featuregrid",
+            sm: new GeoExt.grid.FeatureSelectionModel({
+                selectControl: selectControl,
+                singleSelect: false,
+                autoActivateControl: false,
+                listeners: {
+                    "beforerowselect": function() {
+                        if(selectControl.active && !this._selectingFeature) {
+                            return false;
+                        }
+                        delete this._selectingFeature;
+                    },
+                    scope: this
+                }
+            }),
+            autoScroll: true,
+            bbar: ["->", {
+                text: "Display on map",
+                enableToggle: true,
+                toggleHandler: function(btn, pressed) {
+                    featureManager[pressed ? "showLayer" : "hideLayer"](this.id);
+                },
+                scope: this
+            }, {
+                text: "Zoom to selected",
+                iconCls: "icon-zoom-to",
+                handler: function(btn) {
+                    var bounds, geom, extent;
+                    featureGrid.getSelectionModel().each(function(r) {
+                        geom = r.getFeature().geometry;
+                        if(geom) {
+                            extent = geom.getBounds();
+                            if(bounds) {
+                                bounds.extend(extent);
+                            } else {
+                                bounds = extent.clone();
+                            }
+                        }
+                    }, this);
+                    if(bounds) {
+                        this.target.mapPanel.map.zoomToExtent(bounds);
+                    }
+                },
+                scope: this                
+            }]
+        }, config || {});
+        var featureGrid = gxp.plugins.FeatureGrid.superclass.addOutput.call(this, config);
+        
+        featureManager.on("layerchange", function(mgr, rec, schema) {
+            //TODO use schema instead of store to configure the fields
+            var ignoreFields = ["feature", "state", "fid"];
+            schema && schema.each(function(r) {
+                r.get("type").indexOf("gml:") == 0 && ignoreFields.push(r.get("name"));
+            });
+            featureGrid.ignoreFields = ignoreFields;
+            featureGrid.setStore(featureManager.featureStore);
+        }, this);
+        
+        return featureGrid;
     }
         
 });

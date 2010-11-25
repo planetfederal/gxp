@@ -42,6 +42,7 @@
         "plugins/Tool.js",
         "plugins/WMSGetFeatureInfo.js",
         "plugins/FeatureEditor.js",
+        "plugins/FeatureGrid.js",
         "plugins/FeatureManager.js",
         "plugins/LayerTree.js",
         "plugins/RemoveLayer.js"

@@ -92,14 +92,21 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
      *  Sets the store for this grid, reconfiguring the column model
      */
     setStore: function(store) {
-        if(this.store instanceof GeoExt.data.FeatureStore) {
-            this.store.unbind();
+        if (store) {
+            if(this.store instanceof GeoExt.data.FeatureStore) {
+                this.store.unbind();
+            }
+            if(this.layer) {
+                this.layer.destroyFeatures();
+                store.bind(this.layer);
+            }
+            this.reconfigure(store, this.createColumnModel(store));
+        } else {
+            this.reconfigure(
+                new Ext.data.Store(),
+                new Ext.grid.ColumnModel({columns: []})
+            );
         }
-        if(this.layer) {
-            this.layer.destroyFeatures();
-            store.bind(this.layer);
-        }
-        this.reconfigure(store, this.createColumnModel(store));
     },
     
     /** private: method[createColumnModel]
