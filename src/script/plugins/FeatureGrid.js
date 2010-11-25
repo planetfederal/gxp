@@ -60,7 +60,7 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                 scope: this
             }, {
                 text: "Zoom to selected",
-                iconCls: "icon-zoom-to",
+                iconCls: "gx-icon-zoom-to",
                 handler: function(btn) {
                     var bounds, geom, extent;
                     featureGrid.getSelectionModel().each(function(r) {

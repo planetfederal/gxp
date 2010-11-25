@@ -57,6 +57,12 @@
     background-image: url(img/silk/delete.png);
 }
 
+/* gx_featuregrid */
+.x-btn .gx-icon-zoom-to, .x-menu-item .gx-icon-zoom-to { 
+    background-image: url(img/silk/magnifier.png);
+}
+
+
 /* fixes textarea scrollbar issue in FF on OSX */
 .ext-gecko.ext-mac textarea.x-form-field {
     padding: 1px 2px;
