@@ -3,8 +3,8 @@ Ext.onReady(function() {
     app = new gxp.Viewer({
         portalConfig: {
             renderTo: document.body,
-            width: 500,
-            height: 450,
+            width: 800,
+            height: 465,
             bbar: {id: "mybbar"}
         },
         portalItems: [{
@@ -19,6 +19,12 @@ Ext.onReady(function() {
             layout: "fit",
             border: false,
             height: 150
+        }, {
+            id: "querycontainer",
+            region: "west",
+            layout: "fit",
+            border: false,
+            width: 310
         }],
         tools: [{
             ptype: "gx_layertree",
@@ -55,6 +61,10 @@ Ext.onReady(function() {
         }, {
             actionTarget: "mybbar", // ".bbar" would also work
             actions: [{text: "Click me - I'm a tool on the portal's bbar"}]
+        }, {
+            ptype: "gx_querypanel",
+            featureManager: "featuremanager",
+            outputTarget: "querycontainer"
         }],
         defaultSourceType: "gx_wmssource",
         sources: {

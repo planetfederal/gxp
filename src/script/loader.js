@@ -44,6 +44,7 @@
         "plugins/FeatureEditor.js",
         "plugins/FeatureGrid.js",
         "plugins/FeatureManager.js",
+        "plugins/QueryPanel.js",
         "plugins/LayerTree.js",
         "plugins/RemoveLayer.js"
     );
