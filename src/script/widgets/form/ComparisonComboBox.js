@@ -45,8 +45,8 @@ gxp.form.ComarisonComboBox = Ext.extend(Ext.form.ComboBox, {
                     var index = this.store.findExact("value", this.getValue());
                     if (index != -1) {
                         this.fireEvent("select", this, this.store.getAt(index));
-                    } else if (this.selectedIndex != null) {
-                        this.setValue(this.store.getAt(this.selectedIndex).get("value"));
+                    } else if (this.startValue != null) {
+                        this.setValue(this.startValue);
                     }
                 }
             }

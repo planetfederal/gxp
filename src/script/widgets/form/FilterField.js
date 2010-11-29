@@ -78,8 +78,8 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
                     var index = combo.store.findExact("name", combo.getValue());
                     if (index != -1) {
                         combo.fireEvent("select", combo, combo.store.getAt(index));
-                    } else if (combo.selectedIndex != null) {
-                        combo.setValue(combo.store.getAt(combo.selectedIndex).get("name"));
+                    } else if (combo.startValue != null) {
+                        combo.setValue(combo.startValue);
                     }
                 },
                 scope: this
