@@ -15,7 +15,7 @@ Ext.onReady(function() {
     var wms = new OpenLayers.Layer.WMS(
         "Global Imagery",
         "/geoserver/wms",
-        {layers: 'bluemarble'}
+        {layers: 'world'}
     );
     var vector = new OpenLayers.Layer.Vector();    
     map.addLayers([wms, vector]);
@@ -32,15 +32,15 @@ Ext.onReady(function() {
                 layers: [{
                     title: "US States",
                     name: "states",
-                    namespace: "http://www.openplans.org/topp",
+                    namespace: "http://usa.opengeo.org",
                     url: "/geoserver/wfs",
-                    schema: "/geoserver/wfs?version=1.1.0&request=DescribeFeatureType&typeName=topp:states"
+                    schema: "/geoserver/wfs?version=1.1.0&request=DescribeFeatureType&typeName=usa:states"
                 }, {
-                    title: "Archaeological Sites",
-                    name: "archsites",
-                    namespace: "http://opengeo.org",
+                    title: "Medford Parks",
+                    name: "parks",
+                    namespace: "http://medford.opengeo.org",
                     url: "/geoserver/wfs",
-                    schema: "/geoserver/wfs?version=1.1.0&request=DescribeFeatureType&typeName=og:archsites"
+                    schema: "/geoserver/wfs?version=1.1.0&request=DescribeFeatureType&typeName=medford:parks"
                 }]
             },
             root: "layers",
