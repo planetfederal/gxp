@@ -507,6 +507,7 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
             items: [{
                 xtype: "container",
                 width: 28,
+                height: 26,
                 style: "padding-left: 2px",
                 items: {
                     xtype: "button",
