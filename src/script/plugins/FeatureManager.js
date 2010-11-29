@@ -249,7 +249,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                     var fields = [], match, geometryName;
                     s.each(function(r) {
                         // TODO: To be more generic, we would look for GeometryPropertyType as well.
-                        var match = /gml:((Multi)?(Point|Line|Polygon|Curve|Surface)).*/.exec(r.get("type"));
+                        match = /gml:((Multi)?(Point|Line|Polygon|Curve|Surface)).*/.exec(r.get("type"));
                         if (match) {
                             geometryName = r.get("name");
                             this.geometryType = match[1];
