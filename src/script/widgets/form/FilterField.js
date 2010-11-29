@@ -68,8 +68,19 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
             value: this.filter.property,
             listeners: {
                 select: function(combo, record) {
+                    this.items.get(1).enable();
                     this.filter.property = record.get("name");
                     this.fireEvent("change", this.filter);
+                },
+                // workaround for select event not being fired when tab is hit
+                // after field was autocompleted with forceSelection
+                "blur": function(combo) {
+                    var index = combo.store.findExact("name", combo.getValue());
+                    if (index != -1) {
+                        combo.fireEvent("select", combo, combo.store.getAt(index));
+                    } else if (combo.selectedIndex != null) {
+                        combo.setValue(combo.store.getAt(combo.selectedIndex).get("name"));
+                    }
                 },
                 scope: this
             },
@@ -114,10 +125,12 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
         return [
             this.attributesComboConfig, {
                 xtype: "gx_comparisoncombo",
+                disabled: true,
                 allowBlank: this.allowBlank,
                 value: this.filter.type,
                 listeners: {
                     select: function(combo, record) {
+                        this.items.get(2).enable();
                         this.filter.type = record.get("value");
                         this.fireEvent("change", this.filter);
                     },
@@ -125,6 +138,7 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
                 }
             }, {
                 xtype: "textfield",
+                disabled: true,
                 value: this.filter.value,
                 width: 50,
                 grow: true,

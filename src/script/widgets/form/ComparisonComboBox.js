@@ -13,17 +13,21 @@ gxp.form.ComarisonComboBox = Ext.extend(Ext.form.ComboBox, {
         [OpenLayers.Filter.Comparison.LESS_THAN_OR_EQUAL_TO, "<="],
         [OpenLayers.Filter.Comparison.GREATER_THAN_OR_EQUAL_TO, ">="],
         [OpenLayers.Filter.Comparison.LIKE, "like"]
-    ],  
+    ],
 
     allowBlank: false,
 
     mode: "local",
 
+    typeAhead: true,
+
+    forceSelection: true,
+
     triggerAction: "all",
 
     width: 50,
 
-    editable: false,
+    editable: true,
   
     initComponent: function() {
         var defConfig = {
@@ -33,7 +37,19 @@ gxp.form.ComarisonComboBox = Ext.extend(Ext.form.ComboBox, {
                 data: this.allowedTypes,
                 fields: ["value", "name"]
             }),
-            value: (this.value === undefined) ? this.allowedTypes[0][0] : this.value
+            value: (this.value === undefined) ? this.allowedTypes[0][0] : this.value,
+            listeners: {
+                // workaround for select event not being fired when tab is hit
+                // after field was autocompleted with forceSelection
+                "blur": function() {
+                    var index = this.store.findExact("value", this.getValue());
+                    if (index != -1) {
+                        this.fireEvent("select", this, this.store.getAt(index));
+                    } else if (this.selectedIndex != null) {
+                        this.setValue(this.store.getAt(this.selectedIndex).get("value"));
+                    }
+                }
+            }
         };
         Ext.applyIf(this, defConfig);
         
