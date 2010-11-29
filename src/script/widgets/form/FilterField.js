@@ -35,16 +35,34 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
         if(!this.filter) {
             this.filter = this.createDefaultFilter();
         }
-        if(!this.attributes) {
-            this.attributes = new GeoExt.data.AttributeStore();
+        // Maintain compatibility with QueryPanel, which relies on "remote"
+        // mode and the filterBy filter applied in it's attributeStore's load
+        // listener *after* the initial combo filtering.
+        //TODO Assume that the AttributeStore is already loaded and always
+        // create a new one without geometry fields.
+        var mode = "remote", attributes = new GeoExt.data.AttributeStore();
+        if (this.attributes) {
+            if (this.attributes.getCount() != 0) {
+                mode = "local";
+                this.attributes.each(function(r) {
+                    // TODO: To be more generic, we would look for GeometryPropertyType as well.
+                    var match = /gml:((Multi)?(Point|Line|Polygon|Curve|Surface)).*/.exec(r.get("type"));
+                    match || attributes.add([r]);
+                });
+            } else {
+                attributes = this.attributes;
+            }
         }
 
         var defAttributesComboConfig = {
             xtype: "combo",
-            store: this.attributes,
-            editable: false,
+            store: attributes,
+            editable: mode == "local",
+            typeAhead: true,
+            forceSelection: true,
+            mode: mode,
             triggerAction: "all",
-            allowBlank: false,
+            allowBlank: this.allowBlank,
             displayField: "name",
             valueField: "name",
             value: this.filter.property,
@@ -96,6 +114,7 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
         return [
             this.attributesComboConfig, {
                 xtype: "gx_comparisoncombo",
+                allowBlank: this.allowBlank,
                 value: this.filter.type,
                 listeners: {
                     select: function(combo, record) {
@@ -111,7 +130,7 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
                 grow: true,
                 growMin: 50,
                 anchor: "100%",
-                allowBlank: false,
+                allowBlank: this.allowBlank,
                 listeners: {
                     change: function(el, value) {
                         this.filter.value = value;

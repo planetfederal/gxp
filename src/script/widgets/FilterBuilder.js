@@ -35,6 +35,13 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
      */
     allowedBuilderTypes: null,
     
+    /** api: config[allowBlank]
+     *  ``Boolean`` Do we allow blank FilterFields? It is safe to say true
+     *  here, but for compatibility reasons with old applications, the default
+     *  is false.
+     */
+    allowBlank: false,
+    
     /** api: config[preComboText]
      *  ``String``
      *  String to display before filter type combo.  Default is ``"Match"``.
@@ -351,6 +358,7 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
             filter: filter,
             columnWidth: 1,
             attributes: this.attributes,
+            allowBlank: group ? undefined : this.allowBlank,
             customizeFilterOnInit: group && false,
             listeners: {
                 change: function() {
@@ -458,6 +466,7 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
             grandchild = grandchildren[i];
             var fieldCfg = {
                 xtype: "gx_filterfield",
+                allowBlank: this.allowBlank,
                 columnWidth: 1,
                 filter: grandchild,
                 attributes: this.attributes,
