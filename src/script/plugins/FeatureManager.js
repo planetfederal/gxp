@@ -246,22 +246,29 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                 if (s === false) {
                     this.clearFeatureStore();
                 } else {
-                    var fields = [];
+                    var fields = [], match, geometryName;
                     s.each(function(r) {
-                        fields.push({
-                            name: r.get("name"),
-                            type: ({
-                                "xsd:boolean": "boolean",
-                                "xsd:int": "int",
-                                "xsd:integer": "int",
-                                "xsd:short": "int",
-                                "xsd:long": "int",
-                                "xsd:date": "date",
-                                "xsd:string": "string",
-                                "xsd:float": "float",
-                                "xsd:double": "float"
-                            })[r.get("type")]
-                        })
+                        // TODO: To be more generic, we would look for GeometryPropertyType as well.
+                        var match = /gml:((Multi)?(Point|Line|Polygon|Curve|Surface)).*/.exec(r.get("type"));
+                        if (match) {
+                            geometryName = r.get("name");
+                            this.geometryType = match[1];
+                        } else {
+                            fields.push({
+                                name: r.get("name"),
+                                type: ({
+                                    "xsd:boolean": "boolean",
+                                    "xsd:int": "int",
+                                    "xsd:integer": "int",
+                                    "xsd:short": "int",
+                                    "xsd:long": "int",
+                                    "xsd:date": "date",
+                                    "xsd:string": "string",
+                                    "xsd:float": "float",
+                                    "xsd:double": "float"
+                                })[r.get("type")]
+                            });
+                        }
                     }, this);
                     this.featureStore = new gxp.data.WFSFeatureStore({
                         fields: fields,
@@ -269,6 +276,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                         url: s.url,
                         featureType: s.reader.raw.featureTypes[0].typeName,
                         featureNS: s.reader.raw.targetNamespace,
+                        geometryName: geometryName,
                         maxFeatures: this.maxFeatures,
                         layer: this.featureLayer,
                         ogcFilter: filter,
@@ -284,16 +292,6 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                             scope: this
                         }
                     });
-                    
-                    // detect the geometry type
-                    s.each(function(r) {
-                        // TODO: To be more generic, we would look for GeometryPropertyType as well.
-                        var match = /gml:((Multi)?(Point|Line|Polygon|Curve|Surface)).*/.exec(r.get("type"));
-                        if (match) {
-                            this.geometryType = match[1];
-                        }
-                        return !match;
-                    }, this);
                 }
                 this.fireEvent("layerchange", this, rec, s);
                 }, this
