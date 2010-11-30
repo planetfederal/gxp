@@ -4,10 +4,10 @@
 
 Ext.namespace("gxp.plugins");
 
-gxp.plugins.QueryPanel = Ext.extend(gxp.plugins.Tool, {
+gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
     
-    /** api: ptype = gx_querypanel */
-    ptype: "gx_querypanel",
+    /** api: ptype = gx_QueryForm */
+    ptype: "gx_queryform",
 
     /** api: config[featureManager]
      *  ``String`` The id of the :class:`gxp.plugins.FeatureManager` to use
@@ -57,17 +57,18 @@ gxp.plugins.QueryPanel = Ext.extend(gxp.plugins.Tool, {
             }],
             bbar: ["->", {
                 text: "Query",
+                iconCls: "gx-icon-find",
                 handler: function() {
                     var filters = [];
-                    if (queryPanel.spatialFieldset.collapsed !== true) {
+                    if (QueryForm.spatialFieldset.collapsed !== true) {
                         filters.push(new OpenLayers.Filter.Spatial({
                             type: OpenLayers.Filter.Spatial.BBOX,
                             property: featureManager.featureStore.geometryName,
                             value: this.target.mapPanel.map.getExtent()
                         }));
                     }
-                    if (queryPanel.attributeFieldset.collapsed !== true) {
-                        var attributeFilter = queryPanel.filterBuilder.getFilter();
+                    if (QueryForm.attributeFieldset.collapsed !== true) {
+                        var attributeFilter = QueryForm.filterBuilder.getFilter();
                         attributeFilter && filters.push(attributeFilter);
                     }
                     featureManager.loadFeatures(filters.length > 1 ?
@@ -81,33 +82,33 @@ gxp.plugins.QueryPanel = Ext.extend(gxp.plugins.Tool, {
                 scope: this
             }]
         }, config || {});
-        var queryPanel = gxp.plugins.FeatureGrid.superclass.addOutput.call(this, config);
+        var QueryForm = gxp.plugins.FeatureGrid.superclass.addOutput.call(this, config);
         
         featureManager.on("layerchange", function(mgr, rec, schema) {
-            queryPanel.attributeFieldset.removeAll();
-            queryPanel.setDisabled(!schema);
+            QueryForm.attributeFieldset.removeAll();
+            QueryForm.setDisabled(!schema);
             if (schema) {
-                queryPanel.attributeFieldset.add({
+                QueryForm.attributeFieldset.add({
                     xtype: "gx_filterbuilder",
                     ref: "../filterBuilder",
                     attributes: schema,
                     allowBlank: true,
                     allowGroups: false
                 });
-                queryPanel.spatialFieldset.expand();
-                queryPanel.attributeFieldset.expand();
+                QueryForm.spatialFieldset.expand();
+                QueryForm.attributeFieldset.expand();
             } else {
-                queryPanel.attributeFieldset.collapse();
-                queryPanel.spatialFieldset.collapse();
+                QueryForm.attributeFieldset.collapse();
+                QueryForm.spatialFieldset.collapse();
             }
-            queryPanel.attributeFieldset.doLayout();
+            QueryForm.attributeFieldset.doLayout();
         }, this);
         
         this.target.mapPanel.map.events.register("moveend", this, function() {
-            queryPanel.extent.setValue(this.getFormattedMapExtent());
+            QueryForm.extent.setValue(this.getFormattedMapExtent());
         });
         
-        return queryPanel;
+        return QueryForm;
     },
     
     getFormattedMapExtent: function() {
@@ -117,4 +118,4 @@ gxp.plugins.QueryPanel = Ext.extend(gxp.plugins.Tool, {
         
 });
 
-Ext.preg(gxp.plugins.QueryPanel.prototype.ptype, gxp.plugins.QueryPanel);
+Ext.preg(gxp.plugins.QueryForm.prototype.ptype, gxp.plugins.QueryForm);

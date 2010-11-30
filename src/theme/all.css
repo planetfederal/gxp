@@ -62,6 +62,12 @@
     background-image: url(img/silk/magnifier.png);
 }
 
+/* gx_queryform */
+.x-btn .gx-icon-find { 
+    background-image: url(img/silk/find.png);
+}
+
+
 
 /* fixes textarea scrollbar issue in FF on OSX */
 .ext-gecko.ext-mac textarea.x-form-field {

@@ -25,7 +25,7 @@ Ext.onReady(function() {
                 region: "south",
                 height: 150,
             }, {
-                // container for the QueryPanel
+                // container for the queryform
                 id: "query",
                 xtype: "container",
                 layout: "fit",
@@ -58,7 +58,8 @@ Ext.onReady(function() {
         }, {
             // shared FeatureManager for feature editing, grid and querying
             ptype: "gx_featuremanager",
-            id: "featuremanager"
+            id: "featuremanager",
+            autoLoadFeatures: true
         }, {
             ptype: "gx_featureeditor",
             featureManager: "featuremanager",
@@ -70,7 +71,7 @@ Ext.onReady(function() {
             featureManager: "featuremanager",
             outputTarget: "grid"
         }, {
-            ptype: "gx_querypanel",
+            ptype: "gx_queryform",
             featureManager: "featuremanager",
             outputTarget: "query"
         }, {
