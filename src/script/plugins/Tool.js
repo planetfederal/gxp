@@ -103,9 +103,11 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
                     ct = ct[item];
                 }
             }
-            for (j=a.length-1; j>= 0; --j) {
+            for (j=0, jj=a.length; j<jj; ++j) {
                 if (!(a[j] instanceof Ext.Action)) {
-                    a[j] = new Ext.Action(a[j]);
+                    if (typeof a[j] != "string") {
+                        a[j] = new Ext.Action(a[j]);
+                    }
                 }
                 action = a[j];
                 if (ct instanceof Ext.menu.Menu) {
@@ -113,7 +115,7 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
                         {text: action.initialConfig.menuText})
                     );
                 } else {
-                    ct.add(new Ext.Button(action));
+                    ct.add(action);
                 }
             }
             // call ct.show() in case the container was previously hidden (e.g.
