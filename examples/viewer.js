@@ -4,33 +4,33 @@ Ext.onReady(function() {
         portalConfig: {
             renderTo: document.body,
             layout: "border",
-            width: 800,
+            width: 650,
             height: 465,
             
             // by configuring items here, we don't need to configure portalItems
             // and save a wrapping container
             items: [{
-                // a TabPanel with the map and the layer tree
+                // a TabPanel with the map and a dummy tab
                 id: "centerpanel",
                 xtype: "tabpanel",
                 region: "center",
                 activeTab: 0, // map needs to be visible on initialization
                 border: true,
-                items: ["mymap"]
+                items: ["mymap", {title: "Dummy Tab"}]
             }, {
                 // container for the FeatureGrid
-                id: "grid",
+                id: "south",
                 xtype: "container",
                 layout: "fit",
                 region: "south",
                 height: 150,
             }, {
                 // container for the queryform
-                id: "query",
+                id: "west",
                 xtype: "container",
                 layout: "fit",
                 region: "west",
-                width: 310
+                width: 200
             }],
             bbar: {id: "mybbar"}
         },
@@ -39,11 +39,11 @@ Ext.onReady(function() {
         tools: [{
             ptype: "gx_layertree",
             outputConfig: {
-                title: "Layers",
                 id: "tree",
+                border: true,
                 tbar: [] // we will add buttons to "tree.bbar" later
             },
-            outputTarget: "centerpanel"
+            outputTarget: "west"
         }, {
             ptype: "gx_removelayer",
             actionTarget: ["tree.tbar", "tree.contextMenu"]
@@ -69,11 +69,25 @@ Ext.onReady(function() {
         }, {
             ptype: "gx_featuregrid",
             featureManager: "featuremanager",
-            outputTarget: "grid"
+            outputConfig: {
+                id: "featuregrid"
+            },
+            outputTarget: "south"
         }, {
             ptype: "gx_queryform",
             featureManager: "featuremanager",
-            outputTarget: "query"
+            actions: [{
+                text: "Query",
+                iconCls: "gx-icon-find",
+                tooltip: "Query the selected layer"
+            }],
+            outputAction: 0,
+            outputConfig: {
+                title: "Query",
+                width: 320
+            },
+            actionTarget: "featuregrid.bbar",
+            appendActions: false
         }, {
             // not a useful tool - just a demo for additional items
             actionTarget: "mybbar", // ".bbar" would also work

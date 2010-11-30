@@ -77,7 +77,7 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
         }, config || {});
         var queryForm = gxp.plugins.FeatureGrid.superclass.addOutput.call(this, config);
         
-        featureManager.on("layerchange", function(mgr, rec, schema) {
+        var addFilterBuilder = function(mgr, rec, schema) {
             queryForm.attributeFieldset.removeAll();
             queryForm.setDisabled(!schema);
             if (schema) {
@@ -95,7 +95,11 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
                 queryForm.spatialFieldset.collapse();
             }
             queryForm.attributeFieldset.doLayout();
-        }, this);
+        };
+        featureManager.on("layerchange", addFilterBuilder);
+        addFilterBuilder(featureManager,
+            featureManager.layerRecord, featureManager.schema
+        );
         
         this.target.mapPanel.map.events.register("moveend", this, function() {
             queryForm.extent.setValue(this.getFormattedMapExtent());
