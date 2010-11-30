@@ -20,13 +20,6 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
      */
     schema: null,
         
-    /** api: method[addActions]
-     */
-    addActions: function() {
-        this.addOutput(this.outputConfig);
-        return gxp.plugins.FeatureGrid.superclass.addActions.apply(this, arguments);
-    },
-    
     /** api: method[addOutput]
      */
     addOutput: function(config) {
