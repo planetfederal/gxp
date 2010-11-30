@@ -75,6 +75,7 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
     addActions: function(actions) {
         actions = actions || this.actions;
         if (!actions) {
+            this.addOutput();
             return;
         }
 
@@ -130,6 +131,7 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
     /** api: method[addOutput]
      */
     addOutput: function(config) {
+        config = config || {};
         var ref = this.outputTarget;
         var ct = ref ?
             ref == "map" ?

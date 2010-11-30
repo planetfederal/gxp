@@ -9,13 +9,6 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
     /** api: ptype = gx_layertree */
     ptype: "gx_layertree",
     
-    /** api: method[addActions]
-     */
-    addActions: function() {
-        this.addOutput(this.outputConfig);
-        return gxp.plugins.LayerTree.superclass.addActions.apply(this, arguments);
-    },
-    
     /** api: method[addOutput]
      */
     addOutput: function(config) {
