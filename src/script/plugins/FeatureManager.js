@@ -49,6 +49,12 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      */
     featureLayer: null,
     
+    /** api: property[schema]
+     *  ``GeoExt.data.AttributeStore`` or false if the ``featureLayer`` has no
+     *   associated WFS FeatureType, or null if no layer is currently selected.
+     */
+    schema: null,
+    
     /** api: property[geometryType]
      *  ``String`` The geometry type of the featureLayer
      */
@@ -155,6 +161,9 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
         this.autoSetLayer && this.target.on("layerselectionchange",
             this.setLayer, this
         );
+        this.on("layerchange", function(mgr, layer, schema) {
+            this.schema = schema;
+        }, this);
     },
     
     /** api: method[setLayer]
