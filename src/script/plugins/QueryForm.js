@@ -60,15 +60,15 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
                 iconCls: "gx-icon-find",
                 handler: function() {
                     var filters = [];
-                    if (QueryForm.spatialFieldset.collapsed !== true) {
+                    if (queryForm.spatialFieldset.collapsed !== true) {
                         filters.push(new OpenLayers.Filter.Spatial({
                             type: OpenLayers.Filter.Spatial.BBOX,
                             property: featureManager.featureStore.geometryName,
                             value: this.target.mapPanel.map.getExtent()
                         }));
                     }
-                    if (QueryForm.attributeFieldset.collapsed !== true) {
-                        var attributeFilter = QueryForm.filterBuilder.getFilter();
+                    if (queryForm.attributeFieldset.collapsed !== true) {
+                        var attributeFilter = queryForm.filterBuilder.getFilter();
                         attributeFilter && filters.push(attributeFilter);
                     }
                     featureManager.loadFeatures(filters.length > 1 ?
@@ -82,33 +82,33 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
                 scope: this
             }]
         }, config || {});
-        var QueryForm = gxp.plugins.FeatureGrid.superclass.addOutput.call(this, config);
+        var queryForm = gxp.plugins.FeatureGrid.superclass.addOutput.call(this, config);
         
         featureManager.on("layerchange", function(mgr, rec, schema) {
-            QueryForm.attributeFieldset.removeAll();
-            QueryForm.setDisabled(!schema);
+            queryForm.attributeFieldset.removeAll();
+            queryForm.setDisabled(!schema);
             if (schema) {
-                QueryForm.attributeFieldset.add({
+                queryForm.attributeFieldset.add({
                     xtype: "gx_filterbuilder",
                     ref: "../filterBuilder",
                     attributes: schema,
                     allowBlank: true,
                     allowGroups: false
                 });
-                QueryForm.spatialFieldset.expand();
-                QueryForm.attributeFieldset.expand();
+                queryForm.spatialFieldset.expand();
+                queryForm.attributeFieldset.expand();
             } else {
-                QueryForm.attributeFieldset.collapse();
-                QueryForm.spatialFieldset.collapse();
+                queryForm.attributeFieldset.collapse();
+                queryForm.spatialFieldset.collapse();
             }
-            QueryForm.attributeFieldset.doLayout();
+            queryForm.attributeFieldset.doLayout();
         }, this);
         
         this.target.mapPanel.map.events.register("moveend", this, function() {
-            QueryForm.extent.setValue(this.getFormattedMapExtent());
+            queryForm.extent.setValue(this.getFormattedMapExtent());
         });
         
-        return QueryForm;
+        return queryForm;
     },
     
     getFormattedMapExtent: function() {
