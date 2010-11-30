@@ -89,7 +89,7 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
             ct = ref ?
                 ref == "map" ?
                     this.target.mapPanel :
-                    (this.target.portal[ref] || Ext.getCmp(ref)) :
+                    (Ext.getCmp(ref) || this.target.portal[ref]) :
                 this.target.portal;
             if (item) {
                 meth = {
@@ -132,7 +132,7 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
         var ct = ref ?
             ref == "map" ?
                 this.target.mapPanel :
-                (this.target.portal[ref] || Ext.getCmp(ref)) :
+                (Ext.getCmp(ref) || this.target.portal[ref]) :
             this.target.portal;
         Ext.apply(config, this.outputConfig);
         var cmp = ct.add(config);
