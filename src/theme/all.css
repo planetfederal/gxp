@@ -40,15 +40,15 @@
 }
 
 /* gx_wmsgetfeatureinfo */
-.x-btn .gx-icon-getfeatureinfo {
+.x-btn .gx-icon-getfeatureinfo, .x-menu-item .gx-icon-getfeatureinfo {
     background-image: url(img/silk/information.png);
 }
 
 /* gx_featureeditor */
-.x-btn .gx-icon-addfeature {
+.x-btn .gx-icon-addfeature, .x-menu-item .gx-icon-addfeature {
     background-image: url(img/silk/pencil_add.png);
 }
-.x-btn .gx-icon-editfeature {
+.x-btn .gx-icon-editfeature, .x-menu-item .gx-icon-editfeature {
     background-image: url(img/silk/map_edit.png);
 }
 
@@ -63,7 +63,7 @@
 }
 
 /* gx_queryform */
-.x-btn .gx-icon-find { 
+.x-btn .gx-icon-find, .x-menu-item .gx-icon-find { 
     background-image: url(img/silk/find.png);
 }
 
