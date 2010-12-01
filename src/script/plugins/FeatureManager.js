@@ -14,11 +14,6 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      */
     maxFeatures: 100,
 
-    /** api: config[layerConfig]
-     *  ``Object`` Optional configuration for the vector layer
-     */
-    layerConfig: null,
-    
     /** api: config[autoSetLayer]
      *  ``Boolean`` Listen to the viewer's layerselectionchange event to
      *  automatically set the layer? Default is true.
@@ -30,6 +25,12 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      *  Default is false.
      */
     autoLoadFeatures: false,
+    
+    /** api: config[symbolizer]
+     *  ``Object`` An object with "Point", "Line" and "Polygon" properties,
+     *  each with a valid symbolizer object for OpenLayers. Will be used to
+     *  render features.
+     */
     
     /** api: property[layerRecord]
      *  ``GeoExt.data.LayerRecord`` The currently selected layer for this
@@ -61,8 +62,23 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
     geometryType: null,
     
     /** private: property[toolsShowingLayer]
-     *  ``Array`` of tool ids that currently need to show the layer.
+     *  ``Object`` keyed by tool id - tools that currently need to show the
+     *  layer. Each entry holds a String, which is either "default" or
+     *  "invisible". Selected features will always be shown, and tools setting
+     *  the style to "default" take precedence over tools that set it to
+     *  "invisible".
+     */
     toolsShowingLayer: null,
+    
+    /** private: property[style]
+     *  ``Object`` with an "all" and a "selected" property, each holding an
+     *  ``OpenLayers.Style``
+     */
+    style: null,
+    
+    /** private: property[invisibleStyle]
+     */
+    invisibleStyle: null,
     
     /** api: method[init]
      */
@@ -123,40 +139,49 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
             "layerchange"
         );
         
-        this.toolsShowingLayer = [];
-
-        this.featureLayer = new OpenLayers.Layer.Vector(Ext.id(), Ext.apply({
+        this.toolsShowingLayer = {};
+        
+        this.style = {
+            "all": new OpenLayers.Style(null, {
+                rules: [new OpenLayers.Rule({
+                    symbolizer: this.initialConfig.symbolizer || {
+                        "Point": {
+                            pointRadius: 4,
+                            graphicName: "square",
+                            fillColor: "white",
+                            fillOpacity: 1,
+                            strokeWidth: 1,
+                            strokeOpacity: 1,
+                            strokeColor: "#333333"
+                        },
+                        "Line": {
+                            strokeWidth: 4,
+                            strokeOpacity: 1,
+                            strokeColor: "#ff9933"
+                        },
+                        "Polygon": {
+                            strokeWidth: 2,
+                            strokeOpacity: 1,
+                            strokeColor: "#ff6633",
+                            fillColor: "white",
+                            fillOpacity: 0.3
+                        }
+                    }
+                })]
+            }),
+            "selected": new OpenLayers.Style(null, {
+                rules: [new OpenLayers.Rule({symbolizer: {display: "none"}})]
+            })
+        };
+        
+        this.featureLayer = new OpenLayers.Layer.Vector(Ext.id(), {
             displayInLayerSwitcher: false,
             styleMap: new OpenLayers.StyleMap({
-                "default": new OpenLayers.Style(null, {
-                    rules: [new OpenLayers.Rule({
-                        symbolizer: {
-                            "Point": {
-                                pointRadius: 4,
-                                graphicName: "square",
-                                fillColor: "white",
-                                fillOpacity: 1,
-                                strokeWidth: 1,
-                                strokeOpacity: 1,
-                                strokeColor: "#333333"
-                            },
-                            "Line": {
-                                strokeWidth: 4,
-                                strokeOpacity: 1,
-                                strokeColor: "#ff9933"
-                            },
-                            "Polygon": {
-                                strokeWidth: 2,
-                                strokeOpacity: 1,
-                                strokeColor: "#ff6633",
-                                fillColor: "white",
-                                fillOpacity: 0.3
-                            }
-                        }
-                    })]
-                })
-            })    
-        }, this.layerConfig));
+                "select": OpenLayers.Util.extend({display: ""},
+                    OpenLayers.Feature.Vector.style["select"]),
+                "vertex": this.style["all"]
+            }, {extendDefault: false})    
+        });
 
         this.autoSetLayer && this.target.on("layerselectionchange",
             this.setLayer, this
@@ -190,14 +215,13 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
     /** api: method[showLayer]
      *  :arg id: ``String`` id of a tool that needs to show this tool's
      *      featureLayer.
+     *  :arg display: ``String`` "all" or "selected". Optional, default is
+     *      "all"
      */
-    showLayer: function(id) {
-        if (this.toolsShowingLayer.indexOf(id) == -1) {
-            this.toolsShowingLayer.push(id);
-        }
-        if (this.toolsShowingLayer.length > 0 && !this.featureLayer.map) {
-            this.target.mapPanel.map.addLayer(this.featureLayer);
-        }
+    showLayer: function(id, display) {
+        style = display || "all";
+        this.toolsShowingLayer[id] = style;
+        this.setLayerDisplay();
     },
     
     /** api: method[hideLayer]
@@ -206,8 +230,32 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      *      to show it.
      */
     hideLayer: function(id) {
-        this.toolsShowingLayer.remove(id);
-        if (this.toolsShowingLayer.length == 0 && this.featureLayer.map) {
+        delete this.toolsShowingLayer[id];
+        this.setLayerDisplay();
+    },
+    
+    /** private: mathod[setLayerDisplay]
+     *  If ``toolsShowingLayer`` has entries, the layer will be added to the
+     *  map, otherwise it will be removed. Tools can choose whether they want
+     *  to display all features (display == "all") or only selected features
+     *  (display == "selected"). If there are both tools that want to show all
+     *  features and selected features, all features will be shown.
+     */
+    setLayerDisplay: function() {
+        var show = false;
+        for (var i in this.toolsShowingLayer) {
+            if (show != "all") {
+                show = this.toolsShowingLayer[i];
+            }
+        }
+        if (show) {
+            var style = this.style[show];
+            if (style !== this.featureLayer.styleMap.styles["default"]) {
+                this.featureLayer.styleMap.styles["default"] = style;
+                this.featureLayer.redraw();
+            }
+            this.target.mapPanel.map.addLayer(this.featureLayer);
+        } else if (this.featureLayer.map) {
             this.target.mapPanel.map.removeLayer(this.featureLayer);
         }
     },
