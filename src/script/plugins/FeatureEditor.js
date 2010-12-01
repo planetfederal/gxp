@@ -112,8 +112,12 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
                         this.target.mapPanel.map.events.register("click", this,
                             this.noFeatureClick
                         );
-                    this.target.tools[this.featureManager].showLayer(this.id);
-                    this.selectControl.unselectAll(popup && popup.editing && {except: popup.feature});
+                    featureManager.showLayer(
+                        this.id, this.autoLoadFeatures && "selected"
+                    );
+                    this.selectControl.unselectAll(
+                        popup && popup.editing && {except: popup.feature}
+                    );
                 },
                 "deactivate": function() {
                     this.autoLoadFeatures === true &&
@@ -164,6 +168,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
                     popup = new gxp.FeatureEditPopup(Ext.apply({
                         collapsible: true,
                         feature: feature,
+                        vertexRenderIntent: "vertex",
                         editing: feature.state === OpenLayers.State.INSERT,
                         schema: this.schema,
                         allowDelete: true,
@@ -175,7 +180,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
                                     this.selectControl.unselect(feature);
                                 }
                                 if (feature === this.autoLoadedFeature) {
-                                    featureStore.removeAll();
+                                    featureStore.remove(featureStore.getRecordFromFeature(feature));
                                 }
                             },
                             "featuremodified": function(popup, feature) {
@@ -217,12 +222,21 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
                     popup.show();
                 }
             },
-            "featuresadded": function(evt) {
-                var feature = evt.features.length === 1 && evt.features[0];
-                if(feature && feature.state === OpenLayers.State.INSERT) {
+            "sketchcomplete": function(evt) {
+                // Why not register for featuresadded directly? We only want
+                // to handle features here that were just added by a
+                // DrawFeature control, and we need to make sure that our
+                // featuresadded handler is executed after any FeatureStore's,
+                // because otherwise our selectControl.select statement inside
+                // this handler would trigger a featureselected event before
+                // the feature row is added to a FeatureGrid. This, again,
+                // would result in the new feature not being shown as selected
+                // in the grid.
+                featureManager.featureLayer.events.register("featuresadded", this, function(evt) {
+                    featureManager.featureLayer.events.unregister("featuresadded", this, arguments.callee);
                     this.selectControl.activate();
-                    this.selectControl.select(feature);
-                }
+                    this.selectControl.select(evt.features[0]);
+                });
             },
             scope: this
         });
@@ -257,6 +271,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
      *  :arg evt: ``Object``
      */
     noFeatureClick: function(evt) {
+        var featureManager = this.target.tools[this.featureManager];
         var size = this.target.mapPanel.map.getSize();
         var layer = this.target.selectedLayer.getLayer();
         var store = new GeoExt.data.FeatureStore({
@@ -282,15 +297,24 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
             listeners: {
                 "load": function(store, records) {
                     if (records.length > 0) {
+                        var fid = records[0].get("fid");
                         var filter = new OpenLayers.Filter.FeatureId({
-                            fids: [records[0].get("fid")] 
+                            fids: [fid] 
                         });
-                        this.target.tools[this.featureManager].loadFeatures(
-                            filter, function(features) {
-                                this.autoLoadedFeature = features[0];
-                                this.selectControl.select(features[0]);
-                            }, this
-                        );
+                        var feature = featureManager.featureLayer.getFeatureByFid(fid);
+                        if (feature) {
+                            var popup = this.popup;
+                            this.selectControl.unselectAll(
+                                popup && popup.editing && {except: popup.feature});
+                            this.selectControl.select(feature);
+                        } else {
+                            featureManager.loadFeatures(
+                                filter, function(features) {
+                                    this.autoLoadedFeature = features[0];
+                                    this.selectControl.select(features[0]);
+                                }, this
+                            );
+                        }
                     }
                 },
                 scope: this
