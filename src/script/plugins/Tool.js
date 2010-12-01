@@ -10,7 +10,8 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
      *  elements are expected to be valid Ext config objects. Actions provided
      *  here may have an additional ``menuText`` property, which will be used
      *  as text when the action is used in a menu. The ``text`` property will
-     *  only be used in buttons.
+     *  only be used in buttons. Optional, only needed to create custom
+     *  actions.
      */
     
     /** api: config[outputAction]
@@ -18,6 +19,7 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
      *  trigger this tool's output. Only valid if ``actions`` is configured.
      *  Leave this unconfigured if none of the ``actions`` should trigger this
      *  tool's output.
+     */
     
     /** api: config[actionTarget]
      *  ``String`` or ``Array`` Where to place the tool's actions (e.g. buttons
@@ -88,12 +90,12 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
     /** api: method[addActions]
      *  :param actions: ``Array`` Optional actions to add. If not provided,
      *      this.actions will be added.
-     *  :returns: ``Array`` or ``Ext.Action`` Array of the actions added, or
-     *      a single Action if only one was added.
+     *  :returns: ``Array`` The actions added.
      */
     addActions: function(actions) {
         actions = actions || this.actions;
         if (!actions) {
+            // add output immediately if we have no actions to trigger it
             this.addOutput();
             return;
         }
@@ -153,7 +155,7 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
             ct.isVisible() ?
                 ct.doLayout() : ct instanceof Ext.menu.Menu || ct.show();
         }
-        this.actions = actions instanceof Array ? a : a[0];
+        this.actions = a;
         return this.actions;
     },
     
