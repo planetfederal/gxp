@@ -39,6 +39,11 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
      *  ``OpenLayers.Feature.Vector`` The feature to edit and display.
      */
     
+    /** api: config[vertexRenderIntent]
+     *  ``String`` renderIntent for feature vertices when modifying. Undefined
+     *  by default.
+     */
+    
     /** api: property[feature]
      *  ``OpenLayers.Feature.Vector`` The feature being edited/displayed.
      */
@@ -358,7 +363,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
 
             this.modifyControl = new OpenLayers.Control.ModifyFeature(
                 this.feature.layer,
-                {standalone: true}
+                {standalone: true, vertexRenderIntent: this.vertexRenderIntent}
             );
             this.feature.layer.map.addControl(this.modifyControl);
             this.modifyControl.activate();
