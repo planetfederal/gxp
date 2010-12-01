@@ -58,8 +58,7 @@ Ext.onReady(function() {
         }, {
             // shared FeatureManager for feature editing, grid and querying
             ptype: "gx_featuremanager",
-            id: "featuremanager",
-            autoLoadFeatures: true
+            id: "featuremanager"
         }, {
             ptype: "gx_featureeditor",
             featureManager: "featuremanager",
@@ -76,17 +75,11 @@ Ext.onReady(function() {
         }, {
             ptype: "gx_queryform",
             featureManager: "featuremanager",
-            actions: [{
-                text: "Query",
-                iconCls: "gx-icon-find",
-                tooltip: "Query the selected layer"
-            }],
-            outputAction: 0,
             outputConfig: {
                 title: "Query",
                 width: 320
             },
-            actionTarget: "featuregrid.bbar",
+            actionTarget: ["featuregrid.bbar", "tree.contextMenu"],
             appendActions: false
         }, {
             // not a useful tool - just a demo for additional items
