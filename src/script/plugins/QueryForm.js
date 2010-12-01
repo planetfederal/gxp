@@ -19,6 +19,39 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
      *  ``GeoExt.data.AttributeStore``
      */
     schema: null,
+    
+    /** api: config[actions]
+     *  ``Object`` By default, this tool creates a "Query" action to trigger
+     *  the output of this tool's form. Set to null if you want to include
+     *  the form permanently in your layout.
+     */
+    actions: [{
+        text: "Query",
+        menuText: "Query features",
+        iconCls: "gx-icon-find",
+        tooltip: "Query the selected layer"
+    }],
+    
+    /** api: config[outputAction]
+     *  ``Number`` By default, the "Query" action will trigger this tool's
+     *  form output. There is no need to change this unless you configure
+     *  custom ``actions``.
+     */
+    outputAction: 0,
+
+    /** api: method[addActions]
+     */
+    addActions: function(actions) {
+        gxp.plugins.QueryForm.superclass.addActions.apply(this, arguments);
+        // support custom actions
+        if (this.actions) {
+            this.target.tools[this.featureManager].on("layerchange", function(mgr, rec, schema) {
+                for (var i=this.actions.length-1; i>=0; --i) {
+                    this.actions[i].setDisabled(!schema);
+                }
+            }, this);
+        }
+    },
         
     /** api: method[addOutput]
      */
