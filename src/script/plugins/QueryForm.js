@@ -27,7 +27,7 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
      */
     actions: [{
         text: "Query",
-        menuText: "Query features",
+        menuText: "Query layer",
         iconCls: "gx-icon-find",
         tooltip: "Query the selected layer"
     }],
