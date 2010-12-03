@@ -120,6 +120,14 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
      *  are available to the <scaleSliderTemplate>.
      */
     modifyScaleTipContext: Ext.emptyFn,
+    
+    /** i18n */
+    labelFeaturesText: "Label Features",
+    advancedText: "Advanced",
+    limitByScaleText: "Limit by scale",
+    limitByConditionText: "Limit by condition",
+    symbolText: "Symbol",
+    nameText: "Name",
 
     /** private */
     initComponent: function() {
@@ -199,7 +207,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
             bodyStyle: {"padding": "10px"},
             items: [{
                 xtype: "fieldset",
-                title: "Label Features",
+                title: this.labelFeaturesText,
                 autoHeight: true,
                 checkboxToggle: true,
                 collapsed: !this.hasTextSymbolizer(),
@@ -225,7 +233,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                 autoScroll: true,
                 items: [this.createHeaderPanel(), this.createSymbolizerPanel()]
             }, this.items[0], {
-                title: "Advanced",
+                title: this.advancedText,
                 defaults: {
                     style: {
                         margin: "7px"
@@ -234,7 +242,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                 autoScroll: true,
                 items: [{
                     xtype: "fieldset",
-                    title: "Limit by scale",
+                    title: this.limitByScaleText,
                     checkboxToggle: true,
                     collapsed: !(this.rule && (this.rule.minScaleDenominator || this.rule.maxScaleDenominator)),
                     autoHeight: true,
@@ -274,7 +282,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                     }
                 }, {
                     xtype: "fieldset",
-                    title: "Limit by condition",
+                    title: this.limitByConditionText,
                     checkboxToggle: true,
                     collapsed: !(this.rule && this.rule.filter),
                     autoHeight: true,
@@ -379,7 +387,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
         this.symbolizerSwatch = new GeoExt.FeatureRenderer({
             symbolType: this.symbolType,
             isFormField: true,
-            fieldLabel: "Symbol"
+            fieldLabel: this.symbolText
         });
         return {
             xtype: "form",
@@ -398,7 +406,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                     width: 150,
                     items: [{
                         xtype: "textfield",
-                        fieldLabel: "Name",
+                        fieldLabel: this.nameText,
                         anchor: "95%",
                         value: this.rule && (this.rule.title || this.rule.name || ""),
                         listeners: {

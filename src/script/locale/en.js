@@ -109,6 +109,16 @@ GeoExt.Lang.add("en", {
         currentTextText: "Current extent",
         queryByAttributesText: "Query by attributes",
         layerText: "Layer"
+    },
+    
+    "gxp.RulePanel.prototype": {
+        scaleSliderTemplate: "{scaleType} Scale 1:{scale}",
+        labelFeaturesText: "Label Features",
+        advancedText: "Advanced",
+        limitByScaleText: "Limit by scale",
+        limitByConditionText: "Limit by condition",
+        symbolText: "Symbol",
+        nameText: "Name"
     }
 
 });
