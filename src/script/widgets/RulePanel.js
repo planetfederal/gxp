@@ -195,7 +195,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                 change: function(builder) {
                     var filter = builder.getFilter(); 
                     this.rule.filter = filter;
-                    this.fireEvent("change", this, this.rule)
+                    this.fireEvent("change", this, this.rule);
                 },
                 scope: this
             }
@@ -251,7 +251,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                         collapse: function() {
                             delete this.rule.minScaleDenominator;
                             delete this.rule.maxScaleDenominator;
-                            this.fireEvent("change", this, this.rule)
+                            this.fireEvent("change", this, this.rule);
                         },
                         expand: function() {
                             /**
@@ -275,7 +275,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                                 changed = true;
                             }
                             if (changed) {
-                                this.fireEvent("change", this, this.rule)
+                                this.fireEvent("change", this, this.rule);
                             }
                         },
                         scope: this
@@ -290,17 +290,17 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                     listeners: {
                         collapse: function(){
                             delete this.rule.filter;
-                            this.fireEvent("change", this, this.rule)
+                            this.fireEvent("change", this, this.rule);
                         },
                         expand: function(){
                             var changed = false;
                             this.rule.filter = this.filterBuilder.getFilter();
-                            this.fireEvent("change", this, this.rule)
+                            this.fireEvent("change", this, this.rule);
                         },
                         scope: this
                     }
                 }]
-            }]
+            }];
         };
         this.items[0].autoHeight = true;
 
