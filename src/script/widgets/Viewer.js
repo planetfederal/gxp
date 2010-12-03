@@ -176,7 +176,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                 fallback.apply(this, arguments);
             },
             scope: options.scope || this
-        })
+        });
         this.layerSources[id] = source;
         source.init(this);
         
@@ -272,7 +272,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             }
         }));
         
-        this.fireEvent("portalReady")
+        this.fireEvent("portalReady");
     },
     
     activate: function() {
