@@ -44,10 +44,25 @@ GeoExt.Lang.add("en", {
         removeMenuText: "Remove layer",
         removeActionTip: "Remove layer"
     },
-    
+
     "gxp.plugins.WMSGetFeatureInfo.prototype": {
-        infoActionTip: "Get Feature Info".
+        infoActionTip: "Get Feature Info",
         popupTitle: "Feature Info"
+    },
+
+    "gxp.FeatureEditPopup.prototype": {
+        closeMsgTitle: "Save Changes?",
+        closeMsg: "This feature has unsaved changes. Would you like to save your changes?",
+        deleteMsgTitle: "Delete Feature?",
+        deleteMsg: "Are you sure you want to delete this feature?",
+        editButtonText: "Edit",
+        editButtonTooltip: "Make this feature editable",
+        deleteButtonText: "Delete",
+        deleteButtonTooltip: "Delete this feature",
+        cancelButtonText: "Cancel",
+        cancelButtonTooltip: "Stop editing, discard changes",
+        saveButtonText: "Save",
+        saveButtonTooltip: "Save changes",
     }
 
 });
