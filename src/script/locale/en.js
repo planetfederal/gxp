@@ -62,7 +62,13 @@ GeoExt.Lang.add("en", {
         cancelButtonText: "Cancel",
         cancelButtonTooltip: "Stop editing, discard changes",
         saveButtonText: "Save",
-        saveButtonTooltip: "Save changes",
+        saveButtonTooltip: "Save changes"
+    },
+    
+    "gxp.FillSymbolizer.prototype": {
+        fillText: "Fill",
+        colorText: "Color",
+        opacityText: "Opacity"
     }
 
 });
