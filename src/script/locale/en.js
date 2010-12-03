@@ -119,6 +119,11 @@ GeoExt.Lang.add("en", {
         limitByConditionText: "Limit by condition",
         symbolText: "Symbol",
         nameText: "Name"
+    },
+    
+    "gxp.ScaleLimitPanel": {
+        scaleSliderTemplate: "{scaleType} Scale 1:{scale}",
+        maxScaleLimitText: "Max scale limit"
     }
 
 });
