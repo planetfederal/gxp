@@ -2,7 +2,6 @@
 
     var jsfiles = new Array(
         "util.js",
-        "Lang.js",
         "data/WFSFeatureStore.js",
         "data/WFSProtocolProxy.js",
         "menu/LayerMenu.js",
