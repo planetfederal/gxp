@@ -78,7 +78,11 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
      */
     customizeFilterOnInit: true,
     
-    
+    /** i18n */
+    addConditionText: "add condition",
+    addGroupText: "add group",
+    removeConditionText: "remove condition",
+
     /** api: config[allowGroups]
      *  ``Boolean``
      *  Allow groups of conditions to be added.  Default is ``true``.
@@ -137,12 +141,12 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
 
         gxp.FilterBuilder.superclass.initComponent.call(this);
     },
-    
+
     /** private: method[createToolBar]
      */
     createToolBar: function() {
         var bar = [{
-            text: "add condition",
+            text: this.addConditionText,
             iconCls: "add",
             handler: function() {
                 this.addCondition();
@@ -151,7 +155,7 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
         }];
         if(this.allowGroups) {
             bar.push({
-                text: "add group",
+                text: this.addGroupText,
                 iconCls: "add",
                 handler: function() {
                     this.addCondition(true);
@@ -515,7 +519,7 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
                 style: "padding-left: 2px",
                 items: {
                     xtype: "button",
-                    tooltip: "remove condition",
+                    tooltip: this.removeConditionText,
                     iconCls: "delete",
                     handler: function(btn){
                         this.removeCondition(ct, filterContainer.filter);

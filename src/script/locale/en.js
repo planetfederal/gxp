@@ -69,6 +69,15 @@ GeoExt.Lang.add("en", {
         fillText: "Fill",
         colorText: "Color",
         opacityText: "Opacity"
+    },
+    
+    "gxp.FilterBuilder.prototype": {
+        builderTypeNames: ["any", "all", "none", "not all"],
+        preComboText: "Match",
+        postComboText: "of the following:",
+        addConditionText: "add condition",
+        addGroupText: "add group",
+        removeConditionText: "remove condition"
     }
 
 });
