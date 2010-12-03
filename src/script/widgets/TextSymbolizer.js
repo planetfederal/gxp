@@ -68,6 +68,11 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
     border: false,    
     layout: "form",
     
+    /** i18n */
+    labelValuesText: "Label values",
+    haloText: "Halo",
+    sizeText: "Size",
+    
     initComponent: function() {
         
         if(!this.symbolizer) {
@@ -79,7 +84,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
 
         var defAttributesComboConfig = {
             xtype: "combo",
-            fieldLabel: "Label values",
+            fieldLabel: this.labelValuesText,
             store: this.attributes,
             editable: false,
             triggerAction: "all",
@@ -180,14 +185,14 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
             }
         }, {
             xtype: "fieldset",
-            title: "Halo",
+            title: this.haloText,
             checkboxToggle: true,
             collapsed: !(this.symbolizer.haloRadius || this.symbolizer.haloColor || this.symbolizer.haloOpacity),
             autoHeight: true,
             labelWidth: 50,
             items: [{
                 xtype: "numberfield",
-                fieldLabel: "Size",
+                fieldLabel: this.sizeText,
                 anchor: "89%",
                 allowNegative: false,
                 emptyText: OpenLayers.Renderer.defaultSymbolizer.haloRadius,

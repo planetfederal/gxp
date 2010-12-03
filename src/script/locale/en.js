@@ -124,6 +124,12 @@ GeoExt.Lang.add("en", {
     "gxp.ScaleLimitPanel.prototype": {
         scaleSliderTemplate: "{scaleType} Scale 1:{scale}",
         maxScaleLimitText: "Max scale limit"
+    },
+    
+    "gxp.TextSymbolizer.prototype": {
+        labelValuesText: "Label values",
+        haloText: "Halo",
+        sizeText: "Size"
     }
 
 });
