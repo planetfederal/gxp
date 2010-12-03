@@ -23,6 +23,12 @@ GeoExt.Lang.add("en", {
         rootNodeText: "Layers",
         overlayNodeText: "Overlays",
         baseNodeText: "Base Layers"
+    },
+
+    "gxp.plugins.OSMSource.prototype": {
+        title: "OpenStreetMap Layers",
+        mapnikAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
+        osmarenderAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>"
     }
 
 });

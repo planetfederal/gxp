@@ -15,9 +15,21 @@ gxp.plugins.OSMSource = Ext.extend(gxp.plugins.LayerSource, {
     
     /** api: property[title]
      *  ``String``
-     *  A descriptive title for this layer source.  Default is "Google Layers".
+     *  A descriptive title for this layer source (i18n).
      */
     title: "OpenStreetMap Layers",
+    
+    /** api: property[osmAttribution]
+     *  ``String``
+     *  Attribution string for mapnik generated layer (i18n).
+     */
+    mapnikAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
+
+    /** api: property[homeAttribution]
+     *  ``String``
+     *  Attribution string for osmarender generated layer (i18n).
+     */
+    osmarenderAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
 
     /** api: method[createStore]
      *
@@ -46,7 +58,7 @@ gxp.plugins.OSMSource = Ext.extend(gxp.plugins.LayerSource, {
                     "http://c.tile.openstreetmap.org/${z}/${x}/${y}.png"
                 ],
                 OpenLayers.Util.applyDefaults({                
-                    attribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
+                    attribution: this.mapnikAttribution,
                     type: "mapnik"
                 }, options)
             ),
@@ -58,7 +70,7 @@ gxp.plugins.OSMSource = Ext.extend(gxp.plugins.LayerSource, {
                     "http://c.tah.openstreetmap.org/Tiles/tile/${z}/${x}/${y}.png"
                 ],
                 OpenLayers.Util.applyDefaults({                
-                    attribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
+                    attribution: this.osmarenderAttribution,
                     type: "osmarender"
                 }, options)
             )
