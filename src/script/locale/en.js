@@ -121,7 +121,7 @@ GeoExt.Lang.add("en", {
         nameText: "Name"
     },
     
-    "gxp.ScaleLimitPanel": {
+    "gxp.ScaleLimitPanel.prototype": {
         scaleSliderTemplate: "{scaleType} Scale 1:{scale}",
         maxScaleLimitText: "Max scale limit"
     }
