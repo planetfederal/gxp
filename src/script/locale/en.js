@@ -43,6 +43,11 @@ GeoExt.Lang.add("en", {
     "gxp.plugins.RemoveLayer.prototype": {
         removeMenuText: "Remove layer",
         removeActionTip: "Remove layer"
+    },
+    
+    "gxp.plugins.WMSGetFeatureInfo.prototype": {
+        infoActionTip: "Get Feature Info".
+        popupTitle: "Feature Info"
     }
 
 });

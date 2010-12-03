@@ -18,6 +18,18 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
      *  ``Object``
      */
     popupCache: null,
+
+    /** api: config[infoActionTip]
+     *  ``String``
+     *  Text for feature info action tooltip (i18n).
+     */
+    infoActionTip: "Get Feature Info",
+
+    /** api: config[popupTitle]
+     *  ``String``
+     *  Title for info popup (i18n).
+     */
+    popupTitle: "Feature Info",
      
     /** api: method[addActions]
      */
@@ -25,7 +37,7 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
         this.popupCache = {};
         
         var actions = gxp.plugins.WMSGetFeatureInfo.superclass.addActions.call(this, [{
-            tooltip: "Get Feature Info",
+            tooltip: this.infoActionTip,
             iconCls: "gx-icon-getfeatureinfo",
             toggleGroup: this.toggleGroup,
             enableToggle: true,
@@ -104,7 +116,7 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
         if (!(popupKey in this.popupCache)) {
             popup = this.addOutput({
                 xtype: "gx_popup",
-                title: "Feature Info",
+                title: this.popupTitle,
                 layout: "accordion",
                 location: evt.xy,
                 map: this.target.mapPanel,
