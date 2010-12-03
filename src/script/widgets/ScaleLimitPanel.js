@@ -98,6 +98,10 @@ gxp.ScaleLimitPanel = Ext.extend(Ext.Panel, {
     
     border: false,
     
+    /** i18n */
+    maxScaleLimitText: "Max scale limit",
+    minScaleLimitText: "Min scale limit",
+    
     /** private: method[initComponent]
      */
     initComponent: function() {
@@ -235,7 +239,7 @@ gxp.ScaleLimitPanel = Ext.extend(Ext.Panel, {
                 items: [{
                     xtype: "checkbox",
                     checked: !!this.limitMinScaleDenominator,
-                    fieldLabel: "Max scale limit",
+                    fieldLabel: this.maxScaleLimitText,
                     listeners: {
                         check: function(box, checked) {
                             this.limitMinScaleDenominator = checked;
@@ -259,7 +263,7 @@ gxp.ScaleLimitPanel = Ext.extend(Ext.Panel, {
                 items: [{
                     xtype: "checkbox",
                     checked: !!this.limitMaxScaleDenominator,
-                    fieldLabel: "Min scale limit",
+                    fieldLabel: this.minScaleLimitText,
                     listeners: {
                         check: function(box, checked) {
                             this.limitMaxScaleDenominator = checked;
