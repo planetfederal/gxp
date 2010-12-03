@@ -9,7 +9,7 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
     /** api: ptype = gx_googlesource */
     ptype: "gx_googlesource",
     
-    /** config: property[timeout]
+    /** config: config[timeout]
      *  ``Number``
      *  The time (in milliseconds) to wait before giving up on the Google Maps
      *  script loading.  This layer source will not be availble if the script
@@ -21,11 +21,35 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
      *  ``GeoExt.data.LayerStore``
      */
     
-    /** api: property[title]
+    /** api: config[title]
      *  ``String``
-     *  A descriptive title for this layer source.  Default is "Google Layers".
+     *  A descriptive title for this layer source (i18n).
      */
     title: "Google Layers",
+
+    /** api: config[roadmapAbstract]
+     *  ``String``
+     *  Description of the ROADMAP layer (i18n).
+     */
+    roadmapAbstract: "Show street map",
+
+    /** api: config[satelliteAbstract]
+     *  ``String``
+     *  Description of the SATELLITE layer (i18n).
+     */
+    satelliteAbstract: "Show satellite imagery",
+
+    /** api: config[hybridAbstract]
+     *  ``String``
+     *  Description of the HYBRID layer (i18n).
+     */
+    hybridAbstract: "Show imagery with street names",
+
+    /** api: config[terrainAbstract]
+     *  ``String``
+     *  Description of the TERRAIN layer (i18n).
+     */
+    terrainAbstract: "Show street map with terrain",
 
     constructor: function(config) {
         this.config = config;
@@ -65,10 +89,10 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
         // TODO: We may also be able to determine the MAX_ZOOM_LEVEL for each
         // layer type. If not, consider setting them on the OpenLayers level.
         var mapTypes = {
-            "ROADMAP": {'abstract': "Show street map", MAX_ZOOM_LEVEL: 20},
-            "SATELLITE": {'abstract': "Show satellite imagery"},
-            "HYBRID": {'abstract': "Show imagery with street names"},
-            "TERRAIN": {'abstract': "Show street map with terrain", MAX_ZOOM_LEVEL: 15}
+            "ROADMAP": {"abstract": this.roadmapAbstract, MAX_ZOOM_LEVEL: 20},
+            "SATELLITE": {"abstract": this.satelliteAbstract},
+            "HYBRID": {"abstract": this.hybridAbstract},
+            "TERRAIN": {"abstract": this.terrainAbstract, MAX_ZOOM_LEVEL: 15}
         };
         
         var layers = [];
