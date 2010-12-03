@@ -87,6 +87,21 @@ GeoExt.Lang.add("en", {
         layerSelectionLabel: "View available data from:",
         layerAdditionLabel: "or add a new server.",
         expanderTemplateText: "<p><b>Abstract:</b> {abstract}</p>"
+    },
+    
+    "gxp.PointSymbolizer.prototype": {
+        graphicCircleText: "circle",
+        graphicSquareText: "square",
+        graphicTriangleText: "triangle",
+        graphicStarText: "star",
+        graphicCrossText: "cross",
+        graphicXText: "x",
+        graphicExternalText: "external",
+        urlText: "URL",
+        opacityText: "opacity",
+        symbolText: "Symbol",
+        sizeText: "Size",
+        rotationText: "Rotation"
     }
 
 });

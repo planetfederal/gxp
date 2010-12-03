@@ -33,6 +33,20 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
      */
     symbolizer: null,
     
+    /** i18n */
+    graphicCircleText: "circle",
+    graphicSquareText: "square",
+    graphicTriangleText: "triangle",
+    graphicStarText: "star",
+    graphicCrossText: "cross",
+    graphicXText: "x",
+    graphicExternalText: "external",
+    urlText: "URL",
+    opacityText: "opacity",
+    symbolText: "Symbol",
+    sizeText: "Size",
+    rotationText: "Rotation",
+    
     /** api: config[pointGraphics]
      *  ``Array``
      *  A list of objects to be used as the root of the data for a
@@ -52,13 +66,13 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
      *      ``false``, the value will be assumed to be a url for an external graphic.
      */
     pointGraphics: [
-        {display: "circle", value: "circle", mark: true},
-        {display: "square", value: "square", mark: true},
-        {display: "triangle", value: "triangle", mark: true},
-        {display: "star", value: "star", mark: true},
-        {display: "cross", value: "cross", mark: true},
-        {display: "x", value: "x", mark: true},
-        {display: "external"}
+        {display: this.graphicCircleText, value: "circle", mark: true},
+        {display: this.graphicSquareText, value: "square", mark: true},
+        {display: this.graphicTriangleText, value: "triangle", mark: true},
+        {display: this.graphicStarText, value: "star", mark: true},
+        {display: this.graphicCrossText, value: "cross", mark: true},
+        {display: this.graphicXText, value: "x", mark: true},
+        {display: this.graphicExternalText}
     ],
     
    /** api: config[colorManager]
@@ -120,7 +134,7 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
         
         this.urlField = new Ext.form.TextField({
             name: "url",
-            fieldLabel: "URL",
+            fieldLabel: this.urlText,
             value: this.symbolizer["externalGraphic"],
             hidden: true,
             listeners: {
@@ -140,7 +154,7 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
             items: [this.urlField, {
                 xtype: "slider",
                 name: "opacity",
-                fieldLabel: "Opacity",
+                fieldLabel: this.opacityText,
                 value: [(this.symbolizer["graphicOpacity"] == null) ? 100 : this.symbolizer["graphicOpacity"] * 100],
                 isFormField: true,
                 listeners: {
@@ -164,7 +178,7 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
         this.items = [{
             xtype: "combo",
             name: "mark",
-            fieldLabel: "Symbol",
+            fieldLabel: this.symbolText,
             store: new Ext.data.JsonStore({
                 data: {root: this.pointGraphics},
                 root: "root",
@@ -220,7 +234,7 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
         }, {
             xtype: "textfield",
             name: "size",
-            fieldLabel: "Size",
+            fieldLabel: this.sizeText,
             value: this.symbolizer["pointRadius"] && this.symbolizer["pointRadius"] * 2,
             listeners: {
                 change: function(field, value) {
@@ -233,7 +247,7 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
         }, {
             xtype: "textfield",
             name: "rotation",
-            fieldLabel: "Rotation",
+            fieldLabel: this.rotationText,
             value: this.symbolizer["rotation"],
             listeners: {
                 change: function(field, value) {
