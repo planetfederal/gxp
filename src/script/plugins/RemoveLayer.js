@@ -9,15 +9,27 @@ gxp.plugins.RemoveLayer = Ext.extend(gxp.plugins.Tool, {
     /** api: ptype = gx_removelayer */
     ptype: "gx_removelayer",
     
+    /** api: property[removeMenuText]
+     *  ``String``
+     *  Text for remove menu item (i18n).
+     */
+    removeMenuText: "Remove layer",
+
+    /** api: property[removeActionTip]
+     *  ``String``
+     *  Text for remove action tooltip (i18n).
+     */
+    removeActionTip: "Remove layer",
+    
     /** api: method[addActions]
      */
     addActions: function() {
         var selectedLayer;
         var removeLayerAction = gxp.plugins.RemoveLayer.superclass.addActions.apply(this, [{
-            menuText: "Remove layer",
+            menuText: this.removeMenuText,
             iconCls: "gx-icon-removelayers",
             disabled: true,
-            tooltip: "Remove layer",
+            tooltip: this.removeActionTip,
             handler: function() {
                 var record = selectedLayer;
                 if(record) {

@@ -38,6 +38,11 @@ GeoExt.Lang.add("en", {
         queryByLocationText: "Query by location",
         currentTextText: "Current extent",
         queryByAttributesText: "Query by attributes"
+    },
+
+    "gxp.plugins.RemoveLayer.prototype": {
+        removeMenuText: "Remove layer",
+        removeActionTip: "Remove layer"
     }
 
 });
