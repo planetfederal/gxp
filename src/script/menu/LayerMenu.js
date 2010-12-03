@@ -1,3 +1,11 @@
+/**
+ * Copyright (c) 2008-2010 The Open Planning Project
+ * 
+ * Published under the BSD license.
+ * See http://svn.opengeo.org/gxp/trunk/license.txt for the full text
+ * of the license.
+ */
+
 Ext.namespace("gxp.menu");
 
 gxp.menu.LayerMenu = Ext.extend(Ext.menu.Menu, {
