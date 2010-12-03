@@ -208,7 +208,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             center: config.center && new OpenLayers.LonLat(config.center[0], config.center[1]),
             layers: null,
             items: this.mapItems,
-            tbar: config.tbar || {hidden: true},
+            tbar: config.tbar || {hidden: true}
         }, config));
         
         this.mapPanel.layers.on({
