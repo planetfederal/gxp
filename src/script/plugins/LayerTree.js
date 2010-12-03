@@ -8,6 +8,24 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
     
     /** api: ptype = gx_layertree */
     ptype: "gx_layertree",
+
+    /** api: config[rootNodeText]
+     *  ``String``
+     *  Text for root node of layer tree (i18n).
+     */
+    rootNodeText: "Layers",
+
+    /** api: config[overlayNodeText]
+     *  ``String``
+     *  Text for overlay node of layer tree (i18n).
+     */
+    overlayNodeText: "Overlays",
+
+    /** api: config[baseNodeText]
+     *  ``String``
+     *  Text for baselayer node of layer tree (i18n).
+     */
+    baseNodeText: "Base Layers",
     
     /** api: method[addOutput]
      */
@@ -45,13 +63,13 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
             new GeoExt.tree.TreeNodeUIEventMixin());
         
         var treeRoot = new Ext.tree.TreeNode({
-            text: "Layers",
+            text: this.rootNodeText,
             expanded: true,
             isTarget: false,
             allowDrop: false
         });
         treeRoot.appendChild(new GeoExt.tree.LayerContainer({
-            text: "Overlays",
+            text: this.overlayText,
             iconCls: "gx-folder",
             expanded: true,
             loader: new GeoExt.tree.LayerLoader({
@@ -87,7 +105,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
         }));
         
         treeRoot.appendChild(new GeoExt.tree.LayerContainer({
-            text: "Base Layers",
+            text: this.baseNodeText,
             iconCls: "gx-folder",
             expanded: true,
             group: "background",

@@ -17,6 +17,12 @@ GeoExt.Lang.add("en", {
         satelliteAbstract: "Show satellite imagery",
         hybridAbstract: "Show imagery with street names",
         terrainAbstract: "Show street map with terrain"
+    },
+    
+    "gxp.plugins.LayerTree.prototype": {
+        rootNodeText: "Layers",
+        overlayNodeText: "Overlays",
+        baseNodeText: "Base Layers"
     }
 
 });
