@@ -96,13 +96,14 @@ gxp.grid.CapabilitiesGrid = Ext.extend(Ext.grid.GridPanel, {
      * - queryableHeaderText 
      * - layerSelectionLabel
      * - layerAdditionLabel
+     * - expanderTemplateText
      */
     nameHeaderText : "Name",
     titleHeaderText : "Title",
     queryableHeaderText : "Queryable",
     layerSelectionLabel: "View available data from:",
     layerAdditionLabel: "or add a new server.",
-
+    expanderTemplateText: "<p><b>Abstract:</b> {abstract}</p>",
 
     /** private: method[initComponent]
      *
@@ -122,8 +123,8 @@ gxp.grid.CapabilitiesGrid = Ext.extend(Ext.grid.GridPanel, {
 
         if (!("expander" in this)){
             this.expander = new Ext.grid.RowExpander({
-                tpl : new Ext.Template(
-                    '<p><b>Abstract:</b> {abstract}</p>')});
+                tpl : new Ext.Template(this.expanderTemplateText)
+            });
         }
 
         if(!this.plugins && this.expander){

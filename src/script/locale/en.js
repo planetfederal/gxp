@@ -78,6 +78,15 @@ GeoExt.Lang.add("en", {
         addConditionText: "add condition",
         addGroupText: "add group",
         removeConditionText: "remove condition"
+    },
+    
+    "gxp.grid.CapabilitiesGrid.prototype": {
+        nameHeaderText : "Name",
+        titleHeaderText : "Title",
+        queryableHeaderText : "Queryable",
+        layerSelectionLabel: "View available data from:",
+        layerAdditionLabel: "or add a new server.",
+        expanderTemplateText: "<p><b>Abstract:</b> {abstract}</p>"
     }
 
 });
