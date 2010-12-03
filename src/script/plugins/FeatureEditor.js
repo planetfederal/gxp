@@ -9,6 +9,18 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
     /** api: ptype = gx_featureeditor */
     ptype: "gx_featureeditor",
 
+    /** api: config[createFeatureActionTip]
+     * ``String``
+     * Tooltip string for create new feature action (i18n).
+     */
+    createFeatureActionTip: "Create a new feature",
+    
+    /** api: config[editFeatureActionTip]
+     *  ``String``
+     * Tooltip string for edit existing feature action (i18n).
+     */
+    editFeatureActionTip: "Edit existing feature",
+
     /** api: config[featureManager]
      *  ``String`` The id of the :class:`gxp.plugins.FeatureManager` to use
      *  with this tool.
@@ -243,7 +255,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
 
         var toggleGroup = this.toggleGroup || Ext.id();
         var actions = gxp.plugins.FeatureEditor.superclass.addActions.call(this, [new GeoExt.Action({
-            tooltip: "Create a new feature",
+            tooltip: this.createFeatureActionTip,
             iconCls: "gx-icon-addfeature",
             disabled: true,
             toggleGroup: toggleGroup,
@@ -252,7 +264,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
             control: this.drawControl,
             map: this.target.mapPanel.map
         }), new GeoExt.Action({
-            tooltip: "Edit existing feature",
+            tooltip: this.editFeatureActionTip,
             iconCls: "gx-icon-editfeature",
             disabled: true,
             toggleGroup: toggleGroup,

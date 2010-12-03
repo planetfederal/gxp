@@ -19,7 +19,19 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
      *  ``GeoExt.data.AttributeStore``
      */
     schema: null,
-        
+
+    /** api: config[displayFeatureText]
+     * ``String``
+     * Text for feature display button (i18n).
+     */
+    displayFeatureText: "Display on map",
+
+    /** api: config[zoomToSelectedText]
+     * ``String``
+     * Text for zoom to selected features button (i18n).
+     */
+    zoomToSelectedText: "Zoom to selected",
+
     /** api: method[addOutput]
      */
     addOutput: function(config) {
@@ -45,14 +57,14 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
             }),
             autoScroll: true,
             bbar: ["->", {
-                text: "Display on map",
+                text: this.displayFeatureText,
                 enableToggle: true,
                 toggleHandler: function(btn, pressed) {
                     featureManager[pressed ? "showLayer" : "hideLayer"](this.id);
                 },
                 scope: this
             }, {
-                text: "Zoom to selected",
+                text: this.zoomToSelectedText,
                 iconCls: "gx-icon-zoom-to",
                 handler: function(btn) {
                     var bounds, geom, extent;
