@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009 The Open Planning Project
+ * Copyright (c) 2009-2010 The Open Planning Project
  */
 
 
