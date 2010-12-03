@@ -23,7 +23,7 @@ Ext.onReady(function() {
                 xtype: "container",
                 layout: "fit",
                 region: "south",
-                height: 150,
+                height: 150
             }, {
                 // container for the queryform
                 id: "west",
