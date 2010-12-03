@@ -98,7 +98,13 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
      *  loads.
      */
     geometryName: null,
-    
+
+    /** i18n */
+    queryByLocationText: "Query by location",
+    currentTextText: "Current extent",
+    queryByAttributesText: "Query by attributes",
+    layerText: "Layer",
+
     /** private: method[initComponent]
      */
     initComponent: function() {
@@ -170,7 +176,7 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
         );        
         
         this.mapExtentField = new Ext.form.TextField({
-            fieldLabel: "Current extent",
+            fieldLabel: this.currentTextText,
             readOnly: true,
             anchor: "100%",
             value: this.getFormattedMapExtent()
@@ -185,7 +191,7 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
         this.items = [{
             xtype: "combo",
             name: "layer",
-            fieldLabel: "Layer",
+            fieldLabel: this.layerText,
             store: this.layerStore,
             value: this.layerStore.getAt(0).get("name"),
             displayField: "title",
@@ -205,7 +211,7 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
             }
         }, {
             xtype: "fieldset",
-            title: "Query by location",
+            title: this.queryByLocationText,
             checkboxToggle: true,
             collapsed: !this.spatialQuery,
             anchor: "95%",
@@ -221,7 +227,7 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
             }
         }, {
             xtype: "fieldset",
-            title: "Query by attributes",
+            title: this.queryByAttributesText,
             checkboxToggle: true,
             collapsed: !this.attributeQuery,
             anchor: "95%",

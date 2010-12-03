@@ -102,6 +102,13 @@ GeoExt.Lang.add("en", {
         symbolText: "Symbol",
         sizeText: "Size",
         rotationText: "Rotation"
+    },
+
+    "gxp.QueryPanel.prototype": {
+        queryByLocationText: "Query by location",
+        currentTextText: "Current extent",
+        queryByAttributesText: "Query by attributes",
+        layerText: "Layer"
     }
 
 });
