@@ -29,6 +29,15 @@ GeoExt.Lang.add("en", {
         title: "OpenStreetMap Layers",
         mapnikAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
         osmarenderAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>"
+    },
+    
+    "gxp.plugins.QueryForm.prototype": {
+        queryActionText: "Query",
+        queryMenuText: "Query layer",
+        queryActionTip: "Query the selected layer",
+        queryByLocationText: "Query by location",
+        currentTextText: "Current extent",
+        queryByAttributesText: "Query by attributes"
     }
 
 });

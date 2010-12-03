@@ -20,16 +20,52 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
      */
     schema: null,
     
+    /** api: property[queryActionText]
+     *  ``String``
+     *  Text for query action (i18n).
+     */
+    queryActionText: "Query",
+
+    /** api: property[queryMenuText]
+     *  ``String``
+     *  Text for query menu item (i18n).
+     */
+    queryMenuText: "Query layer",
+
+    /** api: property[queryActionTip]
+     *  ``String``
+     *  Text for query action tooltip (i18n).
+     */
+    queryActionTip: "Query the selected layer",
+
+    /** api: property[queryByLocationText]
+     *  ``String``
+     *  Text for query by location (i18n).
+     */
+    queryByLocationText: "Query by location",
+
+    /** api: property[currentTextText]
+     *  ``String``
+     *  Text for query by current extent (i18n).
+     */
+    currentTextText: "Current extent",
+
+    /** api: property[queryByAttributesText]
+     *  ``String``
+     *  Text for query by attributes (i18n).
+     */
+    queryByAttributesText: "Query by attributes",
+
     /** api: config[actions]
      *  ``Object`` By default, this tool creates a "Query" action to trigger
      *  the output of this tool's form. Set to null if you want to include
      *  the form permanently in your layout.
      */
     actions: [{
-        text: "Query",
-        menuText: "Query layer",
+        text: this.queryActionText,
+        menuText: this.queryMenuText,
         iconCls: "gx-icon-find",
-        tooltip: "Query the selected layer"
+        tooltip: this.queryActionTip
     }],
     
     /** api: config[outputAction]
@@ -52,7 +88,7 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
             }, this);
         }
     },
-        
+
     /** api: method[addOutput]
      */
     addOutput: function(config) {
@@ -65,24 +101,24 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
             items: [{
                 xtype: "fieldset",
                 ref: "spatialFieldset",
-                title: "Query by location",
+                title: this.queryByLocationText,
                 checkboxToggle: true,
                 items: [{
                     xtype: "textfield",
                     ref: "../extent",
                     anchor: "100%",
-                    fieldLabel: "Current extent",
+                    fieldLabel: this.currentTextText,
                     value: this.getFormattedMapExtent(),
                     readOnly: true
                 }]
             }, {
                 xtype: "fieldset",
                 ref: "attributeFieldset",
-                title: "Query by attributes",
+                title: this.queryByAttributesText,
                 checkboxToggle: true
             }],
             bbar: ["->", {
-                text: "Query",
+                text: this.queryActionText,
                 iconCls: "gx-icon-find",
                 handler: function() {
                     var filters = [];
