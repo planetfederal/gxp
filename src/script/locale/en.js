@@ -130,6 +130,17 @@ GeoExt.Lang.add("en", {
         labelValuesText: "Label values",
         haloText: "Halo",
         sizeText: "Size"
+    },
+    
+    "gxp.WMSLayerPanel.prototype": {
+        aboutText: "About",
+        titleText: "Title",
+        nameText: "Name",
+        descriptionText: "Description",
+        displayText: "Display",
+        opacityText: "Opacity",
+        formatText: "Format",
+        transparentText: "Transparent"
     }
 
 });

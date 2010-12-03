@@ -35,6 +35,16 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
      */
     imageFormats: /png|gif|jpe?g/i,
     
+    /** i18n */
+    aboutText: "About",
+    titleText: "Title",
+    nameText: "Name",
+    descriptionText: "Description",
+    displayText: "Display",
+    opacityText: "Opacity",
+    formatText: "Format",
+    transparentText: "Transparent",
+    
     initComponent: function() {
         
         this.addEvents(
@@ -57,7 +67,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
      */
     createAboutPanel: function() {
         return {
-            title: "About",
+            title: this.aboutText,
             style: {"padding": "10px"},
             defaults: {
                 border: false
@@ -67,7 +77,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                 labelWidth: 70,
                 items: [{
                     xtype: "textfield",
-                    fieldLabel: "Title",
+                    fieldLabel: this.titleText,
                     anchor: "99%",
                     value: this.layerRecord.get("title"),
                     listeners: {
@@ -82,7 +92,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                     }
                 }, {
                     xtype: "textfield",
-                    fieldLabel: "Name",
+                    fieldLabel: this.nameText,
                     anchor: "99%",
                     value: this.layerRecord.get("name"),
                     readOnly: true
@@ -92,7 +102,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                 labelAlign: "top",
                 items: [{
                     xtype: "textarea",
-                    fieldLabel: "Description",
+                    fieldLabel: this.descriptionText,
                     grow: true,
                     growMax: 150,
                     anchor: "99%",
@@ -127,14 +137,14 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
         transparent = (transparent === "true" || transparent === true);
 
         return {
-            title: "Display",
+            title: this.displayText,
             style: {"padding": "10px"},
             layout: "form",
             labelWidth: 70,
             items: [{
                 xtype: "slider",
                 name: "opacity",
-                fieldLabel: "Opacity",
+                fieldLabel: this.opacityText,
                 value: opacity * 100,
                 //TODO remove the line below when switching to Ext 3.2 final
                 values: [opacity * 100],
@@ -149,7 +159,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                 }
             }, {
                 xtype: "combo",
-                fieldLabel: "Format",
+                fieldLabel: this.formatText,
                 store: formats,
                 value: currentFormat,
                 mode: "local",
@@ -167,7 +177,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                 }
             }, {
                 xtype: "checkbox",
-                fieldLabel: "Transparent",
+                fieldLabel: this.transparentText,
                 checked: transparent,
                 listeners: {
                     check: function(checkbox, checked) {
