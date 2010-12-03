@@ -9,13 +9,13 @@ gxp.plugins.RemoveLayer = Ext.extend(gxp.plugins.Tool, {
     /** api: ptype = gx_removelayer */
     ptype: "gx_removelayer",
     
-    /** api: property[removeMenuText]
+    /** api: config[removeMenuText]
      *  ``String``
      *  Text for remove menu item (i18n).
      */
     removeMenuText: "Remove layer",
 
-    /** api: property[removeActionTip]
+    /** api: config[removeActionTip]
      *  ``String``
      *  Text for remove action tooltip (i18n).
      */

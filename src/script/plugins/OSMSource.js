@@ -13,19 +13,19 @@ gxp.plugins.OSMSource = Ext.extend(gxp.plugins.LayerSource, {
      *  ``GeoExt.data.LayerStore``
      */
     
-    /** api: property[title]
+    /** api: config[title]
      *  ``String``
      *  A descriptive title for this layer source (i18n).
      */
     title: "OpenStreetMap Layers",
     
-    /** api: property[osmAttribution]
+    /** api: config[osmAttribution]
      *  ``String``
      *  Attribution string for mapnik generated layer (i18n).
      */
     mapnikAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
 
-    /** api: property[homeAttribution]
+    /** api: config[homeAttribution]
      *  ``String``
      *  Attribution string for osmarender generated layer (i18n).
      */

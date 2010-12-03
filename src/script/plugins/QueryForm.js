@@ -20,37 +20,37 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
      */
     schema: null,
     
-    /** api: property[queryActionText]
+    /** api: config[queryActionText]
      *  ``String``
      *  Text for query action (i18n).
      */
     queryActionText: "Query",
 
-    /** api: property[queryMenuText]
+    /** api: config[queryMenuText]
      *  ``String``
      *  Text for query menu item (i18n).
      */
     queryMenuText: "Query layer",
 
-    /** api: property[queryActionTip]
+    /** api: config[queryActionTip]
      *  ``String``
      *  Text for query action tooltip (i18n).
      */
     queryActionTip: "Query the selected layer",
 
-    /** api: property[queryByLocationText]
+    /** api: config[queryByLocationText]
      *  ``String``
      *  Text for query by location (i18n).
      */
     queryByLocationText: "Query by location",
 
-    /** api: property[currentTextText]
+    /** api: config[currentTextText]
      *  ``String``
      *  Text for query by current extent (i18n).
      */
     currentTextText: "Current extent",
 
-    /** api: property[queryByAttributesText]
+    /** api: config[queryByAttributesText]
      *  ``String``
      *  Text for query by attributes (i18n).
      */
