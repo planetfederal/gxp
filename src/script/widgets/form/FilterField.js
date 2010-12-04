@@ -3,12 +3,19 @@
  */
 
 /**
- * @include widgets/form/ComparisonComboBox.js
+ * @requires widgets/form/ComparisonComboBox.js
  */
 
 Ext.namespace("gxp.form");
 gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
-    
+
+    /**
+     * Property: allowBlank
+     * {boolean} Specify <code>false</code> to validate that the value's length is > 0
+     * (defaults to <code>true</code>)
+     */
+    allowBlank: true,
+
     /**
      * Property: filter
      * {OpenLayers.Filter} Optional non-logical filter provided in the initial
@@ -31,9 +38,11 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
     attributesComboConfig: null,
 
     initComponent: function() {
-                
         if(!this.filter) {
             this.filter = this.createDefaultFilter();
+        }
+        if(!this.filter.type) {
+            this.filter.type = OpenLayers.Filter.Comparison.EQUAL_TO;
         }
         if(!this.attributes) {
             this.attributes = new GeoExt.data.AttributeStore();
@@ -41,18 +50,16 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
 
         var defAttributesComboConfig = {
             xtype: "combo",
+            mode: "local",
             store: this.attributes,
             editable: false,
             triggerAction: "all",
-            allowBlank: false,
+            allowBlank: this.allowBlank,
             displayField: "name",
             valueField: "name",
             value: this.filter.property,
             listeners: {
-                select: function(combo, record) {
-                    this.filter.property = record.get("name");
-                    this.fireEvent("change", this.filter);
-                },
+                select: this.attributeSelected,
                 scope: this
             },
             width: 120
@@ -92,11 +99,13 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
      * Creates a panel config containing filter parts.
      */
     createFilterItems: function() {
-        
+        var idx = this.attributes.find("name", this.filter.property);
+        var type = idx != -1 ? this.getFieldType(this.attributes.getAt(idx).get("type")) : null;
         return [
             this.attributesComboConfig, {
                 xtype: "gx_comparisoncombo",
                 value: this.filter.type,
+                allowBlank: this.allowBlank,
                 listeners: {
                     select: function(combo, record) {
                         this.filter.type = record.get("value");
@@ -104,14 +113,40 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
                     },
                     scope: this
                 }
-            }, {
+            }, this.createValueFieldConfig(type, this.filter.value)
+        ];
+    },
+
+    /**
+     * Method: createValueFieldConfig
+     * Creates a config object for the value field based upon the
+     * attribute type
+     */
+    createValueFieldConfig: function(attrType, value) {
+        switch(attrType) {
+        case "date":
+            return {
+                xtype: "datefield",
+                value: value,
+                width: 90,
+                format: "d-m-Y",
+                altFormats: Ext.form.DateField.prototype.altFormats + "|Y-m-d\\TH:i:sP",
+                allowBlank: this.allowBlank,
+                listeners: {
+                    change: function(el, value) {
+                        this.filter.value = value.format("Y-m-d\\TH:i:sP");
+                        this.fireEvent("change", this.filter);
+                    },
+                    scope: this
+                }
+            };
+        default:
+            return {
                 xtype: "textfield",
-                value: this.filter.value,
-                width: 50,
-                grow: true,
-                growMin: 50,
+                value: value,
+                width: 90,
                 anchor: "100%",
-                allowBlank: false,
+                allowBlank: this.allowBlank,
                 listeners: {
                     change: function(el, value) {
                         this.filter.value = value;
@@ -119,8 +154,49 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
                     },
                     scope: this
                 }
-            }
-        ];
+            };
+        }
+    },
+
+    /** 
+     *  Method: attributeSelected
+     *  Called when the value of the attribute combo box changes
+     */
+    attributeSelected: function(combo, record) {
+        this.filter.property = record.get("name");
+
+        var type = this.getFieldType(record.get("type"));
+        var config = this.createValueFieldConfig(type);
+
+        this.innerCt.remove(this.innerCt.get(2), true);
+        this.innerCt.insert(2, config);
+        this.innerCt.doLayout();
+
+        this.fireEvent("change", this.filter);
+    },
+
+    /** private: method[getFieldType]
+     *  :param attrType: ``String`` Attribute type.
+     *  :returns: ``String`` Field type
+     *
+     *  Given a feature attribute type, return an Ext field type if possible.
+     *  Note that there are many unhandled xsd types here.
+     *  
+     *  TODO: this should go elsewhere (AttributeReader)
+     */
+    getFieldType: function(attrType) {
+        return ({
+            "xsd:boolean": "boolean",
+            "xsd:int": "int",
+            "xsd:integer": "int",
+            "xsd:short": "int",
+            "xsd:long": "int",
+            "xsd:date": "date",
+            "xsd:dateTime": "date",
+            "xsd:string": "string",
+            "xsd:float": "float",
+            "xsd:double": "float"
+        })[attrType];
     }
 
 });
