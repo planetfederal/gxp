@@ -81,11 +81,12 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
         var actionTargets = this.actionTarget instanceof Array ?
             this.actionTarget : [this.actionTarget];
         var a = actions instanceof Array ? actions : [actions];
-        var actionTarget, i, j, parts, ref, ct, meth;
+        var actionTarget, i, j, parts, ref, ct, meth, item;
         for (i=actionTargets.length-1; i>=0; --i) {
             actionTarget = actionTargets[i];
             parts = actionTarget.split(".");
-            ref = parts[0], item = parts.length > 1 && parts[1];
+            ref = parts[0];
+            item = parts.length > 1 && parts[1];
             ct = ref ?
                 ref == "map" ?
                     this.target.mapPanel :

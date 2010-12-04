@@ -56,6 +56,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
     
     /** private: property[toolsShowingLayer]
      *  ``Array`` of tool ids that currently need to show the layer.
+     */
     toolsShowingLayer: null,
     
     /** api: method[init]
@@ -230,7 +231,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
             } else {
                 this.featureStore.setOgcFilter(filter);
                 this.featureStore.load();
-            };
+            }
         }
     },
     

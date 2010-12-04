@@ -38,7 +38,7 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
             "Curve": OpenLayers.Handler.Path,
             "Polygon": OpenLayers.Handler.Polygon,
             "Surface": OpenLayers.Handler.Polygon
-        }        
+        };        
         var simpleType = mgr.geometryType.replace("Multi", "");
         var Handler = handlers[simpleType];
         if (Handler) {
