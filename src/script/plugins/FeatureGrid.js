@@ -57,7 +57,7 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
         } else {
             button.disable();
         }
-    }
+    },
 
     /** api: method[addOutput]
      */
