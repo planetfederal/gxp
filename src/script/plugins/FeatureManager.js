@@ -261,7 +261,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                                 "xsd:float": "float",
                                 "xsd:double": "float"
                             })[r.get("type")]
-                        })
+                        });
                     }, this);
                     this.featureStore = new gxp.data.WFSFeatureStore({
                         fields: fields,

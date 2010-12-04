@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2010 The Open Planning Project
  * 
- * @include widgets/form/ColorField.js
+ * @requires widgets/form/ColorField.js
  */
 
 /** api: (define)
@@ -57,7 +57,7 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
         
         var colorFieldPlugins;
         if (this.colorManager) {
-            colorFieldPlugins = [new this.colorManager];
+            colorFieldPlugins = [new this.colorManager()];
         }
         
         this.items = [{

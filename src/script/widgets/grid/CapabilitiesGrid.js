@@ -3,7 +3,7 @@
  *
  */
 
-// @include widgets/NewSourceWindow.js
+// @requires widgets/NewSourceWindow.js
 
 /** api: (define)
  *  module = gxp.grid

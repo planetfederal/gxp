@@ -3,12 +3,12 @@
  */
 
 /**
- * @include widgets/ScaleLimitPanel.js
- * @include widgets/TextSymbolizer.js
- * @include widgets/PolygonSymbolizer.js
- * @include widgets/LineSymbolizer.js
- * @include widgets/PointSymbolizer.js
- * @include widgets/FilterBuilder.js
+ * @requires widgets/ScaleLimitPanel.js
+ * @requires widgets/TextSymbolizer.js
+ * @requires widgets/PolygonSymbolizer.js
+ * @requires widgets/LineSymbolizer.js
+ * @requires widgets/PointSymbolizer.js
+ * @requires widgets/FilterBuilder.js
  */
 
 Ext.namespace("gxp");
@@ -183,7 +183,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                 change: function(builder) {
                     var filter = builder.getFilter(); 
                     this.rule.filter = filter;
-                    this.fireEvent("change", this, this.rule)
+                    this.fireEvent("change", this, this.rule);
                 },
                 scope: this
             }
@@ -239,7 +239,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                         collapse: function() {
                             delete this.rule.minScaleDenominator;
                             delete this.rule.maxScaleDenominator;
-                            this.fireEvent("change", this, this.rule)
+                            this.fireEvent("change", this, this.rule);
                         },
                         expand: function() {
                             /**
@@ -263,7 +263,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                                 changed = true;
                             }
                             if (changed) {
-                                this.fireEvent("change", this, this.rule)
+                                this.fireEvent("change", this, this.rule);
                             }
                         },
                         scope: this
@@ -278,18 +278,18 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                     listeners: {
                         collapse: function(){
                             delete this.rule.filter;
-                            this.fireEvent("change", this, this.rule)
+                            this.fireEvent("change", this, this.rule);
                         },
                         expand: function(){
                             var changed = false;
                             this.rule.filter = this.filterBuilder.getFilter();
-                            this.fireEvent("change", this, this.rule)
+                            this.fireEvent("change", this, this.rule);
                         },
                         scope: this
                     }
                 }]
-            }]
-        };
+            }];
+        }
         this.items[0].autoHeight = true;
 
         this.addEvents(

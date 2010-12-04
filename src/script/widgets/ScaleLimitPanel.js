@@ -3,7 +3,7 @@
  */
 
 /**
- * @include widgets/tips/SliderTip.js
+ * @requires widgets/tips/SliderTip.js
  */
 
 Ext.namespace("gxp");

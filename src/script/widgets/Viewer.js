@@ -168,7 +168,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                 fallback.apply(this, arguments);
             },
             scope: options.scope || this
-        })
+        });
         this.layerSources[id] = source;
         source.init(this);
         
@@ -189,7 +189,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                 if (prop in config) {
                     mapConfig[prop] = config[prop];
                     delete config[prop];
-                };
+                }
             }
         }
 
@@ -208,7 +208,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             center: config.center && new OpenLayers.LonLat(config.center[0], config.center[1]),
             layers: null,
             items: this.mapItems,
-            tbar: config.tbar || {hidden: true},
+            tbar: config.tbar || {hidden: true}
         }, config));
         
         this.mapPanel.layers.on({
@@ -264,7 +264,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             }
         }));
         
-        this.fireEvent("portalReady")
+        this.fireEvent("portalReady");
     },
     
     activate: function() {

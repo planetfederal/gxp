@@ -3,8 +3,8 @@
  */
 
 /**
- * @include widgets/FilterBuilder.js
- * @include data/WFSFeatureStore.js
+ * @requires widgets/FilterBuilder.js
+ * @requires data/WFSFeatureStore.js
  */
 
 /** api: (define)

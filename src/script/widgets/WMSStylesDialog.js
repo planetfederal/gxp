@@ -3,8 +3,8 @@
  */
 
 /**
- * @include widgets/RulePanel.js
- * @include widgets/StylePropertiesDialog.js
+ * @requires widgets/RulePanel.js
+ * @requires widgets/StylePropertiesDialog.js
  */
 
 /** api: (define)
@@ -571,7 +571,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 userStyle = userStyles[i];
                 // remove existing record - this way we replace styles from
                 // userStyles with inline styles.
-                var index = this.stylesStore.find("name", userStyle.name)
+                var index = this.stylesStore.find("name", userStyle.name);
                 index !== -1 && this.stylesStore.removeAt(index);
                 record = new this.stylesStore.recordType({
                     "name": userStyle.name,
@@ -829,7 +829,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      *  event. Updates the layer and the rules fieldset.
      */
     changeStyle: function(record, options) {
-        options = options || {}
+        options = options || {};
         var legend = this.items.get(2).items.get(0);
         this.selectedStyle = record;
         this.updateStyleRemoveButton();            

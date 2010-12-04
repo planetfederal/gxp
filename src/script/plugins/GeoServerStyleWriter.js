@@ -71,7 +71,7 @@ gxp.plugins.GeoServerStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
             this.target.stylesStore.commitChanges();
             options.success && options.success.call(options.scope);
             this.target.fireEvent("saved");
-        }
+        };
         if(dispatchQueue.length > 0) {
             gxp.util.dispatch(dispatchQueue, function() {
                 this.assignStyles(options.defaultStyle, success);
@@ -115,7 +115,7 @@ gxp.plugins.GeoServerStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
                         },
                         success: callback,
                         scope: this
-                    })
+                    });
                 } : callback,
                 scope: this
             });
@@ -135,7 +135,7 @@ gxp.plugins.GeoServerStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
             }
             if (rec.get("name") !== defaultStyle &&
                                 this.deletedStyles.indexOf(rec.id) === -1) {
-                styles.push({"name": rec.get("name")})
+                styles.push({"name": rec.get("name")});
             }
         }, this);
         Ext.Ajax.request({

@@ -3,7 +3,7 @@
  */
 
 /**
- * @include widgets/form/FilterField.js
+ * @requires widgets/form/FilterField.js
  */
 
 /** api: (define)

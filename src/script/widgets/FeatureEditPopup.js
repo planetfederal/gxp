@@ -147,8 +147,8 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
         
         var feature = this.feature;
         if (!this.location) {
-            this.location = feature
-        };
+            this.location = feature;
+        }
         
         this.anchored = !this.editing;
         
@@ -254,7 +254,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
          * values to show up in the property grid.  Decide if this should be 
          * handled in another way.
          */
-        this.grid.propStore.isEditableValue = function() {return true};
+        this.grid.propStore.isEditableValue = function() {return true;};
 
         this.items = [
             this.grid

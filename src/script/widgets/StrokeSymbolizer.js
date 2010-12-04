@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2010 The Open Planning Project
  * 
- * @include widgets/form/ColorField.js
+ * @requires widgets/form/ColorField.js
  */
 
 /** api: (define)
@@ -198,7 +198,7 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
             var ratio = parts[0] / parts[1];
             var array;
             if (!isNaN(ratio)) {
-                array = ratio >= 1 ? "4 4" : "2 4"
+                array = ratio >= 1 ? "4 4" : "2 4";
             }
         }
         return array;

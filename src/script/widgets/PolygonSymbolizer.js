@@ -1,8 +1,8 @@
 /**
  * Copyright (c) 2008 The Open Planning Project
  * 
- * @include widgets/FillSymbolizer.js
- * @include widgets/StrokeSymbolizer.js
+ * @requires widgets/FillSymbolizer.js
+ * @requires widgets/StrokeSymbolizer.js
  */
 
 /** api: (define)

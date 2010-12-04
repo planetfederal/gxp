@@ -110,7 +110,7 @@ gxp.plugins.OSMSource = Ext.extend(gxp.plugins.LayerSource, {
 
             // set visibility from config
             if ("visibility" in config) {
-                layer.visibility = config.visibility
+                layer.visibility = config.visibility;
             }
             
             record.set("selected", config.selected || false);
@@ -122,7 +122,7 @@ gxp.plugins.OSMSource = Ext.extend(gxp.plugins.LayerSource, {
 
             record.data.layer = layer;
             record.commit();
-        };
+        }
         return record;
     }
 

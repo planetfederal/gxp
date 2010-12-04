@@ -1,8 +1,8 @@
 /**
  * Copyright (c) 2008-2010 The Open Planning Project
  *
- * @include widgets/FillSymbolizer.js
- * @include widgets/form/FontComboBox.js
+ * @requires widgets/FillSymbolizer.js
+ * @requires widgets/form/FontComboBox.js
  */
 
 /** api: (define)
@@ -228,7 +228,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                     delete this.symbolizer.haloRadius;
                     delete this.symbolizer.haloColor;
                     delete this.symbolizer.haloOpacity;
-                    this.fireEvent("change", this.symbolizer)
+                    this.fireEvent("change", this.symbolizer);
                 },
                 expand: function() {
                     Ext.apply(this.symbolizer, this.haloCache);

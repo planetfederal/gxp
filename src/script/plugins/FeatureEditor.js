@@ -125,7 +125,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
                         if (popup.editing) {
                             popup.on("cancelclose", function() {
                                 this.selectControl.activate();
-                            }, this, {single: true})
+                            }, this, {single: true});
                         }
                         popup.on("close", function() {
                             featureManager.hideLayer(this.id);
