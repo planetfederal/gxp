@@ -476,7 +476,10 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                         pages.remove(page);
                         // move to the next page if the removed page would have
                         // been the one for our location
-                        condition.allowEmpty === false && this.nextPage();
+                        condition.allowEmpty === false && this.setPage({
+                            index: index % this.pages.length,
+                            allowEmpty: false
+                        });
                     } else if (this.pages.indexOf(page) == i) {
                         callback.call(this, page);
                     }
