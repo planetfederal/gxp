@@ -36,9 +36,10 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
      */
     addOutput: function(config) {
         var featureManager = this.target.tools[this.featureManager];
+        var map = this.target.mapPanel.map;
         // a minimal SelectFeature control - used just to provide select and
         // unselect, won't be added to the map
-        var selectControl = new OpenLayers.Control.SelectFeature(this.target.tools[this.featureManager].featureLayer);
+        var selectControl = new OpenLayers.Control.SelectFeature(featureManager.featureLayer);
         config = Ext.apply({
             xtype: "gx_featuregrid",
             sm: new GeoExt.grid.FeatureSelectionModel({
@@ -56,7 +57,42 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                 }
             }),
             autoScroll: true,
-            bbar: ["->", {
+            bbar: (featureManager.paging ? [{
+                iconCls: "x-tbar-page-first",
+                ref: "../firstPageButton",
+                disabled: true,
+                handler: function() {
+                    featureManager.setPage({index: 0});
+                }
+            }, {
+                iconCls: "x-tbar-page-prev",
+                ref: "../prevPageButton",
+                disabled: true,
+                handler: function() {
+                    featureManager.previousPage();
+                }
+            }, {
+                iconCls: "gx-icon-zoom-to",
+                ref: "../zoomToPageButton",
+                disabled: true,
+                handler: function() {
+                    map.zoomToExtent(featureManager.page.extent);
+                }
+            }, {
+                iconCls: "x-tbar-page-next",
+                ref: "../nextPageButton",
+                disabled: true,
+                handler: function() {
+                    featureManager.nextPage();
+                }
+            }, {
+                iconCls: "x-tbar-page-last",
+                ref: "../lastPageButton",
+                disabled: true,
+                handler: function() {
+                    featureManager.setPage({index: "last"});
+                }
+            }] : []).concat(["->", {
                 text: this.displayFeatureText,
                 enableToggle: true,
                 toggleHandler: function(btn, pressed) {
@@ -84,9 +120,20 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                     }
                 },
                 scope: this                
-            }]
+            }])
         }, config || {});
         var featureGrid = gxp.plugins.FeatureGrid.superclass.addOutput.call(this, config);
+        
+        featureManager.paging && featureManager.on("setpage", function(mgr) {
+            var paging = mgr.pages && mgr.pages.length;
+            featureGrid.zoomToPageButton.setDisabled(!paging);
+            var prev = paging && mgr.pages.indexOf(mgr.page) !== 0;
+            featureGrid.firstPageButton.setDisabled(!prev);
+            featureGrid.prevPageButton.setDisabled(!prev);
+            var next = paging && mgr.pages.indexOf(mgr.page) !== mgr.pages.length - 1;
+            featureGrid.lastPageButton.setDisabled(!next);
+            featureGrid.nextPageButton.setDisabled(!next);
+        }, this);
         
         featureManager.on("layerchange", function(mgr, rec, schema) {
             //TODO use schema instead of store to configure the fields

@@ -70,8 +70,8 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
         var featureManager = this.target.tools[this.featureManager];
         var featureLayer = featureManager.featureLayer;
 
-        // intercept loadFeatures and setLayer calls - allows us to persist
-        // unsaved changes before calling the original function
+        // intercept calls to methods that change the feature store - allows us
+        // to persist unsaved changes before calling the original function
         function intercept(mgr, fn) {
             var fnArgs = Array.prototype.slice.call(arguments);
             // remove mgr and fn, which will leave us with the original
@@ -94,6 +94,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
         featureManager.on({
             "beforequery": intercept.createDelegate(this, "loadFeatures", 1),
             "beforelayerchange": intercept.createDelegate(this, "setLayer", 1),
+            "beforesetpage": intercept.createDelegate(this, "setPage", 1),
             scope: this
         });
         
@@ -120,7 +121,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
             multipleKey: "fakeKey",
             eventListeners: {
                 "activate": function() {
-                    this.autoLoadFeatures === true &&
+                    (this.autoLoadFeatures === true || featureManager.paging) &&
                         this.target.mapPanel.map.events.register("click", this,
                             this.noFeatureClick
                         );
@@ -140,7 +141,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
                         if (popup.editing) {
                             popup.on("cancelclose", function() {
                                 this.selectControl.activate();
-                            }, this, {single: true})
+                            }, this, {single: true});
                         }
                         popup.on("close", function() {
                             featureManager.hideLayer(this.id);
@@ -313,19 +314,34 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
                         var filter = new OpenLayers.Filter.FeatureId({
                             fids: [fid] 
                         });
-                        var feature = featureManager.featureLayer.getFeatureByFid(fid);
-                        if (feature) {
-                            var popup = this.popup;
-                            this.selectControl.unselectAll(
-                                popup && popup.editing && {except: popup.feature});
-                            this.selectControl.select(feature);
-                        } else {
+
+                        autoLoad = function() {
                             featureManager.loadFeatures(
                                 filter, function(features) {
                                     this.autoLoadedFeature = features[0];
                                     this.selectControl.select(features[0]);
                                 }, this
                             );
+                        }.createDelegate(this);
+                        
+                        var feature = featureManager.featureLayer.getFeatureByFid(fid);                        
+                        if (feature) {
+                            var popup = this.popup;
+                            this.selectControl.unselectAll(
+                                popup && popup.editing && {except: popup.feature});
+                            this.selectControl.select(feature);
+                        } else if (featureManager.paging) {
+                            var lonLat = this.target.mapPanel.map.getLonLatFromPixel(evt.xy);
+                            featureManager.setPage({lonLat: lonLat}, function() {
+                                var feature = featureManager.featureLayer.getFeatureByFid(fid);
+                                if (feature) {
+                                    this.selectControl.select(feature);
+                                } else if (this.autoLoadFeatures === true) {
+                                    autoLoad();
+                                }
+                            }, this);
+                        } else {
+                            autoLoad();
                         }
                     }
                 },
@@ -356,7 +372,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
             "Curve": OpenLayers.Handler.Path,
             "Polygon": OpenLayers.Handler.Polygon,
             "Surface": OpenLayers.Handler.Polygon
-        }        
+        };
         var simpleType = mgr.geometryType.replace("Multi", "");
         var Handler = handlers[simpleType];
         if (Handler) {

@@ -13,6 +13,11 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      *  ``Number`` Default is 100
      */
     maxFeatures: 100,
+    
+    /** api: config[paging]
+     *  ``Boolean`` Should paging be enabled? Default is true.
+     */
+    paging: true,
 
     /** api: config[autoSetLayer]
      *  ``Boolean`` Listen to the viewer's layerselectionchange event to
@@ -76,9 +81,16 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      */
     style: null,
     
-    /** private: property[invisibleStyle]
+    /** private: property[pages]
+     *  ``Array`` of page objects for paging mode
      */
-    invisibleStyle: null,
+    pages: null,
+    
+    /** privat: property[page]
+     *  ``Object`` The page currently loaded (for paging mode). Has extent
+     *  and numFeatures properties
+     */
+    page: null,
     
     /** api: method[init]
      */
@@ -136,7 +148,38 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
              *    layer has no associated WFS FeatureType, or null if no layer
              *    is currently selected.
              */
-            "layerchange"
+            "layerchange",
+            
+            /** api: event[beforsetpage]
+             *  Fired if paging is on, before a different page is requested. This
+             *  event can be used to abort the setPage method before any action
+             *  is performed, by having a listener return false.
+             *
+             *  Listener arguments:
+             *  * tool      - :class:`gxp.plugins.FeatureManager` this tool
+             *  * condition - ``Object`` the condition passed to the setPage
+             *    method
+             *  * callback  - ``Function`` the callback argument passed to the
+             *    setPage method
+             *  * scope     - ``Object`` the scope argument passed to the
+             *    setPage method
+             */
+            "beforesetpage",
+
+            /** api: event[setpage]
+             *  Fired if paging is on, when a different page is set, but before
+             *  its features are loaded.
+             *
+             *  Listener arguments:
+             *  * tool      - :class:`gxp.plugins.FeatureManager` this tool
+             *  * condition - ``Object`` the condition passed to the setPage
+             *    method
+             *  * callback  - ``Function`` the callback argument passed to the
+             *    setPage method
+             *  * scope     - ``Object`` the scope argument passed to the
+             *    setPage method
+             */
+            "setpage"
         );
         
         this.toolsShowingLayer = {};
@@ -270,6 +313,8 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      */
     loadFeatures: function(filter, callback, scope) {
         if (this.fireEvent("beforequery", this, filter, callback, scope) !== false) {
+            this.filter = filter;
+            this.pages = null;
             callback && this.featureLayer.events.register(
                 "featuresadded", this, function(evt) {
                     if (this._query) {
@@ -283,11 +328,15 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
             );
             this._query = true;
             if (!this.featureStore) {
-                this.setFeatureStore(filter, true);
+                this.setFeatureStore(filter);
             } else {
                 this.featureStore.setOgcFilter(filter);
-                this.featureStore.load();
             };
+            if (this.paging === true) {
+                this.setPage();
+            } else {
+                this.featureStore.load();
+            }
         }
     },
     
@@ -351,8 +400,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                     });
                 }
                 this.fireEvent("layerchange", this, rec, s);
-                }, this
-            );
+            }, this);
         } else {
             this.clearFeatureStore();
             this.fireEvent("layerchange", this, rec, false);
@@ -371,8 +419,268 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
             this.featureStore = null;
             this.geometryType = null;
         }
-    }
+    },
 
+    /** private: method[processPage]
+     *  :param page: ``Object`` The page to process.
+     *  :param condition: ``Object`` Object with index, next or lonLat
+     *      properties. See ``setPage``.
+     *  :param callback: ``Function`` Callback to call when the requested page
+     *      is available. Called with the page as 1st argument.
+     *  :param scope: ``The scope for the callback.
+     *
+     *  Takes a page, which still may have more features than ``maxFeatures``
+     *  in its extent, creates leaves if necessary, and returns the correct
+     *  leaf in a callback function.
+     */
+    processPage: function (page, condition, callback, scope) {
+        condition = condition || {};
+        var index = condition.lonLat ? null : condition.index;
+        var next = condition.next;
+        var pages = this.pages;
+        var i = this.pages.indexOf(page);
+        this.setPageFilter(page);
+        var nextOk = next ?
+            i == (pages.indexOf(next) || pages.length) - 1 : true;
+        var lonLatOk = condition.lonLat ?
+            page.extent.containsLonLat(condition.lonLat) : true;
+        if (lonLatOk && page.numFeatures && page.numFeatures <= this.maxFeatures) {
+            // nothing to do, leaf is a valid page
+            callback.call(this, page);
+        } else if (lonLatOk && (i == index || nextOk)) {
+            // get the hit count if the page is relevant for the requested index
+            this.featureStore.proxy.protocol.read({
+                readOptions: {output: "object"},
+                resultType: "hits",
+                maxFeatures: null,
+                callback: function(response) {
+                    var i = index, lonLat = condition.lonLat;
+                    if (next) {
+                        i = (pages.indexOf(next) || pages.length) - 1;
+                    }
+                    if (!i && lonLat && page.extent.containsLonLat(lonLat)) {
+                        i = pages.indexOf(page);
+                    }
+                    page.numFeatures = response.numberOfFeatures;
+                    if (this.page) {
+                        return;
+                    }
+                    if (page.numFeatures > this.maxFeatures) {
+                        this.createLeaf(page, {
+                            index: i,
+                            next: next,
+                            lonLat: condition.lonLat
+                        }, callback, scope);
+                    } else if (page.numFeatures == 0 && pages.length > 1) {
+                        // remove page, unless it's the only one (which means
+                        // that loadFeatures returned no features)
+                        pages.remove(page);
+                    } else if (this.pages.indexOf(page) == i) {
+                        callback.call(this, page);
+                    }
+                },
+                scope: this
+            });
+        }
+    },
+    
+    /** private: method[createLeaf]
+     *  :param page: ``Object`` The page to process.
+     *  :param condition: ``Object`` Object with index, next or lonLat
+     *      properties. See ``setPage``.
+     *  :param callback: ``Function`` Callback to call when the requested page
+     *      is available. Called with the page as 1st argument.
+     *  :param scope: ``The scope for the callback.
+     *
+     *  Creates the 4 leaves for a page, and calls processPage on each.
+     */
+    createLeaf: function(page, condition, callback, scope) {
+        condition = condition || {};
+        var layer = this.layerRecord.getLayer();
+        var pageIndex = this.pages.indexOf(page);
+        // replace the page with its 4 subpages, so we remove it first.
+        this.pages.remove(page);
+        var extent = page.extent;
+        var center = extent.getCenterLonLat();
+        var l = [extent.left, center.lon, extent.left, center.lon];
+        var b = [center.lat, center.lat, extent.bottom, extent.bottom];
+        var r = [center.lon, extent.right, center.lon, extent.right];
+        var t = [extent.top, extent.top, center.lat, center.lat];
+        var i, leaf;
+        for (i=3; i>=0; --i) {
+            leaf = {extent: new OpenLayers.Bounds(l[i], b[i], r[i], t[i])};
+            this.pages.splice(pageIndex, 0, leaf);
+            this.processPage(leaf, condition, callback, scope);
+        }
+    },
+    
+    /** private: method[getPagingExtent]
+     *  :param meth: ``String`` Method to call on the target's map when neither
+     *      a filter extent nor a layer extent are available. Useful values
+     *      are "getExtent" and "getMaxExtent".
+     *  :returns: ``OpenLayers.Bounds`` the extent to use for paging
+     *
+     *  Gets the extent to use for the root of the paging quad-tree.
+     */
+    getPagingExtent: function(meth) {
+        layer = this.layerRecord.getLayer();
+        var filter;
+        if (this.filter instanceof OpenLayers.Filter.Spatial && this.filter.type === OpenLayers.Filter.Spatial.BBOX) {
+            filter = this.filter;
+        } else if (this.filter instanceof OpenLayers.Filter.Logical && this.filter.type === OpenLayers.Filter.Logical.AND) {
+            for (var f, i=this.filter.filters.length-1; i>=0; --i) {
+                f = this.filter.filters[i];
+                if (f instanceof OpenLayers.Filter.Spatial && f.type === OpenLayers.Filter.Spatial.BBOX) {
+                    filter = f;
+                    break;
+                }
+            }
+        }
+        var extent = filter && filter.value;
+        return extent && layer.maxExtent ?
+            extent.containsBounds(layer.maxExtent) ? layer.maxExtent : extent :
+            layer.maxExtent || layer.map[meth]();
+    },
+    
+    /** private: method[setPageFilter]
+     *  :param page: ``Object`` The page to create the filter for
+     *  :returns: ``OpenLayers.Filter`` The filter to use for the provided page
+     *
+     *  Creates the filter for a page's extent. This wraps the query filter,
+     *  if any.
+     */
+    setPageFilter: function(page) {
+        var filter;
+        if (page.extent) {
+            var bboxFilter = new OpenLayers.Filter.Spatial({
+                type: OpenLayers.Filter.Spatial.BBOX,
+                property: this.featureStore.geometryName,
+                value: page.extent
+            });
+            filter = this.filter ?
+                new OpenLayers.Filter.Logical({
+                    type: OpenLayers.Filter.Logical.AND,
+                    filters: [this.filter, bboxFilter]
+                }) : bboxFilter;
+        } else {
+            filter = this.filter;
+        }
+        this.featureStore.setOgcFilter(filter);
+        return filter;
+    },
+    
+    /** api: method[nextPage]
+     *  :param callback: ``Function`` Optional callback to call when the page
+     *      is available. The callback will receive the page as 1st argument.
+     *  :param scope: ``Object`` Optional scope for the callback.
+     *
+     *  Load the next page.
+     */
+    nextPage: function(callback, scope) {
+        var page = this.page;
+        this.page = null;
+        var index = (this.pages.indexOf(page) + 1) % this.pages.length;
+        this.setPage({index: index}, callback, scope);
+    },
+    
+    /** api: method[previousPage]
+     *  :param callback: ``Function`` Optional callback to call when the page
+     *      is available. The callback will receive the page as 1st argument.
+     *  :param scope: ``Object`` Optional scope for the callback.
+     *
+     *  Load the previous page.
+     */
+    previousPage: function(callback, scope) {
+        var index = this.pages.indexOf(this.page) - 1;
+        if (index < 0) {
+            index = this.pages.length - 1;
+        }
+        this.setPage({index: index, next: this.page}, callback);
+    },
+    
+    /** api: method[setPage]
+     *  :condition: ``Object`` Object to tell the method which page to set.
+     *      If "lonLat" (``OpenLayers.LonLat``) is provided, the page
+     *      containing the provided location will be loaded.
+     *      If only an "index" property (pointing to a page in this tool's
+     *      pages array) is provided, the method will load the according page
+     *      if it has less then ``maxFeatures`` features. If it does not,
+     *      leaves will be created until the top-left page has less than
+     *      ``maxFeatures``, and this top-left page will be loaded. If index is
+     *      "last", the last page of the quad-tree will be loaded. If an
+     *      additional "next" property is provided (a page object is expected
+     *      here), the page that would be loaded with ``previousPage`` called
+     *      from the provided page will be set. This is the bottom-right page
+     *      of the page pointed to with "index".
+     *  :param callback: ``Function`` Optional callback to call when the page
+     *      is available. The callback will receive the page as 1st argument.
+     *  :param scope: ``Object`` Optional scope for the callback.
+     *
+     *  Sets and loads the page specified by the condition argument. This is
+     *  usually used to load a page for a specific location, or to load the
+     *  first or last page of the quad tree.
+     *
+     *  Sample code to load the page that contains the (0, 0) location:
+     *
+     *  .. code-block:: javascript
+     *      featureManager.setPage({lonLat: new OpenLayers.LonLat(0, 0)});
+     *
+     *  Sample code to load the first page of the quad-tree:
+     *
+     *  .. code-block:: javascript
+     *      featureManager.setPage({index: 0});
+     *
+     *  Sample code to load the last page of the quad-tree:
+     *
+     *  .. code-block:: javascript
+     *      featureManager.setPage({index: "last"});
+     */
+    setPage: function(condition, callback, scope) {
+        if (this.filter instanceof OpenLayers.Filter.FeatureId) {
+            // no paging for FeatureId filters - these cannot be combined with
+            // BBOX filters
+            this.featureStore.load({callback: callback, scope: scope});
+            return;
+        }
+        if (this.fireEvent("beforesetpage", this, condition, callback, scope) !== false) {
+            if (!condition) {
+                // choose a page on the top left
+                var extent = this.getPagingExtent("getExtent");
+                condition = {
+                    lonLat: new OpenLayers.LonLat(extent.left, extent.top)
+                };
+            }
+            var index = condition.index || 0;
+            if (index == "last") {
+                index = this.pages.length - 1;
+                condition.next = this.pages[0];
+            }
+            this.page = null;
+            if (!this.pages) {
+                var layer = this.layerRecord.getLayer();
+                var queryExtent = this.getPagingExtent("getMaxExtent");
+                this.pages = [{extent: queryExtent}];
+                index = 0;
+            } else if (condition.lonLat) {
+                for (var i=this.pages.length-1; i>=0; --i) {
+                    if (this.pages[i].extent.containsLonLat(condition.lonLat)) {
+                        index = i;
+                        break;
+                    }
+                }
+            }
+            this.processPage(this.pages[index],
+                {index: index, next: condition.next, lonLat: condition.lonLat},
+                function(page) {
+                    this.page = page;
+                    this.setPageFilter(page);
+                    this.fireEvent("setpage", this, condition, callback, scope);
+                    this.featureStore.load({callback: callback, scope: scope});
+                }, this
+            );
+        }
+    }
+    
 });
 
 Ext.preg(gxp.plugins.FeatureManager.prototype.ptype, gxp.plugins.FeatureManager);

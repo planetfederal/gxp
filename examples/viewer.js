@@ -58,7 +58,8 @@ Ext.onReady(function() {
         }, {
             // shared FeatureManager for feature editing, grid and querying
             ptype: "gx_featuremanager",
-            id: "featuremanager"
+            id: "featuremanager",
+            maxFeatures: 20
         }, {
             ptype: "gx_featureeditor",
             featureManager: "featuremanager",
