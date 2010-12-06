@@ -328,15 +328,15 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
             );
             this._query = true;
             if (!this.featureStore) {
+                this.paging && this.on("layerchange", function() {
+                    this.setPage();
+                }, this, {single: true});
                 this.setFeatureStore(filter);
             } else {
                 this.featureStore.setOgcFilter(filter);
+                this.paging && this.setPage();
             };
-            if (this.paging === true) {
-                this.setPage();
-            } else {
-                this.featureStore.load();
-            }
+            this.paging || this.featureStore.load();
         }
     },
     
@@ -466,15 +466,17 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                         return;
                     }
                     if (page.numFeatures > this.maxFeatures) {
-                        this.createLeaf(page, {
+                        this.createLeaf(page, Ext.applyIf({
                             index: i,
-                            next: next,
-                            lonLat: condition.lonLat
-                        }, callback, scope);
+                            next: next
+                        }, condition), callback, scope);
                     } else if (page.numFeatures == 0 && pages.length > 1) {
                         // remove page, unless it's the only one (which means
                         // that loadFeatures returned no features)
                         pages.remove(page);
+                        // move to the next page if the removed page would have
+                        // been the one for our location
+                        condition.allowEmpty === false && this.nextPage();
                     } else if (this.pages.indexOf(page) == i) {
                         callback.call(this, page);
                     }
@@ -537,9 +539,11 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
             }
         }
         var extent = filter && filter.value;
-        return extent && layer.maxExtent ?
-            extent.containsBounds(layer.maxExtent) ? layer.maxExtent : extent :
-            layer.maxExtent || this.target.mapPanel.map[meth]();
+        return (extent && layer.maxExtent) ?
+            extent.containsBounds(layer.maxExtent) ?
+                layer.maxExtent :
+                extent :
+            (layer.maxExtent || this.target.mapPanel.map[meth]());
     },
     
     /** private: method[setPageFilter]
@@ -580,7 +584,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
         var page = this.page;
         this.page = null;
         var index = (this.pages.indexOf(page) + 1) % this.pages.length;
-        this.setPage({index: index}, callback, scope);
+        this.setPage({index: index, allowEmpty: false}, callback, scope);
     },
     
     /** api: method[previousPage]
@@ -595,7 +599,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
         if (index < 0) {
             index = this.pages.length - 1;
         }
-        this.setPage({index: index, next: this.page}, callback);
+        this.setPage({index: index, allowEmpty: false, next: this.page}, callback);
     },
     
     /** api: method[setPage]
@@ -607,11 +611,14 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      *      if it has less then ``maxFeatures`` features. If it does not,
      *      leaves will be created until the top-left page has less than
      *      ``maxFeatures``, and this top-left page will be loaded. If index is
-     *      "last", the last page of the quad-tree will be loaded. If an
+     *      "last", the last page of the quad-tree will be loaded.
+     *      If an
      *      additional "next" property is provided (a page object is expected
      *      here), the page that would be loaded with ``previousPage`` called
      *      from the provided page will be set. This is the bottom-right page
      *      of the page pointed to with "index".
+     *      If the resulting page would be empty, and "allowEmpty" is false,
+     *      the next matching page will be loaded.
      *  :param callback: ``Function`` Optional callback to call when the page
      *      is available. The callback will receive the page as 1st argument.
      *  :param scope: ``Object`` Optional scope for the callback.
@@ -634,6 +641,11 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      *
      *  .. code-block:: javascript
      *      featureManager.setPage({index: "last"});
+     *
+     *  Sample code to load the first page that contains features:
+     *
+     *  .. code-block:: javascript
+     *      featureManager.setPage();
      */
     setPage: function(condition, callback, scope) {
         if (this.filter instanceof OpenLayers.Filter.FeatureId) {
@@ -647,12 +659,13 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                 // choose a page on the top left
                 var extent = this.getPagingExtent("getExtent");
                 condition = {
-                    lonLat: new OpenLayers.LonLat(extent.left, extent.top)
+                    lonLat: new OpenLayers.LonLat(extent.left, extent.top),
+                    allowEmpty: false
                 };
             }
-            var index = condition.index || 0;
-            if (index == "last") {
-                index = this.pages.length - 1;
+            condition.index = condition.index || 0;
+            if (condition.index == "last") {
+                condition.index = this.pages.length - 1;
                 condition.next = this.pages[0];
             }
             this.page = null;
@@ -660,17 +673,16 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                 var layer = this.layerRecord.getLayer();
                 var queryExtent = this.getPagingExtent("getMaxExtent");
                 this.pages = [{extent: queryExtent}];
-                index = 0;
+                condition.index = 0;
             } else if (condition.lonLat) {
                 for (var i=this.pages.length-1; i>=0; --i) {
                     if (this.pages[i].extent.containsLonLat(condition.lonLat)) {
-                        index = i;
+                        condition.index = i;
                         break;
                     }
                 }
             }
-            this.processPage(this.pages[index],
-                {index: index, next: condition.next, lonLat: condition.lonLat},
+            this.processPage(this.pages[condition.index], condition,
                 function(page) {
                     this.page = page;
                     this.setPageFilter(page);
