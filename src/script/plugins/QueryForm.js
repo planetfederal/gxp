@@ -61,12 +61,6 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
      *  the output of this tool's form. Set to null if you want to include
      *  the form permanently in your layout.
      */
-    actions: [{
-        text: this.queryActionText,
-        menuText: this.queryMenuText,
-        iconCls: "gx-icon-find",
-        tooltip: this.queryActionTip
-    }],
     
     /** api: config[outputAction]
      *  ``Number`` By default, the "Query" action will trigger this tool's
@@ -74,6 +68,18 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
      *  custom ``actions``.
      */
     outputAction: 0,
+    
+    constructor: function(config) {
+        Ext.applyIf(config, {
+            actions: [{
+                text: this.queryActionText,
+                menuText: this.queryMenuText,
+                iconCls: "gx-icon-find",
+                tooltip: this.queryActionTip
+            }]
+        });
+        gxp.plugins.QueryForm.superclass.constructor.apply(this, arguments);
+    },
 
     /** api: method[addActions]
      */
