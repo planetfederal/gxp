@@ -111,7 +111,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             // us in dealing with the different EPSG codes for web mercator.
             var layerProjection = this.getProjection(original);
 
-            var nativeExtent = original.get("bbox")[projection.getCode()]
+            var nativeExtent = original.get("bbox")[projection.getCode()];
             var maxExtent = 
                 (nativeExtent && OpenLayers.Bounds.fromArray(nativeExtent.bbox)) || 
                 OpenLayers.Bounds.fromArray(original.get("llbbox")).transform(new OpenLayers.Projection("EPSG:4326"), projection);
@@ -249,9 +249,13 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 rec = recs[i];
                 if (rec.get("layerName") == layerName) {
                     callback.call(scope, rec);
-                    break;
+                    return;
                 }
             }
+            // something went wrong (e.g. GeoServer does not return a valid
+            // DescribeFeatureType document for group layers)
+            delete describedLayers[layerName];
+            callback.call(scope, false);
         };
         var describedLayers = arguments.callee.describedLayers;
         var index;
@@ -283,7 +287,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             this.schemaCache = {};
         }
         this.describeLayer(rec, function(r) {
-            if (r.get("owsType") == "WFS") {
+            if (r && r.get("owsType") == "WFS") {
                 var typeName = r.get("typeName");
                 var schema = this.schemaCache[typeName];
                 if (schema) {
