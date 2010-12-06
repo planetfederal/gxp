@@ -37,6 +37,13 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
      */
     autoLoadFeatures: false,
     
+    /** api: config[showSelectedOnly]
+     *  ``Boolean`` If set to true, only selected features will be displayed
+     *  on the layer. If set to false, all features (on the current page) will
+     *  be. Default is true.
+     */
+    showSelectedOnly: true,
+    
     /** private: property[drawControl]
      *  ``OpenLayers.Control.DrawFeature``
      */
@@ -126,7 +133,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
                             this.noFeatureClick
                         );
                     featureManager.showLayer(
-                        this.id, this.autoLoadFeatures && "selected"
+                        this.id, this.showSelectedOnly && "selected"
                     );
                     this.selectControl.unselectAll(
                         popup && popup.editing && {except: popup.feature}
