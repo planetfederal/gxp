@@ -539,7 +539,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
         var extent = filter && filter.value;
         return extent && layer.maxExtent ?
             extent.containsBounds(layer.maxExtent) ? layer.maxExtent : extent :
-            layer.maxExtent || layer.map[meth]();
+            layer.maxExtent || this.target.mapPanel.map[meth]();
     },
     
     /** private: method[setPageFilter]
