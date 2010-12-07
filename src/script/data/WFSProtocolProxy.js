@@ -52,8 +52,8 @@ gxp.data.WFSProtocolProxy = Ext.extend(GeoExt.data.ProtocolProxy, {
         });
         
         // create the protocol if none provided
-        if(!this.protocol) {
-            config.protocol = new OpenLayers.Protocol.WFS({
+        if(!(this.protocol && this.protocol instanceof OpenLayers.Protocol)) {
+            config.protocol = new OpenLayers.Protocol.WFS(Ext.apply({
                 version: config.version,
                 srsName: config.srsName,
                 url: config.url,
@@ -63,7 +63,7 @@ gxp.data.WFSProtocolProxy = Ext.extend(GeoExt.data.ProtocolProxy, {
                 schema: config.schema,
                 filter: config.filter,
                 maxFeatures: config.maxFeatures
-            });
+            }, config.protocol));
         }
 
         gxp.data.WFSProtocolProxy.superclass.constructor.apply(this, arguments);
@@ -134,8 +134,8 @@ gxp.data.WFSProtocolProxy = Ext.extend(GeoExt.data.ProtocolProxy, {
             var state, feature;
             var destroys = [];
             var insertIds = response.insertIds || [];
-            var j = 0;
-            for(var i=0, len=features.length; i<len; ++i) {
+            var i, len, j = 0;
+            for(i=0, len=features.length; i<len; ++i) {
                 feature = features[i];
                 state = feature.state;
                 if(state) {
@@ -149,8 +149,7 @@ gxp.data.WFSProtocolProxy = Ext.extend(GeoExt.data.ProtocolProxy, {
                 }
             }
             
-            var feature;
-            for(var i=0, len=destroys.length; i<len; ++i) {
+            for(i=0, len=destroys.length; i<len; ++i) {
                 feature = destroys[i];
                 feature.layer && feature.layer.destroyFeatures([feature]);
             }
@@ -188,10 +187,10 @@ gxp.data.WFSProtocolProxy = Ext.extend(GeoExt.data.ProtocolProxy, {
              * Bottom line (based on my current understanding): we need to
              * implement extractValues for the FeatureReader.
              */
-            var len = features.length;
+            len = features.length;
             var data = new Array(len);
             var f;
-            for (var i=0; i<len; ++i) {
+            for (i=0; i<len; ++i) {
                 f = features[i];
                 // TODO - check if setting the state to null here is appropriate,
                 // or if feature state handling should rather be done in

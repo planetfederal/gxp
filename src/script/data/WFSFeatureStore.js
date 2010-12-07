@@ -41,8 +41,8 @@ gxp.data.WFSFeatureStore = Ext.extend(GeoExt.data.FeatureStore, {
     
     /** private */
     constructor: function(config) {
-        if(!config.proxy) {
-            config.proxy = new gxp.data.WFSProtocolProxy({
+        if(!(config.proxy && config.proxy instanceof GeoExt.data.ProtocolProxy)) {
+            config.proxy = new gxp.data.WFSProtocolProxy(Ext.apply({
                 srsName: config.srsName,
                 url: config.url,
                 featureType: config.featureType,
@@ -51,7 +51,7 @@ gxp.data.WFSFeatureStore = Ext.extend(GeoExt.data.FeatureStore, {
                 schema: config.schema,
                 filter: config.ogcFilter,
                 maxFeatures: config.maxFeatures
-            });
+            }, config.proxy));
         }
         if(!config.writer) {
             // a writer is not used, but is required by store.save

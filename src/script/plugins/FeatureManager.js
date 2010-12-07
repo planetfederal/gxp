@@ -398,7 +398,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                         fields: fields,
                         proxy: {
                             protocol: {
-                                outputFormat: 'json', 
+                                outputFormat: 'JSON', 
                                 readFormat: new OpenLayers.Format.GeoJSON() 
                             }
                         },
