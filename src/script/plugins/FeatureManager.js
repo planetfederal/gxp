@@ -49,6 +49,11 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      */
     featureStore: null,
     
+    /** private: property[hitCountProtocol]
+     *  ``OpenLayers.Protocol.WFS``
+     */
+    hitCountProtocol: null,
+    
     /** api: property[featureLayer]
      *  ``OpenLayers.Layer.Vector`` The layer associated with this tool's
      *  featureStore.
@@ -376,13 +381,27 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                             });
                         }
                     }, this);
-                    this.featureStore = new gxp.data.WFSFeatureStore({
-                        fields: fields,
+                    var protocolOptions = {
                         srsName: this.target.mapPanel.map.getProjection(),
                         url: s.url,
                         featureType: s.reader.raw.featureTypes[0].typeName,
                         featureNS: s.reader.raw.targetNamespace,
-                        geometryName: geometryName,
+                        geometryName: geometryName
+                    };
+                    this.hitCountProtocol = new OpenLayers.Protocol.WFS(Ext.apply({
+                        version: "1.1.0",
+                        readOptions: {output: "object"},
+                        resultType: "hits",
+                        filter: filter
+                    }, protocolOptions));
+                    this.featureStore = new gxp.data.WFSFeatureStore(Ext.apply({
+                        fields: fields,
+                        proxy: {
+                            protocol: {
+                                outputFormat: 'json', 
+                                readFormat: new OpenLayers.Format.GeoJSON() 
+                            }
+                        },
                         maxFeatures: this.maxFeatures,
                         layer: this.featureLayer,
                         ogcFilter: filter,
@@ -397,7 +416,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                             },
                             scope: this
                         }
-                    });
+                    }, protocolOptions));
                 }
                 this.fireEvent("layerchange", this, rec, s);
             }, this);
@@ -449,10 +468,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
             callback.call(this, page);
         } else if (lonLatOk && (i == index || nextOk)) {
             // get the hit count if the page is relevant for the requested index
-            this.featureStore.proxy.protocol.read({
-                readOptions: {output: "object"},
-                resultType: "hits",
-                maxFeatures: null,
+            this.hitCountProtocol.read({
                 callback: function(response) {
                     var i = index, lonLat = condition.lonLat;
                     if (next) {
@@ -566,6 +582,9 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
             filter = this.filter;
         }
         this.featureStore.setOgcFilter(filter);
+        //TODO the protocol could use a setFilter method
+        this.hitCountProtocol.filter = filter;
+        this.hitCountProtocol.options.filter = filter;
         return filter;
     },
     
