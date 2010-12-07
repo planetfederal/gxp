@@ -37,6 +37,12 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      *  render features.
      */
     
+    /** api: config[format]
+     *  ``String`` The response format to use for WFS GetFeature requests.
+     *  Valid values are "GML2", "GML3" and "JSON". Default is "JSON".
+     */
+    format: "JSON",
+    
     /** api: property[layerRecord]
      *  ``GeoExt.data.LayerRecord`` The currently selected layer for this
      *  FeatureManager
@@ -398,8 +404,9 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                         fields: fields,
                         proxy: {
                             protocol: {
-                                outputFormat: 'JSON', 
-                                readFormat: new OpenLayers.Format.GeoJSON() 
+                                outputFormat: this.format, 
+                                readFormat: this.format == "JSON" ?
+                                    new OpenLayers.Format.GeoJSON() : null 
                             }
                         },
                         maxFeatures: this.maxFeatures,
