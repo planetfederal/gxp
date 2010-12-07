@@ -140,7 +140,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
                     );
                 },
                 "deactivate": function() {
-                    this.autoLoadFeatures === true &&
+                    (this.autoLoadFeatures === true || featureManager.paging) &&
                         this.target.mapPanel.map.events.unregister("click",
                             this, this.noFeatureClick
                         );
