@@ -205,7 +205,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             map: Ext.applyIf({
                 theme: mapConfig.theme || null,
                 controls: mapConfig.controls || [
-                    new OpenLayers.Control.Navigation({zoomWheelEnabled: false}),
+                    new OpenLayers.Control.Navigation({zoomWheelOptions: {interval: 250}}),
                     new OpenLayers.Control.PanPanel(),
                     new OpenLayers.Control.ZoomPanel(),
                     new OpenLayers.Control.Attribution()
