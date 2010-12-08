@@ -38,10 +38,10 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      */
     
     /** api: config[format]
-     *  ``String`` The response format to use for WFS GetFeature requests.
-     *  Valid values are "GML2", "GML3" and "JSON". Default is "JSON".
+     *  ``String`` Optional response format to use for WFS GetFeature requests.
+     *  Valid values are "GML2", "GML3" and "JSON". By default this is not set,
+     *  which means that GML3 will be used.
      */
-    format: "JSON",
     
     /** api: property[layerRecord]
      *  ``GeoExt.data.LayerRecord`` The currently selected layer for this
