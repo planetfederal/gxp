@@ -49,12 +49,16 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
         var target = this.target, me = this;
         var addListeners = function(node, record) {
             if (record) {
-                target.on("layerselectionchange", function(tool, rec) {
-                    tool !== me && rec === record && node.select();
+                target.on("layerselectionchange", function(rec) {
+                    if (!me.selectionChanging && rec === record) {
+                        node.select();
+                    }
                 });
-                record === target.selectedLayer && node.on("rendernode", function() {
-                    node.select();
-                });
+                if (record === target.selectedLayer) {
+                    node.on("rendernode", function() {
+                        node.select();
+                    })
+                }
             }
         };
         
@@ -156,9 +160,9 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
             selModel: new Ext.tree.DefaultSelectionModel({
                 listeners: {
                     selectionchange: function(selModel, node) {
-                        this.target.fireEvent("layerselectionchange", this,
-                            getSelectedLayerRecord()
-                        );
+                        this.selectionChanging = true;
+                        var changed = this.target.selectLayer(getSelectedLayerRecord());
+                        this.selectionChanging = false;
                     },
                     scope: this
                 }

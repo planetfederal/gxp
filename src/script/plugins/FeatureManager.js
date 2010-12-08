@@ -237,9 +237,9 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
             }, {extendDefault: false})    
         });
 
-        this.autoSetLayer && this.target.on("layerselectionchange",
-            this.setLayer, this
-        );
+        if (this.autoSetLayer) {
+            this.target.on("layerselectionchange", this.setLayer, this);
+        }
         this.on("layerchange", function(mgr, layer, schema) {
             this.schema = schema;
         }, this);
@@ -250,7 +250,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      *
      *  Sets the layer for this tool
      */
-    setLayer: function(tool, layerRecord) {
+    setLayer: function(layerRecord) {
         if (this.fireEvent("beforelayerchange", this, layerRecord) !== false) {
             if (layerRecord !== this.layerRecord) {
                 this.clearFeatureStore();

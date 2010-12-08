@@ -39,7 +39,7 @@ gxp.plugins.RemoveLayer = Ext.extend(gxp.plugins.Tool, {
             scope: this
         }])[0];
 
-        this.target.on("layerselectionchange", function(tool, record) {
+        this.target.on("layerselectionchange", function(record) {
             selectedLayer = record;
             removeLayerAction.setDisabled(
                 this.target.mapPanel.layers.getCount() <= 1 || !record
