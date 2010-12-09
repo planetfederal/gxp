@@ -29,13 +29,19 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
      *  places (e.g. a button and a context menu item). To reference one of the
      *  toolbars of an ``Ext.Panel``, ".tbar", ".bbar" or ".fbar" has to be
      *  appended. The default is "map.tbar". The viewer's main MapPanel
-     *  can always be accessed with "map" as actionTarget.
+     *  can always be accessed with "map" as actionTarget. Set to null if no
+     *  actions should be created.
      */
     actionTarget: "map.tbar",
         
     /** api: config[toggleGroup]
      *  ``String`` If this tool should be radio-button style toggled with other
      *  tools, this string is to identify the toggle group.
+     */
+    
+    /** api: config[defaultAction]
+     *  ``Number`` Optional index of an action that should be active by
+     *  default. Only works for actions that are a ``GeoExt.Action`` instance.
      */
     
     /** api: config[appendActions]
@@ -99,31 +105,33 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
             this.addOutput();
             return;
         }
-
+        
         var actionTargets = this.actionTarget instanceof Array ?
             this.actionTarget : [this.actionTarget];
         var a = actions instanceof Array ? actions : [actions];
         var actionTarget, i, j, parts, ref, item, ct, meth;
         for (i=actionTargets.length-1; i>=0; --i) {
             actionTarget = actionTargets[i];
-            parts = actionTarget.split(".");
-            ref = parts[0];
-            item = parts.length > 1 && parts[1];
-            ct = ref ?
-                ref == "map" ?
-                    this.target.mapPanel :
-                    (Ext.getCmp(ref) || this.target.portal[ref]) :
-                this.target.portal;
-            if (item) {
-                meth = {
-                    "tbar": "getTopToolbar",
-                    "bbar": "getBottomToolbar",
-                    "fbar": "getFooterToolbar"
-                }[item];
-                if (meth) {
-                    ct = ct[meth]();
-                } else {
-                    ct = ct[item];
+            if (actionTarget) {
+                parts = actionTarget.split(".");
+                ref = parts[0];
+                item = parts.length > 1 && parts[1];
+                ct = ref ?
+                    ref == "map" ?
+                        this.target.mapPanel :
+                        (Ext.getCmp(ref) || this.target.portal[ref]) :
+                    this.target.portal;
+                if (item) {
+                    meth = {
+                        "tbar": "getTopToolbar",
+                        "bbar": "getBottomToolbar",
+                        "fbar": "getFooterToolbar"
+                    }[item];
+                    if (meth) {
+                        ct = ct[meth]();
+                    } else {
+                        ct = ct[item];
+                    }
                 }
             }
             for (j=0, jj=a.length; j<jj; ++j) {
@@ -133,28 +141,35 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
                     }
                 }
                 action = a[j];
-                if (ct instanceof Ext.menu.Menu) {
-                    action = Ext.apply(new Ext.menu.Item(action),
-                        {text: action.initialConfig.menuText}
-                    );
+                if (j == this.defaultAction && action instanceof GeoExt.Action) {
+                    action.activateOnEnable = true;
                 }
-                action = this.appendActions ? ct.add(action) : ct.insert(0, action);
-                if (this.outputAction != null && j == this.outputAction) {
-                    var cmp;
-                    action.on("click", function() {
-                        if (cmp) {
-                            cmp.ownerCt && cmp.ownerCt instanceof Ext.Window ?
-                                cmp.ownerCt.show() : cmp.show();
-                        } else {
-                            cmp = this.addOutput();
-                        }
-                    }, this);
+                if (ct) {
+                    if (ct instanceof Ext.menu.Menu) {
+                        action = Ext.apply(new Ext.menu.Item(action),
+                            {text: action.initialConfig.menuText}
+                        );
+                    }
+                    action = this.appendActions ? ct.add(action) : ct.insert(0, action);
+                    if (this.outputAction != null && j == this.outputAction) {
+                        var cmp;
+                        action.on("click", function() {
+                            if (cmp) {
+                                cmp.ownerCt && cmp.ownerCt instanceof Ext.Window ?
+                                    cmp.ownerCt.show() : cmp.show();
+                            } else {
+                                cmp = this.addOutput();
+                            }
+                        }, this);
+                    }
                 }
             }
             // call ct.show() in case the container was previously hidden (e.g.
             // the mapPanel's bbar or tbar which are initially hidden)
-            ct.isVisible() ?
-                ct.doLayout() : ct instanceof Ext.menu.Menu || ct.show();
+            if (ct) {
+                ct.isVisible() ?
+                    ct.doLayout() : ct instanceof Ext.menu.Menu || ct.show();
+            }
         }
         this.actions = a;
         return this.actions;
@@ -167,6 +182,7 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
             // nothing to do here for tools that don't have any output
             return;
         }
+
         config = config || {};
         var ref = this.outputTarget;
         var ct = ref ?
