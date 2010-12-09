@@ -79,7 +79,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
              *  * layerRecord - ``GeoExt.data.LayerRecord`` the record of the
              *    selected layer, or null if no layer is selected.
              */
-            "layerselectionchange"
+            "beforelayerselectionchange",
             
             /** api: event[layerselectionchange]
              *  Fired when the selected set of layers changes. 
