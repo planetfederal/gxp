@@ -26,6 +26,7 @@
         "widgets/form/ColorField.js",
         "widgets/form/FilterField.js",
         "widgets/form/FontComboBox.js",
+        "widgets/form/ViewerField.js",
         "widgets/grid/CapabilitiesGrid.js",
         "widgets/grid/FeatureGrid.js",
         "widgets/GoogleEarthPanel.js",
@@ -43,7 +44,9 @@
         "plugins/FeatureEditor.js",
         "plugins/FeatureGrid.js",
         "plugins/FeatureManager.js",
+        "plugins/FeatureToField.js",
         "plugins/QueryForm.js",
+        "plugins/SelectFeature.js",
         "plugins/LayerTree.js",
         "plugins/RemoveLayer.js"
     );

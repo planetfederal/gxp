@@ -67,6 +67,10 @@
     background-image: url(img/silk/find.png);
 }
 
+/* gx_selectfeature */
+.x-btn .gx-icon-selectfeature, .x-menu-item .gx-icon-selectfeature { 
+    background-image: url(img/silk/cursor.png);
+}
 
 
 /* fixes textarea scrollbar issue in FF on OSX */
