@@ -87,12 +87,23 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
             if (popup) {
                 if (popup.editing) {
                     function doIt() {
+                        unregisterDoIt.call(this);
+                        if (fn === "setLayer") {
+                            this.target.selectLayer(fnArgs[0]);
+                        } else {
+                            mgr[fn].apply(mgr, fnArgs);
+                        }
+                    };
+                    function unregisterDoIt() {
                         featureManager.featureStore.un("write", doIt, this);
                         popup.un("canceledit", doIt, this);
-                        mgr[fn].apply(mgr, fnArgs);
-                    };
+                    }
                     featureManager.featureStore.on("write", doIt, this);
-                    popup.on("canceledit", doIt, this);
+                    popup.on({
+                        canceledit: doIt,
+                        cancelclose: unregisterDoIt,
+                        scope: this
+                    });
                 }
                 popup.close();
                 return !popup.editing;
@@ -270,6 +281,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
             enableToggle: true,
             allowDepress: true,
             control: this.drawControl,
+            deactivateOnDisable: true,
             map: this.target.mapPanel.map
         }), new GeoExt.Action({
             tooltip: this.editFeatureActionTip,
@@ -279,6 +291,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
             enableToggle: true,
             allowDepress: true,
             control: this.selectControl,
+            deactivateOnDisable: true,
             map: this.target.mapPanel.map
         })]);
 

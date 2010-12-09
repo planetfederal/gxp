@@ -30,22 +30,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
     /** api: method[addOutput]
      */
     addOutput: function(config) {
-        var getRecordFromNode = function(node) {
-            if(node && node.layer) {
-                var layer = node.layer;
-                var store = node.layerStore;
-                record = store.getAt(store.findBy(function(r) {
-                    return r.get("layer") === layer;
-                }));
-            }
-            return record;
-        };
 
-        var getSelectedLayerRecord = function() {
-            var node = layerTree.getSelectionModel().getSelectedNode();
-            return node ? getRecordFromNode(node) : null;
-        };
-        
         var target = this.target, me = this;
         var addListeners = function(node, record) {
             if (record) {
@@ -57,7 +42,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
                 if (record === target.selectedLayer) {
                     node.on("rendernode", function() {
                         node.select();
-                    })
+                    });
                 }
             }
         };
@@ -159,10 +144,19 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
             enableDD: true,
             selModel: new Ext.tree.DefaultSelectionModel({
                 listeners: {
-                    selectionchange: function(selModel, node) {
-                        this.selectionChanging = true;
-                        var changed = this.target.selectLayer(getSelectedLayerRecord());
-                        this.selectionChanging = false;
+                    beforeselect: function(selModel, node) {
+                        var changed = true;
+                        var layer = node && node.layer;
+                        if (layer) {
+                            var store = node.layerStore;
+                            var record = store.getAt(store.findBy(function(r) {
+                                return r.get("layer") === layer;
+                            }));
+                            this.selectionChanging = true;
+                            changed = this.target.selectLayer(record);
+                            this.selectionChanging = false;
+                        }
+                        return changed;
                     },
                     scope: this
                 }
@@ -176,7 +170,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
                         c.items.getCount() > 0 && c.showAt(e.getXY());
                     }
                 },
-                beforemovenode: function(tree, node, oldParent, newParent, index) {
+                beforemovenode: function(tree, node, oldParent, newParent, i) {
                     // change the group when moving to a new container
                     if(oldParent !== newParent) {
                         var store = newParent.loader.store;

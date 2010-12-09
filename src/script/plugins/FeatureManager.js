@@ -238,7 +238,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
         });
 
         if (this.autoSetLayer) {
-            this.target.on("layerselectionchange", this.setLayer, this);
+            this.target.on("beforelayerselectionchange", this.setLayer, this);
         }
         this.on("layerchange", function(mgr, layer, schema) {
             this.schema = schema;
@@ -247,11 +247,13 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
     
     /** api: method[setLayer]
      *  :arg layerRecord: ``GeoExt.data.LayerRecord``
+     *  :returns: ``Boolean`` The layer was changed.
      *
      *  Sets the layer for this tool
      */
     setLayer: function(layerRecord) {
-        if (this.fireEvent("beforelayerchange", this, layerRecord) !== false) {
+        var change = this.fireEvent("beforelayerchange", this, layerRecord);
+        if (change !== false) {
             if (layerRecord !== this.layerRecord) {
                 this.clearFeatureStore();
                 this.layerRecord = layerRecord;
@@ -264,6 +266,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                 }
             }
         }
+        return change;
     },
     
     /** api: method[showLayer]
