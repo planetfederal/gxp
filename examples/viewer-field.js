@@ -2,11 +2,8 @@ var field;
 Ext.onReady(function() {
     viewerField = new gxp.form.ViewerField({
         name: "state",
-        fieldLabel: "Select your state, modify it if required, or create a new one",
-        validator: function(v) {
-            // only valid when feature has an id, meaning that it is saved
-            return v !== "" && !!Ext.decode(v).id;
-        },
+        fieldLabel: "Select your state",
+        allowBlank: false,
         viewer: {
             portalConfig: {border: false},
             // configuration of all tool plugins for this application
