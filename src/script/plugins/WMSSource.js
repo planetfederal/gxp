@@ -24,7 +24,8 @@
         this.raw = data;
     };
     Ext.intercept(GeoExt.data.WMSCapabilitiesReader.prototype, "readRecords", keepRaw);
-    Ext.intercept(GeoExt.data.AttributeReader.prototype, "readRecords", keepRaw);
+    GeoExt.data.AttributeReader &&
+        Ext.intercept(GeoExt.data.AttributeReader.prototype, "readRecords", keepRaw);
 })();
 
 Ext.namespace("gxp.plugins");
