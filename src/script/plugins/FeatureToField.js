@@ -24,16 +24,33 @@ gxp.plugins.FeatureToField = Ext.extend(gxp.plugins.Tool, {
      */
     addActions: function() {
         var featureManager = this.target.tools[this.featureManager];
-
+        var featureInField;
         var format = new OpenLayers.Format[this.format];
         featureManager.featureLayer.events.on({
             "featureselected": function(evt) {
                 this.target.field.setValue(format.write(evt.feature));
+                featureInField = evt.feature;
             },
             "featureunselected": function() {
                 this.target.field.setValue("");
+                featureInField = null;
             },
             scope: this
+        });
+        featureManager.on("layerchange", function() {
+            featureManager.featureStore && featureManager.featureStore.on("save", function(store, batch, data) {
+                if (data.create) {
+                    var i, feature;
+                    for (i=data.create.length-1; i>=0; --i) {
+                        //TODO check why the WFSFeatureStore returns an object
+                        // here instead of a record
+                        feature = data.create[i].feature;
+                        if (feature == featureInField) {
+                            this.target.field.setValue(format.write(feature));
+                        }
+                    }
+                };
+            }, this);
         });
         
         return gxp.plugins.FeatureToField.superclass.addActions.apply(this, arguments);
