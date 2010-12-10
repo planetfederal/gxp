@@ -41,6 +41,12 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      */
     describeLayerStore: null,
     
+    /** private: property[describedLayers]
+     */
+    describedLayers: null,
+    
+    /** private: property[schemaCache]
+     */
     schemaCache: null,
     
     /** api: method[createStore]
@@ -238,8 +244,8 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             callback.call(scope, false);
             return;
         }
-        if (!arguments.callee.describedLayers) {
-            arguments.callee.describedLayers = {};
+        if (!this.describedLayers) {
+            this.describedLayers = {};
         }
         var layerName = rec.getLayer().params.LAYERS;
         var cb = function() {
@@ -257,7 +263,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             delete describedLayers[layerName];
             callback.call(scope, false);
         };
-        var describedLayers = arguments.callee.describedLayers;
+        var describedLayers = this.describedLayers;
         var index;
         if (!describedLayers[layerName]) {
             describedLayers[layerName] = true;
