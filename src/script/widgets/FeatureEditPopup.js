@@ -60,6 +60,11 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
      */
     schema: null,
     
+    /** api: config[readOnly]
+     *  ``Boolean`` Set to true to disable editing. Default is false.
+     */
+    readOnly: false,
+    
     /** api: config[allowDelete]
      *  ``Boolean`` Set to true to provide a Delete button for deleting the
      *  feature. Default is false.
@@ -270,6 +275,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
         ];
 
         this.bbar = new Ext.Toolbar({
+            hidden: this.readOnly,
             items: [
                 this.editButton,
                 this.deleteButton,

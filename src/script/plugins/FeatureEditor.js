@@ -1,9 +1,31 @@
 /**
+ * Copyright (c) 2008-2010 The Open Planning Project
+ * 
+ * Published under the BSD license.
+ * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
+ * of the license.
+ */
+
+/**
  * @requires plugins/Tool.js
  */
 
+/** api: (define)
+ *  module = gxp.plugins
+ *  class = FeatureEditor
+ */
+
+/** api: (extends)
+ *  plugins/Tool.js
+ */
 Ext.namespace("gxp.plugins");
 
+/** api: constructor
+ *  .. class:: FeatureEditor(config)
+ *
+ *    Plugin for feature editing. Requires a
+ *    :class:`gxp.plugins.FeatureManager`.
+ */   
 gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
     
     /** api: ptype = gx_featureeditor */
@@ -26,6 +48,12 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
      *  with this tool.
      */
     featureManager: null,
+    
+    /** api: config[readOnly]
+     *  ``Boolean`` Set to true to use the FeatureEditor merely as a feature
+     *  info tool, without editing capabilities. Default is false.
+     */
+    readOnly: false,
     
     /** api: config[autoLoadFeatures]
      *  ``Boolean`` Should this tool load features on click? If set to true,
@@ -200,6 +228,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
                         collapsible: true,
                         feature: feature,
                         vertexRenderIntent: "vertex",
+                        readOnly: this.readOnly,
                         editing: feature.state === OpenLayers.State.INSERT,
                         schema: this.schema,
                         allowDelete: true,
@@ -277,6 +306,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
             tooltip: this.createFeatureActionTip,
             iconCls: "gx-icon-addfeature",
             disabled: true,
+            hidden: this.readOnly,
             toggleGroup: toggleGroup,
             enableToggle: true,
             allowDepress: true,

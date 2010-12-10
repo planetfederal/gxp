@@ -13,11 +13,13 @@ Ext.onReady(function() {
                 id: "featuremanager",
                 paging: false
             }, {
-                ptype: "gx_selectfeature",
+                ptype: "gx_featureeditor",
                 featureManager: "featuremanager",
+                readOnly: true,
                 autoLoadFeatures: true,
                 actionTarget: null,
-                defaultAction: 0
+                defaultAction: 1,
+                outputConfig: {panIn: false, height: 220}
             }, {
                 ptype: "gx_featuretofield",
                 featureManager: "featuremanager"
