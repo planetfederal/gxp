@@ -1,2 +1,2 @@
-pygments: true
+pygments: false
 exclude: _static, _sources
