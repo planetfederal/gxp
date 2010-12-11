@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>gxp.NewSourceWindow &mdash; GXP v0.1</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="GXP v0.1" href="../../index.html" />
+    <link rel="up" title="Widgets" href="../widgets.html" />
+    <link rel="next" title="gxp.PointSymbolizer" href="PointSymbolizer.html" />
+    <link rel="prev" title="gxp.LineSymbolizer" href="LineSymbolizer.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="PointSymbolizer.html" title="gxp.PointSymbolizer"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="LineSymbolizer.html" title="gxp.LineSymbolizer"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">GXP</a> &raquo;</li>
+          <li><a href="../widgets.html" accesskey="U">Widgets</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="../../index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">gxp.NewSourceWindow</span></tt></a><ul>
+<li><a class="reference external" href="#config-options">Config Options</a></li>
+<li><a class="reference external" href="#public-properties">Public Properties</a></li>
+<li><a class="reference external" href="#events">Events</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="LineSymbolizer.html"
+                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.LineSymbolizer</span></tt></a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="PointSymbolizer.html"
+                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.PointSymbolizer</span></tt></a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../../_sources/lib/widgets/NewSourceWindow.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="gxp-newsourcewindow">
+<h1><a title="gxp.gxp.NewSourceWindow" class="reference internal" href="#gxp.gxp.NewSourceWindow"><tt class="xref docutils literal"><span class="pre">gxp.NewSourceWindow</span></tt></a><a class="headerlink" href="#gxp-newsourcewindow" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="gxp.gxp.NewSourceWindow">
+<em class="property">class </em><tt class="descclassname">gxp.</tt><tt class="descname">NewSourceWindow</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#gxp.gxp.NewSourceWindow" title="Permalink to this definition">¶</a></dt>
+<dd>An Ext.Window with some defaults that better lend themselves toward use
+as a quick query to get a service URL from a user.</dd></dl>
+
+<div class="section" id="config-options">
+<h2>Config Options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
+<p>Configuration properties.</p>
+<dl class="describe">
+<dt>
+<tt class="descname">addSource</tt></dt>
+<dd><p>A callback function to be called when the user submits the form in the
+NewSourceWindow.</p>
+<p>TODO this can probably be extracted to an event handler</p>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">bodyStyle</tt></dt>
+<dd>The default bodyStyle sets the padding to 0px</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">closeAction</tt></dt>
+<dd>The default closeAction is &#8216;hide&#8217;</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">title</tt></dt>
+<dd>The title defaults to &#8216;Add New Server...&#8217;</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">width</tt></dt>
+<dd>The width defaults to 300</dd></dl>
+
+</div>
+<div class="section" id="public-properties">
+<h2>Public Properties<a class="headerlink" href="#public-properties" title="Permalink to this headline">¶</a></h2>
+<p>Public properties.</p>
+<dl class="attribute">
+<dt id="gxp.NewSourceWindow.error">
+<tt class="descclassname">NewSourceWindow.</tt><tt class="descname">error</tt><a class="headerlink" href="#gxp.NewSourceWindow.error" title="Permalink to this definition">¶</a></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt>
+The error message set (for example, when adding the source failed)</dd></dl>
+
+</div>
+<div class="section" id="events">
+<h2>Events<a class="headerlink" href="#events" title="Permalink to this headline">¶</a></h2>
+<p>Events.</p>
+<dl class="describe">
+<dt>
+<tt class="descname">server-added</tt></dt>
+<dd>Fired with the URL that the user provided as a parameter when the form
+is submitted.</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="PointSymbolizer.html" title="gxp.PointSymbolizer"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="LineSymbolizer.html" title="gxp.LineSymbolizer"
+             >previous</a> |</li>
+        <li><a href="../../index.html">GXP</a> &raquo;</li>
+          <li><a href="../widgets.html" >Widgets</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2008-2010, The Open Planning Project.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,53 @@
+
+.. currentmodule:: gxp
+
+:class:`gxp.PolygonSymbolizer`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.Panel <http://extjs.com/deploy/dev/docs/?class=Ext.Panel>`_
+    
+
+
+
+xtype
+    ``gx_linesymbolizer``
+
+
+
+
+
+.. class:: PolygonSymbolizer(config)
+
+    Form for configuring a polygon symbolizer.
+
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.Panel <http://extjs.com/deploy/dev/docs/?class=Ext.Panel>`_.
+
+
+.. describe:: symbolizer
+
+    ``Object``
+    A symbolizer object that will be used to fill in form values.
+    This object will be modified when values change.  Clone first if
+    you do not want your symbolizer modified.
+
+
+
+
+
+
+
+
+

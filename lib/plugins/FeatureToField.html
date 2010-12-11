@@ -1,0 +1,241 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>gxp.plugins.FeatureToField &mdash; GXP v0.1</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="GXP v0.1" href="../../index.html" />
+    <link rel="up" title="gxp.plugins" href="../plugins.html" />
+    <link rel="next" title="gxp.plugins.GeoServerStyleWriter" href="GeoServerStyleWriter.html" />
+    <link rel="prev" title="gxp.plugins.FeatureManager" href="FeatureManager.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="GeoServerStyleWriter.html" title="gxp.plugins.GeoServerStyleWriter"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="FeatureManager.html" title="gxp.plugins.FeatureManager"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">GXP</a> &raquo;</li>
+          <li><a href="../plugins.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="../../index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">gxp.plugins.FeatureToField</span></tt></a><ul>
+<li><a class="reference external" href="#config-options">Config Options</a></li>
+<li><a class="reference external" href="#public-methods">Public Methods</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="FeatureManager.html"
+                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins.FeatureManager</span></tt></a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="GeoServerStyleWriter.html"
+                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.plugins.GeoServerStyleWriter</span></tt></a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../../_sources/lib/plugins/FeatureToField.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="gxp-plugins-featuretofield">
+<h1><a title="gxp.plugins.FeatureToField" class="reference internal" href="#gxp.plugins.FeatureToField"><tt class="xref docutils literal"><span class="pre">gxp.plugins.FeatureToField</span></tt></a><a class="headerlink" href="#gxp-plugins-featuretofield" title="Permalink to this headline">¶</a></h1>
+<dl class="meta docutils">
+<dt>Extends</dt>
+<dd><ul class="first last simple">
+<li><a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a></li>
+<li><a title="gxp.plugins.Tool" class="reference external" href="Tool.html#gxp.plugins.Tool"><tt class="xref docutils literal"><span class="pre">gxp.plugins.Tool</span></tt></a></li>
+</ul>
+</dd>
+<dt>ptype</dt>
+<dd><tt class="docutils literal"><span class="pre">gx_featuretofield</span></tt></dd>
+</dl>
+<dl class="class">
+<dt id="gxp.plugins.FeatureToField">
+<em class="property">class </em><tt class="descclassname">gxp.plugins.</tt><tt class="descname">FeatureToField</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#gxp.plugins.FeatureToField" title="Permalink to this definition">¶</a></dt>
+<dd>Plugin for serializing the currently selected feature to the form field
+of a <a title="gxp.form.ViewerField" class="reference external" href="../widgets/form/ViewerField.html#gxp.form.ViewerField"><tt class="xref docutils literal"><span class="pre">gxp.form.ViewerField</span></tt></a>. Requires a
+<a title="gxp.plugins.FeatureManager" class="reference external" href="FeatureManager.html#gxp.plugins.FeatureManager"><tt class="xref docutils literal"><span class="pre">gxp.plugins.FeatureManager</span></tt></a> and a tool that selects features
+(e.g. <a title="gxp.plugins.FeatureEditor" class="reference external" href="FeatureEditor.html#gxp.plugins.FeatureEditor"><tt class="xref docutils literal"><span class="pre">gxp.plugins.FeatureEditor</span></tt></a>).</dd></dl>
+
+<div class="section" id="config-options">
+<h2>Config Options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
+<p>Configuration properties in addition to
+those listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a>.</p>
+<dl class="describe">
+<dt>
+<tt class="descname">actions</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Array</span></tt> Custom actions for tools that do not provide their own. Array
+elements are expected to be valid Ext config objects. Actions provided
+here may have an additional <tt class="docutils literal"><span class="pre">menuText</span></tt> property, which will be used
+as text when the action is used in a menu. The <tt class="docutils literal"><span class="pre">text</span></tt> property will
+only be used in buttons. Optional, only needed to create custom
+actions.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">actionTarget</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt> or <tt class="docutils literal"><span class="pre">Array</span></tt> Where to place the tool&#8217;s actions (e.g. buttons
+or menus)? This can be any string that references an <tt class="docutils literal"><span class="pre">Ext.Container</span></tt>
+property on the portal, or a unique id configured on a component, or an
+array of the aforementioned if the action is to be put in more than one
+places (e.g. a button and a context menu item). To reference one of the
+toolbars of an <tt class="docutils literal"><span class="pre">Ext.Panel</span></tt>, &#8220;.tbar&#8221;, &#8220;.bbar&#8221; or &#8220;.fbar&#8221; has to be
+appended. The default is &#8220;map.tbar&#8221;. The viewer&#8217;s main MapPanel
+can always be accessed with &#8220;map&#8221; as actionTarget. Set to null if no
+actions should be created.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">appendActions</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> If set to false, actions won&#8217;t be added, but inserted to
+the container at the beginning. This is useful to control the order of
+actions in a toolbar. Default is true.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">defaultAction</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Number</span></tt> Optional index of an action that should be active by
+default. Only works for actions that are a <tt class="docutils literal"><span class="pre">GeoExt.Action</span></tt> instance.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">featureManager</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt> <a title="gxp.plugins.FeatureManager" class="reference external" href="FeatureManager.html#gxp.plugins.FeatureManager"><tt class="xref docutils literal"><span class="pre">FeatureManager</span></tt></a> to use for this tool.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">format</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt> The format to use for encoding the feature. Defaults to
+&#8220;GeoJSON&#8221;, which means <tt class="docutils literal"><span class="pre">OpenLayers.Format.GeoJSON</span></tt>. All
+OpenLayers.Format.* formats that can serialize a single feature can be
+used here.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">outputAction</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Number</span></tt> The <tt class="docutils literal"><span class="pre">actions</span></tt> array index of the action that should
+trigger this tool&#8217;s output. Only valid if <tt class="docutils literal"><span class="pre">actions</span></tt> is configured.
+Leave this unconfigured if none of the <tt class="docutils literal"><span class="pre">actions</span></tt> should trigger this
+tool&#8217;s output.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">outputConfig</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Object</span></tt> Optional configuration for the output container. This may
+be useful to override the xtype (e.g. &#8220;window&#8221; instead of &#8220;gx_popup&#8221;),
+or to provide layout configurations when rendering to an
+<tt class="docutils literal"><span class="pre">outputTarget</span></tt>.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">outputTarget</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt> Where to add the tool&#8217;s output container? This can be any
+string that references an <tt class="docutils literal"><span class="pre">Ext.Container</span></tt> property on the portal, or
+&#8220;map&#8221; to access the viewer&#8217;s main map. If not provided, a window will
+be created.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">toggleGroup</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt> If this tool should be radio-button style toggled with other
+tools, this string is to identify the toggle group.</dd></dl>
+
+</div>
+<div class="section" id="public-methods">
+<h2>Public Methods<a class="headerlink" href="#public-methods" title="Permalink to this headline">¶</a></h2>
+<p>Public methods in addition to those
+listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a>.</p>
+<dl class="method">
+<dt id="gxp.plugins.FeatureToField.addActions">
+<tt class="descclassname">FeatureToField.</tt><tt class="descname">addActions</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.FeatureToField.addActions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="gxp.plugins.FeatureToField.addOutput">
+<tt class="descclassname">FeatureToField.</tt><tt class="descname">addOutput</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.FeatureToField.addOutput" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="GeoServerStyleWriter.html" title="gxp.plugins.GeoServerStyleWriter"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="FeatureManager.html" title="gxp.plugins.FeatureManager"
+             >previous</a> |</li>
+        <li><a href="../../index.html">GXP</a> &raquo;</li>
+          <li><a href="../plugins.html" ><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2008-2010, The Open Planning Project.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+    </div>
+  </body>
+</html>

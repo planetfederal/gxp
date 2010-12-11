@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>gxp.FilterBuilder &mdash; GXP v0.1</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="GXP v0.1" href="../../index.html" />
+    <link rel="up" title="Widgets" href="../widgets.html" />
+    <link rel="next" title="gxp.GoogleEarthPanel" href="GoogleEarthPanel.html" />
+    <link rel="prev" title="gxp.FillSymbolizer" href="FillSymbolizer.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="GoogleEarthPanel.html" title="gxp.GoogleEarthPanel"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="FillSymbolizer.html" title="gxp.FillSymbolizer"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">GXP</a> &raquo;</li>
+          <li><a href="../widgets.html" accesskey="U">Widgets</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="../../index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">gxp.FilterBuilder</span></tt></a><ul>
+<li><a class="reference external" href="#config-options">Config Options</a></li>
+<li><a class="reference external" href="#public-methods">Public Methods</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="FillSymbolizer.html"
+                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.FillSymbolizer</span></tt></a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="GoogleEarthPanel.html"
+                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.GoogleEarthPanel</span></tt></a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../../_sources/lib/widgets/FilterBuilder.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="gxp-filterbuilder">
+<h1><a title="gxp.FilterBuilder" class="reference internal" href="#gxp.FilterBuilder"><tt class="xref docutils literal"><span class="pre">gxp.FilterBuilder</span></tt></a><a class="headerlink" href="#gxp-filterbuilder" title="Permalink to this headline">¶</a></h1>
+<dl class="meta docutils">
+<dt>Extends</dt>
+<dd><ul class="first last simple">
+<li><a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.Panel">Ext.Panel</a></li>
+</ul>
+</dd>
+<dt>xtype</dt>
+<dd><tt class="docutils literal"><span class="pre">gx_filterbuilder</span></tt></dd>
+</dl>
+<dl class="class">
+<dt id="gxp.FilterBuilder">
+<em class="property">class </em><tt class="descclassname">gxp.</tt><tt class="descname">FilterBuilder</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#gxp.FilterBuilder" title="Permalink to this definition">¶</a></dt>
+<dd>Create a panel for assembling a filter.</dd></dl>
+
+<div class="section" id="config-options">
+<h2>Config Options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
+<p>Configuration properties in addition to
+those listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.Panel">Ext.Panel</a>.</p>
+<dl class="describe">
+<dt>
+<tt class="descname">allowBlank</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> Do we allow blank FilterFields? It is safe to say true
+here, but for compatibility reasons with old applications, the default
+is false.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">allowedBuilderTypes</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Array</span></tt>
+List of builder type constants.  Default is
+<tt class="docutils literal"><span class="pre">[ANY_OF,</span> <span class="pre">ALL_OF,</span> <span class="pre">NONE_OF]</span></tt>.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">allowGroups</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt>
+Allow groups of conditions to be added.  Default is <tt class="docutils literal"><span class="pre">true</span></tt>.
+If <tt class="docutils literal"><span class="pre">false</span></tt>, only individual conditions (non-logical filters) can
+be added.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">builderTypeNames</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Array</span></tt>
+A list of labels for that correspond to builder type constants.
+These will be the option names available in the builder type combo.
+Default is <tt class="docutils literal"><span class="pre">[&quot;any&quot;,</span> <span class="pre">&quot;all&quot;,</span> <span class="pre">&quot;none&quot;,</span> <span class="pre">&quot;not</span> <span class="pre">all&quot;]</span></tt>.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">cls</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt>
+The CSS class to be added to this panel&#8217;s element (defaults to
+<tt class="docutils literal"><span class="pre">&quot;gx-filterbuilder&quot;</span></tt>).</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">postComboText</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt>
+String to display before filter type combo.  Default is
+<tt class="docutils literal"><span class="pre">&quot;of</span> <span class="pre">the</span> <span class="pre">following:&quot;</span></tt>.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">preComboText</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt>
+String to display before filter type combo.  Default is <tt class="docutils literal"><span class="pre">&quot;Match&quot;</span></tt>.</dd></dl>
+
+</div>
+<div class="section" id="public-methods">
+<h2>Public Methods<a class="headerlink" href="#public-methods" title="Permalink to this headline">¶</a></h2>
+<p>Public methods in addition to those
+listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.Panel">Ext.Panel</a>.</p>
+<dl class="method">
+<dt id="gxp.FilterBuilder.getFilter">
+<tt class="descclassname">FilterBuilder.</tt><tt class="descname">getFilter</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.FilterBuilder.getFilter" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">OpenLayers.Filter</span></tt></td>
+</tr>
+</tbody>
+</table>
+<p>Returns a filter that fits the model in the Filter Encoding
+specification.  Use this method instead of directly accessing
+the <tt class="docutils literal"><span class="pre">filter</span></tt> property.  Return will be <tt class="docutils literal"><span class="pre">false</span></tt> if any child
+filter does not have a type, property, or value.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="GoogleEarthPanel.html" title="gxp.GoogleEarthPanel"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="FillSymbolizer.html" title="gxp.FillSymbolizer"
+             >previous</a> |</li>
+        <li><a href="../../index.html">GXP</a> &raquo;</li>
+          <li><a href="../widgets.html" >Widgets</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2008-2010, The Open Planning Project.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+    </div>
+  </body>
+</html>

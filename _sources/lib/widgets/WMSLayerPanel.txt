@@ -1,0 +1,78 @@
+
+.. currentmodule:: gxp
+
+:class:`gxp.WMSLayerPanel`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.TabPanel <http://extjs.com/deploy/dev/docs/?class=Ext.TabPanel>`_
+    
+
+
+
+
+
+
+
+.. class:: WMSLayerPanel(config)
+
+    Create a dialog for setting WMS layer properties like title, abstract,
+    opacity, transparency and image format.
+
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.TabPanel <http://extjs.com/deploy/dev/docs/?class=Ext.TabPanel>`_.
+
+
+.. describe:: activeTab
+
+    ``String or Number``
+    A string id or the numeric index of the tab that should be initially
+    activated on render.  Defaults to ``0``.
+
+.. describe:: border
+
+    ``Boolean``
+    Display a border around the panel.  Defaults to ``false``.
+
+.. describe:: imageFormats
+
+    ``RegEx`` Regular expression used to test browser friendly formats for
+    GetMap requests.  The formats displayed will those from the record that
+    match this expression.  Default is ``/png|gif|jpe?g/i``.
+
+.. describe:: layerRecord
+
+    ``GeoExt.data.LayerRecord``
+    Show properties for this layer record.
+
+
+
+
+
+
+
+
+Events
+------
+
+Events in addition to those
+listed for `Ext.TabPanel <http://extjs.com/deploy/dev/docs/?class=Ext.TabPanel>`_.
+
+
+.. describe:: change
+
+    Fires when the ``layerRecord`` is changed using this dialog.
+
+
+

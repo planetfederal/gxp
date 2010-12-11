@@ -1,0 +1,72 @@
+
+.. currentmodule:: gxp
+
+:class:`gxp.FeatureEditPopup`
+================================================================================
+
+
+
+.. class:: FeatureEditPopup(config)
+
+    Create a new popup which displays the attributes of a feature and
+    makes the feature editable,
+    using an ``OpenLayers.Control.MofidyFeature``.
+
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties.
+
+
+.. describe:: allowDelete
+
+    ``Boolean`` Set to true to provide a Delete button for deleting the
+    feature. Default is false.
+
+.. describe:: editing
+
+    ``Boolean`` Set to true to open the popup in editing mode.
+    Default is false.
+
+.. describe:: feature
+
+    ``OpenLayers.Feature.Vector`` The feature to edit and display.
+
+.. describe:: readOnly
+
+    ``Boolean`` Set to true to disable editing. Default is false.
+
+.. describe:: schema
+
+    ``GeoExt.data.AttributeStore`` Optional. If provided, available
+    feature attributes will be determined from the schema instead of using
+    the attributes that the feature has currently set.
+
+.. describe:: vertexRenderIntent
+
+    ``String`` renderIntent for feature vertices when modifying. Undefined
+    by default.
+
+
+
+
+Public Properties
+-----------------
+
+Public properties.
+
+
+.. attribute:: FeatureEditPopup.feature
+
+    ``OpenLayers.Feature.Vector`` The feature being edited/displayed.
+
+
+
+
+
+
+

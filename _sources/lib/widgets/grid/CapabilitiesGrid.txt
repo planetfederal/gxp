@@ -1,0 +1,126 @@
+
+.. currentmodule:: gxp.grid
+
+:class:`gxp.grid.CapabilitiesGrid`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.grid.GridPanel <http://extjs.com/deploy/dev/docs/?class=Ext.grid.GridPanel>`_
+    
+
+
+
+xtype
+    ``gx_capabilitiesgrid``
+
+
+
+
+
+.. class:: CapabilitiesGrid(config)
+
+    Create a new grid displaying the WMS cabilities of a URL, or the
+    contents of a ``GeoExt.data.WMSCapabilitiesStore``\ .  The user can
+    add layers to a passed-in ``GeoExt.MapPanel`` from the grid.
+
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.grid.GridPanel <http://extjs.com/deploy/dev/docs/?class=Ext.grid.GridPanel>`_.
+
+
+.. describe:: addSource
+
+    A callback method that will be called when a url is entered into this
+    grid's NewLayerWindow. It should expect the following parameters:
+    
+    .. list-table::
+        :widths: 20 80
+    
+        * - ``url``
+          - the URL that the user entered
+        * - ``success``
+          - a callback to call after the successful addition of a source
+        * - ``failure``
+          - a callback to call after a failure to add a source
+        * - ``scope``
+          - the scope in which to run the callbacks
+    
+    If this is not provided, a default implementation will be used.  It is
+    recommended that client code use handlers for the 'add' event on the
+    metaStore rather than overriding this method.
+
+.. describe:: allowNewSources
+
+    ``Boolean``
+    Use this property (set it to false) to force the widget to hide the option to add new sources
+    even when a proxy is set up. Defaults to true.
+
+.. describe:: cm
+
+    ``Ext.grid.ColumnModel`` or Array[Object]
+    The ColumnModel as normally specified in Ext Grids
+
+.. describe:: metaStore
+
+    ``Ext.data.Store``
+    A Store containing the alternative stores that are available for this
+    GridPanel.  Stores added using the grid toolbar's 'add sources' button
+    will be added to this store.
+    
+    The store must provide at least the following fields:
+    
+    .. list-table::
+        :widths: 20 80
+    
+        * - ``name``
+          - the display name for the store
+        * - ``store``
+          - the ``WMSCapabilitiesStore`` instance
+        * - ``identifier``
+          - an id string that layers may use to associate themselves with a
+            source (useful for serialization)
+        * - ``url``
+          - the root URL to the source's OWS service
+
+.. describe:: store
+
+    ``GeoExt.data.LayerStore``
+
+.. describe:: url
+
+    The id of the column to auto-expand.  Unlike the standard ExtJS
+    ``GridPanel``, this class provides a default value of 'title'.
+
+
+
+
+
+
+Public Methods
+--------------
+
+Public methods in addition to those
+listed for `Ext.grid.GridPanel <http://extjs.com/deploy/dev/docs/?class=Ext.grid.GridPanel>`_.
+
+
+.. method:: CapabilitiesGrid.addLayers
+
+    :param: base: a boolean indicating whether or not to make the new layer
+        a base layer.
+    
+    Adds a layer to the :class:`GeoExt.MapPanel` of this instance.
+
+
+
+
+

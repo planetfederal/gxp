@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>gxp.PointSymbolizer &mdash; GXP v0.1</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="GXP v0.1" href="../../index.html" />
+    <link rel="up" title="Widgets" href="../widgets.html" />
+    <link rel="next" title="gxp.PolygonSymbolizer" href="PolygonSymbolizer.html" />
+    <link rel="prev" title="gxp.NewSourceWindow" href="NewSourceWindow.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="PolygonSymbolizer.html" title="gxp.PolygonSymbolizer"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="NewSourceWindow.html" title="gxp.NewSourceWindow"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">GXP</a> &raquo;</li>
+          <li><a href="../widgets.html" accesskey="U">Widgets</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="../../index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">gxp.PointSymbolizer</span></tt></a><ul>
+<li><a class="reference external" href="#config-options">Config Options</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="NewSourceWindow.html"
+                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.NewSourceWindow</span></tt></a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="PolygonSymbolizer.html"
+                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.PolygonSymbolizer</span></tt></a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../../_sources/lib/widgets/PointSymbolizer.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="gxp-pointsymbolizer">
+<h1><a title="gxp.PointSymbolizer" class="reference internal" href="#gxp.PointSymbolizer"><tt class="xref docutils literal"><span class="pre">gxp.PointSymbolizer</span></tt></a><a class="headerlink" href="#gxp-pointsymbolizer" title="Permalink to this headline">¶</a></h1>
+<dl class="meta docutils">
+<dt>Extends</dt>
+<dd><ul class="first last simple">
+<li><a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.Panel">Ext.Panel</a></li>
+</ul>
+</dd>
+<dt>xtype</dt>
+<dd><tt class="docutils literal"><span class="pre">gx_pointsymbolizer</span></tt></dd>
+</dl>
+<dl class="class">
+<dt id="gxp.PointSymbolizer">
+<em class="property">class </em><tt class="descclassname">gxp.</tt><tt class="descname">PointSymbolizer</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#gxp.PointSymbolizer" title="Permalink to this definition">¶</a></dt>
+<dd>Form for configuring a point symbolizer.</dd></dl>
+
+<div class="section" id="config-options">
+<h2>Config Options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
+<p>Configuration properties in addition to
+those listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.Panel">Ext.Panel</a>.</p>
+<dl class="describe">
+<dt>
+<tt class="descname">colorManager</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Function</span></tt>
+Optional color manager constructor to be used as a plugin for the color
+field.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">pointGraphics</tt></dt>
+<dd><p><tt class="docutils literal"><span class="pre">Array</span></tt>
+A list of objects to be used as the root of the data for a
+JsonStore.  These will become records used in the selection of
+a point graphic.  If an object in the list has no &#8220;value&#8221; property,
+the user will be presented with an input to provide their own URL
+for an external graphic.  By default, names of well-known marks are
+provided.  In addition, the default list will produce a record with
+display of &#8220;external&#8221; that create an input for an external graphic
+URL.</p>
+<p>ields:</p>
+<ul>
+<li><p class="first">display - <tt class="docutils literal"><span class="pre">String</span></tt> The name to be displayed to the user.</p>
+</li>
+<li><p class="first">preview - <tt class="docutils literal"><span class="pre">String</span></tt> URL to a graphic for preview.</p>
+</li>
+<li><p class="first">value - <tt class="docutils literal"><span class="pre">String</span></tt> Value to be sent to the server.</p>
+</li>
+<li><dl class="first docutils">
+<dt>mark - <tt class="docutils literal"><span class="pre">Boolean</span></tt> The value is a well-known name for a mark.  If</dt>
+<dd><p class="first last"><tt class="docutils literal"><span class="pre">false</span></tt>, the value will be assumed to be a url for an external graphic.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">symbolizer</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Object</span></tt>
+A symbolizer object that will be used to fill in form values.
+This object will be modified when values change.  Clone first if
+you do not want your symbolizer modified.</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="PolygonSymbolizer.html" title="gxp.PolygonSymbolizer"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="NewSourceWindow.html" title="gxp.NewSourceWindow"
+             >previous</a> |</li>
+        <li><a href="../../index.html">GXP</a> &raquo;</li>
+          <li><a href="../widgets.html" >Widgets</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2008-2010, The Open Planning Project.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+    </div>
+  </body>
+</html>

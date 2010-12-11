@@ -1,0 +1,71 @@
+
+.. currentmodule:: gxp
+
+:class:`gxp.FillSymbolizer`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.FormPanel <http://extjs.com/deploy/dev/docs/?class=Ext.FormPanel>`_
+    
+
+
+
+xtype
+    ``gx_fillsymbolizer``
+
+
+
+
+
+.. class:: FillSymbolizer(config)
+
+    Form for configuring a symbolizer fill.
+
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.FormPanel <http://extjs.com/deploy/dev/docs/?class=Ext.FormPanel>`_.
+
+
+.. describe:: checkboxToggle
+
+    ``Boolean`` Set to false if the "Fill" fieldset should not be
+    toggleable. Default is true.
+
+.. describe:: colorManager
+
+    ``Function``
+    Optional color manager constructor to be used as a plugin for the color
+    field.
+
+.. describe:: defaultColor
+
+    ``String`` Default background color for the Color field. This
+    color will be displayed when no fillColor value for the symbolizer
+    is available. Defaults to the ``fillColor`` property of
+    ``OpenLayers.Renderer.defaultSymbolizer``.
+
+.. describe:: symbolizer
+
+    ``Object``
+    A symbolizer object that will be used to fill in form values.
+    This object will be modified when values change.  Clone first if
+    you do not want your symbolizer modified.
+
+
+
+
+
+
+
+
+

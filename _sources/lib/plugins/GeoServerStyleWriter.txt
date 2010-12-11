@@ -1,0 +1,91 @@
+
+.. currentmodule:: gxp.plugins
+
+:class:`gxp.plugins.GeoServerStyleWriter`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_
+    * :class:`gxp.plugins.StyleWriter`
+
+
+
+
+
+ptype
+    ``gx_geoserverstylewriter``
+
+
+
+.. class:: GeoServerStyleWriter(config)
+
+    Save styles from :class:`gxp.WMSStylesDialog` or similar classes that
+    have a ``layerRecord`` and a ``stylesStore`` with a ``userStyle``
+    field. The plugin provides a save method, which will use the GeoServer
+    RESTConfig API to persist style changes from the ``stylesStore`` to the
+    server and associate them with the layer referenced in the target's
+    ``layerRecord``.
+
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
+
+
+.. describe:: baseUrl
+
+    ``String``
+    The base url for the GeoServer REST API. Default is "/geoserver/rest".
+
+
+
+
+Public Properties
+-----------------
+
+Public properties in addition to those
+listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
+
+
+.. attribute:: GeoServerStyleWriter.deletedStyles
+
+    ``Array(String)`` style names of styles from the server that were
+    deleted and have to be removed from the server
+
+
+
+
+Public Methods
+--------------
+
+Public methods in addition to those
+listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
+
+
+.. method:: GeoServerStyleWriter.write
+
+    :arg options: ``Object``
+    
+    Saves the styles of the target's ``layerRecord`` using GeoServer's
+    RESTconfig API.
+    
+    Supported options:
+    
+    * defaultStyle - ``String`` If set, the default style will be set.
+    * success - ``Function`` A function to call when all styles were
+      written successfully.
+    * scope - ``Object`` A scope to call the ``success`` function with.
+
+
+
+
+

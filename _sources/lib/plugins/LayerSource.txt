@@ -1,0 +1,117 @@
+
+.. currentmodule:: gxp.plugins
+
+:class:`gxp.plugins.LayerSource`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_
+    
+
+
+
+
+
+
+
+.. class:: LayerSource(config)
+
+  Base class for layer sources to plug into a :class:`gxp.Viewer`. A source
+  is created by adding it to the ``sources`` object of the viewer. Once
+  there, the viewer will create layers from it by looking at objects in
+  the ``layers`` array of its ``map`` config option, calling the source's
+  ``createLayerRecord`` method.
+
+
+    
+
+
+
+
+Public Properties
+-----------------
+
+Public properties in addition to those
+listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
+
+
+.. attribute:: LayerSource.store
+
+    ``GeoExt.data.LayerStore``
+
+.. attribute:: LayerSource.title
+
+    ``String``
+    A descriptive title for this layer source.
+
+
+
+
+Public Methods
+--------------
+
+Public methods in addition to those
+listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
+
+
+.. method:: LayerSource.createLayerRecord
+
+    :arg config:  ``Object``  The application config for this layer.
+    :returns: ``GeoExt.data.LayerRecord``
+    
+    Create a layer record given the config.
+
+.. method:: LayerSource.createStore
+
+    Creates a store of layer records.  Fires "ready" when store is loaded.
+
+.. method:: LayerSource.getConfigForRecord
+
+    :arg record: :class:`GeoExt.data.LayerRecord`
+    :returns: ``Object``
+    
+    Create a config object that can be used to recreate the given record.
+
+.. method:: LayerSource.getProjection
+
+    :arg layerRecord: ``GeoExt.data.LayerRecord`` a record from this
+        source's store
+    :returns: ``OpenLayers.Projection`` A suitable projection for the
+        ``layerRecord``. If the layer is available in the map projection,
+        the map projection will be returned. Otherwise an equal projection,
+        or null if none is available.
+    
+    Get the projection that the source will use for the layer created in
+    ``createLayerRecord``. If the layer is not available in a projection
+    that fits the map projection, null will be returned.
+
+.. method:: LayerSource.init
+
+    :arg target: ``Object`` The object initializing this plugin.
+    
+    Calls :meth:`createStore` with a callback that fires the 'ready' event.
+
+
+
+
+Events
+------
+
+Events in addition to those
+listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
+
+
+.. describe:: failure
+
+    Fires if the layer source fails to load.
+
+.. describe:: ready
+
+    Fires when the layer source is ready for action.
+
+
+

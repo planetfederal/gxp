@@ -1,0 +1,71 @@
+
+.. currentmodule:: gxp
+
+:class:`gxp.RulePanel`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.TabPanel <http://extjs.com/deploy/dev/docs/?class=Ext.TabPanel>`_
+    
+
+
+
+xtype
+    ``gx_rulepanel``
+
+
+
+
+
+.. class:: RulePanel(config)
+
+    Create a panel for assembling SLD rules.
+
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.TabPanel <http://extjs.com/deploy/dev/docs/?class=Ext.TabPanel>`_.
+
+
+.. describe:: rule
+
+    ``OpenLayers.Rule`` Optional rule provided in the initial
+    configuration.  If a rule is provided and no `symbolType` is provided,
+    the symbol type will be derived from the first symbolizer found in the
+    rule.
+
+
+
+
+Public Properties
+-----------------
+
+Public properties in addition to those
+listed for `Ext.TabPanel <http://extjs.com/deploy/dev/docs/?class=Ext.TabPanel>`_.
+
+
+.. attribute:: RulePanel.fonts
+
+    ``Array(String)`` List of fonts for the font combo.  If not set,
+        defaults  to the list provided by the <Styler.FontComboBox>.
+
+.. attribute:: RulePanel.symbolType
+
+    ``String`` One of "Point", "Line", or "Polygon".  If no rule is
+    provided, default is "Point".
+
+
+
+
+
+
+

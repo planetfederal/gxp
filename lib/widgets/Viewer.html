@@ -1,0 +1,379 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>gxp.Viewer &mdash; GXP v0.1</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="GXP v0.1" href="../../index.html" />
+    <link rel="up" title="Widgets" href="../widgets.html" />
+    <link rel="next" title="gxp.WMSLayerPanel" href="WMSLayerPanel.html" />
+    <link rel="prev" title="gxp.TextSymbolizer" href="TextSymbolizer.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="WMSLayerPanel.html" title="gxp.WMSLayerPanel"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="TextSymbolizer.html" title="gxp.TextSymbolizer"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">GXP</a> &raquo;</li>
+          <li><a href="../widgets.html" accesskey="U">Widgets</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="../../index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">gxp.Viewer</span></tt></a><ul>
+<li><a class="reference external" href="#example-use">Example Use</a></li>
+<li><a class="reference external" href="#config-options">Config Options</a></li>
+<li><a class="reference external" href="#public-properties">Public Properties</a></li>
+<li><a class="reference external" href="#public-methods">Public Methods</a></li>
+<li><a class="reference external" href="#events">Events</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="TextSymbolizer.html"
+                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.TextSymbolizer</span></tt></a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="WMSLayerPanel.html"
+                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.WMSLayerPanel</span></tt></a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../../_sources/lib/widgets/Viewer.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="gxp-viewer">
+<h1><a title="gxp.Viewer" class="reference internal" href="#gxp.Viewer"><tt class="xref docutils literal"><span class="pre">gxp.Viewer</span></tt></a><a class="headerlink" href="#gxp-viewer" title="Permalink to this headline">¶</a></h1>
+<dl class="meta docutils">
+<dt>Extends</dt>
+<dd><ul class="first last simple">
+<li><a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a></li>
+</ul>
+</dd>
+</dl>
+<dl class="class">
+<dt id="gxp.Viewer">
+<em class="property">class </em><tt class="descclassname">gxp.</tt><tt class="descname">Viewer</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#gxp.Viewer" title="Permalink to this definition">¶</a></dt>
+<dd>A map viewer application framework that can be extended with plugins
+for layer sources and tools. Types of viewers that can be built with
+this framework range from simple map viewers to complex web-based GIS
+applications with capabilities like feature editing, styling and more.</dd></dl>
+
+<div class="section" id="example-use">
+<h2>Example Use<a class="headerlink" href="#example-use" title="Permalink to this headline">¶</a></h2>
+<p>A viewer can be added to an HTML page with a script block containing
+something like this for a minimal viewer with an OSM layer:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">gxp</span><span class="p">.</span><span class="nx">Viewer</span><span class="p">({</span>
+    <span class="nx">sources</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">osm</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">ptype</span><span class="o">:</span> <span class="s2">&quot;gx_osmsource&quot;</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="nx">map</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">center</span><span class="o">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="nx">zoom</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="nx">layers</span><span class="o">:</span> <span class="p">[{</span>
+            <span class="nx">source</span><span class="o">:</span> <span class="s2">&quot;osm&quot;</span><span class="p">,</span>
+            <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;mapnik&quot;</span>
+        <span class="p">}]</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="config-options">
+<h2>Config Options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
+<p>Configuration properties in addition to
+those listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a>.</p>
+<dl class="describe">
+<dt>
+<tt class="descname">defaultSourceType</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt>
+The default layer source plugin type.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">defaultToolType</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt>
+The default tool plugin type. Default is &#8220;gx_tool&#8221;</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">map</tt></dt>
+<dd><p><tt class="docutils literal"><span class="pre">Object</span></tt> Map configuration for this viewer. This object is similar
+to the <tt class="docutils literal"><span class="pre">GeoExt.MapPanel</span></tt> configuration, with the following
+exceptions:</p>
+<ul>
+<li><p class="first">center: <tt class="docutils literal"><span class="pre">Array</span></tt> of lon (x) and lat (y) values</p>
+</li>
+<li><p class="first">items: not available - use <tt class="docutils literal"><span class="pre">mapItems</span></tt> instead</p>
+</li>
+<li><p class="first">tbar: not available - use <tt class="xref docutils literal"><span class="pre">gxp.Tool</span></tt> plugins to populate
+the tbar</p>
+</li>
+<li><p class="first">layers: <tt class="docutils literal"><span class="pre">Array(Object)</span></tt>. Each object has a <tt class="docutils literal"><span class="pre">source</span></tt> property
+referencing a <a title="gxp.plugins.LayerSource" class="reference external" href="../plugins/LayerSource.html#gxp.plugins.LayerSource"><tt class="xref docutils literal"><span class="pre">gxp.plugins.LayerSource</span></tt></a>. The viewer will call
+the <tt class="docutils literal"><span class="pre">createLayerRecord</span></tt> of this source with the object as
+argument, which will result in a layer being created with the
+configuration provided here.</p>
+<p>Valid config options for all layer sources:</p>
+<ul class="simple">
+<li>source: <tt class="docutils literal"><span class="pre">String</span></tt> referencing a source from <tt class="docutils literal"><span class="pre">sources</span></tt></li>
+<li>name: <tt class="docutils literal"><span class="pre">String</span></tt> - the name from the source&#8217;s <tt class="docutils literal"><span class="pre">store</span></tt> (only for
+sources that maintain a store)</li>
+<li>visibility: <tt class="docutils literal"><span class="pre">Boolean</span></tt> - initial layer visibility</li>
+<li>opacity: <tt class="docutils literal"><span class="pre">Number</span></tt> - initial layer.opacity</li>
+<li>group: <tt class="docutils literal"><span class="pre">String</span></tt> - group for the layer when the viewer also uses a
+<a title="gxp.plugins.LayerTree" class="reference external" href="../plugins/LayerTree.html#gxp.plugins.LayerTree"><tt class="xref docutils literal"><span class="pre">gxp.plugins.LayerTree</span></tt></a>. Set this to &#8220;background&#8221; to make
+the layer a base layer</li>
+<li>fixed: <tt class="docutils literal"><span class="pre">Boolean</span></tt> - Set to true to prevent the layer from being
+removed by a <a title="gxp.plugins.RemoveLayer" class="reference external" href="../plugins/RemoveLayer.html#gxp.plugins.RemoveLayer"><tt class="xref docutils literal"><span class="pre">gxp.plugins.RemoveLayer</span></tt></a> tool and from being
+dragged in a <a title="gxp.plugins.LayerTree" class="reference external" href="../plugins/LayerTree.html#gxp.plugins.LayerTree"><tt class="xref docutils literal"><span class="pre">gxp.plugins.LayerTree</span></tt></a></li>
+<li>selected: <tt class="docutils literal"><span class="pre">Boolean</span></tt> - Set to true to mark the layer selected</li>
+</ul>
+</li>
+<li><p class="first">map: not available, can be configured with <tt class="docutils literal"><span class="pre">maxExtent</span></tt>,
+<tt class="docutils literal"><span class="pre">numZoomLevels</span></tt> and <tt class="docutils literal"><span class="pre">theme</span></tt>.</p>
+</li>
+<li><p class="first">maxExtent: <tt class="docutils literal"><span class="pre">Array</span></tt> to be consumed by
+<tt class="docutils literal"><span class="pre">OpenLayers.Bounds.fromArray</span></tt> - the maxExtent of the map</p>
+</li>
+<li><p class="first">numZoomLevels: <tt class="docutils literal"><span class="pre">Number</span></tt> - the number of zoom levels if not
+available on the first layer</p>
+</li>
+<li><p class="first">theme: <tt class="docutils literal"><span class="pre">String</span></tt> - optional theme for the <tt class="docutils literal"><span class="pre">OpenLayers.Map</span></tt>, as
+in <tt class="docutils literal"><span class="pre">OpenLayers.Map.theme</span></tt>.</p>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">mapItems</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Array(Ext.Component)</span></tt>
+Any items to be added to the map panel. A typical item to put on a map
+would be a <tt class="docutils literal"><span class="pre">GeoExt.ZoomSlider</span></tt>.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">portalConfig</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Object</span></tt> Configuration object for the wrapping container of the
+viewer. This will be an <tt class="docutils literal"><span class="pre">Ext.Panel</span></tt> if it has a <tt class="docutils literal"><span class="pre">renderTo</span></tt>
+property, or an <tt class="docutils literal"><span class="pre">Ext.Viewport</span></tt> otherwise.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">portalItems</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Array</span></tt> Items for the portal. A MapPanel will automatically be added
+to the portal, unless <tt class="docutils literal"><span class="pre">portalConfig</span></tt> has <tt class="docutils literal"><span class="pre">items</span></tt> configured.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">sources</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Object</span></tt> Layer source configurations for this viewer, keyed by source
+id. The source id will be used to reference the layer source in the
+<tt class="docutils literal"><span class="pre">layers</span></tt> array of the <tt class="docutils literal"><span class="pre">map</span></tt> object.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">tools</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Array(</span></tt> <a title="gxp.plugins.Tool" class="reference external" href="../plugins/Tool.html#gxp.plugins.Tool"><tt class="xref docutils literal"><span class="pre">gxp.plugins.Tool</span></tt></a> <tt class="docutils literal"><span class="pre">)</span></tt>
+Any tools to be added to the viewer. Tools are plugins that will be
+plugged into this viewer&#8217;s <tt class="docutils literal"><span class="pre">portal</span></tt>. The <tt class="docutils literal"><span class="pre">tools</span></tt> array is usually
+populated with configuration objects for plugins (using a ptype),
+rather than instances. A default ptype can be configured with this
+viewer&#8217;s <tt class="docutils literal"><span class="pre">defaultToolType</span></tt> option.</dd></dl>
+
+</div>
+<div class="section" id="public-properties">
+<h2>Public Properties<a class="headerlink" href="#public-properties" title="Permalink to this headline">¶</a></h2>
+<p>Public properties in addition to those
+listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a>.</p>
+<dl class="attribute">
+<dt id="gxp.Viewer.portalItems">
+<tt class="descclassname">Viewer.</tt><tt class="descname">portalItems</tt><a class="headerlink" href="#gxp.Viewer.portalItems" title="Permalink to this definition">¶</a></dt>
+<dd><tt class="docutils literal"><span class="pre">Array(Ext.Component)</span></tt>
+Items that make up the portal.</dd></dl>
+
+<dl class="attribute">
+<dt id="gxp.Viewer.selectedLayer">
+<tt class="descclassname">Viewer.</tt><tt class="descname">selectedLayer</tt><a class="headerlink" href="#gxp.Viewer.selectedLayer" title="Permalink to this definition">¶</a></dt>
+<dd><tt class="docutils literal"><span class="pre">GeoExt.data.LayerRecord</span></tt> The currently selected layer</dd></dl>
+
+<dl class="attribute">
+<dt id="gxp.Viewer.tools">
+<tt class="descclassname">Viewer.</tt><tt class="descname">tools</tt><a class="headerlink" href="#gxp.Viewer.tools" title="Permalink to this definition">¶</a></dt>
+<dd><tt class="docutils literal"><span class="pre">Object</span></tt> Storage of tool instances for this viewer, keyed by id</dd></dl>
+
+</div>
+<div class="section" id="public-methods">
+<h2>Public Methods<a class="headerlink" href="#public-methods" title="Permalink to this headline">¶</a></h2>
+<p>Public methods in addition to those
+listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a>.</p>
+<dl class="method">
+<dt id="gxp.Viewer.getSource">
+<tt class="descclassname">Viewer.</tt><tt class="descname">getSource</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.Viewer.getSource" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>layerRec</em> &#8211; <tt class="docutils literal"><span class="pre">GeoExt.data.LayerRecord</span></tt> the layer to get the
+source for.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gxp.Viewer.loadConfig">
+<tt class="descclassname">Viewer.</tt><tt class="descname">loadConfig</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.Viewer.loadConfig" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>config</em> &#8211; <tt class="docutils literal"><span class="pre">Object</span></tt> The config object passed to the constructor.</td>
+</tr>
+</tbody>
+</table>
+<p>Subclasses that load config asynchronously can override this to load
+any configuration before applyConfig is called.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gxp.Viewer.selectLayer">
+<tt class="descclassname">Viewer.</tt><tt class="descname">selectLayer</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.Viewer.selectLayer" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>record</em> &#8211; <tt class="docutils literal"><span class="pre">GeoExt.data.LayerRecord`</span></tt> Layer record.  Call with no
+layer record to remove layer selection.</td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">Boolean</span></tt> Layers were set as selected.</td>
+</tr>
+</tbody>
+</table>
+<p>TODO: change to selectLayers (plural)</p>
+</dd></dl>
+
+</div>
+<div class="section" id="events">
+<h2>Events<a class="headerlink" href="#events" title="Permalink to this headline">¶</a></h2>
+<p>Events in addition to those
+listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a>.</p>
+<dl class="describe">
+<dt>
+<tt class="descname">beforelayerselectionchange</tt></dt>
+<dd><p>Fired before the selected set of layers changes.  Listeners
+can return <tt class="docutils literal"><span class="pre">false</span></tt> to stop the selected layers from being
+changed.</p>
+<p>Listeners arguments:</p>
+<ul class="simple">
+<li>layerRecord - <tt class="docutils literal"><span class="pre">GeoExt.data.LayerRecord</span></tt> the record of the
+selected layer, or null if no layer is selected.</li>
+</ul>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">layerselectionchange</tt></dt>
+<dd><p>Fired when the selected set of layers changes.</p>
+<p>Listeners arguments:</p>
+<ul class="simple">
+<li>layerRecord - <tt class="docutils literal"><span class="pre">GeoExt.data.LayerRecord</span></tt> the record of the
+selected layer, or null if no layer is selected.</li>
+</ul>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">portalReady</tt></dt>
+<dd>Fires when portal is ready for interaction.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">ready</tt></dt>
+<dd>Fires when application is ready for user interaction.</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="WMSLayerPanel.html" title="gxp.WMSLayerPanel"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="TextSymbolizer.html" title="gxp.TextSymbolizer"
+             >previous</a> |</li>
+        <li><a href="../../index.html">GXP</a> &raquo;</li>
+          <li><a href="../widgets.html" >Widgets</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2008-2010, The Open Planning Project.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+    </div>
+  </body>
+</html>

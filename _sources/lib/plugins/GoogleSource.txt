@@ -1,0 +1,179 @@
+
+.. currentmodule:: gxp.plugins
+
+:class:`gxp.plugins.GoogleSource`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_
+    * :class:`gxp.plugins.LayerSource`
+
+
+
+
+
+ptype
+    ``gx_googlesource``
+
+
+
+.. class:: GoolgeSource(config)
+
+  Plugin for using Google layers with :class:`gxp.Viewer` instances. The
+  plugin uses the GMaps v3 API and also takes care of loading the
+  required Google resources.
+
+  Available layer names for this source are "ROADMAP", "SATELLITE",
+  "HYBRID" and "TERRAIN"
+
+
+
+Example Use
+-----------
+
+The configuration in the ``sources`` property of the :class:`gxp.Viewer` is
+straightforward:
+
+.. code-block:: javascript
+
+  "google": {
+      ptype: "gx_google"
+  }
+
+A typical configuration for a layer from this source (in the ``layers``
+array of the viewer's ``map`` config option would look like this:
+
+.. code-block:: javascript
+
+  {
+      source: "google",
+      name: "TERRAIN"
+  }
+
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
+
+
+.. describe:: hybridAbstract
+
+    ``String``
+    Description of the HYBRID layer (i18n).
+
+.. describe:: roadmapAbstract
+
+    ``String``
+    Description of the ROADMAP layer (i18n).
+
+.. describe:: satelliteAbstract
+
+    ``String``
+    Description of the SATELLITE layer (i18n).
+
+.. describe:: terrainAbstract
+
+    ``String``
+    Description of the TERRAIN layer (i18n).
+
+.. describe:: title
+
+    ``String``
+    A descriptive title for this layer source (i18n).
+
+
+
+
+Public Properties
+-----------------
+
+Public properties in addition to those
+listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
+
+
+.. attribute:: GoogleSource.store
+
+    ``GeoExt.data.LayerStore`` containing records with "ROADMAP",
+    "SATELLITE", "HYBRID" and "TERRAIN" name fields.
+
+.. attribute:: GoogleSource.title
+
+    ``String``
+    A descriptive title for this layer source.
+
+
+
+
+Public Methods
+--------------
+
+Public methods in addition to those
+listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
+
+
+.. method:: GoogleSource.createLayerRecord
+
+    :arg config:  ``Object``  The application config for this layer.
+    :returns: ``GeoExt.data.LayerRecord``
+    
+    Create a layer record given the config.
+
+.. method:: GoogleSource.createStore
+
+    Creates a store of layer records.  Fires "ready" when store is loaded.
+
+.. method:: GoogleSource.getConfigForRecord
+
+    :arg record: :class:`GeoExt.data.LayerRecord`
+    :returns: ``Object``
+    
+    Create a config object that can be used to recreate the given record.
+
+.. method:: GoogleSource.getProjection
+
+    :arg layerRecord: ``GeoExt.data.LayerRecord`` a record from this
+        source's store
+    :returns: ``OpenLayers.Projection`` A suitable projection for the
+        ``layerRecord``. If the layer is available in the map projection,
+        the map projection will be returned. Otherwise an equal projection,
+        or null if none is available.
+    
+    Get the projection that the source will use for the layer created in
+    ``createLayerRecord``. If the layer is not available in a projection
+    that fits the map projection, null will be returned.
+
+.. method:: GoogleSource.init
+
+    :arg target: ``Object`` The object initializing this plugin.
+    
+    Calls :meth:`createStore` with a callback that fires the 'ready' event.
+
+
+
+
+Events
+------
+
+Events in addition to those
+listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
+
+
+.. describe:: failure
+
+    Fires if the layer source fails to load.
+
+.. describe:: ready
+
+    Fires when the layer source is ready for action.
+
+
+

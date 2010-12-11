@@ -1,0 +1,121 @@
+
+.. currentmodule:: gxp
+
+:class:`gxp.QueryPanel`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.Panel <http://extjs.com/deploy/dev/docs/?class=Ext.Panel>`_
+    
+
+
+
+xtype
+    ``gx_querypanel``
+
+
+
+
+
+.. class:: QueryPanel(config)
+
+    Create a panel for assembling and issuing feature requests.
+
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.Panel <http://extjs.com/deploy/dev/docs/?class=Ext.Panel>`_.
+
+
+.. describe:: attributeQuery
+
+    ``Boolean``
+    Initial state of "query by attribute" checkbox.  Default is false.
+
+.. describe:: layerStore
+
+    ``Ext.data.Store``
+    A store with records representing each WFS layer to be queried. Records
+    must have ``title``, ``name`` (feature type), ``namespace`` (namespace
+    URI), ``url`` (wfs url), and ``schema`` (schema url) fields.
+
+.. describe:: layout
+
+    ``String``
+    Defaults to "form."
+
+.. describe:: maxFeatures
+
+    ``Number``
+    Optional limit for number of features requested in a query.  No limit
+    set by default.
+
+.. describe:: spatialQuery
+
+    ``Boolean``
+    Initial state of "query by location" checkbox.  Default is true.
+
+
+
+
+Public Properties
+-----------------
+
+Public properties in addition to those
+listed for `Ext.Panel <http://extjs.com/deploy/dev/docs/?class=Ext.Panel>`_.
+
+
+.. attribute:: QueryPanel.attributeQuery
+
+    ``Boolean``
+    Query by attributes.
+
+.. attribute:: QueryPanel.attributeStore
+
+    ``GeoExt.data.AttributeStore``
+    The attributes associated with the currently selected layer.
+
+.. attribute:: QueryPanel.geometryType
+
+    ``String`` (Multi)?(Point|Line|Polygon|Curve|Surface) The geometry type
+    of features of the selected layer. If the layer has multiple geometry
+    fields, the type of the first geometry field will be returned.
+
+.. attribute:: QueryPanel.spatialQuery
+
+    ``Boolean``
+    Query by extent.
+
+
+
+
+Public Methods
+--------------
+
+Public methods in addition to those
+listed for `Ext.Panel <http://extjs.com/deploy/dev/docs/?class=Ext.Panel>`_.
+
+
+.. method:: QueryPanel.getFilter
+
+    Get the filter representing the conditions in the panel.  Returns false
+    if neither spatial nor attribute query is checked.
+
+.. method:: QueryPanel.query
+
+    Issue a request for features.  Should not be called until the "ready"
+    event has fired.  If called before ready, no query will be issued.
+
+
+
+
+

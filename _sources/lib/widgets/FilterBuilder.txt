@@ -1,0 +1,106 @@
+
+.. currentmodule:: gxp
+
+:class:`gxp.FilterBuilder`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.Panel <http://extjs.com/deploy/dev/docs/?class=Ext.Panel>`_
+    
+
+
+
+xtype
+    ``gx_filterbuilder``
+
+
+
+
+
+.. class:: FilterBuilder(config)
+
+    Create a panel for assembling a filter.
+
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.Panel <http://extjs.com/deploy/dev/docs/?class=Ext.Panel>`_.
+
+
+.. describe:: allowBlank
+
+    ``Boolean`` Do we allow blank FilterFields? It is safe to say true
+    here, but for compatibility reasons with old applications, the default
+    is false.
+
+.. describe:: allowedBuilderTypes
+
+    ``Array``
+    List of builder type constants.  Default is
+    ``[ANY_OF, ALL_OF, NONE_OF]``.
+
+.. describe:: allowGroups
+
+    ``Boolean``
+    Allow groups of conditions to be added.  Default is ``true``.
+    If ``false``, only individual conditions (non-logical filters) can
+    be added.
+
+.. describe:: builderTypeNames
+
+    ``Array``
+    A list of labels for that correspond to builder type constants.
+    These will be the option names available in the builder type combo.
+    Default is ``["any", "all", "none", "not all"]``.
+
+.. describe:: cls
+
+    ``String``
+    The CSS class to be added to this panel's element (defaults to
+    ``"gx-filterbuilder"``).
+
+.. describe:: postComboText
+
+    ``String``
+    String to display before filter type combo.  Default is
+    ``"of the following:"``.
+
+.. describe:: preComboText
+
+    ``String``
+    String to display before filter type combo.  Default is ``"Match"``.
+
+
+
+
+
+
+Public Methods
+--------------
+
+Public methods in addition to those
+listed for `Ext.Panel <http://extjs.com/deploy/dev/docs/?class=Ext.Panel>`_.
+
+
+.. method:: FilterBuilder.getFilter
+
+    :return: ``OpenLayers.Filter``
+    
+    Returns a filter that fits the model in the Filter Encoding
+    specification.  Use this method instead of directly accessing
+    the ``filter`` property.  Return will be ``false`` if any child
+    filter does not have a type, property, or value.
+
+
+
+
+

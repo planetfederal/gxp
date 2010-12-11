@@ -1,0 +1,50 @@
+.. module:: gxp.util
+    :synopsis: A collection of utility functions.
+
+:mod:`gxp.util`
+===============
+
+The :mod:`gxp.util` module contains general utility functions for use in GXP
+applications.
+
+
+Functions
+---------
+
+Public functions.
+
+
+.. function:: gxp.util.dispatch
+
+    :arg functions: ``Array(Function)`` List of functions to be called.
+        All functions will be called with two arguments - a callback to
+        call when the sequence is done and a storage object.
+    :arg complete:  ``Function`` A function that will be called when all
+        other functions report that they are done.  The final callback
+        will be called with the storage object passed to all other
+        functions.
+    :arg scope: ``Object`` Optional object to be set as the scope of all
+        functions called.
+    
+    Allows multiple asynchronous sequences to be called in parallel.  A
+    final callback is called when all other sequences report that they
+    are done.
+
+.. function:: gxp.util.getAbsoluteUrl
+
+    :arg url: ``String``
+    :return: ``String``
+    
+    Converts the provided url to an absolute url.
+
+.. function:: gxp.util.uniqueName
+
+    :arg name: ``String`` The name to make unique across this session.
+    :arg delimiter: ``Char`` Optional. Delimiter for appending the
+        number that makes the new name unique. Defaults to " " (blank).
+    :return: ``String`` a unique name based on ``name``
+    
+    Appends a delimiter and a number to make the passed ``name`` unique
+    in the current session.
+
+

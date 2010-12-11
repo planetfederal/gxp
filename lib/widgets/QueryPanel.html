@@ -1,0 +1,224 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>gxp.QueryPanel &mdash; GXP v0.1</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="GXP v0.1" href="../../index.html" />
+    <link rel="up" title="Widgets" href="../widgets.html" />
+    <link rel="next" title="gxp.RulePanel" href="RulePanel.html" />
+    <link rel="prev" title="gxp.PolygonSymbolizer" href="PolygonSymbolizer.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="RulePanel.html" title="gxp.RulePanel"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="PolygonSymbolizer.html" title="gxp.PolygonSymbolizer"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">GXP</a> &raquo;</li>
+          <li><a href="../widgets.html" accesskey="U">Widgets</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="../../index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">gxp.QueryPanel</span></tt></a><ul>
+<li><a class="reference external" href="#config-options">Config Options</a></li>
+<li><a class="reference external" href="#public-properties">Public Properties</a></li>
+<li><a class="reference external" href="#public-methods">Public Methods</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="PolygonSymbolizer.html"
+                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.PolygonSymbolizer</span></tt></a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="RulePanel.html"
+                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.RulePanel</span></tt></a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../../_sources/lib/widgets/QueryPanel.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="gxp-querypanel">
+<h1><a title="gxp.QueryPanel" class="reference internal" href="#gxp.QueryPanel"><tt class="xref docutils literal"><span class="pre">gxp.QueryPanel</span></tt></a><a class="headerlink" href="#gxp-querypanel" title="Permalink to this headline">¶</a></h1>
+<dl class="meta docutils">
+<dt>Extends</dt>
+<dd><ul class="first last simple">
+<li><a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.Panel">Ext.Panel</a></li>
+</ul>
+</dd>
+<dt>xtype</dt>
+<dd><tt class="docutils literal"><span class="pre">gx_querypanel</span></tt></dd>
+</dl>
+<dl class="class">
+<dt id="gxp.QueryPanel">
+<em class="property">class </em><tt class="descclassname">gxp.</tt><tt class="descname">QueryPanel</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#gxp.QueryPanel" title="Permalink to this definition">¶</a></dt>
+<dd>Create a panel for assembling and issuing feature requests.</dd></dl>
+
+<div class="section" id="config-options">
+<h2>Config Options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
+<p>Configuration properties in addition to
+those listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.Panel">Ext.Panel</a>.</p>
+<dl class="describe">
+<dt>
+<tt class="descname">attributeQuery</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt>
+Initial state of &#8220;query by attribute&#8221; checkbox.  Default is false.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">layerStore</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Ext.data.Store</span></tt>
+A store with records representing each WFS layer to be queried. Records
+must have <tt class="docutils literal"><span class="pre">title</span></tt>, <tt class="docutils literal"><span class="pre">name</span></tt> (feature type), <tt class="docutils literal"><span class="pre">namespace</span></tt> (namespace
+URI), <tt class="docutils literal"><span class="pre">url</span></tt> (wfs url), and <tt class="docutils literal"><span class="pre">schema</span></tt> (schema url) fields.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">layout</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt>
+Defaults to &#8220;form.&#8221;</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">maxFeatures</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Number</span></tt>
+Optional limit for number of features requested in a query.  No limit
+set by default.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">spatialQuery</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt>
+Initial state of &#8220;query by location&#8221; checkbox.  Default is true.</dd></dl>
+
+</div>
+<div class="section" id="public-properties">
+<h2>Public Properties<a class="headerlink" href="#public-properties" title="Permalink to this headline">¶</a></h2>
+<p>Public properties in addition to those
+listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.Panel">Ext.Panel</a>.</p>
+<dl class="attribute">
+<dt id="gxp.QueryPanel.attributeQuery">
+<tt class="descclassname">QueryPanel.</tt><tt class="descname">attributeQuery</tt><a class="headerlink" href="#gxp.QueryPanel.attributeQuery" title="Permalink to this definition">¶</a></dt>
+<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt>
+Query by attributes.</dd></dl>
+
+<dl class="attribute">
+<dt id="gxp.QueryPanel.attributeStore">
+<tt class="descclassname">QueryPanel.</tt><tt class="descname">attributeStore</tt><a class="headerlink" href="#gxp.QueryPanel.attributeStore" title="Permalink to this definition">¶</a></dt>
+<dd><tt class="docutils literal"><span class="pre">GeoExt.data.AttributeStore</span></tt>
+The attributes associated with the currently selected layer.</dd></dl>
+
+<dl class="attribute">
+<dt id="gxp.QueryPanel.geometryType">
+<tt class="descclassname">QueryPanel.</tt><tt class="descname">geometryType</tt><a class="headerlink" href="#gxp.QueryPanel.geometryType" title="Permalink to this definition">¶</a></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt> (Multi)?(Point|Line|Polygon|Curve|Surface) The geometry type
+of features of the selected layer. If the layer has multiple geometry
+fields, the type of the first geometry field will be returned.</dd></dl>
+
+<dl class="attribute">
+<dt id="gxp.QueryPanel.spatialQuery">
+<tt class="descclassname">QueryPanel.</tt><tt class="descname">spatialQuery</tt><a class="headerlink" href="#gxp.QueryPanel.spatialQuery" title="Permalink to this definition">¶</a></dt>
+<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt>
+Query by extent.</dd></dl>
+
+</div>
+<div class="section" id="public-methods">
+<h2>Public Methods<a class="headerlink" href="#public-methods" title="Permalink to this headline">¶</a></h2>
+<p>Public methods in addition to those
+listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.Panel">Ext.Panel</a>.</p>
+<dl class="method">
+<dt id="gxp.QueryPanel.getFilter">
+<tt class="descclassname">QueryPanel.</tt><tt class="descname">getFilter</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.QueryPanel.getFilter" title="Permalink to this definition">¶</a></dt>
+<dd>Get the filter representing the conditions in the panel.  Returns false
+if neither spatial nor attribute query is checked.</dd></dl>
+
+<dl class="method">
+<dt id="gxp.QueryPanel.query">
+<tt class="descclassname">QueryPanel.</tt><tt class="descname">query</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.QueryPanel.query" title="Permalink to this definition">¶</a></dt>
+<dd>Issue a request for features.  Should not be called until the &#8220;ready&#8221;
+event has fired.  If called before ready, no query will be issued.</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="RulePanel.html" title="gxp.RulePanel"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="PolygonSymbolizer.html" title="gxp.PolygonSymbolizer"
+             >previous</a> |</li>
+        <li><a href="../../index.html">GXP</a> &raquo;</li>
+          <li><a href="../widgets.html" >Widgets</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2008-2010, The Open Planning Project.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+    </div>
+  </body>
+</html>

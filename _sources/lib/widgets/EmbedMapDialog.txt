@@ -1,0 +1,86 @@
+
+.. currentmodule:: gxp
+
+:class:`gxp.EmbedMapDialog`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.Container <http://extjs.com/deploy/dev/docs/?class=Ext.Container>`_
+    
+
+
+
+xtype
+    ``gx_embedmapdialog``
+
+
+
+
+
+.. class:: EmbedMapDialog(config)
+
+A dialog for configuring a map iframe to embed on external web pages.
+
+
+
+Example Use
+-----------
+
+Show a :class:`gxp.EmbedMapDialog` in a window, using "viewer.html" in the
+current path as url:
+
+.. code-block:: javascript
+
+    new Ext.Window({
+         title: "Export Map",
+         layout: "fit",
+         width: 380,
+         autoHeight: true,
+         items: [{
+             xtype: "gx_embedmapdialog",
+             url: "viewer.html"
+         }]
+     }).show();
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.Container <http://extjs.com/deploy/dev/docs/?class=Ext.Container>`_.
+
+
+.. describe:: url
+
+    ``String`` the url to use as the iframe's src of the embed snippet. Can
+    be a url relative to the current href and will be converted to an
+    absolute one.
+
+
+
+
+Public Properties
+-----------------
+
+Public properties in addition to those
+listed for `Ext.Container <http://extjs.com/deploy/dev/docs/?class=Ext.Container>`_.
+
+
+.. attribute:: EmbedMapDialog.url
+
+    ``String`` the url to use as the iframe's src of the embed snippet. Can
+    be a url relative to the current href and will be converted to an
+    absolute one.
+
+
+
+
+
+
+

@@ -1,0 +1,35 @@
+
+.. currentmodule:: gxp.form
+
+:class:`gxp.form.FilterField`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.form.CompositeField <http://extjs.com/deploy/dev/docs/?class=Ext.form.CompositeField>`_
+    
+
+
+
+
+
+
+
+.. class:: FilterField(config)
+
+    A form field representing a comparison filter.
+
+
+    
+
+
+
+
+
+
+
+
+

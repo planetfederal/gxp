@@ -1,0 +1,57 @@
+
+.. currentmodule:: gxp.form
+
+:class:`gxp.form.FontComboBox`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.form.ComboBox <http://extjs.com/deploy/dev/docs/?class=Ext.form.ComboBox>`_
+    
+
+
+
+xtype
+    ``gx_fontcombo``
+
+
+
+
+
+.. class:: FontComboBox(config)
+
+    A combo box for selecting a font.
+
+
+    
+
+
+
+
+Public Properties
+-----------------
+
+Public properties in addition to those
+listed for `Ext.form.ComboBox <http://extjs.com/deploy/dev/docs/?class=Ext.form.ComboBox>`_.
+
+
+.. attribute:: FontComboBox.defaultFont
+
+    ``String``
+    The ``fonts`` item to select by default.
+
+.. attribute:: FontComboBox.fonts
+
+    ``Array``
+    List of font families to choose from.  Default is ["Arial",
+    "Courier New", "Tahoma", "Times New Roman", "Verdana"].
+
+
+
+
+
+
+

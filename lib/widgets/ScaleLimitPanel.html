@@ -1,0 +1,238 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>gxp.ScaleLimitPanel &mdash; GXP v0.1</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="GXP v0.1" href="../../index.html" />
+    <link rel="up" title="Widgets" href="../widgets.html" />
+    <link rel="next" title="gxp.StrokeSymbolizer" href="StrokeSymbolizer.html" />
+    <link rel="prev" title="gxp.RulePanel" href="RulePanel.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="StrokeSymbolizer.html" title="gxp.StrokeSymbolizer"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="RulePanel.html" title="gxp.RulePanel"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">GXP</a> &raquo;</li>
+          <li><a href="../widgets.html" accesskey="U">Widgets</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="../../index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">gxp.ScaleLimitPanel</span></tt></a><ul>
+<li><a class="reference external" href="#config-options">Config Options</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="RulePanel.html"
+                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.RulePanel</span></tt></a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="StrokeSymbolizer.html"
+                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.StrokeSymbolizer</span></tt></a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../../_sources/lib/widgets/ScaleLimitPanel.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="gxp-scalelimitpanel">
+<h1><a title="gxp.ScaleLimitPanel" class="reference internal" href="#gxp.ScaleLimitPanel"><tt class="xref docutils literal"><span class="pre">gxp.ScaleLimitPanel</span></tt></a><a class="headerlink" href="#gxp-scalelimitpanel" title="Permalink to this headline">¶</a></h1>
+<dl class="meta docutils">
+<dt>Extends</dt>
+<dd><ul class="first last simple">
+<li><a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.Panel">Ext.Panel</a></li>
+</ul>
+</dd>
+<dt>xtype</dt>
+<dd><tt class="docutils literal"><span class="pre">gx_scalelimitpanel</span></tt></dd>
+</dl>
+<dl class="class">
+<dt id="gxp.ScaleLimitPanel">
+<em class="property">class </em><tt class="descclassname">gxp.</tt><tt class="descname">ScaleLimitPanel</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#gxp.ScaleLimitPanel" title="Permalink to this definition">¶</a></dt>
+<dd>A panel for assembling scale constraints in SLD styles.</dd></dl>
+
+<div class="section" id="config-options">
+<h2>Config Options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
+<p>Configuration properties in addition to
+those listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.Panel">Ext.Panel</a>.</p>
+<dl class="describe">
+<dt>
+<tt class="descname">limitMaxScaleDenominator</tt></dt>
+<dd><dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">Boolean</span></tt> Limit the maximum scale denominator.  If false, no upper</dt>
+<dd>limit will be imposed.</dd>
+</dl>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">limitMinScaleDenominator</tt></dt>
+<dd><dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">Boolean</span></tt> Limit the minimum scale denominator.  If false, no lower</dt>
+<dd>limit will be imposed.</dd>
+</dl>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">maxScaleDenominator</tt></dt>
+<dd><dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">Number</span></tt> The initial maximum scale denominator.  If &lt;limitMaxScaleDenominator&gt; is</dt>
+<dd>true and no minScaleDenominator is provided, &lt;maxScaleDenominatorLimit&gt; will
+be used.</dd>
+</dl>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">maxScaleDenominatorLimit</tt></dt>
+<dd><dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">Number</span></tt> Upper limit for scale denominators.  Default is what you get</dt>
+<dd>when you project the world in Spherical Mercator onto a single
+256 x 256 pixel tile and assume OpenLayers.DOTS_PER_INCH (this
+corresponds to zoom level 0 in Google Maps).</dd>
+</dl>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">minScaleDenominator</tt></dt>
+<dd><dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">Number</span></tt> The initial minimum scale denominator.  If &lt;limitMinScaleDenominator&gt; is</dt>
+<dd>true and no minScaleDenominator is provided, &lt;minScaleDenominatorLimit&gt; will
+be used.</dd>
+</dl>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">minScaleDenominatorLimit</tt></dt>
+<dd><dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">Number</span></tt> Lower limit for scale denominators.  Default is what you get when</dt>
+<dd>you assume 20 zoom levels starting with the world in Spherical
+Mercator on a single 256 x 256 tile at zoom 0 where the zoom factor
+is 2.</dd>
+</dl>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">modifyScaleTipContext</tt></dt>
+<dd><dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">Function</span></tt> Called from the multi-slider tip&#8217;s getText function.  The</dt>
+<dd>function will receive two arguments - a reference to the panel and
+a data object.  The data object will have scale, zoom, and type
+properties already calculated.  Other properties added to the data
+object  are available to the &lt;scaleSliderTemplate&gt;.</dd>
+</dl>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">scaleLevels</tt></dt>
+<dd><dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">Number</span></tt> Number of scale levels to assume.  This is only for scaling</dt>
+<dd>values exponentially along the slider.  Scale values are not
+required to one of the discrete levels.  Default is 20.</dd>
+</dl>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">scaleSliderTemplate</tt></dt>
+<dd><p><tt class="docutils literal"><span class="pre">String</span></tt> Template for the tip displayed by the scale threshold slider.</p>
+<p>Can be customized using the following keywords in curly braces:</p>
+<ul class="simple">
+<li>zoom - the zoom level</li>
+<li>scale - the scale denominator</li>
+<li>type - &#8220;Max&#8221; or &#8220;Min&#8221; denominator</li>
+<li>scaleType - &#8220;Min&#8221; or &#8220;Max&#8221; scale (sense is opposite of type)</li>
+</ul>
+<p>Default is &#8220;{scaleType} Scale 1:{scale}&#8221;.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="StrokeSymbolizer.html" title="gxp.StrokeSymbolizer"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="RulePanel.html" title="gxp.RulePanel"
+             >previous</a> |</li>
+        <li><a href="../../index.html">GXP</a> &raquo;</li>
+          <li><a href="../widgets.html" >Widgets</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2008-2010, The Open Planning Project.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>gxp.plugins.LayerSource &mdash; GXP v0.1</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="GXP v0.1" href="../../index.html" />
+    <link rel="up" title="gxp.plugins" href="../plugins.html" />
+    <link rel="next" title="gxp.plugins.LayerTree" href="LayerTree.html" />
+    <link rel="prev" title="gxp.plugins.GoogleSource" href="GoogleSource.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="LayerTree.html" title="gxp.plugins.LayerTree"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="GoogleSource.html" title="gxp.plugins.GoogleSource"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">GXP</a> &raquo;</li>
+          <li><a href="../plugins.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="../../index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">gxp.plugins.LayerSource</span></tt></a><ul>
+<li><a class="reference external" href="#public-properties">Public Properties</a></li>
+<li><a class="reference external" href="#public-methods">Public Methods</a></li>
+<li><a class="reference external" href="#events">Events</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="GoogleSource.html"
+                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins.GoogleSource</span></tt></a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="LayerTree.html"
+                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.plugins.LayerTree</span></tt></a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../../_sources/lib/plugins/LayerSource.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="gxp-plugins-layersource">
+<h1><a title="gxp.plugins.LayerSource" class="reference internal" href="#gxp.plugins.LayerSource"><tt class="xref docutils literal"><span class="pre">gxp.plugins.LayerSource</span></tt></a><a class="headerlink" href="#gxp-plugins-layersource" title="Permalink to this headline">¶</a></h1>
+<dl class="meta docutils">
+<dt>Extends</dt>
+<dd><ul class="first last simple">
+<li><a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a></li>
+</ul>
+</dd>
+</dl>
+<dl class="class">
+<dt id="gxp.plugins.LayerSource">
+<em class="property">class </em><tt class="descclassname">gxp.plugins.</tt><tt class="descname">LayerSource</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#gxp.plugins.LayerSource" title="Permalink to this definition">¶</a></dt>
+<dd>Base class for layer sources to plug into a <a title="gxp.Viewer" class="reference external" href="../widgets/Viewer.html#gxp.Viewer"><tt class="xref docutils literal"><span class="pre">gxp.Viewer</span></tt></a>. A source
+is created by adding it to the <tt class="docutils literal"><span class="pre">sources</span></tt> object of the viewer. Once
+there, the viewer will create layers from it by looking at objects in
+the <tt class="docutils literal"><span class="pre">layers</span></tt> array of its <tt class="docutils literal"><span class="pre">map</span></tt> config option, calling the source&#8217;s
+<tt class="docutils literal"><span class="pre">createLayerRecord</span></tt> method.</dd></dl>
+
+<div class="section" id="public-properties">
+<h2>Public Properties<a class="headerlink" href="#public-properties" title="Permalink to this headline">¶</a></h2>
+<p>Public properties in addition to those
+listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a>.</p>
+<dl class="attribute">
+<dt id="gxp.plugins.LayerSource.store">
+<tt class="descclassname">LayerSource.</tt><tt class="descname">store</tt><a class="headerlink" href="#gxp.plugins.LayerSource.store" title="Permalink to this definition">¶</a></dt>
+<dd><tt class="docutils literal"><span class="pre">GeoExt.data.LayerStore</span></tt></dd></dl>
+
+<dl class="attribute">
+<dt id="gxp.plugins.LayerSource.title">
+<tt class="descclassname">LayerSource.</tt><tt class="descname">title</tt><a class="headerlink" href="#gxp.plugins.LayerSource.title" title="Permalink to this definition">¶</a></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt>
+A descriptive title for this layer source.</dd></dl>
+
+</div>
+<div class="section" id="public-methods">
+<h2>Public Methods<a class="headerlink" href="#public-methods" title="Permalink to this headline">¶</a></h2>
+<p>Public methods in addition to those
+listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a>.</p>
+<dl class="method">
+<dt id="gxp.plugins.LayerSource.createLayerRecord">
+<tt class="descclassname">LayerSource.</tt><tt class="descname">createLayerRecord</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.LayerSource.createLayerRecord" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>config</em> &#8211; <tt class="docutils literal"><span class="pre">Object</span></tt>  The application config for this layer.</td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">GeoExt.data.LayerRecord</span></tt></td>
+</tr>
+</tbody>
+</table>
+<p>Create a layer record given the config.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gxp.plugins.LayerSource.createStore">
+<tt class="descclassname">LayerSource.</tt><tt class="descname">createStore</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.LayerSource.createStore" title="Permalink to this definition">¶</a></dt>
+<dd>Creates a store of layer records.  Fires &#8220;ready&#8221; when store is loaded.</dd></dl>
+
+<dl class="method">
+<dt id="gxp.plugins.LayerSource.getConfigForRecord">
+<tt class="descclassname">LayerSource.</tt><tt class="descname">getConfigForRecord</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.LayerSource.getConfigForRecord" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>record</em> &#8211; <tt class="xref docutils literal"><span class="pre">GeoExt.data.LayerRecord</span></tt></td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">Object</span></tt></td>
+</tr>
+</tbody>
+</table>
+<p>Create a config object that can be used to recreate the given record.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gxp.plugins.LayerSource.getProjection">
+<tt class="descclassname">LayerSource.</tt><tt class="descname">getProjection</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.LayerSource.getProjection" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>layerRecord</em> &#8211; <tt class="docutils literal"><span class="pre">GeoExt.data.LayerRecord</span></tt> a record from this
+source&#8217;s store</td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">OpenLayers.Projection</span></tt> A suitable projection for the
+<tt class="docutils literal"><span class="pre">layerRecord</span></tt>. If the layer is available in the map projection,
+the map projection will be returned. Otherwise an equal projection,
+or null if none is available.</td>
+</tr>
+</tbody>
+</table>
+<p>Get the projection that the source will use for the layer created in
+<tt class="docutils literal"><span class="pre">createLayerRecord</span></tt>. If the layer is not available in a projection
+that fits the map projection, null will be returned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gxp.plugins.LayerSource.init">
+<tt class="descclassname">LayerSource.</tt><tt class="descname">init</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.LayerSource.init" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>target</em> &#8211; <tt class="docutils literal"><span class="pre">Object</span></tt> The object initializing this plugin.</td>
+</tr>
+</tbody>
+</table>
+<p>Calls <a title="gxp.plugins.LayerSource.createStore" class="reference internal" href="#gxp.plugins.LayerSource.createStore"><tt class="xref docutils literal"><span class="pre">createStore()</span></tt></a> with a callback that fires the &#8216;ready&#8217; event.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="events">
+<h2>Events<a class="headerlink" href="#events" title="Permalink to this headline">¶</a></h2>
+<p>Events in addition to those
+listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a>.</p>
+<dl class="describe">
+<dt>
+<tt class="descname">failure</tt></dt>
+<dd>Fires if the layer source fails to load.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">ready</tt></dt>
+<dd>Fires when the layer source is ready for action.</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="LayerTree.html" title="gxp.plugins.LayerTree"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="GoogleSource.html" title="gxp.plugins.GoogleSource"
+             >previous</a> |</li>
+        <li><a href="../../index.html">GXP</a> &raquo;</li>
+          <li><a href="../plugins.html" ><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2008-2010, The Open Planning Project.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+    </div>
+  </body>
+</html>

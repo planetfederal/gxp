@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>gxp.WMSLayerPanel &mdash; GXP v0.1</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="GXP v0.1" href="../../index.html" />
+    <link rel="up" title="Widgets" href="../widgets.html" />
+    <link rel="next" title="gxp.WMSStylesDialog" href="WMSStylesDialog.html" />
+    <link rel="prev" title="gxp.Viewer" href="Viewer.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="WMSStylesDialog.html" title="gxp.WMSStylesDialog"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Viewer.html" title="gxp.Viewer"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">GXP</a> &raquo;</li>
+          <li><a href="../widgets.html" accesskey="U">Widgets</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="../../index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">gxp.WMSLayerPanel</span></tt></a><ul>
+<li><a class="reference external" href="#config-options">Config Options</a></li>
+<li><a class="reference external" href="#events">Events</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="Viewer.html"
+                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.Viewer</span></tt></a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="WMSStylesDialog.html"
+                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.WMSStylesDialog</span></tt></a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../../_sources/lib/widgets/WMSLayerPanel.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="gxp-wmslayerpanel">
+<h1><a title="gxp.WMSLayerPanel" class="reference internal" href="#gxp.WMSLayerPanel"><tt class="xref docutils literal"><span class="pre">gxp.WMSLayerPanel</span></tt></a><a class="headerlink" href="#gxp-wmslayerpanel" title="Permalink to this headline">¶</a></h1>
+<dl class="meta docutils">
+<dt>Extends</dt>
+<dd><ul class="first last simple">
+<li><a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.TabPanel">Ext.TabPanel</a></li>
+</ul>
+</dd>
+</dl>
+<dl class="class">
+<dt id="gxp.WMSLayerPanel">
+<em class="property">class </em><tt class="descclassname">gxp.</tt><tt class="descname">WMSLayerPanel</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#gxp.WMSLayerPanel" title="Permalink to this definition">¶</a></dt>
+<dd>Create a dialog for setting WMS layer properties like title, abstract,
+opacity, transparency and image format.</dd></dl>
+
+<div class="section" id="config-options">
+<h2>Config Options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
+<p>Configuration properties in addition to
+those listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.TabPanel">Ext.TabPanel</a>.</p>
+<dl class="describe">
+<dt>
+<tt class="descname">activeTab</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span> <span class="pre">or</span> <span class="pre">Number</span></tt>
+A string id or the numeric index of the tab that should be initially
+activated on render.  Defaults to <tt class="docutils literal"><span class="pre">0</span></tt>.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">border</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt>
+Display a border around the panel.  Defaults to <tt class="docutils literal"><span class="pre">false</span></tt>.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">imageFormats</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">RegEx</span></tt> Regular expression used to test browser friendly formats for
+GetMap requests.  The formats displayed will those from the record that
+match this expression.  Default is <tt class="docutils literal"><span class="pre">/png|gif|jpe?g/i</span></tt>.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">layerRecord</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">GeoExt.data.LayerRecord</span></tt>
+Show properties for this layer record.</dd></dl>
+
+</div>
+<div class="section" id="events">
+<h2>Events<a class="headerlink" href="#events" title="Permalink to this headline">¶</a></h2>
+<p>Events in addition to those
+listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.TabPanel">Ext.TabPanel</a>.</p>
+<dl class="describe">
+<dt>
+<tt class="descname">change</tt></dt>
+<dd>Fires when the <tt class="docutils literal"><span class="pre">layerRecord</span></tt> is changed using this dialog.</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="WMSStylesDialog.html" title="gxp.WMSStylesDialog"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="Viewer.html" title="gxp.Viewer"
+             >previous</a> |</li>
+        <li><a href="../../index.html">GXP</a> &raquo;</li>
+          <li><a href="../widgets.html" >Widgets</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2008-2010, The Open Planning Project.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+    </div>
+  </body>
+</html>

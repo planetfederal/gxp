@@ -1,0 +1,48 @@
+
+.. currentmodule:: gxp.menu
+
+:class:`gxp.menu.LayerMenu`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.menu.Menu <http://extjs.com/deploy/dev/docs/?class=Ext.menu.Menu>`_
+    
+
+
+
+
+
+
+
+.. class:: LayerMenu(config)
+
+  A menu to control layer visibility.
+
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.menu.Menu <http://extjs.com/deploy/dev/docs/?class=Ext.menu.Menu>`_.
+
+
+.. describe:: layers
+
+    ``GeoExt.data.LayerStore``
+    The store containing layer records to be viewed in this menu.
+
+
+
+
+
+
+
+
+

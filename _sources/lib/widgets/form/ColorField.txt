@@ -1,0 +1,99 @@
+
+.. currentmodule:: gxp.form
+
+:class:`gxp.form.ColorField`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.form.TextField <http://extjs.com/deploy/dev/docs/?class=Ext.form.TextField>`_
+    
+
+
+
+
+
+
+
+.. class:: ColorField(config)
+
+    A text field that colors its own background based on the input value.
+    The value may be any one of the 16 W3C supported CSS color names
+    (http://www.w3.org/TR/css3-color/).  The value can also be an arbitrary
+    RGB hex value prefixed by a '#' (e.g. '#FFCC66').
+
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.form.TextField <http://extjs.com/deploy/dev/docs/?class=Ext.form.TextField>`_.
+
+
+.. describe:: defaultBackground
+
+    The default background color if the symbolizer has no fillColor set.
+    Defaults to #ffffff.
+
+
+
+
+Public Properties
+-----------------
+
+Public properties in addition to those
+listed for `Ext.form.TextField <http://extjs.com/deploy/dev/docs/?class=Ext.form.TextField>`_.
+
+
+.. attribute:: ColorField.cssColors
+
+    ``Object``
+    Properties are supported CSS color names.  Values are RGB hex strings
+    (prefixed with '#').
+
+
+
+
+Public Methods
+--------------
+
+Public methods in addition to those
+listed for `Ext.form.TextField <http://extjs.com/deploy/dev/docs/?class=Ext.form.TextField>`_.
+
+
+.. method:: ColorField.getHexValue
+
+    :returns: ``String`` The RGB hex string for the field's value (prefixed
+        with '#').
+    
+    As a compliment to the field's ``getValue`` method, this method always
+    returns the RGB hex string representation of the current value
+    in the field (given a named color or a hex string).
+
+.. method:: ColorField.getValue
+
+    :returns: ``String`` The RGB hex string for the field's value (prefixed
+        with '#').
+    
+    This method always returns the RGB hex string representation of the
+    current value in the field (given a named color or a hex string),
+    except for the case when the value has not been changed.
+
+.. method:: ColorField.setValue
+
+    :arg value: ``Object``
+    
+    Sets the value of the field. If the value matches one of the well known
+    colors in ``cssColors``, a human readable value will be displayed
+    instead of the hex code.
+
+
+
+
+

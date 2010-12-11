@@ -1,0 +1,53 @@
+
+.. currentmodule:: gxp.plugins
+
+:class:`gxp.plugins.StyleWriter`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_
+    
+
+
+
+
+
+
+
+.. class:: StyleWriter(config)
+
+    Base class for plugins that plug into :class:`gxp.WMSStylesDialog` or
+    similar classes that have a ``layerRecord`` and a ``stylesStore`` with
+    a ``userStyle`` field. The plugin provides a save method, which will
+    persist style changes from the ``stylesStore`` to the server and
+    associate them with the layer referenced in the target's
+    ``layerRecord``.
+
+
+    
+
+
+
+
+Public Properties
+-----------------
+
+Public properties in addition to those
+listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
+
+
+.. attribute:: StyleWriter.deletedStyles
+
+    ``Array(String)`` style names of styles from the server that were
+    deleted and have to be removed from the server
+
+
+
+
+
+
+
