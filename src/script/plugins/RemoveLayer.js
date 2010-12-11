@@ -1,9 +1,31 @@
 /**
+ * Copyright (c) 2008-2010 The Open Planning Project
+ * 
+ * Published under the BSD license.
+ * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
+ * of the license.
+ */
+
+/**
  * @requires plugins/Tool.js
  */
 
+/** api: (define)
+ *  module = gxp.plugins
+ *  class = RemoveLayer
+ */
+
+/** api: (extends)
+ *  plugins/Tool.js
+ */
 Ext.namespace("gxp.plugins");
 
+/** api: constructor
+ *  .. class:: RemoveLayer(config)
+ *
+ *    Plugin for removing a selected layer from the map.
+ *    TODO Make this plural - selected layers
+ */
 gxp.plugins.RemoveLayer = Ext.extend(gxp.plugins.Tool, {
     
     /** api: ptype = gx_removelayer */

@@ -135,7 +135,7 @@ gxp.form.ColorField = Ext.extend(Ext.form.TextField,  {
     },
     
     /** api: method[setValue]
-     *  :param value: ``Object``
+     *  :arg value: ``Object``
      *  
      *  Sets the value of the field. If the value matches one of the well known
      *  colors in ``cssColors``, a human readable value will be displayed

@@ -1,5 +1,9 @@
 /**
- * Copyright (c) 2010 OpenPlans
+ * Copyright (c) 2008-2010 The Open Planning Project
+ * 
+ * Published under the BSD license.
+ * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
+ * of the license.
  */
 
 /**
@@ -14,9 +18,8 @@ Ext.namespace("gxp.plugins");
  */
 
 /** api: (extends)
- * srcipt/plugins/StyleWriter.js
+ *  plugins/StyleWriter.js
  */
-
 
 /** api: constructor
  *  .. class:: GeoServerStyleWriter(config)
@@ -32,7 +35,7 @@ gxp.plugins.GeoServerStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
     
     /** api: config[baseUrl]
      *  ``String``
-     *  The object that this plugin is plugged into.
+     *  The base url for the GeoServer REST API. Default is "/geoserver/rest".
      */
     baseUrl: "/geoserver/rest",
     
@@ -52,6 +55,7 @@ gxp.plugins.GeoServerStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
      *  RESTconfig API.
      *  
      *  Supported options:
+     *
      *  * defaultStyle - ``String`` If set, the default style will be set.
      *  * success - ``Function`` A function to call when all styles were
      *    written successfully.

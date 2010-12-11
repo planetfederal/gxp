@@ -38,7 +38,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'GXP'
-copyright = u'2009, The Open Planning Project'
+copyright = u'2008-2010, The Open Planning Project'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

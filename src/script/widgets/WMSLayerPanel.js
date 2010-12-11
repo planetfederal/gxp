@@ -6,7 +6,19 @@
  * of the license.
  */
 
+/** api: (define)
+ *  module = gxp
+ *  class = WMSLayerPanel
+ *  base_link = `Ext.TabPanel <http://extjs.com/deploy/dev/docs/?class=Ext.TabPanel>`_
+ */
 Ext.namespace("gxp");
+
+/** api: constructor
+ *  .. class:: WMSLayerPanel(config)
+ *   
+ *      Create a dialog for setting WMS layer properties like title, abstract,
+ *      opacity, transparency and image format.
+ */
 gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
     
     /** api: config[layerRecord]

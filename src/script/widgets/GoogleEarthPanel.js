@@ -7,7 +7,7 @@
  */
 
 /** api: (define)
- *  module = gxp // to be ported to gxp
+ *  module = gxp
  *  class = GoogleEarthPanel
  *  base_link = `Ext.Panel <http://extjs.com/deploy/dev/docs/?class=Ext.Panel>`_
  */

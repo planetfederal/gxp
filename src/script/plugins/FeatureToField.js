@@ -1,9 +1,33 @@
 /**
+ * Copyright (c) 2008-2010 The Open Planning Project
+ * 
+ * Published under the BSD license.
+ * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
+ * of the license.
+ */
+
+/**
  * @requires plugins/Tool.js
  */
 
+/** api: (define)
+ *  module = gxp.plugins
+ *  class = FeatureToField
+ */
+
+/** api: (extends)
+ *  plugins/Tool.js
+ */
 Ext.namespace("gxp.plugins");
 
+/** api: constructor
+ *  .. class:: FeatureToField(config)
+ *
+ *    Plugin for serializing the currently selected feature to the form field
+ *    of a :class:`gxp.form.ViewerField`. Requires a
+ *    :class:`gxp.plugins.FeatureManager` and a tool that selects features
+ *    (e.g. :class:`gxp.plugins.FeatureEditor`).
+ */   
 gxp.plugins.FeatureToField = Ext.extend(gxp.plugins.Tool, {
     
     /** api: ptype = gx_featuretofield */
@@ -16,7 +40,8 @@ gxp.plugins.FeatureToField = Ext.extend(gxp.plugins.Tool, {
     /** api: config[format]
      *  ``String`` The format to use for encoding the feature. Defaults to
      *  "GeoJSON", which means ``OpenLayers.Format.GeoJSON``. All
-     *  OpenLayers.Format.* formats can be used here.
+     *  OpenLayers.Format.* formats that can serialize a single feature can be
+     *  used here.
      */
     format: "GeoJSON",
     

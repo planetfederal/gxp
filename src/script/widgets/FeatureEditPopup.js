@@ -334,7 +334,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
     },
     
     /** private: method[getFieldType]
-     *  :param attrType: ``String`` Attribute type.
+     *  :arg attrType: ``String`` Attribute type.
      *  :returns: ``String`` Field type
      *
      *  Given a feature attribute type, return an Ext field type if possible.
@@ -382,7 +382,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
     },
     
     /** private: method[stopEditing]
-     *  :param save: ``Boolean`` If set to true, changes will be saved and the
+     *  :arg save: ``Boolean`` If set to true, changes will be saved and the
      *      ``featuremodified`` event will be fired.
      */
     stopEditing: function(save) {

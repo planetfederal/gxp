@@ -10,8 +10,18 @@
  * @include widgets/tips/SliderTip.js
  */
 
+/** api: (define)
+ *  module = gxp
+ *  class = ScaleLimitPanel
+ *  base_link = `Ext.Panel <http://extjs.com/deploy/dev/docs/?class=Ext.Panel>`_
+ */
 Ext.namespace("gxp");
 
+/** api: constructor
+ *  .. class:: ScaleLimitPanel(config)
+ *   
+ *      A panel for assembling scale constraints in SLD styles.
+ */
 gxp.ScaleLimitPanel = Ext.extend(Ext.Panel, {
     
     /** api: config[maxScaleDenominatorLimit]
@@ -23,7 +33,7 @@ gxp.ScaleLimitPanel = Ext.extend(Ext.Panel, {
     maxScaleDenominatorLimit: 40075016.68 * 39.3701 * OpenLayers.DOTS_PER_INCH / 256,
     
     /** api: config[limitMaxScaleDenominator]
-     *  ``Boolean` Limit the maximum scale denominator.  If false, no upper
+     *  ``Boolean`` Limit the maximum scale denominator.  If false, no upper
      *     limit will be imposed.
      */
     limitMaxScaleDenominator: true,
@@ -67,12 +77,13 @@ gxp.ScaleLimitPanel = Ext.extend(Ext.Panel, {
      *  ``String`` Template for the tip displayed by the scale threshold slider.
      *
      *  Can be customized using the following keywords in curly braces:
+     *
      *  * zoom - the zoom level
      *  * scale - the scale denominator
      *  * type - "Max" or "Min" denominator
      *  * scaleType - "Min" or "Max" scale (sense is opposite of type)
      *
-     * Default is "{scaleType} Scale 1:{scale}".
+     *  Default is "{scaleType} Scale 1:{scale}".
      */
     scaleSliderTemplate: "{scaleType} Scale 1:{scale}",
     
@@ -358,7 +369,7 @@ gxp.ScaleLimitPanel = Ext.extend(Ext.Panel, {
     },
 
     /** private: method[sliderValuesToScale]
-     *  :param values: ``Array`` Values from the scale slider.
+     *  :arg values: ``Array`` Values from the scale slider.
      *  :return: ``Array`` A two item array of min and max scale denominators.
      *  
      *  Given two values between 0 and 100, generate the min and max scale

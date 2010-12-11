@@ -10,8 +10,16 @@ GXP widgets are a collection of specialized map related components.
     widgets/*
 
 
-.. module:: gxp.form
-    :synopsis: A collection of grid related classes.
+:mod:`gxp.form`
+===============
+
+A collection of grid related classes.
+
+.. toctree::
+    :maxdepth: 1
+    :glob:
+    
+    widgets/form/*
 
 
 :mod:`gxp.grid`
@@ -27,4 +35,13 @@ functionality to ``Ext.grid`` classes.
     widgets/grid/*
 
 
+:mod:`gxp.slider`
+=================
 
+A collection of slider related classes
+
+.. toctree::
+    :maxdepth: 1
+    :glob:
+    
+    widgets/tips/*

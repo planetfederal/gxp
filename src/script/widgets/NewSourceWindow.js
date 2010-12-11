@@ -6,12 +6,12 @@
  * of the license.
  */
 
-Ext.namespace("gxp");
 /** api: (define)
  *  module = gxp
  *  class = NewSourceWindow
  *  extends = Ext.Window
  */
+Ext.namespace("gxp");
 
 /** api: constructor
  * .. class:: gxp.NewSourceWindow(config)
@@ -156,7 +156,7 @@ gxp.NewSourceWindow = Ext.extend(Ext.Window, {
      * A callback function to be called when the user submits the form in the 
      * NewSourceWindow.
      *
-     * .. todo:: this can probably be extracted to an event handler
+     * TODO this can probably be extracted to an event handler
      */
     addSource: function(url, success, failure, scope) {
     }

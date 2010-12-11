@@ -10,7 +10,18 @@
  * @include widgets/form/ComparisonComboBox.js
  */
 
+/** api: (define)
+ *  module = gxp.form
+ *  class = FilterField
+ *  base_link = `Ext.form.CompositeField <http://extjs.com/deploy/dev/docs/?class=Ext.form.CompositeField>`_
+ */
 Ext.namespace("gxp.form");
+
+/** api: constructor
+ *  .. class:: FilterField(config)
+ *   
+ *      A form field representing a comparison filter.
+ */
 gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
     
     /**

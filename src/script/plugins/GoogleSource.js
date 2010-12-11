@@ -1,9 +1,56 @@
 /**
+ * Copyright (c) 2008-2010 The Open Planning Project
+ * 
+ * Published under the BSD license.
+ * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
+ * of the license.
+ */
+
+/**
  * @requires plugins/LayerSource.js
  */
 
+/** api: (define)
+ *  module = gxp.plugins
+ *  class = GoogleSource
+ */
+
+/** api: (extends)
+ *  plugins/LayerSource.js
+ */
 Ext.namespace("gxp.plugins");
 
+/** api: constructor
+ *  .. class:: GoolgeSource(config)
+ *
+ *    Plugin for using Google layers with :class:`gxp.Viewer` instances. The
+ *    plugin uses the GMaps v3 API and also takes care of loading the
+ *    required Google resources.
+ *
+ *    Available layer names for this source are "ROADMAP", "SATELLITE",
+ *    "HYBRID" and "TERRAIN"
+ */   
+/** api: example
+ *  The configuration in the ``sources`` property of the :class:`gxp.Viewer` is
+ *  straightforward:
+ *
+ *  .. code-block:: javascript
+ *
+ *    "google": {
+ *        ptype: "gx_google"
+ *    }
+ *
+ *  A typical configuration for a layer from this source (in the ``layers``
+ *  array of the viewer's ``map`` config option would look like this:
+ *
+ *  .. code-block:: javascript
+ *
+ *    {
+ *        source: "google",
+ *        name: "TERRAIN"
+ *    }
+ *
+ */
 gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
     
     /** api: ptype = gx_googlesource */
@@ -18,7 +65,8 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
     timeout: 7000,
 
     /** api: property[store]
-     *  ``GeoExt.data.LayerStore``
+     *  ``GeoExt.data.LayerStore`` containing records with "ROADMAP",
+     *  "SATELLITE", "HYBRID" and "TERRAIN" name fields.
      */
     
     /** api: config[title]

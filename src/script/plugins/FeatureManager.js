@@ -1,12 +1,38 @@
 /**
+ * Copyright (c) 2008-2010 The Open Planning Project
+ * 
+ * Published under the BSD license.
+ * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
+ * of the license.
+ */
+
+/**
  * @requires plugins/Tool.js
  */
 
+/** api: (define)
+ *  module = gxp.plugins
+ *  class = FeatureManager
+ */
+
+/** api: (extends)
+ *  plugins/Tool.js
+ */
 Ext.namespace("gxp.plugins");
 
+/** api: constructor
+ *  .. class:: FeatureManager(config)
+ *
+ *    Plugin for a shared feature manager that other tools can reference. Works
+ *    on layers added by the :class:`gxp.plugins.WMSSource` plugin, if there is
+ *    a WFS resource advertized in the layer's DescribeLayer document.
+ *
+ *    The FeatureManager handles WFS feature loading, filtering, paging and
+ *    transactions.
+ */   
 gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
     
-    /** api: ptype = gx_wmsgetfeatureinfo */
+    /** api: ptype = gx_featuremanager */
     ptype: "gx_featuremanager",
     
     /** api: config[maxFeatures]
@@ -15,7 +41,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
     maxFeatures: 100,
     
     /** api: config[paging]
-     *  ``Boolean`` Should paging be enabled? Default is true.
+     *  ``Boolean`` Should quad-tree paging be enabled? Default is true.
      */
     paging: true,
 
@@ -97,13 +123,13 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      */
     pages: null,
     
-    /** privat: property[page]
+    /** private: property[page]
      *  ``Object`` The page currently loaded (for paging mode). Has extent
      *  and numFeatures properties
      */
     page: null,
     
-    /** api: method[init]
+    /** private: method[init]
      */
     init: function(target) {
         gxp.plugins.FeatureEditor.superclass.init.apply(this, arguments);
@@ -115,6 +141,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
              *  is performed, by having a listener return false.
              *
              *  Listener arguments:
+             *
              *  * tool   - :class:`gxp.plugins.FeatureManager` this tool
              *  * filter - ``OpenLayers.Filter`` the filter argument passed to
              *    the loadFeatures method
@@ -130,8 +157,9 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
              *  available.
              *
              *  Listener arguments:
+             *
              *  * tool  - :class:`gxp.plugins.FeatureManager` this tool
-             *  * store - :class:`gxp.data.WFSFeatureStore
+             *  * store - :class:`gxp.data.WFSFeatureStore`
              */
             "query",
             
@@ -142,6 +170,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
              *  performed, by having a listener return false.
              *
              *  Listener arguments:
+             *
              *  * tool  - :class:`gxp.plugins.FeatureManager` this tool
              *  * layer - ``GeoExt.data.LayerRecord`` the layerRecord argument
              *    passed to the setLayer method
@@ -153,6 +182,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
              *  available.
              *
              *  Listener arguments:
+             *
              *  * tool   - :class:`gxp.plugins.FeatureManager` this tool
              *  * layer  - ``GeoExt.data.LayerRecord`` the new layer
              *  * schema - ``GeoExt.data.AttributeStore`` or false if the
@@ -167,6 +197,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
              *  is performed, by having a listener return false.
              *
              *  Listener arguments:
+             *
              *  * tool      - :class:`gxp.plugins.FeatureManager` this tool
              *  * condition - ``Object`` the condition passed to the setPage
              *    method
@@ -182,6 +213,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
              *  its features are loaded.
              *
              *  Listener arguments:
+             *
              *  * tool      - :class:`gxp.plugins.FeatureManager` this tool
              *  * condition - ``Object`` the condition passed to the setPage
              *    method
@@ -449,12 +481,12 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
     },
 
     /** private: method[processPage]
-     *  :param page: ``Object`` The page to process.
-     *  :param condition: ``Object`` Object with index, next or lonLat
+     *  :arg page: ``Object`` The page to process.
+     *  :arg condition: ``Object`` Object with index, next or lonLat
      *      properties. See ``setPage``.
-     *  :param callback: ``Function`` Callback to call when the requested page
+     *  :arg callback: ``Function`` Callback to call when the requested page
      *      is available. Called with the page as 1st argument.
-     *  :param scope: ``The scope for the callback.
+     *  :arg scope: ``The scope for the callback.
      *
      *  Takes a page, which still may have more features than ``maxFeatures``
      *  in its extent, creates leaves if necessary, and returns the correct
@@ -514,12 +546,12 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
     },
     
     /** private: method[createLeaf]
-     *  :param page: ``Object`` The page to process.
-     *  :param condition: ``Object`` Object with index, next or lonLat
+     *  :arg page: ``Object`` The page to process.
+     *  :arg condition: ``Object`` Object with index, next or lonLat
      *      properties. See ``setPage``.
-     *  :param callback: ``Function`` Callback to call when the requested page
+     *  :arg callback: ``Function`` Callback to call when the requested page
      *      is available. Called with the page as 1st argument.
-     *  :param scope: ``The scope for the callback.
+     *  :arg scope: ``The scope for the callback.
      *
      *  Creates the 4 leaves for a page, and calls processPage on each.
      */
@@ -544,7 +576,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
     },
     
     /** private: method[getPagingExtent]
-     *  :param meth: ``String`` Method to call on the target's map when neither
+     *  :arg meth: ``String`` Method to call on the target's map when neither
      *      a filter extent nor a layer extent are available. Useful values
      *      are "getExtent" and "getMaxExtent".
      *  :returns: ``OpenLayers.Bounds`` the extent to use for paging
@@ -574,7 +606,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
     },
     
     /** private: method[setPageFilter]
-     *  :param page: ``Object`` The page to create the filter for
+     *  :arg page: ``Object`` The page to create the filter for
      *  :returns: ``OpenLayers.Filter`` The filter to use for the provided page
      *
      *  Creates the filter for a page's extent. This wraps the query filter,
@@ -604,9 +636,9 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
     },
     
     /** api: method[nextPage]
-     *  :param callback: ``Function`` Optional callback to call when the page
+     *  :arg callback: ``Function`` Optional callback to call when the page
      *      is available. The callback will receive the page as 1st argument.
-     *  :param scope: ``Object`` Optional scope for the callback.
+     *  :arg scope: ``Object`` Optional scope for the callback.
      *
      *  Load the next page.
      */
@@ -618,9 +650,9 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
     },
     
     /** api: method[previousPage]
-     *  :param callback: ``Function`` Optional callback to call when the page
+     *  :arg callback: ``Function`` Optional callback to call when the page
      *      is available. The callback will receive the page as 1st argument.
-     *  :param scope: ``Object`` Optional scope for the callback.
+     *  :arg scope: ``Object`` Optional scope for the callback.
      *
      *  Load the previous page.
      */
@@ -633,7 +665,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
     },
     
     /** api: method[setPage]
-     *  :condition: ``Object`` Object to tell the method which page to set.
+     *  :arg condition: ``Object`` Object to tell the method which page to set.
      *      If "lonLat" (``OpenLayers.LonLat``) is provided, the page
      *      containing the provided location will be loaded.
      *      If only an "index" property (pointing to a page in this tool's
@@ -641,17 +673,16 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      *      if it has less then ``maxFeatures`` features. If it does not,
      *      leaves will be created until the top-left page has less than
      *      ``maxFeatures``, and this top-left page will be loaded. If index is
-     *      "last", the last page of the quad-tree will be loaded.
-     *      If an
+     *      "last", the last page of the quad-tree will be loaded. If an
      *      additional "next" property is provided (a page object is expected
      *      here), the page that would be loaded with ``previousPage`` called
      *      from the provided page will be set. This is the bottom-right page
      *      of the page pointed to with "index".
      *      If the resulting page would be empty, and "allowEmpty" is false,
      *      the next matching page will be loaded.
-     *  :param callback: ``Function`` Optional callback to call when the page
+     *  :arg callback: ``Function`` Optional callback to call when the page
      *      is available. The callback will receive the page as 1st argument.
-     *  :param scope: ``Object`` Optional scope for the callback.
+     *  :arg scope: ``Object`` Optional scope for the callback.
      *
      *  Sets and loads the page specified by the condition argument. This is
      *  usually used to load a page for a specific location, or to load the
@@ -660,21 +691,25 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      *  Sample code to load the page that contains the (0, 0) location:
      *
      *  .. code-block:: javascript
+     *
      *      featureManager.setPage({lonLat: new OpenLayers.LonLat(0, 0)});
      *
      *  Sample code to load the first page of the quad-tree:
      *
      *  .. code-block:: javascript
+     *
      *      featureManager.setPage({index: 0});
      *
      *  Sample code to load the last page of the quad-tree:
      *
      *  .. code-block:: javascript
+     *
      *      featureManager.setPage({index: "last"});
      *
      *  Sample code to load the first page that contains features:
      *
      *  .. code-block:: javascript
+     *
      *      featureManager.setPage();
      */
     setPage: function(condition, callback, scope) {

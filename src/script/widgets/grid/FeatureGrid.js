@@ -9,8 +9,9 @@
 /** api: (define)
  *  module = gxp.grid
  *  class = FeatureGrid
- *  extends = Ext.grid.GridPanel
+ *  base_link = `Ext.grid.GridPanel <http://extjs.com/deploy/dev/docs/?class=Ext.grid.GridPanel>`_
  */
+Ext.namespace("gxp.grid");
 
 /** api: constructor
  *  .. class:: FeatureGrid(config)
@@ -18,7 +19,6 @@
  *      Create a new grid displaying the contents of a 
  *      ``GeoExt.data.FeatureStore`` .
  */
-Ext.namespace("gxp.grid");
 gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
 
     /** api: config[map]
@@ -91,7 +91,7 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
     },
     
     /** api: method[setStore]
-     *  :param store: ``GeoExt.data.FeatureStore``
+     *  :arg store: ``GeoExt.data.FeatureStore``
      *  
      *  Sets the store for this grid, reconfiguring the column model
      */
@@ -114,7 +114,7 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
     },
     
     /** private: method[createColumnModel]
-     *  :param store: ``GeoExt.data.FeatureStore``
+     *  :arg store: ``GeoExt.data.FeatureStore``
      *  :return: ``Ext.grid.ColumnModel``
      */
     createColumnModel: function(store) {
