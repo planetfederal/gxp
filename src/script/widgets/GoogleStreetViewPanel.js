@@ -89,6 +89,9 @@ gxp.GoogleStreetViewPanel = Ext.extend(Ext.Panel, {
                 zoom: this.zoom
             }
         };
+        this.panorama = new google.maps.StreetViewPanorama(
+            this.body.dom, options
+        );
 
     },
 
