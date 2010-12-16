@@ -147,6 +147,13 @@ The default tool plugin type. Default is &#8220;gx_tool&#8221;</dd></dl>
 
 <dl class="describe">
 <dt>
+<tt class="descname">field</tt></dt>
+<dd><a title="gxp.form.ViewerField" class="reference external" href="form/ViewerField.html#gxp.form.ViewerField"><tt class="xref docutils literal"><span class="pre">gxp.form.ViewerField</span></tt></a> Optional - set by
+<a title="gxp.form.ViewerField" class="reference external" href="form/ViewerField.html#gxp.form.ViewerField"><tt class="xref docutils literal"><span class="pre">gxp.form.ViewerField</span></tt></a> so plugins like
+<a title="gxp.plugins.FeatureToField" class="reference external" href="../plugins/FeatureToField.html#gxp.plugins.FeatureToField"><tt class="xref docutils literal"><span class="pre">gxp.plugins.FeatureToField</span></tt></a> can set the form field&#8217;s value.</dd></dl>
+
+<dl class="describe">
+<dt>
 <tt class="descname">map</tt></dt>
 <dd><p><tt class="docutils literal"><span class="pre">Object</span></tt> Map configuration for this viewer. This object is similar
 to the <tt class="docutils literal"><span class="pre">GeoExt.MapPanel</span></tt> configuration, with the following
@@ -237,6 +244,13 @@ viewer&#8217;s <tt class="docutils literal"><span class="pre">defaultToolType</s
 <h2>Public Properties<a class="headerlink" href="#public-properties" title="Permalink to this headline">¶</a></h2>
 <p>Public properties in addition to those
 listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a>.</p>
+<dl class="attribute">
+<dt id="gxp.Viewer.field">
+<tt class="descclassname">Viewer.</tt><tt class="descname">field</tt><a class="headerlink" href="#gxp.Viewer.field" title="Permalink to this definition">¶</a></dt>
+<dd><a title="gxp.form.ViewerField" class="reference external" href="form/ViewerField.html#gxp.form.ViewerField"><tt class="xref docutils literal"><span class="pre">gxp.form.ViewerField</span></tt></a> Used by plugins to access the form field.
+Only available if this viewer is wrapped into an
+<tt class="xref docutils literal"><span class="pre">Ext.form.ViewerField</span></tt>.</dd></dl>
+
 <dl class="attribute">
 <dt id="gxp.Viewer.portalItems">
 <tt class="descclassname">Viewer.</tt><tt class="descname">portalItems</tt><a class="headerlink" href="#gxp.Viewer.portalItems" title="Permalink to this definition">¶</a></dt>

@@ -71,6 +71,12 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     ``String``
     The default tool plugin type. Default is "gx_tool"
 
+.. describe:: field
+
+    :class:`gxp.form.ViewerField` Optional - set by
+    :class:`gxp.form.ViewerField` so plugins like
+    :class:`gxp.plugins.FeatureToField` can set the form field's value.
+
 .. describe:: map
 
     ``Object`` Map configuration for this viewer. This object is similar
@@ -151,6 +157,12 @@ Public Properties
 Public properties in addition to those
 listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
 
+
+.. attribute:: Viewer.field
+
+    :class:`gxp.form.ViewerField` Used by plugins to access the form field.
+    Only available if this viewer is wrapped into an
+    :class:`Ext.form.ViewerField`.
 
 .. attribute:: Viewer.portalItems
 
