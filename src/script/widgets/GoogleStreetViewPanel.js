@@ -20,6 +20,16 @@ gxp.GoogleStreetViewPanel = Ext.extend(Ext.Panel, {
      */
     panorama: null,
 
+    /** api: config[heading]
+     *  ``Number``  The camera heading in degrees relative to true north. True north 
+     *  is 0 degrees, east is 90 degrees, south is 180 degrees, west is 270 
+     *  degrees.
+     */
+    /** private: property[heading]
+     *  ``Number``  Camera heading.
+     */
+    heading: 0,
+
     /** api: config[yaw]
      *  ``Number``  The camera yaw in degrees relative to true north. True north 
      *  is 0 degrees, east is 90 degrees, south is 180 degrees, west is 270 
@@ -49,13 +59,13 @@ gxp.GoogleStreetViewPanel = Ext.extend(Ext.Panel, {
      */
     zoom: 0,
 
-    /** api: config[position]
+    /** api: config[location]
      *  ``OpenLayers.LonLat``  The panorama location
      */
-    /** private: property[position]
+    /** private: property[location]
      *  ``OpenLayers.LonLat``  Panorama location
      */
-    position: null,
+    location: null,
 
     /** private: method[initComponent]
      *  Private initComponent override.
@@ -82,7 +92,7 @@ gxp.GoogleStreetViewPanel = Ext.extend(Ext.Panel, {
 
         // Configure panorama and associate methods and parameters to it
         var options = {
-            position: new google.maps.LatLng(this.position.lat, this.position.lon),
+            position: new google.maps.LatLng(this.location.lat, this.location.lon),
             pov: {
                 heading: this.heading,
                 pitch: this.pitch,

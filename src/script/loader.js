@@ -30,6 +30,7 @@
         "widgets/grid/CapabilitiesGrid.js",
         "widgets/grid/FeatureGrid.js",
         "widgets/GoogleEarthPanel.js",
+        "widgets/GoogleStreetViewPanel.js",
         "widgets/tips/SliderTip.js",
         "plugins/LayerSource.js",
         "plugins/WMSSource.js",
