@@ -6,7 +6,19 @@
  * of the license.
  */
 
+/** api: (define)
+ *  module = gxp.form
+ *  class = ComparisonComboBox
+ *  base_link = `Ext.form.ComboBox <http://extjs.com/deploy/dev/docs/?class=Ext.form.ComboBox>`_
+ */
 Ext.namespace("gxp.form");
+
+/** api: constructor
+ *  .. class:: ComparisonComboBox(config)
+ *   
+ *      A combo box for selecting comparison operators available in OGC
+ *      filters.
+ */
 gxp.form.ComarisonComboBox = Ext.extend(Ext.form.ComboBox, {
     
     allowedTypes: [

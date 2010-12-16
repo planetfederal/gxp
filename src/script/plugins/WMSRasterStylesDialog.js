@@ -1,5 +1,30 @@
+/**
+ * Copyright (c) 2008-2010 The Open Planning Project
+ * 
+ * Published under the BSD license.
+ * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
+ * of the license.
+ */
+
+/** api: (define)
+ *  module = gxp.plugins
+ *  class = WMSRasterStylesDialog
+ */
+
+/** api: (extends)
+ *  plugins/Tool.js
+ */
 Ext.namespace("gxp.plugins");
 
+/** api: constructor
+ *  .. class:: WMSRasterStyleDialog(config)
+ *
+ *    This plugins extends the :class:`gxp.WMSStylesDialog` to with basic
+ *    raster support, for single-band rasters only.
+ *
+ *    TODO replace this with true raster support instead of squeezing it into
+ *    a VectorLegend as if we were dealing with vector styles.
+ */   
 gxp.plugins.WMSRasterStylesDialog = {
     
     /** private: property[isRaster]
@@ -255,13 +280,14 @@ gxp.plugins.WMSRasterStylesDialog = {
     /** private: method[addRasterLegend]
      *  :arg rules: ``Array``
      *  :arg options: ``Object`` Additional options for this method.
-     *  :return: ``GeoExt.VectorLegend`` the legend that was created
+     *  :returns: ``GeoExt.VectorLegend`` the legend that was created
      *
      *  Creates the vector legend for the pseudo rules that are created from
      *  the RasterSymbolizer of the first rule and adds it to the rules
      *  fieldset.
      *  
      *  Supported options:
+     *
      *  * selectedRuleIndex: ``Number`` The index of a pseudo rule to select
      *    in the legend.
      */  

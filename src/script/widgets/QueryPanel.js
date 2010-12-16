@@ -248,7 +248,7 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
     },
     
     /** private: method[createFilterBuilder]
-     *  :param record: ``Ext.data.Record``  A record representing the feature
+     *  :arg record: ``Ext.data.Record``  A record representing the feature
      *      type.
      *  
      *  Remove any existing filter builder and create a new one.  This method
@@ -330,7 +330,7 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
     },
     
     /** private: method[getFieldType]
-     *  :param attrType: ``String`` Attribute type.
+     *  :arg attrType: ``String`` Attribute type.
      *  :returns: ``String`` Field type
      *
      *  Given a feature attribute type, return an Ext field type if possible.

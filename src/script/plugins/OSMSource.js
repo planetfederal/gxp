@@ -1,16 +1,61 @@
 /**
+ * Copyright (c) 2008-2010 The Open Planning Project
+ * 
+ * Published under the BSD license.
+ * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
+ * of the license.
+ */
+
+/**
  * @requires plugins/LayerSource.js
  */
 
+/** api: (define)
+ *  module = gxp.plugins
+ *  class = OSMSource
+ */
+
+/** api: (extends)
+ *  plugins/LayerSource.js
+ */
 Ext.namespace("gxp.plugins");
 
+/** api: constructor
+ *  .. class:: OSMSource(config)
+ *
+ *    Plugin for using OpenStreetMap layers with :class:`gxp.Viewer` instances.
+ *
+ *    Available layer names are "mapnik" and "osmarender"
+ */
+/** api: example
+ *  The configuration in the ``sources`` property of the :class:`gxp.Viewer` is
+ *  straightforward:
+ *
+ *  .. code-block:: javascript
+ *
+ *    "osm": {
+ *        ptype: "gx_osmsource"
+ *    }
+ *
+ *  A typical configuration for a layer from this source (in the ``layers``
+ *  array of the viewer's ``map`` config option would look like this:
+ *
+ *  .. code-block:: javascript
+ *
+ *    {
+ *        source: "osm",
+ *        name: "osmarander"
+ *    }
+ *
+ */
 gxp.plugins.OSMSource = Ext.extend(gxp.plugins.LayerSource, {
     
     /** api: ptype = gx_osmsource */
     ptype: "gx_osmsource",
 
     /** api: property[store]
-     *  ``GeoExt.data.LayerStore``
+     *  ``GeoExt.data.LayerStore``. Will contain records with "mapnik" and
+     *  "osmarender" as name field values.
      */
     
     /** api: config[title]

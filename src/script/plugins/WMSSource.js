@@ -1,4 +1,12 @@
 /**
+ * Copyright (c) 2008-2010 The Open Planning Project
+ * 
+ * Published under the BSD license.
+ * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
+ * of the license.
+ */
+
+/**
  * @requires plugins/LayerSource.js
  */
 
@@ -24,15 +32,59 @@
         this.raw = data;
     };
     Ext.intercept(GeoExt.data.WMSCapabilitiesReader.prototype, "readRecords", keepRaw);
-    Ext.intercept(GeoExt.data.AttributeReader.prototype, "readRecords", keepRaw);
+    GeoExt.data.AttributeReader &&
+        Ext.intercept(GeoExt.data.AttributeReader.prototype, "readRecords", keepRaw);
 })();
 
+/** api: (define)
+ *  module = gxp.plugins
+ *  class = WMSSource
+ */
+
+/** api: (extends)
+ *  plugins/LayerSource.js
+ */
 Ext.namespace("gxp.plugins");
 
+/** api: constructor
+ *  .. class:: WMSSource(config)
+ *
+ *    Plugin for using WMS layers with :class:`gxp.Viewer` instances. The
+ *    plugin issues a GetCapabilities request to create a store of the WMS's
+ *    layers.
+ */   
+/** api: example
+ *  Configuration in the  :class:`gxp.Viewer`:
+ *
+ *  .. code-block:: javascript
+ *
+ *    defaultSourceType: "gx_wmssource",
+ *    sources: {
+ *        "opengeo": {
+ *            url: "http://suite.opengeo.org/geoserver/wms"
+ *        }
+ *    }
+ *
+ *  A typical configuration for a layer from this source (in the ``layers``
+ *  array of the viewer's ``map`` config option would look like this:
+ *
+ *  .. code-block:: javascript
+ *
+ *    {
+ *        source: "opengeo",
+ *        name: "world",
+ *        group: "background"
+ *    }
+ *
+ */
 gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
     
     /** api: ptype = gx_wmssource */
     ptype: "gx_wmssource",
+    
+    /** api: config[url]
+     *  ``String`` WMS service URL for this source
+     */
     
     /** private: property[describeLayerStore]
      *  ``GeoExt.data.WMSDescribeLayerStore`` additional store of layer
@@ -231,12 +283,15 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
     },
     
     /** api: method[describeLayer]
-     *  :param rec: ``GeoExt.data.LayerRecord`` the layer to issue a WMS
+     *  :arg rec: ``GeoExt.data.LayerRecord`` the layer to issue a WMS
      *      DescribeLayer request for
-     *  :param callback: ``Function`` Callback function. Will be called with
-     *      an ``Ext.data.Record`` containing the result as first argument, or
-     *      false if the WMS does not support DescribeLayer.
-     *  :param scope: ``Object`` Optional scope for the callback.
+     *  :arg callback: ``Function`` Callback function. Will be called with
+     *      an ``Ext.data.Record`` from a ``GeoExt.data.DescribeLayerStore``
+     *      as first argument, or false if the WMS does not support
+     *      DescribeLayer.
+     *  :arg scope: ``Object`` Optional scope for the callback.
+     *
+     *  Get a DescribeLayer response from this source's WMS.
      */
     describeLayer: function(rec, callback, scope) {
         !this.describeLayerStore && this.initDescribeLayerStore();
@@ -280,13 +335,16 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
     },
     
     /** api: method[getSchema]
-     *  :param rec: ``GeoExt.data.LayerRecord`` the WMS layer to issue a WFS
+     *  :arg rec: ``GeoExt.data.LayerRecord`` the WMS layer to issue a WFS
      *      DescribeFeatureType request for
-     *  :param callback: ``Function`` Callback function. Will be called with
-     *      a ``GeoExt.data.AttributeStore`` containing the result as first
+     *  :arg callback: ``Function`` Callback function. Will be called with
+     *      a ``GeoExt.data.AttributeStore`` containing the schema as first
      *      argument, or false if the WMS does not support DescribeLayer or the
      *      layer is not associated with a WFS feature type.
-     *  :param scope: ``Object`` Optional scope for the callback.
+     *  :arg scope: ``Object`` Optional scope for the callback.
+     *
+     *  Gets the schema for a layer of this source, if the layer is a feature
+     *  layer.
      */
     getSchema: function(rec, callback, scope) {
         if (!this.schemaCache) {

@@ -11,8 +11,9 @@
 /** api: (define)
  *  module = gxp.grid
  *  class = CapabilitiesGrid
- *  extends = Ext.grid.GridPanel
+ *  base_link = `Ext.grid.GridPanel <http://extjs.com/deploy/dev/docs/?class=Ext.grid.GridPanel>`_
  */
+Ext.namespace("gxp.grid");
 
 /** api: constructor
  *  .. class:: CapabilitiesGrid(config)
@@ -21,7 +22,6 @@
  *      contents of a ``GeoExt.data.WMSCapabilitiesStore``\ .  The user can
  *      add layers to a passed-in ``GeoExt.MapPanel`` from the grid.
  */
-Ext.namespace("gxp.grid");
 gxp.grid.CapabilitiesGrid = Ext.extend(Ext.grid.GridPanel, {
 
     /** api: config[store]

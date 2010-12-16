@@ -6,8 +6,18 @@
  * of the license.
  */
 
+/** api: (define)
+ *  module = gxp.menu
+ *  class = LayerMenu
+ *  base_link = `Ext.menu.Menu <http://extjs.com/deploy/dev/docs/?class=Ext.menu.Menu>`_
+ */
 Ext.namespace("gxp.menu");
 
+/** api: constructor
+ *  .. class:: LayerMenu(config)
+ *
+ *    A menu to control layer visibility.
+ */   
 gxp.menu.LayerMenu = Ext.extend(Ext.menu.Menu, {
     
     /** api: config[layers]

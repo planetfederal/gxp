@@ -16,7 +16,16 @@ Ext.namespace("gxp.form");
 /** api: constructor
  *  .. class:: ViewerField(config)
  *   
- *      A form field that holds an entire :class:`gxp.Viewer`.
+ *    A form field that holds an entire :class:`gxp.Viewer`. This field is used
+ *    to process geospatial information in forms. By itself, this field does
+ *    nothing but showing a map viewer in a form element, aligned with field
+ *    label and suited for an ``Ext.layouts.FormLayout``.
+ *
+ *    To actually have this field's textarea populated with information, a
+ *    plugin accessing the additional ``field`` property that this component
+ *    adds to its :class:`gxp.Viewer` instance is required.
+ *    See :class:`gxp.plugins.FeatureToField` for a basic plugin that does
+ *    this.
  */
 gxp.form.ViewerField = Ext.extend(Ext.form.TextArea, {
 
@@ -27,10 +36,24 @@ gxp.form.ViewerField = Ext.extend(Ext.form.TextArea, {
     /** api: config[height]
      *  ``Number`` Height of the map viewer. Default is 220.
      */
+    
+    /** api: config[viewer]
+     *  ``Object`` Configuration passed to the :class:`gxp.Viewer` constructor.
+     *  The ``portalConfig`` will be extended to make sure that the portal is
+     *  rendered into this field.
+     */
 
-     /** private: method[initComponent]
-      *  Override
-      */
+    /** api: property[viewer]
+     *  :class:`gxp.Viewer` The viewer wrapped by this field. This component
+     *  adds an additional ``field`` (``Ext.form.TextArea``) property to the
+     *  viewer, which is to be populated by a viewer plugin to actually give
+     *  this field a value.
+     */
+    viewer: null,
+
+    /** private: method[initComponent]
+     *  Override
+     */
     initComponent: function() {
         this.width = this.width || 350;
         this.height = this.height || 220;

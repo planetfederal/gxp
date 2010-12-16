@@ -1,9 +1,32 @@
 /**
+ * Copyright (c) 2008-2010 The Open Planning Project
+ * 
+ * Published under the BSD license.
+ * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
+ * of the license.
+ */
+
+/**
  * @requires plugins/Tool.js
  */
 
+/** api: (define)
+ *  module = gxp.plugins
+ *  class = QueryForm
+ */
+
+/** api: (extends)
+ *  plugins/Tool.js
+ */
 Ext.namespace("gxp.plugins");
 
+/** api: constructor
+ *  .. class:: QueryForm(config)
+ *
+ *    Plugin for performing queries on feature layers
+ *    TODO Replace this tool with something that is less like GeoEditor and
+ *    more like filtering.
+ */
 gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
     
     /** api: ptype = gx_QueryForm */

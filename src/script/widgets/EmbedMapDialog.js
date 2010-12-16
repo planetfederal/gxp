@@ -20,6 +20,7 @@ Ext.namespace("gxp");
  *  current path as url:
  * 
  *  .. code-block:: javascript
+ *
  *      new Ext.Window({
  *           title: "Export Map",
  *           layout: "fit",

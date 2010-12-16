@@ -1,5 +1,27 @@
+/**
+ * Copyright (c) 2008-2010 The Open Planning Project
+ * 
+ * Published under the BSD license.
+ * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
+ * of the license.
+ */
+
+/** api: (define)
+ *  module = gxp.plugins
+ *  class = LayerSource
+ *  base_link = `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_
+ */
 Ext.namespace("gxp.plugins");
 
+/** api: constructor
+ *  .. class:: LayerSource(config)
+ *
+ *    Base class for layer sources to plug into a :class:`gxp.Viewer`. A source
+ *    is created by adding it to the ``sources`` object of the viewer. Once
+ *    there, the viewer will create layers from it by looking at objects in
+ *    the ``layers`` array of its ``map`` config option, calling the source's
+ *    ``createLayerRecord`` method.
+ */   
 gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
     
     /** api: property[store]
@@ -120,7 +142,5 @@ gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
             selected: record.get("selected")
         };
     }
-    
-
     
 });

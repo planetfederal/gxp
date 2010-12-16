@@ -15,12 +15,17 @@
  * @include widgets/FilterBuilder.js
  */
 
-Ext.namespace("gxp");
-
 /** api: (define)
  *  module = gxp
  *  class = RulePanel
  *  base_link = `Ext.TabPanel <http://extjs.com/deploy/dev/docs/?class=Ext.TabPanel>`_
+ */
+Ext.namespace("gxp");
+
+/** api: constructor
+ *  .. class:: RulePanel(config)
+ *   
+ *      Create a panel for assembling SLD rules.
  */
 gxp.RulePanel = Ext.extend(Ext.TabPanel, {
     

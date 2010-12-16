@@ -6,12 +6,19 @@
  * of the license.
  */
 
+/** api: (define)
+ *  module = gxp.slider
+ *  class = Tip
+ *  base_link = `Ext.slider.Tip <http://extjs.com/deploy/dev/docs/?class=Ext.slider.Tip>`_
+ */
 Ext.namespace("gxp.slider");
 
-/**
- * See http://trac.geoext.org/ticket/262
+/** api: constructor
+ *  .. class:: gxp.slider.Tip(config)
  *
- * This tip matches the Ext.slider.Tip but addes the hover functionality.
+ *    See http://trac.geoext.org/ticket/262
+ *
+ *    This tip matches the Ext.slider.Tip but addes the hover functionality.
  */
 gxp.slider.Tip = Ext.extend(Ext.slider.Tip, {
 
@@ -27,7 +34,7 @@ gxp.slider.Tip = Ext.extend(Ext.slider.Tip, {
     dragging: false,
 
     /** private: method[init]
-     *  :param slider: ``Object``
+     *  :arg slider: ``Object``
      */
     init: function(slider) {
         if(this.hover) {

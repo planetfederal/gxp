@@ -125,6 +125,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
              *  Fires on every style modification.
              *
              *  Listener arguments:
+             *
              *  * :class:`gxp.WMSStylesDialog` this component
              *  * ``String`` the name of the modified style
              */
@@ -135,6 +136,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
              *  combo box.
              *  
              *  Listener arguments:
+             *
              *  * :class:`gxp.WMSStylesDialog` this component
              *  * ``String`` the name of the selected style
              */
@@ -145,6 +147,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
              *  :class:`gxp.plugins.StyleWriter` plugin)
              *
              *  Listener arguments:
+             *
              *  * :class:`gxp.WMSStylesDialog` this component
              *  * ``Object`` options for the ``write`` method of the
              *    :class:`gxp.plugins.StyleWriter`
@@ -250,6 +253,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     
     /** api: method[editStyle]
      *  :arg prevStyle: ``Ext.data.Record``
+     *
      *  Edit the currently selected style.
      */
     editStyle: function(prevStyle) {
@@ -305,6 +309,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      *  :return: ``String`` The current SLD for the NamedLayer.
      *  
      *  Supported ``options``:
+     *
      *  * userStyles - ``Array(String)`` list of userStyles (by name) that are
      *    to be included in the SLD. By default, all will be included.
      */

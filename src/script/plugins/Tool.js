@@ -1,5 +1,26 @@
+/**
+ * Copyright (c) 2008-2010 The Open Planning Project
+ * 
+ * Published under the BSD license.
+ * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
+ * of the license.
+ */
+
+/** api: (define)
+ *  module = gxp.plugins
+ *  class = Tool
+ *  base_link = `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_
+ */
 Ext.namespace("gxp.plugins");
 
+/** api: constructor
+ *  .. class:: Tool(config)
+ *
+ *    Base class for plugins that add tool functionality to
+ *    :class:`gxp.Viewer`. These plugins are used by adding configuration 
+ *    objects for them to the ``tools`` array of the viewer's config object,
+ *    using their ``ptype``.
+ */   
 gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
     
     /** api: ptype = gx_tool */
@@ -85,7 +106,7 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
         gxp.plugins.Tool.superclass.constructor.apply(this, arguments);
     },
     
-    /** api: method[init]
+    /** private: method[init]
      *  :arg target: ``Object`` The object initializing this plugin.
      */
     init: function(target) {
@@ -94,7 +115,7 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
     },
     
     /** api: method[addActions]
-     *  :param actions: ``Array`` Optional actions to add. If not provided,
+     *  :arg actions: ``Array`` Optional actions to add. If not provided,
      *      this.actions will be added.
      *  :returns: ``Array`` The actions added.
      */

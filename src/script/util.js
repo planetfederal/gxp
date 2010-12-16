@@ -17,14 +17,14 @@ gxp.util = {
     _uniqueNames: {},
 
     /** api: function[dispatch]
-     *  :param functions: ``Array(Function)`` List of functions to be called.
+     *  :arg functions: ``Array(Function)`` List of functions to be called.
      *      All functions will be called with two arguments - a callback to
      *      call when the sequence is done and a storage object.
-     *  :param complete:  ``Function`` A function that will be called when all
+     *  :arg complete:  ``Function`` A function that will be called when all
      *      other functions report that they are done.  The final callback
      *      will be called with the storage object passed to all other
      *      functions.
-     *  :param scope: ``Object`` Optional object to be set as the scope of all
+     *  :arg scope: ``Object`` Optional object to be set as the scope of all
      *      functions called.
      *      
      *  Allows multiple asynchronous sequences to be called in parallel.  A
@@ -54,8 +54,8 @@ gxp.util = {
     },
     
     /** api: function[uniqueName]
-     *  :param name: ``String`` The name to make unique across this session.
-     *  :param delimiter: ``Char`` Optional. Delimiter for appending the
+     *  :arg name: ``String`` The name to make unique across this session.
+     *  :arg delimiter: ``Char`` Optional. Delimiter for appending the
      *      number that makes the new name unique. Defaults to " " (blank).
      *  :return: ``String`` a unique name based on ``name``
      *  
@@ -80,7 +80,7 @@ gxp.util = {
     },
 
     /** api: function[getAbsoluteUrl]
-     *  :param url: ``String``
+     *  :arg url: ``String``
      *  :return: ``String``
      *  
      *  Converts the provided url to an absolute url.

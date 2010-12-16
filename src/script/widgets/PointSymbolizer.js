@@ -59,6 +59,7 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
      *  URL.
      *
      * Fields:
+     *
      *  * display - ``String`` The name to be displayed to the user.
      *  * preview - ``String`` URL to a graphic for preview.
      *  * value - ``String`` Value to be sent to the server.
@@ -290,5 +291,5 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
     
 });
 
-/** api: xtype = gx_strokesymbolizer */
+/** api: xtype = gx_pointsymbolizer */
 Ext.reg('gx_pointsymbolizer', gxp.PointSymbolizer);
