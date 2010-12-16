@@ -145,6 +145,18 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
      *  ``GeoExt.data.LayerRecord`` The currently selected layer
      */
     selectedLayer: null,
+    
+    /** api: config[field]
+     *  :class:`gxp.form.ViewerField` Optional - set by
+     *  :class:`gxp.form.ViewerField` so plugins like
+     *  :class:`gxp.plugins.FeatureToField` can set the form field's value.
+     */
+    
+    /** api: property[field]
+     *  :class:`gxp.form.ViewerField` Used by plugins to access the form field.
+     *  Only available if this viewer is wrapped into an
+     *  :class:`Ext.form.ViewerField`.
+     */
      
     /** private: method[constructor]
      *  Construct the viewer.
