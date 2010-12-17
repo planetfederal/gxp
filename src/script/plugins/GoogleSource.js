@@ -226,7 +226,7 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
             autoload: Ext.encode({
                 modules: [{
                     name: "maps",
-                    version: 3,
+                    version: 3.2,
                     nocss: "true",
                     callback: "gxp.plugins.GoogleSource.monitor.onScriptLoad",
                     other_params: "sensor=false"
