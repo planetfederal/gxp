@@ -65,13 +65,13 @@ function openPopup(location) {
     if (!location) {
         location = mapPanel.map.getCenter();
     }
-    if (popup) {
+    if (popup && popup.anc) {
         popup.close();
     }
 
     popup = new GeoExt.Popup({
         title: "Street View",
-        location: sf,
+        location: location,
         width: 300,
         height: 300,
         collapsible: true,
