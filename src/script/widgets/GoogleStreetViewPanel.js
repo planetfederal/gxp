@@ -30,16 +30,6 @@ gxp.GoogleStreetViewPanel = Ext.extend(Ext.Panel, {
      */
     heading: 0,
 
-    /** api: config[yaw]
-     *  ``Number``  The camera yaw in degrees relative to true north. True north 
-     *  is 0 degrees, east is 90 degrees, south is 180 degrees, west is 270 
-     *  degrees.
-     */
-    /** private: property[yaw]
-     *  ``Number``  Camera yaw
-     */
-    yaw: 180,
-
     /** api: config[pitch]
      *  ``Number``  The camera pitch in degrees, relative to the street view 
      *  vehicle. Ranges from 90 degrees (directly upwards) to -90 degrees 
@@ -84,12 +74,22 @@ gxp.GoogleStreetViewPanel = Ext.extend(Ext.Panel, {
      *  Private afterRender override.
      */
     afterRender : function() {
-        if (this.ownerCt) {
-            var size = this.ownerCt.getSize();
+        var owner = this.ownerCt;
+        if (owner) {
+            var size = owner.getSize();
             Ext.applyIf(this, size);
+            if (!this.location) {
+                // try to derive location from owner (e.g. popup)
+                if (GeoExt.Popup && owner instanceof GeoExt.Popup) {
+                    this.location = owner.location.clone().transform(
+                        owner.map.getProjectionObject(),
+                        new OpenLayers.Projection("EPSG:4326")
+                    );
+                }
+            }
         }
         gxp.GoogleStreetViewPanel.superclass.afterRender.call(this);
-
+        
         // Configure panorama and associate methods and parameters to it
         var options = {
             position: new google.maps.LatLng(this.location.lat, this.location.lon),
@@ -110,7 +110,6 @@ gxp.GoogleStreetViewPanel = Ext.extend(Ext.Panel, {
      *
      */
     beforeDestroy: function() {
-        this.panorama.remove();
         delete this.panorama;
         gxp.GoogleStreetViewPanel.superclass.beforeDestroy.apply(this, arguments);
     },
@@ -121,7 +120,7 @@ gxp.GoogleStreetViewPanel = Ext.extend(Ext.Panel, {
      *  :param h: ``Number`` Height
      */
     onResize : function(w, h) {
-        gxp.GoogleStreetViewPanel.superclass.onResize.call(this, w, h);
+        gxp.GoogleStreetViewPanel.superclass.onResize.apply(this, arguments);
         if (this.panorama) {
             if (typeof this.panorama == "object") {
                 this.panorama.checkResize();
@@ -131,10 +130,9 @@ gxp.GoogleStreetViewPanel = Ext.extend(Ext.Panel, {
 
     /** private: method[setSize]
      *  Set size of Street View Panorama
-     *
      */
     setSize : function(width, height, animate) {
-        gxp.GoogleStreetViewPanel.superclass.setSize.call(this, width, height, animate);
+        gxp.GoogleStreetViewPanel.superclass.setSize.apply(this, arguments);
         if (this.panorama) {
             if (typeof this.panorama == "object") {
                 this.panorama.checkResize();
