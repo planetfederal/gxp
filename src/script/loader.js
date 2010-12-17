@@ -33,6 +33,7 @@
         "widgets/GoogleStreetViewPanel.js",
         "widgets/tips/SliderTip.js",
         "plugins/LayerSource.js",
+        "plugins/BingSource.js",
         "plugins/WMSSource.js",
         "plugins/OSMSource.js",
         "plugins/GoogleSource.js",
