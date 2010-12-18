@@ -80,11 +80,16 @@ gxp.GoogleStreetViewPanel = Ext.extend(Ext.Panel, {
             Ext.applyIf(this, size);
             if (!this.location) {
                 // try to derive location from owner (e.g. popup)
-                if (GeoExt.Popup && owner instanceof GeoExt.Popup) {
-                    this.location = owner.location.clone().transform(
-                        owner.map.getProjectionObject(),
-                        new OpenLayers.Projection("EPSG:4326")
-                    );
+                if (GeoExt.Popup) {
+                    this.bubble(function(cmp) {
+                        if (cmp instanceof GeoExt.Popup) {
+                            this.location = owner.location.clone().transform(
+                                owner.map.getProjectionObject(),
+                                new OpenLayers.Projection("EPSG:4326")
+                            );
+                            return false;
+                        }
+                    }, this);
                 }
             }
         }
