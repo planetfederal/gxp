@@ -83,8 +83,8 @@ gxp.GoogleStreetViewPanel = Ext.extend(Ext.Panel, {
                 if (GeoExt.Popup) {
                     this.bubble(function(cmp) {
                         if (cmp instanceof GeoExt.Popup) {
-                            this.location = owner.location.clone().transform(
-                                owner.map.getProjectionObject(),
+                            this.location = cmp.location.clone().transform(
+                                cmp.map.getProjectionObject(),
                                 new OpenLayers.Projection("EPSG:4326")
                             );
                             return false;
@@ -128,7 +128,7 @@ gxp.GoogleStreetViewPanel = Ext.extend(Ext.Panel, {
         gxp.GoogleStreetViewPanel.superclass.onResize.apply(this, arguments);
         if (this.panorama) {
             if (typeof this.panorama == "object") {
-                this.panorama.checkResize();
+                google.maps.event.trigger(this.panorama, "resize")
             }
         }
     },
@@ -140,7 +140,7 @@ gxp.GoogleStreetViewPanel = Ext.extend(Ext.Panel, {
         gxp.GoogleStreetViewPanel.superclass.setSize.apply(this, arguments);
         if (this.panorama) {
             if (typeof this.panorama == "object") {
-                this.panorama.checkResize();
+                google.maps.event.trigger(this.panorama, "resize")
             }
         }
     }
