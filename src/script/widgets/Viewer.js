@@ -170,10 +170,10 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
              */
             "ready",
             
-            /** api: event[portalReady]
-             *  Fires when portal is ready for interaction.
+            /** api: event[portalready]
+             *  Fires after the portal is initialized.
              */
-            "portalReady",
+            "portalready",
 
             /** api: event[beforelayerselectionchange]
              *  Fired before the selected set of layers changes.  Listeners 
@@ -403,7 +403,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             }
         }));
         
-        this.fireEvent("portalReady");
+        this.fireEvent("portalready");
     },
     
     activate: function() {

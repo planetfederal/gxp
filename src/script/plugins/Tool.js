@@ -111,7 +111,7 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
      */
     init: function(target) {
         this.target = target;
-        this.target.on("portalReady", this.addActions, this);
+        this.target.on("portalready", this.addActions, this);
     },
     
     /** api: method[addActions]
