@@ -50,6 +50,13 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      *  automatically set the layer? Default is true.
      */
     autoSetLayer: true,
+    
+    /** api: config[layer]
+     *  ``Object`` with source and name properties. A layer to use if
+     *  ``autoSetLayer`` is false or before a layerselectionchange event is
+     *  fired. The layer referenced here will be set as soon as it is added to
+     *  the target's map.
+     */
 
     /** api: config[autoLoadFeatures]
      *  ``Boolean`` Automatically load features after a new layer has been set?
@@ -271,6 +278,18 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
 
         if (this.autoSetLayer) {
             this.target.on("beforelayerselectionchange", this.setLayer, this);
+        }
+        if (this.layer) {
+            this.target.mapPanel.layers.on("add", function(store, records) {
+                var i, r, l = this.layer;
+                for (i=records.length-1; i>=0; --i) {
+                    r = records[i];
+                    if (r.get("name") == l.name && r.get("source") == l.source) {
+                        this.setLayer(r);
+                        break;
+                    }
+                }
+            }, this);
         }
         this.on("layerchange", function(mgr, layer, schema) {
             this.schema = schema;
