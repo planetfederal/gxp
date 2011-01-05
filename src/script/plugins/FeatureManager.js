@@ -396,12 +396,15 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                 this.paging && this.on("layerchange", function() {
                     this.setPage();
                 }, this, {single: true});
-                this.setFeatureStore(filter);
+                this.setFeatureStore(filter, !this.paging);
             } else {
                 this.featureStore.setOgcFilter(filter);
-                this.paging && this.setPage();
+                if (this.paging) {
+                    this.setPage();
+                } else {
+                    this.featureStore.load();
+                }
             };
-            this.paging || this.featureStore.load();
         }
     },
     
