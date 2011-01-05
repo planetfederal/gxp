@@ -72,6 +72,11 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
      */
     showSelectedOnly: true,
     
+    /** api: config[excludeFields]
+     *  ``Array`` Optional list of field names (case sensitive) that are to be
+     *  excluded from the property grid of the FeatureEditPopup.
+     */
+    
     /** private: property[drawControl]
      *  ``OpenLayers.Control.DrawFeature``
      */
@@ -229,6 +234,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
                         feature: feature,
                         vertexRenderIntent: "vertex",
                         readOnly: this.readOnly,
+                        excludeFields: this.excludeFields,
                         editing: feature.state === OpenLayers.State.INSERT,
                         schema: this.schema,
                         allowDelete: true,

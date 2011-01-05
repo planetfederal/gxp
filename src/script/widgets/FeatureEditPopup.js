@@ -60,6 +60,11 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
      */
     schema: null,
     
+    /** api: config[excludeFields]
+     *  ``Array`` Optional list of field names (case sensitive) that are to be
+     *  excluded from the property grid.
+     */
+    
     /** api: config[readOnly]
      *  ``Boolean`` Set to true to disable editing. Default is false.
      */
@@ -177,6 +182,9 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                     return;
                 }
                 name = r.get("name");
+                if (this.excludeFields && this.excludeFields.indexOf(name) !== -1) {
+                    return;
+                }
                 value = feature.attributes[name];
                 switch(type) {
                     case "string":
