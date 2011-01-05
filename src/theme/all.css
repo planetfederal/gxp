@@ -72,6 +72,10 @@
     background-image: url(img/silk/cursor.png);
 }
 
+/* gx_zoomtoextent */
+.x-btn .gx-icon-zoomtoextent { 
+    background-image: url(img/silk/arrow_out.png);
+}
 
 /* fixes textarea scrollbar issue in FF on OSX */
 .ext-gecko.ext-mac textarea.x-form-field {
