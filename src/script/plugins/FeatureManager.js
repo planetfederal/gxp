@@ -186,7 +186,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
             
             /** api: event[layerchange]
              *  Fired after a layer change, as soon as the layer's schema is
-             *  available.
+             *  available and a ``featureStore`` has been created.
              *
              *  Listener arguments:
              *
