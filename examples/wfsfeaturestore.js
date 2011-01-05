@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2010 The Open Planning Project
+ * Copyright (c) 2008-2011 The Open Planning Project
  */
 
 // make the references to the map panel and the popup 
