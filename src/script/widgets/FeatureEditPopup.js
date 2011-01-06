@@ -182,9 +182,6 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                     return;
                 }
                 name = r.get("name");
-                if (this.excludeFields && this.excludeFields.indexOf(name) !== -1) {
-                    return;
-                }
                 value = feature.attributes[name];
                 switch(type) {
                     case "string":
@@ -261,6 +258,13 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             source: feature.attributes,
             customEditors: customEditors,
             listeners: {
+                "viewready": function() {
+                    this.grid.getStore().filterBy(function(r) {
+                        return this.excludeFields ?
+                            this.excludeFields.indexOf(r.get("name")) == -1 :
+                            true;
+                    }, this);
+                },
                 "beforeedit": function() {
                     return this.editing;
                 },
