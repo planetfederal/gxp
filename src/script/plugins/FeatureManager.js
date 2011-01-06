@@ -139,7 +139,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
     /** private: method[init]
      */
     init: function(target) {
-        gxp.plugins.FeatureEditor.superclass.init.apply(this, arguments);
+        gxp.plugins.FeatureManager.superclass.init.apply(this, arguments);
         
         this.addEvents(
             /** api: event[beforequery]
