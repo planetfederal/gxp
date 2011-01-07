@@ -505,9 +505,11 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                     if (request.source === source && request.name === name) {
                         // we call this in the next cycle to guarantee that
                         // getLayerRecord returns before callback is called
-                        window.setTimeout(function() {
-                            request.callback.call(request.scope, record);                        
-                        }, 0);
+                        (function(req) {
+                            window.setTimeout(function() {
+                                req.callback.call(req.scope, record);                        
+                            }, 0);
+                        })(request);
                     } else {
                         remaining.push(request);
                     }
