@@ -189,10 +189,11 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
             multipleKey: "fakeKey",
             eventListeners: {
                 "activate": function() {
-                    (this.autoLoadFeatures === true || featureManager.paging) &&
-                        this.target.mapPanel.map.events.register("click", this,
-                            this.noFeatureClick
+                    if (this.autoLoadFeatures === true || featureManager.paging) {
+                        this.target.mapPanel.map.events.register(
+                            "click", this, this.noFeatureClick
                         );
+                    }
                     featureManager.showLayer(
                         this.id, this.showSelectedOnly && "selected"
                     );
@@ -201,10 +202,11 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
                     );
                 },
                 "deactivate": function() {
-                    (this.autoLoadFeatures === true || featureManager.paging) &&
-                        this.target.mapPanel.map.events.unregister("click",
-                            this, this.noFeatureClick
+                    if (this.autoLoadFeatures === true || featureManager.paging) {
+                        this.target.mapPanel.map.events.unregister(
+                            "click", this, this.noFeatureClick
                         );
+                    }
                     if (popup) {
                         if (popup.editing) {
                             popup.on("cancelclose", function() {
