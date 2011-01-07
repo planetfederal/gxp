@@ -168,12 +168,21 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
         
         this.drawControl = new OpenLayers.Control.DrawFeature(
             featureLayer,
-            OpenLayers.Handler.Point, {
+            OpenLayers.Handler.Point, 
+            {
                 eventListeners: {
-                    "featureadded": function(evt) {
+                    featureadded: function(evt) {
                         if (this.autoLoadFeatures === true) {
                             this.autoLoadedFeature = evt.feature;
                         }
+                    },
+                    activate: function() {
+                        featureManager.showLayer(
+                            this.id, this.showSelectedOnly && "selected"
+                        );
+                    },
+                    deactivate: function() {
+                        featureManager.hideLayer(this.id);
                     },
                     scope: this
                 }
@@ -319,6 +328,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
                 // in the grid.
                 featureManager.featureLayer.events.register("featuresadded", this, function(evt) {
                     featureManager.featureLayer.events.unregister("featuresadded", this, arguments.callee);
+                    this.drawControl.deactivate();
                     this.selectControl.activate();
                     this.selectControl.select(evt.features[0]);
                 });
