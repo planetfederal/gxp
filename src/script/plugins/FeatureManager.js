@@ -136,11 +136,9 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      */
     page: null,
     
-    /** private: method[init]
+    /** private: method[constructor]
      */
-    init: function(target) {
-        gxp.plugins.FeatureManager.superclass.init.apply(this, arguments);
-        
+    constructor: function() {
         this.addEvents(
             /** api: event[beforequery]
              *  Fired before a WFS GetFeature request is issued. This event
@@ -231,7 +229,13 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
              */
             "setpage"
         );
-        
+        gxp.plugins.FeatureManager.superclass.constructor.apply(this, arguments);        
+    },
+    
+    /** private: method[init]
+     */
+    init: function(target) {
+        gxp.plugins.FeatureManager.superclass.init.apply(this, arguments);
         this.toolsShowingLayer = {};
         
         this.style = {
