@@ -494,26 +494,27 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
      *  Check through getLayerRecord requests to see if any can be satisfied.
      */
     checkLayerRecordQueue: function() {
-        var map = this.mapPanel.map;
-        this.mapPanel.layers.each(function(record) {            
-            var source = record.get("source");
-            var name = record.get("name");
-            var remaining = [];
-            var request;
-            for (var i=0, ii=this.getLayerRecordQueue.length; i<ii; ++i) {
-                request = this.getLayerRecordQueue[i];
-                if (request.source === source && request.name === name) {
-                    // we call this in the next cycle to guarantee that
-                    // getLayerRecord returns before callback is called
-                    window.setTimeout(function() {
-                        request.callback.call(request.scope, record);                        
-                    }, 0);
-                } else {
-                    remaining.push(request);
+        if (this.getLayerRecordQueue.length > 0) {
+            this.mapPanel.layers.each(function(record) {            
+                var source = record.get("source");
+                var name = record.get("name");
+                var remaining = [];
+                var request;
+                for (var i=0, ii=this.getLayerRecordQueue.length; i<ii; ++i) {
+                    request = this.getLayerRecordQueue[i];
+                    if (request.source === source && request.name === name) {
+                        // we call this in the next cycle to guarantee that
+                        // getLayerRecord returns before callback is called
+                        window.setTimeout(function() {
+                            request.callback.call(request.scope, record);                        
+                        }, 0);
+                    } else {
+                        remaining.push(request);
+                    }
                 }
-            }
-            this.getLayerRecordQueue = remaining;
-        }, this);
+                this.getLayerRecordQueue = remaining;
+            }, this);
+        }
     },
     
     /** api:method[getSource]
