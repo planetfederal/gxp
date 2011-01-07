@@ -322,8 +322,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      *      "all"
      */
     showLayer: function(id, display) {
-        style = display || "all";
-        this.toolsShowingLayer[id] = style;
+        this.toolsShowingLayer[id] = display || "all";
         this.setLayerDisplay();
     },
     
