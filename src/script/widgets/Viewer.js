@@ -203,6 +203,9 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             portalItems: []
         });
 
+        // private array of pending getLayerRecord requests
+        this.getLayerRecordQueue = [];
+
         this.loadConfig(config, this.applyConfig);
         gxp.Viewer.superclass.constructor.apply(this, arguments);
         
@@ -352,6 +355,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         
         this.mapPanel.layers.on({
             "add": function(store, records) {
+                // check selected layer status
                 var record;
                 for (var i=records.length-1; i>= 0; i--) {
                     record = records[i];
@@ -359,6 +363,8 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                         this.selectLayer(record);
                     }
                 }
+                // check getLayerRecord request queue
+                this.checkLayerRecordQueue();
             },
             "remove": function(store, record) {
                 if (record.get("selected") === true) {
@@ -462,6 +468,52 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             }
             
         }        
+    },
+    
+    /** api: method[getLayerRecord]
+     *  :arg conf: ``Object`` A minimal layer configuration object with source
+     *      and name properties.
+     *  :arg callback: ``Function`` A function to be called with the layer 
+     *      record that corresponds to the given config.
+     *
+     *  Asyncronously retrieves a layer record given a basic layer config.  The
+     *  callback will be called as soon as the desired layer has been added to
+     *  the map.
+     */
+    getLayerRecord: function(conf, callback, scope) {
+        this.getLayerRecordQueue.push({
+            source: conf.source,
+            name: conf.name,
+            callback: callback,
+            scope: scope
+        });
+        this.checkLayerRecordQueue();
+    },
+    
+    /** private: method[checkLayerRecordQueue]
+     *  Check through getLayerRecord requests to see if any can be satisfied.
+     */
+    checkLayerRecordQueue: function() {
+        var map = this.mapPanel.map;
+        this.mapPanel.layers.each(function(record) {            
+            var source = record.get("source");
+            var name = record.get("name");
+            var remaining = [];
+            var request;
+            for (var i=0, ii=this.getLayerRecordQueue.length; i<ii; ++i) {
+                request = this.getLayerRecordQueue[i];
+                if (request.source === source && request.name === name) {
+                    // we call this in the next cycle to guarantee that
+                    // getLayerRecord returns before callback is called
+                    window.setTimeout(function() {
+                        request.callback.call(request.scope, record);                        
+                    }, 0);
+                } else {
+                    remaining.push(request);
+                }
+            }
+            this.getLayerRecordQueue = remaining;
+        }, this);
     },
     
     /** api:method[getSource]

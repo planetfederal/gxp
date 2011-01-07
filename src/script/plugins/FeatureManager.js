@@ -280,16 +280,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
             this.target.on("beforelayerselectionchange", this.setLayer, this);
         }
         if (this.layer) {
-            this.target.mapPanel.layers.on("add", function(store, records) {
-                var i, r, l = this.layer;
-                for (i=records.length-1; i>=0; --i) {
-                    r = records[i];
-                    if (r.get("name") == l.name && r.get("source") == l.source) {
-                        this.setLayer(r);
-                        break;
-                    }
-                }
-            }, this);
+            this.target.getLayerRecord(this.layer, this.setLayer, this);
         }
         this.on("layerchange", function(mgr, layer, schema) {
             this.schema = schema;
