@@ -49,6 +49,12 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
      */
     featureManager: null,
     
+    /** api: config[snappingAgent]
+     *  ``String`` Optional id of the :class:`gxp.plugins.SnappingAgent` to use
+     *  with this tool.
+     */
+    snappingAgent: null,
+    
     /** api: config[readOnly]
      *  ``Boolean`` Set to true to use the FeatureEditor merely as a feature
      *  info tool, without editing capabilities. Default is false.
@@ -109,6 +115,17 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
         var popup;
         var featureManager = this.target.tools[this.featureManager];
         var featureLayer = featureManager.featureLayer;
+
+        // optionally set up snapping
+        var snapId = this.snappingAgent;
+        if (snapId) {
+            var snappingAgent = this.target.tools[snapId];
+            if (snappingAgent) {
+                snappingAgent.addSnappingControl(featureLayer);
+            } else {
+                throw new Error("Unable to locate snapping agent: " + snapId);
+            }
+        }
 
         // intercept calls to methods that change the feature store - allows us
         // to persist unsaved changes before calling the original function
