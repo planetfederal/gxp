@@ -271,7 +271,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
             })
         };
         
-        this.featureLayer = new OpenLayers.Layer.Vector(Ext.id(), {
+        this.featureLayer = new OpenLayers.Layer.Vector(this.id, {
             displayInLayerSwitcher: false,
             styleMap: new OpenLayers.StyleMap({
                 "select": OpenLayers.Util.extend({display: ""},
@@ -356,9 +356,28 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                 this.featureLayer.styleMap.styles["default"] = style;
                 this.featureLayer.redraw();
             }
-            this.target.mapPanel.map.addLayer(this.featureLayer);
+            var map = this.target.mapPanel.map;
+            map.addLayer(this.featureLayer);
+            map.events.on({
+                addlayer: this.raiseLayer,
+                scope: this
+            });
         } else if (this.featureLayer.map) {
             this.target.mapPanel.map.removeLayer(this.featureLayer);
+            map.events.un({
+                addlayer: this.raiseLayer,
+                scope: this
+            });
+        }
+    },
+    
+    /** private: method[raiseLayer]
+     *  Called whenever a layer is added to the map to keep this layer on top.
+     */
+    raiseLayer: function() {
+        var map = this.featureLayer && this.featureLayer.map;
+        if (map) {
+            map.setLayerIndex(this.featureLayer, map.layers.length);
         }
     },
     
