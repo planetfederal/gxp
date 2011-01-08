@@ -374,17 +374,19 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
         if (this.fireEvent("beforequery", this, filter, callback, scope) !== false) {
             this.filter = filter;
             this.pages = null;
-            callback && this.featureLayer.events.register(
-                "featuresadded", this, function(evt) {
-                    if (this._query) {
-                        delete this._query;
-                        this.featureLayer.events.unregister(
-                            "featuresadded", this, arguments.callee
-                        );
-                        callback.call(scope, evt.features);
+            if (callback) {
+                this.featureLayer.events.register(
+                    "featuresadded", this, function(evt) {
+                        if (this._query) {
+                            delete this._query;
+                            this.featureLayer.events.unregister(
+                                "featuresadded", this, arguments.callee
+                            );
+                            callback.call(scope, evt.features);
+                        }
                     }
-                }
-            );
+                );
+            }
             this._query = true;
             if (!this.featureStore) {
                 this.paging && this.on("layerchange", function() {
@@ -399,6 +401,22 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                     this.featureStore.load();
                 }
             };
+        }
+    },
+    
+    /** api: method[clearFeatures]
+     *  Unload all features.
+     */
+    clearFeatures: function() {
+        var store = this.featureStore;
+        if (store) {
+            store.removeAll();
+            // TODO: make abort really work in OpenLayers
+            var proxy = store.proxy;
+            proxy.abortRequest();
+            if (proxy.protocol.response) {
+                proxy.protocol.response.abort();
+            }
         }
     },
     
