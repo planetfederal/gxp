@@ -108,20 +108,20 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
      *
      *  Creates a store of layer records.  Fires "ready" when store is loaded.
      */
-    createStore: function() {        
-        if (gxp.plugins.GoogleSource.monitor.ready) {
-            this.syncCreateStore();
-        } else {
-            gxp.plugins.GoogleSource.monitor.on({
-                ready: function() {
-                    this.syncCreateStore();
-                },
-                scope: this
-            });
-            if (!gxp.plugins.GoogleSource.monitor.loading) {
-                this.loadScript();
-            }
-        }
+    createStore: function() {
+        gxp.plugins.GoogleSource.loader.onLoad({
+            timeout: this.timeout,
+            callback: this.syncCreateStore,
+            errback: function() {
+                delete this.store;
+                this.fireEvent(
+                    "failure", 
+                    this,
+                    "The Google Maps script failed to load within the provided timeout (" + (this.timeout / 1000) + " s)."
+                );
+            },
+            scope: this
+        });
     },
     
     /** private: method[syncCreateStore]
@@ -218,62 +218,14 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
             record.commit();
         };
         return record;
-    },
-    
-    loadScript: function() {
-
-        var params = {
-            autoload: Ext.encode({
-                modules: [{
-                    name: "maps",
-                    version: 3.2,
-                    nocss: "true",
-                    callback: "gxp.plugins.GoogleSource.monitor.onScriptLoad",
-                    other_params: "sensor=false"
-                }]
-            })
-        };
-        
-        var script = document.createElement("script");
-        script.src = "http://www.google.com/jsapi?" + Ext.urlEncode(params);
-
-        // cancel loading if monitor is not ready within timeout
-        window.setTimeout(
-            (function() {
-                if (!gxp.plugins.GoogleSource.monitor.ready) {
-                    this.abortScriptLoad(script);
-                }
-            }).createDelegate(this), 
-            this.timeout
-        );
-        
-        document.getElementsByTagName("head")[0].appendChild(script);
-
-    },
-    
-    /** private: method[abortScriptLoad]
-     *  :arg script: ``HTMLScriptElement``
-     *
-     *  Aborts the Google Maps script loading by removing the script from the 
-     *  document.  Fires the "failure" event.  Called if the script does not 
-     *  load within the timeout.
-     */
-    abortScriptLoad: function(script) {
-        document.getElementsByTagName("head")[0].removeChild(script);
-        delete this.store;
-        this.fireEvent(
-            "failure", 
-            this,
-            "The Google Maps script failed to load within the provided timeout (" + (this.timeout / 1000) + " s)."
-        );
     }
-
+    
 });
 
 /**
- * Create a monitor singleton that all plugin instances can use.
+ * Create a loader singleton that all plugin instances can use.
  */
-gxp.plugins.GoogleSource.monitor = new (Ext.extend(Ext.util.Observable, {
+gxp.plugins.GoogleSource.loader = new (Ext.extend(Ext.util.Observable, {
 
     /** private: property[ready]
      *  ``Boolean``
@@ -292,8 +244,14 @@ gxp.plugins.GoogleSource.monitor = new (Ext.extend(Ext.util.Observable, {
             /** private: event[ready]
              *  Fires when this plugin type is ready.
              */
-             "ready"
+             "ready",
+
+             /** private: event[failure]
+              *  Fires when script loading fails.
+              */
+              "failure"
         );
+        return Ext.util.Observable.prototype.constructor.apply(this, arguments);
     },
     
     /** private: method[onScriptLoad]
@@ -301,12 +259,82 @@ gxp.plugins.GoogleSource.monitor = new (Ext.extend(Ext.util.Observable, {
      */
     onScriptLoad: function() {
         // the google loader calls this in the window scope
-        var monitor = gxp.plugins.GoogleSource.monitor;
+        var monitor = gxp.plugins.GoogleSource.loader;
         if (!monitor.ready) {
             monitor.ready = true;
             monitor.loading = false;
             monitor.fireEvent("ready");
         }
+    },
+    
+    /** api: method[gxp.plugins.GoogleSource.loader.onLoad]
+     *  :arg options: ``Object``
+     *
+     *  Options:
+     *  * callback - ``Function`` Called when script loads.
+     *  * errback - ``Function`` Called if loading fails.
+     *  * timeout - ``Number`` Time to wait before deciding that loading failed
+     *      (in milliseconds).
+     */
+    onLoad: function(options) {
+        if (this.ready) {
+            // call this in the next turn for consistent return before callback
+            window.setTimeout(function() {
+                options.callback.call(options.scope);                
+            }, 0);
+        } else if (!this.loading) {
+            this.loadScript(options);
+        } else {
+            this.on({
+                ready: options.callback,
+                failure: options.errback || Ext.emptyFn,
+                scope: options.scope
+            });
+        }
+    },
+
+    /** private: method[onScriptLoad]
+     *  Called when all resources required by this plugin type have loaded.
+     */
+    loadScript: function(options) {
+
+        var params = {
+            autoload: Ext.encode({
+                modules: [{
+                    name: "maps",
+                    version: 3.2,
+                    nocss: "true",
+                    callback: "gxp.plugins.GoogleSource.loader.onScriptLoad",
+                    other_params: "sensor=false"
+                }]
+            })
+        };
+        
+        var script = document.createElement("script");
+        script.src = "http://www.googled.com/jsapi?" + Ext.urlEncode(params);
+
+        // cancel loading if monitor is not ready within timeout
+        var errback = options.errback || Ext.emptyFn;
+        var timeout = options.timeout || gxp.plugins.GoogleSource.prototype.timeout;
+        window.setTimeout((function() {
+            if (!gxp.plugins.GoogleSource.loader.ready) {
+                this.loading = false;
+                this.ready = false;
+                document.getElementsByTagName("head")[0].removeChild(script);
+                errback.call(options.scope);
+                this.fireEvent("failure");
+                this.purgeListeners();
+            }
+        }).createDelegate(this), timeout);
+        
+        // register callback for ready
+        this.on({
+            ready: options.callback,
+            scope: options.scope
+        });
+        
+        document.getElementsByTagName("head")[0].appendChild(script);
+
     }
 
 }))();
