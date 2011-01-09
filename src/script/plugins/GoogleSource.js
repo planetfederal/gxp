@@ -145,12 +145,12 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
         
         var layers = [];
         var name, mapType;
-        for(var name in mapTypes) {
+        for (name in mapTypes) {
             mapType = google.maps.MapTypeId[name];
             layers.push(new OpenLayers.Layer.Google(
                 // TODO: get MapType object name
                 // http://code.google.com/p/gmaps-api-issues/issues/detail?id=2562
-                "Google " + mapType.replace(/\w/, function(c) {return c.toUpperCase()}), {
+                "Google " + mapType.replace(/\w/, function(c) {return c.toUpperCase();}), {
                     type: mapType,
                     typeName: name,
                     MAX_ZOOM_LEVEL: mapTypes[name].MAX_ZOOM_LEVEL,
@@ -158,7 +158,7 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
                     restrictedExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
                     projection: this.projection
                 }
-            ))
+            ));
         }
         this.store = new GeoExt.data.LayerStore({
             layers: layers,
@@ -206,7 +206,7 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
             }
             // set visibility from config
             if ("visibility" in config) {
-                layer.visibility = config.visibility
+                layer.visibility = config.visibility;
             }
             
             record.set("selected", config.selected || false);
