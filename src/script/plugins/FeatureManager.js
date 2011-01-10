@@ -350,20 +350,20 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                 show = this.toolsShowingLayer[i];
             }
         }
+        var map = this.target.mapPanel.map;
         if (show) {
             var style = this.style[show];
             if (style !== this.featureLayer.styleMap.styles["default"]) {
                 this.featureLayer.styleMap.styles["default"] = style;
                 this.featureLayer.redraw();
             }
-            var map = this.target.mapPanel.map;
             map.addLayer(this.featureLayer);
             map.events.on({
                 addlayer: this.raiseLayer,
                 scope: this
             });
         } else if (this.featureLayer.map) {
-            this.target.mapPanel.map.removeLayer(this.featureLayer);
+            map.removeLayer(this.featureLayer);
             map.events.un({
                 addlayer: this.raiseLayer,
                 scope: this
