@@ -28,8 +28,8 @@ Ext.namespace("gxp.form");
  */   
 gxp.form.GoogleGeocoderComboBox = Ext.extend(Ext.form.ComboBox, {
     
-    /** api: xtype = gx_googlegeocodercombo */
-    xtype: "gx_googlegeocodercombo",
+    /** api: xtype = gxp_googlegeocodercombo */
+    xtype: "gxp_googlegeocodercombo",
 
     /** api: config[queryDelay]
      *  ``Number`` Delay before the search occurs.  Default is 50ms.
