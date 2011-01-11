@@ -1,0 +1,44 @@
+<html>
+    <head>
+        <title>Google Geocoder</title>
+
+        <script src="http://extjs.cachefly.net/ext-3.3.0/adapter/ext/ext-base.js"></script>
+        <script src="http://extjs.cachefly.net/ext-3.3.0/ext-all-debug.js"></script>
+        <link rel="stylesheet" type="text/css" href="http://extjs.cachefly.net/ext-3.3.0/resources/css/ext-all.css" />
+        <link rel="stylesheet" type="text/css" href="http://extjs.cachefly.net/ext-3.3.0/examples/shared/examples.css" />
+        <link rel="stylesheet" type="text/css" href="../../openlayers/theme/default/style.css" />
+        <link rel="stylesheet" type="text/css" href="../../openlayers/theme/default/google.css" />
+        <script src="../../openlayers/lib/OpenLayers.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../geoext/resources/css/geoext-all-debug.css" />
+        <script src="../../geoext/lib/GeoExt.js"></script>
+        <script type="text/javascript" src="../src/script/plugins/LayerSource.js"></script>
+        <script type="text/javascript" src="../src/script/plugins/GoogleSource.js"></script>
+        <script type="text/javascript" src="../src/script/widgets/form/GoogleGeocoderComboBox.js"></script>
+        <link rel="stylesheet" type="text/css" href="../src/theme/all.css"/>
+        <style>
+            #map {
+                width: 512px;
+                height: 256px;
+            }
+            .olControlAttribution {
+                size: 8px;
+                bottom: 2px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Google Geocoder</h1>
+        <p>
+            This example shows the use of the Google Geocoder.
+        </p><p>
+            The js is not minified so it is readable.
+            See <a href="google-geocoder.js">google-geocoder.js</a>.
+        </p>
+        <div id="map"></div>
+        <br>Enter an address:
+        <div id="combo1"></div>
+        <br>Enter an address (within the New York region):
+        <div id="combo2"></div>
+        <script type="text/javascript" src="google-geocoder.js"></script>        
+    </body>
+</html>
