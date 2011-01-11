@@ -334,7 +334,8 @@ gxp.plugins.GoogleSource.loader = new (Ext.extend(Ext.util.Observable, {
             ready: options.callback,
             scope: options.scope
         });
-        
+
+        this.loading = true;
         document.getElementsByTagName("head")[0].appendChild(script);
 
     }
