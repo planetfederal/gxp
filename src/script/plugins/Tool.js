@@ -206,19 +206,28 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
 
         config = config || {};
         var ref = this.outputTarget;
-        var ct = ref ?
-            ref == "map" ?
-                this.target.mapPanel :
-                (Ext.getCmp(ref) || this.target.portal[ref]) :
-            new Ext.Window(Ext.apply({
+        var container;
+        if (ref) {
+            if (ref === "map") {
+                container = this.target.mapPanel;
+            } else {
+                container = Ext.getCmp(ref) || this.target.portal[ref];
+            }
+            Ext.apply(config, this.outputConfig);
+        } else {
+            container = new Ext.Window(Ext.apply({
                 hideBorders: true,
                 shadow: false,
                 closeAction: "hide"
             }, this.outputConfig)).show();
-        ref && Ext.apply(config, this.outputConfig);
-        var cmp = ct.add(config);
-        cmp instanceof Ext.Window ? cmp.show() : ct.doLayout();
-        return cmp;
+        }
+        var component = container.add(config);            
+        if (component instanceof Ext.Window) {
+            component.show();
+        } else {
+            container.doLayout();
+        }
+        return component;
     }
     
 });
