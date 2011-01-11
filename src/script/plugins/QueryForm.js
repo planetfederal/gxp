@@ -29,7 +29,7 @@ Ext.namespace("gxp.plugins");
  */
 gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
     
-    /** api: ptype = gx_QueryForm */
+    /** api: ptype = gx_queryform */
     ptype: "gx_queryform",
 
     /** api: config[featureManager]
