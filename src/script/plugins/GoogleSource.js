@@ -271,10 +271,12 @@ gxp.plugins.GoogleSource.loader = new (Ext.extend(Ext.util.Observable, {
      *  :arg options: ``Object``
      *
      *  Options:
+     *
      *  * callback - ``Function`` Called when script loads.
      *  * errback - ``Function`` Called if loading fails.
      *  * timeout - ``Number`` Time to wait before deciding that loading failed
      *      (in milliseconds).
+     *  * scope - ``Object`` The ``this`` object for callbacks.
      */
     onLoad: function(options) {
         if (this.ready) {
