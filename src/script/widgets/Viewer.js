@@ -103,6 +103,8 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
      *    * selected: ``Boolean`` - Set to true to mark the layer selected
      *  * map: not available, can be configured with ``maxExtent``,
      *    ``numZoomLevels`` and ``theme``.
+     *  * restrictedExtent: ``Array`` to be consumed by
+     *    ``OpenLayers.Bounds.fromArray`` - the restrictedExtent of the map
      *  * maxExtent: ``Array`` to be consumed by
      *    ``OpenLayers.Bounds.fromArray`` - the maxExtent of the map
      *  * numZoomLevels: ``Number`` - the number of zoom levels if not
@@ -329,7 +331,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         
         // split initial map configuration into map and panel config
         if (this.initialConfig.map) {
-            var props = "theme,controls,projection,units,maxExtent,maxResolution,numZoomLevels".split(",");
+            var props = "theme,controls,projection,units,maxExtent,restrictedExtent,maxResolution,numZoomLevels".split(",");
             var prop;
             for (var i=props.length-1; i>=0; --i) {
                 prop = props[i];
@@ -350,6 +352,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                     new OpenLayers.Control.Attribution()
                 ],
                 maxExtent: mapConfig.maxExtent && OpenLayers.Bounds.fromArray(mapConfig.maxExtent),
+                restrictedExtent: mapConfig.restrictedExtent && OpenLayers.Bounds.fromArray(mapConfig.restrictedExtent),
                 numZoomLevels: mapConfig.numZoomLevels || 20
             }, mapConfig),
             center: config.center && new OpenLayers.LonLat(config.center[0], config.center[1]),
@@ -427,7 +430,6 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
 
         // initialize tooltips
         Ext.QuickTips.init();
-        
         this.fireEvent("ready");
     },
     
