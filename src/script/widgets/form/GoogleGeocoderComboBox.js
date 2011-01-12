@@ -32,10 +32,10 @@ gxp.form.GoogleGeocoderComboBox = Ext.extend(Ext.form.ComboBox, {
     xtype: "gxp_googlegeocodercombo",
 
     /** api: config[queryDelay]
-     *  ``Number`` Delay before the search occurs.  Default is 50ms.
+     *  ``Number`` Delay before the search occurs.  Default is 100ms.
      */
-    queryDelay: 50,
-
+    queryDelay: 100,
+    
     /** api: config[bounds]
      *  ``OpenLayers.Bounds | Array`` Optional bounds (in geographic coordinates)
      *  for restricting search.
@@ -91,6 +91,14 @@ gxp.form.GoogleGeocoderComboBox = Ext.extend(Ext.form.ComboBox, {
             ],
             autoLoad: false
         });
+        
+        this.on({
+            focus: function() {
+                this.clearValue();
+            },
+            scope: this
+        });
+        
         return gxp.form.GoogleGeocoderComboBox.superclass.initComponent.apply(this, arguments);
 
     },
