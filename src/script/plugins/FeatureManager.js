@@ -273,11 +273,25 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
         
         this.featureLayer = new OpenLayers.Layer.Vector(this.id, {
             displayInLayerSwitcher: false,
+            visibility: false,
             styleMap: new OpenLayers.StyleMap({
                 "select": OpenLayers.Util.extend({display: ""},
                     OpenLayers.Feature.Vector.style["select"]),
                 "vertex": this.style["all"]
             }, {extendDefault: false})    
+        });
+        
+        this.target.on({
+            ready: function() {
+                this.target.mapPanel.map.addLayer(this.featureLayer);
+            },
+            scope: this
+        });
+        this.on({
+            beforedestroy: function() {
+                this.target.mapPanel.map.removeLayer(this.featureLayer);
+            },
+            scope: this
         });
 
         if (this.autoSetLayer) {
@@ -357,13 +371,13 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                 this.featureLayer.styleMap.styles["default"] = style;
                 this.featureLayer.redraw();
             }
-            map.addLayer(this.featureLayer);
+            this.featureLayer.setVisibility(true);
             map.events.on({
                 addlayer: this.raiseLayer,
                 scope: this
             });
         } else if (this.featureLayer.map) {
-            map.removeLayer(this.featureLayer);
+            this.featureLayer.setVisibility(false);
             map.events.un({
                 addlayer: this.raiseLayer,
                 scope: this
