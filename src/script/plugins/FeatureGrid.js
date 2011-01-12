@@ -41,7 +41,14 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
      *  ``GeoExt.data.AttributeStore``
      */
     schema: null,
-
+    
+    /** api: config[alwaysDisplayOnMap]
+     *  ``Boolean`` If set to true, the features that are shown in the grid
+     *  will always be displayed on the map, and there will be no "Display on
+     *  map" button in the toolbar. Default is false.
+     */
+    alwaysDisplayOnMap: false,
+    
     /** api: config[displayFeatureText]
      * ``String``
      * Text for feature display button (i18n).
@@ -97,6 +104,7 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                 iconCls: "gx-icon-zoom-to",
                 ref: "../zoomToPageButton",
                 disabled: true,
+                hidden: featureManager.autoZoomPage,
                 handler: function() {
                     map.zoomToExtent(featureManager.page.extent);
                 }
@@ -116,6 +124,7 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                 }
             }] : []).concat(["->", {
                 text: this.displayFeatureText,
+                hidden: this.alwaysDisplayOnMap,
                 enableToggle: true,
                 toggleHandler: function(btn, pressed) {
                     featureManager[pressed ? "showLayer" : "hideLayer"](this.id);
@@ -145,6 +154,8 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
             }])
         }, config || {});
         var featureGrid = gxp.plugins.FeatureGrid.superclass.addOutput.call(this, config);
+        
+        this.alwaysDisplayOnMap && featureManager.showLayer(this.id);
         
         featureManager.paging && featureManager.on("setpage", function(mgr) {
             var paging = mgr.pages && mgr.pages.length;
