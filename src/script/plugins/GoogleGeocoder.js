@@ -56,7 +56,7 @@ gxp.plugins.GoogleGeocoder = Ext.extend(gxp.plugins.Tool, {
         if (bounds && !combo.bounds) {
             target.on({
                 ready: function() {
-                    combo.bounds = bounds.transform(
+                    combo.bounds = bounds.clone().transform(
                         target.mapPanel.map.getProjectionObject(),
                         new OpenLayers.Projection("EPSG:4326")
                     );
@@ -81,7 +81,7 @@ gxp.plugins.GoogleGeocoder = Ext.extend(gxp.plugins.Tool, {
     onComboSelect: function(combo, record) {
         if (this.updateField) {
             var map = this.target.mapPanel.map;
-            var location = record.get(this.updateField).transform(
+            var location = record.get(this.updateField).clone().transform(
                 new OpenLayers.Projection("EPSG:4326"),
                 map.getProjectionObject()
             );
