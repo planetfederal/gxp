@@ -253,18 +253,20 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             scope: this
         });
         
+        var excludeFields = this.excludeFields;
         this.grid = new Ext.grid.PropertyGrid({
             border: false,
             source: feature.attributes,
             customEditors: customEditors,
+            viewConfig: {
+                forceFit: true,
+                getRowClass: function(record) {
+                    if (excludeFields.indexOf(record.get("name")) !== -1) {
+                        return "x-hide-nosize";
+                    }
+                }
+            },
             listeners: {
-                "viewready": function() {
-                    this.grid.getStore().filterBy(function(r) {
-                        return this.excludeFields ?
-                            this.excludeFields.indexOf(r.get("name")) == -1 :
-                            true;
-                    }, this);
-                },
                 "beforeedit": function() {
                     return this.editing;
                 },
