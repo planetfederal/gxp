@@ -335,7 +335,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      *  the featureStore contains features, it will be cleared.
      */
     deactivate: function() {
-        if (gxp.plugins.FeatureManager.superclass.activate.apply(this, arguments)) {
+        if (gxp.plugins.FeatureManager.superclass.deactivate.apply(this, arguments)) {
             if (this.autoSetLayer) {
                 this.target.un("beforelayerselectionchange", this.setLayer, this);
             }
