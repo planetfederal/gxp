@@ -300,16 +300,44 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
             },
             scope: this
         });
-
-        if (this.autoSetLayer) {
-            this.target.on("beforelayerselectionchange", this.setLayer, this);
+    },
+    
+    /** api: method[activate]
+     *  :returns: ``Boolean`` true when this tool was activated
+     *
+     *  Activates this tool. When active, this tool loads the features for the
+     *  configured layer, or listens to layer changes on the application and
+     *  loads features for the selected layer.
+     */
+    activate: function() {
+        if (gxp.plugins.FeatureManager.superclass.activate.apply(this, arguments)) {
+            if (this.autoSetLayer) {
+                this.target.on("beforelayerselectionchange", this.setLayer, this);
+            }
+            if (this.layer) {
+                this.target.getLayerRecord(this.layer, this.setLayer, this);
+            }
+            this.on("layerchange", this.setSchema, this);
+            return true;
         }
-        if (this.layer) {
-            this.target.getLayerRecord(this.layer, this.setLayer, this);
+    },
+    
+    /** api: method[deactivate]
+     *  :returns: ``Boolean`` true when this tool was deactivated
+     *
+     *  Dectivates this tool. When deactivated, this tool won't listen to layer
+     *  changes on the application and load features for the selected layer. If
+     *  the featureStore contains features, it will be cleared.
+     */
+    deactivate: function() {
+        if (gxp.plugins.FeatureManager.superclass.activate.apply(this, arguments)) {
+            if (this.autoSetLayer) {
+                this.target.un("beforelayerselectionchange", this.setLayer, this);
+            }
+            this.un("layerchange", this.setSchema, this);
+            this.featureStore.removeAll();
+            return true;
         }
-        this.on("layerchange", function(mgr, layer, schema) {
-            this.schema = schema;
-        }, this);
     },
     
     /** api: method[setLayer]
@@ -334,6 +362,15 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
             }
         }
         return change;
+    },
+    
+    /** private: method[setSchema]
+     *  :arg mgr: :class:`gxp.plugins.FeatureManager`
+     *  :arg layer: ``GeoExt.data.LayerRecord``
+     *  :arg schema: ``GeoExt.data.AttributeStore``
+     */
+    setSchema: function(mgr, layer, schema) {
+        this.schema = schema;
     },
     
     /** api: method[showLayer]
