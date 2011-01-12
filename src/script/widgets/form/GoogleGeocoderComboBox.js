@@ -37,7 +37,8 @@ gxp.form.GoogleGeocoderComboBox = Ext.extend(Ext.form.ComboBox, {
     queryDelay: 50,
 
     /** api: config[bounds]
-     *  ``OpenLayers.Bounds | Array`` Optional bounds for restricting search.
+     *  ``OpenLayers.Bounds | Array`` Optional bounds (in geographic coordinates)
+     *  for restricting search.
      */
     
     /** api: config[valueField]
@@ -99,27 +100,33 @@ gxp.form.GoogleGeocoderComboBox = Ext.extend(Ext.form.ComboBox, {
     prepGeocoder: function() {
         var geocoder = new google.maps.Geocoder();
         
-        // optional bounds for restricting search
-        var bounds = this.bounds;
-        if (bounds) {
-            if (bounds instanceof OpenLayers.Bounds) {
-                bounds = bounds.toArray();
-            }
-            bounds = new google.maps.LatLngBounds(
-                new google.maps.LatLng(bounds[1], bounds[0]),
-                new google.maps.LatLng(bounds[3], bounds[2])
-            );
-        }
 
         // create an async proxy for getting geocoder results
         var api = {};
         api[Ext.data.Api.actions.read] = true;
         var proxy = new Ext.data.DataProxy({api: api});
         var combo = this;
+        
+        // TODO: unhack this - this is due to the the tool output being generated too early
+        var getBounds = (function() {
+            // optional bounds for restricting search
+            var bounds = this.bounds;
+            if (bounds) {
+                if (bounds instanceof OpenLayers.Bounds) {
+                    bounds = bounds.toArray();
+                }
+                bounds = new google.maps.LatLngBounds(
+                    new google.maps.LatLng(bounds[1], bounds[0]),
+                    new google.maps.LatLng(bounds[3], bounds[2])
+                );
+            }
+            return bounds;
+        }).createDelegate(this);
+        
         proxy.doRequest = function(action, rs, params, reader, callback, scope, options) {
             // Assumes all actions read.
             geocoder.geocode(
-                {address: params.query, bounds: bounds},
+                {address: params.query, bounds: getBounds()},
                 function(results, status) {
                     var readerResult;
                     if (status === google.maps.GeocoderStatus.OK || 

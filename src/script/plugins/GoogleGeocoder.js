@@ -42,19 +42,37 @@ gxp.plugins.GoogleGeocoder = Ext.extend(gxp.plugins.Tool, {
      *  Default is "viewport".
      */
     updateField: "viewport",
+    
+    init: function(target) {
 
-    /** api: method[addOutput]
-     */
-    addOutput: function(config) {
-        return gxp.plugins.GoogleGeocoder.superclass.addOutput.call(this, Ext.apply({
-            xtype: "gxp_googlegeocodercombo",
-            emptyText: this.emptyText,
-            bounds: this.bounds,
+        var combo = new gxp.form.GoogleGeocoderComboBox(Ext.apply({
             listeners: {
                 select: this.onComboSelect,
                 scope: this
             }
-        }, config));
+        }, this.outputConfig));
+        
+        var bounds = target.mapPanel.map.restrictedExtent;
+        if (bounds && !combo.bounds) {
+            target.on({
+                ready: function() {
+                    combo.bounds = bounds.transform(
+                        target.mapPanel.map.getProjectionObject(),
+                        new OpenLayers.Projection("EPSG:4326")
+                    );
+                }
+            });
+        }
+        this.combo = combo;
+        
+        return gxp.plugins.GoogleGeocoder.superclass.init.apply(this, arguments);
+
+    },
+
+    /** api: method[addOutput]
+     */
+    addOutput: function(config) {
+        return gxp.plugins.GoogleGeocoder.superclass.addOutput.call(this, this.combo);
     },
     
     /** private: method[onComboSelect]
