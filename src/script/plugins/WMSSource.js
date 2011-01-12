@@ -11,9 +11,9 @@
  */
 
 /**
- * The WMSCapabilities and WFSDescribeFEature formats parse the document and
+ * The WMSCapabilities and WFSDescribeFeatureType formats parse the document and
  * pass the raw data to the WMSCapabilitiesReader/AttributeReader.  There,
- * records are created from layer data.  The rest of the data is lossed.  It
+ * records are created from layer data.  The rest of the data is lost.  It
  * makes sense to store this raw data somewhere - either on the OpenLayers
  * format or the GeoExt reader.  Until there is a better solution, we'll
  * override the reader's readRecords method  here so that we can have access to
