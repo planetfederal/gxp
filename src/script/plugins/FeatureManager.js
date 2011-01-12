@@ -331,8 +331,8 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      *  :returns: ``Boolean`` true when this tool was deactivated
      *
      *  Dectivates this tool. When deactivated, this tool won't listen to layer
-     *  changes on the application and load features for the selected layer. If
-     *  the featureStore contains features, it will be cleared.
+     *  changes on the application and load features for the selected layer.
+     *  The current featureLayer will be cleared.
      */
     deactivate: function() {
         if (gxp.plugins.FeatureManager.superclass.deactivate.apply(this, arguments)) {
@@ -340,7 +340,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                 this.target.un("beforelayerselectionchange", this.setLayer, this);
             }
             this.un("layerchange", this.setSchema, this);
-            this.featureStore.removeAll();
+            this.setLayer();
             return true;
         }
     },
