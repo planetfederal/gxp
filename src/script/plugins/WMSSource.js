@@ -367,7 +367,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                         url: r.get("owsURL"),
                         baseParams: {
                             SERVICE: "WFS",
-                            VERSION: "1.1.1",
+                            VERSION: "1.1.0",
                             REQUEST: "DescribeFeatureType",
                             TYPENAME: typeName
                         },
