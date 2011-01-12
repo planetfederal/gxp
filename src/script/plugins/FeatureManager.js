@@ -52,16 +52,16 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
     autoZoomPage: false,
 
     /** api: config[autoSetLayer]
-     *  ``Boolean`` Listen to the viewer's layerselectionchange event to
-     *  automatically set the layer? Default is true.
+     *  ``Boolean`` When no ``layer`` is configured, listen to the viewer's
+     *  layerselectionchange event to automatically set the layer. Default is
+     *  true unless ``layer`` is configured.
      */
     autoSetLayer: true,
     
     /** api: config[layer]
-     *  ``Object`` with source and name properties. A layer to use if
-     *  ``autoSetLayer`` is false or before a layerselectionchange event is
-     *  fired. The layer referenced here will be set as soon as it is added to
-     *  the target's map.
+     *  ``Object`` with source and name properties. The layer referenced here
+     *  will be set as soon as it is added to the target's map. When this
+     *  option is configured, ``autoSetLayer`` will be set to false.
      */
 
     /** api: config[autoLoadFeatures]
@@ -235,6 +235,11 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
              */
             "setpage"
         );
+        
+        if (this.layer) {
+            this.autoSetLayer = false;
+        }
+        
         gxp.plugins.FeatureManager.superclass.constructor.apply(this, arguments);        
     },
     
