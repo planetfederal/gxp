@@ -82,6 +82,11 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                         }
                         delete this._selectingFeature;
                     },
+                    "selectionchange": function() {
+                        featureGrid.zoomToSelectedButton.setDisabled(
+                            featureGrid.getSelectionModel().getCount() == 0
+                        );
+                    },
                     scope: this
                 }
             }),
@@ -133,6 +138,8 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
             }, {
                 text: this.zoomToSelectedText,
                 iconCls: "gx-icon-zoom-to",
+                ref: "../zoomToSelectedButton",
+                disabled: true,
                 handler: function(btn) {
                     var bounds, geom, extent;
                     featureGrid.getSelectionModel().each(function(r) {
