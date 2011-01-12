@@ -369,7 +369,14 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
      *  :arg evt: ``Object``
      */
     noFeatureClick: function(evt) {
+        var evtLL = this.target.mapPanel.map.getLonLatFromPixel(evt.xy);
         var featureManager = this.target.tools[this.featureManager];
+        var page = featureManager.page;
+        if (featureManager.paging && page && page.extent.containsLonLat(evtLL)) {
+            // no need to load a different page if the clicked location is
+            // inside the current page bounds
+            return;
+        }
         var size = this.target.mapPanel.map.getSize();
         var layer = this.target.selectedLayer.getLayer();
         var store = new GeoExt.data.FeatureStore({
