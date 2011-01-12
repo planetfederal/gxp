@@ -25,6 +25,16 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
     
     /** api: ptype = gx_tool */
     ptype: "gx_tool",
+    
+    /** api: config[autoActivate]
+     *  ``Boolean`` Set to false if the tool should be initialized without
+     *  activating it. Default is true.
+     */
+    autoActivate: true,
+    
+    /** api: property[active]
+     *  ``Boolean`` Is the tool currently active?
+     */
 
     /** api: config[actions]
      *  ``Array`` Custom actions for tools that do not provide their own. Array
@@ -99,10 +109,30 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
      */
     constructor: function(config) {
         this.initialConfig = config;
+        this.active = false;
         Ext.apply(this, config);
         if (!this.id) {
             this.id = Ext.id();
         }
+        
+        this.addEvents(
+            /** api: event[activate]
+             *  Fired when the tool is activated.
+             *
+             *  Listener arguments:
+             *  * tool - :class:`gxp.plugins.Tool` the activated tool
+             */
+            "activate",
+
+            /** api: event[deactivate]
+             *  Fired when the tool is deactivated.
+             *
+             *  Listener arguments:
+             *  * tool - :class:`gxp.plugins.Tool` the deactivated tool
+             */
+            "deactivate"
+        );
+        
         gxp.plugins.Tool.superclass.constructor.apply(this, arguments);
     },
     
@@ -111,7 +141,34 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
      */
     init: function(target) {
         this.target = target;
+        this.autoActivate && this.activate();
         this.target.on("portalready", this.addActions, this);
+    },
+    
+    /** api: method[activate]
+     *  :returns: ``Boolean`` true when this tool was activated
+     *
+     *  Activates this tool.
+     */
+    activate: function() {
+        if (this.active === false) {
+            this.active = true;
+            this.fireEvent("activate", this);
+            return true;
+        }
+    },
+    
+    /** api: method[deactivate]
+     *  :returns: ``Boolean`` true when this tool was deactivated
+     *
+     *  Deactivates this tool.
+     */
+    deactivate: function() {
+        if (this.active === true) {
+            this.active = false;
+            this.fireEvent("deactivate", this);
+            return true;
+        }
     },
     
     /** api: method[addActions]
