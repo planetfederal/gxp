@@ -85,6 +85,16 @@ gxp.plugins.ZoomToExtent = Ext.extend(gxp.plugins.Tool, {
                     }
                 }
                 if (extent) {
+                    // respect map properties
+                    var restricted = map.restrictedExtent || map.maxExtent;
+                    if (restricted) {
+                        extent = new OpenLayers.Bounds(
+                            Math.max(extent.left, restricted.left),
+                            Math.max(extent.bottom, restricted.bottom),
+                            Math.min(extent.right, restricted.right),
+                            Math.min(extent.top, restricted.top)
+                        );
+                    }
                     map.zoomToExtent(extent, true);
                 }
             },
