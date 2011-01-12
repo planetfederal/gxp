@@ -294,6 +294,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
             scope: this
         });
         this.on({
+            //TODO add a beforedestroy event to the tool
             beforedestroy: function() {
                 this.target.mapPanel.map.removeLayer(this.featureLayer);
             },
