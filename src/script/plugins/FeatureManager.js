@@ -44,6 +44,12 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      *  ``Boolean`` Should quad-tree paging be enabled? Default is true.
      */
     paging: true,
+    
+    /** api: config[autoZoomPage]
+     *  ``Boolean`` Set to true to always zoom the map to the currently
+     *  selected page. Default is false.
+     */
+    autoZoomPage: false,
 
     /** api: config[autoSetLayer]
      *  ``Boolean`` Listen to the viewer's layerselectionchange event to
@@ -818,6 +824,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                 function(page) {
                     this.page = page;
                     this.setPageFilter(page);
+                    this.autoZoomPage && this.target.mapPanel.map.zoomToExtent(page.extent);
                     this.fireEvent("setpage", this, condition, callback, scope);
                     this.featureStore.load({callback: callback, scope: scope});
                 }, this
