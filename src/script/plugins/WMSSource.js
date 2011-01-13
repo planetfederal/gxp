@@ -101,17 +101,27 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      */
     schemaCache: null,
     
+    /** api: config[version]
+     *  ``String``
+     *  If specified, the version string will be included in WMS GetCapabilities
+     *  requests.  By default, no version is set.
+     */
+    
     /** api: method[createStore]
      *
      *  Creates a store of layer records.  Fires "ready" when store is loaded.
      */
     createStore: function() {
+        var baseParams = {
+            SERVICE: "WMS",
+            REQUEST: "GetCapabilities"
+        };
+        if (this.version) {
+            baseParams.VERSION = this.version;
+        }
         this.store = new GeoExt.data.WMSCapabilitiesStore({
             url: this.url,
-            baseParams: {
-                SERVICE: "WMS",
-                REQUEST: "GetCapabilities"
-            },
+            baseParams: baseParams,
             autoLoad: true,
             listeners: {
                 load: function() {
