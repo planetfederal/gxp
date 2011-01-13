@@ -144,7 +144,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
     
     /** private: method[constructor]
      */
-    constructor: function() {
+    constructor: function(config) {
         this.addEvents(
             /** api: event[beforequery]
              *  Fired before a WFS GetFeature request is issued. This event
@@ -236,7 +236,8 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
             "setpage"
         );
         
-        if (this.layer) {
+        // change autoSetLayer default if passed a layer config
+        if (config && config.layer) {
             this.autoSetLayer = false;
         }
         
