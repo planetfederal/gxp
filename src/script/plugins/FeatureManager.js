@@ -517,6 +517,17 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                 } else {
                     var fields = [], geometryName;
                     var geomRegex = /gml:((Multi)?(Point|Line|Polygon|Curve|Surface)).*/;
+                    var types = {
+                        "xsd:boolean": "boolean",
+                        "xsd:int": "int",
+                        "xsd:integer": "int",
+                        "xsd:short": "int",
+                        "xsd:long": "int",
+                        "xsd:date": "date",
+                        "xsd:string": "string",
+                        "xsd:float": "float",
+                        "xsd:double": "float"
+                    };
                     schema.each(function(r) {
                         // TODO: To be more generic, we would look for GeometryPropertyType as well.
                         var match = geomRegex.exec(r.get("type"));
@@ -525,20 +536,15 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                             this.geometryType = match[1];
                         } else {
                             // TODO: use (and improve if needed) GeoExt.form.recordToField
-                            fields.push({
+                            var type = types[r.get("type")];
+                            var field = {
                                 name: r.get("name"),
-                                type: ({
-                                    "xsd:boolean": "boolean",
-                                    "xsd:int": "int",
-                                    "xsd:integer": "int",
-                                    "xsd:short": "int",
-                                    "xsd:long": "int",
-                                    "xsd:date": "date",
-                                    "xsd:string": "string",
-                                    "xsd:float": "float",
-                                    "xsd:double": "float"
-                                })[r.get("type")]
-                            });
+                                type: types[type]
+                            }
+                            if (type == "date") {
+                                field.dateFormat = "Y-m-d";
+                            }
+                            fields.push(field);
                         }
                     }, this);
                     var protocolOptions = {
