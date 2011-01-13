@@ -62,7 +62,6 @@ gxp.plugins.SnappingAgent = Ext.extend(gxp.plugins.Tool, {
         var featureManager = new gxp.plugins.FeatureManager({
             maxFeatures: null,
             paging: false,
-            autoSetLayer: false,
             layer: {
                 source: snapTarget.source,
                 name: snapTarget.name
