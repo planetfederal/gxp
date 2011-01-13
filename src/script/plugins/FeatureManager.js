@@ -507,21 +507,23 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      *  :arg autoLoad: ``Boolean``
      */
     setFeatureStore: function(filter, autoLoad) {
-        var rec = this.layerRecord;
-        var source = this.target.getSource(rec);
+        var record = this.layerRecord;
+        var source = this.target.getSource(record);
         if (source && source instanceof gxp.plugins.WMSSource) {
-            source.getSchema(rec, function(s) {
-                if (s === false) {
+            source.getSchema(record, function(schema) {
+                if (schema === false) {
                     this.clearFeatureStore();
                 } else {
-                    var fields = [], match, geometryName;
-                    s.each(function(r) {
+                    var fields = [], geometryName;
+                    var geomRegex = /gml:((Multi)?(Point|Line|Polygon|Curve|Surface)).*/;
+                    schema.each(function(r) {
                         // TODO: To be more generic, we would look for GeometryPropertyType as well.
-                        match = /gml:((Multi)?(Point|Line|Polygon|Curve|Surface)).*/.exec(r.get("type"));
+                        var match = geomRegex.exec(r.get("type"));
                         if (match) {
                             geometryName = r.get("name");
                             this.geometryType = match[1];
                         } else {
+                            // TODO: use (and improve if needed) GeoExt.form.recordToField
                             fields.push({
                                 name: r.get("name"),
                                 type: ({
@@ -540,9 +542,9 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                     }, this);
                     var protocolOptions = {
                         srsName: this.target.mapPanel.map.getProjection(),
-                        url: s.url,
-                        featureType: s.reader.raw.featureTypes[0].typeName,
-                        featureNS: s.reader.raw.targetNamespace,
+                        url: schema.url,
+                        featureType: schema.reader.raw.featureTypes[0].typeName,
+                        featureNS: schema.reader.raw.targetNamespace,
                         geometryName: geometryName
                     };
                     this.hitCountProtocol = new OpenLayers.Protocol.WFS(Ext.apply({
@@ -565,7 +567,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                         autoSave: false,
                         listeners: {
                             "write": function() {
-                                rec.getLayer().redraw(true);
+                                record.getLayer().redraw(true);
                             },
                             "load": function() {
                                 this.fireEvent("query", this, this.featureStore);
@@ -574,11 +576,11 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                         }
                     }, protocolOptions));
                 }
-                this.fireEvent("layerchange", this, rec, s);
+                this.fireEvent("layerchange", this, record, schema);
             }, this);
         } else {
             this.clearFeatureStore();
-            this.fireEvent("layerchange", this, rec, false);
+            this.fireEvent("layerchange", this, record, false);
         }        
     },
     
