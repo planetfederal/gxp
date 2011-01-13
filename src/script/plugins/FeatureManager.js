@@ -541,8 +541,9 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                                 name: r.get("name"),
                                 type: types[type]
                             }
+                            //TODO consider date type handling in OpenLayers.Format
                             if (type == "date") {
-                                field.dateFormat = "Y-m-d";
+                                field.dateFormat = "Y-m-d\\Z";
                             }
                             fields.push(field);
                         }

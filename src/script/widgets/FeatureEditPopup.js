@@ -172,6 +172,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
         this.anchored = !this.editing;
         
         var customEditors = {};
+        var customRenderers = {};
         if(this.schema) {
             var attributes = {};
             var name, type, value;
@@ -190,12 +191,18 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                         customEditors[name] = new Ext.grid.GridEditor(
                             new Ext.form.DateField({
                                 format: "Y-m-d",
-                                getValue: function() {
-                                    var value = this.parseDate(Ext.form.DateField.superclass.getValue.call(this)) || "";
-                                    return value instanceof Date ? value.format("Y-m-d") : value;
-                                }
+                                altFormats: "Y-m-d\\Z"
                             })
                         );
+                        customRenderers[name] = function(v) {
+                            //TODO see if there i a higher level component that
+                            // would help us here
+                            var value = v;
+                            if (!(value instanceof Date)) {
+                                value = Date.parseDate(v, "Y-m-d\\Z");
+                            }
+                            return value ? value.format("Y-m-d") : v;
+                        }
                         break;
                     case "boolean":
                         //TODO nodata handling for Boolean
@@ -269,6 +276,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             border: false,
             source: feature.attributes,
             customEditors: customEditors,
+            customRenderers: customRenderers,
             viewConfig: {
                 forceFit: true,
                 getRowClass: function(record) {
@@ -423,6 +431,19 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             var feature = this.feature;
             if (feature.state === this.getDirtyState()) {
                 if (save === true) {
+                    //TODO consider handling date types in the OpenLayers.Format
+                    if (this.schema) {
+                        var attribute, rec;
+                        for (var i in feature.attributes) {
+                            rec = this.schema.getAt(this.schema.findExact("name", i));
+                            if (this.getFieldType(rec.get("type")) == "date") {
+                                attribute = feature.attributes[i];
+                                if (attribute instanceof Date) {
+                                    feature.attributes[i] = attribute.format("Y-m-d\\Z");
+                                }
+                            }
+                        }
+                    }
                     this.fireEvent("featuremodified", this, feature);
                 } else if(feature.state === OpenLayers.State.INSERT) {
                     this.editing = false;
