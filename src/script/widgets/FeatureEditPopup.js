@@ -280,7 +280,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             viewConfig: {
                 forceFit: true,
                 getRowClass: function(record) {
-                    if (excludeFields.indexOf(record.get("name")) !== -1) {
+                    if (excludeFields && excludeFields.indexOf(record.get("name")) !== -1) {
                         return "x-hide-nosize";
                     }
                 }
