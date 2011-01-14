@@ -130,7 +130,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
      */
     createDisplayPanel: function() {
         var record = this.layerRecord;
-        var layer = record.get("layer");
+        var layer = record.getLayer();
         var opacity = layer.opacity;
         if(opacity == null) {
             opacity = 1;

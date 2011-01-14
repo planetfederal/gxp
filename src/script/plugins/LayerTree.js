@@ -87,7 +87,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
                 store: this.target.mapPanel.layers,
                 filter: function(record) {
                     return !record.get("group") &&
-                        record.get("layer").displayInLayerSwitcher == true;
+                        record.getLayer().displayInLayerSwitcher == true;
                 },
                 createNode: function(attr) {
                     attr.uiProvider = LayerNodeUI;
@@ -95,7 +95,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
                     var store = attr.layerStore;
                     if (layer && store) {
                         var record = store.getAt(store.findBy(function(r) {
-                            return r.get("layer") === layer;
+                            return r.getLayer() === layer;
                         }));
                         if (record && !record.get("queryable")) {
                             attr.iconCls = "gx-tree-rasterlayer-icon";
@@ -125,7 +125,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
                 store: this.target.mapPanel.layers,
                 filter: function(record) {
                     return record.get("group") === "background" &&
-                        record.get("layer").displayInLayerSwitcher == true;
+                        record.getLayer().displayInLayerSwitcher == true;
                 },
                 createNode: function(attr) {
                     attr.uiProvider = LayerNodeUI;
@@ -133,7 +133,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
                     var store = attr.layerStore;
                     if (layer && store) {
                         var record = store.getAt(store.findBy(function(r) {
-                            return r.get("layer") === layer;
+                            return r.getLayer() === layer;
                         }));
                         if (record) {
                             if (!record.get("queryable")) {
@@ -172,7 +172,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
                         if (layer) {
                             var store = node.layerStore;
                             var record = store.getAt(store.findBy(function(r) {
-                                return r.get("layer") === layer;
+                                return r.getLayer() === layer;
                             }));
                             this.selectionChanging = true;
                             changed = this.target.selectLayer(record);
@@ -197,7 +197,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
                     if(oldParent !== newParent) {
                         var store = newParent.loader.store;
                         var index = store.findBy(function(r) {
-                            return r.get("layer") === node.layer;
+                            return r.getLayer() === node.layer;
                         });
                         var record = store.getAt(index);
                         record.set("group", newParent.attributes.group);

@@ -545,7 +545,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         if (!data || !data.documentElement) {
             data = new OpenLayers.Format.XML().read(response.responseText);
         }
-        var layerParams = this.layerRecord.get("layer").params;
+        var layerParams = this.layerRecord.getLayer().params;
 
         var initialStyle = this.initialConfig.styleName || layerParams.STYLES;
         if (initialStyle) {
@@ -719,7 +719,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      *      request result was returned.
      */
     getStyles: function(callback) {
-        var layer = this.layerRecord.get("layer");
+        var layer = this.layerRecord.getLayer();
         if(this.editable === true) {
             Ext.Ajax.request({
                 url: layer.url,
@@ -746,7 +746,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             callback.call(this);
             return;
         }
-        var layer = this.layerRecord.get("layer");
+        var layer = this.layerRecord.getLayer();
         Ext.Ajax.request({
             url: layer.url,
             params: {
@@ -780,7 +780,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             displayField: "name",
             value: this.selectedStyle ?
                 this.selectedStyle.get("name") :
-                this.layerRecord.get("layer").params.STYLES || "default",
+                this.layerRecord.getLayer().params.STYLES || "default",
             disabled: !store.getCount(),
             mode: "local",
             typeAhead: true,
