@@ -875,9 +875,12 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
             }
             this.processPage(this.pages[condition.index], condition,
                 function(page) {
+                    var map = this.target.mapPanel.map;
                     this.page = page;
                     this.setPageFilter(page);
-                    this.autoZoomPage && this.target.mapPanel.map.zoomToExtent(page.extent);
+                    if (this.autoZoomPage && !map.getExtent().containsLonLat(page.extent.getCenterLonLat())) {
+                        map.zoomToExtent(page.extent);
+                    }
                     this.fireEvent("setpage", this, condition, callback, scope);
                     this.featureStore.load({callback: callback, scope: scope});
                 }, this
