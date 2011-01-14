@@ -66,9 +66,6 @@ gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
      */
     init: function(target) {
         this.target = target;
-        var fallback = function(msg, details) {
-            this.fireEvent("failure", msg, details);
-        }
         this.createStore();
     },
     
