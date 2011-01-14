@@ -528,7 +528,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                 remaining.push(request);
             }
         }
-        this.layerRecordQueue = remaining;
+        this.getLayerRecordQueue = remaining;
     },
     
     /** api:method[getSource]
