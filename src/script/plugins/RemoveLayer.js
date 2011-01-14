@@ -47,7 +47,7 @@ gxp.plugins.RemoveLayer = Ext.extend(gxp.plugins.Tool, {
      */
     addActions: function() {
         var selectedLayer;
-        var removeLayerAction = gxp.plugins.RemoveLayer.superclass.addActions.apply(this, [{
+        var actions = gxp.plugins.RemoveLayer.superclass.addActions.apply(this, [{
             menuText: this.removeMenuText,
             iconCls: "gx-icon-removelayers",
             disabled: true,
@@ -59,7 +59,8 @@ gxp.plugins.RemoveLayer = Ext.extend(gxp.plugins.Tool, {
                 }
             },
             scope: this
-        }])[0];
+        }]);
+        var removeLayerAction = actions[0]
 
         this.target.on("layerselectionchange", function(record) {
             selectedLayer = record;
@@ -77,7 +78,7 @@ gxp.plugins.RemoveLayer = Ext.extend(gxp.plugins.Tool, {
             "remove": enforceOne
         })
         
-        return removeLayerAction;
+        return actions;
     }
         
 });
