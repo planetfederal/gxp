@@ -389,24 +389,42 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
             // inside the current page bounds
             return;
         }
-        var size = this.target.mapPanel.map.getSize();
-        var layer = this.target.selectedLayer.getLayer();
+
+        var layer = featureManager.layerRecord && featureManager.layerRecord.getLayer();
+        if (!layer) {
+            // if the feature manager has no layer currently set, do nothing
+            return;
+        }
+        
+        // construct params for GetFeatureInfo request
+        // layer is not added to map, so we do this manually
+        var map = this.target.mapPanel.map;
+        var size = map.getSize();
+        var params = Ext.applyIf({
+            REQUEST: "GetFeatureInfo",
+            BBOX: map.getExtent().toBBOX(),
+            WIDTH: size.w,
+            HEIGHT: size.h,
+            X: evt.xy.x,
+            Y: evt.xy.y,
+            QUERY_LAYERS: layer.params.LAYERS,
+            INFO_FORMAT: "application/vnd.ogc.gml",
+            EXCEPTIONS: "application/vnd.ogc.se_xml",
+            FEATURE_COUNT: 1
+        }, layer.params);
+        var projectionCode = map.getProjection();
+        if (parseFloat(layer.params.VERSION) >= 1.3) {
+            params.CRS = projectionCode;
+        } else {
+            params.SRS = projectionCode;
+        }
+        
         var store = new GeoExt.data.FeatureStore({
             fields: {},
             proxy: new GeoExt.data.ProtocolProxy({
                 protocol: new OpenLayers.Protocol.HTTP({
-                    url: layer.getFullRequestString({
-                        REQUEST: "GetFeatureInfo",
-                        BBOX: this.target.mapPanel.map.getExtent().toBBOX(),
-                        WIDTH: size.w,
-                        HEIGHT: size.h,
-                        X: evt.xy.x,
-                        Y: evt.xy.y,
-                        QUERY_LAYERS: layer.params.LAYERS,
-                        INFO_FORMAT: "application/vnd.ogc.gml",
-                        EXCEPTIONS: "application/vnd.ogc.se_xml",
-                        FEATURE_COUNT: 1
-                    }),
+                    url: (typeof layer.url === "string") ? layer.url : layer.url[0],
+                    params: params,
                     format: new OpenLayers.Format.WMSGetFeatureInfo()
                 })
             }),
@@ -419,7 +437,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
                             fids: [fid] 
                         });
 
-                        autoLoad = function() {
+                        var autoLoad = function() {
                             featureManager.loadFeatures(
                                 filter, function(features) {
                                     this.autoLoadedFeature = features[0];
