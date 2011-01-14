@@ -1,6 +1,6 @@
 
 .x-btn .add {
-    background-image: url(img/add.png);
+    background-image: url(img/silk/add.png);
 }
 
 .x-btn .delete {
@@ -50,6 +50,14 @@
 }
 .x-btn .gx-icon-editfeature, .x-menu-item .gx-icon-editfeature {
     background-image: url(img/silk/map_edit.png);
+}
+
+/* gxp_addlayers */
+.x-btn .gxp-icon-addlayers, .x-menu-item .gxp-icon-addlayers {
+    background-image: url(img/silk/add.png);
+}
+.x-btn .icon-addserver {
+    background-image: url(img/silk/map_add.png);
 }
 
 /* gx_removelayer */
