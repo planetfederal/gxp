@@ -166,7 +166,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         if (index > -1) {
             var original = this.store.getAt(index);
 
-            var layer = original.get("layer");
+            var layer = original.getLayer();
 
             /**
              * TODO: The WMSCapabilitiesReader should allow for creation
@@ -405,7 +405,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      */
     getConfigForRecord: function(record) {
         var config = gxp.plugins.WMSSource.superclass.getConfigForRecord.apply(this, arguments);
-        var layer = record.get("layer");
+        var layer = record.getLayer();
         var params = layer.params;
         return Ext.apply(config, {
             format: params.FORMAT,

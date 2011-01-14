@@ -133,7 +133,7 @@ gxp.plugins.OLSource = Ext.extend(gxp.plugins.LayerSource, {
         // get general config
         var config = gxp.plugins.OLSource.superclass.getConfigForRecord.apply(this, arguments);
         // add config specific to this source
-        var layer = record.get("layer");
+        var layer = record.getLayer();
         return Ext.apply(config, {
             type: record.get("type"),
             args: record.get("args")

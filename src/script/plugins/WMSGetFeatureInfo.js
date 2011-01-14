@@ -94,9 +94,9 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
             info.controls = [];
             queryableLayers.each(function(x){
                 var control = new OpenLayers.Control.WMSGetFeatureInfo({
-                    url: x.get("layer").url,
+                    url: x.getLayer().url,
                     queryVisible: true,
-                    layers: [x.get("layer")],
+                    layers: [x.getLayer()],
                     eventListeners: {
                         getfeatureinfo: function(evt) {
                             var match = evt.text.match(/<body[^>]*>([\s\S]*)<\/body>/);

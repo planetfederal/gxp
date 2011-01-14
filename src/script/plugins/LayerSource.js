@@ -130,7 +130,7 @@ gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
      *  Create a config object that can be used to recreate the given record.
      */
     getConfigForRecord: function(record) {
-        var layer = record.get("layer");
+        var layer = record.getLayer();
         return {
             source: record.get("source"),
             name: record.get("name"),
