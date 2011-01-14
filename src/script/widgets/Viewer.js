@@ -508,9 +508,10 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
      *  Check through getLayerRecord requests to see if any can be satisfied.
      */
     checkLayerRecordQueue: function() {
-        var request, source, record;
+        var request, source, record, called;
         var remaining = [];
         for (var i=0, ii=this.getLayerRecordQueue.length; i<ii; ++i) {
+            called = false;
             request = this.getLayerRecordQueue[i];
             source = request.config.source;
             if (source in this.layerSources) {
@@ -523,8 +524,10 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                             req.callback.call(req.scope, rec);                        
                         }, 0);
                     })(request, record);
+                    called = true;
                 }
-            } else {
+            }
+            if (!called) {
                 remaining.push(request);
             }
         }
