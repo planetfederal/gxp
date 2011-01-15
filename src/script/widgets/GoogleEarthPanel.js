@@ -82,12 +82,13 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
 
         gxp.GoogleEarthPanel.superclass.initComponent.call(this);
 
+        var mapPanel = this.mapPanel || GeoExt.MapPanel.guess();
         if (!this.map) {
-            this.map = this.mapPanel && this.mapPanel.map;
+            this.map = mapPanel.map ;
         }
 
         if (!this.layers) {
-            this.layers = this.mapPanel && this.mapPanel.layers;
+            this.layers = mapPanel.layers;
         }
 
         this.projection = new OpenLayers.Projection("EPSG:4326");
@@ -97,10 +98,14 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
         // or CSS display = none, the Google Earth plugin will show an error
         // message when it is re-enabled. To counteract this, we delete 
         // the instance and create a new one each time.
-        this.on("show", function() {
-            this.layerCache = {};
-            google.earth.createInstance(this.body.dom, this.onEarthReady.createDelegate(this), function(){});
-        }, this);
+        function render() {
+            if (this.rendered) {
+                this.layerCache = {};
+                google.earth.createInstance(this.body.dom, this.onEarthReady.createDelegate(this), function(){});
+            }
+        };
+        this.on("show", render, this);
+        this.on("render", render, this);
         
         this.on("hide", function() {
             if (this.earth != null) {
@@ -335,3 +340,7 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
         return data.clone().transform(this.projection, this.map.getProjectionObject());
     }
 });
+
+
+/** api: xtype = gxp_googleearthpanel */
+Ext.reg("gxp_googleearthpanel", gxp.GoogleEarthPanel);
