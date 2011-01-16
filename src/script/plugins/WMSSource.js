@@ -284,8 +284,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             this.describeLayerStore = new GeoExt.data.WMSDescribeLayerStore({
                 url: req.href,
                 baseParams: {
-                    // TODO: version negotiation?
-                    VERSION: "1.1.1",
+                    VERSION: this.store.reader.raw.version,
                     REQUEST: "DescribeLayer"
                 }
             });
@@ -377,6 +376,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                         url: r.get("owsURL"),
                         baseParams: {
                             SERVICE: "WFS",
+                            //TODO should get version from WFS GetCapabilities
                             VERSION: "1.1.0",
                             REQUEST: "DescribeFeatureType",
                             TYPENAME: typeName
