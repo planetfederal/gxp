@@ -48,8 +48,8 @@
         "plugins/FeatureManager.js",
         "plugins/FeatureToField.js",
         "plugins/QueryForm.js",
-        "plugins/SelectFeature.js",
         "plugins/LayerTree.js",
+        "plugins/AddLayers.js",
         "plugins/RemoveLayer.js"
     );
     
