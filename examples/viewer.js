@@ -1,6 +1,7 @@
 var app;
 Ext.onReady(function() {
     app = new gxp.Viewer({
+        proxy: "/geoserver/rest/proxy?url=",
         portalConfig: {
             renderTo: document.body,
             layout: "border",
@@ -44,6 +45,9 @@ Ext.onReady(function() {
                 tbar: [] // we will add buttons to "tree.bbar" later
             },
             outputTarget: "west"
+        }, {
+            ptype: "gxp_addlayers",
+            actionTarget: "tree.tbar"
         }, {
             ptype: "gx_removelayer",
             actionTarget: ["tree.tbar", "tree.contextMenu"]
