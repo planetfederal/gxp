@@ -184,7 +184,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                             // add to combo and select
                             var record = new sources.recordType({
                                 id: id,
-                                title: this.layerSources[id].title || "Untitled" // TODO: titles
+                                title: this.target.layerSources[id].title || "Untitled" // TODO: titles
                             });
                             sources.insert(0, [record]);
                             sourceComboBox.onSelect(record, 0);
