@@ -147,7 +147,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                         msg = "Trouble creating layer store from response.";
                     }
                     // TODO: decide on signature for failure listeners
-                    this.fireEvent("failure", this, msg, Array.prototype.concat(arguments));
+                    this.fireEvent("failure", this, msg, Array.prototype.slice.call(arguments));
                 },
                 scope: this
             }
