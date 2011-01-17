@@ -309,14 +309,14 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         source.on({
             ready: function() {
                 var callback = options.callback || Ext.emptyFn;
-                callback.call(this, id);
+                callback.call(options.scope || this, id);
             },
             failure: function() {
                 var fallback = options.fallback || Ext.emptyFn;
                 delete this.layerSources[id];
-                fallback.apply(this, arguments);
+                fallback.apply(options.scope || this, arguments);
             },
-            scope: options.scope || this
+            scope: this
         });
         this.layerSources[id] = source;
         source.init(this);
