@@ -180,8 +180,11 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             var layerProjection = this.getProjection(original);
 
             var nativeExtent = original.get("bbox")[projection.getCode()];
+            var swapAxis = OpenLayers.Layer.WMS.prototype.reverseAxisOrder.call(
+                Ext.applyIf({map: this.target.mapPanel.map}, layer)
+            );
             var maxExtent = 
-                (nativeExtent && OpenLayers.Bounds.fromArray(nativeExtent.bbox, layer.reverseAxisOrder())) || 
+                (nativeExtent && OpenLayers.Bounds.fromArray(nativeExtent.bbox, swapAxis)) || 
                 OpenLayers.Bounds.fromArray(original.get("llbbox")).transform(new OpenLayers.Projection("EPSG:4326"), projection);
             
             // make sure maxExtent is valid (transform does not succeed for all llbbox)
