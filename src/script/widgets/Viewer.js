@@ -493,15 +493,32 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
      *  Asyncronously retrieves a layer record given a basic layer config.  The
      *  callback will be called as soon as the desired layer source is ready.
      *  This method should only be called to retrieve layer records from sources
-     *  configured before the call.
+     *  configured before the call. If a layer with the provided config is
+     *  already on the viewer's mapPanel, the callback will be called with the
+     *  existing one.
      */
     getLayerRecord: function(config, callback, scope) {
-        this.getLayerRecordQueue.push({
-            config: config,
-            callback: callback,
-            scope: scope
-        });
-        this.checkLayerRecordQueue();
+        if (this.mapPanel) {
+            // look for existing record on the map
+            var haveRecord = false;
+            this.mapPanel.layers.each(function(rec) {
+                if (rec.get("source") == config.source && rec.get("name") == config.name) {
+                    window.setTimeout(function() {
+                        callback.call(scope, rec);
+                    }, 0);
+                    haveRecord = true;
+                    return false;
+                }
+            });
+        }
+        if (haveRecord === false) {
+            this.getLayerRecordQueue.push({
+                config: config,
+                callback: callback,
+                scope: scope
+            });
+            this.checkLayerRecordQueue();
+        }
     },
     
     /** private: method[checkLayerRecordQueue]
