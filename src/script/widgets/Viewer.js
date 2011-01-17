@@ -206,7 +206,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         });
 
         // private array of pending getLayerRecord requests
-        this.getLayerRecordQueue = [];
+        this.createLayerRecordQueue = [];
 
         this.loadConfig(config, this.applyConfig);
         gxp.Viewer.superclass.constructor.apply(this, arguments);
@@ -484,7 +484,26 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         }        
     },
     
-    /** api: method[getLayerRecord]
+    /** api: method[getLayerRecordFromMap]
+     *  :arg config: ``Object`` A minimal layer configuration object with source
+     *      and name properties.
+     *
+     *  Retrieves a layer record from the map.
+     */
+    getLayerRecordFromMap: function(config) {
+        var record = null;
+        if (this.mapPanel) {
+            this.mapPanel.layers.each(function(rec) {
+                if (rec.get("source") == config.source && rec.get("name") == config.name) {
+                    record = rec;
+                    return false;
+                }
+            });
+        }
+        return record;
+    },
+    
+    /** api: method[createLayerRecord]
      *  :arg config: ``Object`` A minimal layer configuration object with source
      *      and name properties.
      *  :arg callback: ``Function`` A function to be called with the layer 
@@ -493,26 +512,11 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
      *  Asyncronously retrieves a layer record given a basic layer config.  The
      *  callback will be called as soon as the desired layer source is ready.
      *  This method should only be called to retrieve layer records from sources
-     *  configured before the call. If a layer with the provided config is
-     *  already on the viewer's mapPanel, the callback will be called with the
-     *  existing one.
+     *  configured before the call.
      */
-    getLayerRecord: function(config, callback, scope) {
-        if (this.mapPanel) {
-            // look for existing record on the map
-            var haveRecord = false;
-            this.mapPanel.layers.each(function(rec) {
-                if (rec.get("source") == config.source && rec.get("name") == config.name) {
-                    window.setTimeout(function() {
-                        callback.call(scope, rec);
-                    }, 0);
-                    haveRecord = true;
-                    return false;
-                }
-            });
-        }
+    createLayerRecord: function(config, callback, scope) {
         if (haveRecord === false) {
-            this.getLayerRecordQueue.push({
+            this.createLayerRecordQueue.push({
                 config: config,
                 callback: callback,
                 scope: scope
@@ -522,20 +526,20 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
     },
     
     /** private: method[checkLayerRecordQueue]
-     *  Check through getLayerRecord requests to see if any can be satisfied.
+     *  Check through createLayerRecord requests to see if any can be satisfied.
      */
     checkLayerRecordQueue: function() {
         var request, source, record, called;
         var remaining = [];
-        for (var i=0, ii=this.getLayerRecordQueue.length; i<ii; ++i) {
+        for (var i=0, ii=this.createLayerRecordQueue.length; i<ii; ++i) {
             called = false;
-            request = this.getLayerRecordQueue[i];
+            request = this.createLayerRecordQueue[i];
             source = request.config.source;
             if (source in this.layerSources) {
                 record = this.layerSources[source].createLayerRecord(request.config);
                 if (record) {
                     // we call this in the next cycle to guarantee that
-                    // getLayerRecord returns before callback is called
+                    // createLayerRecord returns before callback is called
                     (function(req, rec) {
                         window.setTimeout(function() {
                             req.callback.call(req.scope, rec);                        
@@ -548,7 +552,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                 remaining.push(request);
             }
         }
-        this.getLayerRecordQueue = remaining;
+        this.createLayerRecordQueue = remaining;
     },
     
     /** api:method[getSource]
