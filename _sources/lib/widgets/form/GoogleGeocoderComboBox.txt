@@ -1,0 +1,74 @@
+
+.. currentmodule:: gxp.form
+
+:class:`gxp.form.GoogleGeocoderComboBox`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.form.ComboBox <http://extjs.com/deploy/dev/docs/?class=Ext.form.ComboBox>`_
+    
+
+
+
+xtype
+    ``gxp_googlegeocodercombo``
+
+
+
+
+
+.. class:: GoogleGeocoderComboBox(config)
+
+Creates a combo box that issues queries to the Google Maps geocoding service.
+If the user enters a valid address in the search box, the combo's store
+will be populated with records that match the address.  Records have the
+following fields:
+
+* address - ``String`` The formatted address.
+* location - ``OpenLayers.LonLat`` Location matching address.
+* viewport - ``OpenLayers.Bounds`` Recommended viewing bounds.
+
+
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.form.ComboBox <http://extjs.com/deploy/dev/docs/?class=Ext.form.ComboBox>`_.
+
+
+.. describe:: bounds
+
+    ``OpenLayers.Bounds | Array`` Optional bounds (in geographic coordinates)
+    for restricting search.
+
+.. describe:: queryDelay
+
+    ``Number`` Delay before the search occurs.  Default is 100ms.
+
+.. describe:: valueField
+
+    ``String``
+    Field from selected record to use when the combo's ``getValue`` method
+    is called.  Default is "location".  Possible value's are "location",
+    "viewport", or "address".  The location value will be an
+    `OpenLayers.LonLat`` object that corresponds to the geocoded address.
+    The viewport value will be an ``OpenLayers.Bounds`` object that is
+    the recommended viewport for viewing the resulting location.  The
+    address value will be a string that is the formatted address.
+
+
+
+
+
+
+
+
+
