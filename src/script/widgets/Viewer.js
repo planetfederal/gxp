@@ -517,14 +517,12 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
      *  configured before the call.
      */
     createLayerRecord: function(config, callback, scope) {
-        if (haveRecord === false) {
-            this.createLayerRecordQueue.push({
-                config: config,
-                callback: callback,
-                scope: scope
-            });
-            this.checkLayerRecordQueue();
-        }
+        this.createLayerRecordQueue.push({
+            config: config,
+            callback: callback,
+            scope: scope
+        });
+        this.checkLayerRecordQueue();
     },
     
     /** private: method[checkLayerRecordQueue]
