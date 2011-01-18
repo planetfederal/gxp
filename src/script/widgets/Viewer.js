@@ -487,6 +487,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
     /** api: method[getLayerRecordFromMap]
      *  :arg config: ``Object`` A minimal layer configuration object with source
      *      and name properties.
+     *  :returns: ``GeoExt.data.LayerRecord``
      *
      *  Retrieves a layer record from the map.
      */
@@ -508,6 +509,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
      *      and name properties.
      *  :arg callback: ``Function`` A function to be called with the layer 
      *      record that corresponds to the given config.
+     *  :arg scope: ``Object`` Optional scope for the callback.
      *
      *  Asyncronously retrieves a layer record given a basic layer config.  The
      *  callback will be called as soon as the desired layer source is ready.
