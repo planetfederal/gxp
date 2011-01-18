@@ -17,7 +17,7 @@ Extends
 
 
 ptype
-    ``gx_QueryForm``
+    ``gx_queryform``
 
 
 
@@ -61,6 +61,11 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     ``Boolean`` If set to false, actions won't be added, but inserted to
     the container at the beginning. This is useful to control the order of
     actions in a toolbar. Default is true.
+
+.. describe:: autoActivate
+
+    ``Boolean`` Set to false if the tool should be initialized without
+    activating it. Default is true.
 
 .. describe:: currentTextText
 
@@ -130,6 +135,18 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
 
 
 
+Public Properties
+-----------------
+
+Public properties in addition to those
+listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
+
+
+.. attribute:: QueryForm.active
+
+    ``Boolean`` Is the tool currently active?
+
+
 
 
 Public Methods
@@ -139,6 +156,12 @@ Public methods in addition to those
 listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
 
 
+.. method:: QueryForm.activate
+
+    :returns: ``Boolean`` true when this tool was activated
+    
+    Activates this tool.
+
 .. method:: QueryForm.addActions
 
     
@@ -147,7 +170,35 @@ listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.uti
 
     
 
+.. method:: QueryForm.deactivate
 
+    :returns: ``Boolean`` true when this tool was deactivated
+    
+    Deactivates this tool.
+
+
+
+
+Events
+------
+
+Events in addition to those
+listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
+
+
+.. describe:: activate
+
+    Fired when the tool is activated.
+    
+    Listener arguments:
+    * tool - :class:`gxp.plugins.Tool` the activated tool
+
+.. describe:: deactivate
+
+    Fired when the tool is deactivated.
+    
+    Listener arguments:
+    * tool - :class:`gxp.plugins.Tool` the deactivated tool
 
 
 

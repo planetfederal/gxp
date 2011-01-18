@@ -69,6 +69,12 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
 
     ``String`` WMS service URL for this source
 
+.. describe:: version
+
+    ``String``
+    If specified, the version string will be included in WMS GetCapabilities
+    requests.  By default, no version is set.
+
 
 
 

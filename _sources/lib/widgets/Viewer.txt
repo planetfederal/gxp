@@ -109,6 +109,8 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
       * selected: ``Boolean`` - Set to true to mark the layer selected
     * map: not available, can be configured with ``maxExtent``,
       ``numZoomLevels`` and ``theme``.
+    * restrictedExtent: ``Array`` to be consumed by
+      ``OpenLayers.Bounds.fromArray`` - the restrictedExtent of the map
     * maxExtent: ``Array`` to be consumed by
       ``OpenLayers.Bounds.fromArray`` - the maxExtent of the map
     * numZoomLevels: ``Number`` - the number of zoom levels if not
@@ -187,6 +189,25 @@ Public methods in addition to those
 listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
 
 
+.. method:: Viewer.createLayerRecord
+
+    :arg config: ``Object`` A minimal layer configuration object with source
+        and name properties.
+    :arg callback: ``Function`` A function to be called with the layer
+        record that corresponds to the given config.
+    
+    Asyncronously retrieves a layer record given a basic layer config.  The
+    callback will be called as soon as the desired layer source is ready.
+    This method should only be called to retrieve layer records from sources
+    configured before the call.
+
+.. method:: Viewer.getLayerRecordFromMap
+
+    :arg config: ``Object`` A minimal layer configuration object with source
+        and name properties.
+    
+    Retrieves a layer record from the map.
+
 .. method:: Viewer.getSource
 
     :arg layerRec: ``GeoExt.data.LayerRecord`` the layer to get the
@@ -237,9 +258,9 @@ listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.uti
     * layerRecord - ``GeoExt.data.LayerRecord`` the record of the
       selected layer, or null if no layer is selected.
 
-.. describe:: portalReady
+.. describe:: portalready
 
-    Fires when portal is ready for interaction.
+    Fires after the portal is initialized.
 
 .. describe:: ready
 

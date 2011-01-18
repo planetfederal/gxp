@@ -68,6 +68,11 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     the container at the beginning. This is useful to control the order of
     actions in a toolbar. Default is true.
 
+.. describe:: autoActivate
+
+    ``Boolean`` Set to false if the tool should be initialized without
+    activating it. Default is true.
+
 .. describe:: autoLoadFeatures
 
     ``Boolean`` Automatically load features after a new layer has been set?
@@ -75,8 +80,14 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
 
 .. describe:: autoSetLayer
 
-    ``Boolean`` Listen to the viewer's layerselectionchange event to
-    automatically set the layer? Default is true.
+    ``Boolean`` When no ``layer`` is configured, listen to the viewer's
+    layerselectionchange event to automatically set the layer. Default is
+    true unless ``layer`` is configured.
+
+.. describe:: autoZoomPage
+
+    ``Boolean`` Set to true to always zoom the map to the currently
+    selected page. Default is false.
 
 .. describe:: defaultAction
 
@@ -88,6 +99,12 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     ``String`` Optional response format to use for WFS GetFeature requests.
     Valid values are "GML2", "GML3" and "JSON". By default this is not set,
     which means that GML3 will be used.
+
+.. describe:: layer
+
+    ``Object`` with source and name properties. The layer referenced here
+    will be set as soon as it is added to the target's map. When this
+    option is configured, ``autoSetLayer`` will be set to false.
 
 .. describe:: maxFeatures
 
@@ -139,6 +156,10 @@ Public properties in addition to those
 listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
 
 
+.. attribute:: FeatureManager.active
+
+    ``Boolean`` Is the tool currently active?
+
 .. attribute:: FeatureManager.featureLayer
 
     ``OpenLayers.Layer.Vector`` The layer associated with this tool's
@@ -173,6 +194,14 @@ Public methods in addition to those
 listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
 
 
+.. method:: FeatureManager.activate
+
+    :returns: ``Boolean`` true when this tool was activated
+    
+    Activates this tool. When active, this tool loads the features for the
+    configured layer, or listens to layer changes on the application and
+    loads features for the selected layer.
+
 .. method:: FeatureManager.addActions
 
     :arg actions: ``Array`` Optional actions to add. If not provided,
@@ -182,6 +211,18 @@ listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.uti
 .. method:: FeatureManager.addOutput
 
     
+
+.. method:: FeatureManager.clearFeatures
+
+    Unload all features.
+
+.. method:: FeatureManager.deactivate
+
+    :returns: ``Boolean`` true when this tool was deactivated
+    
+    Dectivates this tool. When deactivated, this tool won't listen to layer
+    changes on the application and load features for the selected layer.
+    The current featureLayer will be cleared.
 
 .. method:: FeatureManager.hideLayer
 
@@ -287,6 +328,13 @@ Events in addition to those
 listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
 
 
+.. describe:: activate
+
+    Fired when the tool is activated.
+    
+    Listener arguments:
+    * tool - :class:`gxp.plugins.Tool` the activated tool
+
 .. describe:: beforelayerchange
 
     Fired before a layer change results in destruction of the
@@ -332,10 +380,17 @@ listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.uti
     * scope     - ``Object`` the scope argument passed to the
       setPage method
 
+.. describe:: deactivate
+
+    Fired when the tool is deactivated.
+    
+    Listener arguments:
+    * tool - :class:`gxp.plugins.Tool` the deactivated tool
+
 .. describe:: layerchange
 
     Fired after a layer change, as soon as the layer's schema is
-    available.
+    available and a ``featureStore`` has been created.
     
     Listener arguments:
     

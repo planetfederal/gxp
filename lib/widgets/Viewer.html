@@ -190,6 +190,9 @@ dragged in a <a title="gxp.plugins.LayerTree" class="reference external" href=".
 <li><p class="first">map: not available, can be configured with <tt class="docutils literal"><span class="pre">maxExtent</span></tt>,
 <tt class="docutils literal"><span class="pre">numZoomLevels</span></tt> and <tt class="docutils literal"><span class="pre">theme</span></tt>.</p>
 </li>
+<li><p class="first">restrictedExtent: <tt class="docutils literal"><span class="pre">Array</span></tt> to be consumed by
+<tt class="docutils literal"><span class="pre">OpenLayers.Bounds.fromArray</span></tt> - the restrictedExtent of the map</p>
+</li>
 <li><p class="first">maxExtent: <tt class="docutils literal"><span class="pre">Array</span></tt> to be consumed by
 <tt class="docutils literal"><span class="pre">OpenLayers.Bounds.fromArray</span></tt> - the maxExtent of the map</p>
 </li>
@@ -273,6 +276,44 @@ Items that make up the portal.</dd></dl>
 <p>Public methods in addition to those
 listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a>.</p>
 <dl class="method">
+<dt id="gxp.Viewer.createLayerRecord">
+<tt class="descclassname">Viewer.</tt><tt class="descname">createLayerRecord</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.Viewer.createLayerRecord" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><em>config</em> &#8211; <tt class="docutils literal"><span class="pre">Object</span></tt> A minimal layer configuration object with source
+and name properties.</li>
+<li><em>callback</em> &#8211; <tt class="docutils literal"><span class="pre">Function</span></tt> A function to be called with the layer
+record that corresponds to the given config.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Asyncronously retrieves a layer record given a basic layer config.  The
+callback will be called as soon as the desired layer source is ready.
+This method should only be called to retrieve layer records from sources
+configured before the call.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gxp.Viewer.getLayerRecordFromMap">
+<tt class="descclassname">Viewer.</tt><tt class="descname">getLayerRecordFromMap</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.Viewer.getLayerRecordFromMap" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>config</em> &#8211; <tt class="docutils literal"><span class="pre">Object</span></tt> A minimal layer configuration object with source
+and name properties.</td>
+</tr>
+</tbody>
+</table>
+<p>Retrieves a layer record from the map.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="gxp.Viewer.getSource">
 <tt class="descclassname">Viewer.</tt><tt class="descname">getSource</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.Viewer.getSource" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
@@ -349,8 +390,8 @@ selected layer, or null if no layer is selected.</li>
 
 <dl class="describe">
 <dt>
-<tt class="descname">portalReady</tt></dt>
-<dd>Fires when portal is ready for interaction.</dd></dl>
+<tt class="descname">portalready</tt></dt>
+<dd>Fires after the portal is initialized.</dd></dl>
 
 <dl class="describe">
 <dt>
@@ -386,7 +427,7 @@ selected layer, or null if no layer is selected.</li>
       </ul>
     </div>
     <div class="footer">
-      &copy; Copyright 2008-2010, The Open Planning Project.
+      &copy; Copyright 2008-2011, The Open Planning Project.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
     </div>
   </body>

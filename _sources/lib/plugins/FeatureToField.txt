@@ -66,6 +66,11 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     the container at the beginning. This is useful to control the order of
     actions in a toolbar. Default is true.
 
+.. describe:: autoActivate
+
+    ``Boolean`` Set to false if the tool should be initialized without
+    activating it. Default is true.
+
 .. describe:: defaultAction
 
     ``Number`` Optional index of an action that should be active by
@@ -111,6 +116,18 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
 
 
 
+Public Properties
+-----------------
+
+Public properties in addition to those
+listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
+
+
+.. attribute:: FeatureToField.active
+
+    ``Boolean`` Is the tool currently active?
+
+
 
 
 Public Methods
@@ -120,6 +137,12 @@ Public methods in addition to those
 listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
 
 
+.. method:: FeatureToField.activate
+
+    :returns: ``Boolean`` true when this tool was activated
+    
+    Activates this tool.
+
 .. method:: FeatureToField.addActions
 
     
@@ -128,7 +151,35 @@ listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.uti
 
     
 
+.. method:: FeatureToField.deactivate
 
+    :returns: ``Boolean`` true when this tool was deactivated
+    
+    Deactivates this tool.
+
+
+
+
+Events
+------
+
+Events in addition to those
+listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
+
+
+.. describe:: activate
+
+    Fired when the tool is activated.
+    
+    Listener arguments:
+    * tool - :class:`gxp.plugins.Tool` the activated tool
+
+.. describe:: deactivate
+
+    Fired when the tool is deactivated.
+    
+    Listener arguments:
+    * tool - :class:`gxp.plugins.Tool` the deactivated tool
 
 
 

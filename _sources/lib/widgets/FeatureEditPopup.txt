@@ -32,6 +32,11 @@ Configuration properties.
     ``Boolean`` Set to true to open the popup in editing mode.
     Default is false.
 
+.. describe:: excludeFields
+
+    ``Array`` Optional list of field names (case sensitive) that are to be
+    excluded from the property grid.
+
 .. describe:: feature
 
     ``OpenLayers.Feature.Vector`` The feature to edit and display.

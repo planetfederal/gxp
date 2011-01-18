@@ -151,6 +151,18 @@ listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.uti
     ``createLayerRecord``. If the layer is not available in a projection
     that fits the map projection, null will be returned.
 
+.. method:: GoogleSource.gxp.plugins.GoogleSource.loader.onLoad
+
+    :arg options: ``Object``
+    
+    Options:
+    
+    * callback - ``Function`` Called when script loads.
+    * errback - ``Function`` Called if loading fails.
+    * timeout - ``Number`` Time to wait before deciding that loading failed
+        (in milliseconds).
+    * scope - ``Object`` The ``this`` object for callbacks.
+
 .. method:: GoogleSource.init
 
     :arg target: ``Object`` The object initializing this plugin.

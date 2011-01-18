@@ -58,11 +58,22 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     can always be accessed with "map" as actionTarget. Set to null if no
     actions should be created.
 
+.. describe:: alwaysDisplayOnMap
+
+    ``Boolean`` If set to true, the features that are shown in the grid
+    will always be displayed on the map, and there will be no "Display on
+    map" button in the toolbar. Default is false.
+
 .. describe:: appendActions
 
     ``Boolean`` If set to false, actions won't be added, but inserted to
     the container at the beginning. This is useful to control the order of
     actions in a toolbar. Default is true.
+
+.. describe:: autoActivate
+
+    ``Boolean`` Set to false if the tool should be initialized without
+    activating it. Default is true.
 
 .. describe:: defaultAction
 
@@ -113,6 +124,18 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
 
 
 
+Public Properties
+-----------------
+
+Public properties in addition to those
+listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
+
+
+.. attribute:: FeatureGrid.active
+
+    ``Boolean`` Is the tool currently active?
+
+
 
 
 Public Methods
@@ -121,6 +144,12 @@ Public Methods
 Public methods in addition to those
 listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
 
+
+.. method:: FeatureGrid.activate
+
+    :returns: ``Boolean`` true when this tool was activated
+    
+    Activates this tool.
 
 .. method:: FeatureGrid.addActions
 
@@ -132,7 +161,35 @@ listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.uti
 
     
 
+.. method:: FeatureGrid.deactivate
 
+    :returns: ``Boolean`` true when this tool was deactivated
+    
+    Deactivates this tool.
+
+
+
+
+Events
+------
+
+Events in addition to those
+listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
+
+
+.. describe:: activate
+
+    Fired when the tool is activated.
+    
+    Listener arguments:
+    * tool - :class:`gxp.plugins.Tool` the activated tool
+
+.. describe:: deactivate
+
+    Fired when the tool is deactivated.
+    
+    Listener arguments:
+    * tool - :class:`gxp.plugins.Tool` the deactivated tool
 
 
 

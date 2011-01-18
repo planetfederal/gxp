@@ -41,7 +41,7 @@
           <a href="FeatureGrid.html" title="gxp.plugins.FeatureGrid"
              accesskey="P">previous</a> |</li>
         <li><a href="../../index.html">GXP</a> &raquo;</li>
-          <li><a href="../plugins.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
+          <li><a href="../plugins.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -147,6 +147,12 @@ actions in a toolbar. Default is true.</dd></dl>
 
 <dl class="describe">
 <dt>
+<tt class="descname">autoActivate</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> Set to false if the tool should be initialized without
+activating it. Default is true.</dd></dl>
+
+<dl class="describe">
+<dt>
 <tt class="descname">autoLoadFeatures</tt></dt>
 <dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> Automatically load features after a new layer has been set?
 Default is false.</dd></dl>
@@ -154,8 +160,15 @@ Default is false.</dd></dl>
 <dl class="describe">
 <dt>
 <tt class="descname">autoSetLayer</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> Listen to the viewer&#8217;s layerselectionchange event to
-automatically set the layer? Default is true.</dd></dl>
+<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> When no <tt class="docutils literal"><span class="pre">layer</span></tt> is configured, listen to the viewer&#8217;s
+layerselectionchange event to automatically set the layer. Default is
+true unless <tt class="docutils literal"><span class="pre">layer</span></tt> is configured.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">autoZoomPage</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> Set to true to always zoom the map to the currently
+selected page. Default is false.</dd></dl>
 
 <dl class="describe">
 <dt>
@@ -169,6 +182,13 @@ default. Only works for actions that are a <tt class="docutils literal"><span cl
 <dd><tt class="docutils literal"><span class="pre">String</span></tt> Optional response format to use for WFS GetFeature requests.
 Valid values are &#8220;GML2&#8221;, &#8220;GML3&#8221; and &#8220;JSON&#8221;. By default this is not set,
 which means that GML3 will be used.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">layer</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Object</span></tt> with source and name properties. The layer referenced here
+will be set as soon as it is added to the target&#8217;s map. When this
+option is configured, <tt class="docutils literal"><span class="pre">autoSetLayer</span></tt> will be set to false.</dd></dl>
 
 <dl class="describe">
 <dt>
@@ -223,6 +243,11 @@ tools, this string is to identify the toggle group.</dd></dl>
 <p>Public properties in addition to those
 listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a>.</p>
 <dl class="attribute">
+<dt id="gxp.plugins.FeatureManager.active">
+<tt class="descclassname">FeatureManager.</tt><tt class="descname">active</tt><a class="headerlink" href="#gxp.plugins.FeatureManager.active" title="Permalink to this definition">¶</a></dt>
+<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> Is the tool currently active?</dd></dl>
+
+<dl class="attribute">
 <dt id="gxp.plugins.FeatureManager.featureLayer">
 <tt class="descclassname">FeatureManager.</tt><tt class="descname">featureLayer</tt><a class="headerlink" href="#gxp.plugins.FeatureManager.featureLayer" title="Permalink to this definition">¶</a></dt>
 <dd><tt class="docutils literal"><span class="pre">OpenLayers.Layer.Vector</span></tt> The layer associated with this tool&#8217;s
@@ -260,6 +285,22 @@ FeatureManager</dd></dl>
 <p>Public methods in addition to those
 listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a>.</p>
 <dl class="method">
+<dt id="gxp.plugins.FeatureManager.activate">
+<tt class="descclassname">FeatureManager.</tt><tt class="descname">activate</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.FeatureManager.activate" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">Boolean</span></tt> true when this tool was activated</td>
+</tr>
+</tbody>
+</table>
+<p>Activates this tool. When active, this tool loads the features for the
+configured layer, or listens to layer changes on the application and
+loads features for the selected layer.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="gxp.plugins.FeatureManager.addActions">
 <tt class="descclassname">FeatureManager.</tt><tt class="descname">addActions</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.FeatureManager.addActions" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
@@ -279,6 +320,27 @@ this.actions will be added.</td>
 <dt id="gxp.plugins.FeatureManager.addOutput">
 <tt class="descclassname">FeatureManager.</tt><tt class="descname">addOutput</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.FeatureManager.addOutput" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="gxp.plugins.FeatureManager.clearFeatures">
+<tt class="descclassname">FeatureManager.</tt><tt class="descname">clearFeatures</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.FeatureManager.clearFeatures" title="Permalink to this definition">¶</a></dt>
+<dd>Unload all features.</dd></dl>
+
+<dl class="method">
+<dt id="gxp.plugins.FeatureManager.deactivate">
+<tt class="descclassname">FeatureManager.</tt><tt class="descname">deactivate</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.FeatureManager.deactivate" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">Boolean</span></tt> true when this tool was deactivated</td>
+</tr>
+</tbody>
+</table>
+<p>Dectivates this tool. When deactivated, this tool won&#8217;t listen to layer
+changes on the application and load features for the selected layer.
+The current featureLayer will be cleared.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="gxp.plugins.FeatureManager.hideLayer">
@@ -448,6 +510,14 @@ featureLayer.</li>
 listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a>.</p>
 <dl class="describe">
 <dt>
+<tt class="descname">activate</tt></dt>
+<dd><p>Fired when the tool is activated.</p>
+<p>Listener arguments:
+* tool - <a title="gxp.plugins.Tool" class="reference external" href="Tool.html#gxp.plugins.Tool"><tt class="xref docutils literal"><span class="pre">gxp.plugins.Tool</span></tt></a> the activated tool</p>
+</dd></dl>
+
+<dl class="describe">
+<dt>
 <tt class="descname">beforelayerchange</tt></dt>
 <dd><p>Fired before a layer change results in destruction of the
 current featureStore, and creation of a new one. This event
@@ -499,9 +569,17 @@ setPage method</li>
 
 <dl class="describe">
 <dt>
+<tt class="descname">deactivate</tt></dt>
+<dd><p>Fired when the tool is deactivated.</p>
+<p>Listener arguments:
+* tool - <a title="gxp.plugins.Tool" class="reference external" href="Tool.html#gxp.plugins.Tool"><tt class="xref docutils literal"><span class="pre">gxp.plugins.Tool</span></tt></a> the deactivated tool</p>
+</dd></dl>
+
+<dl class="describe">
+<dt>
 <tt class="descname">layerchange</tt></dt>
 <dd><p>Fired after a layer change, as soon as the layer&#8217;s schema is
-available.</p>
+available and a <tt class="docutils literal"><span class="pre">featureStore</span></tt> has been created.</p>
 <p>Listener arguments:</p>
 <ul class="simple">
 <li>tool   - <a title="gxp.plugins.FeatureManager" class="reference internal" href="#gxp.plugins.FeatureManager"><tt class="xref docutils literal"><span class="pre">gxp.plugins.FeatureManager</span></tt></a> this tool</li>
@@ -566,11 +644,11 @@ setPage method</li>
           <a href="FeatureGrid.html" title="gxp.plugins.FeatureGrid"
              >previous</a> |</li>
         <li><a href="../../index.html">GXP</a> &raquo;</li>
-          <li><a href="../plugins.html" ><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
+          <li><a href="../plugins.html" ><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-      &copy; Copyright 2008-2010, The Open Planning Project.
+      &copy; Copyright 2008-2011, The Open Planning Project.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
     </div>
   </body>

@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="GXP v0.1" href="../index.html" />
-    <link rel="next" title="gxp.plugins.FeatureEditor" href="plugins/FeatureEditor.html" />
+    <link rel="next" title="gxp.plugins.AddLayers" href="plugins/AddLayers.html" />
     <link rel="prev" title="gxp.menu.LayerMenu" href="menu/LayerMenu.html" /> 
   </head>
   <body>
@@ -34,7 +34,7 @@
           <a href="../modindex.html" title="Global Module Index"
              accesskey="M">modules</a> |</li>
         <li class="right" >
-          <a href="plugins/FeatureEditor.html" title="gxp.plugins.FeatureEditor"
+          <a href="plugins/AddLayers.html" title="gxp.plugins.AddLayers"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="menu/LayerMenu.html" title="gxp.menu.LayerMenu"
@@ -48,8 +48,8 @@
             <p class="topless"><a href="menu/LayerMenu.html"
                                   title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.menu.LayerMenu</span></tt></a></p>
             <h4>Next topic</h4>
-            <p class="topless"><a href="plugins/FeatureEditor.html"
-                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.plugins.FeatureEditor</span></tt></a></p>
+            <p class="topless"><a href="plugins/AddLayers.html"
+                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.plugins.AddLayers</span></tt></a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
               <li><a href="../_sources/lib/plugins.txt"
@@ -91,11 +91,14 @@ layer sources to the viewer, and allows it to build layers from a simple
 configuration object.</li>
 </ul>
 <ul>
+<li class="toctree-l1"><a class="reference external" href="plugins/AddLayers.html"><tt class="docutils literal"><span class="pre">gxp.plugins.AddLayers</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="plugins/BingSource.html"><tt class="docutils literal"><span class="pre">gxp.plugins.BingSource</span></tt></a></li>
 <li class="toctree-l1"><a class="reference external" href="plugins/FeatureEditor.html"><tt class="docutils literal"><span class="pre">gxp.plugins.FeatureEditor</span></tt></a></li>
 <li class="toctree-l1"><a class="reference external" href="plugins/FeatureGrid.html"><tt class="docutils literal"><span class="pre">gxp.plugins.FeatureGrid</span></tt></a></li>
 <li class="toctree-l1"><a class="reference external" href="plugins/FeatureManager.html"><tt class="docutils literal"><span class="pre">gxp.plugins.FeatureManager</span></tt></a></li>
 <li class="toctree-l1"><a class="reference external" href="plugins/FeatureToField.html"><tt class="docutils literal"><span class="pre">gxp.plugins.FeatureToField</span></tt></a></li>
 <li class="toctree-l1"><a class="reference external" href="plugins/GeoServerStyleWriter.html"><tt class="docutils literal"><span class="pre">gxp.plugins.GeoServerStyleWriter</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="plugins/GoogleGeocoder.html"><tt class="docutils literal"><span class="pre">gxp.plugins.GoogleGeocoder</span></tt></a></li>
 <li class="toctree-l1"><a class="reference external" href="plugins/GoogleSource.html"><tt class="docutils literal"><span class="pre">gxp.plugins.GoogleSource</span></tt></a></li>
 <li class="toctree-l1"><a class="reference external" href="plugins/LayerSource.html"><tt class="docutils literal"><span class="pre">gxp.plugins.LayerSource</span></tt></a></li>
 <li class="toctree-l1"><a class="reference external" href="plugins/LayerTree.html"><tt class="docutils literal"><span class="pre">gxp.plugins.LayerTree</span></tt></a></li>
@@ -103,11 +106,13 @@ configuration object.</li>
 <li class="toctree-l1"><a class="reference external" href="plugins/OSMSource.html"><tt class="docutils literal"><span class="pre">gxp.plugins.OSMSource</span></tt></a></li>
 <li class="toctree-l1"><a class="reference external" href="plugins/QueryForm.html"><tt class="docutils literal"><span class="pre">gxp.plugins.QueryForm</span></tt></a></li>
 <li class="toctree-l1"><a class="reference external" href="plugins/RemoveLayer.html"><tt class="docutils literal"><span class="pre">gxp.plugins.RemoveLayer</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="plugins/SnappingAgent.html"><tt class="docutils literal"><span class="pre">gxp.plugins.SnappingAgent</span></tt></a></li>
 <li class="toctree-l1"><a class="reference external" href="plugins/StyleWriter.html"><tt class="docutils literal"><span class="pre">gxp.plugins.StyleWriter</span></tt></a></li>
 <li class="toctree-l1"><a class="reference external" href="plugins/Tool.html"><tt class="docutils literal"><span class="pre">gxp.plugins.Tool</span></tt></a></li>
 <li class="toctree-l1"><a class="reference external" href="plugins/WMSGetFeatureInfo.html"><tt class="docutils literal"><span class="pre">gxp.plugins.WMSGetFeatureInfo</span></tt></a></li>
 <li class="toctree-l1"><a class="reference external" href="plugins/WMSRasterStylesDialog.html"><tt class="docutils literal"><span class="pre">gxp.plugins.WMSRasterStylesDialog</span></tt></a></li>
 <li class="toctree-l1"><a class="reference external" href="plugins/WMSSource.html"><tt class="docutils literal"><span class="pre">gxp.plugins.WMSSource</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="plugins/ZoomToExtent.html"><tt class="docutils literal"><span class="pre">gxp.plugins.ZoomToExtent</span></tt></a></li>
 </ul>
 </div>
 
@@ -127,7 +132,7 @@ configuration object.</li>
           <a href="../modindex.html" title="Global Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="plugins/FeatureEditor.html" title="gxp.plugins.FeatureEditor"
+          <a href="plugins/AddLayers.html" title="gxp.plugins.AddLayers"
              >next</a> |</li>
         <li class="right" >
           <a href="menu/LayerMenu.html" title="gxp.menu.LayerMenu"
@@ -136,7 +141,7 @@ configuration object.</li>
       </ul>
     </div>
     <div class="footer">
-      &copy; Copyright 2008-2010, The Open Planning Project.
+      &copy; Copyright 2008-2011, The Open Planning Project.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
     </div>
   </body>

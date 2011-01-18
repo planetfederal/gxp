@@ -64,6 +64,11 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     the container at the beginning. This is useful to control the order of
     actions in a toolbar. Default is true.
 
+.. describe:: autoActivate
+
+    ``Boolean`` Set to false if the tool should be initialized without
+    activating it. Default is true.
+
 .. describe:: autoLoadFeatures
 
     ``Boolean`` Should this tool load features on click? If set to true,
@@ -72,6 +77,11 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     filter created from the id of a feature returned from a WMS
     GetFeatureInfo request at the click position. This feature will then be
     selected immediately. Default is false.
+
+.. describe:: createFeatureActionText
+
+    ``String``
+    Create new feature text.
 
 .. describe:: createFeatureActionTip
 
@@ -83,10 +93,20 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     ``Number`` Optional index of an action that should be active by
     default. Only works for actions that are a ``GeoExt.Action`` instance.
 
+.. describe:: editFeatureActionText
+
+    ``String``
+    Modify feature text.
+
 .. describe:: editFeatureActionTip
 
     ``String``
-    ooltip string for edit existing feature action (i18n).
+    Tooltip string for edit existing feature action (i18n).
+
+.. describe:: excludeFields
+
+    ``Array`` Optional list of field names (case sensitive) that are to be
+    excluded from the property grid of the FeatureEditPopup.
 
 .. describe:: featureManager
 
@@ -125,12 +145,29 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     on the layer. If set to false, all features (on the current page) will
     be. Default is true.
 
+.. describe:: snappingAgent
+
+    ``String`` Optional id of the :class:`gxp.plugins.SnappingAgent` to use
+    with this tool.
+
 .. describe:: toggleGroup
 
     ``String`` If this tool should be radio-button style toggled with other
     tools, this string is to identify the toggle group.
 
 
+
+
+Public Properties
+-----------------
+
+Public properties in addition to those
+listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
+
+
+.. attribute:: FeatureEditor.active
+
+    ``Boolean`` Is the tool currently active?
 
 
 
@@ -142,6 +179,12 @@ Public methods in addition to those
 listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
 
 
+.. method:: FeatureEditor.activate
+
+    :returns: ``Boolean`` true when this tool was activated
+    
+    Activates this tool.
+
 .. method:: FeatureEditor.addActions
 
     
@@ -150,7 +193,35 @@ listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.uti
 
     
 
+.. method:: FeatureEditor.deactivate
 
+    :returns: ``Boolean`` true when this tool was deactivated
+    
+    Deactivates this tool.
+
+
+
+
+Events
+------
+
+Events in addition to those
+listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
+
+
+.. describe:: activate
+
+    Fired when the tool is activated.
+    
+    Listener arguments:
+    * tool - :class:`gxp.plugins.Tool` the activated tool
+
+.. describe:: deactivate
+
+    Fired when the tool is deactivated.
+    
+    Listener arguments:
+    * tool - :class:`gxp.plugins.Tool` the deactivated tool
 
 
 

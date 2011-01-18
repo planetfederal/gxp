@@ -41,7 +41,7 @@
           <a href="FeatureManager.html" title="gxp.plugins.FeatureManager"
              accesskey="P">previous</a> |</li>
         <li><a href="../../index.html">GXP</a> &raquo;</li>
-          <li><a href="../plugins.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
+          <li><a href="../plugins.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -50,7 +50,9 @@
             <ul>
 <li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">gxp.plugins.FeatureToField</span></tt></a><ul>
 <li><a class="reference external" href="#config-options">Config Options</a></li>
+<li><a class="reference external" href="#public-properties">Public Properties</a></li>
 <li><a class="reference external" href="#public-methods">Public Methods</a></li>
+<li><a class="reference external" href="#events">Events</a></li>
 </ul>
 </li>
 </ul>
@@ -143,6 +145,12 @@ actions in a toolbar. Default is true.</dd></dl>
 
 <dl class="describe">
 <dt>
+<tt class="descname">autoActivate</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> Set to false if the tool should be initialized without
+activating it. Default is true.</dd></dl>
+
+<dl class="describe">
+<dt>
 <tt class="descname">defaultAction</tt></dt>
 <dd><tt class="docutils literal"><span class="pre">Number</span></tt> Optional index of an action that should be active by
 default. Only works for actions that are a <tt class="docutils literal"><span class="pre">GeoExt.Action</span></tt> instance.</dd></dl>
@@ -191,10 +199,34 @@ be created.</dd></dl>
 tools, this string is to identify the toggle group.</dd></dl>
 
 </div>
+<div class="section" id="public-properties">
+<h2>Public Properties<a class="headerlink" href="#public-properties" title="Permalink to this headline">¶</a></h2>
+<p>Public properties in addition to those
+listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a>.</p>
+<dl class="attribute">
+<dt id="gxp.plugins.FeatureToField.active">
+<tt class="descclassname">FeatureToField.</tt><tt class="descname">active</tt><a class="headerlink" href="#gxp.plugins.FeatureToField.active" title="Permalink to this definition">¶</a></dt>
+<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> Is the tool currently active?</dd></dl>
+
+</div>
 <div class="section" id="public-methods">
 <h2>Public Methods<a class="headerlink" href="#public-methods" title="Permalink to this headline">¶</a></h2>
 <p>Public methods in addition to those
 listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a>.</p>
+<dl class="method">
+<dt id="gxp.plugins.FeatureToField.activate">
+<tt class="descclassname">FeatureToField.</tt><tt class="descname">activate</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.FeatureToField.activate" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">Boolean</span></tt> true when this tool was activated</td>
+</tr>
+</tbody>
+</table>
+<p>Activates this tool.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="gxp.plugins.FeatureToField.addActions">
 <tt class="descclassname">FeatureToField.</tt><tt class="descname">addActions</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.FeatureToField.addActions" title="Permalink to this definition">¶</a></dt>
@@ -204,6 +236,41 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
 <dt id="gxp.plugins.FeatureToField.addOutput">
 <tt class="descclassname">FeatureToField.</tt><tt class="descname">addOutput</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.FeatureToField.addOutput" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="gxp.plugins.FeatureToField.deactivate">
+<tt class="descclassname">FeatureToField.</tt><tt class="descname">deactivate</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.FeatureToField.deactivate" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">Boolean</span></tt> true when this tool was deactivated</td>
+</tr>
+</tbody>
+</table>
+<p>Deactivates this tool.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="events">
+<h2>Events<a class="headerlink" href="#events" title="Permalink to this headline">¶</a></h2>
+<p>Events in addition to those
+listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a>.</p>
+<dl class="describe">
+<dt>
+<tt class="descname">activate</tt></dt>
+<dd><p>Fired when the tool is activated.</p>
+<p>Listener arguments:
+* tool - <a title="gxp.plugins.Tool" class="reference external" href="Tool.html#gxp.plugins.Tool"><tt class="xref docutils literal"><span class="pre">gxp.plugins.Tool</span></tt></a> the activated tool</p>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">deactivate</tt></dt>
+<dd><p>Fired when the tool is deactivated.</p>
+<p>Listener arguments:
+* tool - <a title="gxp.plugins.Tool" class="reference external" href="Tool.html#gxp.plugins.Tool"><tt class="xref docutils literal"><span class="pre">gxp.plugins.Tool</span></tt></a> the deactivated tool</p>
+</dd></dl>
 
 </div>
 </div>
@@ -230,11 +297,11 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
           <a href="FeatureManager.html" title="gxp.plugins.FeatureManager"
              >previous</a> |</li>
         <li><a href="../../index.html">GXP</a> &raquo;</li>
-          <li><a href="../plugins.html" ><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
+          <li><a href="../plugins.html" ><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-      &copy; Copyright 2008-2010, The Open Planning Project.
+      &copy; Copyright 2008-2011, The Open Planning Project.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
     </div>
   </body>

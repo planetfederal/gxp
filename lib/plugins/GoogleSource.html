@@ -22,7 +22,7 @@
     <link rel="top" title="GXP v0.1" href="../../index.html" />
     <link rel="up" title="gxp.plugins" href="../plugins.html" />
     <link rel="next" title="gxp.plugins.LayerSource" href="LayerSource.html" />
-    <link rel="prev" title="gxp.plugins.GeoServerStyleWriter" href="GeoServerStyleWriter.html" /> 
+    <link rel="prev" title="gxp.plugins.GoogleGeocoder" href="GoogleGeocoder.html" /> 
   </head>
   <body>
     <div class="related">
@@ -38,10 +38,10 @@
           <a href="LayerSource.html" title="gxp.plugins.LayerSource"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="GeoServerStyleWriter.html" title="gxp.plugins.GeoServerStyleWriter"
+          <a href="GoogleGeocoder.html" title="gxp.plugins.GoogleGeocoder"
              accesskey="P">previous</a> |</li>
         <li><a href="../../index.html">GXP</a> &raquo;</li>
-          <li><a href="../plugins.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
+          <li><a href="../plugins.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -59,8 +59,8 @@
 </ul>
 
             <h4>Previous topic</h4>
-            <p class="topless"><a href="GeoServerStyleWriter.html"
-                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins.GeoServerStyleWriter</span></tt></a></p>
+            <p class="topless"><a href="GoogleGeocoder.html"
+                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins.GoogleGeocoder</span></tt></a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="LayerSource.html"
                                   title="next chapter"><tt class="docutils literal"><span class="pre">gxp.plugins.LayerSource</span></tt></a></p>
@@ -246,6 +246,34 @@ that fits the map projection, null will be returned.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="gxp.plugins.GoogleSource.gxp.plugins.GoogleSource.loader.onLoad">
+<tt class="descclassname">GoogleSource.gxp.plugins.GoogleSource.loader.</tt><tt class="descname">onLoad</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.GoogleSource.gxp.plugins.GoogleSource.loader.onLoad" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>options</em> &#8211; <tt class="docutils literal"><span class="pre">Object</span></tt></td>
+</tr>
+</tbody>
+</table>
+<p>Options:</p>
+<ul>
+<li><p class="first">callback - <tt class="docutils literal"><span class="pre">Function</span></tt> Called when script loads.</p>
+</li>
+<li><p class="first">errback - <tt class="docutils literal"><span class="pre">Function</span></tt> Called if loading fails.</p>
+</li>
+<li><dl class="first docutils">
+<dt>timeout - <tt class="docutils literal"><span class="pre">Number</span></tt> Time to wait before deciding that loading failed</dt>
+<dd><p class="first last">(in milliseconds).</p>
+</dd>
+</dl>
+</li>
+<li><p class="first">scope - <tt class="docutils literal"><span class="pre">Object</span></tt> The <tt class="docutils literal"><span class="pre">this</span></tt> object for callbacks.</p>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
 <dt id="gxp.plugins.GoogleSource.init">
 <tt class="descclassname">GoogleSource.</tt><tt class="descname">init</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.GoogleSource.init" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
@@ -296,14 +324,14 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
           <a href="LayerSource.html" title="gxp.plugins.LayerSource"
              >next</a> |</li>
         <li class="right" >
-          <a href="GeoServerStyleWriter.html" title="gxp.plugins.GeoServerStyleWriter"
+          <a href="GoogleGeocoder.html" title="gxp.plugins.GoogleGeocoder"
              >previous</a> |</li>
         <li><a href="../../index.html">GXP</a> &raquo;</li>
-          <li><a href="../plugins.html" ><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
+          <li><a href="../plugins.html" ><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-      &copy; Copyright 2008-2010, The Open Planning Project.
+      &copy; Copyright 2008-2011, The Open Planning Project.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
     </div>
   </body>
