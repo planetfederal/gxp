@@ -63,18 +63,24 @@ gxp.plugins.OSMSource = Ext.extend(gxp.plugins.LayerSource, {
      *  A descriptive title for this layer source (i18n).
      */
     title: "OpenStreetMap Layers",
-    
-    /** api: config[osmAttribution]
+
+    /** api: config[mapQuestAttribution]
      *  ``String``
      *  Attribution string for mapnik generated layer (i18n).
      */
-    mapnikAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
+    mapQuestAttribution: "Tiles Courtesy of <a href='http://open.mapquest.co.uk/' target='_blank'>MapQuest</a> <img src='http://developer.mapquest.com/content/osm/mq_logo.png' border='0'>",
+
+    /** api: config[mapnikAttribution]
+     *  ``String``
+     *  Attribution string for mapnik generated layer (i18n).
+     */
+    mapnikAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/' target='_blank'>OpenStreetMap</a>",
 
     /** api: config[homeAttribution]
      *  ``String``
      *  Attribution string for osmarender generated layer (i18n).
      */
-    osmarenderAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
+    osmarenderAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/' target='_blank'>OpenStreetMap</a>",
 
     /** api: method[createStore]
      *
@@ -95,6 +101,19 @@ gxp.plugins.OSMSource = Ext.extend(gxp.plugins.LayerSource, {
         };
         
         var layers = [
+            new OpenLayers.Layer.OSM(
+                "MapQuest",
+                [
+                    "http://otile1.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png",
+                    "http://otile2.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png",
+                    "http://otile3.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png",
+                    "http://otile4.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png"
+                ],
+                OpenLayers.Util.applyDefaults({                
+                    attribution: this.mapQuestAttribution,
+                    type: "mapquest"
+                }, options)
+            ),
             new OpenLayers.Layer.OSM(
                 "OpenStreetMap",
                 [
