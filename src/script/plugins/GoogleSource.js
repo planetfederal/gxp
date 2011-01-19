@@ -304,7 +304,7 @@ gxp.plugins.GoogleSource.loader = new (Ext.extend(Ext.util.Observable, {
             autoload: Ext.encode({
                 modules: [{
                     name: "maps",
-                    version: 3.2,
+                    version: 3.3,
                     nocss: "true",
                     callback: "gxp.plugins.GoogleSource.loader.onScriptLoad",
                     other_params: "sensor=false"
