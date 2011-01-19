@@ -50,7 +50,8 @@
         "plugins/QueryForm.js",
         "plugins/LayerTree.js",
         "plugins/AddLayers.js",
-        "plugins/RemoveLayer.js"
+        "plugins/RemoveLayer.js",
+        "plugins/NavigationHistory.js"
     );
     
     var scripts = document.getElementsByTagName("script");

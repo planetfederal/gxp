@@ -217,7 +217,7 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
                     }
                 }
             }
-            for (j=0, jj=a.length; j<jj; ++j) {
+            for (j=a.length-1; j>=0; --j) {
                 if (!(a[j] instanceof Ext.Action)) {
                     if (typeof a[j] != "string") {
                         a[j] = new Ext.Action(a[j]);
