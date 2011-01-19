@@ -63,7 +63,7 @@ gxp.plugins.ZoomToExtent = Ext.extend(gxp.plugins.Tool, {
      */
     addActions: function() {
         return gxp.plugins.ZoomToExtent.superclass.addActions.apply(this, [{
-            menuText: this.removeMenuText,
+            menuText: this.menuText,
             iconCls: "gx-icon-zoomtoextent",
             tooltip: this.tooltip,
             handler: function() {
