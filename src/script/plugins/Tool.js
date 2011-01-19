@@ -53,15 +53,24 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
      */
     
     /** api: config[actionTarget]
-     *  ``String`` or ``Array`` Where to place the tool's actions (e.g. buttons
-     *  or menus)? This can be any string that references an ``Ext.Container``
-     *  property on the portal, or a unique id configured on a component, or an
-     *  array of the aforementioned if the action is to be put in more than one
-     *  places (e.g. a button and a context menu item). To reference one of the
-     *  toolbars of an ``Ext.Panel``, ".tbar", ".bbar" or ".fbar" has to be
-     *  appended. The default is "map.tbar". The viewer's main MapPanel
-     *  can always be accessed with "map" as actionTarget. Set to null if no
-     *  actions should be created.
+     *  ``Object`` or ``String`` or ``Array`` Where to place the tool's actions 
+     *  (e.g. buttons or menus)? 
+     *
+     *  In case of a string, this can be any string that references an 
+     *  ``Ext.Container`` property on the portal, or a unique id configured on a 
+     *  component.
+     *
+     *  In case of an object, the object has a "target" and an "index" property, 
+     *  so that the tool can be inserted at a specified index in the target. 
+     *  In order to use index, appendActions needs to be set to false.
+     *               
+     *  actionTarget can also be an array of strings or objects, if the action is 
+     *  to be put in more than one place (e.g. a button and a context menu item).
+     *
+     *  To reference one of the toolbars of an ``Ext.Panel``, ".tbar", ".bbar" or 
+     *  ".fbar" has to be appended. The default is "map.tbar". The viewer's main 
+     *  MapPanel can always be accessed with "map" as actionTarget. Set to null if 
+     *  no actions should be created.
      */
     actionTarget: "map.tbar",
         
@@ -187,10 +196,14 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
         var actionTargets = this.actionTarget instanceof Array ?
             this.actionTarget : [this.actionTarget];
         var a = actions instanceof Array ? actions : [actions];
-        var actionTarget, i, j, parts, ref, item, ct, meth;
+        var actionTarget, i, j, parts, ref, item, ct, meth, index = 0;
         for (i=actionTargets.length-1; i>=0; --i) {
             actionTarget = actionTargets[i];
             if (actionTarget) {
+                if (actionTarget instanceof Object) {
+                    index = actionTarget.index;
+                    actionTarget = actionTarget.target;
+                }
                 parts = actionTarget.split(".");
                 ref = parts[0];
                 item = parts.length > 1 && parts[1];
@@ -228,7 +241,7 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
                             {text: action.initialConfig.menuText}
                         );
                     }
-                    action = this.appendActions ? ct.add(action) : ct.insert(0, action);
+                    action = this.appendActions ? ct.add(action) : ct.insert(index, action);
                     if (this.outputAction != null && j == this.outputAction) {
                         var cmp;
                         action.on("click", function() {
