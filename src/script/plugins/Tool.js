@@ -62,7 +62,6 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
      *
      *  In case of an object, the object has a "target" and an "index" property, 
      *  so that the tool can be inserted at a specified index in the target. 
-     *  In order to use index, appendActions needs to be set to false.
      *               
      *  actionTarget can also be an array of strings or objects, if the action is 
      *  to be put in more than one place (e.g. a button and a context menu item).
@@ -83,13 +82,6 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
      *  ``Number`` Optional index of an action that should be active by
      *  default. Only works for actions that are a ``GeoExt.Action`` instance.
      */
-    
-    /** api: config[appendActions]
-     *  ``Boolean`` If set to false, actions won't be added, but inserted to
-     *  the container at the beginning. This is useful to control the order of
-     *  actions in a toolbar. Default is true.
-     */
-    appendActions: true,
     
     /** api: config[outputTarget]
      *  ``String`` Where to add the tool's output container? This can be any
@@ -196,7 +188,7 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
         var actionTargets = this.actionTarget instanceof Array ?
             this.actionTarget : [this.actionTarget];
         var a = actions instanceof Array ? actions : [actions];
-        var actionTarget, i, j, parts, ref, item, ct, meth, index = 0;
+        var actionTarget, i, j, parts, ref, item, ct, meth, index = null;
         for (i=actionTargets.length-1; i>=0; --i) {
             actionTarget = actionTargets[i];
             if (actionTarget) {
@@ -241,7 +233,7 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
                             {text: action.initialConfig.menuText}
                         );
                     }
-                    action = this.appendActions ? ct.add(action) : ct.insert(index, action);
+                    action = (index === null) ? ct.add(action) : ct.insert(index, action);
                     if (this.outputAction != null && j == this.outputAction) {
                         var cmp;
                         action.on("click", function() {
