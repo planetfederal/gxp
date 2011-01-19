@@ -93,6 +93,14 @@
     background-image: url(img/silk/arrow_right.png);
 }
 
+/* gxp_zoom */
+.x-btn .gxp-icon-zoom-in {
+    background-image: url(img/silk/magnifier_zoom_in.png);
+}
+.x-btn .gxp-icon-zoom-out {
+    background-image: url(img/silk/magnifier_zoom_out.png);
+}
+
 /* fixes textarea scrollbar issue in FF on OSX */
 .ext-gecko.ext-mac textarea.x-form-field {
     padding: 1px 2px;

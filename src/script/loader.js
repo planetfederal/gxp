@@ -51,7 +51,8 @@
         "plugins/LayerTree.js",
         "plugins/AddLayers.js",
         "plugins/RemoveLayer.js",
-        "plugins/NavigationHistory.js"
+        "plugins/NavigationHistory.js",
+        "plugins/Zoom.js"
     );
     
     var scripts = document.getElementsByTagName("script");
