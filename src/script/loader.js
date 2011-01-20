@@ -53,6 +53,7 @@
         "plugins/RemoveLayer.js",
         "plugins/NavigationHistory.js",
         "plugins/Zoom.js",
+        "plugins/ZoomToExtent.js",
         "plugins/Measure.js",
         "plugins/PanMap.js"
     );
