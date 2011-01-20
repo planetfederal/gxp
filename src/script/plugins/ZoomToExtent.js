@@ -28,8 +28,8 @@ Ext.namespace("gxp.plugins");
  */
 gxp.plugins.ZoomToExtent = Ext.extend(gxp.plugins.Tool, {
     
-    /** api: ptype = gx_zoomtoextent */
-    ptype: "gx_zoomtoextent",
+    /** api: ptype = gxp_zoomtoextent */
+    ptype: "gxp_zoomtoextent",
     
     /** api: config[menuText]
      *  ``String``
