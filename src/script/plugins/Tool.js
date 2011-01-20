@@ -188,7 +188,7 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
         var actionTargets = this.actionTarget instanceof Array ?
             this.actionTarget : [this.actionTarget];
         var a = actions instanceof Array ? actions : [actions];
-        var actionTarget, i, j, parts, ref, item, ct, meth, index = null;
+        var actionTarget, i, j, jj, parts, ref, item, ct, meth, index = null;
         for (i=actionTargets.length-1; i>=0; --i) {
             actionTarget = actionTargets[i];
             if (actionTarget) {
@@ -217,7 +217,7 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
                     }
                 }
             }
-            for (j=a.length-1; j>=0; --j) {
+            for (j=0, jj=a.length; j<jj; ++j) {
                 if (!(a[j] instanceof Ext.Action)) {
                     if (typeof a[j] != "string") {
                         a[j] = new Ext.Action(a[j]);
@@ -234,6 +234,9 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
                         );
                     }
                     action = (index === null) ? ct.add(action) : ct.insert(index, action);
+                    if (index !== null) {
+                        index += 1;
+                    }
                     if (this.outputAction != null && j == this.outputAction) {
                         var cmp;
                         action.on("click", function() {
