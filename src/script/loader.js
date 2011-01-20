@@ -52,7 +52,9 @@
         "plugins/AddLayers.js",
         "plugins/RemoveLayer.js",
         "plugins/NavigationHistory.js",
-        "plugins/Zoom.js"
+        "plugins/Zoom.js",
+        "plugins/Measure.js",
+        "plugins/PanMap.js"
     );
     
     var scripts = document.getElementsByTagName("script");

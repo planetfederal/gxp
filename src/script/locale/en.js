@@ -54,6 +54,11 @@ GeoExt.Lang.add("en", {
         mapnikAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
         osmarenderAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>"
     },
+
+    "gxp.plugins.PanMap.prototype": {
+        menuText: "Pan Map",
+        tooltip: "Pan Map"
+    },
     
     "gxp.plugins.QueryForm.prototype": {
         queryActionText: "Query",

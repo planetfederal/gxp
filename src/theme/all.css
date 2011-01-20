@@ -60,6 +60,11 @@
     background-image: url(img/silk/map_add.png);
 }
 
+/* gxp_panmap */
+.x-btn .gxp-icon-pan {
+    background-image: url(img/geosilk/pan.png);
+}
+
 /* gx_removelayer */
 .x-btn .gx-icon-removelayers, .x-menu-item .gx-icon-removelayers {
     background-image: url(img/silk/delete.png);
