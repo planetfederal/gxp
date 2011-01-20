@@ -101,6 +101,15 @@
     background-image: url(img/silk/magnifier_zoom_out.png);
 }
 
+/* gxp_measure */
+.gxp-icon-measure-length {
+    background-image: url(img/geosilk/ruler.png) !important;
+}
+
+.gxp-icon-measure-area {
+   background-image: url(img/geosilk/ruler_square.png) !important;
+}
+
 /* fixes textarea scrollbar issue in FF on OSX */
 .ext-gecko.ext-mac textarea.x-form-field {
     padding: 1px 2px;
