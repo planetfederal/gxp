@@ -36,20 +36,20 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      *  ``String``
      *  Text for add menu item (i18n).
      */
-    addMenuText: "Add layer",
+    addMenuText: "Add layers",
 
     /** api: config[addActionTip]
      *  ``String``
      *  Text for add action tooltip (i18n).
      */
-    addActionTip: "Add layer",
+    addActionTip: "Add layers",
     
     /** api: method[addActions]
      */
     addActions: function() {
         var selectedLayer;
         var actions = gxp.plugins.AddLayers.superclass.addActions.apply(this, [{
-            tooltip : "Add Layers",
+            tooltip : this.addActionTip,
             disabled: true,
             iconCls: "gxp-icon-addlayers",
             handler : this.showCapabilitiesGrid,

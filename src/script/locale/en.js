@@ -1,13 +1,17 @@
 
 GeoExt.Lang.add("en", {
 
+    "gxp.plugins.AddLayers.prototype": {
+        addMenuText: "Add layers",
+        addActionTip: "Add layers"
+    },
+    
     "gxp.plugins.BingSource.prototype": {
         title: "Bing Layers",
         roadTitle: "Road",
         aerialTitle: "Aerial",
         labeledAerialTitle: "Bing Aerial With Labels"
-    },
-    
+    },    
 
     "gxp.plugins.FeatureEditor.prototype": {
         createFeatureActionTip: "Create a new feature",
