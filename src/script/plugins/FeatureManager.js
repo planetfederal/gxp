@@ -458,27 +458,27 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
             this.filter = filter;
             this.pages = null;
             if (callback) {
-                this.on("query", function(tool, store) {
-                    if (this._query) {
-                        delete this._query;
-                        this.un("query", arguments.callee, this);
-                        var len = store.getCount();
-                        if (store.getCount() == 0) {
-                            callback.call(scope, [])
-                        } else {
-                            // wait until the features are added to the layer,
-                            // so it is easier for listeners that e.g. want to
-                            // select features, which requires them to be on
-                            // a layer.
-                            this.featureLayer.events.register("featuresadded", this, function(evt) {
-                                this.featureLayer.events.unregister("featuresadded", this, arguments.callee);
-                                callback.call(scope, evt.features);
-                            });
-                        }
+                var me = this;
+                // unregister previous listener, if any
+                me._activeQuery && me.un("query", me._activeQuery)
+                this.on("query", me._activeQuery = function(tool, store) {
+                    delete me._activeQuery;
+                    this.un("query", arguments.callee, this);
+                    var len = store.getCount();
+                    if (store.getCount() == 0) {
+                        callback.call(scope, [])
+                    } else {
+                        // wait until the features are added to the layer,
+                        // so it is easier for listeners that e.g. want to
+                        // select features, which requires them to be on
+                        // a layer.
+                        this.featureLayer.events.register("featuresadded", this, function(evt) {
+                            this.featureLayer.events.unregister("featuresadded", this, arguments.callee);
+                            callback.call(scope, evt.features);
+                        });
                     }
-                }, this);
+                }, this, {single: true});
             }
-            this._query = true;
             if (!this.featureStore) {
                 this.paging && this.on("layerchange", function(tool, rec, schema) {
                     if (schema) {
