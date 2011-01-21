@@ -458,17 +458,25 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
             this.filter = filter;
             this.pages = null;
             if (callback) {
-                this.featureLayer.events.register(
-                    "featuresadded", this, function(evt) {
-                        if (this._query) {
-                            delete this._query;
-                            this.featureLayer.events.unregister(
-                                "featuresadded", this, arguments.callee
-                            );
-                            callback.call(scope, evt.features);
+                this.on("query", function(tool, store) {
+                    if (this._query) {
+                        delete this._query;
+                        this.un("query", arguments.callee, this);
+                        var len = store.getCount();
+                        if (store.getCount() == 0) {
+                            callback.call(scope, [])
+                        } else {
+                            // wait until the features are added to the layer,
+                            // so it is easier for listeners that e.g. want to
+                            // select features, which requires them to be on
+                            // a layer.
+                            this.featureLayer.events.register("featuresadded", this, function(evt) {
+                                this.featureLayer.events.unregister("featuresadded", this, arguments.callee);
+                                callback.call(scope, evt.features);
+                            });
                         }
                     }
-                );
+                }, this);
             }
             this._query = true;
             if (!this.featureStore) {
@@ -861,7 +869,9 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
         if (this.filter instanceof OpenLayers.Filter.FeatureId) {
             // no paging for FeatureId filters - these cannot be combined with
             // BBOX filters
-            this.featureStore.load({callback: callback, scope: scope});
+            this.featureStore.load({callback: function() {
+                callback && callback.call(scope);
+            }});
             return;
         }
         if (this.fireEvent("beforesetpage", this, condition, callback, scope) !== false) {
@@ -901,7 +911,9 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                         map.zoomToExtent(page.extent);
                     }
                     this.fireEvent("setpage", this, condition, callback, scope);
-                    this.featureStore.load({callback: callback, scope: scope});
+                    this.featureStore.load({callback: function() {
+                        callback && callback.call(scope, page);
+                    }});
                 }, this
             );
         }
