@@ -70,8 +70,8 @@
     background-image: url(img/silk/delete.png);
 }
 
-/* gx_featuregrid */
-.x-btn .gx-icon-zoom-to, .x-menu-item .gx-icon-zoom-to { 
+/* gxp_zoomtoselectedfeatures */
+.x-btn .gxp-icon-zoom-to, .x-menu-item .gxp-icon-zoom-to { 
     background-image: url(img/silk/magnifier.png);
 }
 

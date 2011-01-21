@@ -55,12 +55,6 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
      */
     displayFeatureText: "Display on map",
 
-    /** api: config[zoomToSelectedText]
-     * ``String``
-     * Text for zoom to selected features button (i18n).
-     */
-    zoomToSelectedText: "Zoom to selected",
-
     /** api: method[addOutput]
      */
     addOutput: function(config) {
@@ -81,11 +75,6 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                             return false;
                         }
                         delete this._selectingFeature;
-                    },
-                    "selectionchange": function() {
-                        featureGrid.zoomToSelectedButton.setDisabled(
-                            featureGrid.getSelectionModel().getCount() == 0
-                        );
                     },
                     scope: this
                 }
@@ -135,29 +124,6 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                     featureManager[pressed ? "showLayer" : "hideLayer"](this.id);
                 },
                 scope: this
-            }, {
-                text: this.zoomToSelectedText,
-                iconCls: "gx-icon-zoom-to",
-                ref: "../zoomToSelectedButton",
-                disabled: true,
-                handler: function(btn) {
-                    var bounds, geom, extent;
-                    featureGrid.getSelectionModel().each(function(r) {
-                        geom = r.getFeature().geometry;
-                        if(geom) {
-                            extent = geom.getBounds();
-                            if(bounds) {
-                                bounds.extend(extent);
-                            } else {
-                                bounds = extent.clone();
-                            }
-                        }
-                    }, this);
-                    if(bounds) {
-                        this.target.mapPanel.map.zoomToExtent(bounds);
-                    }
-                },
-                scope: this                
             }])
         }, config || {});
         var featureGrid = gxp.plugins.FeatureGrid.superclass.addOutput.call(this, config);

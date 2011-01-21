@@ -19,8 +19,7 @@ GeoExt.Lang.add("en", {
     },
     
     "gxp.plugins.FeatureGrid.prototype": {
-        displayFeatureText: "Display on map",
-        zoomToSelectedText: "Zoom to selected"
+        displayFeatureText: "Display on map"
     },
     
     "gxp.plugins.GoogleSource.prototype": {
@@ -88,6 +87,11 @@ GeoExt.Lang.add("en", {
         zoomOutMenuText: "Zoom Out",
         zoomInTooltip: "Zoom In",
         zoomOutTooltip: "Zoom Out"
+    },
+    
+    "gxp.plugins.ZoomToSelectedFeatures.prototype": {
+        zoomMenuText: "Zoom to selected features",
+        zoomActionTip: "Zoom to selected features"
     },
 
     "gxp.FeatureEditPopup.prototype": {

@@ -54,6 +54,7 @@
         "plugins/NavigationHistory.js",
         "plugins/Zoom.js",
         "plugins/ZoomToExtent.js",
+        "plugins/ZoomToSelectedFeatures.js",
         "plugins/Measure.js",
         "plugins/PanMap.js"
     );
