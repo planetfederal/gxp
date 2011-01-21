@@ -50,6 +50,24 @@ gxp.plugins.ZoomToExtent = Ext.extend(gxp.plugins.Tool, {
      */
     extent: null,
     
+    /** api: config[closest]
+     *  ``Boolean`` Find the zoom level that most closely fits the specified
+     *  extent. Note that this may result in a zoom that does not exactly
+     *  contain the entire extent.  Default is true.
+     */
+    closest: true,
+    
+    /** private: property[iconCls]
+     */
+    iconCls: "gx-icon-zoomtoextent",
+    
+    /** api: config[closest]
+     *  ``Boolean`` Find the zoom level that most closely fits the specified
+     *  extent. Note that this may result in a zoom that does not exactly
+     *  contain the entire extent.  Default is true.
+     */
+    closest: true,
+    
     /** private: method[constructor]
      */
     constructor: function(config) {
@@ -64,11 +82,11 @@ gxp.plugins.ZoomToExtent = Ext.extend(gxp.plugins.Tool, {
     addActions: function() {
         return gxp.plugins.ZoomToExtent.superclass.addActions.apply(this, [{
             menuText: this.menuText,
-            iconCls: "gx-icon-zoomtoextent",
+            iconCls: this.iconCls,
             tooltip: this.tooltip,
             handler: function() {
                 var map = this.target.mapPanel.map;
-                var extent = this.extent;
+                var extent = typeof this.extent == "function" ? this.extent() : this.extent;
                 if (!extent) {
                     // determine visible extent
                     var layer, extended;
@@ -95,7 +113,7 @@ gxp.plugins.ZoomToExtent = Ext.extend(gxp.plugins.Tool, {
                             Math.min(extent.top, restricted.top)
                         );
                     }
-                    map.zoomToExtent(extent, true);
+                    map.zoomToExtent(extent, this.closest);
                 }
             },
             scope: this

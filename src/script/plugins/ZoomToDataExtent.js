@@ -12,7 +12,7 @@
 
 /** api: (define)
  *  module = gxp.plugins
- *  class = ZoomToSelectedFeatures
+ *  class = ZoomToDataExtent
  */
 
 /** api: (extends)
@@ -21,26 +21,26 @@
 Ext.namespace("gxp.plugins");
 
 /** api: constructor
- *  .. class:: ZoomToSelectedFeatures(config)
+ *  .. class:: ZoomToDataExtent(config)
  *
- *    Plugin for zooming to the extent of selected features
+ *    Plugin for zooming to the data extent of a vector layer
  */
-gxp.plugins.ZoomToSelectedFeatures = Ext.extend(gxp.plugins.ZoomToExtent, {
+gxp.plugins.ZoomToDataExtent = Ext.extend(gxp.plugins.ZoomToExtent, {
     
-    /** api: ptype = gxp_zoomtoselectedfeatures */
-    ptype: "gxp_zoomtoselectedfeatures",
+    /** api: ptype = gxp_zoomtodataextent */
+    ptype: "gxp_zoomtodataextent",
     
     /** api: config[menuText]
      *  ``String``
      *  Text for zoom menu item (i18n).
      */
-    menuText: "Zoom to selected features",
+    menuText: "Zoom to layer extent",
 
     /** api: config[tooltip]
      *  ``String``
      *  Text for zoom action tooltip (i18n).
      */
-    tooltip: "Zoom to selected features",
+    tooltip: "Zoom to layer extent",
     
     /** api: config[featureManager]
      *  ``String`` id of the :class:`gxp.plugins.FeatureManager` to look for
@@ -57,38 +57,25 @@ gxp.plugins.ZoomToSelectedFeatures = Ext.extend(gxp.plugins.ZoomToExtent, {
     /** private: property[iconCls]
      */
     iconCls: "gxp-icon-zoom-to",
-    
-    /** private: method[extent]
+
+    /** api: method[extent]
      */
     extent: function() {
-        var layer = this.target.tools[this.featureManager].featureLayer;
-        var bounds, geom, extent, features = layer.selectedFeatures;
-        for (var i=features.length-1; i>=0; --i) {
-            geom = features[i].geometry;
-            if (geom) {
-                extent = geom.getBounds();
-                if (bounds) {
-                    bounds.extend(extent);
-                } else {
-                    bounds = extent.clone();
-                }
-            }
-        };
-        return bounds;
-     },
-    
+        return this.target.tools[this.featureManager].featureLayer.getDataExtent();
+    },
+
     /** api: method[addActions]
      */
     addActions: function() {
-        var actions = gxp.plugins.ZoomToSelectedFeatures.superclass.addActions.apply(this, arguments);
+        var actions = gxp.plugins.ZoomToDataExtent.superclass.addActions.apply(this, arguments);
         actions[0].disable();
 
         var layer = this.target.tools[this.featureManager].featureLayer;
         layer.events.on({
-            "featureselected": function() {
+            "featuresadded": function() {
                 actions[0].isDisabled() && actions[0].enable();
             },
-            "featureunselected": function(evt) {
+            "featuresremoved": function(evt) {
                 layer.features.length == 0 && actions[0].disable();
             }
         });
@@ -98,4 +85,4 @@ gxp.plugins.ZoomToSelectedFeatures = Ext.extend(gxp.plugins.ZoomToExtent, {
         
 });
 
-Ext.preg(gxp.plugins.ZoomToSelectedFeatures.prototype.ptype, gxp.plugins.ZoomToSelectedFeatures);
+Ext.preg(gxp.plugins.ZoomToDataExtent.prototype.ptype, gxp.plugins.ZoomToDataExtent);

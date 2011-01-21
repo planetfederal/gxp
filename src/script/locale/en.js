@@ -89,9 +89,19 @@ GeoExt.Lang.add("en", {
         zoomOutTooltip: "Zoom Out"
     },
     
+    "gxp.plugins.ZoomToExtent.prototype": {
+        menuText: "Zoom To Max Extent",
+        tooltip: "Zoom To Max Extent"
+    },
+    
+    "gxp.plugins.ZoomToDataExtent.prototype": {
+        menuText: "Zoom to layer extent",
+        tooltip: "Zoom to layer extent"
+    },
+    
     "gxp.plugins.ZoomToSelectedFeatures.prototype": {
-        zoomMenuText: "Zoom to selected features",
-        zoomActionTip: "Zoom to selected features"
+        menuText: "Zoom to selected features",
+        tooltip: "Zoom to selected features"
     },
 
     "gxp.FeatureEditPopup.prototype": {
