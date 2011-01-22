@@ -88,8 +88,8 @@ gxp.plugins.ZoomToSelectedFeatures = Ext.extend(gxp.plugins.ZoomToExtent, {
             "featureselected": function() {
                 actions[0].isDisabled() && actions[0].enable();
             },
-            "featureunselected": function(evt) {
-                layer.features.length == 0 && actions[0].disable();
+            "featureunselected": function() {
+                layer.selectedFeatures.length == 0 && actions[0].disable();
             }
         });
         
