@@ -75,7 +75,7 @@ gxp.plugins.ZoomToDataExtent = Ext.extend(gxp.plugins.ZoomToExtent, {
             "featuresadded": function() {
                 actions[0].isDisabled() && actions[0].enable();
             },
-            "featuresremoved": function(evt) {
+            "featuresremoved": function() {
                 layer.features.length == 0 && actions[0].disable();
             }
         });
