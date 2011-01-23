@@ -12,7 +12,7 @@
 
 /** api: (define)
  *  module = gxp.plugins
- *  class = PanMap
+ *  class = Navigation
  */
 
 /** api: (extends)
@@ -21,31 +21,32 @@
 Ext.namespace("gxp.plugins");
 
 /** api: constructor
- *  .. class:: PanMap(config)
+ *  .. class:: Navigation(config)
  *
- *    Provides one action for panning the map.
+ *    Provides one action for panning the map and zooming in with
+ *    a box. Optionally provide mousewheel zoom support.
  */
-gxp.plugins.PanMap = Ext.extend(gxp.plugins.Tool, {
+gxp.plugins.Navigation = Ext.extend(gxp.plugins.Tool, {
     
-    /** api: ptype = gxp_panmap */
-    ptype: "gxp_panmap",
+    /** api: ptype = gxp_navigation */
+    ptype: "gxp_navigation",
     
     /** api: config[menuText]
      *  ``String``
-     *  Text for pan menu item (i18n).
+     *  Text for navigation menu item (i18n).
      */
     menuText: "Pan Map",
 
     /** api: config[tooltip]
      *  ``String``
-     *  Text for pan action tooltip (i18n).
+     *  Text for navigation action tooltip (i18n).
      */
     tooltip: "Pan Map",
 
     /** private: method[constructor]
      */
     constructor: function(config) {
-        gxp.plugins.PanMap.superclass.constructor.apply(this, arguments);
+        gxp.plugins.Navigation.superclass.constructor.apply(this, arguments);
     },
 
     /** api: method[addActions]
@@ -61,9 +62,9 @@ gxp.plugins.PanMap = Ext.extend(gxp.plugins.Tool, {
             control: new OpenLayers.Control.Navigation({zoomWheelEnabled: false}),
             map: this.target.mapPanel.map,
             toggleGroup: this.toggleGroup})];
-        return gxp.plugins.PanMap.superclass.addActions.apply(this, [actions]);
+        return gxp.plugins.Navigation.superclass.addActions.apply(this, [actions]);
     }
         
 });
 
-Ext.preg(gxp.plugins.PanMap.prototype.ptype, gxp.plugins.PanMap);
+Ext.preg(gxp.plugins.Navigation.prototype.ptype, gxp.plugins.Navigation);

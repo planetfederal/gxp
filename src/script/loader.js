@@ -56,7 +56,7 @@
         "plugins/ZoomToExtent.js",
         "plugins/ZoomToSelectedFeatures.js",
         "plugins/Measure.js",
-        "plugins/PanMap.js"
+        "plugins/Navigation.js"
     );
     
     var scripts = document.getElementsByTagName("script");

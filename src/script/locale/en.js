@@ -44,6 +44,11 @@ GeoExt.Lang.add("en", {
         measureTooltip: "Measure"
     },
 
+    "gxp.plugins.Navigation.prototype": {
+        menuText: "Pan Map",
+        tooltip: "Pan Map"
+    },
+
     "gxp.plugins.NavigationHistory.prototype": {
         previousMenuText: "Zoom To Previous Extent",
         nextMenuText: "Zoom To Next Extent",
@@ -58,11 +63,6 @@ GeoExt.Lang.add("en", {
         osmarenderAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>"
     },
 
-    "gxp.plugins.PanMap.prototype": {
-        menuText: "Pan Map",
-        tooltip: "Pan Map"
-    },
-    
     "gxp.plugins.QueryForm.prototype": {
         queryActionText: "Query",
         queryMenuText: "Query layer",
