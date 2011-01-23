@@ -52,6 +52,8 @@ gxp.plugins.Navigation = Ext.extend(gxp.plugins.Tool, {
     /** api: method[addActions]
      */
     addActions: function() {
+        this.controlOptions = this.controlOptions || {};
+        Ext.applyIf(this.controlOptions, {zoomWheelEnabled: false});
         var actions = [new GeoExt.Action({
             tooltip: this.tooltip,
             menuText: this.menuText,
@@ -59,7 +61,7 @@ gxp.plugins.Navigation = Ext.extend(gxp.plugins.Tool, {
             enableToggle: true,
             pressed: true,
             allowDepress: false,
-            control: new OpenLayers.Control.Navigation({zoomWheelEnabled: false}),
+            control: new OpenLayers.Control.Navigation(this.controlOptions),
             map: this.target.mapPanel.map,
             toggleGroup: this.toggleGroup})];
         return gxp.plugins.Navigation.superclass.addActions.apply(this, [actions]);

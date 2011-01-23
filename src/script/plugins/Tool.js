@@ -96,6 +96,12 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
      *  or to provide layout configurations when rendering to an
      *  ``outputTarget``.
      */
+
+    /** api: config[controlOptions]
+     *  ``Object`` If this tool is associated with an ``OpenLayers.Control``
+     *  then this is an optional object to pass to the constructor of the
+     *  associated ``OpenLayers.Control``.
+     */
     
     /** private: property[target]
      *  ``Object``
