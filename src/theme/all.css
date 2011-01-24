@@ -23,32 +23,32 @@
     background-image: url(img/pencil.png);
 }
 
-.gx-filterbuilder .x-toolbar {
+.gxp-filterbuilder .x-toolbar {
     background: transparent;
     border: none !important;
 }
 
-/* gx_embedmapdialog */
-.gx-field-label {
+/* gxp_embedmapdialog */
+.gxp-field-label {
     font-weight: bold;
     margin: 4px;
     vertical-align: baseline;
 }
-.gx-export-section {
+.gxp-export-section {
     padding: 10px 10px 5px 10px;
     margin-bottom: 0;
 }
 
-/* gx_wmsgetfeatureinfo */
-.x-btn .gx-icon-getfeatureinfo, .x-menu-item .gx-icon-getfeatureinfo {
+/* gxp_wmsgetfeatureinfo */
+.x-btn .gxp-icon-getfeatureinfo, .x-menu-item .gxp-icon-getfeatureinfo {
     background-image: url(img/silk/information.png);
 }
 
-/* gx_featureeditor */
-.x-btn .gx-icon-addfeature, .x-menu-item .gx-icon-addfeature {
+/* gxp_featureeditor */
+.x-btn .gxp-icon-addfeature, .x-menu-item .gxp-icon-addfeature {
     background-image: url(img/silk/pencil_add.png);
 }
-.x-btn .gx-icon-editfeature, .x-menu-item .gx-icon-editfeature {
+.x-btn .gxp-icon-editfeature, .x-menu-item .gxp-icon-editfeature {
     background-image: url(img/silk/map_edit.png);
 }
 
@@ -65,8 +65,8 @@
     background-image: url(img/geosilk/pan.png);
 }
 
-/* gx_removelayer */
-.x-btn .gx-icon-removelayers, .x-menu-item .gx-icon-removelayers {
+/* gxp_removelayer */
+.x-btn .gxp-icon-removelayers, .x-menu-item .gxp-icon-removelayers {
     background-image: url(img/silk/delete.png);
 }
 
@@ -75,18 +75,18 @@
     background-image: url(img/silk/magnifier.png);
 }
 
-/* gx_queryform */
-.x-btn .gx-icon-find, .x-menu-item .gx-icon-find { 
+/* gxp_queryform */
+.x-btn .gxp-icon-find, .x-menu-item .gxp-icon-find { 
     background-image: url(img/silk/find.png);
 }
 
-/* gx_selectfeature */
-.x-btn .gx-icon-selectfeature, .x-menu-item .gx-icon-selectfeature { 
+/* gxp_selectfeature */
+.x-btn .gxp-icon-selectfeature, .x-menu-item .gxp-icon-selectfeature { 
     background-image: url(img/silk/cursor.png);
 }
 
-/* gx_zoomtoextent */
-.x-btn .gx-icon-zoomtoextent { 
+/* gxp_zoomtoextent */
+.x-btn .gxp-icon-zoomtoextent { 
     background-image: url(img/silk/arrow_out.png);
 }
 

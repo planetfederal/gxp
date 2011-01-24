@@ -58,14 +58,14 @@ gxp.menu.LayerMenu = Ext.extend(Ext.menu.Menu, {
      */
     onLayerAdd: function() {
         this.removeAll();
-        // this.getEl().addClass("gx-layer-menu");
+        // this.getEl().addClass("gxp-layer-menu");
         // this.getEl().applyStyles({
         //     width: '',
         //     height: ''
         // });
         this.add(
             {
-                iconCls: "gx-layer-visibility",
+                iconCls: "gxp-layer-visibility",
                 text: "Layer",
                 canActivate: false
             },

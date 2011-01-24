@@ -61,7 +61,7 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
         
         var actions = gxp.plugins.WMSGetFeatureInfo.superclass.addActions.call(this, [{
             tooltip: this.infoActionTip,
-            iconCls: "gx-icon-getfeatureinfo",
+            iconCls: "gxp-icon-getfeatureinfo",
             toggleGroup: this.toggleGroup,
             enableToggle: true,
             allowDepress: true,

@@ -297,7 +297,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
     },
     
     addLayerSource: function(options) {
-        var id = options.id || Ext.id(null, "gx-source-");
+        var id = options.id || Ext.id(null, "gxp-source-");
         var source;
         try {
             source = Ext.ComponentMgr.createPlugin(

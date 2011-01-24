@@ -59,7 +59,7 @@ gxp.plugins.ZoomToExtent = Ext.extend(gxp.plugins.Tool, {
     
     /** private: property[iconCls]
      */
-    iconCls: "gx-icon-zoomtoextent",
+    iconCls: "gxp-icon-zoomtoextent",
     
     /** api: config[closest]
      *  ``Boolean`` Find the zoom level that most closely fits the specified

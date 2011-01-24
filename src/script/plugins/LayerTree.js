@@ -81,7 +81,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
         });
         treeRoot.appendChild(new GeoExt.tree.LayerContainer({
             text: this.overlayText,
-            iconCls: "gx-folder",
+            iconCls: "gxp-folder",
             expanded: true,
             loader: new GeoExt.tree.LayerLoader({
                 store: this.target.mapPanel.layers,
@@ -98,7 +98,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
                             return r.getLayer() === layer;
                         }));
                         if (record && !record.get("queryable")) {
-                            attr.iconCls = "gx-tree-rasterlayer-icon";
+                            attr.iconCls = "gxp-tree-rasterlayer-icon";
                         }
                     }
                     var node = GeoExt.tree.LayerLoader.prototype.createNode.apply(this, [attr]);
@@ -117,7 +117,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
         
         treeRoot.appendChild(new GeoExt.tree.LayerContainer({
             text: this.baseNodeText,
-            iconCls: "gx-folder",
+            iconCls: "gxp-folder",
             expanded: true,
             group: "background",
             loader: new GeoExt.tree.LayerLoader({
@@ -137,7 +137,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
                         }));
                         if (record) {
                             if (!record.get("queryable")) {
-                                attr.iconCls = "gx-tree-rasterlayer-icon";
+                                attr.iconCls = "gxp-tree-rasterlayer-icon";
                             }
                             if (record.get("fixed")) {
                                 attr.allowDrag = false;

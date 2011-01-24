@@ -95,7 +95,7 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                     featureManager.previousPage();
                 }
             }, {
-                iconCls: "gx-icon-zoom-to",
+                iconCls: "gxp-icon-zoom-to",
                 ref: "../zoomToPageButton",
                 disabled: true,
                 hidden: featureManager.autoZoomPage,

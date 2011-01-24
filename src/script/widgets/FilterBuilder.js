@@ -62,9 +62,9 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
     /** api: config[cls]
      *  ``String``
      *  The CSS class to be added to this panel's element (defaults to
-     *  ``"gx-filterbuilder"``).
+     *  ``"gxp-filterbuilder"``).
      */
-    cls: "gx-filterbuilder",
+    cls: "gxp-filterbuilder",
 
     /** private: property[builderType]
      */

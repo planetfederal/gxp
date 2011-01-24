@@ -350,7 +350,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
         var actions = gxp.plugins.FeatureEditor.superclass.addActions.call(this, [new GeoExt.Action({
             tooltip: this.createFeatureActionTip,
             text: this.createFeatureActionText,
-            iconCls: "gx-icon-addfeature",
+            iconCls: "gxp-icon-addfeature",
             disabled: true,
             hidden: this.readOnly,
             toggleGroup: toggleGroup,
@@ -362,7 +362,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
         }), new GeoExt.Action({
             tooltip: this.editFeatureActionTip,
             text: this.editFeatureActionText,
-            iconCls: "gx-icon-editfeature",
+            iconCls: "gxp-icon-editfeature",
             disabled: true,
             toggleGroup: toggleGroup,
             enableToggle: true,

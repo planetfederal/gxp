@@ -97,7 +97,7 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
             actions: [{
                 text: this.queryActionText,
                 menuText: this.queryMenuText,
-                iconCls: "gx-icon-find",
+                iconCls: "gxp-icon-find",
                 tooltip: this.queryActionTip
             }]
         });
@@ -148,7 +148,7 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
             }],
             bbar: ["->", {
                 text: this.queryActionText,
-                iconCls: "gx-icon-find",
+                iconCls: "gxp-icon-find",
                 handler: function() {
                     var filters = [];
                     if (queryForm.spatialFieldset.collapsed !== true) {
