@@ -146,5 +146,5 @@ gxp.GoogleStreetViewPanel = Ext.extend(Ext.Panel, {
     }
 });
 
-/** api: xtype = gx_googlestreetviewpanel */
-Ext.reg("gx_googlestreetviewpanel", gxp.GoogleStreetViewPanel);
+/** api: xtype = gxp_googlestreetviewpanel */
+Ext.reg("gxp_googlestreetviewpanel", gxp.GoogleStreetViewPanel);

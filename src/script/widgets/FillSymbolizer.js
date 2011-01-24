@@ -83,7 +83,7 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
                 width: 100 // TODO: move to css
             },
             items: [{
-                xtype: "gx_colorfield",
+                xtype: "gxp_colorfield",
                 fieldLabel: this.colorText,
                 name: "color",
                 emptyText: OpenLayers.Renderer.defaultSymbolizer.fillColor,
@@ -155,5 +155,5 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
     
 });
 
-/** api: xtype = gx_fillsymbolizer */
-Ext.reg('gx_fillsymbolizer', gxp.FillSymbolizer);
+/** api: xtype = gxp_fillsymbolizer */
+Ext.reg('gxp_fillsymbolizer', gxp.FillSymbolizer);

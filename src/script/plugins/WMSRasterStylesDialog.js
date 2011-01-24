@@ -199,7 +199,7 @@ gxp.plugins.WMSRasterStylesDialog = {
                         }]
                     }]
                 }, {
-                    xtype: "gx_polygonsymbolizer",
+                    xtype: "gxp_polygonsymbolizer",
                     symbolizer: rule.symbolizers[0],
                     bodyStyle: {"padding": "10px"},
                     border: false,

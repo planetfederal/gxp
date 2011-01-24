@@ -9,7 +9,7 @@ Ext.onReady(function() {
         labelWidth: 40,
         bodyStyle: {padding: 10},
         items: [{
-            xtype: "gx_fontcombo",
+            xtype: "gxp_fontcombo",
             fieldLabel: "Font",
             anchor: "90%"
         }]

@@ -55,7 +55,7 @@ Ext.onReady(function() {
         renderTo: "panel1",
         width: 320,
         items: [{
-            xtype: "gx_filterbuilder",
+            xtype: "gxp_filterbuilder",
             style: "padding: .3em .3em .1em .1em",
             allowGroups: false,
             filter: filter.clone(),
@@ -77,7 +77,7 @@ Ext.onReady(function() {
         renderTo: "panel2",
         width: 320,
         items: [{
-            xtype: "gx_filterbuilder",
+            xtype: "gxp_filterbuilder",
             style: "padding: .3em .3em .1em .1em",
             filter: filter.clone(),
             attributes: new GeoExt.data.AttributeStore({

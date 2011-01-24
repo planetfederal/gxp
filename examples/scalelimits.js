@@ -5,7 +5,7 @@ Ext.onReady(function() {
         renderTo: "panel",
         border: false,
         items: [{
-            xtype: "gx_scalelimitpanel",
+            xtype: "gxp_scalelimitpanel",
             scaleSliderTemplate: "{scaleType} Zoom Level: {zoom}<br>{scaleType} Scale 1:{scale}"
         }]
     });

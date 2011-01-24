@@ -473,7 +473,7 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
         for(var i=0, len=grandchildren.length; i<len; ++i) {
             grandchild = grandchildren[i];
             var fieldCfg = {
-                xtype: "gx_filterfield",
+                xtype: "gxp_filterfield",
                 allowBlank: this.allowBlank,
                 columnWidth: 1,
                 filter: grandchild,
@@ -488,7 +488,7 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
             var containerCfg = Ext.applyIf(
                 grandchild instanceof OpenLayers.Filter.Logical ?
                     {
-                        xtype: "gx_filterbuilder"
+                        xtype: "gxp_filterbuilder"
                     } : {
                         xtype: "container",
                         layout: "form",
@@ -572,5 +572,5 @@ gxp.FilterBuilder.ALL_OF = 1;
 gxp.FilterBuilder.NONE_OF = 2;
 gxp.FilterBuilder.NOT_ALL_OF = 3;
 
-/** api: xtype = gx_filterbuilder */
-Ext.reg('gx_filterbuilder', gxp.FilterBuilder); 
+/** api: xtype = gxp_filterbuilder */
+Ext.reg('gxp_filterbuilder', gxp.FilterBuilder); 

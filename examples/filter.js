@@ -47,7 +47,7 @@ Ext.onReady(function() {
         layout: "form",
         hideLabels: true,
         items: [{
-            xtype: "gx_filterfield",
+            xtype: "gxp_filterfield",
             anchor: "100%",
             filter: filter,
             attributes: new GeoExt.data.AttributeStore({

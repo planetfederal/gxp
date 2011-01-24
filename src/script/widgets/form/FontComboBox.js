@@ -73,5 +73,5 @@ gxp.form.FontComboBox = Ext.extend(Ext.form.ComboBox, {
     }
 });
 
-/** api: xtype = gx_fontcombo */
+/** api: xtype = gxp_fontcombo */
 Ext.reg("gx_fontcombo", gxp.form.FontComboBox);

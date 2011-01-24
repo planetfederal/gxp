@@ -121,7 +121,7 @@ function showProp(record) {
         height: 350,
         layout: "fit",
         items: [{
-            xtype: "gx_wmslayerpanel",
+            xtype: "gxp_wmslayerpanel",
             layerRecord: record,
             defaults: {style: "padding: 10px"}
         }]

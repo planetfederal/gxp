@@ -107,7 +107,7 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
             collapsed: this.external,
             layout: "form",
             items: [{
-                xtype: "gx_fillsymbolizer",
+                xtype: "gxp_fillsymbolizer",
                 symbolizer: this.symbolizer,
                 labelWidth: this.labelWidth,
                 labelAlign: this.labelAlign,
@@ -119,7 +119,7 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
                     scope: this
                 }
             }, {
-                xtype: "gx_strokesymbolizer",
+                xtype: "gxp_strokesymbolizer",
                 symbolizer: this.symbolizer,
                 labelWidth: this.labelWidth,
                 labelAlign: this.labelAlign,
@@ -291,5 +291,5 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
     
 });
 
-/** api: xtype = gx_pointsymbolizer */
-Ext.reg('gx_pointsymbolizer', gxp.PointSymbolizer);
+/** api: xtype = gxp_pointsymbolizer */
+Ext.reg('gxp_pointsymbolizer', gxp.PointSymbolizer);

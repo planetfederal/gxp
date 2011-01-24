@@ -36,7 +36,7 @@ gxp.PolygonSymbolizer = Ext.extend(Ext.Panel, {
     initComponent: function() {
         
         this.items = [{
-            xtype: "gx_fillsymbolizer",
+            xtype: "gxp_fillsymbolizer",
             symbolizer: this.symbolizer,
             listeners: {
                 change: function(symbolizer) {
@@ -45,7 +45,7 @@ gxp.PolygonSymbolizer = Ext.extend(Ext.Panel, {
                 scope: this
             }
         }, {
-            xtype: "gx_strokesymbolizer",
+            xtype: "gxp_strokesymbolizer",
             symbolizer: this.symbolizer,
             listeners: {
                 change: function(symbolizer) {
@@ -74,5 +74,5 @@ gxp.PolygonSymbolizer = Ext.extend(Ext.Panel, {
     
 });
 
-/** api: xtype = gx_linesymbolizer */
-Ext.reg('gx_polygonsymbolizer', gxp.PolygonSymbolizer);
+/** api: xtype = gxp_linesymbolizer */
+Ext.reg('gxp_polygonsymbolizer', gxp.PolygonSymbolizer);

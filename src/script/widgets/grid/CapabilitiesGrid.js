@@ -323,5 +323,5 @@ gxp.grid.CapabilitiesGrid = Ext.extend(Ext.grid.GridPanel, {
     }
 });
 
-/** api: xtype = gx_capabilitiesgrid */
-Ext.reg('gx_capabilitiesgrid', gxp.grid.CapabilitiesGrid); 
+/** api: xtype = gxp_capabilitiesgrid */
+Ext.reg('gxp_capabilitiesgrid', gxp.grid.CapabilitiesGrid); 

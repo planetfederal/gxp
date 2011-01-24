@@ -133,5 +133,5 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
     }
 });
 
-/** api: xtype = gx_featuregrid */
-Ext.reg('gx_featuregrid', gxp.grid.FeatureGrid); 
+/** api: xtype = gxp_featuregrid */
+Ext.reg('gxp_featuregrid', gxp.grid.FeatureGrid); 

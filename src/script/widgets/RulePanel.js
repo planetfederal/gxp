@@ -458,7 +458,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
             {draw: this.symbolizerSwatch.rendered}
         );
         var cfg = {
-            xtype: "gx_" + this.symbolType.toLowerCase() + "symbolizer",
+            xtype: "gxp_" + this.symbolType.toLowerCase() + "symbolizer",
             symbolizer: symbolizer,
             bodyStyle: {padding: "10px"},
             border: false,
@@ -509,5 +509,5 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
 
 });
 
-/** api: xtype = gx_rulepanel */
-Ext.reg('gx_rulepanel', gxp.RulePanel); 
+/** api: xtype = gxp_rulepanel */
+Ext.reg('gxp_rulepanel', gxp.RulePanel); 

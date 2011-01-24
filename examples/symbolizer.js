@@ -51,7 +51,7 @@ Ext.onReady(function() {
                         plain: true,
                         closeAction: "hide",
                         items: [{
-                            xtype: "gx_linesymbolizer",
+                            xtype: "gxp_linesymbolizer",
                             symbolizer: renderer.symbolizers[0],
                             bodyStyle: {padding: 10},
                             border: false,
@@ -87,7 +87,7 @@ Ext.onReady(function() {
                         plain: true,
                         closeAction: "hide",
                         items: [{
-                            xtype: "gx_polygonsymbolizer",
+                            xtype: "gxp_polygonsymbolizer",
                             symbolizer: renderer.symbolizers[0],
                             bodyStyle: {padding: 10},
                             border: false,
@@ -124,7 +124,7 @@ Ext.onReady(function() {
                         plain: true,
                         closeAction: "hide",
                         items: [{
-                            xtype: "gx_pointsymbolizer",
+                            xtype: "gxp_pointsymbolizer",
                             symbolizer: renderer.symbolizers[0],
                             pointGraphics: [
                                 {display: "circle", value: "circle", mark: true, preview: "../theme/img/circle.gif"},

@@ -90,5 +90,5 @@ gxp.StylePropertiesDialog = Ext.extend(Ext.Container, {
     }
 });
 
-/** api: xtype = gx_styleproperties */
-Ext.reg('gx_stylepropertiesdialog', gxp.StylePropertiesDialog);
+/** api: xtype = gxp_styleproperties */
+Ext.reg('gxp_stylepropertiesdialog', gxp.StylePropertiesDialog);

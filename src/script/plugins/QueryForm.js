@@ -180,7 +180,7 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
             queryForm.setDisabled(!schema);
             if (schema) {
                 queryForm.attributeFieldset.add({
-                    xtype: "gx_filterbuilder",
+                    xtype: "gxp_filterbuilder",
                     ref: "../filterBuilder",
                     attributes: schema,
                     allowBlank: true,

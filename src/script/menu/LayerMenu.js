@@ -96,4 +96,4 @@ gxp.menu.LayerMenu = Ext.extend(Ext.menu.Menu, {
     
 });
 
-Ext.reg('gx_layermenu', gxp.menu.LayerMenu);
+Ext.reg('gxp_layermenu', gxp.menu.LayerMenu);

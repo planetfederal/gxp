@@ -139,7 +139,7 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
         
         return [
             this.attributesComboConfig, {
-                xtype: "gx_comparisoncombo",
+                xtype: "gxp_comparisoncombo",
                 disabled: true,
                 allowBlank: this.allowBlank,
                 value: this.filter.type,
@@ -173,4 +173,4 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
 
 });
 
-Ext.reg('gx_filterfield', gxp.form.FilterField);
+Ext.reg('gxp_filterfield', gxp.form.FilterField);

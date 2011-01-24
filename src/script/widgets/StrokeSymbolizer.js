@@ -109,7 +109,7 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
                     scope: this
                 }
             }, {
-                xtype: "gx_colorfield",
+                xtype: "gxp_colorfield",
                 name: "color",
                 fieldLabel: "Color",
                 emptyText: OpenLayers.Renderer.defaultSymbolizer.strokeColor,
@@ -214,5 +214,5 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
     
 });
 
-/** api: xtype = gx_strokesymbolizer */
-Ext.reg('gx_strokesymbolizer', gxp.StrokeSymbolizer); 
+/** api: xtype = gxp_strokesymbolizer */
+Ext.reg('gxp_strokesymbolizer', gxp.StrokeSymbolizer); 

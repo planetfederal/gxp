@@ -111,7 +111,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
             style: "background: transparent; border: none; padding: 0 0em 0.5em;",
             xtype: "toolbar",
             items: [{
-                xtype: "gx_fontcombo",
+                xtype: "gxp_fontcombo",
                 fonts: this.fonts || undefined,
                 width: 110,
                 value: this.symbolizer.fontFamily,
@@ -169,7 +169,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                 }
             }]
         }, {
-            xtype: "gx_fillsymbolizer",
+            xtype: "gxp_fillsymbolizer",
             symbolizer: this.symbolizer,
             defaultColor: OpenLayers.Renderer.defaultSymbolizer.fontColor,
             checkboxToggle: false,
@@ -210,7 +210,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                     scope: this
                 }
             }, {
-                xtype: "gx_fillsymbolizer",
+                xtype: "gxp_fillsymbolizer",
                 symbolizer: {
                     fillColor: ("haloColor" in this.symbolizer) ? this.symbolizer.haloColor : OpenLayers.Renderer.defaultSymbolizer.haloColor,
                     fillOpacity: ("haloOpacity" in this.symbolizer) ? this.symbolizer.haloOpacity : OpenLayers.Renderer.defaultSymbolizer.haloOpacity
@@ -277,5 +277,5 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
     
 });
 
-/** api: xtype = gx_textsymbolizer */
-Ext.reg('gx_textsymbolizer', gxp.TextSymbolizer); 
+/** api: xtype = gxp_textsymbolizer */
+Ext.reg('gxp_textsymbolizer', gxp.TextSymbolizer); 

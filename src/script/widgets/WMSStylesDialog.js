@@ -267,7 +267,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             items: {
                 border: false,
                 items: {
-                    xtype: "gx_stylepropertiesdialog",
+                    xtype: "gxp_stylepropertiesdialog",
                     userStyle: userStyle.clone(),
                     // styles that came from the server
                     // have a name that we don't change
@@ -476,7 +476,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             autoHeight: true,
             modal: true,
             items: [{
-                xtype: "gx_rulepanel",
+                xtype: "gxp_rulepanel",
                 symbolType: this.symbolType,
                 rule: rule,
                 attributes: new GeoExt.data.AttributeStore({
@@ -885,7 +885,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             this.symbolType = typeHierarchy[highest];
         }
         var legend = this.items.get(2).add({
-            xtype: "gx_vectorlegend",
+            xtype: "gxp_vectorlegend",
             showTitle: false,
             rules: rules,
             symbolType: this.symbolType,
@@ -926,5 +926,5 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     
 });
 
-/** api: xtype = gx_wmsstylesdialog */
-Ext.reg('gx_wmsstylesdialog', gxp.WMSStylesDialog);
+/** api: xtype = gxp_wmsstylesdialog */
+Ext.reg('gxp_wmsstylesdialog', gxp.WMSStylesDialog);

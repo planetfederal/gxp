@@ -391,5 +391,5 @@ gxp.ScaleLimitPanel = Ext.extend(Ext.Panel, {
     
 });
 
-/** api: xtype = gx_scalelimitpanel */
-Ext.reg('gx_scalelimitpanel', gxp.ScaleLimitPanel); 
+/** api: xtype = gxp_scalelimitpanel */
+Ext.reg('gxp_scalelimitpanel', gxp.ScaleLimitPanel); 

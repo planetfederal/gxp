@@ -206,4 +206,4 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
 
 });
 
-Ext.reg('gx_wmslayerpanel', gxp.WMSLayerPanel); 
+Ext.reg('gxp_wmslayerpanel', gxp.WMSLayerPanel); 

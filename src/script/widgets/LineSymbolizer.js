@@ -35,7 +35,7 @@ gxp.LineSymbolizer = Ext.extend(Ext.Panel, {
     initComponent: function() {
         
         this.items = [{
-            xtype: "gx_strokesymbolizer",
+            xtype: "gxp_strokesymbolizer",
             symbolizer: this.symbolizer,
             listeners: {
                 change: function(symbolizer) {
@@ -64,5 +64,5 @@ gxp.LineSymbolizer = Ext.extend(Ext.Panel, {
     
 });
 
-/** api: xtype = gx_linesymbolizer */
-Ext.reg('gx_linesymbolizer', gxp.LineSymbolizer);
+/** api: xtype = gxp_linesymbolizer */
+Ext.reg('gxp_linesymbolizer', gxp.LineSymbolizer);

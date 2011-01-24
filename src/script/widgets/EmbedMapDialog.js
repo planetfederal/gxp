@@ -27,7 +27,7 @@ Ext.namespace("gxp");
  *           width: 380,
  *           autoHeight: true,
  *           items: [{
- *               xtype: "gx_embedmapdialog",
+ *               xtype: "gxp_embedmapdialog",
  *               url: "viewer.html" 
  *           }]
  *       }).show();
@@ -199,4 +199,4 @@ gxp.EmbedMapDialog = Ext.extend(Ext.Container, {
 });
 
 /** api: xtype = gx_embedmapdialog */
-Ext.reg('gx_embedmapdialog', gxp.EmbedMapDialog);
+Ext.reg('gxp_embedmapdialog', gxp.EmbedMapDialog);
