@@ -35,6 +35,7 @@
         "plugins/LayerSource.js",
         "plugins/BingSource.js",
         "plugins/WMSSource.js",
+        "plugins/WMSCSource.js",
         "plugins/OSMSource.js",
         "plugins/GoogleSource.js",
         "plugins/OLSource.js",
