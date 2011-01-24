@@ -408,15 +408,10 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      *  features and selected features, all features will be shown.
      */
     setLayerDisplay: function() {
-        var show = false;
-        for (var i in this.toolsShowingLayer) {
-            if (show != "all") {
-                show = this.toolsShowingLayer[i];
-            }
-        }
+        var show = this.visible();
         var map = this.target.mapPanel.map;
         if (show) {
-            var style = this.style[show];
+            var style = this.style[show]; // "all" or "selected"
             if (style !== this.featureLayer.styleMap.styles["default"]) {
                 this.featureLayer.styleMap.styles["default"] = style;
                 this.featureLayer.redraw();
@@ -433,6 +428,22 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                 scope: this
             });
         }
+    },
+    
+    /** api: method[visible]
+     *  :returns: ``mixed`` "all", "selected" or false
+     *
+     *  Are we currently showing all features, selected features only or no
+     *  features?
+     */
+    visible: function() {
+        var show = false;
+        for (var i in this.toolsShowingLayer) {
+            if (show != "all") {
+                show = this.toolsShowingLayer[i];
+            }
+        }
+        return show;
     },
     
     /** private: method[raiseLayer]
@@ -751,11 +762,14 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
             }
         }
         var extent = filter && filter.value;
-        return (extent && layer.maxExtent) ?
-            extent.containsBounds(layer.maxExtent) ?
-                layer.maxExtent :
-                extent :
-            (layer.maxExtent || this.target.mapPanel.map[meth]());
+        if (extent && layer.maxExtent) {
+            if (extent.containsBounds(layer.maxExtent)) {
+                extent = layer.maxExtent;
+            }
+        } else {
+            extent = this.target.mapPanel.map[meth]() || layer.maxExtent;
+        }
+        return extent;
     },
     
     /** private: method[setPageFilter]
