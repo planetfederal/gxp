@@ -28,8 +28,8 @@ Ext.namespace("gxp.plugins");
  */   
 gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
     
-    /** api: ptype = gx_featureeditor */
-    ptype: "gx_featureeditor",
+    /** api: ptype = gxp_featureeditor */
+    ptype: "gxp_featureeditor",
 
     /** api: config[createFeatureActionTip]
      *  ``String``

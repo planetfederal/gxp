@@ -30,8 +30,8 @@ Ext.namespace("gxp.plugins");
  */   
 gxp.plugins.FeatureToField = Ext.extend(gxp.plugins.Tool, {
     
-    /** api: ptype = gx_featuretofield */
-    ptype: "gx_featuretofield",
+    /** api: ptype = gxp_featuretofield */
+    ptype: "gxp_featuretofield",
     
     /** api: config[featureManager]
      *  ``String`` :class:`FeatureManager` to use for this tool.

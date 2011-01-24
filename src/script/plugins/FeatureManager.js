@@ -32,8 +32,8 @@ Ext.namespace("gxp.plugins");
  */   
 gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
     
-    /** api: ptype = gx_featuremanager */
-    ptype: "gx_featuremanager",
+    /** api: ptype = gxp_featuremanager */
+    ptype: "gxp_featuremanager",
     
     /** api: config[maxFeatures]
      *  ``Number`` Default is 100

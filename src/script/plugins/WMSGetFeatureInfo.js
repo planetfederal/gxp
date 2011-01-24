@@ -29,8 +29,8 @@ Ext.namespace("gxp.plugins");
  */   
 gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
     
-    /** api: ptype = gx_wmsgetfeatureinfo */
-    ptype: "gx_wmsgetfeatureinfo",
+    /** api: ptype = gxp_wmsgetfeatureinfo */
+    ptype: "gxp_wmsgetfeatureinfo",
     
     /** api: config[outputTarget]
      *  ``String`` Popups created by this tool are added to the map by default.

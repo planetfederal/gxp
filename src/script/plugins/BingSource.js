@@ -34,7 +34,7 @@ Ext.namespace("gxp.plugins");
  *  .. code-block:: javascript
  *
  *    "bing": {
- *        ptype: "gx_bingsource"
+ *        ptype: "gxp_bingsource"
  *    }
  *
  *  A typical configuration for a layer from this source (in the ``layers``
@@ -51,8 +51,8 @@ Ext.namespace("gxp.plugins");
  */
 gxp.plugins.BingSource = Ext.extend(gxp.plugins.LayerSource, {
     
-    /** api: ptype = gx_bingsource */
-    ptype: "gx_bingsource",
+    /** api: ptype = gxp_bingsource */
+    ptype: "gxp_bingsource",
 
     /** api: property[store]
      *  ``GeoExt.data.LayerStore``. Will contain records with "mapnik" and

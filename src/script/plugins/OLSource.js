@@ -38,7 +38,7 @@ Ext.namespace("gxp.plugins");
  *  .. code-block:: javascript
  *
  *    "ol": {
- *        ptype: "gx_olsource"
+ *        ptype: "gxp_olsource"
  *    }
  *
  *  A typical configuration for a layer from this source (in the ``layers``
@@ -55,8 +55,8 @@ Ext.namespace("gxp.plugins");
  */
 gxp.plugins.OLSource = Ext.extend(gxp.plugins.LayerSource, {
     
-    /** api: ptype = gx_olsource */
-    ptype: "gx_olsource",
+    /** api: ptype = gxp_olsource */
+    ptype: "gxp_olsource",
     
     /** api: method[createLayerRecord]
      *  :arg config:  ``Object``  The application config for this layer.

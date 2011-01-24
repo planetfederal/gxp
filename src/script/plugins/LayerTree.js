@@ -27,8 +27,8 @@ Ext.namespace("gxp.plugins");
  */   
 gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
     
-    /** api: ptype = gx_layertree */
-    ptype: "gx_layertree",
+    /** api: ptype = gxp_layertree */
+    ptype: "gxp_layertree",
 
     /** api: config[rootNodeText]
      *  ``String``

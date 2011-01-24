@@ -9,11 +9,11 @@ Ext.onReady(function() {
             // configuration of all tool plugins for this application
             tools: [{
                 // shared FeatureManager for feature editing, grid and querying
-                ptype: "gx_featuremanager",
+                ptype: "gxp_featuremanager",
                 id: "featuremanager",
                 paging: false
             }, {
-                ptype: "gx_featureeditor",
+                ptype: "gxp_featureeditor",
                 featureManager: "featuremanager",
                 readOnly: true,
                 autoLoadFeatures: true,
@@ -21,7 +21,7 @@ Ext.onReady(function() {
                 defaultAction: 1,
                 outputConfig: {panIn: false, height: 220}
             }, {
-                ptype: "gx_featuretofield",
+                ptype: "gxp_featuretofield",
                 featureManager: "featuremanager"
             }],
 
@@ -32,7 +32,7 @@ Ext.onReady(function() {
                     url: "/geoserver/wms"
                 },
                 google: {
-                    ptype: "gx_googlesource"
+                    ptype: "gxp_googlesource"
                 }
             },
 

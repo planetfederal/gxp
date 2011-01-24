@@ -27,8 +27,8 @@ Ext.namespace("gxp.plugins");
  */   
 gxp.plugins.SnappingAgent = Ext.extend(gxp.plugins.Tool, {
     
-    /** api: ptype = gx_snappingagent */
-    ptype: "gx_snappingagent",    
+    /** api: ptype = gxp_snappingagent */
+    ptype: "gxp_snappingagent",    
     
     /** private: method[init]
      */

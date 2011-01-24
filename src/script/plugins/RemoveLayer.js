@@ -28,8 +28,8 @@ Ext.namespace("gxp.plugins");
  */
 gxp.plugins.RemoveLayer = Ext.extend(gxp.plugins.Tool, {
     
-    /** api: ptype = gx_removelayer */
-    ptype: "gx_removelayer",
+    /** api: ptype = gxp_removelayer */
+    ptype: "gxp_removelayer",
     
     /** api: config[removeMenuText]
      *  ``String``

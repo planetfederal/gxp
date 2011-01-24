@@ -29,8 +29,8 @@ Ext.namespace("gxp.plugins");
  */
 gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
     
-    /** api: ptype = gx_queryform */
-    ptype: "gx_queryform",
+    /** api: ptype = gxp_queryform */
+    ptype: "gxp_queryform",
 
     /** api: config[featureManager]
      *  ``String`` The id of the :class:`gxp.plugins.FeatureManager` to use

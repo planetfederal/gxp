@@ -37,7 +37,7 @@ Ext.namespace("gxp.plugins");
  *  .. code-block:: javascript
  *
  *    "google": {
- *        ptype: "gx_google"
+ *        ptype: "gxp_google"
  *    }
  *
  *  A typical configuration for a layer from this source (in the ``layers``
@@ -53,8 +53,8 @@ Ext.namespace("gxp.plugins");
  */
 gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
     
-    /** api: ptype = gx_googlesource */
-    ptype: "gx_googlesource",
+    /** api: ptype = gxp_googlesource */
+    ptype: "gxp_googlesource",
     
     /** config: config[timeout]
      *  ``Number``

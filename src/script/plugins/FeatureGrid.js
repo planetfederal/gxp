@@ -28,8 +28,8 @@ Ext.namespace("gxp.plugins");
  */   
 gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
     
-    /** api: ptype = gx_featuregrid */
-    ptype: "gx_featuregrid",
+    /** api: ptype = gxp_featuregrid */
+    ptype: "gxp_featuregrid",
 
     /** api: config[featureManager]
      *  ``String`` The id of the :class:`gxp.plugins.FeatureManager` to use

@@ -23,8 +23,8 @@ Ext.namespace("gxp.plugins");
  */   
 gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
     
-    /** api: ptype = gx_tool */
-    ptype: "gx_tool",
+    /** api: ptype = gxp_tool */
+    ptype: "gxp_tool",
     
     /** api: config[autoActivate]
      *  ``Boolean`` Set to false if the tool should be initialized without

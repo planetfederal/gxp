@@ -79,8 +79,8 @@ Ext.namespace("gxp.plugins");
  */
 gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
     
-    /** api: ptype = gx_wmssource */
-    ptype: "gx_wmssource",
+    /** api: ptype = gxp_wmssource */
+    ptype: "gxp_wmssource",
     
     /** api: config[url]
      *  ``String`` WMS service URL for this source

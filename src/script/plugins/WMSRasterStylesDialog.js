@@ -355,5 +355,5 @@ gxp.plugins.WMSRasterStylesDialog = {
     
 };
 
-/** api: ptype = gx_wmsrasterstylesdialog */
+/** api: ptype = gxp_wmsrasterstylesdialog */
 Ext.preg("gx_wmsrasterstylesdialog", gxp.plugins.WMSRasterStylesDialog);

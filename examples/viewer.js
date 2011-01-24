@@ -38,7 +38,7 @@ Ext.onReady(function() {
         
         // configuration of all tool plugins for this application
         tools: [{
-            ptype: "gx_layertree",
+            ptype: "gxp_layertree",
             outputConfig: {
                 id: "tree",
                 border: true,
@@ -49,7 +49,7 @@ Ext.onReady(function() {
             ptype: "gxp_addlayers",
             actionTarget: "tree.tbar"
         }, {
-            ptype: "gx_removelayer",
+            ptype: "gxp_removelayer",
             actionTarget: ["tree.tbar", "tree.contextMenu"]
         }, {
             ptype: "gxp_zoomtoextent",
@@ -61,7 +61,7 @@ Ext.onReady(function() {
             ptype: "gxp_navigationhistory",
             actionTarget: "map.tbar"
         }, {
-            ptype: "gx_wmsgetfeatureinfo",
+            ptype: "gxp_wmsgetfeatureinfo",
             outputConfig: {
                 width: 400,
                 height: 200
@@ -70,24 +70,24 @@ Ext.onReady(function() {
             toggleGroup: "layertools"
         }, {
             // shared FeatureManager for feature editing, grid and querying
-            ptype: "gx_featuremanager",
+            ptype: "gxp_featuremanager",
             id: "featuremanager",
             maxFeatures: 20
         }, {
-            ptype: "gx_featureeditor",
+            ptype: "gxp_featureeditor",
             featureManager: "featuremanager",
             autoLoadFeatures: true, // no need to "check out" features
             outputConfig: {panIn: false},
             toggleGroup: "layertools"
         }, {
-            ptype: "gx_featuregrid",
+            ptype: "gxp_featuregrid",
             featureManager: "featuremanager",
             outputConfig: {
                 id: "featuregrid"
             },
             outputTarget: "south"
         }, {
-            ptype: "gx_queryform",
+            ptype: "gxp_queryform",
             featureManager: "featuremanager",
             outputConfig: {
                 title: "Query",
@@ -108,7 +108,7 @@ Ext.onReady(function() {
                 url: "/geoserver/wms"
             },
             google: {
-                ptype: "gx_googlesource"
+                ptype: "gxp_googlesource"
             }
         },
         
