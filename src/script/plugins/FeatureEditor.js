@@ -173,6 +173,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
             "beforequery": intercept.createDelegate(this, "loadFeatures", 1),
             "beforelayerchange": intercept.createDelegate(this, "setLayer", 1),
             "beforesetpage": intercept.createDelegate(this, "setPage", 1),
+            "beforeclearfeatures": intercept.createDelegate(this, "cleafFeatures", 1),
             scope: this
         });
         

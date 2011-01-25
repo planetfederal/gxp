@@ -233,7 +233,29 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
              *  * scope     - ``Object`` the scope argument passed to the
              *    setPage method
              */
-            "setpage"
+            "setpage",
+            
+            /** api: event[beforeclearfeatures]
+             *  Fired when the clearFeatures method is called, before clearing
+             *  the features. This event can be used to abort clearFeatures
+             *  before any action is performed, by having a listener return
+             *  false.
+             *
+             *  Listener arguments:
+             *
+             *  * tool - :class:`gxp.plugins.FeatureManager` this tool
+             */
+            "beforeclearfeatures",
+            
+            /** api: event[clearfeatures]
+             *  Fired when features have been cleared by the clearFeatures
+             *  method.
+             *
+             *  Listener arguments:
+             *
+             *  * tool - :class:`gxp.plugins.FeatureManager` this tool
+             */
+            "clearfeatures"
         );
         
         // change autoSetLayer default if passed a layer config
@@ -515,12 +537,15 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
     clearFeatures: function() {
         var store = this.featureStore;
         if (store) {
-            store.removeAll();
-            // TODO: make abort really work in OpenLayers
-            var proxy = store.proxy;
-            proxy.abortRequest();
-            if (proxy.protocol.response) {
-                proxy.protocol.response.abort();
+            if (this.fireEvent("beforeclearfeatures", this) !== false) {
+                store.removeAll();
+                this.fireEvent("clearfeatures", this);
+                // TODO: make abort really work in OpenLayers
+                var proxy = store.proxy;
+                proxy.abortRequest();
+                if (proxy.protocol.response) {
+                    proxy.protocol.response.abort();
+                }
             }
         }
     },
