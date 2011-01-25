@@ -138,7 +138,7 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
 
         if (!(popupKey in this.popupCache)) {
             popup = this.addOutput({
-                xtype: "gxp_popup",
+                xtype: "gx_popup",
                 title: this.popupTitle,
                 layout: "accordion",
                 location: evt.xy,
