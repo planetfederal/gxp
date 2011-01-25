@@ -7,7 +7,6 @@
  */
 
 /**
- * @requires plugins/Tool.js
  * @requires plugins/ZoomToExtent.js
  */
 
