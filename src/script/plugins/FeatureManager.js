@@ -761,13 +761,12 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                 }
             }
         }
-        var extent = filter && filter.value;
+        var extent = filter ? filter.value : this.target.mapPanel.map[meth]();
         if (extent && layer.maxExtent) {
             if (extent.containsBounds(layer.maxExtent)) {
+                // take the smaller one of the two
                 extent = layer.maxExtent;
             }
-        } else {
-            extent = this.target.mapPanel.map[meth]() || layer.maxExtent;
         }
         return extent;
     },
