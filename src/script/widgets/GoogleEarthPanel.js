@@ -31,21 +31,17 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
      */
     HORIZONTAL_FIELD_OF_VIEW: (30 * Math.PI) / 180,
     
-    /** api: config[map]
-     *  ``OpenLayers.Map or Object``  A map.
-     */
-
-    /** api: property[map]
+    /** private: property[map]
      *  ``OpenLayers.Map``
      *  The OpenLayers map associated with this panel.  Defaults
      *  to the map of the configured MapPanel
      */
     map: null,
 
-    /** api: property[mapPanel]
-     *  ``OpenLayers.Map``
-     *  The OpenLayers map associated with this panel.  Defaults
-     *  to the map of the configured MapPanel
+    /** api: config[mapPanel]
+     *  ``GeoExt.MapPanel | String``
+     *  The map panel associated with this panel.  If a MapPanel instance is 
+     *  not provided, a MapPanel id must be provided.
      */
     mapPanel: null,
 
@@ -82,14 +78,15 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
 
         gxp.GoogleEarthPanel.superclass.initComponent.call(this);
 
-        var mapPanel = this.mapPanel || GeoExt.MapPanel.guess();
-        if (!this.map) {
-            this.map = mapPanel.map ;
+        var mapPanel = this.mapPanel;
+        if (mapPanel && !(mapPanel instanceof GeoExt.MapPanel)) {
+            mapPanel = Ext.getCmp(mapPanel);
         }
-
-        if (!this.layers) {
-            this.layers = mapPanel.layers;
+        if (!mapPanel) {
+            throw new Error("Could not get map panel from config: " + this.mapPanel);
         }
+        this.map = mapPanel.map;
+        this.layers = mapPanel.layers;
 
         this.projection = new OpenLayers.Projection("EPSG:4326");
         
@@ -105,7 +102,6 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
             }
         };
         this.on("show", render, this);
-        this.on("render", render, this);
         
         this.on("hide", function() {
             if (this.earth != null) {
@@ -188,9 +184,9 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
             var add = this.fireEvent("beforeadd", layer);
             if (add !== false) {
                 var name = layer.getLayer().id;
-
+                var networkLink;
                 if (this.layerCache[name]) {
-                    var networkLink = this.layerCache[name];
+                    networkLink = this.layerCache[name];
                 } else {
                     var link = this.earth.createLink('kl_' + name);
                     var ows = layer.getLayer().url;
@@ -199,7 +195,7 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
                     var kmlPath = '/kml?mode=refresh&layers=' + params.LAYERS +
                         "&styles=" + params.STYLES;
                     link.setHref(ows + kmlPath);
-                    var networkLink = this.earth.createNetworkLink('nl_' + name);
+                    networkLink = this.earth.createNetworkLink('nl_' + name);
                     networkLink.setName(name);
                     networkLink.set(link, false, false);
                     this.layerCache[name] = networkLink;
@@ -221,7 +217,7 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
      *  Sets the view of the 3D visualization to approximate an OpenLayers extent.
      */
     setExtent: function(extent) {
-        var extent = extent.transform(this.map.getProjectionObject(), this.projection);
+        extent = extent.transform(this.map.getProjectionObject(), this.projection);
         var center = extent.getCenterLonLat();
         
         var width = this.getExtentWidth(extent);
