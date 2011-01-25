@@ -216,7 +216,7 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
                 record.set("group", config.group);
             }
             record.commit();
-        };
+        }
         return record;
     }
     

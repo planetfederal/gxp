@@ -85,7 +85,7 @@ gxp.plugins.OLSource = Ext.extend(gxp.plugins.LayerSource, {
             var Constructor = function() {
                 // this only works for args that can be serialized as JSON
                 Class.prototype.initialize.apply(this, config.args);
-            }
+            };
             Constructor.prototype = Class.prototype;
 
             // create a new layer given type and args

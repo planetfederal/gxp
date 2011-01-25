@@ -204,7 +204,7 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
             var ratio = parts[0] / parts[1];
             var array;
             if (!isNaN(ratio)) {
-                array = ratio >= 1 ? "4 4" : "2 4"
+                array = ratio >= 1 ? "4 4" : "2 4";
             }
         }
         return array;

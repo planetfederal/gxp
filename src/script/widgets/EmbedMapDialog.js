@@ -194,7 +194,7 @@ gxp.EmbedMapDialog = Ext.extend(Ext.Container, {
                 "afterrender": this.updateSnippet,
                 scope: this
             }
-        }
+        };
     }
 });
 

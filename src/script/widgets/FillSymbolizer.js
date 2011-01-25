@@ -68,7 +68,7 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
         
         var colorFieldPlugins;
         if (this.colorManager) {
-            colorFieldPlugins = [new this.colorManager];
+            colorFieldPlugins = [new this.colorManager()];
         }
         
         this.items = [{

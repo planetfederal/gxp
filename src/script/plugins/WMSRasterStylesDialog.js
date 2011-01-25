@@ -322,7 +322,7 @@ gxp.plugins.WMSRasterStylesDialog = {
             if (fieldset.items) {
                 rules = fieldset.items.get(0).rules;
                 for (var i=rules.length-1; i>=0; i--) {
-                    quantity = Math.max(quantity, parseFloat(rules[i].name))
+                    quantity = Math.max(quantity, parseFloat(rules[i].name));
                 }            
             }
         }

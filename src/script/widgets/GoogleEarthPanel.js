@@ -195,7 +195,7 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
                     var link = this.earth.createLink('kl_' + name);
                     var ows = layer.getLayer().url;
                     ows = ows.replace(/\?.*/, '');
-                    var params = layer.getLayer().params
+                    var params = layer.getLayer().params;
                     var kmlPath = '/kml?mode=refresh&layers=' + params.LAYERS +
                         "&styles=" + params.STYLES;
                     link.setHref(ows + kmlPath);
@@ -290,7 +290,6 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
         // we expect, then we zoom to that zoom level.
         //
         // Big note: This expects a map that has fractional zoom disabled!
-        var lookAt = this.earth.getView().copyAsLookAt(this.earth.ALTITUDE_RELATIVE_TO_GROUND);
         var height = lookAt.getRange();
         
         var width = 2 * height * Math.tan(this.HORIZONTAL_FIELD_OF_VIEW);
