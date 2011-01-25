@@ -527,7 +527,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                 } else {
                     this.featureStore.load();
                 }
-            };
+            }
         }
     },
     
