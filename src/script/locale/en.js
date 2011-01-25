@@ -8,8 +8,8 @@ GeoExt.Lang.add("en", {
     
     "gxp.plugins.BingSource.prototype": {
         title: "Bing Layers",
-        roadTitle: "Road",
-        aerialTitle: "Aerial",
+        roadTitle: "Bing Roads",
+        aerialTitle: "Bing Aerial",
         labeledAerialTitle: "Bing Aerial With Labels"
     },    
 

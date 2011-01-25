@@ -69,13 +69,13 @@ gxp.plugins.BingSource = Ext.extend(gxp.plugins.LayerSource, {
      *  ``String``
      *  A descriptive title for the Road layer (i18n).
      */
-    roadTitle: "Road",
+    roadTitle: "Bing Roads",
 
     /** api: config[aerialTitle]
      *  ``String``
      *  A descriptive title for the Aerial layer (i18n).
      */
-    aerialTitle: "Aerial",
+    aerialTitle: "Bing Aerial",
 
     /** api: config[labeledAerialTitle]
      *  ``String``
@@ -162,7 +162,7 @@ gxp.plugins.BingSource = Ext.extend(gxp.plugins.LayerSource, {
 
             // set visibility from config
             if ("visibility" in config) {
-                layer.visibility = config.visibility
+                layer.visibility = config.visibility;
             }
             
             record.set("selected", config.selected || false);
