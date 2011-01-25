@@ -220,7 +220,6 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
     /** private: method[setExtent]
      *  Sets the view of the 3D visualization to approximate an OpenLayers extent.
      */
- 
     setExtent: function(extent) {
         var extent = extent.transform(this.map.getProjectionObject(), this.projection);
         var center = extent.getCenterLonLat();
@@ -245,11 +244,10 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
         this.earth.getView().setAbstractView(camera);
     },
 
-    /** private: method[setExtent]
+    /** private: method[getExtent]
      *  Gets an OpenLayers.Bounds that approximates the visable area of
      *  3D visualization.
-     */    
-    
+     */ 
     getExtent: function() {
         var geBounds = this.earth.getView().getViewportGlobeBounds();
         var olBounds = new OpenLayers.Bounds(
@@ -260,8 +258,7 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
 
 
     /** private: method[updateMap]
-     */    
-    
+     */
     updateMap: function() {
         // Get the center of the map from GE. We let GE get the center (as opposed to getting
         // the extent and then finding the center) because it'll find the correct visual
@@ -314,8 +311,7 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
 
 
     /** private: method[getExentWidth]
-     */    
-    
+     */
     getExtentWidth: function(extent) {
         var center = extent.getCenterLonLat();
         
@@ -327,14 +323,14 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
     
 
     /** private: method[reprojectToGE]
-     */    
+     */
     reprojectToGE: function(data) {
         return data.clone().transform(this.map.getProjectionObject(), this.projection);
     },
     
 
     /** private: method[reprojectToMap]
-     */    
+     */
     reprojectToMap: function(data) {
         return data.clone().transform(this.projection, this.map.getProjectionObject());
     }
