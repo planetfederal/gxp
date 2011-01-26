@@ -65,6 +65,11 @@
     background-image: url(img/geosilk/pan.png);
 }
 
+/* gxp_layerproperties */
+.x-btn .gxp-icon-layerproperties, .x-menu-item .gxp-icon-layerproperties {
+    background-image: url(img/silk/wrench.png);
+}
+
 /* gxp_removelayer */
 .x-btn .gxp-icon-removelayers, .x-menu-item .gxp-icon-removelayers {
     background-image: url(img/silk/delete.png);

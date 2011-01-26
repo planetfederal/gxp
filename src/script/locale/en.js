@@ -34,6 +34,11 @@ GeoExt.Lang.add("en", {
         hybridAbstract: "Show imagery with street names",
         terrainAbstract: "Show street map with terrain"
     },
+
+    "gxp.plugins.LayerProperties.prototype": {
+        menuText: "Layer Properties",
+        toolTip: "Layer Properties"
+    },
     
     "gxp.plugins.LayerTree.prototype": {
         rootNodeText: "Layers",
