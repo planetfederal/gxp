@@ -150,6 +150,10 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
                         unregisterDoIt.call(this);
                         if (fn === "setLayer") {
                             this.target.selectLayer(fnArgs[0]);
+                        } else if (fn === "clearFeatures") {
+                            // nothing asynchronous involved here, so let's
+                            // finish the caller first before we do anything.
+                            window.setTimeout(function() {mgr[fn].call(mgr);});
                         } else {
                             mgr[fn].apply(mgr, fnArgs);
                         }
@@ -173,7 +177,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
             "beforequery": intercept.createDelegate(this, "loadFeatures", 1),
             "beforelayerchange": intercept.createDelegate(this, "setLayer", 1),
             "beforesetpage": intercept.createDelegate(this, "setPage", 1),
-            "beforeclearfeatures": intercept.createDelegate(this, "cleafFeatures", 1),
+            "beforeclearfeatures": intercept.createDelegate(this, "clearFeatures", 1),
             scope: this
         });
         
