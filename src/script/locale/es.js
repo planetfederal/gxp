@@ -24,7 +24,7 @@ GeoExt.Lang.add("es", {
     },
     
     "gxp.plugins.FeatureGrid.prototype": {
-        displayFeatureText: "Display on map"
+        displayFeatureText: "Display on map",
         firstPageTip: "First page",
         previousPageTip: "Previous page",
         zoomPageExtentTip: "Zoom to page extent",
@@ -76,6 +76,14 @@ GeoExt.Lang.add("es", {
         mapQuestAttribution: "Tiles Courtesy of <a href='http://open.mapquest.co.uk/' target='_blank'>MapQuest</a> <img src='http://developer.mapquest.com/content/osm/mq_logo.png' border='0'>",
         mapnikAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
         osmarenderAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>"
+    },
+
+    "gxp.plugins.MapQuestSource.prototype": {
+        title: "MapQuest Layers",
+        osmAttribution: "Tiles Courtesy of <a href='http://open.mapquest.co.uk/' target='_blank'>MapQuest</a> <img src='http://developer.mapquest.com/content/osm/mq_logo.png' border='0'>",
+        osmTitle: "MapQuest OpenStreetMap",
+        naipAttribution: "Tiles Courtesy of <a href='http://open.mapquest.co.uk/' target='_blank'>MapQuest</a> <img src='http://developer.mapquest.com/content/osm/mq_logo.png' border='0'>",
+        naipTitle: "MapQuest Imagery"
     },
 
     "gxp.plugins.QueryForm.prototype": {
