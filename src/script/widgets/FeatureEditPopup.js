@@ -331,22 +331,26 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                     return;
                 }
                 if(this.feature.state === this.getDirtyState()) {
-                    Ext.Msg.show({
-                        title: this.closeMsgTitle,
-                        msg: this.closeMsg,
-                        buttons: Ext.Msg.YESNOCANCEL,
-                        fn: function(button) {
-                            if(button && button !== "cancel") {
-                                this.stopEditing(button === "yes");
-                                this.close();
-                            } else {
-                                this.fireEvent("cancelclose", this);
-                            }
-                        },
-                        scope: this,
-                        icon: Ext.MessageBox.QUESTION,
-                        animEl: this.getEl()
-                    });
+                    if (!this._closeMsgBox) {
+                        this._closeMsgBox = true;
+                        Ext.Msg.show({
+                            title: this.closeMsgTitle,
+                            msg: this.closeMsg,
+                            buttons: Ext.Msg.YESNOCANCEL,
+                            fn: function(button) {
+                                delete this._closeMsgBox;
+                                if (button && button !== "cancel") {
+                                    this.stopEditing(button === "yes");
+                                    this.close();
+                                } else {
+                                    this.fireEvent("cancelclose", this);
+                                }
+                            },
+                            scope: this,
+                            icon: Ext.MessageBox.QUESTION,
+                            animEl: this.getEl()
+                        });
+                    }
                     return false;
                 } else {
                     this.stopEditing(false);
