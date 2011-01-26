@@ -5,7 +5,10 @@ GeoExt.Lang.add("en", {
         addMenuText: "Add layers",
         addActionTip: "Add layers",
         addServerText: "Add a New Server",
-        untitledText: "Untitled"
+        untitledText: "Untitled",
+        addLayerSourceErrorText: "Error getting WMS capabilities ({msg}).\nPlease check the url and try again.",
+        availableLayersText: "Available Layers",
+        doneText: "Done"
     },
     
     "gxp.plugins.BingSource.prototype": {

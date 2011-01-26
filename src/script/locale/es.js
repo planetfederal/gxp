@@ -5,7 +5,10 @@ GeoExt.Lang.add("es", {
         addMenuText: "Añadir Capa",
         addActionTip: "Añadir Capa",
         addServerText: "Añadir servidor",
-        untitledText: "Sin Título"
+        untitledText: "Sin Título",
+        addLayerSourceErrorText: "Error obteniendo capabilities de WMS ({msg}).\nPor favor, compruebe la URL y vuelva a intentarlo.",
+        availableLayersText: "Capas disponibles",
+        doneText: "Hecho"
     },
     
     "gxp.plugins.BingSource.prototype": {
@@ -49,23 +52,23 @@ GeoExt.Lang.add("es", {
     },
 
     "gxp.plugins.Measure.prototype": {
-        lengthMenuText: "Length",
-        areaMenuText: "Area",
-        lengthTooltip: "Measure length",
-        areaTooltip: "Measure area",
-        measureTooltip: "Measure"
+        lengthMenuText: "Longitud",
+        areaMenuText: "Área",
+        lengthTooltip: "Medir Longitud",
+        areaTooltip: "Medir Área",
+        measureTooltip: "Medir"
     },
 
     "gxp.plugins.Navigation.prototype": {
-        menuText: "Pan Map",
-        tooltip: "Pan Map"
+        menuText: "Desplazar mapa",
+        tooltip: "Desplazar mapa"
     },
 
     "gxp.plugins.NavigationHistory.prototype": {
-        previousMenuText: "Zoom To Previous Extent",
-        nextMenuText: "Zoom To Next Extent",
-        previousTooltip: "Zoom To Previous Extent",
-        nextTooltip: "Zoom To Next Extent"
+        previousMenuText: "Vista anterior",
+        nextMenuText: "Vista siguiente",
+        previousTooltip: "Vista anterior",
+        nextTooltip: "Vista siguiente"
     },
 
     "gxp.plugins.OSMSource.prototype": {
@@ -90,15 +93,15 @@ GeoExt.Lang.add("es", {
     },
 
     "gxp.plugins.WMSGetFeatureInfo.prototype": {
-        infoActionTip: "Get Feature Info",
-        popupTitle: "Feature Info"
+        infoActionTip: "Consultar elementos",
+        popupTitle: "Información de elementos"
     },
 
     "gxp.plugins.Zoom.prototype": {
-        zoomInMenuText: "Zoom In",
-        zoomOutMenuText: "Zoom Out",
-        zoomInTooltip: "Zoom In",
-        zoomOutTooltip: "Zoom Out"
+        zoomInMenuText: "Acercar",
+        zoomOutMenuText: "Alejar",
+        zoomInTooltip: "Acercar",
+        zoomOutTooltip: "Alejar"
     },
     
     "gxp.plugins.ZoomToExtent.prototype": {

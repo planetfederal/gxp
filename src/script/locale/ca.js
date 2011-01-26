@@ -5,7 +5,10 @@ GeoExt.Lang.add("ca", {
         addMenuText: "Afegeix Capa",
         addActionTip: "Afegeix Capa",
         addServerText: "Afegeix servidor",
-        untitledText: "Sense Títol"
+        untitledText: "Sense Títol",
+        addLayerSourceErrorText: "Error obtenint les capabilities del WMS ({msg}).\nSi us plau, comproveu la URL i torneu-ho a intentar.",
+        availableLayersText: "Capes disponibles",
+        doneText: "Fet"
     },
     
     "gxp.plugins.BingSource.prototype": {
@@ -49,23 +52,23 @@ GeoExt.Lang.add("ca", {
     },
 
     "gxp.plugins.Measure.prototype": {
-        lengthMenuText: "Length",
-        areaMenuText: "Area",
-        lengthTooltip: "Measure length",
-        areaTooltip: "Measure area",
-        measureTooltip: "Measure"
+        lengthMenuText: "Longitud",
+        areaMenuText: "Àrea",
+        lengthTooltip: "Mesura Longitud",
+        areaTooltip: "Mesura Àrea",
+        measureTooltip: "Mesura"
     },
 
     "gxp.plugins.Navigation.prototype": {
-        menuText: "Pan Map",
-        tooltip: "Pan Map"
+        menuText: "Desplaça mapa",
+        tooltip: "Desplaça mapa"
     },
 
     "gxp.plugins.NavigationHistory.prototype": {
-        previousMenuText: "Zoom To Previous Extent",
-        nextMenuText: "Zoom To Next Extent",
-        previousTooltip: "Zoom To Previous Extent",
-        nextTooltip: "Zoom To Next Extent"
+        previousMenuText: "Vista anterior",
+        nextMenuText: "Vista següent",
+        previousTooltip: "Vista anterior",
+        nextTooltip: "Vista següent"
     },
 
     "gxp.plugins.OSMSource.prototype": {
@@ -90,15 +93,15 @@ GeoExt.Lang.add("ca", {
     },
 
     "gxp.plugins.WMSGetFeatureInfo.prototype": {
-        infoActionTip: "Get Feature Info",
-        popupTitle: "Feature Info"
+        infoActionTip: "Consulta elements",
+        popupTitle: "Informació dels elements"
     },
 
     "gxp.plugins.Zoom.prototype": {
-        zoomInMenuText: "Zoom In",
-        zoomOutMenuText: "Zoom Out",
-        zoomInTooltip: "Zoom In",
-        zoomOutTooltip: "Zoom Out"
+        zoomInMenuText: "Apropa",
+        zoomOutMenuText: "Allunya",
+        zoomInTooltip: "Apropa",
+        zoomOutTooltip: "Allunya"
     },
     
     "gxp.plugins.ZoomToExtent.prototype": {
