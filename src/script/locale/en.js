@@ -108,6 +108,11 @@ GeoExt.Lang.add("en", {
         menuText: "Zoom to layer extent",
         tooltip: "Zoom to layer extent"
     },
+
+    "gxp.plugins.ZoomToLayerExtent.prototype": {
+        menuText: "Zoom to layer extent",
+        tooltip: "Zoom to layer extent"
+    },
     
     "gxp.plugins.ZoomToSelectedFeatures.prototype": {
         menuText: "Zoom to selected features",

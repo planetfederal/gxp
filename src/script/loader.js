@@ -55,6 +55,8 @@
         "plugins/NavigationHistory.js",
         "plugins/Zoom.js",
         "plugins/ZoomToExtent.js",
+        "plugins/ZoomToDataExtent.js",
+        "plugins/ZoomToLayerExtent",
         "plugins/ZoomToSelectedFeatures.js",
         "plugins/Measure.js",
         "plugins/Navigation.js",

@@ -75,7 +75,7 @@
     background-image: url(img/silk/delete.png);
 }
 
-/* gxp_zoomtodataextent, gxp_zoomtoselectedfeatures */
+/* gxp_zoomtodataextent, gxp_zoomtoselectedfeatures, gxp_zoomtolayerextent */
 .x-btn .gxp-icon-zoom-to, .x-menu-item .gxp-icon-zoom-to { 
     background-image: url(img/silk/magnifier.png);
 }
