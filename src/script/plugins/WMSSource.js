@@ -329,31 +329,39 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         }
         var layerName = rec.getLayer().params.LAYERS;
         var cb = function() {
-            var recs = Ext.isArray(arguments[1]) ? arguments[1] : arguments[0];
-            var rec;
-            for (var i=recs.length-1; i>=0; i--) {
-                rec = recs[i];
-                if (rec.get("layerName") == layerName) {
-                    callback.call(scope, rec);
-                    return;
+            for (var l in describedLayers) {
+                if (l == layerName) {
+                    this.describeLayerStore.un("load", describedLayers[l], this);
+                    describedLayers[l] = true;
+                    var recs = Ext.isArray(arguments[1]) ? arguments[1] : arguments[0];
+                    var rec;
+                    for (var i=recs.length-1; i>=0; i--) {
+                        rec = recs[i];
+                        if (rec.get("layerName") == layerName) {
+                            callback.call(scope, rec);
+                            return;
+                        }
+                    }
+                    // something went wrong (e.g. GeoServer does not return a valid
+                    // DescribeFeatureType document for group layers)
+                    delete describedLayers[layerName];
+                    callback.call(scope, false);
+                    break;
                 }
             }
-            // something went wrong (e.g. GeoServer does not return a valid
-            // DescribeFeatureType document for group layers)
-            delete describedLayers[layerName];
-            callback.call(scope, false);
         };
         var describedLayers = this.describedLayers;
         var index;
         if (!describedLayers[layerName]) {
-            describedLayers[layerName] = true;
+            describedLayers[layerName] = cb;
             this.describeLayerStore.load({
                 params: {LAYERS: layerName},
                 add: true,
-                callback: cb
+                callback: cb,
+                scope: this
             });
         } else if ((index = this.describeLayerStore.findExact("layerName", layerName)) == -1) {
-            this.describeLayerStore.on("load", cb, this, {single: true});
+            this.describeLayerStore.on("load", cb, this);
         } else {
             callback.call(scope, this.describeLayerStore.getAt(index));
         }
