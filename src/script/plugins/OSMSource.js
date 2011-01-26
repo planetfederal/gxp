@@ -64,12 +64,6 @@ gxp.plugins.OSMSource = Ext.extend(gxp.plugins.LayerSource, {
      */
     title: "OpenStreetMap Layers",
 
-    /** api: config[mapQuestAttribution]
-     *  ``String``
-     *  Attribution string for mapnik generated layer (i18n).
-     */
-    mapQuestAttribution: "Tiles Courtesy of <a href='http://open.mapquest.co.uk/' target='_blank'>MapQuest</a> <img src='http://developer.mapquest.com/content/osm/mq_logo.png' border='0'>",
-
     /** api: config[mapnikAttribution]
      *  ``String``
      *  Attribution string for mapnik generated layer (i18n).
@@ -101,19 +95,6 @@ gxp.plugins.OSMSource = Ext.extend(gxp.plugins.LayerSource, {
         };
         
         var layers = [
-            new OpenLayers.Layer.OSM(
-                "MapQuest",
-                [
-                    "http://otile1.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png",
-                    "http://otile2.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png",
-                    "http://otile3.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png",
-                    "http://otile4.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png"
-                ],
-                OpenLayers.Util.applyDefaults({                
-                    attribution: this.mapQuestAttribution,
-                    type: "mapquest"
-                }, options)
-            ),
             new OpenLayers.Layer.OSM(
                 "OpenStreetMap",
                 [
