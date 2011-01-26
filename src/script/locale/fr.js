@@ -1,14 +1,14 @@
 
-GeoExt.Lang.add("en", {
+GeoExt.Lang.add("fr", {
 
     "gxp.plugins.AddLayers.prototype": {
-        addMenuText: "Add layers",
-        addActionTip: "Add layers",
-        addServerText: "Add a New Server",
-        untitledText: "Untitled",
-        addLayerSourceErrorText: "Error getting WMS capabilities ({msg}).\nPlease check the url and try again.",
-        availableLayersText: "Available Layers",
-        doneText: "Done"
+        addMenuText: "Ajouter des calques",
+        addActionTip: "Ajouter des calques",
+        addServerText: "Ajouter un nouveau serveur",
+        untitledText: "Sans titre",
+        addLayerSourceErrorText: "Erreur capacités WMS obtenir ({msg}).\nVeuillez vérifier URL et essayez à nouveau.",
+        availableLayersText: "Layers disponible",
+        doneText: "Terminé"
     },
     
     "gxp.plugins.BingSource.prototype": {
@@ -41,34 +41,34 @@ GeoExt.Lang.add("en", {
     },
 
     "gxp.plugins.LayerProperties.prototype": {
-        menuText: "Layer Properties",
-        toolTip: "Layer Properties"
+        menuText: "Propriétés de la couche",
+        toolTip: "Propriétés de la couche"
     },
     
     "gxp.plugins.LayerTree.prototype": {
         rootNodeText: "Layers",
-        overlayNodeText: "Overlays",
-        baseNodeText: "Base Layers"
+        overlayNodeText: "Surimpressions",
+        baseNodeText: "Couches"
     },
 
     "gxp.plugins.Measure.prototype": {
-        lengthMenuText: "Length",
-        areaMenuText: "Area",
-        lengthTooltip: "Measure length",
-        areaTooltip: "Measure area",
-        measureTooltip: "Measure"
+        lengthMenuText: "Longueur",
+        areaMenuText: "Zone",
+        lengthTooltip: "Mesure Longueur",
+        areaTooltip: "Mesure Zone",
+        measureTooltip: "Mesure"
     },
 
     "gxp.plugins.Navigation.prototype": {
-        menuText: "Pan Map",
-        tooltip: "Pan Map"
+        menuText: "Plan Pan",
+        tooltip: "Plan Pan"
     },
 
     "gxp.plugins.NavigationHistory.prototype": {
-        previousMenuText: "Zoom To Previous Extent",
-        nextMenuText: "Zoom To Next Extent",
-        previousTooltip: "Zoom To Previous Extent",
-        nextTooltip: "Zoom To Next Extent"
+        previousMenuText: "Zoom à Précédent",
+        nextMenuText: "Zoom à Next",
+        previousTooltip: "Zoom à Précédent",
+        nextTooltip: "Zoom à Next"
     },
 
     "gxp.plugins.OSMSource.prototype": {
@@ -84,25 +84,24 @@ GeoExt.Lang.add("en", {
         queryActionTip: "Query the selected layer",
         queryByLocationText: "Query by location",
         currentTextText: "Current extent",
-        queryByAttributesText: "Query by attributes",
-        queryMsg: "Querying..."
+        queryByAttributesText: "Query by attributes"
     },
 
     "gxp.plugins.RemoveLayer.prototype": {
-        removeMenuText: "Remove layer",
-        removeActionTip: "Remove layer"
+        removeMenuText: "Enlever la couche",
+        removeActionTip: "Enlever la couche"
     },
 
     "gxp.plugins.WMSGetFeatureInfo.prototype": {
         infoActionTip: "Get Feature Info",
-        popupTitle: "Feature Info"
+        popupTitle: "Info entité"
     },
 
     "gxp.plugins.Zoom.prototype": {
         zoomInMenuText: "Zoom In",
-        zoomOutMenuText: "Zoom Out",
+        zoomOutMenuText: "Zoom arrière",
         zoomInTooltip: "Zoom In",
-        zoomOutTooltip: "Zoom Out"
+        zoomOutTooltip: "Zoom arrière"
     },
     
     "gxp.plugins.ZoomToExtent.prototype": {
@@ -116,8 +115,8 @@ GeoExt.Lang.add("en", {
     },
 
     "gxp.plugins.ZoomToLayerExtent.prototype": {
-        menuText: "Zoom to layer extent",
-        tooltip: "Zoom to layer extent"
+        menuText: "Zoom à la couche",
+        tooltip: "Zoom à la couche"
     },
     
     "gxp.plugins.ZoomToSelectedFeatures.prototype": {
@@ -159,9 +158,9 @@ GeoExt.Lang.add("en", {
         nameHeaderText : "Name",
         titleHeaderText : "Title",
         queryableHeaderText : "Queryable",
-        layerSelectionLabel: "View available data from:",
+        layerSelectionLabel: "Voir les données disponibles à partir de:",
         layerAdditionLabel: "or add a new server.",
-        expanderTemplateText: "<p><b>Abstract:</b> {abstract}</p>"
+        expanderTemplateText: "<p><b>Résumé:</b> {abstract}</p>"
     },
     
     "gxp.PointSymbolizer.prototype": {

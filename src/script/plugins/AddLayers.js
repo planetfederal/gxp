@@ -43,6 +43,36 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      *  Text for add action tooltip (i18n).
      */
     addActionTip: "Add layers",
+
+    /** api: config[addServerText]
+     *  ``String``
+     *  Text for add server button (i18n).
+     */
+    addServerText: "Add a New Server",
+
+    /** api: config[untitledText]
+     *  ``String``
+     *  Text for an untitled layer (i18n).
+     */
+    untitledText: "Untitled",
+
+    /** api: config[addLayerSourceErrorText]
+     *  ``String``
+     *  Text for an error message when WMS GetCapabilities retrieval fails (i18n).
+     */
+    addLayerSourceErrorText: "Error getting WMS capabilities ({msg}).\nPlease check the url and try again.",
+
+    /** api: config[availableLayersText]
+     *  ``String``
+     *  Text for the available layers (i18n).
+     */
+    availableLayersText: "Available Layers",
+
+    /** api: config[doneText]
+     *  ``String``
+     *  Text for Done button (i18n).
+     */
+    doneText: "Done",
     
     /** api: method[addActions]
      */
@@ -165,7 +195,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         
         if (this.target.proxy) {
             capGridToolbar.push("-", new Ext.Button({
-                text: "Add a New Server",
+                text: this.addServerText,
                 iconCls: "gxp-icon-addserver",
                 handler: function() {
                     newSourceWindow.show();
@@ -184,7 +214,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                             // add to combo and select
                             var record = new sources.recordType({
                                 id: id,
-                                title: this.target.layerSources[id].title || "Untitled" // TODO: titles
+                                title: this.target.layerSources[id].title || this.untitledText
                             });
                             sources.insert(0, [record]);
                             sourceComboBox.onSelect(record, 0);
@@ -192,7 +222,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                         },
                         fallback: function(source, msg) {
                             newSourceWindow.setError(
-                                "Error getting WMS capabilities (" + msg + ").\nPlease check the url and try again."
+                                new Ext.Template(this.addLayerSourceErrorText).apply({msg: msg})
                             );
                         },
                         scope: this
@@ -203,7 +233,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         });
 
         this.capGrid = new Ext.Window({
-            title: "Available Layers",
+            title: this.availableLayersText,
             closeAction: "hide",
             layout: "border",
             height: 300,
@@ -220,7 +250,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     scope : this
                 }),
                 new Ext.Button({
-                    text: "Done",
+                    text: this.doneText,
                     handler: function() {
                         this.capGrid.hide();
                     },
