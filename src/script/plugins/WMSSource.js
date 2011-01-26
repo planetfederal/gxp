@@ -329,26 +329,25 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         }
         var layerName = rec.getLayer().params.LAYERS;
         var cb = function() {
-            for (var l in describedLayers) {
-                if (l == layerName) {
-                    this.describeLayerStore.un("load", describedLayers[l], this);
-                    describedLayers[l] = true;
-                    var recs = Ext.isArray(arguments[1]) ? arguments[1] : arguments[0];
-                    var rec;
-                    for (var i=recs.length-1; i>=0; i--) {
-                        rec = recs[i];
-                        if (rec.get("layerName") == layerName) {
-                            callback.call(scope, rec);
-                            return;
-                        }
-                    }
-                    // something went wrong (e.g. GeoServer does not return a valid
-                    // DescribeFeatureType document for group layers)
-                    delete describedLayers[layerName];
-                    callback.call(scope, false);
-                    break;
+            var recs = Ext.isArray(arguments[1]) ? arguments[1] : arguments[0];
+            var rec;
+            for (var i=recs.length-1; i>=0; i--) {
+                rec = recs[i], name;
+                if ((name = rec.get("layerName")) == layerName) {
+                    this.describeLayerStore.un("load", arguments.callee, this);
+                    this.describedLayers[name] = true;
+                    callback.call(scope, rec);
+                    return;
+                } else if (typeof this.describedLayers[name] == "function") {
+                    var fn = this.describedLayers[name];
+                    this.describeLayerStore.un("load", fn, this);
+                    fn.apply(this, arguments);
                 }
             }
+            // something went wrong (e.g. GeoServer does not return a valid
+            // DescribeFeatureType document for group layers)
+            delete describedLayers[layerName];
+            callback.call(scope, false);
         };
         var describedLayers = this.describedLayers;
         var index;
