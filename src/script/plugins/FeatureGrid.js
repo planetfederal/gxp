@@ -49,6 +49,20 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
      */
     alwaysDisplayOnMap: false,
     
+    /** api: config[autoExpand]
+     *  ``Boolean`` If set to true, and when this tool's output is added to a
+     *  container that can be expanded, it will be expanded when features are
+     *  loaded. Default is false.
+     */
+    autoExpand: false,
+    
+    /** api: config[autoCollapse]
+     *  ``Boolean`` If set to true, and when this tool's output is added to a
+     *  container that can be collapsed, it will be collapsed when no features
+     *  are to be displayed. Default is false.
+     */
+    autoCollapse: false,
+    
     /** api: config[displayFeatureText]
      * ``String``
      * Text for feature display button (i18n).
@@ -159,7 +173,27 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                     featureManager[pressed ? "showLayer" : "hideLayer"](this.id);
                 },
                 scope: this
-            }])
+            }]),
+            listeners: {
+                "added": function(cmp, ownerCt) {
+                    var autoCollapse = (function() {
+                        this.autoCollapse && typeof ownerCt.collapse == "function" &&
+                            ownerCt.collapse();
+                    }).bind(this);
+                    var autoExpand = (function() {
+                        this.autoExpand && typeof ownerCt.expand == "function" &&
+                            ownerCt.expand()
+                    }).bind(this);
+                    featureManager.on({
+                        "query": function(tool, store) {
+                            store && store.getCount() ? autoExpand() : autoCollapse();
+                        },
+                        "layerchange": autoCollapse,
+                        "clearfeatures": autoCollapse
+                    });
+                },
+                scope: this
+            }
         }, config || {});
         var featureGrid = gxp.plugins.FeatureGrid.superclass.addOutput.call(this, config);
         
@@ -175,7 +209,7 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
             featureGrid.lastPageButton.setDisabled(!next);
             featureGrid.nextPageButton.setDisabled(!next);
         }, this);
-        
+                
         featureManager.on("layerchange", function(mgr, rec, schema) {
             //TODO use schema instead of store to configure the fields
             var ignoreFields = ["feature", "state", "fid"];
@@ -188,7 +222,7 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
         
         return featureGrid;
     }
-        
+            
 });
 
 Ext.preg(gxp.plugins.FeatureGrid.prototype.ptype, gxp.plugins.FeatureGrid);
