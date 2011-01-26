@@ -235,7 +235,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 title: layer.name,
                 group: config.group,
                 source: config.source,
-                properties: "gx_wmslayerpanel",
+                properties: "gxp_wmslayerpanel",
                 fixed: config.fixed,
                 selected: "selected" in config ? config.selected : false,
                 layer: layer

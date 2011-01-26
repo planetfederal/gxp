@@ -34,6 +34,11 @@ GeoExt.Lang.add("en", {
         hybridAbstract: "Show imagery with street names",
         terrainAbstract: "Show street map with terrain"
     },
+
+    "gxp.plugins.LayerProperties.prototype": {
+        menuText: "Layer Properties",
+        toolTip: "Layer Properties"
+    },
     
     "gxp.plugins.LayerTree.prototype": {
         rootNodeText: "Layers",
@@ -100,6 +105,11 @@ GeoExt.Lang.add("en", {
     },
     
     "gxp.plugins.ZoomToDataExtent.prototype": {
+        menuText: "Zoom to layer extent",
+        tooltip: "Zoom to layer extent"
+    },
+
+    "gxp.plugins.ZoomToLayerExtent.prototype": {
         menuText: "Zoom to layer extent",
         tooltip: "Zoom to layer extent"
     },

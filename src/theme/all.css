@@ -65,12 +65,17 @@
     background-image: url(img/geosilk/pan.png);
 }
 
+/* gxp_layerproperties */
+.x-btn .gxp-icon-layerproperties, .x-menu-item .gxp-icon-layerproperties {
+    background-image: url(img/silk/wrench.png);
+}
+
 /* gxp_removelayer */
 .x-btn .gxp-icon-removelayers, .x-menu-item .gxp-icon-removelayers {
     background-image: url(img/silk/delete.png);
 }
 
-/* gxp_zoomtodataextent, gxp_zoomtoselectedfeatures */
+/* gxp_zoomtodataextent, gxp_zoomtoselectedfeatures, gxp_zoomtolayerextent */
 .x-btn .gxp-icon-zoom-to, .x-menu-item .gxp-icon-zoom-to { 
     background-image: url(img/silk/magnifier.png);
 }

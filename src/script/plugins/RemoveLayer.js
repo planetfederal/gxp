@@ -60,7 +60,7 @@ gxp.plugins.RemoveLayer = Ext.extend(gxp.plugins.Tool, {
             },
             scope: this
         }]);
-        var removeLayerAction = actions[0]
+        var removeLayerAction = actions[0];
 
         this.target.on("layerselectionchange", function(record) {
             selectedLayer = record;
