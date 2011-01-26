@@ -20,6 +20,11 @@ GeoExt.Lang.add("en", {
     
     "gxp.plugins.FeatureGrid.prototype": {
         displayFeatureText: "Display on map"
+        firstPageTip: "First page",
+        previousPageTip: "Previous page",
+        zoomPageExtentTip: "Zoom to page extent",
+        nextPageTip: "Next page",
+        nextPageTip: "Last page"
     },
     
     "gxp.plugins.GoogleSource.prototype": {

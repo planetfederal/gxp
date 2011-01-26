@@ -55,6 +55,36 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
      */
     displayFeatureText: "Display on map",
 
+    /** api: config[zoomFirstPageTip]
+     *  ``String``
+     *  Tooltip string for first page action (i18n).
+     */
+    firstPageTip: "First page",
+
+    /** api: config[previousPageTip]
+     *  ``String``
+     *  Tooltip string for previous page action (i18n).
+     */
+    previousPageTip: "Previous page",
+
+    /** api: config[zoomFirstPageTip]
+     *  ``String``
+     *  Tooltip string for zoom to page extent action (i18n).
+     */
+    zoomPageExtentTip: "Zoom to page extent",
+
+    /** api: config[nextPageTip]
+     *  ``String``
+     *  Tooltip string for next page action (i18n).
+     */
+    nextPageTip: "Next page",
+
+    /** api: config[lastPageTip]
+     *  ``String``
+     *  Tooltip string for last page action (i18n).
+     */
+    nextPageTip: "Last page",
+
     /** api: method[addOutput]
      */
     addOutput: function(config) {
@@ -83,6 +113,7 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
             bbar: (featureManager.paging ? [{
                 iconCls: "x-tbar-page-first",
                 ref: "../firstPageButton",
+                tooltip: this.firstPageTip,
                 disabled: true,
                 handler: function() {
                     featureManager.setPage({index: 0});
@@ -90,6 +121,7 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
             }, {
                 iconCls: "x-tbar-page-prev",
                 ref: "../prevPageButton",
+                tooltip: this.previousPageTip,
                 disabled: true,
                 handler: function() {
                     featureManager.previousPage();
@@ -97,6 +129,7 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
             }, {
                 iconCls: "gxp-icon-zoom-to",
                 ref: "../zoomToPageButton",
+                tooltip: this.zoomPageExtentTip,
                 disabled: true,
                 hidden: featureManager.autoZoomPage,
                 handler: function() {
@@ -105,6 +138,7 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
             }, {
                 iconCls: "x-tbar-page-next",
                 ref: "../nextPageButton",
+                tooltip: this.nextPageTip,
                 disabled: true,
                 handler: function() {
                     featureManager.nextPage();
@@ -112,6 +146,7 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
             }, {
                 iconCls: "x-tbar-page-last",
                 ref: "../lastPageButton",
+                tooltip: this.lastPageTip,
                 disabled: true,
                 handler: function() {
                     featureManager.setPage({index: "last"});
