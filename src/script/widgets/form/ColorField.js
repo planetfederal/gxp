@@ -185,4 +185,4 @@ gxp.form.ColorField = Ext.extend(Ext.form.TextField,  {
     
 });
 
-Ext.reg("gx_colorfield", gxp.form.ColorField);
+Ext.reg("gxp_colorfield", gxp.form.ColorField);

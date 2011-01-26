@@ -113,4 +113,4 @@ gxp.form.ViewerField = Ext.extend(Ext.form.TextArea, {
     
 });
 
-Ext.reg("gx_viewerfield", gxp.form.ViewerField);
+Ext.reg("gxp_viewerfield", gxp.form.ViewerField);

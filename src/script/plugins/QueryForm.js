@@ -8,6 +8,7 @@
 
 /**
  * @requires plugins/Tool.js
+ * @include widgets/QueryPanel.js
  */
 
 /** api: (define)
