@@ -79,7 +79,8 @@ GeoExt.Lang.add("en", {
         queryActionTip: "Query the selected layer",
         queryByLocationText: "Query by location",
         currentTextText: "Current extent",
-        queryByAttributesText: "Query by attributes"
+        queryByAttributesText: "Query by attributes",
+        queryMsg: "Querying..."
     },
 
     "gxp.plugins.RemoveLayer.prototype": {

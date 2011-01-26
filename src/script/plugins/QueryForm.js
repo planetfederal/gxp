@@ -39,6 +39,13 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
      */
     featureManager: null,
     
+    /** api: config[autoHide]
+     *  ``Boolean`` Set to true if the output of this tool goes into an
+     *  ``Ext.Window`` that should be hidden when the query result is
+     *  available. Default is false.
+     */
+    autoHide: false,
+
     /** private: property[schema]
      *  ``GeoExt.data.AttributeStore``
      */
@@ -79,6 +86,12 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
      *  Text for query by attributes (i18n).
      */
     queryByAttributesText: "Query by attributes",
+    
+    /** api: config[queryMsg]
+     *  ``String``
+     *  Text for query load mask (i18n).
+     */
+    queryMsg: "Querying...",
 
     /** api: config[actions]
      *  ``Object`` By default, this tool creates a "Query" action to trigger
@@ -104,7 +117,7 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
         });
         gxp.plugins.QueryForm.superclass.constructor.apply(this, arguments);
     },
-
+    
     /** api: method[addActions]
      */
     addActions: function(actions) {
@@ -202,6 +215,19 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
         
         this.target.mapPanel.map.events.register("moveend", this, function() {
             queryForm.extent.setValue(this.getFormattedMapExtent());
+        });
+        
+        featureManager.on({
+            "beforequery": function() {
+                new Ext.LoadMask(queryForm.getEl(), {
+                    store: featureManager.featureStore,
+                    msg: this.queryMsg
+                }).show();
+            },
+            "query": function() {
+                this.autoHide && queryForm.ownerCt.hide();
+            },
+            scope: this
         });
         
         return queryForm;
