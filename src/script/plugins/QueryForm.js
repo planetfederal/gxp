@@ -56,6 +56,12 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
      *  Text for query action (i18n).
      */
     queryActionText: "Query",
+    
+    /** api: config[cancelButtonText]
+     *  ``String``
+     *  Text for cancel button (i18n).
+     */
+    cancelButtonText: "Cancel",
 
     /** api: config[queryMenuText]
      *  ``String``
@@ -92,6 +98,18 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
      *  Text for query load mask (i18n).
      */
     queryMsg: "Querying...",
+    
+    /** api: config[noFeaturesTitle]
+     *  ``String``
+     *  Text for no features alert title (i18n)
+     */
+    noFeaturesTitle: "No Match",
+
+    /** api: config[noFeaturesMsg]
+     *  ``String``
+     *  Text for no features alert message (i18n)
+     */
+    noFeaturesMessage: "Your query did not return any results",
 
     /** api: config[actions]
      *  ``Object`` By default, this tool creates a "Query" action to trigger
@@ -112,7 +130,8 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
                 text: this.queryActionText,
                 menuText: this.queryMenuText,
                 iconCls: "gxp-icon-find",
-                tooltip: this.queryActionTip
+                tooltip: this.queryActionTip,
+                disabled: true,
             }]
         });
         gxp.plugins.QueryForm.superclass.constructor.apply(this, arguments);
@@ -161,6 +180,20 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
                 checkboxToggle: true
             }],
             bbar: ["->", {
+                text: this.cancelButtonText,
+                iconCls: "cancel",
+                handler: function() {
+                    var ownerCt = queryForm.ownerCt;
+                    if (ownerCt && ownerCt instanceof Ext.Window) {
+                        ownerCt.hide();
+                    } else {
+                        addAttributeFilter(
+                            featureManager, featureManager.layerRecord,
+                            featureManater.schema
+                        );
+                    }
+                }
+            }, {
                 text: this.queryActionText,
                 iconCls: "gxp-icon-find",
                 handler: function() {
@@ -224,8 +257,11 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
                     msg: this.queryMsg
                 }).show();
             },
-            "query": function() {
-                this.autoHide && queryForm.ownerCt.hide();
+            "query": function(tool, store) {
+                if (store) {
+                    store.getCount() || Ext.Msg.alert(this.noFeaturesTitle, this.noFeaturesMessage);
+                    this.autoHide && queryForm.ownerCt && queryForm.ownerCt.hide();
+                }
             },
             scope: this
         });
