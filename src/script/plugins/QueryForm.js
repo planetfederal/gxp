@@ -109,7 +109,7 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
      *  ``String``
      *  Text for no features alert message (i18n)
      */
-    noFeaturesMessage: "Your query did not return any results",
+    noFeaturesMessage: "Your query did not return any results.",
 
     /** api: config[actions]
      *  ``Object`` By default, this tool creates a "Query" action to trigger
@@ -259,7 +259,12 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
             },
             "query": function(tool, store) {
                 if (store) {
-                    store.getCount() || Ext.Msg.alert(this.noFeaturesTitle, this.noFeaturesMessage);
+                    store.getCount() || Ext.Msg.show({
+                        title: this.noFeaturesTitle,
+                        msg: this.noFeaturesMessage,
+                        buttons: Ext.Msg.OK,
+                        icon: Ext.Msg.INFO
+                    });
                     this.autoHide && queryForm.ownerCt && queryForm.ownerCt.hide();
                 }
             },

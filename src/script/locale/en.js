@@ -96,7 +96,7 @@ GeoExt.Lang.add("en", {
         queryMsg: "Querying...",
         cancelButtonText: "Cancel",
         noFeaturesTitle: "No Match",
-        noFeaturesMessage: "Your query did not return any results"
+        noFeaturesMessage: "Your query did not return any results."
     },
 
     "gxp.plugins.RemoveLayer.prototype": {
