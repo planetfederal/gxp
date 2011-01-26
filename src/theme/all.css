@@ -119,3 +119,11 @@
 .ext-gecko.ext-mac textarea.x-form-field {
     padding: 1px 2px;
 }
+
+.x-tree-node img.gxp-folder, .x-tree-node-collapsed img.gxp-folder{
+    background: url(../../../../externals/ext/resources/images/default/tree/folder.gif);
+}
+
+.x-tree-node-expanded img.gxp-folder {
+    background: url(../../../../externals/ext/resources/images/default/tree/folder-open.gif);
+}

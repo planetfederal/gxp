@@ -96,8 +96,9 @@ gxp.plugins.WMSCSource = Ext.extend(gxp.plugins.WMSSource, {
                 if (tileSet.layers === layer.params.LAYERS && 
                     srs === this.getMapProjection().getCode()) {
                         var bbox = tileSet.bbox[srs].bbox;
-                        layer.addOptions({resolutions: tileSet.resolutions, 
-                            tileOrigin: new OpenLayers.LonLat(bbox.left, bbox.bottom)});
+                        layer.addOptions({resolutions: tileSet.resolutions,
+                            tileSize: new OpenLayers.Size(tileSet.width, tileSet.height),
+                            tileOrigin: new OpenLayers.LonLat(bbox[0], bbox[1])});
                         layer.params.TILED = true;
                         break;
                 }
