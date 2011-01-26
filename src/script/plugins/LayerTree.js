@@ -81,7 +81,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
         });
         treeRoot.appendChild(new GeoExt.tree.LayerContainer({
             text: this.overlayNodeText,
-            iconCls: "gx-folder",
+            iconCls: "gxp-folder",
             expanded: true,
             loader: new GeoExt.tree.LayerLoader({
                 store: this.target.mapPanel.layers,
