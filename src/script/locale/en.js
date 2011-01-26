@@ -24,7 +24,7 @@ GeoExt.Lang.add("en", {
     },
     
     "gxp.plugins.FeatureGrid.prototype": {
-        displayFeatureText: "Display on map"
+        displayFeatureText: "Display on map",
         firstPageTip: "First page",
         previousPageTip: "Previous page",
         zoomPageExtentTip: "Zoom to page extent",
@@ -85,7 +85,10 @@ GeoExt.Lang.add("en", {
         queryByLocationText: "Query by location",
         currentTextText: "Current extent",
         queryByAttributesText: "Query by attributes",
-        queryMsg: "Querying..."
+        queryMsg: "Querying...",
+        cancelButtonText: "Cancel",
+        noFeaturesTitle: "No Match",
+        noFeaturesMessage: "Your query did not return any results"
     },
 
     "gxp.plugins.RemoveLayer.prototype": {
