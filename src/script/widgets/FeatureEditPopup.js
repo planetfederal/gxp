@@ -344,11 +344,11 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
 
         this.bbar = new Ext.Toolbar({
             hidden: this.readOnly,
-            items: [
+            items: ["->",
+                this.cancelButton,
                 this.editButton,
                 this.deleteButton,
-                this.saveButton,
-                this.cancelButton
+                this.saveButton
             ]
         });
         
