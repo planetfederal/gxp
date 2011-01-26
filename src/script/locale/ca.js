@@ -3,7 +3,9 @@ GeoExt.Lang.add("ca", {
 
     "gxp.plugins.AddLayers.prototype": {
         addMenuText: "Afegeix Capa",
-        addActionTip: "Afegeix Capa"
+        addActionTip: "Afegeix Capa",
+        addServerText: "Afegeix servidor",
+        untitledText: "Sense Títol"
     },
     
     "gxp.plugins.BingSource.prototype": {
@@ -36,8 +38,8 @@ GeoExt.Lang.add("ca", {
     },
 
     "gxp.plugins.LayerProperties.prototype": {
-        menuText: "Layer Properties",
-        toolTip: "Layer Properties"
+        menuText: "Propietats de la capa",
+        toolTip: "Propietats de la capa"
     },
     
     "gxp.plugins.LayerTree.prototype": {
@@ -110,8 +112,8 @@ GeoExt.Lang.add("ca", {
     },
 
     "gxp.plugins.ZoomToLayerExtent.prototype": {
-        menuText: "Zoom to layer extent",
-        tooltip: "Zoom to layer extent"
+        menuText: "Ajusta vista a l'extensió de la capa",
+        tooltip: "Ajusta vista a l'extensió de la capa"
     },
     
     "gxp.plugins.ZoomToSelectedFeatures.prototype": {
@@ -153,9 +155,9 @@ GeoExt.Lang.add("ca", {
         nameHeaderText : "Name",
         titleHeaderText : "Title",
         queryableHeaderText : "Queryable",
-        layerSelectionLabel: "View available data from:",
+        layerSelectionLabel: "Llista les capes de:",
         layerAdditionLabel: "or add a new server.",
-        expanderTemplateText: "<p><b>Abstract:</b> {abstract}</p>"
+        expanderTemplateText: "<p><b>Resum:</b> {abstract}</p>"
     },
     
     "gxp.PointSymbolizer.prototype": {

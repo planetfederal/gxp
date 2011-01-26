@@ -3,7 +3,9 @@ GeoExt.Lang.add("en", {
 
     "gxp.plugins.AddLayers.prototype": {
         addMenuText: "Add layers",
-        addActionTip: "Add layers"
+        addActionTip: "Add layers",
+        addServerText: "Add a New Server",
+        untitledText: "Untitled"
     },
     
     "gxp.plugins.BingSource.prototype": {

@@ -3,7 +3,9 @@ GeoExt.Lang.add("fr", {
 
     "gxp.plugins.AddLayers.prototype": {
         addMenuText: "Ajouter des calques",
-        addActionTip: "Ajouter des calques"
+        addActionTip: "Ajouter des calques",
+        addServerText: "Ajouter un nouveau serveur",
+        untitledText: "Sans titre"
     },
     
     "gxp.plugins.BingSource.prototype": {
@@ -36,8 +38,8 @@ GeoExt.Lang.add("fr", {
     },
 
     "gxp.plugins.LayerProperties.prototype": {
-        menuText: "Layer Properties",
-        toolTip: "Layer Properties"
+        menuText: "Propriétés de la couche",
+        toolTip: "Propriétés de la couche"
     },
     
     "gxp.plugins.LayerTree.prototype": {
@@ -110,8 +112,8 @@ GeoExt.Lang.add("fr", {
     },
 
     "gxp.plugins.ZoomToLayerExtent.prototype": {
-        menuText: "Zoom to layer extent",
-        tooltip: "Zoom to layer extent"
+        menuText: "Zoom à la couche",
+        tooltip: "Zoom à la couche"
     },
     
     "gxp.plugins.ZoomToSelectedFeatures.prototype": {
@@ -153,9 +155,9 @@ GeoExt.Lang.add("fr", {
         nameHeaderText : "Name",
         titleHeaderText : "Title",
         queryableHeaderText : "Queryable",
-        layerSelectionLabel: "View available data from:",
+        layerSelectionLabel: "Voir les données disponibles à partir de:",
         layerAdditionLabel: "or add a new server.",
-        expanderTemplateText: "<p><b>Abstract:</b> {abstract}</p>"
+        expanderTemplateText: "<p><b>Résumé:</b> {abstract}</p>"
     },
     
     "gxp.PointSymbolizer.prototype": {
