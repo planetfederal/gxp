@@ -39,6 +39,7 @@
         "plugins/OSMSource.js",
         "plugins/GoogleSource.js",
         "plugins/OLSource.js",
+        "plugins/MapQuestSource.js",
         "plugins/StyleWriter.js",
         "plugins/GeoServerStyleWriter.js",
         "plugins/WMSRasterStylesDialog.js",

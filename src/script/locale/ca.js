@@ -78,6 +78,14 @@ GeoExt.Lang.add("ca", {
         osmarenderAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>"
     },
 
+    "gxp.plugins.MapQuestSource.prototype": {
+        title: "MapQuest Layers",
+        osmAttribution: "Tiles Courtesy of <a href='http://open.mapquest.co.uk/' target='_blank'>MapQuest</a> <img src='http://developer.mapquest.com/content/osm/mq_logo.png' border='0'>",
+        osmTitle: "MapQuest OpenStreetMap",
+        naipAttribution: "Tiles Courtesy of <a href='http://open.mapquest.co.uk/' target='_blank'>MapQuest</a> <img src='http://developer.mapquest.com/content/osm/mq_logo.png' border='0'>",
+        naipTitle: "MapQuest Imagery"
+    },
+
     "gxp.plugins.QueryForm.prototype": {
         queryActionText: "Query",
         queryMenuText: "Query layer",
