@@ -60,7 +60,7 @@
         "plugins/Zoom.js",
         "plugins/ZoomToExtent.js",
         "plugins/ZoomToDataExtent.js",
-        "plugins/ZoomToLayerExtent",
+        "plugins/ZoomToLayerExtent.js",
         "plugins/ZoomToSelectedFeatures.js",
         "plugins/Measure.js",
         "plugins/Navigation.js",
