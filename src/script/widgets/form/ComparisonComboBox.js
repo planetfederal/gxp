@@ -19,7 +19,7 @@ Ext.namespace("gxp.form");
  *      A combo box for selecting comparison operators available in OGC
  *      filters.
  */
-gxp.form.ComarisonComboBox = Ext.extend(Ext.form.ComboBox, {
+gxp.form.ComparisonComboBox = Ext.extend(Ext.form.ComboBox, {
     
     allowedTypes: [
         [OpenLayers.Filter.Comparison.EQUAL_TO, "="],
@@ -69,8 +69,8 @@ gxp.form.ComarisonComboBox = Ext.extend(Ext.form.ComboBox, {
         };
         Ext.applyIf(this, defConfig);
         
-        gxp.form.ComarisonComboBox.superclass.initComponent.call(this);
+        gxp.form.ComparisonComboBox.superclass.initComponent.call(this);
     }
 });
 
-Ext.reg("gxp_comparisoncombo", gxp.form.ComarisonComboBox);
+Ext.reg("gxp_comparisoncombo", gxp.form.ComparisonComboBox);

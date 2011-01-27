@@ -58,7 +58,7 @@ Ext.namespace("gxp.plugins");
  *
  *  .. code-block:: javascript
  *
- *    defaultSourceType: "gx_wmssource",
+ *    defaultSourceType: "gxp_wmssource",
  *    sources: {
  *        "opengeo": {
  *            url: "http://suite.opengeo.org/geoserver/wms"

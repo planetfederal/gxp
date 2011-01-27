@@ -32,6 +32,11 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
      *  URI), ``url`` (wfs url), and ``schema`` (schema url) fields.
      */
     
+    /** api: config[map]
+     *  ``OpenLayers.MapPanel`` The map to take the spatial extent for the
+     *  spatialQuery from. Required.
+     */
+
     /** api: config[maxFeatures]
      *  ``Number``
      *  Optional limit for number of features requested in a query.  No limit

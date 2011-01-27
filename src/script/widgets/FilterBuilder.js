@@ -355,10 +355,10 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
     addCondition: function(group) {
         var filter, type;
         if(group) {
-            type = "gx_filterbuilder";
+            type = "gxp_filterbuilder";
             filter = this.wrapFilter(this.createDefaultFilter());
         } else {
-            type = "gx_filterfield";
+            type = "gxp_filterfield";
             filter = this.createDefaultFilter();
         }
         var newChild = this.newRow({

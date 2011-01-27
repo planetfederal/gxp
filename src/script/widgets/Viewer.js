@@ -603,6 +603,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
      */
     destroy: function() {
         //TODO there is probably more that needs to be destroyed
+        this.mapPanel.destroy();
         this.portal && this.portal.destroy();
     }
     

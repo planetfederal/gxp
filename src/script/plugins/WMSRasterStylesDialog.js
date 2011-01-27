@@ -222,7 +222,7 @@ gxp.plugins.WMSRasterStylesDialog = {
             }]
         });
         // remove stroke fieldset
-        var strokeSymbolizer = pseudoRuleDlg.findByType("gx_strokesymbolizer")[0];
+        var strokeSymbolizer = pseudoRuleDlg.findByType("gxp_strokesymbolizer")[0];
         strokeSymbolizer.ownerCt.remove(strokeSymbolizer);
         
         pseudoRuleDlg.show();
@@ -356,4 +356,4 @@ gxp.plugins.WMSRasterStylesDialog = {
 };
 
 /** api: ptype = gxp_wmsrasterstylesdialog */
-Ext.preg("gx_wmsrasterstylesdialog", gxp.plugins.WMSRasterStylesDialog);
+Ext.preg("gxp_wmsrasterstylesdialog", gxp.plugins.WMSRasterStylesDialog);
