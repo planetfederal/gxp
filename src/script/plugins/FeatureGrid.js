@@ -63,6 +63,14 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
      */
     autoCollapse: false,
     
+    /** api: config[selectOnMap]
+     *  ``Boolean`` If set to true, features can not only be selected on the
+     *  grid, but also on the map, and multi-selection will be enabled. Only
+     *  set to true when no feature editor or feature info tool is used with
+     *  the underlying feature manager. Default is false.
+     */
+    selectOnMap: false,
+    
     /** api: config[displayFeatureText]
      * ``String``
      * Text for feature display button (i18n).
@@ -109,7 +117,7 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
         var selectControl = new OpenLayers.Control.SelectFeature(featureManager.featureLayer);
         config = Ext.apply({
             xtype: "gxp_featuregrid",
-            sm: new GeoExt.grid.FeatureSelectionModel({
+            sm: new GeoExt.grid.FeatureSelectionModel(this.selectOnMap ? null : {
                 selectControl: selectControl,
                 singleSelect: false,
                 autoActivateControl: false,
