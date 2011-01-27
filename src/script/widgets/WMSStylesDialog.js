@@ -580,7 +580,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 userStyle = userStyles[i];
                 // remove existing record - this way we replace styles from
                 // userStyles with inline styles.
-                index = this.stylesStore.find("name", userStyle.name);
+                index = this.stylesStore.findExact("name", userStyle.name);
                 index !== -1 && this.stylesStore.removeAt(index);
                 record = new this.stylesStore.recordType({
                     "name": userStyle.name,
@@ -724,8 +724,10 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             Ext.Ajax.request({
                 url: layer.url,
                 params: {
+                    "SERVICE": "WMS",
+                    "VERSION": layer.params["VERSION"],
                     "REQUEST": "GetStyles",
-                    "LAYERS": layer.params.LAYERS
+                    "LAYERS": [layer.params["LAYERS"]].join(",")
                 },
                 success: this.parseSLD,
                 failure: this.setupNonEditable,
@@ -750,6 +752,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         Ext.Ajax.request({
             url: layer.url,
             params: {
+                "SERVICE": "WMS",
                 "VERSION": layer.params["VERSION"],
                 "REQUEST": "DescribeLayer",
                 "LAYERS": [layer.params["LAYERS"]].join(",")
@@ -885,7 +888,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             this.symbolType = typeHierarchy[highest];
         }
         var legend = this.items.get(2).add({
-            xtype: "gxp_vectorlegend",
+            xtype: "gx_vectorlegend",
             showTitle: false,
             rules: rules,
             symbolType: this.symbolType,

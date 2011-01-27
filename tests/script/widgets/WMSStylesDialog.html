@@ -9,34 +9,48 @@
 
     <script type="text/javascript">
        
-        var layerRecord;
-        
+        var mapPanels = [];
         function createWMSStylesDialog(editable) {
-            layerRecord = new GeoExt.data.LayerRecord({
-                layer: new OpenLayers.Layer.WMS(),
-                styles: ["foo"]
+            var mapPanel = new GeoExt.MapPanel({
+                renderTo: document.body,
+                width: 300,
+                height: 200,
+                layers: [new OpenLayers.Layer.WMS("states", "/geoserver/wms?SERVICE=WMS&VERSION=1.1.1", {
+                    layers: "usa:states"
+                })]
             });
+            mapPanels.push(mapPanel);
+            var record = mapPanel.layers.getAt(0);
+            record.set("styles", {name: "foo"});
             return new gxp.WMSStylesDialog({
+                renderTo: document.body,
                 editable: editable,
-                layerRecord: layerRecord,
-                // additional config for mocked test environment
-                layerDescription: true
+                layerRecord: record
             });
         }
         
         function destroy() {
-            layerRecord.getLayer().destroy();
+            var mapPanel;
+            while(mapPanel = mapPanels.pop()) {
+                mapPanel.destroy();
+            }
         }
         
         function test_WMSStylesDialog(t) {
-            t.plan(1);
+            t.plan(3);
             
-            var instance = createWMSStylesDialog(false);
+            var editable = createWMSStylesDialog(true);
+            var readonly = createWMSStylesDialog(false);
             
-            t.ok(instance instanceof gxp.WMSStylesDialog, "Instance created successfully");
+            t.ok(editable instanceof gxp.WMSStylesDialog, "Instance created successfully");
             
-            instance.destroy();
-            destroy();
+            t.delay_call(5, function() {
+                t.ok(editable.items.get(2).items.get(0) instanceof GeoExt.VectorLegend, "Vector legend for editable styles");
+                t.ok(readonly.items.get(2).items.get(0) instanceof GeoExt.WMSLegend, "WMS legend for readonly styles");
+                editable.destroy();
+                readonly.destroy();
+                destroy();
+            });
         }
 
     </script>
