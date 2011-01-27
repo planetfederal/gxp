@@ -597,6 +597,13 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         }, this);
         
         return state;
+    },
+    
+    /** api: method[destroy]
+     */
+    destroy: function() {
+        //TODO there is probably more that needs to be destroyed
+        this.portal && this.portal.destroy();
     }
     
 });
