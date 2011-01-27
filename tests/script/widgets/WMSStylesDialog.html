@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html debug="true">
+  <head>
+    <script src="http://extjs.cachefly.net/ext-3.3.0/adapter/ext/ext-base.js"></script>
+    <script src="http://extjs.cachefly.net/ext-3.3.0/ext-all-debug.js"></script>
+    <script type="text/javascript" src="../../../../openlayers/lib/OpenLayers.js"></script>
+    <script type="text/javascript" src="../../../../geoext/lib/GeoExt.js"></script>
+    <script type="text/javascript" src="../../../src/script/loader.js"></script>
+
+    <script type="text/javascript">
+       
+        var layerRecord;
+        
+        function createWMSStylesDialog(editable) {
+            layerRecord = new GeoExt.data.LayerRecord({
+                layer: new OpenLayers.Layer.WMS(),
+                styles: ["foo"]
+            });
+            return new gxp.WMSStylesDialog({
+                editable: editable,
+                layerRecord: layerRecord,
+                // additional config for mocked test environment
+                layerDescription: true
+            });
+        }
+        
+        function destroy() {
+            layerRecord.getLayer().destroy();
+        }
+        
+        function test_WMSStylesDialog(t) {
+            t.plan(1);
+            
+            var instance = createWMSStylesDialog(false);
+            
+            t.ok(instance instanceof gxp.WMSStylesDialog, "Instance created successfully");
+            
+            instance.destroy();
+            destroy();
+        }
+
+    </script>
+  </head>
+  <body>
+  </body>
+</html>

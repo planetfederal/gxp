@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html debug="true">
+  <head>
+    <script src="http://extjs.cachefly.net/ext-3.3.0/adapter/ext/ext-base.js"></script>
+    <script src="http://extjs.cachefly.net/ext-3.3.0/ext-all-debug.js"></script>
+    <script type="text/javascript" src="../../../../openlayers/lib/OpenLayers.js"></script>
+    <script type="text/javascript" src="../../../../geoext/lib/GeoExt.js"></script>
+    <script type="text/javascript" src="../../../src/script/loader.js"></script>
+
+    <script type="text/javascript">
+    
+        var mapPanel;
+        var feature;
+        
+        function createFeatureEditPopup() {
+            mapPanel = new GeoExt.MapPanel({
+                renderTo: document.body,
+                layers: [new OpenLayers.Layer.Vector()]
+            });
+            feature = new OpenLayers.Feature.Vector(
+                new OpenLayers.Geometry.Point(5,6), {foo: "bar"}
+            );
+            mapPanel.layers.getAt(0).getLayer().addFeatures([feature]);
+            return new gxp.FeatureEditPopup({feature: feature});
+        }
+        
+        function destroy() {
+            feature.destroy();
+            mapPanel.destroy();
+        }
+       
+        function test_FeatureEditPopup(t) {
+            t.plan(1);
+            
+            var instance = createFeatureEditPopup();
+            
+            t.ok(instance instanceof gxp.FeatureEditPopup, "Instance created successfully");
+            
+            instance.destroy();
+            destroy();
+        }
+
+    </script>
+  </head>
+  <body>
+  </body>
+</html>
