@@ -26,7 +26,7 @@ Ext.onReady(function() {
             }],
 
             // layer sources
-            defaultSourceType: "gx_wmssource",
+            defaultSourceType: "gxp_wmssource",
             sources: {
                 local: {
                     url: "/geoserver/wms"
