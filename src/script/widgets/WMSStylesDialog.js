@@ -778,6 +778,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             store: store,
             editable: false,
             displayField: "name",
+            valueField: "name",
             value: this.selectedStyle ?
                 this.selectedStyle.get("name") :
                 this.layerRecord.getLayer().params.STYLES || "default",
