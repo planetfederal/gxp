@@ -15,7 +15,7 @@
                 renderTo: document.body,
                 width: 300,
                 height: 200,
-                layers: [new OpenLayers.Layer.WMS("states", "/geoserver/wms?SERVICE=WMS&VERSION=1.1.1", {
+                layers: [new OpenLayers.Layer.WMS("states", "/geoserver/wms", {
                     layers: "usa:states"
                 })]
             });
