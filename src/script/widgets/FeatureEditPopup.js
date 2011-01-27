@@ -60,9 +60,21 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
      */
     schema: null,
     
+    /** api: config[fields]
+     *  ``Array``
+     *  List of field config names corresponding to feature attributes.  If
+     *  not provided, fields will be derived from attributes. If provided,
+     *  the field order from this list will be used, and fields missing in the
+     *  list will be excluded.
+     */
+
     /** api: config[excludeFields]
      *  ``Array`` Optional list of field names (case sensitive) that are to be
      *  excluded from the property grid.
+     */
+    
+    /** private: property[excludeFields]
+     *
      */
     
     /** api: config[readOnly]
@@ -166,7 +178,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
         
         var feature = this.feature;
         if (!this.location) {
-            this.location = feature;
+            this.location = feature
         };
         
         this.anchored = !this.editing;
@@ -175,6 +187,15 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
         var customRenderers = {};
         if(this.schema) {
             var attributes = {};
+            if (this.fields) {
+                if (!this.excludeFields) {
+                    this.excludeFields = [];
+                }
+                // determine the order of attributes
+                for (var i=0,ii=this.fields.length; i<ii; ++i) {
+                    attributes[this.fields[i]] = null;
+                }
+            }
             var name, type, value;
             this.schema.each(function(r) {
                 type = this.getFieldType(r.get("type"));
@@ -183,6 +204,11 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                     return;
                 }
                 name = r.get("name");
+                if (this.fields) {
+                    if (this.fields.indexOf(name) == -1) {
+                        this.excludeFields.push(name);
+                    }
+                }
                 value = feature.attributes[name];
                 switch(type) {
                     case "string":
@@ -293,6 +319,15 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                     this.setFeatureState(this.getDirtyState());
                 },
                 scope: this
+            },
+            initComponent: function() {
+                //TODO This is a workaround for maintaining the order of the
+                // feature attributes. Decide if this should be handled in
+                // another way.
+                var origSort = Ext.data.Store.prototype.sort;
+                Ext.data.Store.prototype.sort = function() {};
+                Ext.grid.PropertyGrid.prototype.initComponent.apply(this, arguments);
+                Ext.data.Store.prototype.sort = origSort;
             }
         });
         
@@ -301,7 +336,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
          * values to show up in the property grid.  Decide if this should be 
          * handled in another way.
          */
-        this.grid.propStore.isEditableValue = function() {return true;};
+        this.grid.propStore.isEditableValue = function() {return true};
 
         this.items = [
             this.grid
@@ -309,11 +344,11 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
 
         this.bbar = new Ext.Toolbar({
             hidden: this.readOnly,
-            items: ["->",
-                this.cancelButton,
-                this.deleteButton,
+            items: [
                 this.editButton,
-                this.saveButton
+                this.deleteButton,
+                this.saveButton,
+                this.cancelButton
             ]
         });
         
@@ -331,26 +366,22 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                     return;
                 }
                 if(this.feature.state === this.getDirtyState()) {
-                    if (!this._closeMsgBox) {
-                        this._closeMsgBox = true;
-                        Ext.Msg.show({
-                            title: this.closeMsgTitle,
-                            msg: this.closeMsg,
-                            buttons: Ext.Msg.YESNOCANCEL,
-                            fn: function(button) {
-                                delete this._closeMsgBox;
-                                if (button && button !== "cancel") {
-                                    this.stopEditing(button === "yes");
-                                    this.close();
-                                } else {
-                                    this.fireEvent("cancelclose", this);
-                                }
-                            },
-                            scope: this,
-                            icon: Ext.MessageBox.QUESTION,
-                            animEl: this.getEl()
-                        });
-                    }
+                    Ext.Msg.show({
+                        title: this.closeMsgTitle,
+                        msg: this.closeMsg,
+                        buttons: Ext.Msg.YESNOCANCEL,
+                        fn: function(button) {
+                            if(button && button !== "cancel") {
+                                this.stopEditing(button === "yes");
+                                this.close();
+                            } else {
+                                this.fireEvent("cancelclose", this);
+                            }
+                        },
+                        scope: this,
+                        icon: Ext.MessageBox.QUESTION,
+                        animEl: this.getEl()
+                    });
                     return false;
                 } else {
                     this.stopEditing(false);

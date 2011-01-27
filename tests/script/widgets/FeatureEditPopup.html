@@ -9,32 +9,46 @@
 
     <script type="text/javascript">
     
-        var mapPanel;
-        var feature;
+        var mapPanel, feature, attributeStore;
         
-        function createFeatureEditPopup() {
+        function createFeatureEditPopup(config) {
             mapPanel = new GeoExt.MapPanel({
                 renderTo: document.body,
+                width: 300,
+                height: 200,
                 layers: [new OpenLayers.Layer.Vector()]
             });
             feature = new OpenLayers.Feature.Vector(
-                new OpenLayers.Geometry.Point(5,6), {foo: "bar"}
+                new OpenLayers.Geometry.Point(5,6), {a1: "1", a2: "2", a3: "3"}
             );
+            attributeStore = new GeoExt.data.AttributeStore({
+                data: [{name: "a1", type: "xsd:int"}, {name: "a2", type: "xsd:int"}, {name: "a3", type: "xsd:int"}]
+            });
             mapPanel.layers.getAt(0).getLayer().addFeatures([feature]);
-            return new gxp.FeatureEditPopup({feature: feature});
+            return new gxp.FeatureEditPopup(Ext.apply({
+                feature: feature,
+                schema: attributeStore,
+                width: 200,
+                height: 200
+            }, config));
         }
         
         function destroy() {
+            attributeStore.destroy();
             feature.destroy();
             mapPanel.destroy();
         }
        
         function test_FeatureEditPopup(t) {
-            t.plan(1);
+            t.plan(4);
             
-            var instance = createFeatureEditPopup();
+            var instance = createFeatureEditPopup({fields: ["a3", "a1"]});
+            instance.show();
             
             t.ok(instance instanceof gxp.FeatureEditPopup, "Instance created successfully");
+            t.eq(instance.grid.store.getAt(0).get("name"), "a3", "field order respected");
+            t.eq(instance.excludeFields[0], "a2", "2nd field excluded");
+            t.eq(Ext.query(".x-hide-nosize", instance.grid.body.dom).length, 1, "1 row excluded");
             
             instance.destroy();
             destroy();
