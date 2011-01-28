@@ -105,7 +105,7 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
      *  ``String``
      *  Tooltip string for last page action (i18n).
      */
-    nextPageTip: "Last page",
+    lastPageTip: "Last page",
 
     /** api: method[addOutput]
      */
