@@ -51,6 +51,11 @@ GeoExt.Lang.add("es", {
         baseNodeText: "Capa de base"
     },
 
+    "gxp.plugins.Legend.prototype": { 
+        menuText: "Show Legend",
+        tooltip: "Show Legend"
+    },
+
     "gxp.plugins.Measure.prototype": {
         lengthMenuText: "Longitud",
         areaMenuText: "Área",

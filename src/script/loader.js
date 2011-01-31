@@ -64,7 +64,8 @@
         "plugins/ZoomToSelectedFeatures.js",
         "plugins/Measure.js",
         "plugins/Navigation.js",
-        "plugins/LayerProperties.js"
+        "plugins/LayerProperties.js",
+        "plugins/Legend.js"
     );
     
     var scripts = document.getElementsByTagName("script");

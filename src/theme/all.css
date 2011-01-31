@@ -39,6 +39,11 @@
     margin-bottom: 0;
 }
 
+/* gxp_legend */
+.x-btn .gxp-icon-legend, .x-menu-item .gxp-icon-legend, .x-tree-node .gxp-icon-legend {
+    background-image: url(img/silk/application_view_tile.png);
+}
+
 /* gxp_wmsgetfeatureinfo */
 .x-btn .gxp-icon-getfeatureinfo, .x-menu-item .gxp-icon-getfeatureinfo, .x-tree-node .gxp-icon-getfeatureinfo {
     background-image: url(img/silk/information.png);
