@@ -224,6 +224,17 @@ GeoExt.Lang.add("ca", {
         transparentText: "Transparent",
         cacheText: "Cache",
         cacheFieldText: "Use cached version"
+    },
+
+    "gxp.EmbedMapDialog.prototype": {
+        publishMessage: "Ja podeu incloure el vostre mapa a altres webs! Simplement copieu el següent codi HTML allà on desitgeu incrustar-ho:",
+        heightLabel: 'Alçària',
+        widthLabel: 'Amplada',
+        mapSizeLabel: 'Mida',
+        miniSizeLabel: 'Mínima',
+        smallSizeLabel: 'Petita',
+        premiumSizeLabel: 'Premium',
+        largeSizeLabel: 'Gran'
     }
 
 });

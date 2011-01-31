@@ -224,6 +224,17 @@ GeoExt.Lang.add("es", {
         transparentText: "Transparent",
         cacheText: "Cache",
         cacheFieldText: "Use cached version"
+    },
+
+    "gxp.EmbedMapDialog.prototype": {
+        publishMessage: "¡Su mapa ya puede publicarse en otras webs! Simplemente copie el siguiente código HTML en el lugar donde desee incrustarlo:",
+        heightLabel: 'Alto',
+        widthLabel: 'Ancho',
+        mapSizeLabel: 'Tamaño',
+        miniSizeLabel: 'Mínimo',
+        smallSizeLabel: 'Pequeño',
+        premiumSizeLabel: 'Premium',
+        largeSizeLabel: 'Grande'
     }
 
 });

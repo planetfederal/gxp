@@ -224,6 +224,17 @@ GeoExt.Lang.add("fr", {
         transparentText: "Transparent",
         cacheText: "Cache",
         cacheFieldText: "Use cached version"
+    },
+
+    "gxp.EmbedMapDialog.prototype": {
+        publishMessage: "Votre carte est prête à être publiée sur le web Il suffit de copier le code HTML suivant pour intégrer la carte dans votre site Web:",
+        heightLabel: 'Hauteur',
+        widthLabel: 'Largeur',
+        mapSizeLabel: 'Taille de la carte',
+        miniSizeLabel: 'Mini',
+        smallSizeLabel: 'Petit',
+        premiumSizeLabel: 'Premium',
+        largeSizeLabel: 'Large'
     }
 
 });
