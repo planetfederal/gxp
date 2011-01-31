@@ -52,8 +52,8 @@ GeoExt.Lang.add("es", {
     },
 
     "gxp.plugins.Legend.prototype": { 
-        menuText: "Show Legend",
-        tooltip: "Show Legend"
+        menuText: "Leyenda",
+        tooltip: "Leyenda"
     },
 
     "gxp.plugins.Measure.prototype": {
