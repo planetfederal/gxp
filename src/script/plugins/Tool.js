@@ -226,13 +226,13 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
             for (j=0, jj=a.length; j<jj; ++j) {
                 if (!(a[j] instanceof Ext.Action || a[j] instanceof Ext.Component)) {
                     if (typeof a[j] != "string") {
+                        // actions for a tool need to take into account visibility
+                        // from the parent tool
+                        Ext.apply(a[j], {hidden: this.hidden});
                         a[j] = new Ext.Action(a[j]);
                     }
                 }
                 action = a[j];
-                if (this.hidden === true) {
-                    action.hide();
-                }
                 if (j == this.defaultAction && action instanceof GeoExt.Action) {
                     action.activateOnEnable = true;
                 }
