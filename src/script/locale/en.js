@@ -225,7 +225,9 @@ GeoExt.Lang.add("en", {
         displayText: "Display",
         opacityText: "Opacity",
         formatText: "Format",
-        transparentText: "Transparent"
+        transparentText: "Transparent",
+        cacheText: "Cache",
+        cacheFieldText: "Use cached version"
     }
 
 });
