@@ -56,14 +56,18 @@ gxp.plugins.Legend = Ext.extend(gxp.plugins.Tool, {
             iconCls: "gxp-icon-legend",
             tooltip: this.tooltip,
             handler: function() {
-                new Ext.Window({autoScroll: true, width: 300, height: 400, 
-                    title: this.menuText, items: [{
+                this.addOutput({
+                    autoScroll: true, 
+                    width: 300, 
+                    height: 400,
+                    title: this.menuText, 
+                    items: [{
                         xtype: 'gx_legendpanel',
                         ascending: false,
                         border: false,
                         layerStore: this.target.mapPanel.layers
-                    }
-                ]}).show();
+                    }]
+                });
             },
             scope: this
         }];
