@@ -890,6 +890,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         var legend = this.items.get(2).add({
             xtype: "gx_vectorlegend",
             showTitle: false,
+            height: rules.length > 10 ? 250 : undefined,
+            autoScroll: rules.length > 10,
             rules: rules,
             symbolType: this.symbolType,
             selectOnClick: true,
