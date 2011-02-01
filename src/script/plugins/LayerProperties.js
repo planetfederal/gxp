@@ -46,7 +46,7 @@ gxp.plugins.LayerProperties = Ext.extend(gxp.plugins.Tool, {
      */
     addActions: function() {
         var selectedLayer;
-        var layerPropertiesDialog;
+        var layerProperties;
         var actions = gxp.plugins.LayerProperties.superclass.addActions.apply(this, [{
             menuText: this.menuText,
             iconCls: "gxp-icon-layerproperties",
@@ -57,21 +57,29 @@ gxp.plugins.LayerProperties = Ext.extend(gxp.plugins.Tool, {
                 if (record) {
                     var type = record.get("properties");
                     if (type) {
-                        if(layerPropertiesDialog) {
-                            layerPropertiesDialog.close();
+                        if (layerProperties && layerProperties.ownerCt) {
+                            layerProperties.ownerCt instanceof Ext.Window ?
+                                layerProperties.ownerCt.close() :
+                                layerProperties.ownerCt.remove(layerProperties);
+                                layerProperties.destroy();
                         }
-                        layerPropertiesDialog = new Ext.Window({
+                        var config = this.initialConfig.outputConfig || {};
+                        this.outputConfig = Ext.apply({
                             title: this.menuText + ": " + record.get("title"),
-                            width: 250,
-                            height: 250,
-                            layout: "fit",
+                            width: 265,
+                            autoHeight: !config.height,
+                            layout: config.height ? "fit" : undefined,
                             items: [{
                                 xtype: type,
+                                autoHeight: !config.height,
                                 layerRecord: record,
-                                defaults: {style: "padding: 10px"}
+                                defaults: {
+                                    autoHeight: !config.height,
+                                    style: "padding: 10px"
+                                }
                             }]
-                        });
-                        layerPropertiesDialog.show();
+                        }, config);
+                        layerProperties = this.addOutput();
                     }
                 }
             },
