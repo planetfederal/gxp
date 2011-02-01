@@ -2,88 +2,88 @@
 GeoExt.Lang.add("ru", {
 
     "gxp.plugins.AddLayers.prototype": {
-        addMenuText: "Add layers",
-        addActionTip: "Add layers",
-        addServerText: "Add a New Server",
-        untitledText: "Untitled",
-        addLayerSourceErrorText: "Error getting WMS capabilities ({msg}).\nPlease check the url and try again.",
-        availableLayersText: "Available Layers",
-        doneText: "Done"
+        addMenuText: "Добавить слои",
+        addActionTip: "Добавить слои",
+        addServerText: "Добавить сервер",
+        untitledText: "Безымянный",
+        addLayerSourceErrorText: "Ошибка получения описания WMS ({msg}).\nПожайлуста проверьте url повторите снова.",
+        availableLayersText: "Доступные слои",
+        doneText: "Выполнено"
     },
     
     "gxp.plugins.BingSource.prototype": {
-        title: "Bing Layers",
-        roadTitle: "Bing Roads",
-        aerialTitle: "Bing Aerial",
-        labeledAerialTitle: "Bing Aerial With Labels"
+        title: "Слои Bing",
+        roadTitle: "Дороги Bing",
+        aerialTitle: "Снимки Bing",
+        labeledAerialTitle: "Снимки Bing с подписями"
     },    
 
     "gxp.plugins.FeatureEditor.prototype": {
-        createFeatureActionTip: "Create a new feature",
-        editFeatureActionTip: "Edit existing feature"
+        createFeatureActionTip: "Создать объект",
+        editFeatureActionTip: "Редактировать объект"
     },
     
     "gxp.plugins.FeatureGrid.prototype": {
-        displayFeatureText: "Display on map",
-        firstPageTip: "First page",
-        previousPageTip: "Previous page",
-        zoomPageExtentTip: "Zoom to page extent",
-        nextPageTip: "Next page",
-        nextPageTip: "Last page"
+        displayFeatureText: "Отображать на карте",
+        firstPageTip: "Первая страница",
+        previousPageTip: "Предыдущая страница",
+        zoomPageExtentTip: "Показать всю карту",
+        nextPageTip: "Следующая страница",
+        nextPageTip: "Следующая страница"
     },
     
     "gxp.plugins.GoogleSource.prototype": {
-        title: "Google Layers",
-        roadmapAbstract: "Show street map",
-        satelliteAbstract: "Show satellite imagery",
-        hybridAbstract: "Show imagery with street names",
-        terrainAbstract: "Show street map with terrain"
+        title: "Слои Google",
+        roadmapAbstract: "Показать карту улиц",
+        satelliteAbstract: "Показать космоснимки",
+        hybridAbstract: "Показать снимки с улицами",
+        terrainAbstract: "Показать карту улиц с рельефом"
     },
 
     "gxp.plugins.LayerProperties.prototype": {
-        menuText: "Layer Properties",
-        toolTip: "Layer Properties"
+        menuText: "Свойства слоя",
+        toolTip: "Свойства слоя"
     },
     
     "gxp.plugins.LayerTree.prototype": {
-        rootNodeText: "Layers",
-        overlayNodeText: "Overlays",
-        baseNodeText: "Base Layers"
+        rootNodeText: "Слои",
+        overlayNodeText: "Оверлеи",
+        baseNodeText: "Базовые"
     },
 
     "gxp.plugins.Legend.prototype": {
-        menuText: "Show Legend",
-        tooltip: "Show Legend"
+        menuText: "Показать легенду",
+        tooltip: "Показать легенду"
     },
 
     "gxp.plugins.Measure.prototype": {
-        lengthMenuText: "Length",
-        areaMenuText: "Area",
-        lengthTooltip: "Measure length",
-        areaTooltip: "Measure area",
-        measureTooltip: "Measure"
+        lengthMenuText: "Длина",
+        areaMenuText: "Площадь",
+        lengthTooltip: "Измерить длину",
+        areaTooltip: "Измерить площадь",
+        measureTooltip: "Измерения"
     },
 
     "gxp.plugins.Navigation.prototype": {
-        menuText: "Pan Map",
-        tooltip: "Pan Map"
+        menuText: "Двигать карту",
+        tooltip: "Двигать карту"
     },
 
     "gxp.plugins.NavigationHistory.prototype": {
-        previousMenuText: "Zoom To Previous Extent",
-        nextMenuText: "Zoom To Next Extent",
-        previousTooltip: "Zoom To Previous Extent",
-        nextTooltip: "Zoom To Next Extent"
+        previousMenuText: "Перейти к предыдущему охвату",
+        nextMenuText: "Перейти к следующему охвату",
+        previousTooltip: "Перейти к предыдущему охвату",
+        nextTooltip: "Перейти к следующему охвату"
     },
 
     "gxp.plugins.OSMSource.prototype": {
-        title: "OpenStreetMap Layers",
-        mapnikAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
-        osmarenderAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>"
+        title: "Слои OpenStreetMap",
+        mapnikAttribution: "Данные CC-By-SA <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
+        osmarenderAttribution: "Данные CC-By-SA <a href='http://openstreetmap.org/'>OpenStreetMap</a>"
     },
 
     "gxp.plugins.MapQuestSource.prototype": {
-        title: "MapQuest Layers",
+        title: "Слои MapQuest",
         osmAttribution: "Tiles Courtesy of <a href='http://open.mapquest.co.uk/' target='_blank'>MapQuest</a> <img src='http://developer.mapquest.com/content/osm/mq_logo.png' border='0'>",
         osmTitle: "MapQuest OpenStreetMap",
         naipAttribution: "Tiles Courtesy of <a href='http://open.mapquest.co.uk/' target='_blank'>MapQuest</a> <img src='http://developer.mapquest.com/content/osm/mq_logo.png' border='0'>",
@@ -91,21 +91,21 @@ GeoExt.Lang.add("ru", {
     },
 
     "gxp.plugins.QueryForm.prototype": {
-        queryActionText: "Query",
-        queryMenuText: "Query layer",
-        queryActionTip: "Query the selected layer",
-        queryByLocationText: "Query by location",
-        currentTextText: "Current extent",
-        queryByAttributesText: "Query by attributes",
-        queryMsg: "Querying...",
-        cancelButtonText: "Cancel",
-        noFeaturesTitle: "No Match",
-        noFeaturesMessage: "Your query did not return any results."
+        queryActionText: "Запрос",
+        queryMenuText: "Поисковый слой",
+        queryActionTip: "Искать в выбраном слое",
+        queryByLocationText: "Запрос по положению",
+        currentTextText: "Текущий охват",
+        queryByAttributesText: "Запрос по атрибутам",
+        queryMsg: "Поиск...",
+        cancelButtonText: "Отмена",
+        noFeaturesTitle: "Не найдено",
+        noFeaturesMessage: "Ваш запрос не дал результатов."
     },
 
     "gxp.plugins.RemoveLayer.prototype": {
-        removeMenuText: "Remove layer",
-        removeActionTip: "Remove layer"
+        removeMenuText: "Удалить слой",
+        removeActionTip: "Удалить слой"
     },
 
     "gxp.plugins.WMSGetFeatureInfo.prototype": {
@@ -114,136 +114,136 @@ GeoExt.Lang.add("ru", {
     },
 
     "gxp.plugins.Zoom.prototype": {
-        zoomInMenuText: "Zoom In",
-        zoomOutMenuText: "Zoom Out",
-        zoomInTooltip: "Zoom In",
-        zoomOutTooltip: "Zoom Out"
+        zoomInMenuText: "Масштаб +",
+        zoomOutMenuText: "Мастаб -",
+        zoomInTooltip: "Мастаб +",
+        zoomOutTooltip: "Мастаб -"
     },
     
     "gxp.plugins.ZoomToExtent.prototype": {
-        menuText: "Zoom To Max Extent",
-        tooltip: "Zoom To Max Extent"
+        menuText: "Показать всю карту",
+        tooltip: "Показать всю карту"
     },
     
     "gxp.plugins.ZoomToDataExtent.prototype": {
-        menuText: "Zoom to layer extent",
-        tooltip: "Zoom to layer extent"
+        menuText: "Показать весь слой",
+        tooltip: "Показать весь слой"
     },
 
     "gxp.plugins.ZoomToLayerExtent.prototype": {
-        menuText: "Zoom to layer extent",
-        tooltip: "Zoom to layer extent"
+        menuText: "Показать весь слой",
+        tooltip: "Показать весь слой"
     },
     
     "gxp.plugins.ZoomToSelectedFeatures.prototype": {
-        menuText: "Zoom to selected features",
-        tooltip: "Zoom to selected features"
+        menuText: "Показать выделенные объекты",
+        tooltip: "Показать выделенные объекты"
     },
 
     "gxp.FeatureEditPopup.prototype": {
-        closeMsgTitle: "Save Changes?",
-        closeMsg: "This feature has unsaved changes. Would you like to save your changes?",
-        deleteMsgTitle: "Delete Feature?",
-        deleteMsg: "Are you sure you want to delete this feature?",
-        editButtonText: "Edit",
-        editButtonTooltip: "Make this feature editable",
-        deleteButtonText: "Delete",
-        deleteButtonTooltip: "Delete this feature",
-        cancelButtonText: "Cancel",
-        cancelButtonTooltip: "Stop editing, discard changes",
-        saveButtonText: "Save",
-        saveButtonTooltip: "Save changes"
+        closeMsgTitle: "Сохранить изменения?",
+        closeMsg: "Этот объект имеет не сохраненные изменения. Сохранить изменения?",
+        deleteMsgTitle: "Удалить объект?",
+        deleteMsg: "Вы уверены что хотите удалить объект?",
+        editButtonText: "Править",
+        editButtonTooltip: "Перейти в режим редактирования объекта",
+        deleteButtonText: "Удалить",
+        deleteButtonTooltip: "Удалить этот объект",
+        cancelButtonText: "Отмена",
+        cancelButtonTooltip: "Остановить правку, Отменить изменения",
+        saveButtonText: "Сохранить",
+        saveButtonTooltip: "Сохранить"
     },
     
     "gxp.FillSymbolizer.prototype": {
-        fillText: "Fill",
-        colorText: "Color",
-        opacityText: "Opacity"
+        fillText: "Заливка",
+        colorText: "Цвет",
+        opacityText: "Непрозрачность"
     },
     
     "gxp.FilterBuilder.prototype": {
-        builderTypeNames: ["any", "all", "none", "not all"],
-        preComboText: "Match",
-        postComboText: "of the following:",
-        addConditionText: "add condition",
-        addGroupText: "add group",
-        removeConditionText: "remove condition"
+        builderTypeNames: ["любых", "всех", "ни одного", "не всех"],
+        preComboText: "Соответствующие",
+        postComboText: "их следующих:",
+        addConditionText: "добавить условие",
+        addGroupText: "добавить группу",
+        removeConditionText: "удалить условие"
     },
     
     "gxp.grid.CapabilitiesGrid.prototype": {
-        nameHeaderText : "Name",
-        titleHeaderText : "Title",
-        queryableHeaderText : "Queryable",
-        layerSelectionLabel: "View available data from:",
-        layerAdditionLabel: "or add a new server.",
-        expanderTemplateText: "<p><b>Abstract:</b> {abstract}</p>"
+        nameHeaderText : "Название",
+        titleHeaderText : "Заголовок",
+        queryableHeaderText : "Поисковый",
+        layerSelectionLabel: "Показать доступные данные из:",
+        layerAdditionLabel: "или добавте сервер.",
+        expanderTemplateText: "<p><b>Описание:</b> {abstract}</p>"
     },
     
     "gxp.PointSymbolizer.prototype": {
-        graphicCircleText: "circle",
-        graphicSquareText: "square",
-        graphicTriangleText: "triangle",
-        graphicStarText: "star",
-        graphicCrossText: "cross",
-        graphicXText: "x",
-        graphicExternalText: "external",
+        graphicCircleText: "Круг",
+        graphicSquareText: "Квадрат",
+        graphicTriangleText: "Треугольник",
+        graphicStarText: "Звезда",
+        graphicCrossText: "Крест",
+        graphicXText: "Х",
+        graphicExternalText: "внешнее",
         urlText: "URL",
-        opacityText: "opacity",
-        symbolText: "Symbol",
-        sizeText: "Size",
-        rotationText: "Rotation"
+        opacityText: "Непрозрачность",
+        symbolText: "Символ",
+        sizeText: "Размер",
+        rotationText: "Поворот"
     },
 
     "gxp.QueryPanel.prototype": {
-        queryByLocationText: "Query by location",
-        currentTextText: "Current extent",
-        queryByAttributesText: "Query by attributes",
-        layerText: "Layer"
+        queryByLocationText: "Запрос по положению",
+        currentTextText: "Текущий охват",
+        queryByAttributesText: "Запрос по атрибутам",
+        layerText: "Слой"
     },
     
     "gxp.RulePanel.prototype": {
-        scaleSliderTemplate: "{scaleType} Scale 1:{scale}",
-        labelFeaturesText: "Label Features",
-        advancedText: "Advanced",
-        limitByScaleText: "Limit by scale",
-        limitByConditionText: "Limit by condition",
-        symbolText: "Symbol",
-        nameText: "Name"
+        scaleSliderTemplate: "{scaleType} Масштаб 1:{scale}",
+        labelFeaturesText: "Подписи объектов",
+        advancedText: "Дополнительно",
+        limitByScaleText: "Ограничить по масштабу",
+        limitByConditionText: "Ограничить по условию",
+        symbolText: "Символ",
+        nameText: "Имя"
     },
     
     "gxp.ScaleLimitPanel.prototype": {
-        scaleSliderTemplate: "{scaleType} Scale 1:{scale}",
-        maxScaleLimitText: "Max scale limit"
+        scaleSliderTemplate: "{scaleType} Масштаб 1:{scale}",
+        maxScaleLimitText: "Макс предел масштаба"
     },
     
     "gxp.TextSymbolizer.prototype": {
-        labelValuesText: "Label values",
-        haloText: "Halo",
-        sizeText: "Size"
+        labelValuesText: "Зачение подписи",
+        haloText: "Фон",
+        sizeText: "Размер"
     },
     
     "gxp.WMSLayerPanel.prototype": {
-        aboutText: "About",
-        titleText: "Title",
-        nameText: "Name",
-        descriptionText: "Description",
-        displayText: "Display",
-        opacityText: "Opacity",
-        formatText: "Format",
-        transparentText: "Transparent",
-        cacheText: "Cache",
-        cacheFieldText: "Use cached version"
+        aboutText: "Описание",
+        titleText: "Заголовок",
+        nameText: "Название",
+        descriptionText: "Описание",
+        displayText: "Отображение",
+        opacityText: "Непрозрачность",
+        formatText: "Формат",
+        transparentText: "Прозрачность",
+        cacheText: "Кеш",
+        cacheFieldText: "Использовать кеш"
     },
 
     "gxp.EmbedMapDialog.prototype": {
-        publishMessage: "Your map is ready to be published to the web! Simply copy the following HTML to embed the map in your website:",
-        heightLabel: 'Height',
-        widthLabel: 'Width',
-        mapSizeLabel: 'Map Size',
-        miniSizeLabel: 'Mini',
-        smallSizeLabel: 'Small',
-        premiumSizeLabel: 'Premium',
-        largeSizeLabel: 'Large'
+        publishMessage: "Ваша карта готова к публикации в веб! Просто скопируйте данный HTML встроеной карты на веб-сайт:",
+        heightLabel: 'Высота',
+        widthLabel: 'Ширина',
+        mapSizeLabel: 'Размер карты',
+        miniSizeLabel: 'Мини',
+        smallSizeLabel: 'Маленький',
+        premiumSizeLabel: 'Стандартный',
+        largeSizeLabel: 'Большой'
     }
 
 });
