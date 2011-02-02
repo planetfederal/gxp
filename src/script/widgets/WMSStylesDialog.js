@@ -136,8 +136,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             "modified",
             
             /** api: event[styleselected]
-             *  Fires whenever an existing style is selected from this dialog's
-             *  Style combo box.
+             *  Fires whenever a style is selected from this dialog's Style
+             *  combo box.
              *  
              *  Listener arguments:
              *
@@ -159,14 +159,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             "beforesaved",
             
             /** api: event[saved]
-             *  Fires when a style was successfully saved. Applications should
-             *  listen for this event and redraw layers with the currently
-             *  selected style.
-             *
-             *  Listener arguments:
-             *
-             *  * :class:`gxp.WMSStylesDialog` this component
-             *  * ``String`` the name of the currently selected style
+             *  Fires when a style was successfully saved.
              */
             "saved"            
         );
@@ -236,12 +229,6 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         gxp.util.dispatch([this.getStyles, this.describeLayer], function() {
             this.enable();
         }, this);
-        
-        this.on({
-            "beforesaved": function() { this._saving = true; },
-            "saved": function() { delete this._saving; },
-            scope: this
-        });
 
         gxp.WMSStylesDialog.superclass.initComponent.apply(this, arguments);
     },
@@ -275,7 +262,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     editStyle: function(prevStyle) {
         var userStyle = this.selectedStyle.get("userStyle");
         var styleProperties = new Ext.Window({
-            title: "User Style: " + (userStyle.title || userStyle.name),
+            title: "User Style: " + userStyle.title,
             bodyBorder: false,
             autoHeight: true,
             width: 300,
@@ -294,13 +281,11 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 handler: function() {
                     styleProperties.close();
                     if (prevStyle) {
-                        this._cancelling = true;
                         this.stylesStore.remove(this.selectedStyle);
                         this.changeStyle(prevStyle, {
                             updateCombo: true,
                             markModified: true
                         });
-                        delete this._cancelling;
                     }
                 },
                 scope: this
@@ -464,12 +449,13 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     duplicateRule: function() {
         var legend = this.items.get(2).items.get(0);
         var newRule = this.selectedRule.clone();
+        newRule.name = gxp.util.uniqueName(
+            (newRule.title || newRule.name) + " (copy)");
+        delete newRule.title;
         this.selectedStyle.get("userStyle").rules.push(
             newRule
         );
         legend.update();
-        // mark the style as modified
-        this.selectedStyle.store.afterEdit(this.selectedStyle);
         this.updateRuleRemoveButton();
     },
     
@@ -479,7 +465,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         var rule = this.selectedRule.clone();
 
         var ruleDlg = new Ext.Window({
-            title: "Style Rule: " + (rule.title || rule.name || "New Rule"),
+            title: "Style Rule: " + (rule.title || rule.name),
             width: 340,
             autoHeight: true,
             modal: true,
@@ -671,17 +657,13 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 combo.setValue(this.selectedStyle.get("name"));
             },
             "remove": function(store, record, index) {
-                if (!this._cancelling) {
-                    this._removing = true;
-                    var newIndex =  Math.min(index, store.getCount() - 1);
-                    this.updateStyleRemoveButton();
-                    // update the "Choose style" combo's value
-                    var combo = this.items.get(0).items.get(0);
-                    this.markModified();
-                    combo.fireEvent("select", combo, store.getAt(newIndex), newIndex);
-                    combo.setValue(this.selectedStyle.get("name"));
-                    delete this._removing;
-                }
+                var newIndex =  Math.min(index, store.getCount() - 1);
+                this.updateStyleRemoveButton();
+                // update the "Choose style" combo's value
+                var combo = this.items.get(0).items.get(0);
+                this.markModified();
+                combo.fireEvent("select", combo, store.getAt(newIndex), newIndex);
+                combo.setValue(this.selectedStyle.get("name"));
             },
             "update": function(store, record) {
                 var userStyle = record.get("userStyle");
@@ -714,9 +696,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         if(this.modified === false) {
             this.modified = true;
         }
-        if (!this._saving) {
-            this.fireEvent("modified", this, this.selectedStyle.get("name"));
-        }
+        this.fireEvent("modified", this, this.selectedStyle.get("name"));
     },
     
     /** private: method[createStylesStore]
@@ -737,9 +717,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 "add": function(store, records) {
                     for(var rec, i=records.length-1; i>=0; --i) {
                         rec = records[i];
-                        store.suspendEvents();
                         rec.get("title") || rec.set("title", rec.get("name"));
-                        store.resumeEvents();
                     }
                 }
             }
@@ -829,9 +807,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             listeners: {
                 "select": function(combo, record) {
                     this.changeStyle(record);
-                    if (!record.phantom && !this._removing) {
-                        this.fireEvent("styleselected", this, record.get("name"));
-                    }
+                    this.fireEvent("styleselected", this, record.get("name"));
                 },
                 scope: this
             }
