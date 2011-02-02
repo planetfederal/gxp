@@ -16,6 +16,7 @@
         "widgets/FillSymbolizer.js",
         "widgets/StrokeSymbolizer.js",
         "widgets/PointSymbolizer.js",
+        "widgets/LayerUploadForm.js",
         "widgets/LineSymbolizer.js",
         "widgets/PolygonSymbolizer.js",
         "widgets/RulePanel.js",
