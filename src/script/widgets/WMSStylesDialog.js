@@ -285,7 +285,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             "beforesaved": function() { this._saving = true; },
             "saved": function() { delete this._saving; },
             "render": function() {
-                gxp.util.dispatch([this.getStyles, this.describeLayer], function() {
+                gxp.util.dispatch([this.getStyles], function() {
                     this.enable();
                 }, this);
             },
@@ -476,7 +476,11 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     iconCls: "edit",
                     text: this.editRuleText,
                     toolitp: this.editRuleTip,
-                    handler: this.editRule,
+                    handler: function() {
+                        this.layerDescription ?
+                            this.editRule() :
+                            this.describeLayer(this.editRule);
+                    },
                     scope: this,
                     disabled: true
                 }, {
