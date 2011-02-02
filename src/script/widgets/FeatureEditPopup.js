@@ -538,3 +538,6 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
         });
     }
 });
+
+/** api: xtype = gxp_featureeditpopup */
+Ext.reg('gxp_featureeditpopup', gxp.FeatureEditPopup);

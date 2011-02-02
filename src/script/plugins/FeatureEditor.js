@@ -53,6 +53,11 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
      *  Modify feature text.
      */
 
+    /** api: config[outputTarget]
+     *  ``String`` By default, the FeatureEditPopup will be added to the map.
+     */
+    outputTarget: "map",
+    
     /** api: config[featureManager]
      *  ``String`` The id of the :class:`gxp.plugins.FeatureManager` to use
      *  with this tool.
@@ -280,7 +285,8 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
                 var feature = evt.feature;
                 var featureStore = featureManager.featureStore;
                 if(this.selectControl.active) {
-                    popup = new gxp.FeatureEditPopup(Ext.apply({
+                    popup = this.addOutput({
+                        xtype: "gxp_featureeditpopup",
                         collapsible: true,
                         feature: feature,
                         vertexRenderIntent: "vertex",
@@ -335,9 +341,8 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
                             },
                             scope: this
                         }
-                    }, this.outputConfig));
+                    });
                     this.popup = popup;
-                    popup.show();
                 }
             },
             "sketchcomplete": function(evt) {
