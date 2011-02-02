@@ -143,9 +143,10 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      */
     
     /** api: property[editable]
-     *  ``Boolean`` Read-only. True if this component could gather enough
-     *  information to allow styles being edited, false otherwise. This is
-     *  not supposed to be used before the  ``ready`` event is fired.
+     *  ``Boolean`` Read-only once the dialog is rendered. True if this
+     *  component could gather enough information to allow styles being edited,
+     *  false otherwise. This is not supposed to be read before the
+     *  ``ready`` event is fired.
      */
     editable: true,
     
@@ -275,14 +276,15 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         Ext.applyIf(this, defConfig);
         
         this.createStylesStore();
-                
-        gxp.util.dispatch([this.getStyles, this.describeLayer], function() {
-            this.enable();
-        }, this);
-        
+                        
         this.on({
             "beforesaved": function() { this._saving = true; },
             "saved": function() { delete this._saving; },
+            "render": function() {
+                gxp.util.dispatch([this.getStyles, this.describeLayer], function() {
+                    this.enable();
+                }, this);
+            },
             scope: this
         });
 
