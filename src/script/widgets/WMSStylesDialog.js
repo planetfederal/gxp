@@ -71,6 +71,10 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      styleWindowTitle: "User Style: {0}",
     /** api: config[ruleWindowTitle] (i18n) */
      ruleWindowTitle: "Style Rule: {0}",
+    /** api: config[stylesFieldsetTitle] (i18n) */
+     stylesFieldsetTitle: "Styles",
+    /** api: config[rulesFieldsetTitle] (i18n) */
+     rulesFieldsetTitle: "Rules",
 
     //TODO create a StylesStore which can read styles using GetStyles. Create
     // subclasses for that store with writing capabilities, e.g.
@@ -216,7 +220,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             disabled: true,
             items: [{
                 xtype: "fieldset",
-                title: "Styles",
+                title: this.stylesFieldsetTitle,
                 labelWidth: 85,
                 style: "margin-bottom: 0;"
             }, {
@@ -445,7 +449,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     addRulesFieldSet: function() {
         var rulesFieldSet = new Ext.form.FieldSet({
             itemId: "rulesfieldset",
-            title: "Rules",
+            title: this.rulesFieldsetTitle,
             autoScroll: true,
             style: "margin-bottom: 0;"
         });
