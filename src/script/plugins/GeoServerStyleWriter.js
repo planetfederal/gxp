@@ -72,9 +72,15 @@ gxp.plugins.GeoServerStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
         var success = function() {
             // we don't need any callbacks for deleting styles.
             this.deleteStyles();
-            this.target.stylesStore.commitChanges();
+            var modified = this.target.stylesStore.getModifiedRecords();
+            for (var i=modified.length-1; i>=0; --i) {
+                // mark saved
+                modified[i].phantom = false;
+            }
+            var target = this.target;
+            target.stylesStore.commitChanges();
             options.success && options.success.call(options.scope);
-            this.target.fireEvent("saved");
+            target.fireEvent("saved", target, target.selectedStyle.get("name"));
         }
         if(dispatchQueue.length > 0) {
             gxp.util.dispatch(dispatchQueue, function() {
@@ -174,6 +180,7 @@ gxp.plugins.GeoServerStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
                     "?purge=true"
             });
         }
+        this.deletedStyles = [];
     }
 
 });

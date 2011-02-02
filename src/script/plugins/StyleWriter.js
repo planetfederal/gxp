@@ -65,7 +65,7 @@ gxp.plugins.StyleWriter = Ext.extend(Ext.util.Observable, {
         });
         
         target.on({
-            "beforesaved": function(cmp, options) { this.write(options); },
+            "beforesaved": this.write,
             scope: this
         });
     },
@@ -82,7 +82,8 @@ gxp.plugins.StyleWriter = Ext.extend(Ext.util.Observable, {
      *  ``selectedStyle`` record.
      */
     write: function(target, options) {
-        target.fireEvent("saved");
+        target.stylesStore.commitChanges();
+        target.fireEvent("saved", target, target.selectedStyle.get("name"));
     }
 
 });
