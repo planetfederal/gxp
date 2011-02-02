@@ -180,6 +180,8 @@ gxp.EmbedMapDialog = Ext.extend(Ext.Container, {
                 layout: "fit"
             },
             items: [{
+                items: [adjustments]
+            }, {
                 xtype: "box",
                 autoEl: {
                     tag: "p",
@@ -187,8 +189,6 @@ gxp.EmbedMapDialog = Ext.extend(Ext.Container, {
                 }
             }, {
                 items: [this.snippetArea]
-            }, {
-                items: [adjustments]
             }],
             listeners: {
                 "afterrender": this.updateSnippet,
