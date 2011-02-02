@@ -53,6 +53,12 @@ gxp.EmbedMapDialog = Ext.extend(Ext.Container, {
      *  absolute one.
      */
     url: null,
+
+    /** api: config[toolsArea]
+     *  ``Ext.Component`` Optional component place holder for determining
+     *  which tools need to be visible in the resulting application.
+     */
+    toolsArea: null,
     
     /* begin i18n */
     /** api: config[publishMessage] ``String`` i18n */
@@ -185,6 +191,8 @@ gxp.EmbedMapDialog = Ext.extend(Ext.Container, {
                     tag: "p",
                     html: this.publishMessage
                 }
+            }, {
+                items: (this.toolsArea != null) ? [this.toolsArea] : []
             }, {
                 items: [this.snippetArea]
             }, {
