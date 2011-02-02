@@ -70,6 +70,9 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
      *  ".fbar" has to be appended. The default is "map.tbar". The viewer's main 
      *  MapPanel can always be accessed with "map" as actionTarget. Set to null if 
      *  no actions should be created.
+     *
+     *  If a tool has both actions as well as output, and you want to force
+     *  it to output to a container, set actionTarget to null.
      */
     actionTarget: "map.tbar",
         
@@ -185,7 +188,7 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
      */
     addActions: function(actions) {
         actions = actions || this.actions;
-        if (!actions) {
+        if (!actions || this.actionTarget === null) {
             // add output immediately if we have no actions to trigger it
             this.addOutput();
             return;

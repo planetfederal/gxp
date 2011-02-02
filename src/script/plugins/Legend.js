@@ -42,11 +42,34 @@ gxp.plugins.Legend = Ext.extend(gxp.plugins.Tool, {
      */
     tooltip: "Show Legend",
 
+    /** api: config[actionTarget]
+     *  ``Object`` or ``String`` or ``Array`` Where to place the tool's actions
+     *  (e.g. buttons or menus)? Use null as the default since our tool has both 
+     *  output and action(s).
+     */
+    actionTarget: null,
+
     /** private: method[constructor]
      */
     constructor: function(config) {
         gxp.plugins.Legend.superclass.constructor.apply(this, arguments);
     },
+
+    /** api: method[addActions]
+     */
+    addActions: function() {
+        var actions = [{
+            menuText: this.menuText,
+            iconCls: "gxp-icon-legend",
+            tooltip: this.tooltip,
+            handler: function() {
+                this.addOutput();
+            },
+            scope: this
+        }];
+        return gxp.plugins.Legend.superclass.addActions.apply(this, [actions]);
+    },
+
     /** private: method[addOutput]
      *  :arg config: ``Object``
      */
