@@ -354,10 +354,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     xtype: "gxp_stylepropertiesdialog",
                     userStyle: userStyle.clone(),
                     nameEditable: false,
-                    style: "padding: 10px;",
-                    listeners: {
-                        "change": function() { modified = true; }
-                    }
+                    style: "padding: 10px;"
                 }
             },
             listeners: {
