@@ -232,7 +232,8 @@ GeoExt.Lang.add("en", {
         formatText: "Format",
         transparentText: "Transparent",
         cacheText: "Cache",
-        cacheFieldText: "Use cached version"
+        cacheFieldText: "Use cached version",
+        stylesText: "Styles"
     },
 
     "gxp.EmbedMapDialog.prototype": {
