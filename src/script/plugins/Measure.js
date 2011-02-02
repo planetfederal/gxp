@@ -202,12 +202,9 @@ gxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
             tooltip: this.measureTooltip,
             enableToggle: true,
             toggleGroup: this.toggleGroup,
-            allowDepress: false,
+            allowDepress: true,
             handler: function(button, event) {
-                // allowDepress should deal with this first condition
-                if(!button.pressed) {
-                    button.toggle();
-                } else {
+                if(button.pressed) {
                     button.menu.items.itemAt(this.activeIndex).setChecked(true);
                 }
             },
