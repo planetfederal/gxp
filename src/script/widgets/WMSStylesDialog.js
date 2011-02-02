@@ -32,6 +32,45 @@ Ext.namespace("gxp");
  *      defaults.
  */
 gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
+    
+    /** api: config[addStyleText] (i18n) */
+     addStyleText: "Add",
+    /** api: config[addStyleTip] (i18n) */
+     addStyleTip: "Add a new style",
+    /** api: config[addStyleText] (i18n) */
+     deleteStyleText: "Remove",
+    /** api: config[addStyleTip] (i18n) */
+     deleteStyleTip: "Delete the selected style",
+    /** api: config[addStyleText] (i18n) */
+     editStyleText: "Edit",
+    /** api: config[addStyleTip] (i18n) */
+     editStyleTip: "Edit the selected style",
+    /** api: config[addStyleText] (i18n) */
+     duplicateStyleText: "Duplicate",
+    /** api: config[addStyleTip] (i18n) */
+     duplicateStyleTip: "Duplicate the selected style",
+    /** api: config[addStyleText] (i18n) */
+     addRuleText: "Add",
+    /** api: config[addStyleTip] (i18n) */
+     addRuleTip: "Add a new rule",
+    /** api: config[addStyleText] (i18n) */
+     deleteRuleText: "Remove",
+    /** api: config[addStyleTip] (i18n) */
+     deleteRuleTip: "Delete the selected rule",
+    /** api: config[addStyleText] (i18n) */
+     editRuleText: "Edit",
+    /** api: config[addStyleTip] (i18n) */
+     editRuleTip: "Edit the selected rule",
+    /** api: config[addStyleText] (i18n) */
+     duplicateRuleText: "Duplicate",
+    /** api: config[addStyleTip] (i18n) */
+     duplicateRuleTip: "Duplicate the selected rule",
+    /** api: config[cancelText] (i18n) */
+     cancelText: "Cancel",
+    /** api: config[stylePropertiesWindowTitle] (i18n) */
+     styleWindowTitle: "User Style: {0}",
+    /** api: config[ruleWindowTitle] (i18n) */
+     ruleWindowTitle: "Style Rule: {0}",
 
     //TODO create a StylesStore which can read styles using GetStyles. Create
     // subclasses for that store with writing capabilities, e.g.
@@ -186,13 +225,15 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     {
                         xtype: "button",
                         iconCls: "add",
-                        text: "Add",
+                        text: this.addStyleText,
+                        tooltip: this.addStyleTip,
                         handler: this.addStyle,
                         scope: this
                     }, {
                         xtype: "button",
                         iconCls: "delete",
-                        text: "Remove",
+                        text: this.deleteStyleText,
+                        tooltip: this.deleteStyleTip,
                         handler: function() {
                             this.stylesStore.remove(this.selectedStyle);
                         },
@@ -200,7 +241,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     }, {
                         xtype: "button",
                         iconCls: "edit",
-                        text: "Edit",
+                        text: this.editStyleText,
+                        tooltip: this.editStyleTip,
                         handler: function() {
                             this.editStyle();
                         },
@@ -208,7 +250,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     }, {
                         xtype: "button",
                         iconCls: "duplicate",
-                        text: "Duplicate",
+                        text: this.duplicateStyleText,
+                        tooltip: this.duplicateStyleTip,
                         handler: function() {
                             var prevStyle = this.selectedStyle;
                             var newStyle = prevStyle.get(
@@ -274,23 +317,9 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      */
     editStyle: function(prevStyle) {
         var userStyle = this.selectedStyle.get("userStyle");
-        var styleProperties = new Ext.Window({
-            title: "User Style: " + (userStyle.title || userStyle.name),
-            bodyBorder: false,
-            autoHeight: true,
-            width: 300,
-            modal: true,
-            items: {
-                border: false,
-                items: {
-                    xtype: "gxp_stylepropertiesdialog",
-                    userStyle: userStyle.clone(),
-                    nameEditable: false,
-                    style: "padding: 10px;"
-                }
-            },
+        var buttonCfg = prevStyle ? {
             buttons: [{
-                text: "Cancel",
+                text: this.cancelText,
                 handler: function() {
                     styleProperties.close();
                     if (prevStyle) {
@@ -304,18 +333,36 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     }
                 },
                 scope: this
-            }, {
-                text: "Save",
-                handler: function() {
-                    var userStyle = 
+            }]
+        } : {}
+        var styleProperties = new Ext.Window(Ext.apply(buttonCfg, {
+            title: String.format(this.styleWindowTitle,
+                userStyle.title || userStyle.name),
+            bodyBorder: false,
+            autoHeight: true,
+            width: 300,
+            modal: true,
+            items: {
+                border: false,
+                items: {
+                    xtype: "gxp_stylepropertiesdialog",
+                    userStyle: userStyle.clone(),
+                    nameEditable: false,
+                    style: "padding: 10px;",
+                    listeners: {
+                        "change": function() { modified = true; }
+                    }
+                }
+            },
+            listeners: {
+                "close": function() {
                     this.selectedStyle.set(
                         "userStyle",
                         styleProperties.items.get(0).items.get(0).userStyle);
-                    styleProperties.close();
                 },
                 scope: this
-            }]
-        });
+            }
+        }));
         styleProperties.show();
     },
     
@@ -406,27 +453,31 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 {
                     xtype: "button",
                     iconCls: "add",
-                    text: "Add",
+                    text: this.addRuleText,
+                    tooltip: this.addRuleTip,
                     handler: this.addRule,
                     scope: this
                 }, {
                     xtype: "button",
                     iconCls: "delete",
-                    text: "Remove",
+                    text: this.deleteRuleText,
+                    tooltip: this.deleteRuleTip,
                     handler: this.removeRule,
                     scope: this,
                     disabled: true
                 }, {
                     xtype: "button",
                     iconCls: "edit",
-                    text: "Edit",
+                    text: this.editRuleText,
+                    toolitp: this.editRuleTip,
                     handler: this.editRule,
                     scope: this,
                     disabled: true
                 }, {
                     xtype: "button",
                     iconCls: "duplicate",
-                    text: "Duplicate",
+                    text: this.duplicateRuleText,
+                    tip: this.duplicateRuleTip,
                     handler: this.duplicateRule,
                     scope: this,
                     disabled: true
@@ -479,7 +530,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         var rule = this.selectedRule.clone();
 
         var ruleDlg = new Ext.Window({
-            title: "Style Rule: " + (rule.title || rule.name || "New Rule"),
+            title: String.format(this.ruleWindowTitle,
+                rule.title || rule.name || "New Rule"),
             width: 340,
             autoHeight: true,
             modal: true,
