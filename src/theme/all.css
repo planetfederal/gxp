@@ -120,11 +120,11 @@
 }
 
 /* gxp_measure */
-.x-btn .gxp-icon-measure-length, .x-tree-node .gxp-icon-measure-length {
+.x-btn .gxp-icon-measure-length, .x-menu-item .gxp-icon-measure-length, .x-tree-node .gxp-icon-measure-length {
     background-image: url(img/geosilk/ruler.png) !important;
 }
 
-.x-btn .gxp-icon-measure-area, .x-btn .gxp-icon-measure-area {
+.x-btn .gxp-icon-measure-area, .x-menu-item .gxp-icon-measure-area, .x-tree-node .gxp-icon-measure-area {
    background-image: url(img/geosilk/ruler_square.png) !important;
 }
 
