@@ -71,8 +71,28 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
      *  MapPanel can always be accessed with "map" as actionTarget. Set to null if 
      *  no actions should be created.
      *
-     *  If a tool has both actions as well as output, and you want to force
-     *  it to output to a container, set actionTarget to null.
+     *  Some tools provide a context menu. To reference this context menu as
+     *  actionTarget for other tools, configure an id in the tool's
+     *  outputConfig, and use the id with ".contextMenu" appended. In the
+     *  snippet below, a layer tree is created, with a "Remove layer" action
+     *  as button on the tree's top toolbar, and as menu item in its context
+     *  menu:
+     *
+     *  .. code-block:: javascript
+     *
+     *     {
+     *         xtype: "gxp_layertree",
+     *         outputConfig: {
+     *             id: "tree",
+     *             tbar: []
+     *         }
+     *     }, {
+     *         xtype: "gxp_removelayer",
+     *         actionTarget: ["tree.tbar", "tree.contextMenu"]
+     *     }
+     *
+     *  If a tool has both actions and output, and you want to force it to
+     *  immediately output to a container, set actionTarget to null.
      */
     actionTarget: "map.tbar",
         

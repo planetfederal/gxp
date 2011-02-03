@@ -23,7 +23,8 @@ Ext.namespace("gxp.plugins");
 /** api: constructor
  *  .. class:: LayerTree(config)
  *
- *    Plugin for adding a tree of layers to a :class:`gxp.Viewer`
+ *    Plugin for adding a tree of layers to a :class:`gxp.Viewer`. Also
+ *    provides a context menu on layer nodes.
  */   
 gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
     
