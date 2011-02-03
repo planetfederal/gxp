@@ -23,6 +23,10 @@
     background-image: url(img/pencil.png);
 }
 
+.x-btn .process, .x-menu-item .process {
+    background-image: url(img/silk/cog.png);
+}
+
 .gxp-filterbuilder .x-toolbar {
     background: transparent;
     border: none !important;
@@ -123,7 +127,6 @@
 .x-btn .gxp-icon-measure-length, .x-menu-item .gxp-icon-measure-length, .x-tree-node .gxp-icon-measure-length {
     background-image: url(img/geosilk/ruler.png) !important;
 }
-
 .x-btn .gxp-icon-measure-area, .x-menu-item .gxp-icon-measure-area, .x-tree-node .gxp-icon-measure-area {
    background-image: url(img/geosilk/ruler_square.png) !important;
 }

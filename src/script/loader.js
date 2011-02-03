@@ -57,6 +57,7 @@
         "plugins/LayerTree.js",
         "plugins/AddLayers.js",
         "plugins/RemoveLayer.js",
+        "plugins/SelectedFeatureActions.js",
         "plugins/SnappingAgent.js",
         "plugins/NavigationHistory.js",
         "plugins/Zoom.js",
