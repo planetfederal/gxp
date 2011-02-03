@@ -45,6 +45,7 @@
         "plugins/StyleWriter.js",
         "plugins/GeoServerStyleWriter.js",
         "plugins/Tool.js",
+        "plugins/DeleteSelectedFeatures.js",
         "plugins/GoogleGeocoder.js",
         "plugins/WMSRasterStylesDialog.js",
         "plugins/WMSGetFeatureInfo.js",
