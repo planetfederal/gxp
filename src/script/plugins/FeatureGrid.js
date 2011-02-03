@@ -24,7 +24,8 @@ Ext.namespace("gxp.plugins");
  *  .. class:: FeatureGrid(config)
  *
  *    Plugin for displaying vector features in a grid. Requires a
- *    :class:`gxp.plugins.FeatureManager`.
+ *    :class:`gxp.plugins.FeatureManager`. Also provides a context menu for
+ *    the grid.
  */   
 gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
     
@@ -200,8 +201,17 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                         "clearfeatures": autoCollapse
                     });
                 },
+                contextmenu: function(event) {
+                    var rowIndex = featureGrid.getView().findRowIndex(event.getTarget());
+                    if (rowIndex !== false) {
+                        featureGrid.getSelectionModel().selectRow(rowIndex);
+                        featureGrid.contextMenu.showAt(event.getXY());
+                        event.stopEvent();
+                    }
+                },
                 scope: this
-            }
+            },
+            contextMenu: new Ext.menu.Menu({items: []})
         }, config || {});
         var featureGrid = gxp.plugins.FeatureGrid.superclass.addOutput.call(this, config);
         
