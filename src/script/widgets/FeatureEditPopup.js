@@ -346,8 +346,8 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             hidden: this.readOnly,
             items: ["->",
                 this.cancelButton,
-                this.deleteButton,
                 this.editButton,
+                this.deleteButton,
                 this.saveButton
             ]
         });
