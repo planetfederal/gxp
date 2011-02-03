@@ -150,6 +150,7 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
      *  :arg target: ``Object`` The object initializing this plugin.
      */
     init: function(target) {
+        target.tools[this.id] = this;
         this.target = target;
         this.autoActivate && this.activate();
         this.target.on("portalready", this.addActions, this);

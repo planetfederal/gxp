@@ -10,11 +10,21 @@
     <script type="text/javascript">
        
         function test_Tool(t) {
-            t.plan(1);
+            t.plan(2);
             
-            var instance = new gxp.plugins.Tool();
+            var instance = new gxp.plugins.Tool({id: "foo"});
             
             t.ok(instance instanceof gxp.plugins.Tool, "Instance created successfully");
+            t.eq(instance.id, "foo", "Instance has id from config");
+        }
+        
+        function test_init(t) {
+            t.plan(1);
+            
+            var tool = new gxp.plugins.Tool();
+            var target = {tools: {}, on: function(){}};
+            tool.init(target);
+            t.ok(target.tools[tool.id] === tool, "tool registered on target");
         }
 
     </script>

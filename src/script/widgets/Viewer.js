@@ -394,7 +394,6 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                     throw new Error("Could not create tool plugin with ptype: " + this.initialConfig.tools[i].ptype);
                 }
                 tool.init(this);
-                this.tools[tool.id] = tool;
             }
         }
     },
