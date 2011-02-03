@@ -27,7 +27,8 @@
 {% if base_link is defined or _parents is defined %}
 Extends
     {% if base_link %}* {{ base_link }}{% endif %}
-    {% if _parents %}{% for parent in _parents %}* :class:`{{ parent.module }}.{{ parent.class }}`{% endfor %}{% endif %}
+    {% if _parents %}{% for parent in _parents %}
+    * :class:`{{ parent.module }}.{{ parent.class }}`{% endfor %}{% endif %}
 {% endif %}
 
 {% if xtype is defined %}
