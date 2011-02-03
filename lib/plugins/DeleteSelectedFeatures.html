@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>gxp.plugins.Navigation &mdash; GXP v0.1</title>
+    <title>gxp.plugins.DeleteSelectedFeatures &mdash; GXP v0.1</title>
     <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -21,8 +21,8 @@
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="top" title="GXP v0.1" href="../../index.html" />
     <link rel="up" title="gxp.plugins" href="../plugins.html" />
-    <link rel="next" title="gxp.plugins.NavigationHistory" href="NavigationHistory.html" />
-    <link rel="prev" title="gxp.plugins.Measure" href="Measure.html" /> 
+    <link rel="next" title="gxp.plugins.FeatureEditor" href="FeatureEditor.html" />
+    <link rel="prev" title="gxp.plugins.BingSource" href="BingSource.html" /> 
   </head>
   <body>
     <div class="related">
@@ -35,20 +35,20 @@
           <a href="../../modindex.html" title="Global Module Index"
              accesskey="M">modules</a> |</li>
         <li class="right" >
-          <a href="NavigationHistory.html" title="gxp.plugins.NavigationHistory"
+          <a href="FeatureEditor.html" title="gxp.plugins.FeatureEditor"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="Measure.html" title="gxp.plugins.Measure"
+          <a href="BingSource.html" title="gxp.plugins.BingSource"
              accesskey="P">previous</a> |</li>
         <li><a href="../../index.html">GXP</a> &raquo;</li>
-          <li><a href="../plugins.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
+          <li><a href="../plugins.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
             <h3><a href="../../index.html">Table Of Contents</a></h3>
             <ul>
-<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">gxp.plugins.Navigation</span></tt></a><ul>
+<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">gxp.plugins.DeleteSelectedFeatures</span></tt></a><ul>
 <li><a class="reference external" href="#config-options">Config Options</a></li>
 <li><a class="reference external" href="#public-properties">Public Properties</a></li>
 <li><a class="reference external" href="#public-methods">Public Methods</a></li>
@@ -58,14 +58,14 @@
 </ul>
 
             <h4>Previous topic</h4>
-            <p class="topless"><a href="Measure.html"
-                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins.Measure</span></tt></a></p>
+            <p class="topless"><a href="BingSource.html"
+                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins.BingSource</span></tt></a></p>
             <h4>Next topic</h4>
-            <p class="topless"><a href="NavigationHistory.html"
-                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.plugins.NavigationHistory</span></tt></a></p>
+            <p class="topless"><a href="FeatureEditor.html"
+                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.plugins.FeatureEditor</span></tt></a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
-              <li><a href="../../_sources/lib/plugins/Navigation.txt"
+              <li><a href="../../_sources/lib/plugins/DeleteSelectedFeatures.txt"
                      rel="nofollow">Show Source</a></li>
             </ul>
           <div id="searchbox" style="display: none">
@@ -89,8 +89,8 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="gxp-plugins-navigation">
-<h1><a title="gxp.plugins.Navigation" class="reference internal" href="#gxp.plugins.Navigation"><tt class="xref docutils literal"><span class="pre">gxp.plugins.Navigation</span></tt></a><a class="headerlink" href="#gxp-plugins-navigation" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="gxp-plugins-deleteselectedfeatures">
+<h1><a title="gxp.plugins.DeleteSelectedFeatures" class="reference internal" href="#gxp.plugins.DeleteSelectedFeatures"><tt class="xref docutils literal"><span class="pre">gxp.plugins.DeleteSelectedFeatures</span></tt></a><a class="headerlink" href="#gxp-plugins-deleteselectedfeatures" title="Permalink to this headline">¶</a></h1>
 <dl class="meta docutils">
 <dt>Extends</dt>
 <dd><ul class="first last simple">
@@ -99,13 +99,12 @@
 </ul>
 </dd>
 <dt>ptype</dt>
-<dd><tt class="docutils literal"><span class="pre">gxp_navigation</span></tt></dd>
+<dd><tt class="docutils literal"><span class="pre">gxp_deleteselectedfeatures</span></tt></dd>
 </dl>
 <dl class="class">
-<dt id="gxp.plugins.Navigation">
-<em class="property">class </em><tt class="descclassname">gxp.plugins.</tt><tt class="descname">Navigation</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#gxp.plugins.Navigation" title="Permalink to this definition">¶</a></dt>
-<dd>Provides one action for panning the map and zooming in with
-a box. Optionally provide mousewheel zoom support.</dd></dl>
+<dt id="gxp.plugins.DeleteSelectedFeatures">
+<em class="property">class </em><tt class="descclassname">gxp.plugins.</tt><tt class="descname">DeleteSelectedFeatures</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#gxp.plugins.DeleteSelectedFeatures" title="Permalink to this definition">¶</a></dt>
+<dd>Plugin for deleting selected features</dd></dl>
 
 <div class="section" id="config-options">
 <h2>Config Options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
@@ -167,6 +166,11 @@ activating it. Default is true.</dd></dl>
 
 <dl class="describe">
 <dt>
+<tt class="descname">buttonText</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt> Text for the button label</dd></dl>
+
+<dl class="describe">
+<dt>
 <tt class="descname">controlOptions</tt></dt>
 <dd><tt class="docutils literal"><span class="pre">Object</span></tt> If this tool is associated with an <tt class="docutils literal"><span class="pre">OpenLayers.Control</span></tt>
 then this is an optional object to pass to the constructor of the
@@ -180,9 +184,33 @@ default. Only works for actions that are a <tt class="docutils literal"><span cl
 
 <dl class="describe">
 <dt>
+<tt class="descname">deleteFeatureMsg</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt>
+Text for delete confirmation message with a single feature (i18n).</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">deleteFeaturesMsg</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt>
+Text for delete confirmation message with multiple features (i18n).</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">deleteMsgTitle</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt>
+Text for delete confirmation window title (i18n).</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">featureManager</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt> id of the <a title="gxp.plugins.FeatureManager" class="reference external" href="FeatureManager.html#gxp.plugins.FeatureManager"><tt class="xref docutils literal"><span class="pre">gxp.plugins.FeatureManager</span></tt></a> to look for
+selected features</dd></dl>
+
+<dl class="describe">
+<dt>
 <tt class="descname">menuText</tt></dt>
 <dd><tt class="docutils literal"><span class="pre">String</span></tt>
-Text for navigation menu item (i18n).</dd></dl>
+Text for zoom menu item (i18n).</dd></dl>
 
 <dl class="describe">
 <dt>
@@ -218,7 +246,7 @@ tools, this string is to identify the toggle group.</dd></dl>
 <dt>
 <tt class="descname">tooltip</tt></dt>
 <dd><tt class="docutils literal"><span class="pre">String</span></tt>
-Text for navigation action tooltip (i18n).</dd></dl>
+Text for zoom action tooltip (i18n).</dd></dl>
 
 </div>
 <div class="section" id="public-properties">
@@ -226,8 +254,8 @@ Text for navigation action tooltip (i18n).</dd></dl>
 <p>Public properties in addition to those
 listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a>.</p>
 <dl class="attribute">
-<dt id="gxp.plugins.Navigation.active">
-<tt class="descclassname">Navigation.</tt><tt class="descname">active</tt><a class="headerlink" href="#gxp.plugins.Navigation.active" title="Permalink to this definition">¶</a></dt>
+<dt id="gxp.plugins.DeleteSelectedFeatures.active">
+<tt class="descclassname">DeleteSelectedFeatures.</tt><tt class="descname">active</tt><a class="headerlink" href="#gxp.plugins.DeleteSelectedFeatures.active" title="Permalink to this definition">¶</a></dt>
 <dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> Is the tool currently active?</dd></dl>
 
 </div>
@@ -236,8 +264,8 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
 <p>Public methods in addition to those
 listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a>.</p>
 <dl class="method">
-<dt id="gxp.plugins.Navigation.activate">
-<tt class="descclassname">Navigation.</tt><tt class="descname">activate</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.Navigation.activate" title="Permalink to this definition">¶</a></dt>
+<dt id="gxp.plugins.DeleteSelectedFeatures.activate">
+<tt class="descclassname">DeleteSelectedFeatures.</tt><tt class="descname">activate</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.DeleteSelectedFeatures.activate" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -250,18 +278,18 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
 </dd></dl>
 
 <dl class="method">
-<dt id="gxp.plugins.Navigation.addActions">
-<tt class="descclassname">Navigation.</tt><tt class="descname">addActions</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.Navigation.addActions" title="Permalink to this definition">¶</a></dt>
+<dt id="gxp.plugins.DeleteSelectedFeatures.addActions">
+<tt class="descclassname">DeleteSelectedFeatures.</tt><tt class="descname">addActions</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.DeleteSelectedFeatures.addActions" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="gxp.plugins.Navigation.addOutput">
-<tt class="descclassname">Navigation.</tt><tt class="descname">addOutput</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.Navigation.addOutput" title="Permalink to this definition">¶</a></dt>
+<dt id="gxp.plugins.DeleteSelectedFeatures.addOutput">
+<tt class="descclassname">DeleteSelectedFeatures.</tt><tt class="descname">addOutput</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.DeleteSelectedFeatures.addOutput" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="gxp.plugins.Navigation.deactivate">
-<tt class="descclassname">Navigation.</tt><tt class="descname">deactivate</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.Navigation.deactivate" title="Permalink to this definition">¶</a></dt>
+<dt id="gxp.plugins.DeleteSelectedFeatures.deactivate">
+<tt class="descclassname">DeleteSelectedFeatures.</tt><tt class="descname">deactivate</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.DeleteSelectedFeatures.deactivate" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -313,13 +341,13 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
           <a href="../../modindex.html" title="Global Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="NavigationHistory.html" title="gxp.plugins.NavigationHistory"
+          <a href="FeatureEditor.html" title="gxp.plugins.FeatureEditor"
              >next</a> |</li>
         <li class="right" >
-          <a href="Measure.html" title="gxp.plugins.Measure"
+          <a href="BingSource.html" title="gxp.plugins.BingSource"
              >previous</a> |</li>
         <li><a href="../../index.html">GXP</a> &raquo;</li>
-          <li><a href="../plugins.html" ><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
+          <li><a href="../plugins.html" ><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

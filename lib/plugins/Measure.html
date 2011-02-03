@@ -41,7 +41,7 @@
           <a href="MapQuestSource.html" title="gxp.plugins.MapQuestSource"
              accesskey="P">previous</a> |</li>
         <li><a href="../../index.html">GXP</a> &raquo;</li>
-          <li><a href="../plugins.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
+          <li><a href="../plugins.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -136,8 +136,26 @@ to be put in more than one place (e.g. a button and a context menu item).</p>
 &#8220;.fbar&#8221; has to be appended. The default is &#8220;map.tbar&#8221;. The viewer&#8217;s main
 MapPanel can always be accessed with &#8220;map&#8221; as actionTarget. Set to null if
 no actions should be created.</p>
-<p>If a tool has both actions as well as output, and you want to force
-it to output to a container, set actionTarget to null.</p>
+<p>Some tools provide a context menu. To reference this context menu as
+actionTarget for other tools, configure an id in the tool&#8217;s
+outputConfig, and use the id with &#8220;.contextMenu&#8221; appended. In the
+snippet below, a layer tree is created, with a &#8220;Remove layer&#8221; action
+as button on the tree&#8217;s top toolbar, and as menu item in its context
+menu:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+    <span class="nx">xtype</span><span class="o">:</span> <span class="s2">&quot;gxp_layertree&quot;</span><span class="p">,</span>
+    <span class="nx">outputConfig</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;tree&quot;</span><span class="p">,</span>
+        <span class="nx">tbar</span><span class="o">:</span> <span class="p">[]</span>
+    <span class="p">}</span>
+<span class="p">},</span> <span class="p">{</span>
+    <span class="nx">xtype</span><span class="o">:</span> <span class="s2">&quot;gxp_removelayer&quot;</span><span class="p">,</span>
+    <span class="nx">actionTarget</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;tree.tbar&quot;</span><span class="p">,</span> <span class="s2">&quot;tree.contextMenu&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>If a tool has both actions and output, and you want to force it to
+immediately output to a container, set actionTarget to null.</p>
 </dd></dl>
 
 <dl class="describe">
@@ -318,7 +336,7 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
           <a href="MapQuestSource.html" title="gxp.plugins.MapQuestSource"
              >previous</a> |</li>
         <li><a href="../../index.html">GXP</a> &raquo;</li>
-          <li><a href="../plugins.html" ><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
+          <li><a href="../plugins.html" ><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

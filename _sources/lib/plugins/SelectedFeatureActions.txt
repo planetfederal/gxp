@@ -1,7 +1,7 @@
 
 .. currentmodule:: gxp.plugins
 
-:class:`gxp.plugins.GoogleGeocoder`
+:class:`gxp.plugins.SelectedFeatureActions`
 ================================================================================
 
 
@@ -18,16 +18,36 @@ Extends
 
 
 ptype
-    ``gxp_googlegeocoder``
+    ``gxp_selectedfeatureactions``
 
 
 
-.. class:: GoogleGeocoder(config)
+.. class:: SelectedFeatureActions(config)
 
-  Plugin for adding a GoogleGeocoderComboBox to a viewer.  The underlying
-  GoogleGeocoderComboBox can be configured by setting this tool's
-  ``outputConfig`` property.
+  Plugin for creating actions that put an iframe with a url generated from
+  a template with information from feature attributes or the feature id in
+  the tool's outputTarget.
 
+
+
+Example Use
+-----------
+
+Configuration in the  :class:`gxp.Viewer`:
+
+.. code-block:: javascript
+
+  tools: [{
+      ptype: "gxp_selectedFeatureActions",
+      featureManager: "myfeaturemanager",
+      actionTarget: "featuregrid.contextMenu",
+      actions: [{
+          menuText: "Search for title",
+          urlTemplate: "http://google.com/search?q={title}",
+          iconCls: "google-icon"
+      }
+      //...
+  ]
 
     
 
@@ -41,12 +61,16 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
 
 .. describe:: actions
 
-    ``Array`` Custom actions for tools that do not provide their own. Array
-    elements are expected to be valid Ext config objects. Actions provided
-    here may have an additional ``menuText`` property, which will be used
-    as text when the action is used in a menu. The ``text`` property will
-    only be used in buttons. Optional, only needed to create custom
-    actions.
+    ``Object`` Like actions in :class:`gxp.plugins.Tool`, but with two
+    additional properties:
+    
+    * urlTemplate - ``String`` template for the link to follow. To
+      reference attributes of the selected feature, use "{fieldName}"
+      in the template. In addition to the attributes, "{fid}" is available
+      for the feature id (typename prefix removed).
+    * outputConfig - ``Object`` overrides this tool's outputConfig for
+      output triggered by the respective action. Useful e.g. for creating
+      windows with different sizes for each action.
 
 .. describe:: actionTarget
 
@@ -107,6 +131,11 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     ``Number`` Optional index of an action that should be active by
     default. Only works for actions that are a ``GeoExt.Action`` instance.
 
+.. describe:: featureManager
+
+    :class:`gxp.plugins.FeatureManager` The feature manager to get the
+    selected feature from.
+
 .. describe:: outputAction
 
     ``Number`` The ``actions`` array index of the action that should
@@ -133,15 +162,6 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     ``String`` If this tool should be radio-button style toggled with other
     tools, this string is to identify the toggle group.
 
-.. describe:: updateField
-
-    ``String``
-    If value is specified, when an item is selected in the combo, the map
-    will be zoomed to the corresponding field value in the selected record.
-    If ``null``, no map navigation will occur.  Valid values are the field
-    names described for the :class:`gxp.form.GoogleGeocoderComboBox`.
-    Default is "viewport".
-
 
 
 
@@ -152,7 +172,7 @@ Public properties in addition to those
 listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
 
 
-.. attribute:: GoogleGeocoder.active
+.. attribute:: SelectedFeatureActions.active
 
     ``Boolean`` Is the tool currently active?
 
@@ -166,23 +186,23 @@ Public methods in addition to those
 listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
 
 
-.. method:: GoogleGeocoder.activate
+.. method:: SelectedFeatureActions.activate
 
     :returns: ``Boolean`` true when this tool was activated
     
     Activates this tool.
 
-.. method:: GoogleGeocoder.addActions
+.. method:: SelectedFeatureActions.addActions
 
     :arg actions: ``Array`` Optional actions to add. If not provided,
         this.actions will be added.
     :returns: ``Array`` The actions added.
 
-.. method:: GoogleGeocoder.addOutput
+.. method:: SelectedFeatureActions.addOutput
 
     
 
-.. method:: GoogleGeocoder.deactivate
+.. method:: SelectedFeatureActions.deactivate
 
     :returns: ``Boolean`` true when this tool was deactivated
     

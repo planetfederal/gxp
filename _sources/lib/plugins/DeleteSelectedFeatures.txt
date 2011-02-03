@@ -1,7 +1,7 @@
 
 .. currentmodule:: gxp.plugins
 
-:class:`gxp.plugins.GoogleGeocoder`
+:class:`gxp.plugins.DeleteSelectedFeatures`
 ================================================================================
 
 
@@ -18,15 +18,13 @@ Extends
 
 
 ptype
-    ``gxp_googlegeocoder``
+    ``gxp_deleteselectedfeatures``
 
 
 
-.. class:: GoogleGeocoder(config)
+.. class:: DeleteSelectedFeatures(config)
 
-  Plugin for adding a GoogleGeocoderComboBox to a viewer.  The underlying
-  GoogleGeocoderComboBox can be configured by setting this tool's
-  ``outputConfig`` property.
+  Plugin for deleting selected features
 
 
     
@@ -96,6 +94,10 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     ``Boolean`` Set to false if the tool should be initialized without
     activating it. Default is true.
 
+.. describe:: buttonText
+
+    ``String`` Text for the button label
+
 .. describe:: controlOptions
 
     ``Object`` If this tool is associated with an ``OpenLayers.Control``
@@ -106,6 +108,31 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
 
     ``Number`` Optional index of an action that should be active by
     default. Only works for actions that are a ``GeoExt.Action`` instance.
+
+.. describe:: deleteFeatureMsg
+
+    ``String``
+    Text for delete confirmation message with a single feature (i18n).
+
+.. describe:: deleteFeaturesMsg
+
+    ``String``
+    Text for delete confirmation message with multiple features (i18n).
+
+.. describe:: deleteMsgTitle
+
+    ``String``
+    Text for delete confirmation window title (i18n).
+
+.. describe:: featureManager
+
+    ``String`` id of the :class:`gxp.plugins.FeatureManager` to look for
+    selected features
+
+.. describe:: menuText
+
+    ``String``
+    Text for zoom menu item (i18n).
 
 .. describe:: outputAction
 
@@ -133,14 +160,10 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     ``String`` If this tool should be radio-button style toggled with other
     tools, this string is to identify the toggle group.
 
-.. describe:: updateField
+.. describe:: tooltip
 
     ``String``
-    If value is specified, when an item is selected in the combo, the map
-    will be zoomed to the corresponding field value in the selected record.
-    If ``null``, no map navigation will occur.  Valid values are the field
-    names described for the :class:`gxp.form.GoogleGeocoderComboBox`.
-    Default is "viewport".
+    Text for zoom action tooltip (i18n).
 
 
 
@@ -152,7 +175,7 @@ Public properties in addition to those
 listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
 
 
-.. attribute:: GoogleGeocoder.active
+.. attribute:: DeleteSelectedFeatures.active
 
     ``Boolean`` Is the tool currently active?
 
@@ -166,23 +189,21 @@ Public methods in addition to those
 listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
 
 
-.. method:: GoogleGeocoder.activate
+.. method:: DeleteSelectedFeatures.activate
 
     :returns: ``Boolean`` true when this tool was activated
     
     Activates this tool.
 
-.. method:: GoogleGeocoder.addActions
-
-    :arg actions: ``Array`` Optional actions to add. If not provided,
-        this.actions will be added.
-    :returns: ``Array`` The actions added.
-
-.. method:: GoogleGeocoder.addOutput
+.. method:: DeleteSelectedFeatures.addActions
 
     
 
-.. method:: GoogleGeocoder.deactivate
+.. method:: DeleteSelectedFeatures.addOutput
+
+    
+
+.. method:: DeleteSelectedFeatures.deactivate
 
     :returns: ``Boolean`` true when this tool was deactivated
     
