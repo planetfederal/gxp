@@ -10,6 +10,7 @@
 
 Extends
     * `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_
+    
     * :class:`gxp.plugins.Tool`
 
 

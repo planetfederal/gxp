@@ -10,7 +10,9 @@
 
 Extends
     * `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_
-    * :class:`gxp.plugins.WMSSource`* :class:`gxp.plugins.LayerSource`
+    
+    * :class:`gxp.plugins.WMSSource`
+    * :class:`gxp.plugins.LayerSource`
 
 
 
