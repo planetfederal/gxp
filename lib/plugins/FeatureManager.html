@@ -99,7 +99,7 @@
 </ul>
 </dd>
 <dt>ptype</dt>
-<dd><tt class="docutils literal"><span class="pre">gx_featuremanager</span></tt></dd>
+<dd><tt class="docutils literal"><span class="pre">gxp_featuremanager</span></tt></dd>
 </dl>
 <dl class="class">
 <dt id="gxp.plugins.FeatureManager">
@@ -128,22 +128,22 @@ actions.</dd></dl>
 <dl class="describe">
 <dt>
 <tt class="descname">actionTarget</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">String</span></tt> or <tt class="docutils literal"><span class="pre">Array</span></tt> Where to place the tool&#8217;s actions (e.g. buttons
-or menus)? This can be any string that references an <tt class="docutils literal"><span class="pre">Ext.Container</span></tt>
-property on the portal, or a unique id configured on a component, or an
-array of the aforementioned if the action is to be put in more than one
-places (e.g. a button and a context menu item). To reference one of the
-toolbars of an <tt class="docutils literal"><span class="pre">Ext.Panel</span></tt>, &#8220;.tbar&#8221;, &#8220;.bbar&#8221; or &#8220;.fbar&#8221; has to be
-appended. The default is &#8220;map.tbar&#8221;. The viewer&#8217;s main MapPanel
-can always be accessed with &#8220;map&#8221; as actionTarget. Set to null if no
-actions should be created.</dd></dl>
-
-<dl class="describe">
-<dt>
-<tt class="descname">appendActions</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> If set to false, actions won&#8217;t be added, but inserted to
-the container at the beginning. This is useful to control the order of
-actions in a toolbar. Default is true.</dd></dl>
+<dd><p><tt class="docutils literal"><span class="pre">Object</span></tt> or <tt class="docutils literal"><span class="pre">String</span></tt> or <tt class="docutils literal"><span class="pre">Array</span></tt> Where to place the tool&#8217;s actions
+(e.g. buttons or menus)?</p>
+<p>In case of a string, this can be any string that references an
+<tt class="docutils literal"><span class="pre">Ext.Container</span></tt> property on the portal, or a unique id configured on a
+component.</p>
+<p>In case of an object, the object has a &#8220;target&#8221; and an &#8220;index&#8221; property,
+so that the tool can be inserted at a specified index in the target.</p>
+<p>actionTarget can also be an array of strings or objects, if the action is
+to be put in more than one place (e.g. a button and a context menu item).</p>
+<p>To reference one of the toolbars of an <tt class="docutils literal"><span class="pre">Ext.Panel</span></tt>, &#8220;.tbar&#8221;, &#8220;.bbar&#8221; or
+&#8220;.fbar&#8221; has to be appended. The default is &#8220;map.tbar&#8221;. The viewer&#8217;s main
+MapPanel can always be accessed with &#8220;map&#8221; as actionTarget. Set to null if
+no actions should be created.</p>
+<p>If a tool has both actions as well as output, and you want to force
+it to output to a container, set actionTarget to null.</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
@@ -169,6 +169,13 @@ true unless <tt class="docutils literal"><span class="pre">layer</span></tt> is 
 <tt class="descname">autoZoomPage</tt></dt>
 <dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> Set to true to always zoom the map to the currently
 selected page. Default is false.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">controlOptions</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Object</span></tt> If this tool is associated with an <tt class="docutils literal"><span class="pre">OpenLayers.Control</span></tt>
+then this is an optional object to pass to the constructor of the
+associated <tt class="docutils literal"><span class="pre">OpenLayers.Control</span></tt>.</dd></dl>
 
 <dl class="describe">
 <dt>
@@ -503,6 +510,21 @@ featureLayer.</li>
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="gxp.plugins.FeatureManager.visible">
+<tt class="descclassname">FeatureManager.</tt><tt class="descname">visible</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.FeatureManager.visible" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">mixed</span></tt> &#8220;all&#8221;, &#8220;selected&#8221; or false</td>
+</tr>
+</tbody>
+</table>
+<p>Are we currently showing all features, selected features only or no
+features?</p>
+</dd></dl>
+
 </div>
 <div class="section" id="events">
 <h2>Events<a class="headerlink" href="#events" title="Permalink to this headline">¶</a></h2>
@@ -514,6 +536,19 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
 <dd><p>Fired when the tool is activated.</p>
 <p>Listener arguments:
 * tool - <a title="gxp.plugins.Tool" class="reference external" href="Tool.html#gxp.plugins.Tool"><tt class="xref docutils literal"><span class="pre">gxp.plugins.Tool</span></tt></a> the activated tool</p>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">beforeclearfeatures</tt></dt>
+<dd><p>Fired when the clearFeatures method is called, before clearing
+the features. This event can be used to abort clearFeatures
+before any action is performed, by having a listener return
+false.</p>
+<p>Listener arguments:</p>
+<ul class="simple">
+<li>tool - <a title="gxp.plugins.FeatureManager" class="reference internal" href="#gxp.plugins.FeatureManager"><tt class="xref docutils literal"><span class="pre">gxp.plugins.FeatureManager</span></tt></a> this tool</li>
+</ul>
 </dd></dl>
 
 <dl class="describe">
@@ -564,6 +599,17 @@ method</li>
 setPage method</li>
 <li>scope     - <tt class="docutils literal"><span class="pre">Object</span></tt> the scope argument passed to the
 setPage method</li>
+</ul>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">clearfeatures</tt></dt>
+<dd><p>Fired when features have been cleared by the clearFeatures
+method.</p>
+<p>Listener arguments:</p>
+<ul class="simple">
+<li>tool - <a title="gxp.plugins.FeatureManager" class="reference internal" href="#gxp.plugins.FeatureManager"><tt class="xref docutils literal"><span class="pre">gxp.plugins.FeatureManager</span></tt></a> this tool</li>
 </ul>
 </dd></dl>
 

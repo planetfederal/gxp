@@ -15,7 +15,7 @@ Extends
 
 
 xtype
-    ``gx_wmsstylesdialog``
+    ``gxp_wmsstylesdialog``
 
 
 
@@ -28,6 +28,10 @@ xtype
     means of writing modified styles back to the server. To save styles,
     configure the dialog with a :class:`gxp.plugins.StyleWriter` plugin
     and call the ``saveStyles`` method.
+
+    Note: when this component is included in a build,
+    ``OpenLayers.Renderer.defaultSymbolizer`` will be set to the SLD
+    defaults.
 
 
     
@@ -77,9 +81,10 @@ listed for `Ext.Container <http://extjs.com/deploy/dev/docs/?class=Ext.Container
 
 .. attribute:: WMSStylesDialog.editable
 
-    ``Boolean`` Read-only. True if this component could gather enough
-    information to allow styles being edited, false otherwise. This is
-    not supposed to be used before the  ``ready`` event is fired.
+    ``Boolean`` Read-only once the dialog is rendered. True if this
+    component could gather enough information to allow styles being edited,
+    false otherwise. This is not supposed to be read before the
+    ``ready`` event is fired.
 
 .. attribute:: WMSStylesDialog.selectedStyle
 
@@ -180,12 +185,19 @@ listed for `Ext.Container <http://extjs.com/deploy/dev/docs/?class=Ext.Container
 
 .. describe:: saved
 
-    Fires when a style was successfully saved.
+    Fires when a style was successfully saved. Applications should
+    listen for this event and redraw layers with the currently
+    selected style.
+    
+    Listener arguments:
+    
+    * :class:`gxp.WMSStylesDialog` this component
+    * ``String`` the name of the currently selected style
 
 .. describe:: styleselected
 
-    Fires whenever a style is selected from this dialog's Style
-    combo box.
+    Fires whenever an existing style is selected from this dialog's
+    Style combo box.
     
     Listener arguments:
     

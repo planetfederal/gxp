@@ -17,7 +17,7 @@ Extends
 
 
 ptype
-    ``gx_olsource``
+    ``gxp_olsource``
 
 
 
@@ -42,7 +42,7 @@ straightforward:
 .. code-block:: javascript
 
   "ol": {
-      ptype: "gx_olsource"
+      ptype: "gxp_olsource"
   }
 
 A typical configuration for a layer from this source (in the ``layers``

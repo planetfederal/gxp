@@ -100,13 +100,13 @@
 </ul>
 </dd>
 <dt>ptype</dt>
-<dd><tt class="docutils literal"><span class="pre">gx_bingsource</span></tt></dd>
+<dd><tt class="docutils literal"><span class="pre">gxp_bingsource</span></tt></dd>
 </dl>
 <dl class="class">
 <dt id="gxp.plugins.BingSource">
 <em class="property">class </em><tt class="descclassname">gxp.plugins.</tt><tt class="descname">BingSource</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#gxp.plugins.BingSource" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plugin for using OpenStreetMap layers with <a title="gxp.Viewer" class="reference external" href="../widgets/Viewer.html#gxp.Viewer"><tt class="xref docutils literal"><span class="pre">gxp.Viewer</span></tt></a> instances.</p>
-<p>Available layer names are &#8220;mapnik&#8221; and &#8220;osmarender&#8221;</p>
+<dd><p>Plugin for using Bing layers with <a title="gxp.Viewer" class="reference external" href="../widgets/Viewer.html#gxp.Viewer"><tt class="xref docutils literal"><span class="pre">gxp.Viewer</span></tt></a> instances.</p>
+<p>Available layer names are &#8220;Road&#8221;, &#8220;Aerial&#8221; and &#8220;AerialWithLabels&#8221;</p>
 </dd></dl>
 
 <div class="section" id="example-use">
@@ -114,7 +114,7 @@
 <p>The configuration in the <tt class="docutils literal"><span class="pre">sources</span></tt> property of the <a title="gxp.Viewer" class="reference external" href="../widgets/Viewer.html#gxp.Viewer"><tt class="xref docutils literal"><span class="pre">gxp.Viewer</span></tt></a> is
 straightforward:</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span class="s2">&quot;bing&quot;</span><span class="o">:</span> <span class="p">{</span>
-    <span class="nx">ptype</span><span class="o">:</span> <span class="s2">&quot;gx_bingsource&quot;</span>
+    <span class="nx">ptype</span><span class="o">:</span> <span class="s2">&quot;gxp_bingsource&quot;</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -170,8 +170,8 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
 <dl class="attribute">
 <dt id="gxp.plugins.BingSource.store">
 <tt class="descclassname">BingSource.</tt><tt class="descname">store</tt><a class="headerlink" href="#gxp.plugins.BingSource.store" title="Permalink to this definition">¶</a></dt>
-<dd><tt class="docutils literal"><span class="pre">GeoExt.data.LayerStore</span></tt>. Will contain records with &#8220;mapnik&#8221; and
-&#8220;osmarender&#8221; as name field values.</dd></dl>
+<dd><tt class="docutils literal"><span class="pre">GeoExt.data.LayerStore</span></tt>. Will contain records with &#8220;Road&#8221; and
+&#8220;Aerial&#8221; as name field values.</dd></dl>
 
 <dl class="attribute">
 <dt id="gxp.plugins.BingSource.title">

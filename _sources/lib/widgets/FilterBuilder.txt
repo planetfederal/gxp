@@ -15,7 +15,7 @@ Extends
 
 
 xtype
-    ``gx_filterbuilder``
+    ``gxp_filterbuilder``
 
 
 
@@ -66,7 +66,7 @@ those listed for `Ext.Panel <http://extjs.com/deploy/dev/docs/?class=Ext.Panel>`
 
     ``String``
     The CSS class to be added to this panel's element (defaults to
-    ``"gx-filterbuilder"``).
+    ``"gxp-filterbuilder"``).
 
 .. describe:: postComboText
 

@@ -15,7 +15,7 @@ Extends
 
 
 xtype
-    ``gx_pointsymbolizer``
+    ``gxp_pointsymbolizer``
 
 
 

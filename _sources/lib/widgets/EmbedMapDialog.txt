@@ -41,7 +41,7 @@ current path as url:
          width: 380,
          autoHeight: true,
          items: [{
-             xtype: "gx_embedmapdialog",
+             xtype: "gxp_embedmapdialog",
              url: "viewer.html"
          }]
      }).show();

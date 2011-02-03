@@ -17,7 +17,7 @@ Extends
 
 
 ptype
-    ``gx_geoserverstylewriter``
+    ``gxp_geoserverstylewriter``
 
 
 

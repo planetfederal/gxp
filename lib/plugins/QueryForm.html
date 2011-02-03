@@ -41,7 +41,7 @@
           <a href="OSMSource.html" title="gxp.plugins.OSMSource"
              accesskey="P">previous</a> |</li>
         <li><a href="../../index.html">GXP</a> &raquo;</li>
-          <li><a href="../plugins.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
+          <li><a href="../plugins.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -99,7 +99,7 @@
 </ul>
 </dd>
 <dt>ptype</dt>
-<dd><tt class="docutils literal"><span class="pre">gx_queryform</span></tt></dd>
+<dd><tt class="docutils literal"><span class="pre">gxp_queryform</span></tt></dd>
 </dl>
 <dl class="class">
 <dt id="gxp.plugins.QueryForm">
@@ -122,28 +122,48 @@ the form permanently in your layout.</dd></dl>
 <dl class="describe">
 <dt>
 <tt class="descname">actionTarget</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">String</span></tt> or <tt class="docutils literal"><span class="pre">Array</span></tt> Where to place the tool&#8217;s actions (e.g. buttons
-or menus)? This can be any string that references an <tt class="docutils literal"><span class="pre">Ext.Container</span></tt>
-property on the portal, or a unique id configured on a component, or an
-array of the aforementioned if the action is to be put in more than one
-places (e.g. a button and a context menu item). To reference one of the
-toolbars of an <tt class="docutils literal"><span class="pre">Ext.Panel</span></tt>, &#8220;.tbar&#8221;, &#8220;.bbar&#8221; or &#8220;.fbar&#8221; has to be
-appended. The default is &#8220;map.tbar&#8221;. The viewer&#8217;s main MapPanel
-can always be accessed with &#8220;map&#8221; as actionTarget. Set to null if no
-actions should be created.</dd></dl>
-
-<dl class="describe">
-<dt>
-<tt class="descname">appendActions</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> If set to false, actions won&#8217;t be added, but inserted to
-the container at the beginning. This is useful to control the order of
-actions in a toolbar. Default is true.</dd></dl>
+<dd><p><tt class="docutils literal"><span class="pre">Object</span></tt> or <tt class="docutils literal"><span class="pre">String</span></tt> or <tt class="docutils literal"><span class="pre">Array</span></tt> Where to place the tool&#8217;s actions
+(e.g. buttons or menus)?</p>
+<p>In case of a string, this can be any string that references an
+<tt class="docutils literal"><span class="pre">Ext.Container</span></tt> property on the portal, or a unique id configured on a
+component.</p>
+<p>In case of an object, the object has a &#8220;target&#8221; and an &#8220;index&#8221; property,
+so that the tool can be inserted at a specified index in the target.</p>
+<p>actionTarget can also be an array of strings or objects, if the action is
+to be put in more than one place (e.g. a button and a context menu item).</p>
+<p>To reference one of the toolbars of an <tt class="docutils literal"><span class="pre">Ext.Panel</span></tt>, &#8220;.tbar&#8221;, &#8220;.bbar&#8221; or
+&#8220;.fbar&#8221; has to be appended. The default is &#8220;map.tbar&#8221;. The viewer&#8217;s main
+MapPanel can always be accessed with &#8220;map&#8221; as actionTarget. Set to null if
+no actions should be created.</p>
+<p>If a tool has both actions as well as output, and you want to force
+it to output to a container, set actionTarget to null.</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">autoActivate</tt></dt>
 <dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> Set to false if the tool should be initialized without
 activating it. Default is true.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">autoHide</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> Set to true if the output of this tool goes into an
+<tt class="docutils literal"><span class="pre">Ext.Window</span></tt> that should be hidden when the query result is
+available. Default is false.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">cancelButtonText</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt>
+Text for cancel button (i18n).</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">controlOptions</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Object</span></tt> If this tool is associated with an <tt class="docutils literal"><span class="pre">OpenLayers.Control</span></tt>
+then this is an optional object to pass to the constructor of the
+associated <tt class="docutils literal"><span class="pre">OpenLayers.Control</span></tt>.</dd></dl>
 
 <dl class="describe">
 <dt>
@@ -162,6 +182,18 @@ default. Only works for actions that are a <tt class="docutils literal"><span cl
 <tt class="descname">featureManager</tt></dt>
 <dd><tt class="docutils literal"><span class="pre">String</span></tt> The id of the <a title="gxp.plugins.FeatureManager" class="reference external" href="FeatureManager.html#gxp.plugins.FeatureManager"><tt class="xref docutils literal"><span class="pre">gxp.plugins.FeatureManager</span></tt></a> to use
 with this tool.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">noFeaturesMsg</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt>
+Text for no features alert message (i18n)</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">noFeaturesTitle</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt>
+Text for no features alert title (i18n)</dd></dl>
 
 <dl class="describe">
 <dt>
@@ -215,6 +247,12 @@ Text for query by location (i18n).</dd></dl>
 <tt class="descname">queryMenuText</tt></dt>
 <dd><tt class="docutils literal"><span class="pre">String</span></tt>
 Text for query menu item (i18n).</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">queryMsg</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt>
+Text for query load mask (i18n).</dd></dl>
 
 <dl class="describe">
 <dt>
@@ -321,7 +359,7 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
           <a href="OSMSource.html" title="gxp.plugins.OSMSource"
              >previous</a> |</li>
         <li><a href="../../index.html">GXP</a> &raquo;</li>
-          <li><a href="../plugins.html" ><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
+          <li><a href="../plugins.html" ><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

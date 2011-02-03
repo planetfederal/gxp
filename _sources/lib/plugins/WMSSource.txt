@@ -17,7 +17,7 @@ Extends
 
 
 ptype
-    ``gx_wmssource``
+    ``gxp_wmssource``
 
 
 
@@ -36,7 +36,7 @@ Configuration in the  :class:`gxp.Viewer`:
 
 .. code-block:: javascript
 
-  defaultSourceType: "gx_wmssource",
+  defaultSourceType: "gxp_wmssource",
   sources: {
       "opengeo": {
           url: "http://suite.opengeo.org/geoserver/wms"

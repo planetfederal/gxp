@@ -39,31 +39,13 @@ Configuration properties in addition to
 those listed for `Ext.Panel <http://extjs.com/deploy/dev/docs/?class=Ext.Panel>`_.
 
 
-.. describe:: map
+.. describe:: mapPanel
 
-    ``OpenLayers.Map or Object``  A map.
-
-
-
-
-Public Properties
------------------
-
-Public properties in addition to those
-listed for `Ext.Panel <http://extjs.com/deploy/dev/docs/?class=Ext.Panel>`_.
+    ``GeoExt.MapPanel | String``
+    The map panel associated with this panel.  If a MapPanel instance is
+    not provided, a MapPanel id must be provided.
 
 
-.. attribute:: GoogleEarthPanel.map
-
-    ``OpenLayers.Map``
-    The OpenLayers map associated with this panel.  Defaults
-    to the map of the configured MapPanel
-
-.. attribute:: GoogleEarthPanel.mapPanel
-
-    ``OpenLayers.Map``
-    The OpenLayers map associated with this panel.  Defaults
-    to the map of the configured MapPanel
 
 
 

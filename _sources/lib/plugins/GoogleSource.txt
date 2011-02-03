@@ -17,7 +17,7 @@ Extends
 
 
 ptype
-    ``gx_googlesource``
+    ``gxp_googlesource``
 
 
 
@@ -41,7 +41,7 @@ straightforward:
 .. code-block:: javascript
 
   "google": {
-      ptype: "gx_google"
+      ptype: "gxp_google"
   }
 
 A typical configuration for a layer from this source (in the ``layers``

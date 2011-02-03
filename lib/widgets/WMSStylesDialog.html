@@ -98,16 +98,20 @@
 </ul>
 </dd>
 <dt>xtype</dt>
-<dd><tt class="docutils literal"><span class="pre">gx_wmsstylesdialog</span></tt></dd>
+<dd><tt class="docutils literal"><span class="pre">gxp_wmsstylesdialog</span></tt></dd>
 </dl>
 <dl class="class">
 <dt id="gxp.WMSStylesDialog">
 <em class="property">class </em><tt class="descclassname">gxp.</tt><tt class="descname">WMSStylesDialog</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#gxp.WMSStylesDialog" title="Permalink to this definition">¶</a></dt>
-<dd>Create a dialog for selecting and layer styles. If the WMS supports
+<dd><p>Create a dialog for selecting and layer styles. If the WMS supports
 GetStyles, styles can also be edited. The dialog does not provide any
 means of writing modified styles back to the server. To save styles,
 configure the dialog with a <a title="gxp.plugins.StyleWriter" class="reference external" href="../plugins/StyleWriter.html#gxp.plugins.StyleWriter"><tt class="xref docutils literal"><span class="pre">gxp.plugins.StyleWriter</span></tt></a> plugin
-and call the <tt class="docutils literal"><span class="pre">saveStyles</span></tt> method.</dd></dl>
+and call the <tt class="docutils literal"><span class="pre">saveStyles</span></tt> method.</p>
+<p>Note: when this component is included in a build,
+<tt class="docutils literal"><span class="pre">OpenLayers.Renderer.defaultSymbolizer</span></tt> will be set to the SLD
+defaults.</p>
+</dd></dl>
 
 <div class="section" id="config-options">
 <h2>Config Options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
@@ -154,9 +158,10 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
 <dl class="attribute">
 <dt id="gxp.WMSStylesDialog.editable">
 <tt class="descclassname">WMSStylesDialog.</tt><tt class="descname">editable</tt><a class="headerlink" href="#gxp.WMSStylesDialog.editable" title="Permalink to this definition">¶</a></dt>
-<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> Read-only. True if this component could gather enough
-information to allow styles being edited, false otherwise. This is
-not supposed to be used before the  <tt class="docutils literal"><span class="pre">ready</span></tt> event is fired.</dd></dl>
+<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> Read-only once the dialog is rendered. True if this
+component could gather enough information to allow styles being edited,
+false otherwise. This is not supposed to be read before the
+<tt class="docutils literal"><span class="pre">ready</span></tt> event is fired.</dd></dl>
 
 <dl class="attribute">
 <dt id="gxp.WMSStylesDialog.selectedStyle">
@@ -292,13 +297,21 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
 <dl class="describe">
 <dt>
 <tt class="descname">saved</tt></dt>
-<dd>Fires when a style was successfully saved.</dd></dl>
+<dd><p>Fires when a style was successfully saved. Applications should
+listen for this event and redraw layers with the currently
+selected style.</p>
+<p>Listener arguments:</p>
+<ul class="simple">
+<li><a title="gxp.WMSStylesDialog" class="reference internal" href="#gxp.WMSStylesDialog"><tt class="xref docutils literal"><span class="pre">gxp.WMSStylesDialog</span></tt></a> this component</li>
+<li><tt class="docutils literal"><span class="pre">String</span></tt> the name of the currently selected style</li>
+</ul>
+</dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">styleselected</tt></dt>
-<dd><p>Fires whenever a style is selected from this dialog&#8217;s Style
-combo box.</p>
+<dd><p>Fires whenever an existing style is selected from this dialog&#8217;s
+Style combo box.</p>
 <p>Listener arguments:</p>
 <ul class="simple">
 <li><a title="gxp.WMSStylesDialog" class="reference internal" href="#gxp.WMSStylesDialog"><tt class="xref docutils literal"><span class="pre">gxp.WMSStylesDialog</span></tt></a> this component</li>

@@ -17,15 +17,15 @@ Extends
 
 
 ptype
-    ``gx_bingsource``
+    ``gxp_bingsource``
 
 
 
 .. class:: BingSource(config)
 
-  Plugin for using OpenStreetMap layers with :class:`gxp.Viewer` instances.
+  Plugin for using Bing layers with :class:`gxp.Viewer` instances.
 
-  Available layer names are "mapnik" and "osmarender"
+  Available layer names are "Road", "Aerial" and "AerialWithLabels"
 
 
 
@@ -38,7 +38,7 @@ straightforward:
 .. code-block:: javascript
 
   "bing": {
-      ptype: "gx_bingsource"
+      ptype: "gxp_bingsource"
   }
 
 A typical configuration for a layer from this source (in the ``layers``
@@ -100,8 +100,8 @@ listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.uti
 
 .. attribute:: BingSource.store
 
-    ``GeoExt.data.LayerStore``. Will contain records with "mapnik" and
-    "osmarender" as name field values.
+    ``GeoExt.data.LayerStore``. Will contain records with "Road" and
+    "Aerial" as name field values.
 
 .. attribute:: BingSource.title
 

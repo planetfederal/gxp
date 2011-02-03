@@ -21,7 +21,8 @@
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="top" title="GXP v0.1" href="../../index.html" />
     <link rel="up" title="gxp.plugins" href="../plugins.html" />
-    <link rel="prev" title="gxp.plugins.WMSSource" href="WMSSource.html" /> 
+    <link rel="next" title="gxp.plugins.ZoomToLayerExtent" href="ZoomToLayerExtent.html" />
+    <link rel="prev" title="gxp.plugins.ZoomToDataExtent" href="ZoomToDataExtent.html" /> 
   </head>
   <body>
     <div class="related">
@@ -34,10 +35,13 @@
           <a href="../../modindex.html" title="Global Module Index"
              accesskey="M">modules</a> |</li>
         <li class="right" >
-          <a href="WMSSource.html" title="gxp.plugins.WMSSource"
+          <a href="ZoomToLayerExtent.html" title="gxp.plugins.ZoomToLayerExtent"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="ZoomToDataExtent.html" title="gxp.plugins.ZoomToDataExtent"
              accesskey="P">previous</a> |</li>
         <li><a href="../../index.html">GXP</a> &raquo;</li>
-          <li><a href="../plugins.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
+          <li><a href="../plugins.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -54,8 +58,11 @@
 </ul>
 
             <h4>Previous topic</h4>
-            <p class="topless"><a href="WMSSource.html"
-                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins.WMSSource</span></tt></a></p>
+            <p class="topless"><a href="ZoomToDataExtent.html"
+                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins.ZoomToDataExtent</span></tt></a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="ZoomToLayerExtent.html"
+                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.plugins.ZoomToLayerExtent</span></tt></a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
               <li><a href="../../_sources/lib/plugins/ZoomToExtent.txt"
@@ -92,7 +99,7 @@
 </ul>
 </dd>
 <dt>ptype</dt>
-<dd><tt class="docutils literal"><span class="pre">gx_zoomtoextent</span></tt></dd>
+<dd><tt class="docutils literal"><span class="pre">gxp_zoomtoextent</span></tt></dd>
 </dl>
 <dl class="class">
 <dt id="gxp.plugins.ZoomToExtent">
@@ -117,28 +124,47 @@ actions.</dd></dl>
 <dl class="describe">
 <dt>
 <tt class="descname">actionTarget</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">String</span></tt> or <tt class="docutils literal"><span class="pre">Array</span></tt> Where to place the tool&#8217;s actions (e.g. buttons
-or menus)? This can be any string that references an <tt class="docutils literal"><span class="pre">Ext.Container</span></tt>
-property on the portal, or a unique id configured on a component, or an
-array of the aforementioned if the action is to be put in more than one
-places (e.g. a button and a context menu item). To reference one of the
-toolbars of an <tt class="docutils literal"><span class="pre">Ext.Panel</span></tt>, &#8220;.tbar&#8221;, &#8220;.bbar&#8221; or &#8220;.fbar&#8221; has to be
-appended. The default is &#8220;map.tbar&#8221;. The viewer&#8217;s main MapPanel
-can always be accessed with &#8220;map&#8221; as actionTarget. Set to null if no
-actions should be created.</dd></dl>
-
-<dl class="describe">
-<dt>
-<tt class="descname">appendActions</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> If set to false, actions won&#8217;t be added, but inserted to
-the container at the beginning. This is useful to control the order of
-actions in a toolbar. Default is true.</dd></dl>
+<dd><p><tt class="docutils literal"><span class="pre">Object</span></tt> or <tt class="docutils literal"><span class="pre">String</span></tt> or <tt class="docutils literal"><span class="pre">Array</span></tt> Where to place the tool&#8217;s actions
+(e.g. buttons or menus)?</p>
+<p>In case of a string, this can be any string that references an
+<tt class="docutils literal"><span class="pre">Ext.Container</span></tt> property on the portal, or a unique id configured on a
+component.</p>
+<p>In case of an object, the object has a &#8220;target&#8221; and an &#8220;index&#8221; property,
+so that the tool can be inserted at a specified index in the target.</p>
+<p>actionTarget can also be an array of strings or objects, if the action is
+to be put in more than one place (e.g. a button and a context menu item).</p>
+<p>To reference one of the toolbars of an <tt class="docutils literal"><span class="pre">Ext.Panel</span></tt>, &#8220;.tbar&#8221;, &#8220;.bbar&#8221; or
+&#8220;.fbar&#8221; has to be appended. The default is &#8220;map.tbar&#8221;. The viewer&#8217;s main
+MapPanel can always be accessed with &#8220;map&#8221; as actionTarget. Set to null if
+no actions should be created.</p>
+<p>If a tool has both actions as well as output, and you want to force
+it to output to a container, set actionTarget to null.</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">autoActivate</tt></dt>
 <dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> Set to false if the tool should be initialized without
 activating it. Default is true.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">buttonText</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt> Text to show next to the zoom button</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">closest</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> Find the zoom level that most closely fits the specified
+extent. Note that this may result in a zoom that does not exactly
+contain the entire extent.  Default is true.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">controlOptions</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Object</span></tt> If this tool is associated with an <tt class="docutils literal"><span class="pre">OpenLayers.Control</span></tt>
+then this is an optional object to pass to the constructor of the
+associated <tt class="docutils literal"><span class="pre">OpenLayers.Control</span></tt>.</dd></dl>
 
 <dl class="describe">
 <dt>
@@ -288,10 +314,13 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
           <a href="../../modindex.html" title="Global Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="WMSSource.html" title="gxp.plugins.WMSSource"
+          <a href="ZoomToLayerExtent.html" title="gxp.plugins.ZoomToLayerExtent"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="ZoomToDataExtent.html" title="gxp.plugins.ZoomToDataExtent"
              >previous</a> |</li>
         <li><a href="../../index.html">GXP</a> &raquo;</li>
-          <li><a href="../plugins.html" ><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
+          <li><a href="../plugins.html" ><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

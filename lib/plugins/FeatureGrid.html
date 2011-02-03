@@ -99,7 +99,7 @@
 </ul>
 </dd>
 <dt>ptype</dt>
-<dd><tt class="docutils literal"><span class="pre">gx_featuregrid</span></tt></dd>
+<dd><tt class="docutils literal"><span class="pre">gxp_featuregrid</span></tt></dd>
 </dl>
 <dl class="class">
 <dt id="gxp.plugins.FeatureGrid">
@@ -124,15 +124,22 @@ actions.</dd></dl>
 <dl class="describe">
 <dt>
 <tt class="descname">actionTarget</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">String</span></tt> or <tt class="docutils literal"><span class="pre">Array</span></tt> Where to place the tool&#8217;s actions (e.g. buttons
-or menus)? This can be any string that references an <tt class="docutils literal"><span class="pre">Ext.Container</span></tt>
-property on the portal, or a unique id configured on a component, or an
-array of the aforementioned if the action is to be put in more than one
-places (e.g. a button and a context menu item). To reference one of the
-toolbars of an <tt class="docutils literal"><span class="pre">Ext.Panel</span></tt>, &#8220;.tbar&#8221;, &#8220;.bbar&#8221; or &#8220;.fbar&#8221; has to be
-appended. The default is &#8220;map.tbar&#8221;. The viewer&#8217;s main MapPanel
-can always be accessed with &#8220;map&#8221; as actionTarget. Set to null if no
-actions should be created.</dd></dl>
+<dd><p><tt class="docutils literal"><span class="pre">Object</span></tt> or <tt class="docutils literal"><span class="pre">String</span></tt> or <tt class="docutils literal"><span class="pre">Array</span></tt> Where to place the tool&#8217;s actions
+(e.g. buttons or menus)?</p>
+<p>In case of a string, this can be any string that references an
+<tt class="docutils literal"><span class="pre">Ext.Container</span></tt> property on the portal, or a unique id configured on a
+component.</p>
+<p>In case of an object, the object has a &#8220;target&#8221; and an &#8220;index&#8221; property,
+so that the tool can be inserted at a specified index in the target.</p>
+<p>actionTarget can also be an array of strings or objects, if the action is
+to be put in more than one place (e.g. a button and a context menu item).</p>
+<p>To reference one of the toolbars of an <tt class="docutils literal"><span class="pre">Ext.Panel</span></tt>, &#8220;.tbar&#8221;, &#8220;.bbar&#8221; or
+&#8220;.fbar&#8221; has to be appended. The default is &#8220;map.tbar&#8221;. The viewer&#8217;s main
+MapPanel can always be accessed with &#8220;map&#8221; as actionTarget. Set to null if
+no actions should be created.</p>
+<p>If a tool has both actions as well as output, and you want to force
+it to output to a container, set actionTarget to null.</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
@@ -143,16 +150,30 @@ map&#8221; button in the toolbar. Default is false.</dd></dl>
 
 <dl class="describe">
 <dt>
-<tt class="descname">appendActions</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> If set to false, actions won&#8217;t be added, but inserted to
-the container at the beginning. This is useful to control the order of
-actions in a toolbar. Default is true.</dd></dl>
-
-<dl class="describe">
-<dt>
 <tt class="descname">autoActivate</tt></dt>
 <dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> Set to false if the tool should be initialized without
 activating it. Default is true.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">autoCollapse</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> If set to true, and when this tool&#8217;s output is added to a
+container that can be collapsed, it will be collapsed when no features
+are to be displayed. Default is false.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">autoExpand</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> If set to true, and when this tool&#8217;s output is added to a
+container that can be expanded, it will be expanded when features are
+loaded. Default is false.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">controlOptions</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Object</span></tt> If this tool is associated with an <tt class="docutils literal"><span class="pre">OpenLayers.Control</span></tt>
+then this is an optional object to pass to the constructor of the
+associated <tt class="docutils literal"><span class="pre">OpenLayers.Control</span></tt>.</dd></dl>
 
 <dl class="describe">
 <dt>
@@ -171,6 +192,18 @@ Text for feature display button (i18n).</dd></dl>
 <tt class="descname">featureManager</tt></dt>
 <dd><tt class="docutils literal"><span class="pre">String</span></tt> The id of the <a title="gxp.plugins.FeatureManager" class="reference external" href="FeatureManager.html#gxp.plugins.FeatureManager"><tt class="xref docutils literal"><span class="pre">gxp.plugins.FeatureManager</span></tt></a> to use
 with this tool.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">lastPageTip</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt>
+Tooltip string for last page action (i18n).</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">nextPageTip</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt>
+Tooltip string for next page action (i18n).</dd></dl>
 
 <dl class="describe">
 <dt>
@@ -198,15 +231,29 @@ be created.</dd></dl>
 
 <dl class="describe">
 <dt>
+<tt class="descname">previousPageTip</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt>
+Tooltip string for previous page action (i18n).</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">selectOnMap</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> If set to true, features can not only be selected on the
+grid, but also on the map, and multi-selection will be enabled. Only
+set to true when no feature editor or feature info tool is used with
+the underlying feature manager. Default is false.</dd></dl>
+
+<dl class="describe">
+<dt>
 <tt class="descname">toggleGroup</tt></dt>
 <dd><tt class="docutils literal"><span class="pre">String</span></tt> If this tool should be radio-button style toggled with other
 tools, this string is to identify the toggle group.</dd></dl>
 
 <dl class="describe">
 <dt>
-<tt class="descname">zoomToSelectedText</tt></dt>
+<tt class="descname">zoomFirstPageTip</tt></dt>
 <dd><tt class="docutils literal"><span class="pre">String</span></tt>
-Text for zoom to selected features button (i18n).</dd></dl>
+Tooltip string for zoom to page extent action (i18n).</dd></dl>
 
 </div>
 <div class="section" id="public-properties">

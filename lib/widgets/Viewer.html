@@ -114,7 +114,7 @@ something like this for a minimal viewer with an OSM layer:</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">gxp</span><span class="p">.</span><span class="nx">Viewer</span><span class="p">({</span>
     <span class="nx">sources</span><span class="o">:</span> <span class="p">{</span>
         <span class="nx">osm</span><span class="o">:</span> <span class="p">{</span>
-            <span class="nx">ptype</span><span class="o">:</span> <span class="s2">&quot;gx_osmsource&quot;</span>
+            <span class="nx">ptype</span><span class="o">:</span> <span class="s2">&quot;gxp_osmsource&quot;</span>
         <span class="p">}</span>
     <span class="p">},</span>
     <span class="nx">map</span><span class="o">:</span> <span class="p">{</span>
@@ -143,7 +143,7 @@ The default layer source plugin type.</dd></dl>
 <dt>
 <tt class="descname">defaultToolType</tt></dt>
 <dd><tt class="docutils literal"><span class="pre">String</span></tt>
-The default tool plugin type. Default is &#8220;gx_tool&#8221;</dd></dl>
+The default tool plugin type. Default is &#8220;gxp_tool&#8221;</dd></dl>
 
 <dl class="describe">
 <dt>
@@ -287,6 +287,7 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
 and name properties.</li>
 <li><em>callback</em> &#8211; <tt class="docutils literal"><span class="pre">Function</span></tt> A function to be called with the layer
 record that corresponds to the given config.</li>
+<li><em>scope</em> &#8211; <tt class="docutils literal"><span class="pre">Object</span></tt> Optional scope for the callback.</li>
 </ul>
 </td>
 </tr>
@@ -299,6 +300,11 @@ configured before the call.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="gxp.Viewer.destroy">
+<tt class="descclassname">Viewer.</tt><tt class="descname">destroy</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.Viewer.destroy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="gxp.Viewer.getLayerRecordFromMap">
 <tt class="descclassname">Viewer.</tt><tt class="descname">getLayerRecordFromMap</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.Viewer.getLayerRecordFromMap" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
@@ -307,6 +313,8 @@ configured before the call.</p>
 <tbody valign="top">
 <tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>config</em> &#8211; <tt class="docutils literal"><span class="pre">Object</span></tt> A minimal layer configuration object with source
 and name properties.</td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">GeoExt.data.LayerRecord</span></tt></td>
 </tr>
 </tbody>
 </table>

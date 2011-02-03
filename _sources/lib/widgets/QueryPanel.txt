@@ -15,7 +15,7 @@ Extends
 
 
 xtype
-    ``gx_querypanel``
+    ``gxp_querypanel``
 
 
 
@@ -52,6 +52,11 @@ those listed for `Ext.Panel <http://extjs.com/deploy/dev/docs/?class=Ext.Panel>`
 
     ``String``
     Defaults to "form."
+
+.. describe:: map
+
+    ``OpenLayers.MapPanel`` The map to take the spatial extent for the
+    spatialQuery from. Required.
 
 .. describe:: maxFeatures
 

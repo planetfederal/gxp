@@ -17,7 +17,7 @@ Extends
 
 
 ptype
-    ``gx_osmsource``
+    ``gxp_osmsource``
 
 
 
@@ -38,7 +38,7 @@ straightforward:
 .. code-block:: javascript
 
   "osm": {
-      ptype: "gx_osmsource"
+      ptype: "gxp_osmsource"
   }
 
 A typical configuration for a layer from this source (in the ``layers``
@@ -67,7 +67,7 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     ``String``
     Attribution string for osmarender generated layer (i18n).
 
-.. describe:: osmAttribution
+.. describe:: mapnikAttribution
 
     ``String``
     Attribution string for mapnik generated layer (i18n).

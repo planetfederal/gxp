@@ -124,15 +124,22 @@ actions.</dd></dl>
 <dl class="describe">
 <dt>
 <tt class="descname">actionTarget</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">String</span></tt> or <tt class="docutils literal"><span class="pre">Array</span></tt> Where to place the tool&#8217;s actions (e.g. buttons
-or menus)? This can be any string that references an <tt class="docutils literal"><span class="pre">Ext.Container</span></tt>
-property on the portal, or a unique id configured on a component, or an
-array of the aforementioned if the action is to be put in more than one
-places (e.g. a button and a context menu item). To reference one of the
-toolbars of an <tt class="docutils literal"><span class="pre">Ext.Panel</span></tt>, &#8220;.tbar&#8221;, &#8220;.bbar&#8221; or &#8220;.fbar&#8221; has to be
-appended. The default is &#8220;map.tbar&#8221;. The viewer&#8217;s main MapPanel
-can always be accessed with &#8220;map&#8221; as actionTarget. Set to null if no
-actions should be created.</dd></dl>
+<dd><p><tt class="docutils literal"><span class="pre">Object</span></tt> or <tt class="docutils literal"><span class="pre">String</span></tt> or <tt class="docutils literal"><span class="pre">Array</span></tt> Where to place the tool&#8217;s actions
+(e.g. buttons or menus)?</p>
+<p>In case of a string, this can be any string that references an
+<tt class="docutils literal"><span class="pre">Ext.Container</span></tt> property on the portal, or a unique id configured on a
+component.</p>
+<p>In case of an object, the object has a &#8220;target&#8221; and an &#8220;index&#8221; property,
+so that the tool can be inserted at a specified index in the target.</p>
+<p>actionTarget can also be an array of strings or objects, if the action is
+to be put in more than one place (e.g. a button and a context menu item).</p>
+<p>To reference one of the toolbars of an <tt class="docutils literal"><span class="pre">Ext.Panel</span></tt>, &#8220;.tbar&#8221;, &#8220;.bbar&#8221; or
+&#8220;.fbar&#8221; has to be appended. The default is &#8220;map.tbar&#8221;. The viewer&#8217;s main
+MapPanel can always be accessed with &#8220;map&#8221; as actionTarget. Set to null if
+no actions should be created.</p>
+<p>If a tool has both actions as well as output, and you want to force
+it to output to a container, set actionTarget to null.</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
@@ -142,16 +149,21 @@ Text for add action tooltip (i18n).</dd></dl>
 
 <dl class="describe">
 <dt>
+<tt class="descname">addLayerSourceErrorText</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt>
+Text for an error message when WMS GetCapabilities retrieval fails (i18n).</dd></dl>
+
+<dl class="describe">
+<dt>
 <tt class="descname">addMenuText</tt></dt>
 <dd><tt class="docutils literal"><span class="pre">String</span></tt>
 Text for add menu item (i18n).</dd></dl>
 
 <dl class="describe">
 <dt>
-<tt class="descname">appendActions</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> If set to false, actions won&#8217;t be added, but inserted to
-the container at the beginning. This is useful to control the order of
-actions in a toolbar. Default is true.</dd></dl>
+<tt class="descname">addServerText</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt>
+Text for add server button (i18n).</dd></dl>
 
 <dl class="describe">
 <dt>
@@ -161,9 +173,28 @@ activating it. Default is true.</dd></dl>
 
 <dl class="describe">
 <dt>
+<tt class="descname">availableLayersText</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt>
+Text for the available layers (i18n).</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">controlOptions</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Object</span></tt> If this tool is associated with an <tt class="docutils literal"><span class="pre">OpenLayers.Control</span></tt>
+then this is an optional object to pass to the constructor of the
+associated <tt class="docutils literal"><span class="pre">OpenLayers.Control</span></tt>.</dd></dl>
+
+<dl class="describe">
+<dt>
 <tt class="descname">defaultAction</tt></dt>
 <dd><tt class="docutils literal"><span class="pre">Number</span></tt> Optional index of an action that should be active by
 default. Only works for actions that are a <tt class="docutils literal"><span class="pre">GeoExt.Action</span></tt> instance.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">doneText</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt>
+Text for Done button (i18n).</dd></dl>
 
 <dl class="describe">
 <dt>
@@ -194,6 +225,12 @@ be created.</dd></dl>
 <tt class="descname">toggleGroup</tt></dt>
 <dd><tt class="docutils literal"><span class="pre">String</span></tt> If this tool should be radio-button style toggled with other
 tools, this string is to identify the toggle group.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">untitledText</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt>
+Text for an untitled layer (i18n).</dd></dl>
 
 </div>
 <div class="section" id="public-properties">

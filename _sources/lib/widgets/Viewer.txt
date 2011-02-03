@@ -38,7 +38,7 @@ something like this for a minimal viewer with an OSM layer:
   var app = new gxp.Viewer({
       sources: {
           osm: {
-              ptype: "gx_osmsource"
+              ptype: "gxp_osmsource"
           }
       },
       map: {
@@ -69,7 +69,7 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
 .. describe:: defaultToolType
 
     ``String``
-    The default tool plugin type. Default is "gx_tool"
+    The default tool plugin type. Default is "gxp_tool"
 
 .. describe:: field
 
@@ -195,16 +195,22 @@ listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.uti
         and name properties.
     :arg callback: ``Function`` A function to be called with the layer
         record that corresponds to the given config.
+    :arg scope: ``Object`` Optional scope for the callback.
     
     Asyncronously retrieves a layer record given a basic layer config.  The
     callback will be called as soon as the desired layer source is ready.
     This method should only be called to retrieve layer records from sources
     configured before the call.
 
+.. method:: Viewer.destroy
+
+    
+
 .. method:: Viewer.getLayerRecordFromMap
 
     :arg config: ``Object`` A minimal layer configuration object with source
         and name properties.
+    :returns: ``GeoExt.data.LayerRecord``
     
     Retrieves a layer record from the map.
 

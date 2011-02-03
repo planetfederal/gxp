@@ -50,7 +50,6 @@
             <ul>
 <li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">gxp.GoogleEarthPanel</span></tt></a><ul>
 <li><a class="reference external" href="#config-options">Config Options</a></li>
-<li><a class="reference external" href="#public-properties">Public Properties</a></li>
 <li><a class="reference external" href="#events">Events</a></li>
 </ul>
 </li>
@@ -113,27 +112,10 @@ documentation.</dd></dl>
 those listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.Panel">Ext.Panel</a>.</p>
 <dl class="describe">
 <dt>
-<tt class="descname">map</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">OpenLayers.Map</span> <span class="pre">or</span> <span class="pre">Object</span></tt>  A map.</dd></dl>
-
-</div>
-<div class="section" id="public-properties">
-<h2>Public Properties<a class="headerlink" href="#public-properties" title="Permalink to this headline">¶</a></h2>
-<p>Public properties in addition to those
-listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.Panel">Ext.Panel</a>.</p>
-<dl class="attribute">
-<dt id="gxp.GoogleEarthPanel.map">
-<tt class="descclassname">GoogleEarthPanel.</tt><tt class="descname">map</tt><a class="headerlink" href="#gxp.GoogleEarthPanel.map" title="Permalink to this definition">¶</a></dt>
-<dd><tt class="docutils literal"><span class="pre">OpenLayers.Map</span></tt>
-The OpenLayers map associated with this panel.  Defaults
-to the map of the configured MapPanel</dd></dl>
-
-<dl class="attribute">
-<dt id="gxp.GoogleEarthPanel.mapPanel">
-<tt class="descclassname">GoogleEarthPanel.</tt><tt class="descname">mapPanel</tt><a class="headerlink" href="#gxp.GoogleEarthPanel.mapPanel" title="Permalink to this definition">¶</a></dt>
-<dd><tt class="docutils literal"><span class="pre">OpenLayers.Map</span></tt>
-The OpenLayers map associated with this panel.  Defaults
-to the map of the configured MapPanel</dd></dl>
+<tt class="descname">mapPanel</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">GeoExt.MapPanel</span> <span class="pre">|</span> <span class="pre">String</span></tt>
+The map panel associated with this panel.  If a MapPanel instance is
+not provided, a MapPanel id must be provided.</dd></dl>
 
 </div>
 <div class="section" id="events">

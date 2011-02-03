@@ -5,6 +5,17 @@
 ================================================================================
 
 
+.. cssclass:: meta
+
+
+
+
+xtype
+    ``gxp_featureeditpopup``
+
+
+
+
 
 .. class:: FeatureEditPopup(config)
 
@@ -40,6 +51,14 @@ Configuration properties.
 .. describe:: feature
 
     ``OpenLayers.Feature.Vector`` The feature to edit and display.
+
+.. describe:: fields
+
+    ``Array``
+    List of field config names corresponding to feature attributes.  If
+    not provided, fields will be derived from attributes. If provided,
+    the field order from this list will be used, and fields missing in the
+    list will be excluded.
 
 .. describe:: readOnly
 

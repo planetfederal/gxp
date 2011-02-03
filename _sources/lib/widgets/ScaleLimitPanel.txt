@@ -15,7 +15,7 @@ Extends
 
 
 xtype
-    ``gx_scalelimitpanel``
+    ``gxp_scalelimitpanel``
 
 
 

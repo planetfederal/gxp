@@ -89,6 +89,10 @@
             
   <div class="section" id="gxp-featureeditpopup">
 <h1><a title="gxp.FeatureEditPopup" class="reference internal" href="#gxp.FeatureEditPopup"><tt class="xref docutils literal"><span class="pre">gxp.FeatureEditPopup</span></tt></a><a class="headerlink" href="#gxp-featureeditpopup" title="Permalink to this headline">¶</a></h1>
+<dl class="meta docutils">
+<dt>xtype</dt>
+<dd><tt class="docutils literal"><span class="pre">gxp_featureeditpopup</span></tt></dd>
+</dl>
 <dl class="class">
 <dt id="gxp.FeatureEditPopup">
 <em class="property">class </em><tt class="descclassname">gxp.</tt><tt class="descname">FeatureEditPopup</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#gxp.FeatureEditPopup" title="Permalink to this definition">¶</a></dt>
@@ -121,6 +125,15 @@ excluded from the property grid.</dd></dl>
 <dt>
 <tt class="descname">feature</tt></dt>
 <dd><tt class="docutils literal"><span class="pre">OpenLayers.Feature.Vector</span></tt> The feature to edit and display.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">fields</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Array</span></tt>
+List of field config names corresponding to feature attributes.  If
+not provided, fields will be derived from attributes. If provided,
+the field order from this list will be used, and fields missing in the
+list will be excluded.</dd></dl>
 
 <dl class="describe">
 <dt>

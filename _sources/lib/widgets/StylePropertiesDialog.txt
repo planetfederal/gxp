@@ -15,7 +15,7 @@ Extends
 
 
 xtype
-    ``gx_styleproperties``
+    ``gxp_styleproperties``
 
 
 

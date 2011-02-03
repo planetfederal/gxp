@@ -99,7 +99,7 @@
 </ul>
 </dd>
 <dt>ptype</dt>
-<dd><tt class="docutils literal"><span class="pre">gx_featureeditor</span></tt></dd>
+<dd><tt class="docutils literal"><span class="pre">gxp_featureeditor</span></tt></dd>
 </dl>
 <dl class="class">
 <dt id="gxp.plugins.FeatureEditor">
@@ -124,22 +124,22 @@ actions.</dd></dl>
 <dl class="describe">
 <dt>
 <tt class="descname">actionTarget</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">String</span></tt> or <tt class="docutils literal"><span class="pre">Array</span></tt> Where to place the tool&#8217;s actions (e.g. buttons
-or menus)? This can be any string that references an <tt class="docutils literal"><span class="pre">Ext.Container</span></tt>
-property on the portal, or a unique id configured on a component, or an
-array of the aforementioned if the action is to be put in more than one
-places (e.g. a button and a context menu item). To reference one of the
-toolbars of an <tt class="docutils literal"><span class="pre">Ext.Panel</span></tt>, &#8220;.tbar&#8221;, &#8220;.bbar&#8221; or &#8220;.fbar&#8221; has to be
-appended. The default is &#8220;map.tbar&#8221;. The viewer&#8217;s main MapPanel
-can always be accessed with &#8220;map&#8221; as actionTarget. Set to null if no
-actions should be created.</dd></dl>
-
-<dl class="describe">
-<dt>
-<tt class="descname">appendActions</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> If set to false, actions won&#8217;t be added, but inserted to
-the container at the beginning. This is useful to control the order of
-actions in a toolbar. Default is true.</dd></dl>
+<dd><p><tt class="docutils literal"><span class="pre">Object</span></tt> or <tt class="docutils literal"><span class="pre">String</span></tt> or <tt class="docutils literal"><span class="pre">Array</span></tt> Where to place the tool&#8217;s actions
+(e.g. buttons or menus)?</p>
+<p>In case of a string, this can be any string that references an
+<tt class="docutils literal"><span class="pre">Ext.Container</span></tt> property on the portal, or a unique id configured on a
+component.</p>
+<p>In case of an object, the object has a &#8220;target&#8221; and an &#8220;index&#8221; property,
+so that the tool can be inserted at a specified index in the target.</p>
+<p>actionTarget can also be an array of strings or objects, if the action is
+to be put in more than one place (e.g. a button and a context menu item).</p>
+<p>To reference one of the toolbars of an <tt class="docutils literal"><span class="pre">Ext.Panel</span></tt>, &#8220;.tbar&#8221;, &#8220;.bbar&#8221; or
+&#8220;.fbar&#8221; has to be appended. The default is &#8220;map.tbar&#8221;. The viewer&#8217;s main
+MapPanel can always be accessed with &#8220;map&#8221; as actionTarget. Set to null if
+no actions should be created.</p>
+<p>If a tool has both actions as well as output, and you want to force
+it to output to a container, set actionTarget to null.</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
@@ -156,6 +156,13 @@ call loadFeatures on the <tt class="docutils literal"><span class="pre">featureM
 filter created from the id of a feature returned from a WMS
 GetFeatureInfo request at the click position. This feature will then be
 selected immediately. Default is false.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">controlOptions</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Object</span></tt> If this tool is associated with an <tt class="docutils literal"><span class="pre">OpenLayers.Control</span></tt>
+then this is an optional object to pass to the constructor of the
+associated <tt class="docutils literal"><span class="pre">OpenLayers.Control</span></tt>.</dd></dl>
 
 <dl class="describe">
 <dt>
@@ -201,6 +208,15 @@ with this tool.</dd></dl>
 
 <dl class="describe">
 <dt>
+<tt class="descname">fields</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Array</span></tt>
+List of field config names corresponding to feature attributes.  If
+not provided, fields will be derived from attributes. If provided,
+the field order from this list will be used, and fields missing in the
+list will be excluded.</dd></dl>
+
+<dl class="describe">
+<dt>
 <tt class="descname">outputAction</tt></dt>
 <dd><tt class="docutils literal"><span class="pre">Number</span></tt> The <tt class="docutils literal"><span class="pre">actions</span></tt> array index of the action that should
 trigger this tool&#8217;s output. Only valid if <tt class="docutils literal"><span class="pre">actions</span></tt> is configured.
@@ -218,10 +234,7 @@ or to provide layout configurations when rendering to an
 <dl class="describe">
 <dt>
 <tt class="descname">outputTarget</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">String</span></tt> Where to add the tool&#8217;s output container? This can be any
-string that references an <tt class="docutils literal"><span class="pre">Ext.Container</span></tt> property on the portal, or
-&#8220;map&#8221; to access the viewer&#8217;s main map. If not provided, a window will
-be created.</dd></dl>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt> By default, the FeatureEditPopup will be added to the map.</dd></dl>
 
 <dl class="describe">
 <dt>
