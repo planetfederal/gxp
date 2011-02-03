@@ -1027,9 +1027,9 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     },
     
     newStyleName: function() {
-        var layerName = this.layerRecord.get("name").split(":").pop();
-        return layerName + "_" +
-            gxp.util.md5(layerName + new Date() + Math.random()).substr(0, 7);
+        var layerName = this.layerRecord.get("name");
+        return layerName.split(":").pop() + "_" +
+            gxp.util.md5(layerName + new Date() + Math.random()).substr(0, 8);
     }
     
 });
