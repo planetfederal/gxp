@@ -50,8 +50,8 @@ gxp.plugins.SelectedFeatureActions = Ext.extend(gxp.plugins.Tool, {
     ptype: "gxp_selectedfeatureactions",
     
     /** api: config[featureManager]
-     *  ``gxp.plugins.FeatureManager The feature manager to get the selected
-     *  feature from.
+     *  :class:`gxp.plugins.FeatureManager` The feature manager to get the
+     *  selected feature from.
      */
     
     /** api: config[actions]
