@@ -1,0 +1,38 @@
+
+.. currentmodule:: gxp
+
+:class:`gxp.LayerUploadForm`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.FormPanel <http://extjs.com/deploy/dev/docs/?class=Ext.FormPanel>`_
+    
+
+
+
+xtype
+    ``gxp_uploadlayerform``
+
+
+
+
+
+.. class:: LayerUploadForm(config)
+
+    A panel for uploading new layer data to GeoServer.
+
+
+    
+
+
+
+
+
+
+
+
+

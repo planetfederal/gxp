@@ -1,0 +1,337 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>gxp.plugins.WMSCSource &mdash; GXP v0.1</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="GXP v0.1" href="../../index.html" />
+    <link rel="up" title="gxp.plugins" href="../plugins.html" />
+    <link rel="next" title="gxp.plugins.WMSGetFeatureInfo" href="WMSGetFeatureInfo.html" />
+    <link rel="prev" title="gxp.plugins.Tool" href="Tool.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="WMSGetFeatureInfo.html" title="gxp.plugins.WMSGetFeatureInfo"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Tool.html" title="gxp.plugins.Tool"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">GXP</a> &raquo;</li>
+          <li><a href="../plugins.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="../../index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">gxp.plugins.WMSCSource</span></tt></a><ul>
+<li><a class="reference external" href="#example-use">Example Use</a></li>
+<li><a class="reference external" href="#config-options">Config Options</a></li>
+<li><a class="reference external" href="#public-properties">Public Properties</a></li>
+<li><a class="reference external" href="#public-methods">Public Methods</a></li>
+<li><a class="reference external" href="#events">Events</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="Tool.html"
+                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins.Tool</span></tt></a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="WMSGetFeatureInfo.html"
+                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.plugins.WMSGetFeatureInfo</span></tt></a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../../_sources/lib/plugins/WMSCSource.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="gxp-plugins-wmscsource">
+<h1><a title="gxp.plugins.WMSCSource" class="reference internal" href="#gxp.plugins.WMSCSource"><tt class="xref docutils literal"><span class="pre">gxp.plugins.WMSCSource</span></tt></a><a class="headerlink" href="#gxp-plugins-wmscsource" title="Permalink to this headline">¶</a></h1>
+<dl class="meta docutils">
+<dt>Extends</dt>
+<dd><ul class="first last simple">
+<li><a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a></li>
+<li><tt class="xref docutils literal"><span class="pre">gxp.plugins.WMSSource`*</span> <span class="pre">:class:`gxp.plugins.LayerSource</span></tt></li>
+</ul>
+</dd>
+<dt>ptype</dt>
+<dd><tt class="docutils literal"><span class="pre">gxp_wmscsource</span></tt></dd>
+</dl>
+<dl class="class">
+<dt id="gxp.plugins.WMSCSource">
+<em class="property">class </em><tt class="descclassname">gxp.plugins.</tt><tt class="descname">WMSCSource</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#gxp.plugins.WMSCSource" title="Permalink to this definition">¶</a></dt>
+<dd>Plugin for using WMS-C layers with <a title="gxp.Viewer" class="reference external" href="../widgets/Viewer.html#gxp.Viewer"><tt class="xref docutils literal"><span class="pre">gxp.Viewer</span></tt></a> instances. The
+plugin issues a GetCapabilities request to create a store of the WMS&#8217;s
+layers. If tilesets are available, it will use them.</dd></dl>
+
+<div class="section" id="example-use">
+<h2>Example Use<a class="headerlink" href="#example-use" title="Permalink to this headline">¶</a></h2>
+<p>Configuration in the  <a title="gxp.Viewer" class="reference external" href="../widgets/Viewer.html#gxp.Viewer"><tt class="xref docutils literal"><span class="pre">gxp.Viewer</span></tt></a>:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">defaultSourceType</span><span class="o">:</span> <span class="s2">&quot;gxp_wmscsource&quot;</span><span class="p">,</span>
+<span class="nx">sources</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;opengeo&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">url</span><span class="o">:</span> <span class="s2">&quot;http://suite.opengeo.org/geoserver/wms&quot;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>A typical configuration for a layer from this source (in the <tt class="docutils literal"><span class="pre">layers</span></tt>
+array of the viewer&#8217;s <tt class="docutils literal"><span class="pre">map</span></tt> config option would look like this:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+    <span class="nx">source</span><span class="o">:</span> <span class="s2">&quot;opengeo&quot;</span><span class="p">,</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;world&quot;</span><span class="p">,</span>
+    <span class="nx">group</span><span class="o">:</span> <span class="s2">&quot;background&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="config-options">
+<h2>Config Options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
+<p>Configuration properties in addition to
+those listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a>.</p>
+<dl class="describe">
+<dt>
+<tt class="descname">url</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt> WMS service URL for this source</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">version</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt>
+Only WMS 1.1.1 is supported at the moment.</dd></dl>
+
+</div>
+<div class="section" id="public-properties">
+<h2>Public Properties<a class="headerlink" href="#public-properties" title="Permalink to this headline">¶</a></h2>
+<p>Public properties in addition to those
+listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a>.</p>
+<dl class="attribute">
+<dt id="gxp.plugins.WMSCSource.store">
+<tt class="descclassname">WMSCSource.</tt><tt class="descname">store</tt><a class="headerlink" href="#gxp.plugins.WMSCSource.store" title="Permalink to this definition">¶</a></dt>
+<dd><tt class="docutils literal"><span class="pre">GeoExt.data.LayerStore</span></tt></dd></dl>
+
+<dl class="attribute">
+<dt id="gxp.plugins.WMSCSource.title">
+<tt class="descclassname">WMSCSource.</tt><tt class="descname">title</tt><a class="headerlink" href="#gxp.plugins.WMSCSource.title" title="Permalink to this definition">¶</a></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt>
+A descriptive title for this layer source.</dd></dl>
+
+</div>
+<div class="section" id="public-methods">
+<h2>Public Methods<a class="headerlink" href="#public-methods" title="Permalink to this headline">¶</a></h2>
+<p>Public methods in addition to those
+listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a>.</p>
+<dl class="method">
+<dt id="gxp.plugins.WMSCSource.createLayerRecord">
+<tt class="descclassname">WMSCSource.</tt><tt class="descname">createLayerRecord</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.WMSCSource.createLayerRecord" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>config</em> &#8211; <tt class="docutils literal"><span class="pre">Object</span></tt>  The application config for this layer.</td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">GeoExt.data.LayerRecord</span></tt></td>
+</tr>
+</tbody>
+</table>
+<p>Create a layer record given the config.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gxp.plugins.WMSCSource.createStore">
+<tt class="descclassname">WMSCSource.</tt><tt class="descname">createStore</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.WMSCSource.createStore" title="Permalink to this definition">¶</a></dt>
+<dd>Creates a store of layer records.  Fires &#8220;ready&#8221; when store is loaded.</dd></dl>
+
+<dl class="method">
+<dt id="gxp.plugins.WMSCSource.describeLayer">
+<tt class="descclassname">WMSCSource.</tt><tt class="descname">describeLayer</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.WMSCSource.describeLayer" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><em>rec</em> &#8211; <tt class="docutils literal"><span class="pre">GeoExt.data.LayerRecord</span></tt> the layer to issue a WMS
+DescribeLayer request for</li>
+<li><em>callback</em> &#8211; <tt class="docutils literal"><span class="pre">Function</span></tt> Callback function. Will be called with
+an <tt class="docutils literal"><span class="pre">Ext.data.Record</span></tt> from a <tt class="docutils literal"><span class="pre">GeoExt.data.DescribeLayerStore</span></tt>
+as first argument, or false if the WMS does not support
+DescribeLayer.</li>
+<li><em>scope</em> &#8211; <tt class="docutils literal"><span class="pre">Object</span></tt> Optional scope for the callback.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Get a DescribeLayer response from this source&#8217;s WMS.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gxp.plugins.WMSCSource.getConfigForRecord">
+<tt class="descclassname">WMSCSource.</tt><tt class="descname">getConfigForRecord</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.WMSCSource.getConfigForRecord" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>record</em> &#8211; <tt class="xref docutils literal"><span class="pre">GeoExt.data.LayerRecord</span></tt></td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">Object</span></tt></td>
+</tr>
+</tbody>
+</table>
+<p>Create a config object that can be used to recreate the given record.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gxp.plugins.WMSCSource.getProjection">
+<tt class="descclassname">WMSCSource.</tt><tt class="descname">getProjection</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.WMSCSource.getProjection" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>layerRecord</em> &#8211; <tt class="docutils literal"><span class="pre">GeoExt.data.LayerRecord</span></tt> a record from this
+source&#8217;s store</td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">OpenLayers.Projection</span></tt> A suitable projection for the
+<tt class="docutils literal"><span class="pre">layerRecord</span></tt>. If the layer is available in the map projection,
+the map projection will be returned. Otherwise an equal projection,
+or null if none is available.</td>
+</tr>
+</tbody>
+</table>
+<p>Get the projection that the source will use for the layer created in
+<tt class="docutils literal"><span class="pre">createLayerRecord</span></tt>. If the layer is not available in a projection
+that fits the map projection, null will be returned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gxp.plugins.WMSCSource.getSchema">
+<tt class="descclassname">WMSCSource.</tt><tt class="descname">getSchema</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.WMSCSource.getSchema" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><em>rec</em> &#8211; <tt class="docutils literal"><span class="pre">GeoExt.data.LayerRecord</span></tt> the WMS layer to issue a WFS
+DescribeFeatureType request for</li>
+<li><em>callback</em> &#8211; <tt class="docutils literal"><span class="pre">Function</span></tt> Callback function. Will be called with
+a <tt class="docutils literal"><span class="pre">GeoExt.data.AttributeStore</span></tt> containing the schema as first
+argument, or false if the WMS does not support DescribeLayer or the
+layer is not associated with a WFS feature type.</li>
+<li><em>scope</em> &#8211; <tt class="docutils literal"><span class="pre">Object</span></tt> Optional scope for the callback.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Gets the schema for a layer of this source, if the layer is a feature
+layer.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gxp.plugins.WMSCSource.init">
+<tt class="descclassname">WMSCSource.</tt><tt class="descname">init</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.WMSCSource.init" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>target</em> &#8211; <tt class="docutils literal"><span class="pre">Object</span></tt> The object initializing this plugin.</td>
+</tr>
+</tbody>
+</table>
+<p>Calls <a title="gxp.plugins.WMSCSource.createStore" class="reference internal" href="#gxp.plugins.WMSCSource.createStore"><tt class="xref docutils literal"><span class="pre">createStore()</span></tt></a> with a callback that fires the &#8216;ready&#8217; event.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="events">
+<h2>Events<a class="headerlink" href="#events" title="Permalink to this headline">¶</a></h2>
+<p>Events in addition to those
+listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a>.</p>
+<dl class="describe">
+<dt>
+<tt class="descname">failure</tt></dt>
+<dd>Fires if the layer source fails to load.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">ready</tt></dt>
+<dd>Fires when the layer source is ready for action.</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="WMSGetFeatureInfo.html" title="gxp.plugins.WMSGetFeatureInfo"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="Tool.html" title="gxp.plugins.Tool"
+             >previous</a> |</li>
+        <li><a href="../../index.html">GXP</a> &raquo;</li>
+          <li><a href="../plugins.html" ><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2008-2011, The Open Planning Project.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+    </div>
+  </body>
+</html>
