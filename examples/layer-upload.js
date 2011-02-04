@@ -16,9 +16,14 @@ var form = new gxp.LayerUploadForm({
     },
     listeners: {
         uploadcomplete: function(panel, detail) {
+            var layers = detail.layers;
+            var names = [];
+            for (var i=0, len=layers.length; i<len; ++i) {
+                names.push(layers[i].name);
+            }
             Ext.Msg.show({
                 title: "Success",
-                msg: "Added new layer: " + detail.name,
+                msg: "Added new layer" + (len !== 1 ? "s" : "") + ": " + names.join(", "),
                 minWidth: 200,
                 icon: Ext.Msg.INFO,
                 buttons: Ext.Msg.OK
