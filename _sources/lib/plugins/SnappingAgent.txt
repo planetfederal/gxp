@@ -129,8 +129,6 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
 
     ``Array`` Shortcut to the targets control option of the
     ``OpenLayers.Control.Snapping`` used with this tool.
-    
-      /** private: method[init]
 
 .. describe:: toggleGroup
 
