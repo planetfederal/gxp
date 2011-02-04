@@ -32,11 +32,13 @@ gxp.LayerUploadForm = Ext.extend(Ext.FormPanel, {
     invalidFileExtensionText: "File extension must be one of: ",
     optionsText: "Options",
     workspaceLabel: "Workspace",
-    storeLabel: "Store",
+    workspaceEmptyText: "Default workspace",
+    dataStoreLabel: "Store",
+    dataStoreEmptyText: "Default datastore",
     
     fileUpload: true,
     
-    validFileExtensions: [".zip", ".gz", ".tar.bz2", ".tar", ".tgz", ".tbz2"],
+    validFileExtensions: [".zip", ".tif", ".gz", ".tar.bz2", ".tar", ".tgz", ".tbz2"],
 
     /** private: method[constructor]
      */
@@ -57,24 +59,6 @@ gxp.LayerUploadForm = Ext.extend(Ext.FormPanel, {
      */
     initComponent: function() {
         
-        this.storesStore = new Ext.data.JsonStore({
-            autoLoad: false,
-            root: "dataStores.dataStore",
-            fields: ["name", "href"]
-        });
-        
-        this.storesCombo = new Ext.form.ComboBox({
-            name: "store",
-            fieldLabel: this.storeLabel,
-            store: this.storesStore,
-            displayField: "name",
-            valueField: "name",
-            mode: "local",
-            allowBlank: true,
-            triggerAction: "all",
-            editable: false            
-        });
-
         this.items = [{
             xtype: "textfield",
             name: "title",
@@ -97,18 +81,7 @@ gxp.LayerUploadForm = Ext.extend(Ext.FormPanel, {
             buttonCfg: {
                 iconCls: "upload-icon"
             },
-            validator: (function(value) {
-                var valid = false;
-                var ext, len = value.length;
-                for (var i=0, ii=this.validFileExtensions.length; i<ii; ++i) {
-                    ext = this.validFileExtensions[i];
-                    if (value.slice(-ext.length).toLowerCase() === ext) {
-                        valid = true;
-                        break;
-                    }
-                }
-                return valid || this.invalidFileExtensionText + this.validFileExtensions.join(", ");
-            }).createDelegate(this)
+            validator: this.fileNameValidator.createDelegate(this)
         }, {
             xtype: "fieldset",
             title: this.optionsText,
@@ -116,30 +89,15 @@ gxp.LayerUploadForm = Ext.extend(Ext.FormPanel, {
             checkboxToggle: true,
             collapsed: true,
             hideMode: "offsets",
-            items: [{
-                xtype: "combo",
-                name: "workspace",
-                fieldLabel: this.workspaceLabel,
-                store: new Ext.data.JsonStore({
-                    url: this.getWorkspacesUrl(),
-                    autoLoad: true,
-                    root: "workspaces.workspace",
-                    fields: ["name", "href"]
-                }),
-                displayField: "name",
-                valueField: "name",
-                mode: "local",
-                allowBlank: true,
-                triggerAction: "all",
-                editable: false,
-                listeners: {
-                    select: function(combo, record, index) {
-                        this.storesCombo.reset();
-                        this.loadDataStores(record.get("href"));
-                    },
-                    scope: this
+            items: [this.createWorkspacesCombo(), this.createDataStoresCombo()],
+            listeners: {
+                collapse: function(fieldset) {
+                    // reset all combos
+                    fieldset.items.each(function(item) {
+                        item.reset();
+                    });
                 }
-            }, this.storesCombo]
+            }
         }];
         
         this.buttons = [{
@@ -162,8 +120,28 @@ gxp.LayerUploadForm = Ext.extend(Ext.FormPanel, {
         
         this.addEvents(
             /**
-             * Event: change
-             * Fires before any field blurs if the field value has changed.
+             * Event: workspaceselected
+             * Fires when a workspace is selected.
+             *
+             * Listener arguments:
+             * panel - {<gxp.LayerUploadForm} This form panel.
+             * record - {Ext.data.Record} The selected workspace record.
+             */
+            "workspaceselected",
+
+            /**
+             * Event: datastoreselected
+             * Fires when a datastore is selected.
+             *
+             * Listener arguments:
+             * panel - {<gxp.LayerUploadForm} This form panel.
+             * record - {Ext.data.Record} The selected datastore record.
+             */
+            "datastoreselected",
+
+            /**
+             * Event: uploadcomplete
+             * Fires upon successful upload.
              *
              * Listener arguments:
              * panel - {<gxp.LayerUploadForm} This form panel.
@@ -177,41 +155,125 @@ gxp.LayerUploadForm = Ext.extend(Ext.FormPanel, {
 
     },
     
+    /** private: method[]
+     *  :arg name: ``String`` The chosen filename.
+     *  :returns: ``Boolean | String``  True if valid, message otherwise.
+     */
+    fileNameValidator: function(name) {
+        var valid = false;
+        var ext, len = name.length;
+        for (var i=0, ii=this.validFileExtensions.length; i<ii; ++i) {
+            ext = this.validFileExtensions[i];
+            if (name.slice(-ext.length).toLowerCase() === ext) {
+                valid = true;
+                break;
+            }
+        }
+        return valid || this.invalidFileExtensionText + this.validFileExtensions.join(", ");
+    },
+    
+    /** private: method[createWorkspacesCombo]
+     *  :returns: ``Object`` Combo config.
+     */
+    createWorkspacesCombo: function() {
+        return {
+            xtype: "combo",
+            name: "workspace",
+            fieldLabel: this.workspaceLabel,
+            emptyText: this.workspaceEmptyText,
+            store: new Ext.data.JsonStore({
+                url: this.getWorkspacesUrl(),
+                autoLoad: true,
+                root: "workspaces.workspace",
+                fields: ["name", "href"]
+            }),
+            displayField: "name",
+            valueField: "name",
+            mode: "local",
+            allowBlank: true,
+            triggerAction: "all",
+            editable: false,
+            listeners: {
+                select: function(combo, record, index) {
+                    this.fireEvent("workspaceselected", this, record);
+                },
+                scope: this
+            }
+        };
+    },
+    
+    /** private: method[createDataStoresCombo]
+     *  :returns: ``Ext.form.ComboBox``
+     */
+    createDataStoresCombo: function() {
+        // this store will be loaded whenever a workspace is selected
+        var store = new Ext.data.JsonStore({
+            autoLoad: false,
+            root: "dataStores.dataStore",
+            fields: ["name", "href"]
+        });
+        this.on({
+            workspaceselected: function(panel, record) {
+                combo.reset();
+                var workspaceUrl = record.get("href");
+                store.removeAll();
+                store.proxy = new Ext.data.HttpProxy({
+                    url: workspaceUrl.split(".json").shift() + "/datastores.json"
+                });
+                store.load();
+            },
+            scope: this
+        });
+
+        var combo = new Ext.form.ComboBox({
+            name: "store",
+            fieldLabel: this.dataStoreLabel,
+            emptyText: this.dataStoreEmptyText,
+            store: store,
+            displayField: "name",
+            valueField: "name",
+            mode: "local",
+            allowBlank: true,
+            triggerAction: "all",
+            editable: false,
+            listeners: {
+                select: function(combo, record, index) {
+                    this.fireEvent("datastoreselected", this, record);
+                },
+                scope: this
+            }
+        });
+        
+        return combo;
+    },
+
+    /** private: method[getUploadUrl]
+     */
     getUploadUrl: function() {
         return this.url + "/rest/upload";
     },
     
+    /** private: method[getWorkspacesUrl]
+     */
     getWorkspacesUrl: function() {
         return this.url + "/rest/workspaces.json";
     },
     
-    loadDataStores: function(workspaceUrl) {
-        this.storesStore.removeAll();
-        this.storesStore.proxy = new Ext.data.HttpProxy({
-            url: workspaceUrl.split(".json").shift() + "/datastores.json"
-        });
-        this.storesStore.load();
-    },
-    
     /** private: method[handleUploadResponse]
-     *  ``Function``
+     *  TODO: if response includes errors object, this can be removed
      */
     handleUploadResponse: function(response) {
         var obj;
-        var success = false;
-        var records = [];
         try {
             obj = Ext.decode(response.responseText);
         } catch (err) {
             // the "actionfailed" method will be fired
         }
-        if (obj) {
-            if (obj.error === true || obj.error === "true") {
-                // mark the file field as invlid
-                records = [{data: {id: "file", msg: obj.message}}];
-            } else {
-                success = true;
-            }
+        var success = obj && obj.success;
+        var records = [];
+        if (!success) {
+            // mark the file field as invlid
+            records = [{data: {id: "file", msg: obj.message}}];
         }
         return {success: success, records: records};
     },
@@ -225,5 +287,5 @@ gxp.LayerUploadForm = Ext.extend(Ext.FormPanel, {
 
 });
 
-/** api: xtype = gxp_uploadlayerform */
-Ext.reg("gxp_uploadlayerform", gxp.LayerUploadForm);
+/** api: xtype = gxp_layeruploadform */
+Ext.reg("gxp_layeruploadform", gxp.LayerUploadForm);
