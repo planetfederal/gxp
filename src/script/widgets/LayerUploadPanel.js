@@ -39,6 +39,11 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
     fileUpload: true,
     
     validFileExtensions: [".zip", ".tif", ".gz", ".tar.bz2", ".tar", ".tgz", ".tbz2"],
+    
+    /** api: config[url]
+     *  ``String``
+     *  URL for GeoServer RESTConfig root.  E.g. "http://example.com/geoserver/rest".
+     */
 
     /** private: method[constructor]
      */
@@ -251,13 +256,13 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
     /** private: method[getUploadUrl]
      */
     getUploadUrl: function() {
-        return this.url + "/rest/upload";
+        return this.url + "/upload";
     },
     
     /** private: method[getWorkspacesUrl]
      */
     getWorkspacesUrl: function() {
-        return this.url + "/rest/workspaces.json";
+        return this.url + "/workspaces.json";
     },
     
     /** private: method[handleUploadResponse]
