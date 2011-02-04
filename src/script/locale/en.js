@@ -269,6 +269,23 @@ GeoExt.Lang.add("en", {
          ruleWindowTitle: "Style Rule: {0}",
          stylesFieldsetTitle: "Styles",
          rulesFieldsetTitle: "Rules"
+    },
+
+    "gxp.LayerUploadPanel.prototype": {
+        titleLabel: "Title",
+        titleEmptyText: "Layer title",
+        abstractLabel: "Description",
+        abstractEmptyText: "Layer description",
+        fileLabel: "Data",
+        fieldEmptyText: "Browse for data archive...",
+        uploadText: "Upload",
+        waitMsgText: "Uploading your data...",
+        invalidFileExtensionText: "File extension must be one of: ",
+        optionsText: "Options",
+        workspaceLabel: "Workspace",
+        workspaceEmptyText: "Default workspace",
+        dataStoreLabel: "Store",
+        dataStoreEmptyText: "Default datastore"
     }
 
 });
