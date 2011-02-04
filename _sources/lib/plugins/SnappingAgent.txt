@@ -96,9 +96,8 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
 
 .. describe:: controlOptions
 
-    ``Object`` If this tool is associated with an ``OpenLayers.Control``
-    then this is an optional object to pass to the constructor of the
-    associated ``OpenLayers.Control``.
+    ``Object`` Options for the ``OpenLayers.Control.Snapping`` used with
+    this tool.
 
 .. describe:: defaultAction
 
@@ -125,6 +124,13 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     string that references an ``Ext.Container`` property on the portal, or
     "map" to access the viewer's main map. If not provided, a window will
     be created.
+
+.. describe:: targets
+
+    ``Array`` Shortcut to the targets control option of the
+    ``OpenLayers.Control.Snapping`` used with this tool.
+    
+      /** private: method[init]
 
 .. describe:: toggleGroup
 
