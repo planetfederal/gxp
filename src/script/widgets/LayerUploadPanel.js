@@ -8,17 +8,17 @@
 
 /** api: (define)
  *  module = gxp
- *  class = LayerUploadForm
+ *  class = LayerUploadPanel
  *  base_link = `Ext.FormPanel <http://extjs.com/deploy/dev/docs/?class=Ext.FormPanel>`_
  */
 Ext.namespace("gxp");
 
 /** api: constructor
- *  .. class:: LayerUploadForm(config)
+ *  .. class:: LayerUploadPanel(config)
  *   
  *      A panel for uploading new layer data to GeoServer.
  */
-gxp.LayerUploadForm = Ext.extend(Ext.FormPanel, {
+gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
     
     /** i18n */
     titleLabel: "Title",
@@ -47,7 +47,7 @@ gxp.LayerUploadForm = Ext.extend(Ext.FormPanel, {
         config.errorReader = {
             read: config.handleUploadResponse || this.handleUploadResponse
         };
-        gxp.LayerUploadForm.superclass.constructor.call(this, config);
+        gxp.LayerUploadPanel.superclass.constructor.call(this, config);
     },
     
     /** private: property[selectedWorkspace]
@@ -125,7 +125,7 @@ gxp.LayerUploadForm = Ext.extend(Ext.FormPanel, {
              * Fires when a workspace is selected.
              *
              * Listener arguments:
-             * panel - {<gxp.LayerUploadForm} This form panel.
+             * panel - {<gxp.LayerUploadPanel} This form panel.
              * record - {Ext.data.Record} The selected workspace record.
              */
             "workspaceselected",
@@ -135,7 +135,7 @@ gxp.LayerUploadForm = Ext.extend(Ext.FormPanel, {
              * Fires when a datastore is selected.
              *
              * Listener arguments:
-             * panel - {<gxp.LayerUploadForm} This form panel.
+             * panel - {<gxp.LayerUploadPanel} This form panel.
              * record - {Ext.data.Record} The selected datastore record.
              */
             "datastoreselected",
@@ -145,14 +145,14 @@ gxp.LayerUploadForm = Ext.extend(Ext.FormPanel, {
              * Fires upon successful upload.
              *
              * Listener arguments:
-             * panel - {<gxp.LayerUploadForm} This form panel.
+             * panel - {<gxp.LayerUploadPanel} This form panel.
              * details - {Object} An object with "name" and "href" properties
              *     corresponding to the uploaded layer name and resource href.
              */
             "uploadcomplete"
         ); 
 
-        gxp.LayerUploadForm.superclass.initComponent.call(this);
+        gxp.LayerUploadPanel.superclass.initComponent.call(this);
 
     },
     
@@ -288,5 +288,5 @@ gxp.LayerUploadForm = Ext.extend(Ext.FormPanel, {
 
 });
 
-/** api: xtype = gxp_layeruploadform */
-Ext.reg("gxp_layeruploadform", gxp.LayerUploadForm);
+/** api: xtype = gxp_layeruploadpanel */
+Ext.reg("gxp_layeruploadpanel", gxp.LayerUploadPanel);

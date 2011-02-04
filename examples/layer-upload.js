@@ -1,6 +1,6 @@
 Ext.QuickTips.init();
 
-var form = new gxp.LayerUploadForm({
+var form = new gxp.LayerUploadPanel({
     renderTo: "container",
     url: "/geoserver",
     width: 350,
