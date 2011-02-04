@@ -32,7 +32,9 @@ gxp.LayerUploadForm = Ext.extend(Ext.FormPanel, {
     invalidFileExtensionText: "File extension must be one of: ",
     optionsText: "Options",
     workspaceLabel: "Workspace",
-    storeLabel: "Store",
+    workspaceEmptyText: "Default workspace",
+    dataStoreLabel: "Store",
+    dataStoreEmptyText: "Default datastore",
     
     fileUpload: true,
     
@@ -79,18 +81,7 @@ gxp.LayerUploadForm = Ext.extend(Ext.FormPanel, {
             buttonCfg: {
                 iconCls: "upload-icon"
             },
-            validator: (function(value) {
-                var valid = false;
-                var ext, len = value.length;
-                for (var i=0, ii=this.validFileExtensions.length; i<ii; ++i) {
-                    ext = this.validFileExtensions[i];
-                    if (value.slice(-ext.length).toLowerCase() === ext) {
-                        valid = true;
-                        break;
-                    }
-                }
-                return valid || this.invalidFileExtensionText + this.validFileExtensions.join(", ");
-            }).createDelegate(this)
+            validator: this.fileNameValidator.createDelegate(this)
         }, {
             xtype: "fieldset",
             title: this.optionsText,
@@ -139,6 +130,16 @@ gxp.LayerUploadForm = Ext.extend(Ext.FormPanel, {
             "workspaceselected",
 
             /**
+             * Event: datastoreselected
+             * Fires when a datastore is selected.
+             *
+             * Listener arguments:
+             * panel - {<gxp.LayerUploadForm} This form panel.
+             * record - {Ext.data.Record} The selected datastore record.
+             */
+            "datastoreselected",
+
+            /**
              * Event: uploadcomplete
              * Fires upon successful upload.
              *
@@ -154,6 +155,23 @@ gxp.LayerUploadForm = Ext.extend(Ext.FormPanel, {
 
     },
     
+    /** private: method[]
+     *  :arg name: ``String`` The chosen filename.
+     *  :returns: ``Boolean | String``  True if valid, message otherwise.
+     */
+    fileNameValidator: function(name) {
+        var valid = false;
+        var ext, len = name.length;
+        for (var i=0, ii=this.validFileExtensions.length; i<ii; ++i) {
+            ext = this.validFileExtensions[i];
+            if (name.slice(-ext.length).toLowerCase() === ext) {
+                valid = true;
+                break;
+            }
+        }
+        return valid || this.invalidFileExtensionText + this.validFileExtensions.join(", ");
+    },
+    
     /** private: method[createWorkspacesCombo]
      *  :returns: ``Object`` Combo config.
      */
@@ -162,6 +180,7 @@ gxp.LayerUploadForm = Ext.extend(Ext.FormPanel, {
             xtype: "combo",
             name: "workspace",
             fieldLabel: this.workspaceLabel,
+            emptyText: this.workspaceEmptyText,
             store: new Ext.data.JsonStore({
                 url: this.getWorkspacesUrl(),
                 autoLoad: true,
@@ -208,14 +227,21 @@ gxp.LayerUploadForm = Ext.extend(Ext.FormPanel, {
 
         var combo = new Ext.form.ComboBox({
             name: "store",
-            fieldLabel: this.storeLabel,
+            fieldLabel: this.dataStoreLabel,
+            emptyText: this.dataStoreEmptyText,
             store: store,
             displayField: "name",
             valueField: "name",
             mode: "local",
             allowBlank: true,
             triggerAction: "all",
-            editable: false            
+            editable: false,
+            listeners: {
+                select: function(combo, record, index) {
+                    this.fireEvent("datastoreselected", this, record);
+                },
+                scope: this
+            }
         });
         
         return combo;
