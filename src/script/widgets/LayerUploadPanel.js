@@ -36,8 +36,17 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
     dataStoreLabel: "Store",
     dataStoreEmptyText: "Default datastore",
     
+    /** private: property[fileUpload]
+     *  ``Boolean``
+     */
     fileUpload: true,
     
+    /** api: config[validFileExtensions]
+     *  ``Array``
+     *  List of valid file extensions.  These will be used in validating the 
+     *  file input value.  Default is ``[".zip", ".tif", ".gz", ".tar.bz2", 
+     *  ".tar", ".tgz", ".tbz2"]``.
+     */
     validFileExtensions: [".zip", ".tif", ".gz", ".tar.bz2", ".tar", ".tgz", ".tbz2"],
     
     /** api: config[url]
@@ -90,7 +99,6 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
         }, {
             xtype: "fieldset",
             title: this.optionsText,
-            autoHeight: true,
             checkboxToggle: true,
             collapsed: true,
             hideMode: "offsets",
