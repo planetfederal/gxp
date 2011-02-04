@@ -110,7 +110,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         for (var id in this.target.layerSources) {
             source = this.target.layerSources[id];
             if (source.store) {
-                data.push([id, this.target.layerSources[id].title || id]);                
+                data.push([id, source.title || id]);                
             }
         }
         var sources = new Ext.data.ArrayStore({
