@@ -34,6 +34,10 @@ gxp.plugins.SnappingAgent = Ext.extend(gxp.plugins.Tool, {
      *  ``Object`` Options for the ``OpenLayers.Control.Snapping`` used with
      *  this tool.
      */
+    
+    /** api: config[targets]
+     *  ``Array`` Shortcut to the target control option of the
+     *  ``OpenLayers.Control.Snapping`` used with this tool.
 
     /** private: method[init]
      */
