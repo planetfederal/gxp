@@ -107,6 +107,7 @@ gxp.LayerUploadForm = Ext.extend(Ext.FormPanel, {
                 if (form.isValid()) {
                     form.submit({
                         url: this.getUploadUrl(),
+                        submitEmptyText: false,
                         waitMsg: this.waitMsgText,
                         waitMsgTarget: true,
                         reset: true,
