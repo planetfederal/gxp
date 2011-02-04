@@ -79,7 +79,7 @@ gxp.LayerUploadForm = Ext.extend(Ext.FormPanel, {
             name: "file",
             buttonText: "",
             buttonCfg: {
-                iconCls: "upload-icon"
+                iconCls: "gxp-icon-filebrowse"
             },
             validator: this.fileNameValidator.createDelegate(this)
         }, {

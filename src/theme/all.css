@@ -143,3 +143,34 @@
 .x-tree-node-expanded img.gxp-folder {
     background: url(../../../../externals/ext/resources/images/default/tree/folder-open.gif);
 }
+
+/* gxp_layeruploadform */
+.x-btn .gxp-icon-filebrowse { 
+    background-image: url(img/silk/folder.png);
+}
+
+/* ux.FileUploadField */
+.x-form-file-wrap {
+    position: relative;
+    height: 22px;
+}
+.x-form-file-wrap .x-form-file {
+    position: absolute;
+    right: 0;
+    -moz-opacity: 0;
+    filter:alpha(opacity: 0);
+    opacity: 0;
+    z-index: 2;
+    height: 22px;
+}
+.x-form-file-wrap .x-form-file-btn {
+    position: absolute;
+    right: 0;
+    z-index: 1;
+}
+.x-form-file-wrap .x-form-file-text {
+    position: absolute;
+    left: 0;
+    z-index: 3;
+    color: #777;
+}
