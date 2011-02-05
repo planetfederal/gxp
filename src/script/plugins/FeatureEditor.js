@@ -8,6 +8,7 @@
 
 /**
  * @requires plugins/Tool.js
+ * @requires widgets/FeatureEditPopup.js
  */
 
 /** api: (define)
