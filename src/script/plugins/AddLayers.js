@@ -327,7 +327,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 scope: this
             }
         });
- 
+        
     },
     
     /** private: method[setSelectedSource]
@@ -372,21 +372,34 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                         listeners: {
                             uploadcomplete: function(panel, detail) {
                                 var layers = detail.layers;
-                                var names = [];
+                                var names = {};
                                 for (var i=0, len=layers.length; i<len; ++i) {
-                                    names.push(layers[i].name);
+                                    names[layers[i].name] = true;
                                 }
-                                this.selectedSource.store.load();
-                                win.close();
-                                // TODO: decide a better way to do this
-                                // perhaps selecting the records in the grid
-                                Ext.Msg.show({
-                                    title: "Success",
-                                    msg: "Added new layer" + (len !== 1 ? "s" : "") + ": " + names.join(", "),
-                                    minWidth: 200,
-                                    icon: Ext.Msg.INFO,
-                                    buttons: Ext.Msg.OK
+                                this.selectedSource.store.load({
+                                    callback: function(records, options, success) {
+                                        var gridPanel = this.capGrid.items.get(0);
+                                        var sel = gridPanel.getSelectionModel();
+                                        sel.clearSelections();
+                                        // select newly added layers
+                                        var newRecords = [];
+                                        var last = 0;
+                                        this.selectedSource.store.each(function(record, index) {
+                                            if (record.get("name") in names) {
+                                                last = index;
+                                                newRecords.push(record);
+                                            }
+                                        });
+                                        sel.selectRecords(newRecords);
+                                        // this needs to be deferred because the 
+                                        // grid view has not refreshed yet
+                                        window.setTimeout(function() {
+                                            gridPanel.getView().focusRow(last);
+                                        }, 1);
+                                    },
+                                    scope: this
                                 });
+                                win.close();
                             },
                             scope: this
                         }
