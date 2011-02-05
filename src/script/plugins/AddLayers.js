@@ -230,8 +230,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     // TODO: remove the following when this Ext issue is addressed
                     // http://www.extjs.com/forum/showthread.php?100345-GridPanel-reconfigure-should-refocus-view-to-correct-scroller-height&p=471843
                     capGridPanel.getView().focusRow(0);
-                    this.selectedSource = source;
-                    this.fireEvent("sourceselected", this, source);
+                    this.setSelectedSource(source);
                 },
                 scope: this
             }
@@ -323,12 +322,20 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     capGridPanel.getSelectionModel().clearSelections();
                 },
                 show: function(win) {
-                    this.fireEvent("sourceselected", this, this.target.layerSources[data[0][0]]);
+                    this.setSelectedSource(this.target.layerSources[data[0][0]]);
                 },
                 scope: this
             }
         });
  
+    },
+    
+    /** private: method[setSelectedSource]
+     *  :arg: :class:`gxp.plugins.LayerSource`
+     */
+    setSelectedSource: function(source) {
+        this.selectedSource = source;
+        this.fireEvent("sourceselected", this, source);
     },
     
     /** private: method[createUploadButton]
@@ -370,6 +377,9 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                                     names.push(layers[i].name);
                                 }
                                 this.selectedSource.store.load();
+                                win.close();
+                                // TODO: decide a better way to do this
+                                // perhaps selecting the records in the grid
                                 Ext.Msg.show({
                                     title: "Success",
                                     msg: "Added new layer" + (len !== 1 ? "s" : "") + ": " + names.join(", "),
