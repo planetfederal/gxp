@@ -8,7 +8,8 @@ GeoExt.Lang.add("en", {
         untitledText: "Untitled",
         addLayerSourceErrorText: "Error getting WMS capabilities ({msg}).\nPlease check the url and try again.",
         availableLayersText: "Available Layers",
-        doneText: "Done"
+        doneText: "Done",
+        uploadText: "Upload Data"
     },
     
     "gxp.plugins.BingSource.prototype": {

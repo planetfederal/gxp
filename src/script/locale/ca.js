@@ -8,7 +8,8 @@ GeoExt.Lang.add("ca", {
         untitledText: "Sense Títol",
         addLayerSourceErrorText: "Error obtenint les capabilities del WMS ({msg}).\nSi us plau, comproveu la URL i torneu-ho a intentar.",
         availableLayersText: "Capes disponibles",
-        doneText: "Fet"
+        doneText: "Fet",
+        uploadText: "Upload Data"
     },
     
     "gxp.plugins.BingSource.prototype": {

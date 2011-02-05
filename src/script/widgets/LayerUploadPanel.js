@@ -277,7 +277,7 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
      *  TODO: if response includes errors object, this can be removed
      */
     handleUploadResponse: function(response) {
-        var obj;
+        var obj = {};
         try {
             obj = Ext.decode(response.responseText);
         } catch (err) {

@@ -73,6 +73,58 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      *  Text for Done button (i18n).
      */
     doneText: "Done",
+
+    /** api: config[upload]
+     *  ``Object | Boolean``
+     *  If provided, a :class:`gxp.LayerUploadPanel` will be made accessible
+     *  from a button on the Available Layers dialog.  This panel will be 
+     *  constructed using the provided config.  By default, no upload 
+     *  functionality is provided.
+     */
+    
+    /** api: config[uploadText]
+     *  ``String``
+     *  Text for upload button (only renders if ``upload`` is provided).
+     */
+    uploadText: "Upload Data",
+
+    /** api: config[nonUploadSources]
+     *  ``Array``
+     *  If ``upload`` is enabled, the upload button will not be displayed for 
+     *  sources whose identifiers or URLs are in the provided array.  By 
+     *  default, the upload button will make an effort to be shown for all 
+     *  sources with a url property.
+     */
+
+    /** api: config[relativeUploadOnly]
+     *  ``Boolean``
+     *  If ``upload`` is enabled, only show the button for sources with relative
+     *  URLs (e.g. "/geoserver").  Default is ``true``.
+     */
+    relativeUploadOnly: true,
+    
+    /** private: property[selectedSource]
+     *  :class:`gxp.plugins.LayerSource`
+     *  The currently selected layer source.
+     */
+    selectedSource: null,
+
+    /** private: method[constructor]
+     */
+    constructor: function(config) {
+        this.addEvents(
+            /** api: event[sourceselected]
+             *  Fired when a new source is selected.
+             *
+             *  Listener arguments:
+             *
+             *  * tool - :class:`gxp.plugins.AddLayers` This tool.
+             *  * source - :class:`gxp.plugins.LayerSource` The selected source.
+             */
+            "sourceselected"
+        );
+        gxp.plugins.AddLayers.superclass.constructor.apply(this, arguments);        
+    },
     
     /** api: method[addActions]
      */
@@ -173,11 +225,13 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             value: data[0][0],
             listeners: {
                 select: function(combo, record, index) {
-                    var store = this.target.layerSources[record.get("id")].store;
-                    capGridPanel.reconfigure(store, capGridPanel.getColumnModel());
+                    var source = this.target.layerSources[record.get("id")];
+                    capGridPanel.reconfigure(source.store, capGridPanel.getColumnModel());
                     // TODO: remove the following when this Ext issue is addressed
                     // http://www.extjs.com/forum/showthread.php?100345-GridPanel-reconfigure-should-refocus-view-to-correct-scroller-height&p=471843
                     capGridPanel.getView().focusRow(0);
+                    this.selectedSource = source;
+                    this.fireEvent("sourceselected", this, source);
                 },
                 scope: this
             }
@@ -231,6 +285,28 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 scope: this
             }
         });
+        
+        var bbarItems = [
+            "->",
+            new Ext.Button({
+                text: "Add Layers",
+                iconCls: "gxp-icon-addlayers",
+                handler: addLayers,
+                scope : this
+            }),
+            new Ext.Button({
+                text: this.doneText,
+                handler: function() {
+                    this.capGrid.hide();
+                },
+                scope: this
+            })
+        ];
+        
+        var uploadButton = this.createUploadButton();
+        if (uploadButton) {
+            bbarItems.unshift(uploadButton);
+        }
 
         this.capGrid = new Ext.Window({
             title: this.availableLayersText,
@@ -241,29 +317,144 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             modal: true,
             items: [capGridPanel],
             tbar: capGridToolbar,
-            bbar: [
-                "->",
-                new Ext.Button({
-                    text: "Add Layers",
-                    iconCls: "gxp-icon-addlayers",
-                    handler: addLayers,
-                    scope : this
-                }),
-                new Ext.Button({
-                    text: this.doneText,
-                    handler: function() {
-                        this.capGrid.hide();
-                    },
-                    scope: this
-                })
-            ],
+            bbar: bbarItems,
             listeners: {
-                hide: function(win){
+                hide: function(win) {
                     capGridPanel.getSelectionModel().clearSelections();
-                }
+                },
+                show: function(win) {
+                    this.fireEvent("sourceselected", this, this.target.layerSources[data[0][0]]);
+                },
+                scope: this
             }
         });
  
+    },
+    
+    /** private: method[createUploadButton]
+     *  If this tool is provided an ``upload`` property, a button will be created
+     *  that launches a window with a :class:`gxp.LayerUploadPanel`.
+     */
+    createUploadButton: function() {
+        var button;
+        var uploadConfig = this.initialConfig.upload;
+        // the url will be set in the sourceselected sequence
+        var url;
+        if (uploadConfig) {
+            if (typeof uploadConfig === "boolean") {
+                uploadConfig = {};
+            }
+            button = new Ext.Button({
+                xtype: "button",
+                text: this.uploadText,
+                iconCls: "gxp-icon-filebrowse",
+                hidden: true,
+                handler: function() {
+                    var panel = new gxp.LayerUploadPanel(Ext.apply({
+                        url: url,
+                        width: 350,
+                        border: false,
+                        bodyStyle: "padding: 10px 10px 0 10px;",
+                        frame: true,
+                        labelWidth: 65,
+                        defaults: {
+                            anchor: "95%",
+                            allowBlank: false,
+                            msgTarget: "side"
+                        },
+                        listeners: {
+                            uploadcomplete: function(panel, detail) {
+                                var layers = detail.layers;
+                                var names = [];
+                                for (var i=0, len=layers.length; i<len; ++i) {
+                                    names.push(layers[i].name);
+                                }
+                                this.selectedSource.store.load();
+                                Ext.Msg.show({
+                                    title: "Success",
+                                    msg: "Added new layer" + (len !== 1 ? "s" : "") + ": " + names.join(", "),
+                                    minWidth: 200,
+                                    icon: Ext.Msg.INFO,
+                                    buttons: Ext.Msg.OK
+                                });
+                            },
+                            scope: this
+                        }
+                    }, uploadConfig));
+                    
+                    var win = new Ext.Window({
+                        title: this.uploadText,
+                        modal: true,
+                        resizable: false,
+                        items: [panel]
+                    });
+                    win.show();
+                },
+                scope: this
+            });
+            
+            var urlCache = {};
+            function getStatus(url, callback, scope) {
+                if (url in urlCache) {
+                    // always call callback after returning
+                    window.setTimeout(function() {
+                        callback.call(scope, urlCache[url]);
+                    }, 0);
+                } else {
+                    Ext.Ajax.request({
+                        url: url,
+                        disableCaching: false,
+                        callback: function(options, success, response) {
+                            var status = response.status;
+                            urlCache[url] = status;
+                            callback.call(scope, status);
+                        }
+                    });
+                }
+            }
+            
+            function isEligible(source) {
+                
+            }
+            
+            this.on({
+                sourceselected: function(tool, source) {
+                    button.hide();
+                    var show = false;
+                    if (this.isEligibleForUpload(source)) {
+                        // only works with GeoServer
+                        // if url is http://example.com/geoserver/ows, we want
+                        // http://example.com/geoserver/rest.
+                        var parts = source.url.split("/");
+                        parts.pop();
+                        parts.push("rest");
+                        // this sets the url for the layer upload panel
+                        url = parts.join("/");
+                        // only show button if URL returns a 200
+                        getStatus(url, function(status) {
+                            button.setVisible(status === 200);
+                        }, this);
+                    }
+                },
+                scope: this
+            });
+        }
+        return button;
+    },
+    
+    /** private: method[isEligibleForUpload]
+     *  :arg source: :class:`gxp.plugins.LayerSource`
+     *  :returns: ``Boolean``
+     *
+     *  Determine if the provided source is eligible for upload given the tool
+     *  config.
+     */
+    isEligibleForUpload: function(source) {
+        return (
+            source.url &&
+            (this.relativeUploadOnly ? (source.url.charAt(0) === "/") : true) &&
+            (this.nonUploadSources || []).indexOf(source.id) === -1
+        );
     }
 
 });
