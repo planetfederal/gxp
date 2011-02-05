@@ -8,6 +8,7 @@
 
 /**
  * @requires plugins/Tool.js
+ * @requires data/WFSFeatureStore.js
  */
 
 /** api: (define)
