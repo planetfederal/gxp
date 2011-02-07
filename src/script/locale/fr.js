@@ -86,6 +86,7 @@ GeoExt.Lang.add("fr", {
     "gxp.plugins.Print.prototype": {
         menuText: "Imprimer carte",
         tooltip: "Imprimer carte",
+        previewText: "Aperçu avant impression",
         notAllNotPrintableText: "Non Tous les couches peuvent être imprimés",
         nonePrintableText: "Aucune de vos couches de carte peut être imprimée"
     },

@@ -86,6 +86,7 @@ GeoExt.Lang.add("es", {
     "gxp.plugins.Print.prototype": {
         menuText: "Imprimir",
         tooltip: "Imprimir",
+        previewText: "Vista previa",
         notAllNotPrintableText: "No se pueden imprimir todas las capas",
         nonePrintableText: "No se puede imprimir ninguna de las capas del mapa"
     },

@@ -60,6 +60,12 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      */
     nonePrintableText: "None of your current map layers can be printed",
 
+    /** api: config[previewText]
+     *  ``String``
+     *  Text for print preview text (i18n).
+     */
+    previewText: "Print Preview",
+
     /** private: method[constructor]
      */
     constructor: function(config) {
