@@ -180,7 +180,8 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
      */
     
     addLayer: function(layer, order) {
-        if (this.earth) {
+        var ows = layer.getLayer().url;
+        if (this.earth && ows) {
             var add = this.fireEvent("beforeadd", layer);
             if (add !== false) {
                 var name = layer.getLayer().id;
@@ -189,7 +190,6 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
                     networkLink = this.layerCache[name];
                 } else {
                     var link = this.earth.createLink('kl_' + name);
-                    var ows = layer.getLayer().url;
                     ows = ows.replace(/\?.*/, '');
                     var params = layer.getLayer().params;
                     var kmlPath = '/kml?mode=refresh&layers=' + params.LAYERS +
