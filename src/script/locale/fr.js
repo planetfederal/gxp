@@ -2,39 +2,39 @@
 GeoExt.Lang.add("fr", {
 
     "gxp.plugins.AddLayers.prototype": {
-        addMenuText: "Ajouter des calques",
-        addActionTip: "Ajouter des calques",
+        addMenuText: "Ajouter des couches",
+        addActionTip: "Ajouter des couches",
         addServerText: "Ajouter un nouveau serveur",
         untitledText: "Sans titre",
-        addLayerSourceErrorText: "Erreur capacités WMS obtenir ({msg}).\nVeuillez vérifier URL et essayez à nouveau.",
-        availableLayersText: "Layers disponible",
+        addLayerSourceErrorText: "Erreur lecture capacités WMS ({msg}).\nVeuillez vérifier l'adresse et essayez à nouveau.",
+        availableLayersText: "Couches disponible",
         doneText: "Terminé",
-        uploadText: "Upload Data"
+        uploadText: "Charger des donnée"
     },
     
     "gxp.plugins.BingSource.prototype": {
-        title: "Bing Layers",
-        roadTitle: "Bing Roads",
-        aerialTitle: "Bing Aerial",
-        labeledAerialTitle: "Bing Aerial With Labels"
+        title: "Couches Bing",
+        roadTitle: "Couche routes Bing",
+        aerialTitle: "Couche aérienne Bing",
+        labeledAerialTitle: "Couche aérienne Bing avec labels"
     },    
 
     "gxp.plugins.FeatureEditor.prototype": {
-        createFeatureActionTip: "Create a new feature",
-        editFeatureActionTip: "Edit existing feature"
+        createFeatureActionTip: "Créer un nouveau composant",
+        editFeatureActionTip: "Editer un composant"
     },
     
     "gxp.plugins.FeatureGrid.prototype": {
-        displayFeatureText: "Display on map",
-        firstPageTip: "First page",
-        previousPageTip: "Previous page",
-        zoomPageExtentTip: "Zoom to page extent",
-        nextPageTip: "Next page",
-        lastPageTip: "Last page"
+        displayFeatureText: "Afficher sur la carte",
+        firstPageTip: "Première page",
+        previousPageTip: "Page précédante",
+        zoomPageExtentTip: "Zoomer sur l'emprise de la page",
+        nextPageTip: "Page suivante",
+        lastPageTip: "Dernière page"
     },
     
     "gxp.plugins.GoogleSource.prototype": {
-        title: "Google Layers",
+        title: "Couches Google",
         roadmapAbstract: "Show street map",
         satelliteAbstract: "Show satellite imagery",
         hybridAbstract: "Show imagery with street names",
