@@ -70,164 +70,168 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      */
     addActions: function() {
 
-        var printProvider = new GeoExt.data.PrintProvider({
-            url: this.printService,
-            autoLoad: false,
-            listeners: {
-                beforeprint: function() {
-                    // The print module does not like array params.
-                    // TODO Remove when http://trac.geoext.org/ticket/216 is fixed.
-                    printWindow.items.get(0).printMapPanel.layers.each(function(l) {
-                        var params = l.get("layer").params;
-                        for(var p in params) {
-                            if (params[p] instanceof Array) {
-                                params[p] = params[p].join(",");
+        // don't add any action if there is no print service configured
+        if (this.printService !== null) {
+
+            var printProvider = new GeoExt.data.PrintProvider({
+                url: this.printService,
+                autoLoad: false,
+                listeners: {
+                    beforeprint: function() {
+                        // The print module does not like array params.
+                        // TODO Remove when http://trac.geoext.org/ticket/216 is fixed.
+                        printWindow.items.get(0).printMapPanel.layers.each(function(l) {
+                            var params = l.get("layer").params;
+                            for(var p in params) {
+                                if (params[p] instanceof Array) {
+                                    params[p] = params[p].join(",");
+                                }
                             }
+                        });
+                    },
+                    loadcapabilities: function() {
+                        printButton.initialConfig.disabled = false;
+                        printButton.enable();
+                    },
+                    print: function() {
+                        try {
+                            printWindow.close();
+                        } catch (err) {
+                            // TODO: improve destroy
                         }
-                    });
+                    }
+                }
+            });
+
+            var actions = gxp.plugins.Print.superclass.addActions.call(this, [{
+                menuText: this.menuText,
+                tooltip: this.tooltip,
+                iconCls: "gxp-icon-print",
+                disabled: true,
+                handler: function() {
+                    var supported = getSupportedLayers();
+                    if (supported.length > 0) {
+                        createPrintWindow.call(this);
+                        showPrintWindow.call(this);
+                    } else {
+                        // no layers supported
+                        Ext.Msg.alert(
+                            this.notAllNotPrintableText,
+                            this.nonePrintableText
+                        );
+                    }
                 },
-                loadcapabilities: function() {
-                    printButton.initialConfig.disabled = false;
-                    printButton.enable();
-                },
-                print: function() {
+                scope: this,
+                listeners: {
+                    render: function() {
+                        // wait to load until render so we can enable on success
+                        printProvider.loadCapabilities();
+                    }
+                }
+            }]);
+
+            var printButton = this.actions[0].items[0];
+
+            var printWindow;
+
+            function destroyPrintComponents() {
+                if (printWindow) {
+                    // TODO: fix this in GeoExt
                     try {
-                        printWindow.close();
+                        var panel = printWindow.items.first();
+                        panel.printMapPanel.printPage.destroy();
+                        //panel.printMapPanel.destroy();
                     } catch (err) {
                         // TODO: improve destroy
                     }
+                    printWindow = null;
                 }
             }
-        });
 
-        var actions = gxp.plugins.Print.superclass.addActions.call(this, [{
-            menuText: this.menuText,
-            tooltip: this.tooltip,
-            iconCls: "gxp-icon-print",
-            disabled: true,
-            handler: function() {
-                var supported = getSupportedLayers();
-                if (supported.length > 0) {
-                    createPrintWindow.call(this);
-                    showPrintWindow.call(this);
-                } else {
-                    // no layers supported
-                    Ext.Msg.alert(
-                        this.notAllNotPrintableText,
-                        this.nonePrintableText
-                    );
-                }
-            },
-            scope: this,
-            listeners: {
-                render: function() {
-                    // wait to load until render so we can enable on success
-                    printProvider.loadCapabilities();
-                }
+            var mapPanel = this.target.mapPanel;
+            function getSupportedLayers() {
+                var supported = [];
+                mapPanel.layers.each(function(record) {
+                    var layer = record.getLayer();
+                    if (isSupported(layer)) {
+                        supported.push(layer);
+                    }
+                });
+                return supported;
             }
-        }]);
 
-        var printButton = this.actions[0].items[0];
-
-        var printWindow;
-
-        function destroyPrintComponents() {
-            if (printWindow) {
-                // TODO: fix this in GeoExt
-                try {
-                    var panel = printWindow.items.first();
-                    panel.printMapPanel.printPage.destroy();
-                    //panel.printMapPanel.destroy();
-                } catch (err) {
-                    // TODO: improve destroy
-                }
-                printWindow = null;
+            function isSupported(layer) {
+                return (
+                    layer instanceof OpenLayers.Layer.WMS ||
+                    layer instanceof OpenLayers.Layer.OSM
+                );
             }
-        }
 
-        var mapPanel = this.target.mapPanel;
-        function getSupportedLayers() {
-            var supported = [];
-            mapPanel.layers.each(function(record) {
-                var layer = record.getLayer();
-                if (isSupported(layer)) {
-                    supported.push(layer);
-                }
-            });
-            return supported;
-        }
-
-        function isSupported(layer) {
-            return (
-                layer instanceof OpenLayers.Layer.WMS ||
-                layer instanceof OpenLayers.Layer.OSM
-            );
-        }
-
-        function createPrintWindow() {
-            printWindow = new Ext.Window({
-                title: this.previewText,
-                modal: true,
-                border: false,
-                resizable: false,
-                width: 360,
-                items: [
-                    new GeoExt.ux.PrintPreview({
-                        autoHeight: true,
-                        mapTitle: this.target.about && this.target.about["title"],
-                        comment: this.target.about && this.target.about["abstract"],
-                        printMapPanel: {
-                            map: Ext.applyIf({
-                                controls: [
-                                    new OpenLayers.Control.Navigation(),
-                                    new OpenLayers.Control.PanPanel(),
-                                    new OpenLayers.Control.ZoomPanel(),
-                                    new OpenLayers.Control.Attribution()
-                                ],
-                                eventListeners: {
-                                    preaddlayer: function(evt) {
-                                        return isSupported(evt.layer);
+            function createPrintWindow() {
+                printWindow = new Ext.Window({
+                    title: this.previewText,
+                    modal: true,
+                    border: false,
+                    resizable: false,
+                    width: 360,
+                    items: [
+                        new GeoExt.ux.PrintPreview({
+                            autoHeight: true,
+                            mapTitle: this.target.about && this.target.about["title"],
+                            comment: this.target.about && this.target.about["abstract"],
+                            printMapPanel: {
+                                map: Ext.applyIf({
+                                    controls: [
+                                        new OpenLayers.Control.Navigation(),
+                                        new OpenLayers.Control.PanPanel(),
+                                        new OpenLayers.Control.ZoomPanel(),
+                                        new OpenLayers.Control.Attribution()
+                                    ],
+                                    eventListeners: {
+                                        preaddlayer: function(evt) {
+                                            return isSupported(evt.layer);
+                                        }
                                     }
-                                }
-                            }, mapPanel.initialConfig.map),
-                            items: [{
-                                xtype: "gx_zoomslider",
-                                vertical: true,
-                                height: 100,
-                                aggressive: true
-                            }]
-                        },
-                        printProvider: printProvider,
-                        includeLegend: false,
-                        sourceMap: mapPanel
-                    })
-                ],
-                listeners: {
-                    beforedestroy: destroyPrintComponents
-                }
-            });
+                                }, mapPanel.initialConfig.map),
+                                items: [{
+                                    xtype: "gx_zoomslider",
+                                    vertical: true,
+                                    height: 100,
+                                    aggressive: true
+                                }]
+                            },
+                            printProvider: printProvider,
+                            includeLegend: false,
+                            sourceMap: mapPanel
+                        })
+                    ],
+                    listeners: {
+                        beforedestroy: destroyPrintComponents
+                    }
+                });
+            }
+
+            function showPrintWindow() {
+                printWindow.show();
+
+                // measure the window content width by it's toolbar
+                printWindow.setWidth(0);
+                var tb = printWindow.items.get(0).items.get(0);
+                var w = 0;
+                tb.items.each(function(item) {
+                    if(item.getEl()) {
+                        w += item.getWidth();
+                    }
+                });
+                printWindow.setWidth(
+                    Math.max(printWindow.items.get(0).printMapPanel.getWidth(),
+                    w + 20)
+                );
+                printWindow.center();
+            }
+
+            return actions;
         }
-
-        function showPrintWindow() {
-            printWindow.show();
-
-            // measure the window content width by it's toolbar
-            printWindow.setWidth(0);
-            var tb = printWindow.items.get(0).items.get(0);
-            var w = 0;
-            tb.items.each(function(item) {
-                if(item.getEl()) {
-                    w += item.getWidth();
-                }
-            });
-            printWindow.setWidth(
-                Math.max(printWindow.items.get(0).printMapPanel.getWidth(),
-                w + 20)
-            );
-            printWindow.center();
-        }
-
-        return actions;
     }
 
 });
