@@ -165,6 +165,14 @@ GeoExt.Lang.add("fr", {
         colorText: "Color",
         opacityText: "Opacity"
     },
+
+    "gxp.StrokeSymbolizer.prototype": {
+        strokeText: "Stroke",
+        styleText: "Style",
+        colorText: "Color",
+        widthText: "Width",
+        opacityText: "Opacity"
+    },
     
     "gxp.FilterBuilder.prototype": {
         builderTypeNames: ["any", "all", "none", "not all"],

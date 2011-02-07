@@ -63,6 +63,13 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
     dashStyles: [["solid", "solid"], ["4 4", "dash"], ["2 4", "dot"]],
     
     border: false,
+
+    /** i18n */
+    strokeText: "Stroke",
+    styleText: "Style",
+    colorText: "Color",
+    widthText: "Width",
+    opacityText: "Opacity",
     
     initComponent: function() {
         
@@ -77,7 +84,7 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
 
         this.items = [{
             xtype: "fieldset",
-            title: "Stroke",
+            title: this.strokeText,
             autoHeight: true,
             checkboxToggle: this.checkboxToggle,
             collapsed: this.checkboxToggle === true &&
@@ -89,7 +96,7 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
             items: [{
                 xtype: "combo",
                 name: "style",
-                fieldLabel: "Style",
+                fieldLabel: this.styleText,
                 store: new Ext.data.SimpleStore({
                     data: this.dashStyles,
                     fields: ["value", "display"]
@@ -111,7 +118,7 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
             }, {
                 xtype: "gxp_colorfield",
                 name: "color",
-                fieldLabel: "Color",
+                fieldLabel: this.colorText,
                 emptyText: OpenLayers.Renderer.defaultSymbolizer.strokeColor,
                 value: this.symbolizer.strokeColor,
                 defaultBackground: this.defaultColor ||
@@ -129,7 +136,7 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
             }, {
                 xtype: "numberfield",
                 name: "width",
-                fieldLabel: "Width",
+                fieldLabel: this.widthText,
                 allowNegative: false,
                 emptyText: OpenLayers.Renderer.defaultSymbolizer.strokeWidth,
                 value: this.symbolizer.strokeWidth,
@@ -148,7 +155,7 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
             }, {
                 xtype: "slider",
                 name: "opacity",
-                fieldLabel: "Opacity",
+                fieldLabel: this.opacityText,
                 values: [(("strokeOpacity" in this.symbolizer) ? this.symbolizer.strokeOpacity : OpenLayers.Renderer.defaultSymbolizer.strokeOpacity) * 100],
                 isFormField: true,
                 listeners: {
@@ -209,9 +216,6 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
         }
         return array;
     }
-    
-    
-    
 });
 
 /** api: xtype = gxp_strokesymbolizer */
