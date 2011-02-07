@@ -19,12 +19,27 @@
         }
         
         function test_init(t) {
-            t.plan(1);
+            t.plan(3);
             
-            var tool = new gxp.plugins.Tool();
+            var tool = new gxp.plugins.Tool({
+                listeners: {
+                    activate: function() {  
+                        t.ok(true, "Activate event is fired");
+                    } 
+                }
+            });
             var target = {tools: {}, on: function(){}};
             tool.init(target);
             t.ok(target.tools[tool.id] === tool, "tool registered on target");
+            t.ok(tool.active === true, "tool is automatically activated");
+        }
+
+        function test_autoActivate(t) {
+            t.plan(1);
+            var tool = new gxp.plugins.Tool({autoActivate: false});
+            var target = {tools: {}, on: function(){}};
+            tool.init(target);
+            t.ok(tool.active === false, "tool is not automatically activated when autoActivate is false");
         }
 
     </script>
