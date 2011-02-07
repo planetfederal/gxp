@@ -1,6 +1,10 @@
 
 GeoExt.Lang.add("en", {
 
+    "gxp.menu.LayerMenu.prototype": {
+        layerText: "Layer"
+    },
+
     "gxp.plugins.AddLayers.prototype": {
         addMenuText: "Add layers",
         addActionTip: "Add layers",

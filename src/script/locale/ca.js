@@ -1,6 +1,10 @@
 
 GeoExt.Lang.add("ca", {
 
+    "gxp.menu.LayerMenu.prototype": {
+        layerText: "Layer"
+    },
+
     "gxp.plugins.AddLayers.prototype": {
         addMenuText: "Afegeix Capa",
         addActionTip: "Afegeix Capa",

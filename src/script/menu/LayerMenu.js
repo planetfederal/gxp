@@ -25,7 +25,10 @@ gxp.menu.LayerMenu = Ext.extend(Ext.menu.Menu, {
      *  The store containing layer records to be viewed in this menu.
      */
     layers: null,
-    
+
+    /** i18n */
+    layerText: "Layers",
+
     /** private: method[initComponent]
      *  Private method called to initialize the component.
      */
@@ -66,7 +69,7 @@ gxp.menu.LayerMenu = Ext.extend(Ext.menu.Menu, {
         this.add(
             {
                 iconCls: "gxp-layer-visibility",
-                text: "Layer",
+                text: this.layerText,
                 canActivate: false
             },
             "-"
