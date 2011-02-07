@@ -28,7 +28,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
     /** api: config[fonts]
      *  ``Array(String)``
      *  List of fonts for the font combo.  If not set, defaults to the list
-     *  provided by the :class:`gxp.FontComboBox`.
+     *  provided by the :class:`gxp.form.FontComboBox`.
      */
     fonts: undefined,
     
@@ -112,7 +112,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
             xtype: "toolbar",
             items: [{
                 xtype: "gxp_fontcombo",
-                fonts: this.fonts || undefined,
+                fonts: this.fonts,
                 width: 110,
                 value: this.symbolizer.fontFamily,
                 listeners: {
