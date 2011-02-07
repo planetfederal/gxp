@@ -34,6 +34,12 @@ gxp.StylePropertiesDialog = Ext.extend(Ext.Container, {
      *  editable.
      */
     
+    /** i18n */
+    generalText: "General",
+    nameText: "Name",
+    titleText: "Title",
+    abstractText: "Abstract",
+
     /** private: method[initComponent]
      */
     initComponent: function() {
@@ -48,7 +54,7 @@ gxp.StylePropertiesDialog = Ext.extend(Ext.Container, {
             layout: "form",
             items: [{
                 xtype: "fieldset",
-                title: "General",
+                title: this.generalText,
                 labelWidth: 75,
                 defaults: {
                     xtype: "textfield",
@@ -56,18 +62,18 @@ gxp.StylePropertiesDialog = Ext.extend(Ext.Container, {
                     listeners: listeners
                 },
                 items: [{
-                    fieldLabel: "Name",
+                    fieldLabel: this.nameText,
                     name: "name",
                     value: this.userStyle.name,
                     disabled: this.initialConfig.nameEditable === false,
                     maskRe: /[A-Za-z0-9_]/
                 }, {
-                    fieldLabel: "Title",
+                    fieldLabel: this.titleText,
                     name: "title",
                     value: this.userStyle.title
                 }, {
                     xtype: "textarea",
-                    fieldLabel: "Abstract",
+                    fieldLabel: this.abstractText,
                     name: "description",
                     value: this.userStyle.description
                 }]

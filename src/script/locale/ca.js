@@ -178,6 +178,13 @@ GeoExt.Lang.add("ca", {
         opacityText: "Opacity"
     },
     
+    "gxp.StylePropertiesDialog.prototype": {
+        generalText: "General",
+        nameText: "Name",
+        titleText: "Title",
+        abstractText: "Abstract"
+    },
+
     "gxp.FilterBuilder.prototype": {
         builderTypeNames: ["any", "all", "none", "not all"],
         preComboText: "Match",

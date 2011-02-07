@@ -177,7 +177,14 @@ GeoExt.Lang.add("fr", {
         widthText: "Width",
         opacityText: "Opacity"
     },
-    
+
+    "gxp.StylePropertiesDialog.prototype": {
+        generalText: "Général",
+        nameText: "Nom",
+        titleText: "Titre",
+        abstractText: "Résumé"
+    },
+
     "gxp.FilterBuilder.prototype": {
         builderTypeNames: ["any", "all", "none", "not all"],
         preComboText: "Match",
