@@ -30,7 +30,7 @@ GeoExt.Lang.add("fr", {
         previousPageTip: "Previous page",
         zoomPageExtentTip: "Zoom to page extent",
         nextPageTip: "Next page",
-        nextPageTip: "Last page"
+        lastPageTip: "Last page"
     },
     
     "gxp.plugins.GoogleSource.prototype": {
