@@ -83,6 +83,13 @@ GeoExt.Lang.add("fr", {
         osmarenderAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>"
     },
 
+    "gxp.plugins.Print.prototype": {
+        menuText: "Imprimer carte",
+        tooltip: "Imprimer carte",
+        notAllNotPrintableText: "Non Tous les couches peuvent être imprimés",
+        nonePrintableText: "Aucune de vos couches de carte peut être imprimée"
+    },
+
     "gxp.plugins.MapQuestSource.prototype": {
         title: "MapQuest Layers",
         osmAttribution: "Tiles Courtesy of <a href='http://open.mapquest.co.uk/' target='_blank'>MapQuest</a> <img src='http://developer.mapquest.com/content/osm/mq_logo.png' border='0'>",

@@ -51,6 +51,11 @@
     margin: 0.5em 10px;
 }
 
+/* gxp_print */
+.x-btn .gxp-icon-print, .x-menu-item .gxp-icon-print, .x-tree-node .gxp-icon-print {
+    background-image: url(img/silk/printer.png);
+}
+
 /* gxp_wmsgetfeatureinfo */
 .x-btn .gxp-icon-getfeatureinfo, .x-menu-item .gxp-icon-getfeatureinfo, .x-tree-node .gxp-icon-getfeatureinfo {
     background-image: url(img/silk/information.png);

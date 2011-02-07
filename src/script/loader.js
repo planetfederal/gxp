@@ -68,7 +68,8 @@
         "plugins/Measure.js",
         "plugins/Navigation.js",
         "plugins/LayerProperties.js",
-        "plugins/Legend.js"
+        "plugins/Legend.js",
+        "plugins/Print.js"
     );
     
     var scripts = document.getElementsByTagName("script");
