@@ -26,6 +26,26 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
      *  Show properties for this layer record.
      */
     layerRecord: null,
+
+    /** api: config[source]
+     *  ``gxp.plugins.LayerSource``
+     *  Source for the layer.
+     */
+    source: null,
+    
+    /** api: config[sameOriginStyling]
+     *  ``Boolean``
+     *  Only allow editing of styles for layers whose sources have a URL that
+     *  matches the origin of this applicaiton.  It is strongly discouraged to 
+     *  do styling through the proxy as all authorization headers and cookies 
+     *  are shared with all remotesources.  Default is ``true``.
+     */
+    sameOriginStyling: true,
+
+    /** private: property[editableStyles]
+     *  ``Boolean``
+     */
+    editableStyles: false,
     
     /** api: config[activeTab]
      *  ``String or Number``
@@ -81,8 +101,15 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
         
         // only add the Styles panel if we know for sure that we have styles
         if (this.layerRecord.get("styles")) {
-            var url = this.layerRecord.getLayer().url.split(
+            var url = this.source.url.split(
                 "?").shift().replace(/\/(wms|ows)\/?$/, "/rest");
+            if (this.sameOriginStyling) {
+                // this could be made more robust
+                // for now, only style for sources with relative url
+                this.editableStyles = url.charAt(0) === "/";
+            } else {
+                this.editableStyles = true;
+            }
             this.items.push(this.createStylesPanel(url));
         }
 
@@ -124,6 +151,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
         return {
             title: this.stylesText,
             xtype: "gxp_wmsstylesdialog",
+            editable: false,
             layerRecord: this.layerRecord,
             plugins: [{
                 ptype: "gxp_geoserverstylewriter",
@@ -132,19 +160,23 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
             listeners: {
                 "beforerender": {
                     fn: function(cmp) {
-                        Ext.Ajax.request({
-                            method: "PUT",
-                            url: url + "/styles",
-                            callback: function(options, success, response) {
-                                // we expect a 405 error code here if we are dealing with
-                                // GeoServer and have write access. Otherwise we will
-                                // create the panel in readonly mode.
-                                cmp.editable = (response.status == 405);
-                                cmp.ownerCt.doLayout();
-                            }
-                        });
-                        return false;
+                        var render = !this.editableStyles;
+                        if (!render) {
+                            Ext.Ajax.request({
+                                method: "PUT",
+                                url: url + "/styles",
+                                callback: function(options, success, response) {
+                                    // we expect a 405 error code here if we are dealing with
+                                    // GeoServer and have write access. Otherwise we will
+                                    // create the panel in readonly mode.
+                                    cmp.editable = (response.status == 405);
+                                    cmp.ownerCt.doLayout();
+                                }
+                            });
+                        }
+                        return render;
                     },
+                    scope: this,
                     single: true
                 },
                 "styleselected": function(cmp, style) {
@@ -160,9 +192,10 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                         _olSalt: Math.random(),
                         styles: style
                     });
-                }
+                },
+                scope: this
             }
-        }
+        };
     },
     
     /** private: createAboutPanel
