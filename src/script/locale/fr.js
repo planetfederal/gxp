@@ -57,15 +57,15 @@ GeoExt.Lang.add("fr", {
     },
 
     "gxp.plugins.Legend.prototype": { 
-        menuText: "Show Legend",
-        tooltip: "Show Legend"
+        menuText: "Afficher la légende",
+        tooltip: "Afficher la légende"
     },
 
     "gxp.plugins.Measure.prototype": {
         lengthMenuText: "Longueur",
-        areaMenuText: "Zone",
-        lengthTooltip: "Mesure Longueur",
-        areaTooltip: "Mesure Zone",
+        areaMenuText: "Surface",
+        lengthTooltip: "Mesure longueur",
+        areaTooltip: "Mesure surface",
         measureTooltip: "Mesure"
     },
 
@@ -88,8 +88,8 @@ GeoExt.Lang.add("fr", {
     },
 
     "gxp.plugins.Print.prototype": {
-        menuText: "Imprimer carte",
-        tooltip: "Imprimer carte",
+        menuText: "Imprimer la carte",
+        tooltip: "Imprimer la carte",
         previewText: "Aperçu avant impression",
         notAllNotPrintableText: "Non Tous les couches peuvent être imprimés",
         nonePrintableText: "Aucune de vos couches de carte peut être imprimée"
@@ -123,9 +123,9 @@ GeoExt.Lang.add("fr", {
     },
 
     "gxp.plugins.Zoom.prototype": {
-        zoomInMenuText: "Zoom In",
+        zoomInMenuText: "Zoom avant",
         zoomOutMenuText: "Zoom arrière",
-        zoomInTooltip: "Zoom In",
+        zoomInTooltip: "Zoom avant",
         zoomOutTooltip: "Zoom arrière"
     },
     
@@ -165,17 +165,17 @@ GeoExt.Lang.add("fr", {
     },
     
     "gxp.FillSymbolizer.prototype": {
-        fillText: "Fill",
-        colorText: "Color",
-        opacityText: "Opacity"
+        fillText: "Remplissage",
+        colorText: "Couleur",
+        opacityText: "Opacité"
     },
 
     "gxp.StrokeSymbolizer.prototype": {
-        strokeText: "Stroke",
+        strokeText: "Bordure",
         styleText: "Style",
-        colorText: "Color",
-        widthText: "Width",
-        opacityText: "Opacity"
+        colorText: "Couleur",
+        widthText: "Largeur",
+        opacityText: "Opacité"
     },
 
     "gxp.StylePropertiesDialog.prototype": {
@@ -195,8 +195,8 @@ GeoExt.Lang.add("fr", {
     },
     
     "gxp.grid.CapabilitiesGrid.prototype": {
-        nameHeaderText : "Name",
-        titleHeaderText : "Title",
+        nameHeaderText : "Nom",
+        titleHeaderText : "Titre",
         queryableHeaderText : "Queryable",
         layerSelectionLabel: "Voir les données disponibles à partir de:",
         layerAdditionLabel: "or add a new server.",
@@ -204,17 +204,17 @@ GeoExt.Lang.add("fr", {
     },
     
     "gxp.PointSymbolizer.prototype": {
-        graphicCircleText: "circle",
-        graphicSquareText: "square",
+        graphicCircleText: "cercle",
+        graphicSquareText: "carré",
         graphicTriangleText: "triangle",
-        graphicStarText: "star",
-        graphicCrossText: "cross",
+        graphicStarText: "étoile",
+        graphicCrossText: "croix",
         graphicXText: "x",
-        graphicExternalText: "external",
+        graphicExternalText: "externe",
         urlText: "URL",
-        opacityText: "opacity",
-        symbolText: "Symbol",
-        sizeText: "Size",
+        opacityText: "Opacité",
+        symbolText: "Symbole",
+        sizeText: "Taille",
         rotationText: "Rotation"
     },
 
@@ -232,7 +232,7 @@ GeoExt.Lang.add("fr", {
         limitByScaleText: "Limit by scale",
         limitByConditionText: "Limit by condition",
         symbolText: "Symbol",
-        nameText: "Name"
+        nameText: "Nom"
     },
     
     "gxp.ScaleLimitPanel.prototype": {
@@ -248,11 +248,11 @@ GeoExt.Lang.add("fr", {
     
     "gxp.WMSLayerPanel.prototype": {
         aboutText: "About",
-        titleText: "Title",
-        nameText: "Name",
+        titleText: "Titre",
+        nameText: "Nom",
         descriptionText: "Description",
         displayText: "Display",
-        opacityText: "Opacity",
+        opacityText: "Opacité",
         formatText: "Format",
         transparentText: "Transparent",
         cacheText: "Cache",
@@ -271,7 +271,7 @@ GeoExt.Lang.add("fr", {
     },
 
     "gxp.LayerUploadPanel.prototype": {
-        titleLabel: "Title",
+        titleLabel: "Titre",
         titleEmptyText: "Layer title",
         abstractLabel: "Description",
         abstractEmptyText: "Layer description",
