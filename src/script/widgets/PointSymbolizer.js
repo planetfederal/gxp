@@ -66,15 +66,6 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
      *  * mark - ``Boolean`` The value is a well-known name for a mark.  If
      *      ``false``, the value will be assumed to be a url for an external graphic.
      */
-    pointGraphics: [
-        {display: this.graphicCircleText, value: "circle", mark: true},
-        {display: this.graphicSquareText, value: "square", mark: true},
-        {display: this.graphicTriangleText, value: "triangle", mark: true},
-        {display: this.graphicStarText, value: "star", mark: true},
-        {display: this.graphicCrossText, value: "cross", mark: true},
-        {display: this.graphicXText, value: "x", mark: true},
-        {display: this.graphicExternalText}
-    ],
     
    /** api: config[colorManager]
      *  ``Function``
@@ -167,6 +158,18 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
                 width: 100 // TODO: push this to css                
             }]
         });
+
+        if (!this.pointGraphics) {
+            this.pointGraphics = [
+                {display: this.graphicCircleText, value: "circle", mark: true},
+                {display: this.graphicSquareText, value: "square", mark: true},
+                {display: this.graphicTriangleText, value: "triangle", mark: true},
+                {display: this.graphicStarText, value: "star", mark: true},
+                {display: this.graphicCrossText, value: "cross", mark: true},
+                {display: this.graphicXText, value: "x", mark: true},
+                {display: this.graphicExternalText}
+            ];
+        }
 
         this.items = [{
             xtype: "combo",
