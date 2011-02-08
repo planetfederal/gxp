@@ -19,8 +19,9 @@ var symbolizer = {
     }
 };
 
-
 Ext.onReady(function() {
+    GeoExt.Lang.set(OpenLayers.Util.getParameters().lang || "en");
+
     new gxp.FillSymbolizer({
         renderTo: "fill",
         labelAlign: "right",
