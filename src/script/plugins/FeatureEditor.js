@@ -7,7 +7,7 @@
  */
 
 /**
- * @requires plugins/Tool.js
+ * @requires plugins/ClickableFeatures.js
  * @requires widgets/FeatureEditPopup.js
  */
 
@@ -17,7 +17,7 @@
  */
 
 /** api: (extends)
- *  plugins/Tool.js
+ *  plugins/ClickableFeatures.js
  */
 Ext.namespace("gxp.plugins");
 
@@ -27,7 +27,7 @@ Ext.namespace("gxp.plugins");
  *    Plugin for feature editing. Requires a
  *    :class:`gxp.plugins.FeatureManager`.
  */   
-gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
+gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
     
     /** api: ptype = gxp_featureeditor */
     ptype: "gxp_featureeditor",
@@ -58,12 +58,6 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
      *  ``String`` By default, the FeatureEditPopup will be added to the map.
      */
     outputTarget: "map",
-    
-    /** api: config[featureManager]
-     *  ``String`` The id of the :class:`gxp.plugins.FeatureManager` to use
-     *  with this tool.
-     */
-    featureManager: null,
     
     /** api: config[snappingAgent]
      *  ``String`` Optional id of the :class:`gxp.plugins.SnappingAgent` to use
@@ -107,31 +101,10 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
      *  excluded from the property grid of the FeatureEditPopup.
      */
 
-    /** api: config[tolerance]
-     *  ``Number`` 
-     *  Optional pixel tolerance to use when selecting features.  By default,
-     *  the server decides whether a pixel click intersects a feature based on 
-     *  its own rules.  If a pixel tolerance is provided, it will be included in
-     *  requests for features to inform the server to look in a buffer around 
-     *  features.
-     */
-    
-    /** private: property[toleranceParameters]
-     *  ``Array``
-     *  List of parameter names to use in a GetFeatureInfo request when a 
-     * ``tolerance`` is provided.  Default is ["BUFFER", "RADIUS"].
-     */
-    toleranceParameters: ["BUFFER", "RADIUS"],
-    
     /** private: property[drawControl]
      *  ``OpenLayers.Control.DrawFeature``
      */
     drawControl: null,
-    
-    /** private: property[selectControl]
-     *  ``OpenLayers.Control.SelectFeature``
-     */
-    selectControl: null,
     
     /** private: property[popup]
      *  :class:`gxp.FeatureEditPopup` FeatureEditPopup for this tool
