@@ -75,6 +75,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      stylesFieldsetTitle: "Styles",
     /** api: config[rulesFieldsetTitle] (i18n) */
      rulesFieldsetTitle: "Rules",
+    /** api: config[chooseStyleText] (i18n) */
+     chooseStyleText: "Choose style",
 
     //TODO create a StylesStore which can read styles using GetStyles. Create
     // subclasses for that store with writing capabilities, e.g.
@@ -871,7 +873,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     addStylesCombo: function() {
         var store = this.stylesStore;
         var combo = new Ext.form.ComboBox(Ext.apply({
-            fieldLabel: "Choose style",
+            fieldLabel: this.chooseStyleText,
             store: store,
             editable: false,
             displayField: "title",

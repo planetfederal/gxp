@@ -296,7 +296,8 @@ GeoExt.Lang.add("en", {
          styleWindowTitle: "User Style: {0}",
          ruleWindowTitle: "Style Rule: {0}",
          stylesFieldsetTitle: "Styles",
-         rulesFieldsetTitle: "Rules"
+         rulesFieldsetTitle: "Rules",
+         chooseStyleText: "Choose style"
     },
 
     "gxp.LayerUploadPanel.prototype": {
