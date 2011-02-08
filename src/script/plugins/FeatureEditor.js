@@ -106,6 +106,22 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
      *  ``Array`` Optional list of field names (case sensitive) that are to be
      *  excluded from the property grid of the FeatureEditPopup.
      */
+
+    /** api: config[tolerance]
+     *  ``Number`` 
+     *  Optional pixel tolerance to use when selecting features.  By default,
+     *  the server decides whether a pixel click intersects a feature based on 
+     *  its own rules.  If a pixel tolerance is provided, it will be included in
+     *  requests for features to inform the server to look in a buffer around 
+     *  features.
+     */
+    
+    /** private: property[toleranceParameters]
+     *  ``Array``
+     *  List of parameter names to use in a GetFeatureInfo request when a 
+     * ``tolerance`` is provided.  Default is ["BUFFER", "RADIUS"].
+     */
+    toleranceParameters: ["BUFFER", "RADIUS"],
     
     /** private: property[drawControl]
      *  ``OpenLayers.Control.DrawFeature``
@@ -432,6 +448,11 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.Tool, {
             EXCEPTIONS: "application/vnd.ogc.se_xml",
             FEATURE_COUNT: 1
         }, layer.params);
+        if (typeof this.tolerance === "number") {
+            for (var i=0, ii=this.toleranceParameters.length; i<ii; ++i) {
+                params[this.toleranceParameters[i]] = this.tolerance;
+            }
+        }
         var projectionCode = map.getProjection();
         if (parseFloat(layer.params.VERSION) >= 1.3) {
             params.CRS = projectionCode;
