@@ -243,7 +243,8 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
         if (this.alwaysDisplayOnMap) {
             this.showDisplayButton = false;
             featureManager.showLayer(this.id);
-        } else if (this.selectOnMap) {
+        }
+        if (!this.showDisplayButton && this.selectOnMap) {
             featureManager.showLayer(this.id, "selected");
         }
         
