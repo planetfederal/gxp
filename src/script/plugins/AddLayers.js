@@ -436,10 +436,6 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 }
             }
             
-            function isEligible(source) {
-                
-            }
-            
             this.on({
                 sourceselected: function(tool, source) {
                     button.hide();
@@ -450,12 +446,12 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                         // http://example.com/geoserver/rest.
                         var parts = source.url.split("/");
                         parts.pop();
-                        parts.push("rest");
+                        parts.push("rest/upload");
                         // this sets the url for the layer upload panel
                         url = parts.join("/");
-                        // only show button if URL returns a 200
+                        // only show button if URL returns a 405 for GET
                         getStatus(url, function(status) {
-                            button.setVisible(status === 200);
+                            button.setVisible(status === 405);
                         }, this);
                     }
                 },
