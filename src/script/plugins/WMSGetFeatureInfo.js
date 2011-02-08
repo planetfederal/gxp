@@ -53,6 +53,12 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
      *  Title for info popup (i18n).
      */
     popupTitle: "Feature Info",
+    
+    /** api: config[vendorParams]
+     *  ``Object``
+     *  Optional object with properties to be serialized as vendor specific
+     *  parameters in the requests (e.g. {buffer: 10}).
+     */
      
     /** api: method[addActions]
      */
@@ -97,6 +103,7 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
                     url: x.getLayer().url,
                     queryVisible: true,
                     layers: [x.getLayer()],
+                    vendorParams: this.vendorParams,
                     eventListeners: {
                         getfeatureinfo: function(evt) {
                             var match = evt.text.match(/<body[^>]*>([\s\S]*)<\/body>/);
