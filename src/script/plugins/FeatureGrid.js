@@ -185,20 +185,22 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
             }]),
             listeners: {
                 "added": function(cmp, ownerCt) {
-                    var autoCollapse = (function() {
+                    var onClear = (function() {
+                        this.selectOnMap && this.selectControl.deactivate();
                         this.autoCollapse && typeof ownerCt.collapse == "function" &&
                             ownerCt.collapse();
                     }).bind(this);
-                    var autoExpand = (function() {
+                    var onPopulate = (function() {
+                        this.selectOnMap && this.selectControl.activate();
                         this.autoExpand && typeof ownerCt.expand == "function" &&
                             ownerCt.expand()
                     }).bind(this);
                     featureManager.on({
                         "query": function(tool, store) {
-                            store && store.getCount() ? autoExpand() : autoCollapse();
+                            store && store.getCount() ? onPopulate() : onClear();
                         },
-                        "layerchange": autoCollapse,
-                        "clearfeatures": autoCollapse
+                        "layerchange": onClear,
+                        "clearfeatures": onClear
                     });
                 },
                 contextmenu: function(event) {
