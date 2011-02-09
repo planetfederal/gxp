@@ -7,7 +7,7 @@
  */
 
 /**
- * @requires plugins/Tool.js
+ * @requires plugins/ClickableFeatures.js
  */
 
 /** api: (define)
@@ -16,7 +16,7 @@
  */
 
 /** api: (extends)
- *  plugins/Tool.js
+ *  plugins/ClickableFeatures.js
  */
 Ext.namespace("gxp.plugins");
 
@@ -27,17 +27,11 @@ Ext.namespace("gxp.plugins");
  *    :class:`gxp.plugins.FeatureManager`. Also provides a context menu for
  *    the grid.
  */   
-gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
+gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
     
     /** api: ptype = gxp_featuregrid */
     ptype: "gxp_featuregrid",
 
-    /** api: config[featureManager]
-     *  ``String`` The id of the :class:`gxp.plugins.FeatureManager` to use
-     *  with this tool.
-     */
-    featureManager: null,
-    
     /** private: property[schema]
      *  ``GeoExt.data.AttributeStore``
      */
@@ -49,6 +43,13 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
      *  map" button in the toolbar. Default is false.
      */
     alwaysDisplayOnMap: false,
+    
+    /** api: config[showDisplayButton]
+     *  ``Boolean`` If set to false, no "Display on Map" button will be shown
+     *  in the toolbar. Default is true unless ``alwaysDisplayOnMap`` is set to
+     *  true.
+     */
+    showDisplayButton: true,
     
     /** api: config[autoExpand]
      *  ``Boolean`` If set to true, and when this tool's output is added to a
@@ -107,31 +108,54 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
      *  Tooltip string for last page action (i18n).
      */
     lastPageTip: "Last page",
-
+    
     /** api: method[addOutput]
      */
     addOutput: function(config) {
         var featureManager = this.target.tools[this.featureManager];
-        var map = this.target.mapPanel.map;
+        var map = this.target.mapPanel.map, smCfg;
         // a minimal SelectFeature control - used just to provide select and
-        // unselect, won't be added to the map
-        var selectControl = new OpenLayers.Control.SelectFeature(featureManager.featureLayer);
-        config = Ext.apply({
-            xtype: "gxp_featuregrid",
-            sm: new GeoExt.grid.FeatureSelectionModel(this.selectOnMap ? null : {
-                selectControl: selectControl,
+        // unselect, won't be added to the map unless selectOnMap is true
+        this.selectControl = new OpenLayers.Control.SelectFeature(featureManager.featureLayer);
+        if (this.selectOnMap) {
+             if (featureManager.paging) {
+                this.selectControl.events.on({
+                    "activate": function() {
+                        map.events.register(
+                            "click", this, this.noFeatureClick
+                        );
+                    },
+                    "deactivate": function() {
+                        map.events.unregister(
+                            "click", this, this.noFeatureClick
+                        );
+                    },
+                    scope: this
+                });
+            }
+            map.addControl(this.selectControl);
+            smCfg = {
+                selectControl: this.selectControl
+            }
+        } else {
+            smCfg = {
+                selectControl: this.selectControl,
                 singleSelect: false,
                 autoActivateControl: false,
                 listeners: {
                     "beforerowselect": function() {
-                        if(selectControl.active && !this._selectingFeature) {
+                        if(this.selectControl.active && !this._selectingFeature) {
                             return false;
                         }
                         delete this._selectingFeature;
                     },
                     scope: this
                 }
-            }),
+            }
+        }
+        config = Ext.apply({
+            xtype: "gxp_featuregrid",
+            sm: new GeoExt.grid.FeatureSelectionModel(smCfg),
             autoScroll: true,
             bbar: (featureManager.paging ? [{
                 iconCls: "x-tbar-page-first",
@@ -174,31 +198,32 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
                 handler: function() {
                     featureManager.setPage({index: "last"});
                 }
-            }] : []).concat(["->", {
+            }] : []).concat(["->"].concat(this.showDisplayButton ? [{
                 text: this.displayFeatureText,
-                hidden: this.alwaysDisplayOnMap,
                 enableToggle: true,
                 toggleHandler: function(btn, pressed) {
                     featureManager[pressed ? "showLayer" : "hideLayer"](this.id);
                 },
                 scope: this
-            }]),
+            }] : [])),
             listeners: {
                 "added": function(cmp, ownerCt) {
-                    var autoCollapse = (function() {
+                    var onClear = (function() {
+                        this.selectOnMap && this.selectControl.deactivate();
                         this.autoCollapse && typeof ownerCt.collapse == "function" &&
                             ownerCt.collapse();
                     }).bind(this);
-                    var autoExpand = (function() {
+                    var onPopulate = (function() {
+                        this.selectOnMap && this.selectControl.activate();
                         this.autoExpand && typeof ownerCt.expand == "function" &&
                             ownerCt.expand()
                     }).bind(this);
                     featureManager.on({
                         "query": function(tool, store) {
-                            store && store.getCount() ? autoExpand() : autoCollapse();
+                            store && store.getCount() ? onPopulate() : onClear();
                         },
-                        "layerchange": autoCollapse,
-                        "clearfeatures": autoCollapse
+                        "layerchange": onClear,
+                        "clearfeatures": onClear
                     });
                 },
                 contextmenu: function(event) {
@@ -215,7 +240,13 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.Tool, {
         }, config || {});
         var featureGrid = gxp.plugins.FeatureGrid.superclass.addOutput.call(this, config);
         
-        this.alwaysDisplayOnMap && featureManager.showLayer(this.id);
+        if (this.alwaysDisplayOnMap) {
+            this.showDisplayButton = false;
+            featureManager.showLayer(this.id);
+        }
+        if (!this.showDisplayButton && this.selectOnMap) {
+            featureManager.showLayer(this.id, "selected");
+        }
         
         featureManager.paging && featureManager.on("setpage", function(mgr) {
             var paging = mgr.pages && mgr.pages.length;

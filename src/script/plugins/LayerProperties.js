@@ -73,6 +73,7 @@ gxp.plugins.LayerProperties = Ext.extend(gxp.plugins.Tool, {
                                 xtype: type,
                                 autoHeight: !config.height,
                                 layerRecord: record,
+                                source: this.target.getSource(record),
                                 defaults: {
                                     autoHeight: !config.height,
                                     style: "padding: 10px"
