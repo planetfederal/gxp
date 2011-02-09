@@ -628,7 +628,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                                 this.redrawMatchingLayers(record);
                             },
                             "load": function() {
-                                this.fireEvent("query", this, this.featureStore, filter);
+                                this.fireEvent("query", this, this.featureStore, this.filter);
                             },
                             scope: this
                         }
