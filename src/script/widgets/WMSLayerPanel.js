@@ -6,6 +6,11 @@
  * of the license.
  */
 
+/**
+ * @include widgets/WMSStylesDialog.js
+ * @include plugins/GeoServerStyleWriter.js
+ */
+
 /** api: (define)
  *  module = gxp
  *  class = WMSLayerPanel
