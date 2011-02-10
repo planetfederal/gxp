@@ -125,11 +125,9 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
                     OpenLayers.Renderer.defaultSymbolizer.strokeColor,
                 plugins: colorFieldPlugins,
                 listeners: {
-                    select: function(combo, record, index) {
-                        var newValue = combo.getValue();
-                        var modified = this.symbolizer.strokeColor != newValue;
-                        this.symbolizer.strokeColor = newValue;
-                        modified && this.fireEvent("change", this.symbolizer);
+                    change: function(combo, value) {
+                        this.symbolizer.strokeColor = value;
+                        this.fireEvent("change", this.symbolizer);
                     },
                     scope: this
                 }

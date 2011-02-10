@@ -92,11 +92,9 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
                     OpenLayers.Renderer.defaultSymbolizer.fillColor,
                 plugins: colorFieldPlugins,
                 listeners: {
-                    select: function(combo, record, index) {
-                        var newValue = combo.getValue();
-                        var modified = this.symbolizer.fillColor != newValue; 
-                        this.symbolizer.fillColor = newValue;
-                        modified && this.fireEvent("change", this.symbolizer);
+                    change: function(combo, value) {
+                        this.symbolizer.fillColor = value; 
+                        this.fireEvent("change", this.symbolizer);
                     },
                     scope: this
                 }
