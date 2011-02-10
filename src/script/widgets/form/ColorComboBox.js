@@ -61,6 +61,7 @@ gxp.form.ColorComboBox = Ext.extend(Ext.form.ComboBox,  {
         this.on({
             render: this.updateBackground,
             select: this.updateBackground,
+            valid: this.updateBackground,
             scope: this
         });
         
