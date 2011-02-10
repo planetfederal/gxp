@@ -97,10 +97,7 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
                 xtype: "combo",
                 name: "style",
                 fieldLabel: this.styleText,
-                store: new Ext.data.SimpleStore({
-                    data: this.dashStyles,
-                    fields: ["value", "display"]
-                }),
+                store: this.dashStyles,
                 displayField: "display",
                 valueField: "value",
                 value: this.getDashArray(this.symbolizer.strokeDashstyle) || OpenLayers.Renderer.defaultSymbolizer.strokeDashstyle,
@@ -110,7 +107,7 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
                 editable: false,
                 listeners: {
                     select: function(combo, record) {
-                        this.symbolizer.strokeDashstyle = record.get("value");
+                        this.symbolizer.strokeDashstyle = combo.getValue();
                         this.fireEvent("change", this.symbolizer);
                     },
                     scope: this
