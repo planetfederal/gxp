@@ -48,7 +48,7 @@ gxp.plugins.ZoomToExtent = Ext.extend(gxp.plugins.Tool, {
     tooltip: "Zoom To Max Extent",
     
     /** api: config[extent]
-     *  ``String | OpenLayers.Bounds``
+     *  ``Array | OpenLayers.Bounds``
      *  The target extent.  If none is provided, the map's visible extent will 
      *  be used.
      */
