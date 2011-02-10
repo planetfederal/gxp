@@ -98,8 +98,6 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
                 name: "style",
                 fieldLabel: this.styleText,
                 store: this.dashStyles,
-                displayField: "display",
-                valueField: "value",
                 value: this.getDashArray(this.symbolizer.strokeDashstyle) || OpenLayers.Renderer.defaultSymbolizer.strokeDashstyle,
                 mode: "local",
                 allowBlank: true,
