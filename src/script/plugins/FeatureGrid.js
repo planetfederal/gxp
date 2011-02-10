@@ -40,16 +40,17 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
     /** api: config[alwaysDisplayOnMap]
      *  ``Boolean`` If set to true, the features that are shown in the grid
      *  will always be displayed on the map, and there will be no "Display on
-     *  map" button in the toolbar. Default is false.
+     *  map" button in the toolbar. Default is false. If set to true, no
+     *  "Display on map" button will be shown.
      */
     alwaysDisplayOnMap: false,
     
-    /** api: config[showDisplayButton]
-     *  ``Boolean`` If set to false, no "Display on Map" button will be shown
-     *  in the toolbar. Default is true unless ``alwaysDisplayOnMap`` is set to
-     *  true.
+    /** api: config[displayMode]
+     *  ``String`` Should we display all features on the map, or only the ones
+     *  that are currently selected on the grid. Valid values are "all" and
+     *  "selected". Default is "all".
      */
-    showDisplayButton: true,
+    displayMode: "all",
     
     /** api: config[autoExpand]
      *  ``Boolean`` If set to true, and when this tool's output is added to a
@@ -198,11 +199,12 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                 handler: function() {
                     featureManager.setPage({index: "last"});
                 }
-            }] : []).concat(["->"].concat(this.showDisplayButton ? [{
+            }] : []).concat(["->"].concat(!this.alwaysDisplayOnMap ? [{
                 text: this.displayFeatureText,
                 enableToggle: true,
                 toggleHandler: function(btn, pressed) {
-                    featureManager[pressed ? "showLayer" : "hideLayer"](this.id);
+                    this.selectOnMap && this.selectControl[pressed ? "activate" : "deactivate"]();
+                    featureManager[pressed ? "showLayer" : "hideLayer"](this.id, this.displayMode);
                 },
                 scope: this
             }] : [])),
@@ -240,12 +242,8 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
         }, config || {});
         var featureGrid = gxp.plugins.FeatureGrid.superclass.addOutput.call(this, config);
         
-        if (this.alwaysDisplayOnMap) {
-            this.showDisplayButton = false;
-            featureManager.showLayer(this.id);
-        }
-        if (!this.showDisplayButton && this.selectOnMap) {
-            featureManager.showLayer(this.id, "selected");
+        if (this.alwaysDisplayOnMap || this.selectOnMap) {
+            featureManager.showLayer(this.id, this.displayMode);
         }
         
         featureManager.paging && featureManager.on("setpage", function(mgr) {

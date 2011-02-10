@@ -79,6 +79,11 @@ gxp.plugins.WMSFilterView = Ext.extend(gxp.plugins.Tool, {
             "beforequery": function(tool, filter) {
                 this.filterLayer.setUrl(Ext.BLANK_IMAGE_URL);
                 this.filterLayer.setVisibility(false);
+            },
+            "query": function(tool, store, filter) {
+                if (!filter) {
+                    return;
+                }
                 var rule = new OpenLayers.Rule();
                 var geomType = featureManager.geometryType.replace(/^Multi/, "");
                 var symbolizer = featureManager.style["all"].rules[0].symbolizer;
@@ -130,8 +135,6 @@ gxp.plugins.WMSFilterView = Ext.extend(gxp.plugins.Tool, {
                         }]
                     }).replace(/( xmlns:[^>]*|sld:)/g, "")
                 }));
-            },
-            "query": function(tool, store) {
                 this.filterLayer.setVisibility(true);
             },
             scope: this

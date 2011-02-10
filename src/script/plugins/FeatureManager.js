@@ -172,6 +172,8 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
              *
              *  * tool  - :class:`gxp.plugins.FeatureManager` this tool
              *  * store - :class:`gxp.data.WFSFeatureStore`
+             *  * filter - ``OpenLayers.Filter`` the filter argument passed to
+             *    the loadFeatures method
              */
             "query",
             
@@ -626,7 +628,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                                 this.redrawMatchingLayers(record);
                             },
                             "load": function() {
-                                this.fireEvent("query", this, this.featureStore);
+                                this.fireEvent("query", this, this.featureStore, this.filter);
                             },
                             scope: this
                         }

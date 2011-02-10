@@ -17,32 +17,32 @@ GeoExt.Lang.add("fr", {
     },
     
     "gxp.plugins.BingSource.prototype": {
-        title: "Couches Bing",
-        roadTitle: "Couche routes Bing",
-        aerialTitle: "Couche aérienne Bing",
-        labeledAerialTitle: "Couche aérienne Bing avec labels"
+        title: "Calques Bing",
+        roadTitle: "Bing routes",
+        aerialTitle: "Bing aérienne",
+        labeledAerialTitle: "Bing aérienne avec des étiquettes"
     },    
 
     "gxp.plugins.FeatureEditor.prototype": {
-        createFeatureActionTip: "Créer un nouveau composant",
-        editFeatureActionTip: "Editer un composant"
+        createFeatureActionTip: "Créer une nouvelle fonctionnalité",
+        editFeatureActionTip: "Modifier les existants fonction"
     },
     
     "gxp.plugins.FeatureGrid.prototype": {
         displayFeatureText: "Afficher sur la carte",
         firstPageTip: "Première page",
-        previousPageTip: "Page précédante",
-        zoomPageExtentTip: "Zoomer sur l'emprise de la page",
+        previousPageTip: "Page précédente",
+        zoomPageExtentTip: "Zoom sur la page",
         nextPageTip: "Page suivante",
         lastPageTip: "Dernière page"
     },
     
     "gxp.plugins.GoogleSource.prototype": {
-        title: "Couches Google",
-        roadmapAbstract: "Show street map",
-        satelliteAbstract: "Show satellite imagery",
-        hybridAbstract: "Show imagery with street names",
-        terrainAbstract: "Show street map with terrain"
+        title: "Calques Google",
+        roadmapAbstract: "Voir carte de rue",
+        satelliteAbstract: "Voir les images satellite",
+        hybridAbstract: "Afficher des images avec des noms de rue",
+        terrainAbstract: "Voir carte de rue avec le terrain"
     },
 
     "gxp.plugins.LayerProperties.prototype": {
@@ -57,8 +57,8 @@ GeoExt.Lang.add("fr", {
     },
 
     "gxp.plugins.Legend.prototype": { 
-        menuText: "Afficher la légende",
-        tooltip: "Afficher la légende"
+        menuText: "Légende",
+        tooltip: "Légende"
     },
 
     "gxp.plugins.Measure.prototype": {
@@ -75,16 +75,16 @@ GeoExt.Lang.add("fr", {
     },
 
     "gxp.plugins.NavigationHistory.prototype": {
-        previousMenuText: "Zoom à Précédent",
-        nextMenuText: "Zoom à Next",
-        previousTooltip: "Zoom à Précédent",
-        nextTooltip: "Zoom à Next"
+        previousMenuText: "Zoom précédent Un",
+        nextMenuText: "Zoom sure une Next",
+        previousTooltip: "Zoom précédent Un",
+        nextTooltip: "Zoom sur une Next"
     },
 
     "gxp.plugins.OSMSource.prototype": {
-        title: "OpenStreetMap Layers",
-        mapnikAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
-        osmarenderAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>"
+        title: "Calques OpenStreetMap",
+        mapnikAttribution: "Les données CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
+        osmarenderAttribution: "Les données CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>"
     },
 
     "gxp.plugins.Print.prototype": {
@@ -97,19 +97,19 @@ GeoExt.Lang.add("fr", {
 
     "gxp.plugins.MapQuestSource.prototype": {
         title: "MapQuest Layers",
-        osmAttribution: "Tiles Courtesy of <a href='http://open.mapquest.co.uk/' target='_blank'>MapQuest</a> <img src='http://developer.mapquest.com/content/osm/mq_logo.png' border='0'>",
+        osmAttribution: "Avec la permission de tuiles <a href='http://open.mapquest.co.uk/' target='_blank'>MapQuest</a> <img src='http://developer.mapquest.com/content/osm/mq_logo.png' border='0'>",
         osmTitle: "MapQuest OpenStreetMap",
-        naipAttribution: "Tiles Courtesy of <a href='http://open.mapquest.co.uk/' target='_blank'>MapQuest</a> <img src='http://developer.mapquest.com/content/osm/mq_logo.png' border='0'>",
+        naipAttribution: "Avec la permission de tuiles <a href='http://open.mapquest.co.uk/' target='_blank'>MapQuest</a> <img src='http://developer.mapquest.com/content/osm/mq_logo.png' border='0'>",
         naipTitle: "MapQuest Imagery"
     },
 
     "gxp.plugins.QueryForm.prototype": {
         queryActionText: "Query",
-        queryMenuText: "Query layer",
-        queryActionTip: "Query the selected layer",
-        queryByLocationText: "Query by location",
-        currentTextText: "Current extent",
-        queryByAttributesText: "Query by attributes"
+        queryMenuText: "Couche de requêtes",
+        queryActionTip: "Interroger la couche sélectionnée",
+        queryByLocationText: "Query selon le lieu",
+        currentTextText: "Mesure actuelle",
+        queryByAttributesText: "Requête par attributs"
     },
 
     "gxp.plugins.RemoveLayer.prototype": {
@@ -119,7 +119,7 @@ GeoExt.Lang.add("fr", {
 
     "gxp.plugins.WMSGetFeatureInfo.prototype": {
         infoActionTip: "Get Feature Info",
-        popupTitle: "Info entité"
+        popupTitle: "entité Info"
     },
 
     "gxp.plugins.Zoom.prototype": {
@@ -130,13 +130,13 @@ GeoExt.Lang.add("fr", {
     },
     
     "gxp.plugins.ZoomToExtent.prototype": {
-        menuText: "Zoom To Max Extent",
-        tooltip: "Zoom To Max Extent"
+        menuText: "Zoom sur la carte Max",
+        tooltip: "Zoom sur la carte Max"
     },
     
     "gxp.plugins.ZoomToDataExtent.prototype": {
-        menuText: "Zoom to layer extent",
-        tooltip: "Zoom to layer extent"
+        menuText: "Zoom sur la couche",
+        tooltip: "Zoom sur la couche"
     },
 
     "gxp.plugins.ZoomToLayerExtent.prototype": {
@@ -145,27 +145,27 @@ GeoExt.Lang.add("fr", {
     },
     
     "gxp.plugins.ZoomToSelectedFeatures.prototype": {
-        menuText: "Zoom to selected features",
-        tooltip: "Zoom to selected features"
+        menuText: "Zoom sur les fonctions sélectionnées",
+        tooltip: "Zoom sur les caractéristiques sélectionnées"
     },
 
     "gxp.FeatureEditPopup.prototype": {
-        closeMsgTitle: "Save Changes?",
-        closeMsg: "This feature has unsaved changes. Would you like to save your changes?",
-        deleteMsgTitle: "Delete Feature?",
-        deleteMsg: "Are you sure you want to delete this feature?",
-        editButtonText: "Edit",
-        editButtonTooltip: "Make this feature editable",
-        deleteButtonText: "Delete",
-        deleteButtonTooltip: "Delete this feature",
-        cancelButtonText: "Cancel",
-        cancelButtonTooltip: "Stop editing, discard changes",
-        saveButtonText: "Save",
-        saveButtonTooltip: "Save changes"
+        closeMsgTitle: "Enregistrer les modifications?",
+        closeMsg: "Cette fonction a des modifications non enregistrées. Voulez-vous enregistrer vos modifications?",
+        deleteMsgTitle: "Supprimer entité?",
+        deleteMsg: "Etes-vous sûr de vouloir supprimer cette fonctionnalité?",
+        editButtonText: "Modifier",
+        editButtonTooltip: "Faire de cette fonctionnalité modifiable",
+        deleteButtonText: "Supprimer",
+        deleteButtonTooltip: "Supprimer cette fonction",
+        cancelButtonText: "Annuler",
+        cancelButtonTooltip: "Arrêter de modifier, annuler les modifications",
+        saveButtonText: "Enregistrer",
+        saveButtonTooltip: "Enregistrer les modifications"
     },
     
     "gxp.FillSymbolizer.prototype": {
-        fillText: "Remplissage",
+        fillText: "Remplir",
         colorText: "Couleur",
         opacityText: "Opacité"
     },
@@ -186,12 +186,12 @@ GeoExt.Lang.add("fr", {
     },
 
     "gxp.FilterBuilder.prototype": {
-        builderTypeNames: ["any", "all", "none", "not all"],
+        builderTypeNames: ["Tout", "tous", "aucun", "pas tout"],
         preComboText: "Match",
-        postComboText: "of the following:",
-        addConditionText: "add condition",
-        addGroupText: "add group",
-        removeConditionText: "remove condition"
+        postComboText: "de ce qui suit:",
+        addConditionText: "Ajouter la condition",
+        addGroupText: "Ajouter un groupe",
+        removeConditionText: "Supprimer la condition"
     },
     
     "gxp.grid.CapabilitiesGrid.prototype": {
@@ -199,18 +199,18 @@ GeoExt.Lang.add("fr", {
         titleHeaderText : "Titre",
         queryableHeaderText : "Queryable",
         layerSelectionLabel: "Voir les données disponibles à partir de:",
-        layerAdditionLabel: "or add a new server.",
+        layerAdditionLabel: "ou ajouter un nouveau serveur.",
         expanderTemplateText: "<p><b>Résumé:</b> {abstract}</p>"
     },
     
     "gxp.PointSymbolizer.prototype": {
-        graphicCircleText: "cercle",
-        graphicSquareText: "carré",
-        graphicTriangleText: "triangle",
-        graphicStarText: "étoile",
-        graphicCrossText: "croix",
+        graphicCircleText: "Cercle",
+        graphicSquareText: "Carré",
+        graphicTriangleText: "Triangle",
+        graphicStarText: "Étoile",
+        graphicCrossText: "Croix",
         graphicXText: "x",
-        graphicExternalText: "externe",
+        graphicExternalText: "Externe",
         urlText: "URL",
         opacityText: "Opacité",
         symbolText: "Symbole",
@@ -219,44 +219,44 @@ GeoExt.Lang.add("fr", {
     },
 
     "gxp.QueryPanel.prototype": {
-        queryByLocationText: "Query by location",
-        currentTextText: "Current extent",
-        queryByAttributesText: "Query by attributes",
-        layerText: "Layer"
+        queryByLocationText: "Query selon le lieu",
+        currentTextText: "Mesure actuelle",
+        queryByAttributesText: "Requête par attributs",
+        layerText: "Calque"
     },
     
     "gxp.RulePanel.prototype": {
-        scaleSliderTemplate: "{scaleType} Scale 1:{scale}",
-        labelFeaturesText: "Label Features",
-        advancedText: "Advanced",
-        limitByScaleText: "Limit by scale",
-        limitByConditionText: "Limit by condition",
-        symbolText: "Symbol",
+        scaleSliderTemplate: "{scaleType} échelle 1:{scale}",
+        labelFeaturesText: "Label Caractéristiques",
+        advancedText: "Avancé",
+        limitByScaleText: "Limiter par l'échelle",
+        limitByConditionText: "Limiter par condition",
+        symbolText: "Symbole",
         nameText: "Nom"
     },
     
     "gxp.ScaleLimitPanel.prototype": {
-        scaleSliderTemplate: "{scaleType} Scale 1:{scale}",
-        maxScaleLimitText: "Max scale limit"
+        scaleSliderTemplate: "{scaleType} échelle 1:{scale}",
+        maxScaleLimitText: "Max limite d'échelle"
     },
     
     "gxp.TextSymbolizer.prototype": {
-        labelValuesText: "Label values",
+        labelValuesText: "Label valeurs",
         haloText: "Halo",
-        sizeText: "Size"
+        sizeText: "Taille"
     },
     
     "gxp.WMSLayerPanel.prototype": {
-        aboutText: "About",
+        aboutText: "A propos",
         titleText: "Titre",
         nameText: "Nom",
         descriptionText: "Description",
-        displayText: "Display",
+        displayText: "Affichage",
         opacityText: "Opacité",
         formatText: "Format",
         transparentText: "Transparent",
         cacheText: "Cache",
-        cacheFieldText: "Use cached version"
+        cacheFieldText: "Utiliser la version mise en cache"
     },
 
     "gxp.EmbedMapDialog.prototype": {
@@ -297,19 +297,19 @@ GeoExt.Lang.add("fr", {
 
     "gxp.LayerUploadPanel.prototype": {
         titleLabel: "Titre",
-        titleEmptyText: "Layer title",
+        titleEmptyText: "Titre de la couche",
         abstractLabel: "Description",
-        abstractEmptyText: "Layer description",
-        fileLabel: "Data",
-        fieldEmptyText: "Browse for data archive...",
+        abstractEmptyText: "Description couche",
+        fileLabel: "Données",
+        fieldEmptyText: "Parcourir pour ...",
         uploadText: "Upload",
-        waitMsgText: "Uploading your data...",
-        invalidFileExtensionText: "File extension must be one of: ",
+        waitMsgText: "Transfert de vos données ...",
+        invalidFileExtensionText: "Extension de fichier doit être: ",
         optionsText: "Options",
-        workspaceLabel: "Workspace",
-        workspaceEmptyText: "Default workspace",
-        dataStoreLabel: "Store",
-        dataStoreEmptyText: "Default datastore"
+        workspaceLabel: "Espace de travail",
+        workspaceEmptyText: "Espace de travail par défaut",
+        dataStoreLabel: "Magasin de données",
+        dataStoreEmptyText: "Magasin de données par défaut"
     }
 
 });
