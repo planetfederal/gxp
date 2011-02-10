@@ -98,7 +98,7 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
                 name: "style",
                 fieldLabel: this.styleText,
                 store: this.dashStyles,
-                value: this.getDashArray(this.symbolizer.strokeDashstyle) || OpenLayers.Renderer.defaultSymbolizer.strokeDashstyle,
+                value: this.symbolizer.strokeDashstyle,
                 mode: "local",
                 allowBlank: true,
                 triggerAction: "all",
@@ -194,19 +194,6 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
         ); 
  
         gxp.StrokeSymbolizer.superclass.initComponent.call(this);
-        
-    },
-
-    getDashArray: function(style) {
-        var array;
-        if (style) {
-            var parts = style.split(/\s+/);
-            var ratio = parts[0] / parts[1];
-            if (!isNaN(ratio)) {
-                array = ratio >= 1 ? "4 4" : "2 4";
-            }
-        }
-        return array;
     }
 });
 
