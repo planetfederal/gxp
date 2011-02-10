@@ -24,7 +24,7 @@
         "widgets/TextSymbolizer.js",
         "widgets/Viewer.js",
         "widgets/form/ComparisonComboBox.js",
-        "widgets/form/ColorField.js",
+        "widgets/form/ColorComboBox.js",
         "widgets/form/FilterField.js",
         "widgets/form/FontComboBox.js",
         "widgets/form/GoogleGeocoderComboBox.js",

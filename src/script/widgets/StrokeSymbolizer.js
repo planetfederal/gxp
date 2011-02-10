@@ -7,7 +7,7 @@
  */
 
 /**
- * @include widgets/form/ColorField.js
+ * @include widgets/form/ColorComboBox.js
  */
 
 /** api: (define)
@@ -116,7 +116,7 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
                     scope: this
                 }
             }, {
-                xtype: "gxp_colorfield",
+                xtype: "gxp_colorcombo",
                 name: "color",
                 fieldLabel: this.colorText,
                 emptyText: OpenLayers.Renderer.defaultSymbolizer.strokeColor,

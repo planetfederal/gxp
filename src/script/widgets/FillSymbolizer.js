@@ -7,7 +7,7 @@
  */
  
 /**
- * @include widgets/form/ColorField.js
+ * @include widgets/form/ColorComboBox.js
  */
 
 /** api: (define)
@@ -83,7 +83,7 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
                 width: 100 // TODO: move to css
             },
             items: [{
-                xtype: "gxp_colorfield",
+                xtype: "gxp_colorcombo",
                 fieldLabel: this.colorText,
                 name: "color",
                 emptyText: OpenLayers.Renderer.defaultSymbolizer.fillColor,
