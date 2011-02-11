@@ -330,10 +330,11 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         var layerName = rec.getLayer().params.LAYERS;
         var cb = function() {
             var recs = Ext.isArray(arguments[1]) ? arguments[1] : arguments[0];
-            var rec;
+            var rec, name;
             for (var i=recs.length-1; i>=0; i--) {
-                rec = recs[i], name;
-                if ((name = rec.get("layerName")) == layerName) {
+                rec = recs[i];
+                name = rec.get("layerName");
+                if (name == layerName) {
                     this.describeLayerStore.un("load", arguments.callee, this);
                     this.describedLayers[name] = true;
                     callback.call(scope, rec);
