@@ -48,6 +48,11 @@ gxp.plugins.Legend = Ext.extend(gxp.plugins.Tool, {
      *  output and action(s).
      */
     actionTarget: null,
+    
+    outputConfig: {
+        width: 300,
+        height: 400
+    },
 
     /** private: method[constructor]
      */
@@ -75,16 +80,13 @@ gxp.plugins.Legend = Ext.extend(gxp.plugins.Tool, {
      */
     addOutput: function(config) {
         config = Ext.apply({
-            autoScroll: true,
-            width: 300,
-            height: 400,
-            defaults: {cls: 'gxp-legend-item'},
             title: this.menuText,
             items: [{
                 xtype: 'gx_legendpanel',
                 ascending: false,
                 border: false,
-                layerStore: this.target.mapPanel.layers
+                layerStore: this.target.mapPanel.layers,
+                defaults: {cls: 'gxp-legend-item'}
             }]
         }, config || {});
 
