@@ -35,6 +35,9 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
     workspaceEmptyText: "Default workspace",
     dataStoreLabel: "Store",
     dataStoreEmptyText: "Default datastore",
+    crsLabel: "CRS",
+    crsEmptyText: "Coordinate Reference System ID",
+    invalidCrsText: "CRS identifier should be an EPSG code (e.g. EPSG:4326)",
     
     /** private: property[fileUpload]
      *  ``Boolean``
@@ -102,7 +105,23 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
             checkboxToggle: true,
             collapsed: true,
             hideMode: "offsets",
-            items: [this.createWorkspacesCombo(), this.createDataStoresCombo()],
+            defaults: {
+                anchor: "97%"
+            },
+            items: [
+                this.createWorkspacesCombo(),
+                this.createDataStoresCombo(),
+                {
+                    xtype: "textfield",
+                    name: "crs",
+                    // anchor: "90%",
+                    fieldLabel: this.crsLabel,
+                    emptyText: this.crsEmptyText,
+                    allowBlank: true,
+                    regex: /^epsg:\d+$/i,
+                    regexText: this.invalidCrsText
+                }
+            ],
             listeners: {
                 collapse: function(fieldset) {
                     // reset all combos
@@ -169,7 +188,7 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
 
     },
     
-    /** private: method[]
+    /** private: method[fileNameValidator]
      *  :arg name: ``String`` The chosen filename.
      *  :returns: ``Boolean | String``  True if valid, message otherwise.
      */
@@ -185,7 +204,7 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
         }
         return valid || this.invalidFileExtensionText + this.validFileExtensions.join(", ");
     },
-    
+
     /** private: method[createWorkspacesCombo]
      *  :returns: ``Object`` Combo config.
      */
