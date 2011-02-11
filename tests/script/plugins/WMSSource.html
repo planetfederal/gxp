@@ -17,6 +17,58 @@
             t.ok(instance instanceof gxp.plugins.WMSSource, "Instance created successfully");
         }
 
+
+        function test_trimUrl(t) {
+            
+            var trimUrl = gxp.plugins.WMSSource.prototype.trimUrl;
+            
+            var cases = [{
+                msg: "do nothing for no query string",
+                url: "http://example.com",
+                params: {
+                    foo: "bar"
+                },
+                exp: "http://example.com"
+            }, {
+                msg: "remove foo given foo, leaving no query string",
+                url: "http://example.com?foo=bar",
+                params: {
+                    foo: "baz"
+                },
+                exp: "http://example.com"
+            }, {
+                msg: "remove foo given FOO, leaving bar",
+                url: "http://example.com/?foo=bar&bar=bam",
+                params: {
+                    FOO: "baz"
+                },
+                exp: "http://example.com/?bar=bam"
+            }, {
+                msg: "remove FOO given foo, leaving BAR",
+                url: "http://example.com/?BAR=bam&FOO=bar",
+                params: {
+                    foo: "baz"
+                },
+                exp: "http://example.com/?BAR=bam"
+            }, {
+                msg: "remove foo given foo, leave no trailing &",
+                url: "http://example.com/?foo=bar&",
+                params: {
+                    foo: "baz"
+                },
+                exp: "http://example.com/"
+            }];
+            
+            var num = cases.length;
+            t.plan(num);
+            
+            var c;
+            for (i=0; i<num; ++i) {
+                c = cases[i];
+                t.eq(trimUrl(c.url, c.params), c.exp, c.msg);
+            }
+        }
+
     </script>
   </head>
   <body>
