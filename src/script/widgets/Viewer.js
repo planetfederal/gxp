@@ -331,7 +331,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         
         // split initial map configuration into map and panel config
         if (this.initialConfig.map) {
-            var props = "theme,controls,projection,units,maxExtent,restrictedExtent,maxResolution,numZoomLevels".split(",");
+            var props = "theme,controls,resolutions,projection,units,maxExtent,restrictedExtent,maxResolution,numZoomLevels".split(",");
             var prop;
             for (var i=props.length-1; i>=0; --i) {
                 prop = props[i];
@@ -356,6 +356,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                 numZoomLevels: mapConfig.numZoomLevels || 20
             }, mapConfig),
             center: config.center && new OpenLayers.LonLat(config.center[0], config.center[1]),
+            resolutions: config.resolutions,
             layers: null,
             items: this.mapItems,
             tbar: config.tbar || {hidden: true}
