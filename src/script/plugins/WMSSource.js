@@ -118,7 +118,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      *  If specified, the version string will be included in WMS GetCapabilities
      *  requests.  By default, no version is set.
      */
-    
+
     /** api: method[createStore]
      *
      *  Creates a store of layer records.  Fires "ready" when store is loaded.
@@ -131,8 +131,15 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         if (this.version) {
             baseParams.VERSION = this.version;
         }
+        
         this.store = new GeoExt.data.WMSCapabilitiesStore({
-            url: this.url,
+            // Since we want our parameters (e.g. VERSION) to override any in the 
+            // given URL, we need to remove corresponding paramters from the 
+            // provided URL.  Simply setting baseParams on the store is also not
+            // enough because Ext just tacks these parameters on to the URL - so
+            // we get requests like ?Request=GetCapabilities&REQUEST=GetCapabilities
+            // (assuming the user provides a URL with a Request parameter in it).
+            url: this.trimUrl(this.url, baseParams),
             baseParams: baseParams,
             format: this.format,
             autoLoad: true,
@@ -164,7 +171,32 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 },
                 scope: this
             }
-        });        
+        });
+    },
+    
+    /** private: method[trimUrl]
+     *  :arg url: ``String``
+     *  :arg params: ``Object``
+     *
+     *  Remove all parameters from the URL's query string that have matching
+     *  keys in the provided object.  Keys are compared in a case-insensitive 
+     *  way.
+     */
+    trimUrl: function(url, params, respectCase) {
+        var urlParams = OpenLayers.Util.getParameters(url);
+        params = OpenLayers.Util.upperCaseObject(params);
+        var keys = 0;
+        for (var key in urlParams) {
+            ++keys;
+            if (key.toUpperCase() in params) {
+                --keys;
+                delete urlParams[key];
+            }
+        }
+        return url.split("?").shift() + (keys ? 
+            "?" + OpenLayers.Util.getParameterString(urlParams) :
+            ""
+        );
     },
     
     /** api: method[createLayerRecord]
