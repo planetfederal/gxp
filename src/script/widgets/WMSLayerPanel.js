@@ -152,17 +152,13 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
      *  Creates the Styles panel.
      */
     createStylesPanel: function(url) {
-        var layer = this.layerRecord.getLayer();
-        return {
+        var config = gxp.WMSStylesDialog.createGeoServerStylerConfig(
+            this.layerRecord, url
+        );
+        return Ext.apply(config, {
             title: this.stylesText,
-            xtype: "gxp_wmsstylesdialog",
             editable: false,
-            layerRecord: this.layerRecord,
-            plugins: [{
-                ptype: "gxp_geoserverstylewriter",
-                baseUrl: url
-            }],
-            listeners: {
+            listeners: Ext.apply(config.listeners, {
                 "beforerender": {
                     fn: function(cmp) {
                         var render = !this.editableStyles;
@@ -183,24 +179,9 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                     },
                     scope: this,
                     single: true
-                },
-                "styleselected": function(cmp, style) {
-                    cmp.modified && layer.mergeNewParams({
-                        styles: style
-                    });
-                },
-                "modified": function(cmp, style) {
-                    cmp.saveStyles();
-                },
-                "saved": function(cmp, style) {
-                    layer.mergeNewParams({
-                        _olSalt: Math.random(),
-                        styles: style
-                    });
-                },
-                scope: this
-            }
-        };
+                }
+            })
+        });
     },
     
     /** private: createAboutPanel

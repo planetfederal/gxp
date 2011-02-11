@@ -1034,6 +1034,49 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     
 });
 
+/** api: function[createGeoServerStylerConfig]
+ *  :arg layerRecord: ``GeoExt.data.LayerRecord`` Layer record to configure the
+ *      dialog for.
+ *  :arg url: ``String`` Optional. Custaom URL for the GeoServer REST endpoint
+ *      for writing styles.
+ *
+ *  Creates a configuration object for a :class:`gxp.WMSStylesDialog` with a
+ *  :class:`gxp.plugins.GeoServerStyleWriter` plugin and listeners for the
+ *  "styleselected", "modified" and "saved" events that take care of saving
+ *  styles and keeping the layer view updated.
+ */
+gxp.WMSStylesDialog.createGeoServerStylerConfig = function(layerRecord, url) {
+    var layer = layerRecord.getLayer();
+    if (!url) {
+        url = layer.url.split("?").shift().replace(/\/(wms|ows)\/?$/, "/rest");
+    }
+    return {
+        xtype: "gxp_wmsstylesdialog",
+        layerRecord: layerRecord,
+        plugins: [{
+            ptype: "gxp_geoserverstylewriter",
+            baseUrl: url
+        }],
+        listeners: {
+            "styleselected": function(cmp, style) {
+                cmp.modified && layer.mergeNewParams({
+                    styles: style
+                });
+            },
+            "modified": function(cmp, style) {
+                cmp.saveStyles();
+            },
+            "saved": function(cmp, style) {
+                layer.mergeNewParams({
+                    _olSalt: Math.random(),
+                    styles: style
+                });
+            },
+            scope: this
+        }
+    };
+};
+
 (function() {
     // set SLD defaults for symbolizer
     OpenLayers.Renderer.defaultSymbolizer = {
