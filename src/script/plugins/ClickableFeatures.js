@@ -52,13 +52,20 @@ gxp.plugins.ClickableFeatures = Ext.extend(gxp.plugins.Tool, {
     
     /** private: property[selectControl]
      *  ``OpenLayers.Control.SelectFeature`` the SelectFeature control used in
-     *  the SelectionModel of the grid. To be created by subclasses.
+     *  the SelectionModel of the grid. Usually created by subclasses. If not,
+     *  then a generic SelectFeature control which is not added to the map
+     *  will be created when ``noFeatureClick`` is called for the first time.
      */
-
+    
     /** private: method[noFeatureClick]
      *  :arg evt: ``Object``
      */
     noFeatureClick: function(evt) {
+        if (!this.selectControl) {
+            this.selectControl = new OpenLayers.Control.SelectFeature(
+                this.target.tools[this.featureManager].featureLayer
+            );
+        }
         var evtLL = this.target.mapPanel.map.getLonLatFromPixel(evt.xy);
         var featureManager = this.target.tools[this.featureManager];
         var page = featureManager.page;
