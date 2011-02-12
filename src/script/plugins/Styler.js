@@ -52,10 +52,20 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
      */
     sameOriginStyling: true,
     
+    constructor: function(config) {
+        gxp.plugins.Styler.superclass.constructor.apply(this, arguments);
+        
+        if (!this.outputConfig) {
+            this.outputConfig = {
+                autoHeight: true,
+                width: 265
+            };
+        }
+    },
+    
     /** api: method[addActions]
      */
     addActions: function() {
-        var selectedLayer;
         var layerProperties;
         var actions = gxp.plugins.Styler.superclass.addActions.apply(this, [{
             menuText: this.menuText,
@@ -63,28 +73,12 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
             disabled: true,
             tooltip: this.tooltip,
             handler: function() {
-                if (selectedLayer) {
-                    this.outputConfig = Ext.apply({
-                        title: this.menuText + ": " + selectedLayer.get("title")
-                    }, this.initialConfig.outputConfig);
-                    this.addOutput({
-                        items: [{
-                            border: false,
-                            autoHeight: this.outputConfig.autoHeight,
-                            padding: 5,
-                            items: [
-                                gxp.WMSStylesDialog.createGeoServerStylerConfig(selectedLayer)
-                            ]
-                        }]
-                    });
-                }
+                    this.addOutput();
             },
             scope: this
         }]);
 
         this.target.on("layerselectionchange", function(record) {
-            selectedLayer = record;
-
             var editableStyles = false;
             if (record && record.get("styles")) {
                 var source = this.target.layerSources[record.get("source")];
@@ -114,6 +108,20 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
         }, this);
         
         return actions;
+    },
+    
+    addOutput: function(config) {
+        config = config || {};
+        var record = this.target.selectedLayer;
+
+        var origCfg = this.initialConfig.outputConfig || {};
+        this.outputConfig.title = origCfg.title ||
+            this.menuText + ": " + record.get("title");
+
+        Ext.apply(config, gxp.WMSStylesDialog.createGeoServerStylerConfig(record));
+        Ext.applyIf(config, {style: "padding: 10px"});
+        
+        return gxp.plugins.Styler.superclass.addOutput.call(this, config);
     }
         
 });
