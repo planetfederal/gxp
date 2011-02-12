@@ -61,6 +61,9 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
                 width: 265
             };
         }
+        Ext.applyIf(this.outputConfig, {
+            closeAction: "close"
+        });
     },
     
     /** api: method[addActions]
