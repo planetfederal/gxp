@@ -61,6 +61,7 @@
         "plugins/RemoveLayer.js",
         "plugins/SelectedFeatureActions.js",
         "plugins/SnappingAgent.js",
+        "plugins/Styler.js",
         "plugins/NavigationHistory.js",
         "plugins/Zoom.js",
         "plugins/ZoomToExtent.js",
