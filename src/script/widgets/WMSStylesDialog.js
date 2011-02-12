@@ -340,7 +340,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 },
                 scope: this
             }]
-        } : {}
+        } : {};
         var styleProperties = new Ext.Window(Ext.apply(buttonCfg, {
             title: String.format(this.styleWindowTitle,
                 userStyle.title || userStyle.name),
