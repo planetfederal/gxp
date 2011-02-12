@@ -34,7 +34,8 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
 
     /** api: config[source]
      *  ``gxp.plugins.LayerSource``
-     *  Source for the layer.
+     *  Source for the layer. Optional. If not provided, ``sameOriginStyling``
+     *  will be ignored.
      */
     source: null,
     
@@ -106,7 +107,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
         
         // only add the Styles panel if we know for sure that we have styles
         if (this.layerRecord.get("styles")) {
-            var url = this.source.url.split(
+            var url = (this.source || this.layerRecord.get("layer")).url.split(
                 "?").shift().replace(/\/(wms|ows)\/?$/, "/rest");
             if (this.sameOriginStyling) {
                 // this could be made more robust
@@ -128,6 +129,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
         return {
             title: this.cacheText,
             layout: "form",
+            style: "padding: 10px",
             items: [{
                 xtype: "checkbox",
                 fieldLabel: this.cacheFieldText,
@@ -157,6 +159,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
         );
         return Ext.apply(config, {
             title: this.stylesText,
+            style: "padding: 10px",
             editable: false,
             listeners: Ext.apply(config.listeners, {
                 "beforerender": {
