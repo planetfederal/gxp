@@ -319,7 +319,6 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
             var outputConfig = this.outputConfig || {};
             container = new Ext.Window(Ext.apply({
                 hideBorders: true,
-                border: false,
                 shadow: false,
                 closeAction: "hide",
                 autoHeight: !outputConfig.height,
