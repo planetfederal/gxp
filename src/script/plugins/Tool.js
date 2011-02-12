@@ -277,8 +277,8 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
                         var cmp;
                         action.on("click", function() {
                             if (cmp) {
-                                cmp.ownerCt && cmp.ownerCt instanceof Ext.Window ?
-                                    cmp.ownerCt.show() : cmp.show();
+                                this.outputTarget ?
+                                    cmp.show() : cmp.ownerCt.ownerCt.show();
                             } else {
                                 cmp = this.addOutput();
                             }
@@ -319,12 +319,12 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
             var outputConfig = this.outputConfig || {};
             container = new Ext.Window(Ext.apply({
                 hideBorders: true,
+                border: false,
                 shadow: false,
                 closeAction: "hide",
                 autoHeight: !outputConfig.height,
                 layout: outputConfig.height ? "fit" : undefined,
                 items: [{
-                    border: false,
                     defaults: {autoHeight: !outputConfig.height}
                 }]
             }, outputConfig)).show().items.get(0);
