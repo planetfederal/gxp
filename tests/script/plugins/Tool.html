@@ -41,6 +41,23 @@
             tool.init(target);
             t.ok(tool.active === false, "tool is not automatically activated when autoActivate is false");
         }
+        
+        function test_addRemoveOutput(t) {
+            t.plan(5);
+            var ct = new Ext.Panel({id: "foo", renderTo: document.body, width: 100, height: 100});
+            var tool = new gxp.plugins.Tool({outputTarget: "foo"});
+            var output = tool.addOutput({id: "bar"});
+            t.eq(ct.items.get(0).id, "bar", "output added to contaienr");
+            tool.removeOutput();
+            t.eq(ct.items.getCount(), 0, "output removed from container");
+            
+            tool = new gxp.plugins.Tool();
+            output = tool.addOutput({id: "bar"});
+            t.eq(output.ownerCt.getXType(), "panel", "output without outputTarget wrapped in a panel");
+            t.eq(output.ownerCt.ownerCt.getXType(), "window", "wrapping panel is owned by a window");
+            tool.removeOutput();
+            t.ok(!Ext.ComponentMgr.all.find(function(c) {return c instanceof Ext.Window;}), "window removed after removeOutput");
+        }
 
     </script>
   </head>

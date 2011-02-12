@@ -134,6 +134,11 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
     /** private: property[actions]
      *  ``Array`` The actions this tool has added to viewer components.
      */
+    
+    /** private: property[output]
+     *  ``Array`` output added by this container
+     */
+    output: null,
      
     /** private: method[constructor]
      */
@@ -144,6 +149,7 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
         if (!this.id) {
             this.id = Ext.id();
         }
+        this.output = [];
         
         this.addEvents(
             /** api: event[activate]
@@ -310,11 +316,18 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
             }
             Ext.apply(config, this.outputConfig);
         } else {
+            var outputConfig = this.outputConfig || {};
             container = new Ext.Window(Ext.apply({
                 hideBorders: true,
                 shadow: false,
-                closeAction: "hide"
-            }, this.outputConfig)).show();
+                closeAction: "hide",
+                autoHeight: !outputConfig.height,
+                layout: outputConfig.height ? "fit" : undefined,
+                items: [{
+                    border: false,
+                    defaults: {autoHeight: !outputConfig.height}
+                }]
+            }, outputConfig)).show().items.get(0);
         }
         var component = container.add(config);            
         if (component instanceof Ext.Window) {
@@ -322,7 +335,29 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
         } else {
             container.doLayout();
         }
+        this.output.push(component);
         return component;
+    },
+    
+    /** api: method[removeOutput]
+     *  Removes all output created by this tool
+     */
+    removeOutput: function() {
+        var cmp;
+        for (var i=this.output.length-1; i>=0; --i) {
+            cmp = this.output[i];
+            if (!this.outputTarget) {
+                cmp.findParentBy(function(p) {
+                    return p instanceof Ext.Window;
+                }).close();
+            } else {
+                cmp.ownerCt.remove(cmp);
+                if (cmp.ownerCt instanceof Ext.Window) {
+                    cmp.ownerCt[cmp.ownerCt.closeAction]();
+                }
+            }
+        }
+        this.output = [];
     }
     
 });
