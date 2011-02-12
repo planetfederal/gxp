@@ -131,7 +131,7 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
                 menuText: this.queryMenuText,
                 iconCls: "gxp-icon-find",
                 tooltip: this.queryActionTip,
-                disabled: true,
+                disabled: true
             }]
         });
         gxp.plugins.QueryForm.superclass.constructor.apply(this, arguments);
@@ -157,6 +157,7 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
         var featureManager = this.target.tools[this.featureManager];
 
         config = Ext.apply({
+            border: false,
             bodyStyle: "padding: 10px",
             layout: "form",
             autoScroll: true,
@@ -183,7 +184,8 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
                 text: this.cancelButtonText,
                 iconCls: "cancel",
                 handler: function() {
-                    var ownerCt = queryForm.ownerCt;
+                    var ownerCt = this.outputTarget ? queryForm.ownerCt :
+                        queryForm.ownerCt.ownerCt;
                     if (ownerCt && ownerCt instanceof Ext.Window) {
                         ownerCt.hide();
                     } else {
@@ -265,7 +267,11 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
                         buttons: Ext.Msg.OK,
                         icon: Ext.Msg.INFO
                     });
-                    this.autoHide && queryForm.ownerCt && queryForm.ownerCt.hide();
+                    if (this.autoHide) {
+                        var ownerCt = this.outputTarget ? queryForm.ownerCt :
+                            queryForm.ownerCt.ownerCt;
+                        ownerCt instanceof Ext.Window && ownerCt.hide();
+                    }
                 }
             },
             scope: this
