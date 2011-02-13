@@ -88,7 +88,7 @@ gxp.plugins.OSMSource = Ext.extend(gxp.plugins.LayerSource, {
                 -128 * 156543.0339, -128 * 156543.0339,
                 128 * 156543.0339, 128 * 156543.0339
             ),
-            maxResolution: 156543.0339,
+            maxResolution: 156543.03390625,
             numZoomLevels: 19,
             units: "m",
             buffer: 1
