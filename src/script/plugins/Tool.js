@@ -224,7 +224,7 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
         var actionTargets = this.actionTarget instanceof Array ?
             this.actionTarget : [this.actionTarget];
         var a = actions instanceof Array ? actions : [actions];
-        var actionTarget, i, j, jj, parts, ref, item, ct, meth, index = null;
+        var action, actionTarget, i, j, jj, parts, ref, item, ct, meth, index = null;
         for (i=actionTargets.length-1; i>=0; --i) {
             actionTarget = actionTargets[i];
             if (actionTarget) {
