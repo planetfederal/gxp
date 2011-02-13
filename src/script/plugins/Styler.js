@@ -76,7 +76,7 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
             disabled: true,
             tooltip: this.tooltip,
             handler: function() {
-                    this.addOutput();
+                this.addOutput();
             },
             scope: this
         }]);
@@ -124,7 +124,10 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
         Ext.apply(config, gxp.WMSStylesDialog.createGeoServerStylerConfig(record));
         Ext.applyIf(config, {style: "padding: 10px"});
         
-        return gxp.plugins.Styler.superclass.addOutput.call(this, config);
+        var output = gxp.plugins.Styler.superclass.addOutput.call(this, config);
+        output.stylesStore.on("load", function() {
+            this.outputTarget || output.ownerCt.ownerCt.center();
+        });
     }
         
 });
