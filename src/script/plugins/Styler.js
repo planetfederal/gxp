@@ -82,32 +82,36 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
         }]);
 
         this.target.on("layerselectionchange", function(record) {
-            var editableStyles = false;
-            if (record && record.get("styles")) {
-                var source = this.target.layerSources[record.get("source")];
-                var url = source.url.split(
-                    "?").shift().replace(/\/(wms|ows)\/?$/, "/rest");
-                if (this.sameOriginStyling) {
-                    // this could be made more robust
-                    // for now, only style for sources with relative url
-                    editableStyles = url.charAt(0) === "/";
-                } else {
-                    editableStyles = true;
-                }
-            }
-            if (editableStyles) {
-                Ext.Ajax.request({
-                    method: "PUT",
-                    url: url + "/styles",
-                    callback: function(options, success, response) {
-                        // we expect a 405 error code here if we are dealing
-                        // with GeoServer and have write access.
-                        actions[0].setDisabled(response.status != 405);                        
+            this.target.getSource(record).describeLayer(record, function(rec) {
+                if (rec && rec.get("owsType") == "WFS") {
+                    var editableStyles = false;
+                    if (record && record.get("styles")) {
+                        var source = this.target.layerSources[record.get("source")];
+                        var url = source.url.split(
+                            "?").shift().replace(/\/(wms|ows)\/?$/, "/rest");
+                        if (this.sameOriginStyling) {
+                            // this could be made more robust
+                            // for now, only style for sources with relative url
+                            editableStyles = url.charAt(0) === "/";
+                        } else {
+                            editableStyles = true;
+                        }
                     }
-                });
-            } else {
-                actions[0].disable();
-            }
+                    if (editableStyles) {
+                        Ext.Ajax.request({
+                            method: "PUT",
+                            url: url + "/styles",
+                            callback: function(options, success, response) {
+                                // we expect a 405 error code here if we are dealing
+                                // with GeoServer and have write access.
+                                actions[0].setDisabled(response.status != 405);                        
+                            }
+                        });
+                    } else {
+                        actions[0].disable();
+                    }
+                }
+            }, this);
         }, this);
         
         return actions;
