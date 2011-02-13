@@ -56,10 +56,10 @@ gxp.StylePropertiesDialog = Ext.extend(Ext.Container, {
                     listeners: listeners
                 },
                 items: [{
+                    xtype: this.initialConfig.nameEditable ? "textfield" : "displayfield",
                     fieldLabel: "Name",
                     name: "name",
                     value: this.userStyle.name,
-                    disabled: this.initialConfig.nameEditable === false,
                     maskRe: /[A-Za-z0-9_]/
                 }, {
                     fieldLabel: "Title",
