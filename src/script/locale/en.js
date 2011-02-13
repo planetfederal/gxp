@@ -280,6 +280,7 @@ GeoExt.Lang.add("en", {
          duplicateRuleText: "Duplicate",
          duplicateRuleTip: "Duplicate the selected rule",
          cancelText: "Cancel",
+         saveText: "Save",
          styleWindowTitle: "User Style: {0}",
          ruleWindowTitle: "Style Rule: {0}",
          stylesFieldsetTitle: "Styles",
