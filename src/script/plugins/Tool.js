@@ -92,7 +92,9 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
      *     }
      *
      *  If a tool has both actions and output, and you want to force it to
-     *  immediately output to a container, set actionTarget to null.
+     *  immediately output to a container, set actionTarget to null. If you
+     *  want to hide the actions, set actionTarget to false. In this case, you
+     *  should configure a defaultAction to make sure that an action is active.
      */
     actionTarget: "map.tbar",
         
