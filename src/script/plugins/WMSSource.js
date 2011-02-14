@@ -86,7 +86,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      *  ``String`` WMS service URL for this source
      */
 
-    /** api: baseParams
+    /** api: config[baseParams]
      *  ``Object`` Base parameters to use on the WMS GetCapabilities
      *  request.
      */
