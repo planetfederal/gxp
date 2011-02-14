@@ -91,6 +91,15 @@ gxp.EmbedMapDialog = Ext.extend(Ext.Container, {
         Ext.apply(this, this.getConfig());
         gxp.EmbedMapDialog.superclass.initComponent.call(this);
     },
+
+    /** api: method[getIframeHTML]
+     *  :returns: ``String`` the HTML needed to create the iframe
+     *
+     *  Get the HTML needed to created the iframe.
+     */
+    getIframeHTML: function() {
+        return this.snippetArea.getValue();
+    },
     
     /** private: method[updateSnippet]
      */
