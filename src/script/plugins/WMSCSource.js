@@ -70,8 +70,8 @@ gxp.plugins.WMSCSource = Ext.extend(gxp.plugins.WMSSource, {
             REQUEST: "GetCapabilities",
             TILED: true
         };
-        config.format = new OpenLayers.Format.WMSCapabilities({profile: 'WMSC'});
         gxp.plugins.WMSCSource.superclass.constructor.apply(this, arguments); 
+        this.format = new OpenLayers.Format.WMSCapabilities({profile: 'WMSC'});
     },
     
     /** api: method[createLayerRecord]
