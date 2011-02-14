@@ -61,7 +61,8 @@ gxp.plugins.SelectedFeatureActions = Ext.extend(gxp.plugins.Tool, {
      *  * urlTemplate - ``String`` template for the link to follow. To
      *    reference attributes of the selected feature, use "{fieldName}"
      *    in the template. In addition to the attributes, "{fid}" is available
-     *    for the feature id (typename prefix removed).
+     *    for the feature id (typename prefix removed), and "{layer}" for the
+     *    name of the underlying WMS layer (usually prefix:name).
      *  * outputConfig - ``Object`` overrides this tool's outputConfig for
      *    output triggered by the respective action. Useful e.g. for creating
      *    windows with different sizes for each action.
@@ -74,6 +75,7 @@ gxp.plugins.SelectedFeatureActions = Ext.extend(gxp.plugins.Tool, {
         for (var i=0; i<len; ++i) {
             actions[i] = Ext.apply({
                 iconCls: "process",
+                disabled: true,
                 handler: function() {
                     var feature = featureManager.featureLayer.selectedFeatures[0];
                     var tpl = new Ext.Template(this.urlTemplate);
@@ -84,7 +86,8 @@ gxp.plugins.SelectedFeatureActions = Ext.extend(gxp.plugins.Tool, {
                         bodyCfg: {
                             tag: "iframe",
                             src: tpl.apply(Ext.applyIf({
-                                fid: feature.fid.split(".").pop()
+                                fid: feature.fid.split(".").pop(),
+                                layer: featureManager.layerRecord.get("name")
                             }, feature.attributes)),
                             style: {border: "0px none"}
                         }

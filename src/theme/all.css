@@ -204,6 +204,11 @@
    background-image: url(img/geosilk/ruler_square.png) !important;
 }
 
+/* gxp_styler */
+.x-btn .gxp-icon-palette, .x-menu-item .gxp-icon-palette, .x-tree-node .gxp-icon-palette {
+   background-image: url(img/silk/palette.png);
+}
+
 /* fixes textarea scrollbar issue in FF on OSX */
 .ext-gecko.ext-mac textarea.x-form-field {
     padding: 1px 2px;

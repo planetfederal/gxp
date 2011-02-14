@@ -34,7 +34,8 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
 
     /** api: config[source]
      *  ``gxp.plugins.LayerSource``
-     *  Source for the layer.
+     *  Source for the layer. Optional. If not provided, ``sameOriginStyling``
+     *  will be ignored.
      */
     source: null,
     
@@ -106,7 +107,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
         
         // only add the Styles panel if we know for sure that we have styles
         if (this.layerRecord.get("styles")) {
-            var url = this.source.url.split(
+            var url = (this.source || this.layerRecord.get("layer")).url.split(
                 "?").shift().replace(/\/(wms|ows)\/?$/, "/rest");
             if (this.sameOriginStyling) {
                 // this could be made more robust
@@ -128,6 +129,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
         return {
             title: this.cacheText,
             layout: "form",
+            style: "padding: 10px",
             items: [{
                 xtype: "checkbox",
                 fieldLabel: this.cacheFieldText,
@@ -152,17 +154,14 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
      *  Creates the Styles panel.
      */
     createStylesPanel: function(url) {
-        var layer = this.layerRecord.getLayer();
-        return {
+        var config = gxp.WMSStylesDialog.createGeoServerStylerConfig(
+            this.layerRecord, url
+        );
+        return Ext.apply(config, {
             title: this.stylesText,
-            xtype: "gxp_wmsstylesdialog",
+            style: "padding: 10px",
             editable: false,
-            layerRecord: this.layerRecord,
-            plugins: [{
-                ptype: "gxp_geoserverstylewriter",
-                baseUrl: url
-            }],
-            listeners: {
+            listeners: Ext.apply(config.listeners, {
                 "beforerender": {
                     fn: function(cmp) {
                         var render = !this.editableStyles;
@@ -183,24 +182,9 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                     },
                     scope: this,
                     single: true
-                },
-                "styleselected": function(cmp, style) {
-                    cmp.modified && layer.mergeNewParams({
-                        styles: style
-                    });
-                },
-                "modified": function(cmp, style) {
-                    cmp.saveStyles();
-                },
-                "saved": function(cmp, style) {
-                    layer.mergeNewParams({
-                        _olSalt: Math.random(),
-                        styles: style
-                    });
-                },
-                scope: this
-            }
-        };
+                }
+            })
+        });
     },
     
     /** private: createAboutPanel

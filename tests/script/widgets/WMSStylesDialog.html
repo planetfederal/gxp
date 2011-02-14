@@ -45,7 +45,7 @@
             t.ok(editable instanceof gxp.WMSStylesDialog, "Instance created successfully");
             
             t.delay_call(5, function() {
-                t.ok(editable.items.get(2).items.get(0) instanceof GeoExt.VectorLegend, "Vector legend for editable styles");
+                t.ok(editable.items.get(2).items.get(0) instanceof GeoExt.VectorLegend, "Vector legend for editable styles (needs a usa:states layer on /geoserver/wms to pass)");
                 t.ok(readonly.items.get(2).items.get(0) instanceof GeoExt.WMSLegend, "WMS legend for readonly styles");
                 editable.destroy();
                 readonly.destroy();

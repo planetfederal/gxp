@@ -120,6 +120,12 @@ GeoExt.Lang.add("en", {
         removeMenuText: "Remove layer",
         removeActionTip: "Remove layer"
     },
+    
+    "gxp.plugins.Styler.prototype": {
+        menuText: "Edit Styles",
+        tooltip: "Manage layer styles"
+
+    },
 
     "gxp.plugins.WMSGetFeatureInfo.prototype": {
         infoActionTip: "Get Feature Info",
@@ -293,6 +299,7 @@ GeoExt.Lang.add("en", {
          duplicateRuleText: "Duplicate",
          duplicateRuleTip: "Duplicate the selected rule",
          cancelText: "Cancel",
+         saveText: "Save",
          styleWindowTitle: "User Style: {0}",
          ruleWindowTitle: "Style Rule: {0}",
          stylesFieldsetTitle: "Styles",

@@ -81,7 +81,7 @@ gxp.plugins.GeoServerStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
             target.stylesStore.commitChanges();
             options.success && options.success.call(options.scope);
             target.fireEvent("saved", target, target.selectedStyle.get("name"));
-        }
+        };
         if(dispatchQueue.length > 0) {
             gxp.util.dispatch(dispatchQueue, function() {
                 this.assignStyles(options.defaultStyle, success);
@@ -95,7 +95,7 @@ gxp.plugins.GeoServerStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
      *  :arg styleRec: ``Ext.data.Record`` the record from the target's
      *      ``stylesStore`` to write
      *  :arg dispatchQueue: ``Array(Function)`` the dispatch queue the write
-     *      funciton is added to.
+     *      function is added to.
      * 
      *  This method does not actually write styles, it just adds a function to
      *  the provided ``dispatchQueue`` that will do so.

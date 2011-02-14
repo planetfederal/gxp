@@ -67,6 +67,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      duplicateRuleTip: "Duplicate the selected rule",
     /** api: config[cancelText] (i18n) */
      cancelText: "Cancel",
+    /** api: config[saveText] (i18n) */
+     saveText: "Save",
     /** api: config[stylePropertiesWindowTitle] (i18n) */
      styleWindowTitle: "User Style: {0}",
     /** api: config[ruleWindowTitle] (i18n) */
@@ -325,10 +327,12 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      */
     editStyle: function(prevStyle) {
         var userStyle = this.selectedStyle.get("userStyle");
-        var buttonCfg = prevStyle ? {
-            buttons: [{
+        var buttonCfg = {
+            bbar: ["->", {
                 text: this.cancelText,
+                iconCls: "cancel",
                 handler: function() {
+                    styleProperties.propertiesDialog.userStyle = userStyle;
                     styleProperties.close();
                     if (prevStyle) {
                         this._cancelling = true;
@@ -341,8 +345,14 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     }
                 },
                 scope: this
+            }, {
+                text: this.saveText,
+                iconCls: "save",
+                handler: function() {
+                    styleProperties.close();
+                }
             }]
-        } : {}
+        };
         var styleProperties = new Ext.Window(Ext.apply(buttonCfg, {
             title: String.format(this.styleWindowTitle,
                 userStyle.title || userStyle.name),
@@ -354,6 +364,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 border: false,
                 items: {
                     xtype: "gxp_stylepropertiesdialog",
+                    ref: "../propertiesDialog",
                     userStyle: userStyle.clone(),
                     nameEditable: false,
                     style: "padding: 10px;"
@@ -363,7 +374,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 "close": function() {
                     this.selectedStyle.set(
                         "userStyle",
-                        styleProperties.items.get(0).items.get(0).userStyle);
+                        styleProperties.propertiesDialog.userStyle);
                 },
                 scope: this
             }
@@ -536,7 +547,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     /** private: method[editRule]
      */
     editRule: function() {
-        var rule = this.selectedRule.clone();
+        var rule = this.selectedRule;
+        var origRule = rule.clone();
 
         var ruleDlg = new Ext.Window({
             title: String.format(this.ruleWindowTitle,
@@ -546,6 +558,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             modal: true,
             items: [{
                 xtype: "gxp_rulepanel",
+                ref: "rulePanel",
                 symbolType: this.symbolType,
                 rule: rule,
                 attributes: new GeoExt.data.AttributeStore({
@@ -568,6 +581,19 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     "tabchange": function() {ruleDlg.syncShadow();},
                     scope: this
                 }
+            }],
+            bbar: ["->", {
+                text: this.cancelText,
+                iconCls: "cancel",
+                handler: function() {
+                    this.saveRule(ruleDlg.rulePanel, origRule);
+                    ruleDlg.close();
+                },
+                scope: this
+            }, {
+                text: this.saveText,
+                iconCls: "save",
+                handler: function() { ruleDlg.close(); }
             }]
         });
         ruleDlg.show();
@@ -1035,6 +1061,49 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     }
     
 });
+
+/** api: function[createGeoServerStylerConfig]
+ *  :arg layerRecord: ``GeoExt.data.LayerRecord`` Layer record to configure the
+ *      dialog for.
+ *  :arg url: ``String`` Optional. Custaom URL for the GeoServer REST endpoint
+ *      for writing styles.
+ *
+ *  Creates a configuration object for a :class:`gxp.WMSStylesDialog` with a
+ *  :class:`gxp.plugins.GeoServerStyleWriter` plugin and listeners for the
+ *  "styleselected", "modified" and "saved" events that take care of saving
+ *  styles and keeping the layer view updated.
+ */
+gxp.WMSStylesDialog.createGeoServerStylerConfig = function(layerRecord, url) {
+    var layer = layerRecord.getLayer();
+    if (!url) {
+        url = layer.url.split("?").shift().replace(/\/(wms|ows)\/?$/, "/rest");
+    }
+    return {
+        xtype: "gxp_wmsstylesdialog",
+        layerRecord: layerRecord,
+        plugins: [{
+            ptype: "gxp_geoserverstylewriter",
+            baseUrl: url
+        }],
+        listeners: {
+            "styleselected": function(cmp, style) {
+                cmp.modified && layer.mergeNewParams({
+                    styles: style
+                });
+            },
+            "modified": function(cmp, style) {
+                cmp.saveStyles();
+            },
+            "saved": function(cmp, style) {
+                layer.mergeNewParams({
+                    _olSalt: Math.random(),
+                    styles: style
+                });
+            },
+            scope: this
+        }
+    };
+};
 
 (function() {
     // set SLD defaults for symbolizer

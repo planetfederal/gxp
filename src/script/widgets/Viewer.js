@@ -608,3 +608,8 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
     }
     
 });
+
+(function() {
+    // OGC "standardized rendering pixel size"
+    OpenLayers.DOTS_PER_INCH = 25.4 / 0.28;
+})();

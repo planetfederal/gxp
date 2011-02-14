@@ -41,6 +41,84 @@
             tool.init(target);
             t.ok(tool.active === false, "tool is not automatically activated when autoActivate is false");
         }
+        
+        function test_addRemoveOutput(t) {
+            t.plan(15);
+            var ct = new Ext.Panel({
+                id: "foo",
+                renderTo: document.body,
+                width: 100,
+                height: 100,
+                bbar: []
+            });
+
+            // Adding and removing output for a tool without actions
+            var tool = new gxp.plugins.Tool({
+                outputTarget: "foo"
+            });
+            tool.addOutput({id: "bar"});
+            t.eq(ct.items.get(0).id, "bar", "output added to container");
+            tool.removeOutput();
+            t.eq(ct.items.getCount(), 0, "output removed from container");
+            
+            // Adding and removing output for a tool with outputTarget
+            tool = new gxp.plugins.Tool({
+                actions: [new Ext.Button()],
+                actionTarget: "foo.bbar",
+                outputAction: 0,
+                outputTarget: "foo",
+                outputConfig: {id: "bar", title: "output"}
+            });
+            tool.addActions();
+            var button = tool.actions[0];
+            // If configured with outputAction, a click on that action will
+            // trigger the tool's output.
+            button.fireEvent("click");
+            var output = tool.output[0];
+            t.eq(ct.items.get(0).id, "bar", "output added to container");
+            t.eq(output.title, "output", "title goes on the output component");
+            output.hide();
+            // If the output was hidden, triggering the outputAction will show
+            // it again.
+            button.fireEvent("click");
+            t.eq(output.hidden, false, "output visible again after triggering the action");
+            tool.removeOutput();
+            
+            // Adding and removing output for a tool without outputTarget. This
+            // will cause the output to be placed in an empty panel inside a
+            // fresh window.
+            tool = new gxp.plugins.Tool({
+                actions: [new Ext.Button()],
+                actionTarget: "foo.bbar",
+                outputAction: 0,
+                outputConfig: {title: "output"}
+            });
+            tool.addActions();
+            button = tool.actions[0];
+            button.fireEvent("click");
+            output = tool.output[0];
+            t.eq(output.ownerCt.getXType(), "panel", "output without outputTarget wrapped in a panel");
+            t.eq(output.ownerCt.ownerCt.getXType(), "window", "wrapping panel is owned by a window");
+            t.eq(output.ownerCt.ownerCt.autoHeight, true, "if configured without a height, 'autoHeight' will be set to true");
+            t.eq(output.ownerCt.ownerCt.initialConfig.layout, undefined, "if configured without a height, the window won't have a layout");
+            t.eq(output.ownerCt.ownerCt.title, "output", "title from outputConfig goes on the window");
+            t.eq(output.ownerCt.ownerCt.closeAction, "hide", "window is configured with closeAction: 'hide");
+            // Simulate a click on the window's close button
+            output.ownerCt.ownerCt.hide();
+            // Clicking the outputAction will show the window again
+            button.fireEvent("click");
+            t.eq(output.ownerCt.ownerCt.hidden, false, "output visible again after triggering the action");
+            tool.removeOutput();
+            t.ok(!Ext.ComponentMgr.all.find(function(c) {return c instanceof Ext.Window;}), "window removed after removeOutput");
+
+            // Adding and removing output in a window with custom height.
+            tool = new gxp.plugins.Tool({
+                outputConfig: {height: 100}
+            });
+            output = tool.addOutput();
+            t.eq(output.ownerCt.ownerCt.autoHeight, false, "no autoHeight when a height is provided");
+            t.eq(output.ownerCt.ownerCt.initialConfig.layout, "fit", "'fit' layout used when height is configured");
+        }
 
     </script>
   </head>

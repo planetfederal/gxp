@@ -92,7 +92,9 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
      *     }
      *
      *  If a tool has both actions and output, and you want to force it to
-     *  immediately output to a container, set actionTarget to null.
+     *  immediately output to a container, set actionTarget to null. If you
+     *  want to hide the actions, set actionTarget to false. In this case, you
+     *  should configure a defaultAction to make sure that an action is active.
      */
     actionTarget: "map.tbar",
         
@@ -134,6 +136,11 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
     /** private: property[actions]
      *  ``Array`` The actions this tool has added to viewer components.
      */
+    
+    /** private: property[output]
+     *  ``Array`` output added by this container
+     */
+    output: null,
      
     /** private: method[constructor]
      */
@@ -144,6 +151,7 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
         if (!this.id) {
             this.id = Ext.id();
         }
+        this.output = [];
         
         this.addEvents(
             /** api: event[activate]
@@ -218,7 +226,7 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
         var actionTargets = this.actionTarget instanceof Array ?
             this.actionTarget : [this.actionTarget];
         var a = actions instanceof Array ? actions : [actions];
-        var actionTarget, i, j, jj, parts, ref, item, ct, meth, index = null;
+        var action, actionTarget, i, j, jj, parts, ref, item, ct, meth, index = null;
         for (i=actionTargets.length-1; i>=0; --i) {
             actionTarget = actionTargets[i];
             if (actionTarget) {
@@ -271,8 +279,8 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
                         var cmp;
                         action.on("click", function() {
                             if (cmp) {
-                                cmp.ownerCt && cmp.ownerCt instanceof Ext.Window ?
-                                    cmp.ownerCt.show() : cmp.show();
+                                this.outputTarget ?
+                                    cmp.show() : cmp.ownerCt.ownerCt.show();
                             } else {
                                 cmp = this.addOutput();
                             }
@@ -310,11 +318,17 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
             }
             Ext.apply(config, this.outputConfig);
         } else {
+            var outputConfig = this.outputConfig || {};
             container = new Ext.Window(Ext.apply({
                 hideBorders: true,
                 shadow: false,
-                closeAction: "hide"
-            }, this.outputConfig)).show();
+                closeAction: "hide",
+                autoHeight: !outputConfig.height,
+                layout: outputConfig.height ? "fit" : undefined,
+                items: [{
+                    defaults: {autoHeight: !outputConfig.height}
+                }]
+            }, outputConfig)).show().items.get(0);
         }
         var component = container.add(config);            
         if (component instanceof Ext.Window) {
@@ -322,7 +336,29 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
         } else {
             container.doLayout();
         }
+        this.output.push(component);
         return component;
+    },
+    
+    /** api: method[removeOutput]
+     *  Removes all output created by this tool
+     */
+    removeOutput: function() {
+        var cmp;
+        for (var i=this.output.length-1; i>=0; --i) {
+            cmp = this.output[i];
+            if (!this.outputTarget) {
+                cmp.findParentBy(function(p) {
+                    return p instanceof Ext.Window;
+                }).close();
+            } else {
+                cmp.ownerCt.remove(cmp);
+                if (cmp.ownerCt instanceof Ext.Window) {
+                    cmp.ownerCt[cmp.ownerCt.closeAction]();
+                }
+            }
+        }
+        this.output = [];
     }
     
 });

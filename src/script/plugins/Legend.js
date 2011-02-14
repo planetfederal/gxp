@@ -48,11 +48,19 @@ gxp.plugins.Legend = Ext.extend(gxp.plugins.Tool, {
      *  output and action(s).
      */
     actionTarget: null,
-
+    
     /** private: method[constructor]
      */
     constructor: function(config) {
         gxp.plugins.Legend.superclass.constructor.apply(this, arguments);
+        
+        if (!this.outputConfig) {
+            this.outputConfig = {
+                width: 300,
+                height: 400
+            };
+        }
+        Ext.applyIf(this.outputConfig, {title: this.menuText});
     },
 
     /** api: method[addActions]
@@ -74,22 +82,13 @@ gxp.plugins.Legend = Ext.extend(gxp.plugins.Tool, {
      *  :arg config: ``Object``
      */
     addOutput: function(config) {
-        config = Ext.apply({
-            autoScroll: true,
-            width: 300,
-            height: 400,
-            defaults: {cls: 'gxp-legend-item'},
-            title: this.menuText,
-            items: [{
-                xtype: 'gx_legendpanel',
-                ascending: false,
-                border: false,
-                layerStore: this.target.mapPanel.layers
-            }]
-        }, config || {});
-
-        var legend = gxp.plugins.Legend.superclass.addOutput.call(this, config);
-        return legend;
+        return gxp.plugins.Legend.superclass.addOutput.call(this, Ext.apply({
+            xtype: 'gx_legendpanel',
+            ascending: false,
+            border: false,
+            layerStore: this.target.mapPanel.layers,
+            defaults: {cls: 'gxp-legend-item'}
+        }, config));
     }
 
 });
