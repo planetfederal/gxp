@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>gxp.LineSymbolizer &mdash; GXP v0.1</title>
+    <title>gxp.LayerUploadPanel &mdash; GXP v0.1</title>
     <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -21,8 +21,8 @@
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="top" title="GXP v0.1" href="../../index.html" />
     <link rel="up" title="Widgets" href="../widgets.html" />
-    <link rel="next" title="gxp.NewSourceWindow" href="NewSourceWindow.html" />
-    <link rel="prev" title="gxp.LayerUploadPanel" href="LayerUploadPanel.html" /> 
+    <link rel="next" title="gxp.LineSymbolizer" href="LineSymbolizer.html" />
+    <link rel="prev" title="gxp.LayerUploadForm" href="LayerUploadForm.html" /> 
   </head>
   <body>
     <div class="related">
@@ -35,10 +35,10 @@
           <a href="../../modindex.html" title="Global Module Index"
              accesskey="M">modules</a> |</li>
         <li class="right" >
-          <a href="NewSourceWindow.html" title="gxp.NewSourceWindow"
+          <a href="LineSymbolizer.html" title="gxp.LineSymbolizer"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="LayerUploadPanel.html" title="gxp.LayerUploadPanel"
+          <a href="LayerUploadForm.html" title="gxp.LayerUploadForm"
              accesskey="P">previous</a> |</li>
         <li><a href="../../index.html">GXP</a> &raquo;</li>
           <li><a href="../widgets.html" accesskey="U">Widgets</a> &raquo;</li> 
@@ -48,21 +48,21 @@
         <div class="sphinxsidebarwrapper">
             <h3><a href="../../index.html">Table Of Contents</a></h3>
             <ul>
-<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">gxp.LineSymbolizer</span></tt></a><ul>
+<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">gxp.LayerUploadPanel</span></tt></a><ul>
 <li><a class="reference external" href="#config-options">Config Options</a></li>
 </ul>
 </li>
 </ul>
 
             <h4>Previous topic</h4>
-            <p class="topless"><a href="LayerUploadPanel.html"
-                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.LayerUploadPanel</span></tt></a></p>
+            <p class="topless"><a href="LayerUploadForm.html"
+                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.LayerUploadForm</span></tt></a></p>
             <h4>Next topic</h4>
-            <p class="topless"><a href="NewSourceWindow.html"
-                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.NewSourceWindow</span></tt></a></p>
+            <p class="topless"><a href="LineSymbolizer.html"
+                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.LineSymbolizer</span></tt></a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
-              <li><a href="../../_sources/lib/widgets/LineSymbolizer.txt"
+              <li><a href="../../_sources/lib/widgets/LayerUploadPanel.txt"
                      rel="nofollow">Show Source</a></li>
             </ul>
           <div id="searchbox" style="display: none">
@@ -86,33 +86,39 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="gxp-linesymbolizer">
-<h1><a title="gxp.LineSymbolizer" class="reference internal" href="#gxp.LineSymbolizer"><tt class="xref docutils literal"><span class="pre">gxp.LineSymbolizer</span></tt></a><a class="headerlink" href="#gxp-linesymbolizer" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="gxp-layeruploadpanel">
+<h1><a title="gxp.LayerUploadPanel" class="reference internal" href="#gxp.LayerUploadPanel"><tt class="xref docutils literal"><span class="pre">gxp.LayerUploadPanel</span></tt></a><a class="headerlink" href="#gxp-layeruploadpanel" title="Permalink to this headline">¶</a></h1>
 <dl class="meta docutils">
 <dt>Extends</dt>
 <dd><ul class="first last simple">
-<li><a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.Panel">Ext.Panel</a></li>
+<li><a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.FormPanel">Ext.FormPanel</a></li>
 </ul>
 </dd>
 <dt>xtype</dt>
-<dd><tt class="docutils literal"><span class="pre">gxp_linesymbolizer</span></tt></dd>
+<dd><tt class="docutils literal"><span class="pre">gxp_layeruploadpanel</span></tt></dd>
 </dl>
 <dl class="class">
-<dt id="gxp.LineSymbolizer">
-<em class="property">class </em><tt class="descclassname">gxp.</tt><tt class="descname">LineSymbolizer</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#gxp.LineSymbolizer" title="Permalink to this definition">¶</a></dt>
-<dd>Form for configuring a line symbolizer.</dd></dl>
+<dt id="gxp.LayerUploadPanel">
+<em class="property">class </em><tt class="descclassname">gxp.</tt><tt class="descname">LayerUploadPanel</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#gxp.LayerUploadPanel" title="Permalink to this definition">¶</a></dt>
+<dd>A panel for uploading new layer data to GeoServer.</dd></dl>
 
 <div class="section" id="config-options">
 <h2>Config Options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
 <p>Configuration properties in addition to
-those listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.Panel">Ext.Panel</a>.</p>
+those listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.FormPanel">Ext.FormPanel</a>.</p>
 <dl class="describe">
 <dt>
-<tt class="descname">symbolizer</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">Object</span></tt>
-A symbolizer object that will be used to fill in form values.
-This object will be modified when values change.  Clone first if
-you do not want your symbolizer modified.</dd></dl>
+<tt class="descname">url</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt>
+URL for GeoServer RESTConfig root.  E.g. &#8220;<a class="reference external" href="http://example.com/geoserver/rest">http://example.com/geoserver/rest</a>&#8220;.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">validFileExtensions</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Array</span></tt>
+List of valid file extensions.  These will be used in validating the
+file input value.  Default is <tt class="docutils literal"><span class="pre">[&quot;.zip&quot;,</span> <span class="pre">&quot;.tif&quot;,</span> <span class="pre">&quot;.gz&quot;,</span> <span class="pre">&quot;.tar.bz2&quot;,</span>
+<span class="pre">&quot;.tar&quot;,</span> <span class="pre">&quot;.tgz&quot;,</span> <span class="pre">&quot;.tbz2&quot;]</span></tt>.</dd></dl>
 
 </div>
 </div>
@@ -133,10 +139,10 @@ you do not want your symbolizer modified.</dd></dl>
           <a href="../../modindex.html" title="Global Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="NewSourceWindow.html" title="gxp.NewSourceWindow"
+          <a href="LineSymbolizer.html" title="gxp.LineSymbolizer"
              >next</a> |</li>
         <li class="right" >
-          <a href="LayerUploadPanel.html" title="gxp.LayerUploadPanel"
+          <a href="LayerUploadForm.html" title="gxp.LayerUploadForm"
              >previous</a> |</li>
         <li><a href="../../index.html">GXP</a> &raquo;</li>
           <li><a href="../widgets.html" >Widgets</a> &raquo;</li> 

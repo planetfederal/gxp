@@ -156,7 +156,9 @@ menu:</p>
 </pre></div>
 </div>
 <p>If a tool has both actions and output, and you want to force it to
-immediately output to a container, set actionTarget to null.</p>
+immediately output to a container, set actionTarget to null. If you
+want to hide the actions, set actionTarget to false. In this case, you
+should configure a defaultAction to make sure that an action is active.</p>
 </dd></dl>
 
 <dl class="describe">
@@ -216,6 +218,15 @@ Text for Done button (i18n).</dd></dl>
 
 <dl class="describe">
 <dt>
+<tt class="descname">nonUploadSources</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Array</span></tt>
+If <tt class="docutils literal"><span class="pre">upload</span></tt> is enabled, the upload button will not be displayed for
+sources whose identifiers or URLs are in the provided array.  By
+default, the upload button will make an effort to be shown for all
+sources with a url property.</dd></dl>
+
+<dl class="describe">
+<dt>
 <tt class="descname">outputAction</tt></dt>
 <dd><tt class="docutils literal"><span class="pre">Number</span></tt> The <tt class="docutils literal"><span class="pre">actions</span></tt> array index of the action that should
 trigger this tool&#8217;s output. Only valid if <tt class="docutils literal"><span class="pre">actions</span></tt> is configured.
@@ -240,6 +251,13 @@ be created.</dd></dl>
 
 <dl class="describe">
 <dt>
+<tt class="descname">relativeUploadOnly</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt>
+If <tt class="docutils literal"><span class="pre">upload</span></tt> is enabled, only show the button for sources with relative
+URLs (e.g. &#8220;/geoserver&#8221;).  Default is <tt class="docutils literal"><span class="pre">true</span></tt>.</dd></dl>
+
+<dl class="describe">
+<dt>
 <tt class="descname">toggleGroup</tt></dt>
 <dd><tt class="docutils literal"><span class="pre">String</span></tt> If this tool should be radio-button style toggled with other
 tools, this string is to identify the toggle group.</dd></dl>
@@ -249,6 +267,21 @@ tools, this string is to identify the toggle group.</dd></dl>
 <tt class="descname">untitledText</tt></dt>
 <dd><tt class="docutils literal"><span class="pre">String</span></tt>
 Text for an untitled layer (i18n).</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">upload</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Object</span> <span class="pre">|</span> <span class="pre">Boolean</span></tt>
+If provided, a <a title="gxp.LayerUploadPanel" class="reference external" href="../widgets/LayerUploadPanel.html#gxp.LayerUploadPanel"><tt class="xref docutils literal"><span class="pre">gxp.LayerUploadPanel</span></tt></a> will be made accessible
+from a button on the Available Layers dialog.  This panel will be
+constructed using the provided config.  By default, no upload
+functionality is provided.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">uploadText</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt>
+Text for upload button (only renders if <tt class="docutils literal"><span class="pre">upload</span></tt> is provided).</dd></dl>
 
 </div>
 <div class="section" id="public-properties">
@@ -303,6 +336,11 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
 <p>Deactivates this tool.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="gxp.plugins.AddLayers.removeOutput">
+<tt class="descclassname">AddLayers.</tt><tt class="descname">removeOutput</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.AddLayers.removeOutput" title="Permalink to this definition">¶</a></dt>
+<dd>Removes all output created by this tool</dd></dl>
+
 </div>
 <div class="section" id="events">
 <h2>Events<a class="headerlink" href="#events" title="Permalink to this headline">¶</a></h2>
@@ -322,6 +360,17 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
 <dd><p>Fired when the tool is deactivated.</p>
 <p>Listener arguments:
 * tool - <a title="gxp.plugins.Tool" class="reference external" href="Tool.html#gxp.plugins.Tool"><tt class="xref docutils literal"><span class="pre">gxp.plugins.Tool</span></tt></a> the deactivated tool</p>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">sourceselected</tt></dt>
+<dd><p>Fired when a new source is selected.</p>
+<p>Listener arguments:</p>
+<ul class="simple">
+<li>tool - <a title="gxp.plugins.AddLayers" class="reference internal" href="#gxp.plugins.AddLayers"><tt class="xref docutils literal"><span class="pre">gxp.plugins.AddLayers</span></tt></a> This tool.</li>
+<li>source - <a title="gxp.plugins.LayerSource" class="reference external" href="LayerSource.html#gxp.plugins.LayerSource"><tt class="xref docutils literal"><span class="pre">gxp.plugins.LayerSource</span></tt></a> The selected source.</li>
+</ul>
 </dd></dl>
 
 </div>

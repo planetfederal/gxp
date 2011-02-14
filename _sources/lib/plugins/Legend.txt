@@ -148,6 +148,10 @@ listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.uti
     
     Deactivates this tool.
 
+.. method:: Legend.removeOutput
+
+    Removes all output created by this tool
+
 
 
 

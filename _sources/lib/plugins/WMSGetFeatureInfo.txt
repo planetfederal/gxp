@@ -89,7 +89,9 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
        }
     
     If a tool has both actions and output, and you want to force it to
-    immediately output to a container, set actionTarget to null.
+    immediately output to a container, set actionTarget to null. If you
+    want to hide the actions, set actionTarget to false. In this case, you
+    should configure a defaultAction to make sure that an action is active.
 
 .. describe:: autoActivate
 
@@ -140,6 +142,12 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     ``String`` If this tool should be radio-button style toggled with other
     tools, this string is to identify the toggle group.
 
+.. describe:: vendorParams
+
+    ``Object``
+    Optional object with properties to be serialized as vendor specific
+    parameters in the requests (e.g. {buffer: 10}).
+
 
 
 
@@ -183,6 +191,10 @@ listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.uti
     :returns: ``Boolean`` true when this tool was deactivated
     
     Deactivates this tool.
+
+.. method:: WMSGetFeatureInfo.removeOutput
+
+    Removes all output created by this tool
 
 
 

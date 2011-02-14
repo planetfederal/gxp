@@ -1,7 +1,7 @@
 
 .. currentmodule:: gxp.plugins
 
-:class:`gxp.plugins.FeatureToField`
+:class:`gxp.plugins.WMSFilterView`
 ================================================================================
 
 
@@ -18,16 +18,17 @@ Extends
 
 
 ptype
-    ``gxp_featuretofield``
+    ``gxp_WMSFilterView``
 
 
 
-.. class:: FeatureToField(config)
+.. class:: WMSFilterView(config)
 
-  Plugin for serializing the currently selected feature to the form field
-  of a :class:`gxp.form.ViewerField`. Requires a
-  :class:`gxp.plugins.FeatureManager` and a tool that selects features
-  (e.g. :class:`gxp.plugins.FeatureEditor`).
+  Plugin for displaying the selection of a
+  :class:`gxp.plugins.FeatureManager` as WMS layer. Only works with WMS
+  services that support the CQL_FILTER and FEATUREID vendor parameters.
+  This tool will automatically add a WMS layer to the target's mapPanel,
+  and populate it whenever a query is processed by the FeatureManager.
 
 
     
@@ -112,14 +113,8 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
 
 .. describe:: featureManager
 
-    ``String`` :class:`FeatureManager` to use for this tool.
-
-.. describe:: format
-
-    ``String`` The format to use for encoding the feature. Defaults to
-    "GeoJSON", which means ``OpenLayers.Format.GeoJSON``. All
-    OpenLayers.Format.* formats that can serialize a single feature can be
-    used here.
+    ``String`` The id of the :class:`gxp.plugins.FeatureManager` to use
+    with this tool.
 
 .. describe:: outputAction
 
@@ -157,7 +152,7 @@ Public properties in addition to those
 listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
 
 
-.. attribute:: FeatureToField.active
+.. attribute:: WMSFilterView.active
 
     ``Boolean`` Is the tool currently active?
 
@@ -171,27 +166,29 @@ Public methods in addition to those
 listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
 
 
-.. method:: FeatureToField.activate
+.. method:: WMSFilterView.activate
 
     :returns: ``Boolean`` true when this tool was activated
     
     Activates this tool.
 
-.. method:: FeatureToField.addActions
+.. method:: WMSFilterView.addActions
+
+    :arg actions: ``Array`` Optional actions to add. If not provided,
+        this.actions will be added.
+    :returns: ``Array`` The actions added.
+
+.. method:: WMSFilterView.addOutput
 
     
 
-.. method:: FeatureToField.addOutput
-
-    
-
-.. method:: FeatureToField.deactivate
+.. method:: WMSFilterView.deactivate
 
     :returns: ``Boolean`` true when this tool was deactivated
     
     Deactivates this tool.
 
-.. method:: FeatureToField.removeOutput
+.. method:: WMSFilterView.removeOutput
 
     Removes all output created by this tool
 

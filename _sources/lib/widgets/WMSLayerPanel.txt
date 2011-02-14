@@ -56,6 +56,20 @@ those listed for `Ext.TabPanel <http://extjs.com/deploy/dev/docs/?class=Ext.TabP
     ``GeoExt.data.LayerRecord``
     Show properties for this layer record.
 
+.. describe:: sameOriginStyling
+
+    ``Boolean``
+    Only allow editing of styles for layers whose sources have a URL that
+    matches the origin of this applicaiton.  It is strongly discouraged to
+    do styling through the proxy as all authorization headers and cookies
+    are shared with all remotesources.  Default is ``true``.
+
+.. describe:: source
+
+    ``gxp.plugins.LayerSource``
+    Source for the layer. Optional. If not provided, ``sameOriginStyling``
+    will be ignored.
+
 
 
 

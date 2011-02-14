@@ -1,7 +1,7 @@
 
 .. currentmodule:: gxp.plugins
 
-:class:`gxp.plugins.FeatureToField`
+:class:`gxp.plugins.Styler`
 ================================================================================
 
 
@@ -18,16 +18,13 @@ Extends
 
 
 ptype
-    ``gxp_featuretofield``
+    ``gxp_styler``
 
 
 
-.. class:: FeatureToField(config)
+.. class:: Styler(config)
 
-  Plugin for serializing the currently selected feature to the form field
-  of a :class:`gxp.form.ViewerField`. Requires a
-  :class:`gxp.plugins.FeatureManager` and a tool that selects features
-  (e.g. :class:`gxp.plugins.FeatureEditor`).
+  Plugin providing a styles editing dialog for geoserver layers.
 
 
     
@@ -110,16 +107,10 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     ``Number`` Optional index of an action that should be active by
     default. Only works for actions that are a ``GeoExt.Action`` instance.
 
-.. describe:: featureManager
+.. describe:: menuText
 
-    ``String`` :class:`FeatureManager` to use for this tool.
-
-.. describe:: format
-
-    ``String`` The format to use for encoding the feature. Defaults to
-    "GeoJSON", which means ``OpenLayers.Format.GeoJSON``. All
-    OpenLayers.Format.* formats that can serialize a single feature can be
-    used here.
+    ``String``
+    Text for layer properties menu item (i18n).
 
 .. describe:: outputAction
 
@@ -142,10 +133,23 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     "map" to access the viewer's main map. If not provided, a window will
     be created.
 
+.. describe:: sameOriginStyling
+
+    ``Boolean``
+    Only allow editing of styles for layers whose sources have a URL that
+    matches the origin of this applicaiton.  It is strongly discouraged to
+    do styling through commonly used proxies as all authorization headers
+    and cookies are shared with all remote sources.  Default is ``true``.
+
 .. describe:: toggleGroup
 
     ``String`` If this tool should be radio-button style toggled with other
     tools, this string is to identify the toggle group.
+
+.. describe:: tooltip
+
+    ``String``
+    Text for layer properties action tooltip (i18n).
 
 
 
@@ -157,7 +161,7 @@ Public properties in addition to those
 listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
 
 
-.. attribute:: FeatureToField.active
+.. attribute:: Styler.active
 
     ``Boolean`` Is the tool currently active?
 
@@ -171,27 +175,27 @@ Public methods in addition to those
 listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
 
 
-.. method:: FeatureToField.activate
+.. method:: Styler.activate
 
     :returns: ``Boolean`` true when this tool was activated
     
     Activates this tool.
 
-.. method:: FeatureToField.addActions
+.. method:: Styler.addActions
 
     
 
-.. method:: FeatureToField.addOutput
+.. method:: Styler.addOutput
 
     
 
-.. method:: FeatureToField.deactivate
+.. method:: Styler.deactivate
 
     :returns: ``Boolean`` true when this tool was deactivated
     
     Deactivates this tool.
 
-.. method:: FeatureToField.removeOutput
+.. method:: Styler.removeOutput
 
     Removes all output created by this tool
 

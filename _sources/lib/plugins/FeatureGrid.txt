@@ -11,6 +11,7 @@
 Extends
     * `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_
     
+    * :class:`gxp.plugins.ClickableFeatures`
     * :class:`gxp.plugins.Tool`
 
 
@@ -89,13 +90,16 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
        }
     
     If a tool has both actions and output, and you want to force it to
-    immediately output to a container, set actionTarget to null.
+    immediately output to a container, set actionTarget to null. If you
+    want to hide the actions, set actionTarget to false. In this case, you
+    should configure a defaultAction to make sure that an action is active.
 
 .. describe:: alwaysDisplayOnMap
 
     ``Boolean`` If set to true, the features that are shown in the grid
     will always be displayed on the map, and there will be no "Display on
-    map" button in the toolbar. Default is false.
+    map" button in the toolbar. Default is false. If set to true, no
+    "Display on map" button will be shown.
 
 .. describe:: autoActivate
 
@@ -129,6 +133,12 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
 
     ``String``
     Text for feature display button (i18n).
+
+.. describe:: displayMode
+
+    ``String`` Should we display all features on the map, or only the ones
+    that are currently selected on the grid. Valid values are "all" and
+    "selected". Default is "all".
 
 .. describe:: featureManager
 
@@ -183,6 +193,15 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     ``String`` If this tool should be radio-button style toggled with other
     tools, this string is to identify the toggle group.
 
+.. describe:: tolerance
+
+    ``Number``
+    Optional pixel tolerance to use when selecting features.  By default,
+    the server decides whether a pixel click intersects a feature based on
+    its own rules.  If a pixel tolerance is provided, it will be included in
+    requests for features to inform the server to look in a buffer around
+    features.
+
 .. describe:: zoomFirstPageTip
 
     ``String``
@@ -233,6 +252,10 @@ listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.uti
     :returns: ``Boolean`` true when this tool was deactivated
     
     Deactivates this tool.
+
+.. method:: FeatureGrid.removeOutput
+
+    Removes all output created by this tool
 
 
 

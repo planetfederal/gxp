@@ -22,7 +22,7 @@
     <link rel="top" title="GXP v0.1" href="../../index.html" />
     <link rel="up" title="gxp.plugins" href="../plugins.html" />
     <link rel="next" title="gxp.plugins.FeatureEditor" href="FeatureEditor.html" />
-    <link rel="prev" title="gxp.plugins.BingSource" href="BingSource.html" /> 
+    <link rel="prev" title="gxp.plugins.ClickableFeatures" href="ClickableFeatures.html" /> 
   </head>
   <body>
     <div class="related">
@@ -38,10 +38,10 @@
           <a href="FeatureEditor.html" title="gxp.plugins.FeatureEditor"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="BingSource.html" title="gxp.plugins.BingSource"
+          <a href="ClickableFeatures.html" title="gxp.plugins.ClickableFeatures"
              accesskey="P">previous</a> |</li>
         <li><a href="../../index.html">GXP</a> &raquo;</li>
-          <li><a href="../plugins.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
+          <li><a href="../plugins.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -58,8 +58,8 @@
 </ul>
 
             <h4>Previous topic</h4>
-            <p class="topless"><a href="BingSource.html"
-                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins.BingSource</span></tt></a></p>
+            <p class="topless"><a href="ClickableFeatures.html"
+                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins.ClickableFeatures</span></tt></a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="FeatureEditor.html"
                                   title="next chapter"><tt class="docutils literal"><span class="pre">gxp.plugins.FeatureEditor</span></tt></a></p>
@@ -155,7 +155,9 @@ menu:</p>
 </pre></div>
 </div>
 <p>If a tool has both actions and output, and you want to force it to
-immediately output to a container, set actionTarget to null.</p>
+immediately output to a container, set actionTarget to null. If you
+want to hide the actions, set actionTarget to false. In this case, you
+should configure a defaultAction to make sure that an action is active.</p>
 </dd></dl>
 
 <dl class="describe">
@@ -301,6 +303,11 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
 <p>Deactivates this tool.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="gxp.plugins.DeleteSelectedFeatures.removeOutput">
+<tt class="descclassname">DeleteSelectedFeatures.</tt><tt class="descname">removeOutput</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.DeleteSelectedFeatures.removeOutput" title="Permalink to this definition">¶</a></dt>
+<dd>Removes all output created by this tool</dd></dl>
+
 </div>
 <div class="section" id="events">
 <h2>Events<a class="headerlink" href="#events" title="Permalink to this headline">¶</a></h2>
@@ -344,10 +351,10 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
           <a href="FeatureEditor.html" title="gxp.plugins.FeatureEditor"
              >next</a> |</li>
         <li class="right" >
-          <a href="BingSource.html" title="gxp.plugins.BingSource"
+          <a href="ClickableFeatures.html" title="gxp.plugins.ClickableFeatures"
              >previous</a> |</li>
         <li><a href="../../index.html">GXP</a> &raquo;</li>
-          <li><a href="../plugins.html" ><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
+          <li><a href="../plugins.html" ><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

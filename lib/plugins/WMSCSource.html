@@ -21,7 +21,7 @@
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="top" title="GXP v0.1" href="../../index.html" />
     <link rel="up" title="gxp.plugins" href="../plugins.html" />
-    <link rel="next" title="gxp.plugins.WMSGetFeatureInfo" href="WMSGetFeatureInfo.html" />
+    <link rel="next" title="gxp.plugins.WMSFilterView" href="WMSFilterView.html" />
     <link rel="prev" title="gxp.plugins.Tool" href="Tool.html" /> 
   </head>
   <body>
@@ -35,13 +35,13 @@
           <a href="../../modindex.html" title="Global Module Index"
              accesskey="M">modules</a> |</li>
         <li class="right" >
-          <a href="WMSGetFeatureInfo.html" title="gxp.plugins.WMSGetFeatureInfo"
+          <a href="WMSFilterView.html" title="gxp.plugins.WMSFilterView"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="Tool.html" title="gxp.plugins.Tool"
              accesskey="P">previous</a> |</li>
         <li><a href="../../index.html">GXP</a> &raquo;</li>
-          <li><a href="../plugins.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
+          <li><a href="../plugins.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -62,8 +62,8 @@
             <p class="topless"><a href="Tool.html"
                                   title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins.Tool</span></tt></a></p>
             <h4>Next topic</h4>
-            <p class="topless"><a href="WMSGetFeatureInfo.html"
-                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.plugins.WMSGetFeatureInfo</span></tt></a></p>
+            <p class="topless"><a href="WMSFilterView.html"
+                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.plugins.WMSFilterView</span></tt></a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
               <li><a href="../../_sources/lib/plugins/WMSCSource.txt"
@@ -135,6 +135,12 @@ array of the viewer&#8217;s <tt class="docutils literal"><span class="pre">map</
 <h2>Config Options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
 <p>Configuration properties in addition to
 those listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a>.</p>
+<dl class="describe">
+<dt>
+<tt class="descname">baseParams</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Object</span></tt> Base parameters to use on the WMS GetCapabilities
+request.</dd></dl>
+
 <dl class="describe">
 <dt>
 <tt class="descname">url</tt></dt>
@@ -321,13 +327,13 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
           <a href="../../modindex.html" title="Global Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="WMSGetFeatureInfo.html" title="gxp.plugins.WMSGetFeatureInfo"
+          <a href="WMSFilterView.html" title="gxp.plugins.WMSFilterView"
              >next</a> |</li>
         <li class="right" >
           <a href="Tool.html" title="gxp.plugins.Tool"
              >previous</a> |</li>
         <li><a href="../../index.html">GXP</a> &raquo;</li>
-          <li><a href="../plugins.html" ><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
+          <li><a href="../plugins.html" ><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

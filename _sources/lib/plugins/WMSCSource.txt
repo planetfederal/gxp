@@ -67,6 +67,11 @@ Configuration properties in addition to
 those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
 
 
+.. describe:: baseParams
+
+    ``Object`` Base parameters to use on the WMS GetCapabilities
+    request.
+
 .. describe:: url
 
     ``String`` WMS service URL for this source

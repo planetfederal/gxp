@@ -92,7 +92,9 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
        }
     
     If a tool has both actions and output, and you want to force it to
-    immediately output to a container, set actionTarget to null.
+    immediately output to a container, set actionTarget to null. If you
+    want to hide the actions, set actionTarget to false. In this case, you
+    should configure a defaultAction to make sure that an action is active.
 
 .. describe:: autoActivate
 
@@ -287,6 +289,10 @@ listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.uti
     
     Load the previous page.
 
+.. method:: FeatureManager.removeOutput
+
+    Removes all output created by this tool
+
 .. method:: FeatureManager.setLayer
 
     :arg layerRecord: ``GeoExt.data.LayerRecord``
@@ -468,6 +474,8 @@ listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.uti
     
     * tool  - :class:`gxp.plugins.FeatureManager` this tool
     * store - :class:`gxp.data.WFSFeatureStore`
+    * filter - ``OpenLayers.Filter`` the filter argument passed to
+      the loadFeatures method
 
 .. describe:: setpage
 

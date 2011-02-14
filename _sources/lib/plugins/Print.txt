@@ -1,7 +1,7 @@
 
 .. currentmodule:: gxp.plugins
 
-:class:`gxp.plugins.FeatureToField`
+:class:`gxp.plugins.Print`
 ================================================================================
 
 
@@ -18,16 +18,13 @@ Extends
 
 
 ptype
-    ``gxp_featuretofield``
+    ``gxp_print``
 
 
 
-.. class:: FeatureToField(config)
+.. class:: Print(config)
 
-  Plugin for serializing the currently selected feature to the form field
-  of a :class:`gxp.form.ViewerField`. Requires a
-  :class:`gxp.plugins.FeatureManager` and a tool that selects features
-  (e.g. :class:`gxp.plugins.FeatureEditor`).
+  Provides an action to print the map.
 
 
     
@@ -110,16 +107,20 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     ``Number`` Optional index of an action that should be active by
     default. Only works for actions that are a ``GeoExt.Action`` instance.
 
-.. describe:: featureManager
+.. describe:: menuText
 
-    ``String`` :class:`FeatureManager` to use for this tool.
+    ``String``
+    Text for print menu item (i18n).
 
-.. describe:: format
+.. describe:: nonePrintableText
 
-    ``String`` The format to use for encoding the feature. Defaults to
-    "GeoJSON", which means ``OpenLayers.Format.GeoJSON``. All
-    OpenLayers.Format.* formats that can serialize a single feature can be
-    used here.
+    ``String``
+    Text for message no layers are suitable for printing (i18n).
+
+.. describe:: notAllNotPrintableText
+
+    ``String``
+    Text for message when not all layers can be printed (i18n).
 
 .. describe:: outputAction
 
@@ -142,10 +143,25 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     "map" to access the viewer's main map. If not provided, a window will
     be created.
 
+.. describe:: previewText
+
+    ``String``
+    Text for print preview text (i18n).
+
+.. describe:: printService
+
+    ``String``
+    URL of the print service.
+
 .. describe:: toggleGroup
 
     ``String`` If this tool should be radio-button style toggled with other
     tools, this string is to identify the toggle group.
+
+.. describe:: tooltip
+
+    ``String``
+    Text for print action tooltip (i18n).
 
 
 
@@ -157,7 +173,7 @@ Public properties in addition to those
 listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
 
 
-.. attribute:: FeatureToField.active
+.. attribute:: Print.active
 
     ``Boolean`` Is the tool currently active?
 
@@ -171,27 +187,27 @@ Public methods in addition to those
 listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
 
 
-.. method:: FeatureToField.activate
+.. method:: Print.activate
 
     :returns: ``Boolean`` true when this tool was activated
     
     Activates this tool.
 
-.. method:: FeatureToField.addActions
+.. method:: Print.addActions
 
     
 
-.. method:: FeatureToField.addOutput
+.. method:: Print.addOutput
 
     
 
-.. method:: FeatureToField.deactivate
+.. method:: Print.deactivate
 
     :returns: ``Boolean`` true when this tool was deactivated
     
     Deactivates this tool.
 
-.. method:: FeatureToField.removeOutput
+.. method:: Print.removeOutput
 
     Removes all output created by this tool
 

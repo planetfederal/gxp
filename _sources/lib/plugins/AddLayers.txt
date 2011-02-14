@@ -88,7 +88,9 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
        }
     
     If a tool has both actions and output, and you want to force it to
-    immediately output to a container, set actionTarget to null.
+    immediately output to a container, set actionTarget to null. If you
+    want to hide the actions, set actionTarget to false. In this case, you
+    should configure a defaultAction to make sure that an action is active.
 
 .. describe:: addActionTip
 
@@ -136,6 +138,14 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     ``String``
     Text for Done button (i18n).
 
+.. describe:: nonUploadSources
+
+    ``Array``
+    If ``upload`` is enabled, the upload button will not be displayed for
+    sources whose identifiers or URLs are in the provided array.  By
+    default, the upload button will make an effort to be shown for all
+    sources with a url property.
+
 .. describe:: outputAction
 
     ``Number`` The ``actions`` array index of the action that should
@@ -157,6 +167,12 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     "map" to access the viewer's main map. If not provided, a window will
     be created.
 
+.. describe:: relativeUploadOnly
+
+    ``Boolean``
+    If ``upload`` is enabled, only show the button for sources with relative
+    URLs (e.g. "/geoserver").  Default is ``true``.
+
 .. describe:: toggleGroup
 
     ``String`` If this tool should be radio-button style toggled with other
@@ -166,6 +182,19 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
 
     ``String``
     Text for an untitled layer (i18n).
+
+.. describe:: upload
+
+    ``Object | Boolean``
+    If provided, a :class:`gxp.LayerUploadPanel` will be made accessible
+    from a button on the Available Layers dialog.  This panel will be
+    constructed using the provided config.  By default, no upload
+    functionality is provided.
+
+.. describe:: uploadText
+
+    ``String``
+    Text for upload button (only renders if ``upload`` is provided).
 
 
 
@@ -211,6 +240,10 @@ listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.uti
     
     Deactivates this tool.
 
+.. method:: AddLayers.removeOutput
+
+    Removes all output created by this tool
+
 
 
 
@@ -234,6 +267,15 @@ listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.uti
     
     Listener arguments:
     * tool - :class:`gxp.plugins.Tool` the deactivated tool
+
+.. describe:: sourceselected
+
+    Fired when a new source is selected.
+    
+    Listener arguments:
+    
+    * tool - :class:`gxp.plugins.AddLayers` This tool.
+    * source - :class:`gxp.plugins.LayerSource` The selected source.
 
 
 

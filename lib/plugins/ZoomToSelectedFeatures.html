@@ -37,7 +37,7 @@
           <a href="ZoomToLayerExtent.html" title="gxp.plugins.ZoomToLayerExtent"
              accesskey="P">previous</a> |</li>
         <li><a href="../../index.html">GXP</a> &raquo;</li>
-          <li><a href="../plugins.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
+          <li><a href="../plugins.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -149,7 +149,9 @@ menu:</p>
 </pre></div>
 </div>
 <p>If a tool has both actions and output, and you want to force it to
-immediately output to a container, set actionTarget to null.</p>
+immediately output to a container, set actionTarget to null. If you
+want to hide the actions, set actionTarget to false. In this case, you
+should configure a defaultAction to make sure that an action is active.</p>
 </dd></dl>
 
 <dl class="describe">
@@ -186,7 +188,7 @@ default. Only works for actions that are a <tt class="docutils literal"><span cl
 <dl class="describe">
 <dt>
 <tt class="descname">extent</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">String</span> <span class="pre">|</span> <span class="pre">OpenLayers.Bounds</span></tt>
+<dd><tt class="docutils literal"><span class="pre">Array</span> <span class="pre">|</span> <span class="pre">OpenLayers.Bounds</span></tt>
 The target extent.  If none is provided, the map&#8217;s visible extent will
 be used.</dd></dl>
 
@@ -291,6 +293,11 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
 <p>Deactivates this tool.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="gxp.plugins.ZoomToSelectedFeatures.removeOutput">
+<tt class="descclassname">ZoomToSelectedFeatures.</tt><tt class="descname">removeOutput</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.ZoomToSelectedFeatures.removeOutput" title="Permalink to this definition">¶</a></dt>
+<dd>Removes all output created by this tool</dd></dl>
+
 </div>
 <div class="section" id="events">
 <h2>Events<a class="headerlink" href="#events" title="Permalink to this headline">¶</a></h2>
@@ -334,7 +341,7 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
           <a href="ZoomToLayerExtent.html" title="gxp.plugins.ZoomToLayerExtent"
              >previous</a> |</li>
         <li><a href="../../index.html">GXP</a> &raquo;</li>
-          <li><a href="../plugins.html" ><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
+          <li><a href="../plugins.html" ><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

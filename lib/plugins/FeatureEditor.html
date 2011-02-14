@@ -41,7 +41,7 @@
           <a href="DeleteSelectedFeatures.html" title="gxp.plugins.DeleteSelectedFeatures"
              accesskey="P">previous</a> |</li>
         <li><a href="../../index.html">GXP</a> &raquo;</li>
-          <li><a href="../plugins.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
+          <li><a href="../plugins.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -95,6 +95,7 @@
 <dt>Extends</dt>
 <dd><ul class="first last simple">
 <li><a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a></li>
+<li><a title="gxp.plugins.ClickableFeatures" class="reference external" href="ClickableFeatures.html#gxp.plugins.ClickableFeatures"><tt class="xref docutils literal"><span class="pre">gxp.plugins.ClickableFeatures</span></tt></a></li>
 <li><a title="gxp.plugins.Tool" class="reference external" href="Tool.html#gxp.plugins.Tool"><tt class="xref docutils literal"><span class="pre">gxp.plugins.Tool</span></tt></a></li>
 </ul>
 </dd>
@@ -156,7 +157,9 @@ menu:</p>
 </pre></div>
 </div>
 <p>If a tool has both actions and output, and you want to force it to
-immediately output to a container, set actionTarget to null.</p>
+immediately output to a container, set actionTarget to null. If you
+want to hide the actions, set actionTarget to false. In this case, you
+should configure a defaultAction to make sure that an action is active.</p>
 </dd></dl>
 
 <dl class="describe">
@@ -279,6 +282,16 @@ with this tool.</dd></dl>
 <dd><tt class="docutils literal"><span class="pre">String</span></tt> If this tool should be radio-button style toggled with other
 tools, this string is to identify the toggle group.</dd></dl>
 
+<dl class="describe">
+<dt>
+<tt class="descname">tolerance</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Number</span></tt>
+Optional pixel tolerance to use when selecting features.  By default,
+the server decides whether a pixel click intersects a feature based on
+its own rules.  If a pixel tolerance is provided, it will be included in
+requests for features to inform the server to look in a buffer around
+features.</dd></dl>
+
 </div>
 <div class="section" id="public-properties">
 <h2>Public Properties<a class="headerlink" href="#public-properties" title="Permalink to this headline">¶</a></h2>
@@ -332,6 +345,11 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
 <p>Deactivates this tool.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="gxp.plugins.FeatureEditor.removeOutput">
+<tt class="descclassname">FeatureEditor.</tt><tt class="descname">removeOutput</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.FeatureEditor.removeOutput" title="Permalink to this definition">¶</a></dt>
+<dd>Removes all output created by this tool</dd></dl>
+
 </div>
 <div class="section" id="events">
 <h2>Events<a class="headerlink" href="#events" title="Permalink to this headline">¶</a></h2>
@@ -378,7 +396,7 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
           <a href="DeleteSelectedFeatures.html" title="gxp.plugins.DeleteSelectedFeatures"
              >previous</a> |</li>
         <li><a href="../../index.html">GXP</a> &raquo;</li>
-          <li><a href="../plugins.html" ><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
+          <li><a href="../plugins.html" ><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

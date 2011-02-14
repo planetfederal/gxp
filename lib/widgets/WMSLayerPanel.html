@@ -132,6 +132,22 @@ match this expression.  Default is <tt class="docutils literal"><span class="pre
 <dd><tt class="docutils literal"><span class="pre">GeoExt.data.LayerRecord</span></tt>
 Show properties for this layer record.</dd></dl>
 
+<dl class="describe">
+<dt>
+<tt class="descname">sameOriginStyling</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt>
+Only allow editing of styles for layers whose sources have a URL that
+matches the origin of this applicaiton.  It is strongly discouraged to
+do styling through the proxy as all authorization headers and cookies
+are shared with all remotesources.  Default is <tt class="docutils literal"><span class="pre">true</span></tt>.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">source</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">gxp.plugins.LayerSource</span></tt>
+Source for the layer. Optional. If not provided, <tt class="docutils literal"><span class="pre">sameOriginStyling</span></tt>
+will be ignored.</dd></dl>
+
 </div>
 <div class="section" id="events">
 <h2>Events<a class="headerlink" href="#events" title="Permalink to this headline">¶</a></h2>

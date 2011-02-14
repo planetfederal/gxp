@@ -1,7 +1,7 @@
 
 .. currentmodule:: gxp.plugins
 
-:class:`gxp.plugins.FeatureToField`
+:class:`gxp.plugins.ClickableFeatures`
 ================================================================================
 
 
@@ -18,16 +18,14 @@ Extends
 
 
 ptype
-    ``gxp_featuretofield``
+    ``gxp_tool``
 
 
 
-.. class:: FeatureToField(config)
+.. class:: ClickableFeatures(config)
 
-  Plugin for serializing the currently selected feature to the form field
-  of a :class:`gxp.form.ViewerField`. Requires a
-  :class:`gxp.plugins.FeatureManager` and a tool that selects features
-  (e.g. :class:`gxp.plugins.FeatureEditor`).
+  Base class for tools that need to handle feature clicks. Don't create
+  instances of this base class.
 
 
     
@@ -112,14 +110,8 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
 
 .. describe:: featureManager
 
-    ``String`` :class:`FeatureManager` to use for this tool.
-
-.. describe:: format
-
-    ``String`` The format to use for encoding the feature. Defaults to
-    "GeoJSON", which means ``OpenLayers.Format.GeoJSON``. All
-    OpenLayers.Format.* formats that can serialize a single feature can be
-    used here.
+    ``String`` The id of the :class:`gxp.plugins.FeatureManager` to use
+    with this tool.
 
 .. describe:: outputAction
 
@@ -147,6 +139,15 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     ``String`` If this tool should be radio-button style toggled with other
     tools, this string is to identify the toggle group.
 
+.. describe:: tolerance
+
+    ``Number``
+    Optional pixel tolerance to use when selecting features.  By default,
+    the server decides whether a pixel click intersects a feature based on
+    its own rules.  If a pixel tolerance is provided, it will be included in
+    requests for features to inform the server to look in a buffer around
+    features.
+
 
 
 
@@ -157,7 +158,7 @@ Public properties in addition to those
 listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
 
 
-.. attribute:: FeatureToField.active
+.. attribute:: ClickableFeatures.active
 
     ``Boolean`` Is the tool currently active?
 
@@ -171,27 +172,29 @@ Public methods in addition to those
 listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
 
 
-.. method:: FeatureToField.activate
+.. method:: ClickableFeatures.activate
 
     :returns: ``Boolean`` true when this tool was activated
     
     Activates this tool.
 
-.. method:: FeatureToField.addActions
+.. method:: ClickableFeatures.addActions
+
+    :arg actions: ``Array`` Optional actions to add. If not provided,
+        this.actions will be added.
+    :returns: ``Array`` The actions added.
+
+.. method:: ClickableFeatures.addOutput
 
     
 
-.. method:: FeatureToField.addOutput
-
-    
-
-.. method:: FeatureToField.deactivate
+.. method:: ClickableFeatures.deactivate
 
     :returns: ``Boolean`` true when this tool was deactivated
     
     Deactivates this tool.
 
-.. method:: FeatureToField.removeOutput
+.. method:: ClickableFeatures.removeOutput
 
     Removes all output created by this tool
 

@@ -22,7 +22,7 @@
     <link rel="top" title="GXP v0.1" href="../../index.html" />
     <link rel="up" title="gxp.plugins" href="../plugins.html" />
     <link rel="next" title="gxp.plugins.WMSRasterStylesDialog" href="WMSRasterStylesDialog.html" />
-    <link rel="prev" title="gxp.plugins.WMSCSource" href="WMSCSource.html" /> 
+    <link rel="prev" title="gxp.plugins.WMSFilterView" href="WMSFilterView.html" /> 
   </head>
   <body>
     <div class="related">
@@ -38,10 +38,10 @@
           <a href="WMSRasterStylesDialog.html" title="gxp.plugins.WMSRasterStylesDialog"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="WMSCSource.html" title="gxp.plugins.WMSCSource"
+          <a href="WMSFilterView.html" title="gxp.plugins.WMSFilterView"
              accesskey="P">previous</a> |</li>
         <li><a href="../../index.html">GXP</a> &raquo;</li>
-          <li><a href="../plugins.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
+          <li><a href="../plugins.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -58,8 +58,8 @@
 </ul>
 
             <h4>Previous topic</h4>
-            <p class="topless"><a href="WMSCSource.html"
-                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins.WMSCSource</span></tt></a></p>
+            <p class="topless"><a href="WMSFilterView.html"
+                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins.WMSFilterView</span></tt></a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="WMSRasterStylesDialog.html"
                                   title="next chapter"><tt class="docutils literal"><span class="pre">gxp.plugins.WMSRasterStylesDialog</span></tt></a></p>
@@ -157,7 +157,9 @@ menu:</p>
 </pre></div>
 </div>
 <p>If a tool has both actions and output, and you want to force it to
-immediately output to a container, set actionTarget to null.</p>
+immediately output to a container, set actionTarget to null. If you
+want to hide the actions, set actionTarget to false. In this case, you
+should configure a defaultAction to make sure that an action is active.</p>
 </dd></dl>
 
 <dl class="describe">
@@ -218,6 +220,13 @@ Title for info popup (i18n).</dd></dl>
 <dd><tt class="docutils literal"><span class="pre">String</span></tt> If this tool should be radio-button style toggled with other
 tools, this string is to identify the toggle group.</dd></dl>
 
+<dl class="describe">
+<dt>
+<tt class="descname">vendorParams</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Object</span></tt>
+Optional object with properties to be serialized as vendor specific
+parameters in the requests (e.g. {buffer: 10}).</dd></dl>
+
 </div>
 <div class="section" id="public-properties">
 <h2>Public Properties<a class="headerlink" href="#public-properties" title="Permalink to this headline">¶</a></h2>
@@ -271,6 +280,11 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
 <p>Deactivates this tool.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="gxp.plugins.WMSGetFeatureInfo.removeOutput">
+<tt class="descclassname">WMSGetFeatureInfo.</tt><tt class="descname">removeOutput</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.WMSGetFeatureInfo.removeOutput" title="Permalink to this definition">¶</a></dt>
+<dd>Removes all output created by this tool</dd></dl>
+
 </div>
 <div class="section" id="events">
 <h2>Events<a class="headerlink" href="#events" title="Permalink to this headline">¶</a></h2>
@@ -314,10 +328,10 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
           <a href="WMSRasterStylesDialog.html" title="gxp.plugins.WMSRasterStylesDialog"
              >next</a> |</li>
         <li class="right" >
-          <a href="WMSCSource.html" title="gxp.plugins.WMSCSource"
+          <a href="WMSFilterView.html" title="gxp.plugins.WMSFilterView"
              >previous</a> |</li>
         <li><a href="../../index.html">GXP</a> &raquo;</li>
-          <li><a href="../plugins.html" ><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
+          <li><a href="../plugins.html" ><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

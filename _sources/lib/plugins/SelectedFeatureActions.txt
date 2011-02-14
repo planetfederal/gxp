@@ -67,7 +67,8 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     * urlTemplate - ``String`` template for the link to follow. To
       reference attributes of the selected feature, use "{fieldName}"
       in the template. In addition to the attributes, "{fid}" is available
-      for the feature id (typename prefix removed).
+      for the feature id (typename prefix removed), and "{layer}" for the
+      name of the underlying WMS layer (usually prefix:name).
     * outputConfig - ``Object`` overrides this tool's outputConfig for
       output triggered by the respective action. Useful e.g. for creating
       windows with different sizes for each action.
@@ -113,7 +114,9 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
        }
     
     If a tool has both actions and output, and you want to force it to
-    immediately output to a container, set actionTarget to null.
+    immediately output to a container, set actionTarget to null. If you
+    want to hide the actions, set actionTarget to false. In this case, you
+    should configure a defaultAction to make sure that an action is active.
 
 .. describe:: autoActivate
 
@@ -207,6 +210,10 @@ listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.uti
     :returns: ``Boolean`` true when this tool was deactivated
     
     Deactivates this tool.
+
+.. method:: SelectedFeatureActions.removeOutput
+
+    Removes all output created by this tool
 
 
 

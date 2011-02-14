@@ -1,0 +1,58 @@
+
+.. currentmodule:: gxp
+
+:class:`gxp.LayerUploadPanel`
+================================================================================
+
+
+.. cssclass:: meta
+
+
+Extends
+    * `Ext.FormPanel <http://extjs.com/deploy/dev/docs/?class=Ext.FormPanel>`_
+    
+
+
+
+xtype
+    ``gxp_layeruploadpanel``
+
+
+
+
+
+.. class:: LayerUploadPanel(config)
+
+    A panel for uploading new layer data to GeoServer.
+
+
+    
+
+
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.FormPanel <http://extjs.com/deploy/dev/docs/?class=Ext.FormPanel>`_.
+
+
+.. describe:: url
+
+    ``String``
+    URL for GeoServer RESTConfig root.  E.g. "http://example.com/geoserver/rest".
+
+.. describe:: validFileExtensions
+
+    ``Array``
+    List of valid file extensions.  These will be used in validating the
+    file input value.  Default is ``[".zip", ".tif", ".gz", ".tar.bz2",
+    ".tar", ".tgz", ".tbz2"]``.
+
+
+
+
+
+
+
+
+

@@ -81,6 +81,20 @@ listed for `Ext.Container <http://extjs.com/deploy/dev/docs/?class=Ext.Container
 
 
 
+Public Methods
+--------------
+
+Public methods in addition to those
+listed for `Ext.Container <http://extjs.com/deploy/dev/docs/?class=Ext.Container>`_.
+
+
+.. method:: EmbedMapDialog.getIframeHTML
+
+    :returns: ``String`` the HTML needed to create the iframe
+    
+    Get the HTML needed to created the iframe.
+
+
 
 
 
