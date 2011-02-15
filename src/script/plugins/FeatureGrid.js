@@ -137,7 +137,7 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
             map.addControl(this.selectControl);
             smCfg = {
                 selectControl: this.selectControl
-            }
+            };
         } else {
             smCfg = {
                 selectControl: this.selectControl,
@@ -152,7 +152,7 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                     },
                     scope: this
                 }
-            }
+            };
         }
         config = Ext.apply({
             xtype: "gxp_featuregrid",
@@ -218,7 +218,7 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                     var onPopulate = (function() {
                         this.selectOnMap && this.selectControl.activate();
                         this.autoExpand && typeof ownerCt.expand == "function" &&
-                            ownerCt.expand()
+                            ownerCt.expand();
                     }).bind(this);
                     featureManager.on({
                         "query": function(tool, store) {
@@ -229,11 +229,13 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                     });
                 },
                 contextmenu: function(event) {
-                    var rowIndex = featureGrid.getView().findRowIndex(event.getTarget());
-                    if (rowIndex !== false) {
-                        featureGrid.getSelectionModel().selectRow(rowIndex);
-                        featureGrid.contextMenu.showAt(event.getXY());
-                        event.stopEvent();
+                    if (featureGrid.contextMenu.items.getCount() > 0) {
+                        var rowIndex = featureGrid.getView().findRowIndex(event.getTarget());
+                        if (rowIndex !== false) {
+                            featureGrid.getSelectionModel().selectRow(rowIndex);
+                            featureGrid.contextMenu.showAt(event.getXY());
+                            event.stopEvent();
+                        }
                     }
                 },
                 scope: this

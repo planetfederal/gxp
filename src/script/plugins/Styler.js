@@ -61,6 +61,9 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
                 width: 265
             };
         }
+        Ext.applyIf(this.outputConfig, {
+            closeAction: "close"
+        });
     },
     
     /** api: method[addActions]
@@ -73,38 +76,44 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
             disabled: true,
             tooltip: this.tooltip,
             handler: function() {
-                    this.addOutput();
+                this.addOutput();
             },
             scope: this
         }]);
 
         this.target.on("layerselectionchange", function(record) {
             var editableStyles = false;
-            if (record && record.get("styles")) {
-                var source = this.target.layerSources[record.get("source")];
-                var url = source.url.split(
-                    "?").shift().replace(/\/(wms|ows)\/?$/, "/rest");
-                if (this.sameOriginStyling) {
-                    // this could be made more robust
-                    // for now, only style for sources with relative url
-                    editableStyles = url.charAt(0) === "/";
-                } else {
-                    editableStyles = true;
-                }
-            }
-            if (editableStyles) {
-                Ext.Ajax.request({
-                    method: "PUT",
-                    url: url + "/styles",
-                    callback: function(options, success, response) {
-                        // we expect a 405 error code here if we are dealing
-                        // with GeoServer and have write access.
-                        actions[0].setDisabled(response.status != 405);                        
+            var source = this.target.getSource(record);
+            if (source instanceof gxp.plugins.WMSSource) {
+                source.describeLayer(record, function(rec) {
+                    if (rec && rec.get("owsType") == "WFS") {
+                        if (record && record.get("styles")) {
+                            var source = this.target.layerSources[record.get("source")];
+                            var url = source.url.split(
+                                "?").shift().replace(/\/(wms|ows)\/?$/, "/rest");
+                            if (this.sameOriginStyling) {
+                                // this could be made more robust
+                                // for now, only style for sources with relative url
+                                editableStyles = url.charAt(0) === "/";
+                            } else {
+                                editableStyles = true;
+                            }
+                        }
+                        if (editableStyles) {
+                            Ext.Ajax.request({
+                                method: "PUT",
+                                url: url + "/styles",
+                                callback: function(options, success, response) {
+                                    // we expect a 405 error code here if we are dealing
+                                    // with GeoServer and have write access.
+                                    actions[0].setDisabled(response.status != 405);                        
+                                }
+                            });
+                        }
                     }
-                });
-            } else {
-                actions[0].disable();
+                }, this);
             }
+            editableStyles || actions[0].disable();
         }, this);
         
         return actions;
@@ -121,7 +130,10 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
         Ext.apply(config, gxp.WMSStylesDialog.createGeoServerStylerConfig(record));
         Ext.applyIf(config, {style: "padding: 10px"});
         
-        return gxp.plugins.Styler.superclass.addOutput.call(this, config);
+        var output = gxp.plugins.Styler.superclass.addOutput.call(this, config);
+        output.stylesStore.on("load", function() {
+            this.outputTarget || output.ownerCt.ownerCt.center();
+        });
     }
         
 });
