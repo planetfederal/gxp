@@ -566,7 +566,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                     this.clearFeatureStore();
                 } else {
                     var fields = [], geometryName;
-                    var geomRegex = /gml:((Multi)?(Point|Line|Polygon|Curve|Surface)).*/;
+                    var geomRegex = /gml:((Multi)?(Point|Line|Polygon|Curve|Surface|Geometry)).*/;
                     var types = {
                         "xsd:boolean": "boolean",
                         "xsd:int": "int",
@@ -579,7 +579,6 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                         "xsd:double": "float"
                     };
                     schema.each(function(r) {
-                        // TODO: To be more generic, we would look for GeometryPropertyType as well.
                         var match = geomRegex.exec(r.get("type"));
                         if (match) {
                             geometryName = r.get("name");
