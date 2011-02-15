@@ -38,6 +38,22 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
      *  The vector layer that will be synchronized with the layer store.
      *  If the ``map`` config property is provided, this value will be ignored.
      */
+    
+    /** api: config[schema]
+     *  ``GeoExt.data.AttributeStore``
+     *  Optional schema for the grid. If provided, appropriate field
+     *  renderers (e.g. for date or boolean fields) will be used.
+     */
+
+    /** api: config[dateFormat]
+     *  ``String`` Date format. Default is the value of
+     *  ``Ext.form.DateField.prototype.format``.
+     */
+
+    /** api: config[timeFormat]
+     *  ``String`` Time format. Default is the value of
+     *  ``Ext.form.TimeField.prototype.format``.
+     */
 
     /** private: property[layer]
      *  ``OpenLayers.Layer.Vector`` layer displaying features from this grid's
@@ -73,6 +89,12 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
                 this.store.bind(this.layer);
             }
         }
+        if (!this.dateFormat) {
+            this.dateFormat = Ext.form.DateField.prototype.format;
+        }
+        if (!this.timeFormat) {
+            this.timeFormat = Ext.form.TimeField.prototype.format;
+        }
 
         gxp.grid.FeatureGrid.superclass.initComponent.call(this);       
     },
@@ -92,10 +114,15 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
     
     /** api: method[setStore]
      *  :arg store: ``GeoExt.data.FeatureStore``
+     *  :arg schema: ``GeoExt.data.AttributeStore`` Optional schema to
+     *      determine appropriate field renderers for the grid.
      *  
      *  Sets the store for this grid, reconfiguring the column model
      */
-    setStore: function(store) {
+    setStore: function(store, schema) {
+        if (schema) {
+            this.schema = schema;
+        }
         if (store) {
             if(this.store instanceof GeoExt.data.FeatureStore) {
                 this.store.unbind();
@@ -118,14 +145,46 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
      *  :return: ``Ext.grid.ColumnModel``
      */
     createColumnModel: function(store) {
-        var columns = [];
-        store.fields.each(function(f) {
-            var name = f.name;
-            if(this.ignoreFields.indexOf(name) === -1) {
+        function getRenderer(format) {
+            return function(value) {
+                var date = Date.parseDate(value.replace(/Z$/, ""), "c");
+                return date ? date.format(format) : value;
+            };
+        }
+        var columns = [], name, type, xtype, format;
+        (this.schema || store.fields).each(function(f) {
+            if (this.schema) {
+                name = f.get("name");
+                type = f.get("type").split(":").pop();
+                format = null;
+                switch (type) {
+                    case "date":
+                        format = this.dateFormat;
+                    case "datetime":
+                        format = format ? format : this.dateFormat + " " + this.timeFormat;
+                        xtype = undefined;
+                        renderer = getRenderer(format);
+                        break;
+                    case "boolean":
+                        xtype = "booleancolumn";
+                        break;
+                    case "string":
+                        xtype = "gridcolumn";
+                        break;
+                    default:
+                        xtype = "numbercolumn";
+                }
+            } else {
+                name = f.name;
+            }
+            if (this.ignoreFields.indexOf(name) === -1) {
                 columns.push({
-                    dataIndex: f.name,
-                    header: f.name,
-                    sortable: true
+                    dataIndex: name,
+                    header: name,
+                    sortable: true,
+                    xtype: xtype,
+                    format: format,
+                    renderer: xtype ? undefined : renderer
                 });
             }
         }, this);

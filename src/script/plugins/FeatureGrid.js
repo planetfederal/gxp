@@ -264,7 +264,7 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                 r.get("type").indexOf("gml:") == 0 && ignoreFields.push(r.get("name"));
             });
             featureGrid.ignoreFields = ignoreFields;
-            featureGrid.setStore(featureManager.featureStore);
+            featureGrid.setStore(featureManager.featureStore, schema);
         }, this);
         
         return featureGrid;
