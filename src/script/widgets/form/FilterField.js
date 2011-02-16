@@ -60,8 +60,7 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
             if (this.attributes.getCount() != 0) {
                 mode = "local";
                 this.attributes.each(function(r) {
-                    // TODO: To be more generic, we would look for GeometryPropertyType as well.
-                    var match = /gml:((Multi)?(Point|Line|Polygon|Curve|Surface)).*/.exec(r.get("type"));
+                    var match = /gml:((Multi)?(Point|Line|Polygon|Curve|Surface|Geometry)).*/.exec(r.get("type"));
                     match || attributes.add([r]);
                 });
             } else {

@@ -214,7 +214,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             var name, type, value;
             this.schema.each(function(r) {
                 type = r.get("type");
-                if (type.match(/^[^:]*:?((Multi)?(Point|Line|Polygon|Curve|Surface))/)) {
+                if (type.match(/^[^:]*:?((Multi)?(Point|Line|Polygon|Curve|Surface|Geometry))/)) {
                     // exclude gml geometries
                     return;
                 }

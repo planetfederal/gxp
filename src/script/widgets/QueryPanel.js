@@ -91,9 +91,10 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
     attributeStore: null,
     
     /** api: property[geometryType]
-     *  ``String`` (Multi)?(Point|Line|Polygon|Curve|Surface) The geometry type
-     *  of features of the selected layer. If the layer has multiple geometry
-     *  fields, the type of the first geometry field will be returned.
+     *  ``String`` (Multi)?(Point|Line|Polygon|Curve|Surface|Geometry) The
+     *  geometry type of features of the selected layer. If the layer has
+     *  multiple geometry fields, the type of the first geometry field will
+     *  be returned.
      */
     geometryType: null,
 
@@ -273,8 +274,7 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
                 load: function(store) {
                     this.geometryName = null;
                     store.filterBy(function(r) {
-                        // TODO: To be more generic, we would look for GeometryPropertyType as well.
-                        var match = /gml:((Multi)?(Point|Line|Polygon|Curve|Surface)).*/.exec(r.get("type"));
+                        var match = /gml:((Multi)?(Point|Line|Polygon|Curve|Surface|Geometry)).*/.exec(r.get("type"));
                         if (match && !this.geometryName) {
                             this.geometryName = r.get("name");
                             this.geometryType = match[1];
