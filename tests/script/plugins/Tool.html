@@ -42,6 +42,48 @@
             t.ok(tool.active === false, "tool is not automatically activated when autoActivate is false");
         }
         
+        function test_addActions(t) {
+            t.plan(4);
+            var ct = new Ext.Panel({
+                id: "foo",
+                renderTo: document.body,
+                width: 100,
+                height: 100,
+                bbar: []
+            });
+
+            var target = {tools: {}, on: function(){}};
+            var tool = new gxp.plugins.Tool({
+                defaultAction: 0,
+                actions: [{text: "activeAction"}, {text: "otherAction"}],
+                actionTarget: "foo.bbar"
+            });
+            tool.init(target);
+            tool.addActions();
+
+            t.eq(tool.actions[0].items[0].pressed, true, "activeAction initially active");
+            t.ok(!tool.actions[1].items[0].pressed, "otherAction initially not active");
+            
+            var tool = new gxp.plugins.Tool({
+                defaultAction: 1,
+                actions: [new GeoExt.Action({
+                    control: new OpenLayers.Control(),
+                    text: "otherAction"
+                }), new GeoExt.Action({
+                    control: new OpenLayers.Control(),
+                    text: "activeAction"
+                })],
+                actionTarget: "foo"
+            });
+            tool.init(target);
+            tool.addActions();
+
+            t.ok(!tool.actions[0].control.active, "control of otherAction initially inactive");
+            t.eq(tool.actions[1].control.active, true, "control of activeAction initially active");
+
+            ct.destroy();
+        }
+        
         function test_addRemoveOutput(t) {
             t.plan(15);
             var ct = new Ext.Panel({
@@ -118,6 +160,8 @@
             output = tool.addOutput();
             t.eq(output.ownerCt.ownerCt.autoHeight, false, "no autoHeight when a height is provided");
             t.eq(output.ownerCt.ownerCt.initialConfig.layout, "fit", "'fit' layout used when height is configured");
+
+            ct.destroy();
         }
 
     </script>
