@@ -43,7 +43,7 @@
         }
         
         function test_addActions(t) {
-            t.plan(4);
+            t.plan(6);
             var ct = new Ext.Panel({
                 id: "foo",
                 renderTo: document.body,
@@ -53,6 +53,7 @@
             });
 
             var target = {tools: {}, on: function(){}};
+
             var tool = new gxp.plugins.Tool({
                 defaultAction: 0,
                 actions: [{text: "activeAction"}, {text: "otherAction"}],
@@ -64,7 +65,7 @@
             t.eq(tool.actions[0].items[0].pressed, true, "activeAction initially active");
             t.ok(!tool.actions[1].items[0].pressed, "otherAction initially not active");
             
-            var tool = new gxp.plugins.Tool({
+            tool = new gxp.plugins.Tool({
                 defaultAction: 1,
                 actions: [new GeoExt.Action({
                     control: new OpenLayers.Control(),
@@ -80,6 +81,22 @@
 
             t.ok(!tool.actions[0].control.active, "control of otherAction initially inactive");
             t.eq(tool.actions[1].control.active, true, "control of activeAction initially active");
+
+            tool = new gxp.plugins.Tool({
+                defaultAction: 0,
+                actions: [new GeoExt.Action({
+                    control: new OpenLayers.Control(),
+                    text: "activeAction",
+                    disabled: true
+                })],
+                actionTarget: "foo"
+            });
+            tool.init(target);
+            tool.addActions();
+
+            t.ok(!tool.actions[0].control.active, "action disabled, control not yet active");
+            tool.actions[0].enable();
+            t.eq(tool.actions[0].control.active, true, "action enabled, control active");
 
             ct.destroy();
         }

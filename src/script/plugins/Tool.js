@@ -266,7 +266,9 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
                 }
                 action = a[j];
                 if (j == this.defaultAction && action instanceof GeoExt.Action) {
-                    action.control.activate();
+                    action.isDisabled() ?
+                        action.activateOnEnable = true :
+                        action.control.activate();
                 }
                 if (ct) {
                     if (ct instanceof Ext.menu.Menu) {
