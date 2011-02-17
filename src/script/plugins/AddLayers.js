@@ -446,11 +446,11 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                         // http://example.com/geoserver/rest.
                         var parts = source.url.split("/");
                         parts.pop();
-                        parts.push("rest/upload");
+                        parts.push("rest");
                         // this sets the url for the layer upload panel
                         url = parts.join("/");
-                        // only show button if URL returns a 405 for GET
-                        getStatus(url, function(status) {
+                        // only show button if upload URL returns a 405 for GET
+                        getStatus(url + "/upload", function(status) {
                             button.setVisible(status === 405);
                         }, this);
                     }
