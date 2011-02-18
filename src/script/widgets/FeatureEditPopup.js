@@ -419,9 +419,6 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             );
             this.feature.layer.map.addControl(this.modifyControl);
             this.modifyControl.activate();
-            //TODO remove the line below when
-            // http://trac.osgeo.org/openlayers/ticket/3009 is fixed
-            this.modifyControl.beforeSelectFeature(this.feature);
             this.modifyControl.selectFeature(this.feature);
         }
     },
