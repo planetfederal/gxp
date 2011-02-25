@@ -147,7 +147,10 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
     createColumnModel: function(store) {
         function getRenderer(format) {
             return function(value) {
-                var date = Date.parseDate(value.replace(/Z$/, ""), "c");
+                var date = value;
+                if (typeof value == "string") {
+                     date = Date.parseDate(value.replace(/Z$/, ""), "c");
+                }
                 return date ? date.format(format) : value;
             };
         }
