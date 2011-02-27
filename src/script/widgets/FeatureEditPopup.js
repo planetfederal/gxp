@@ -224,6 +224,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                     }
                 }
                 var value = feature.attributes[name];
+                var fieldCfg = GeoExt.form.recordToField(r);
                 var listeners;
                 if (typeof value == "string") {
                     var format;
@@ -234,6 +235,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                             if (!format) {
                                 format = this.dateFormat + " " + this.timeFormat;
                             }
+                            fieldCfg.editable = false;
                             listeners = {
                                 "startedit": function(el, value) {
                                     if (!(value instanceof Date)) {
@@ -264,7 +266,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                     }
                 }
                 customEditors[name] = new Ext.grid.GridEditor({
-                    field: Ext.create(GeoExt.form.recordToField(r)),
+                    field: Ext.create(fieldCfg),
                     listeners: listeners
                 });
                 attributes[name] = value;
