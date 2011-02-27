@@ -211,41 +211,62 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                     attributes[this.fields[i]] = null;
                 }
             }
-            var name, type, value;
             this.schema.each(function(r) {
-                type = r.get("type");
+                var type = r.get("type");
                 if (type.match(/^[^:]*:?((Multi)?(Point|Line|Polygon|Curve|Surface|Geometry))/)) {
                     // exclude gml geometries
                     return;
                 }
-                name = r.get("name");
+                var name = r.get("name");
                 if (this.fields) {
                     if (this.fields.indexOf(name) == -1) {
                         this.excludeFields.push(name);
                     }
                 }
-                value = feature.attributes[name];
+                var value = feature.attributes[name];
+                var listeners;
                 if (typeof value == "string") {
-                    var date, format;
+                    var format;
                     switch(type.split(":").pop()) {
-                        case "string":
-                            break;
                         case "date":
                             format = this.dateFormat;
                         case "dateTime":
-                            date = Date.parseDate(value.replace(/Z$/, ""), "c");
-                            if (date ) {
-                                value = date.format(format ? format : 
-                                    this.dateFormat + " " + this.timeFormat);
+                            if (!format) {
+                                format = this.dateFormat + " " + this.timeFormat;
                             }
+                            listeners = {
+                                "startedit": function(el, value) {
+                                    if (!(value instanceof Date)) {
+                                        var date = Date.parseDate(value.replace(/Z$/, ""), "c");
+                                        if (date) {
+                                            this.setValue(date);
+                                        }
+                                    }
+                                }
+                            };
+                            customRenderers[name] = (function() {
+                                return function(value) {
+                                    var date = value;
+                                    if (typeof value == "string") {
+                                        date = Date.parseDate(value.replace(/Z$/, ""), "c");
+                                    }
+                                    return date ? date.format(format) : value;
+                                }
+                            })();
                             break;
                         case "boolean":
-                            value = Boolean(value);
+                            listeners = {
+                                "startedit": function(el, value) {
+                                    this.setValue(Boolean(value));
+                                }
+                            }
+                            break;
                     }
                 }
-                customEditors[name] = new Ext.grid.GridEditor(
-                    Ext.create(GeoExt.form.recordToField(r))
-                );
+                customEditors[name] = new Ext.grid.GridEditor({
+                    field: Ext.create(GeoExt.form.recordToField(r)),
+                    listeners: listeners
+                });
                 attributes[name] = value;
             }, this);
             feature.attributes = attributes;
