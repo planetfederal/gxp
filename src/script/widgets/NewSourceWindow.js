@@ -59,9 +59,12 @@ gxp.NewSourceWindow = Ext.extend(Ext.Window, {
 
         this.urlTextField = new Ext.form.TextField({
             fieldLabel: "URL",
+            allowBlank: false,
             width: 240,
             msgTarget: "under",
+            vtype: "url",
             validator: OpenLayers.Function.bind(function() {
+                // use previous error
                 return (this.error == null) ? true : this.error;
             }, this)
         });
@@ -92,9 +95,9 @@ gxp.NewSourceWindow = Ext.extend(Ext.Window, {
                 handler: function() {
                     // Clear validation before trying again.
                     this.error = null;
-                    this.urlTextField.validate();
-
-                    this.fireEvent("server-added", this.urlTextField.getValue());
+                    if (this.urlTextField.validate()) {
+                        this.fireEvent("server-added", this.urlTextField.getValue());
+                    }
                 },
                 scope: this
             })
