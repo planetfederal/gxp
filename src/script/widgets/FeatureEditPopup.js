@@ -255,11 +255,11 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                             })();
                             break;
                         case "boolean":
-                            listeners.startedit = (function() {
-                                return function(el, value) {
+                            listeners = {
+                                "startedit": function(el, value) {
                                     this.setValue(Boolean(value));
                                 }
-                            })();
+                            }
                             break;
                     }
                 }
