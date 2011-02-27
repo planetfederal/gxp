@@ -147,6 +147,9 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
     createColumnModel: function(store) {
         function getRenderer(format) {
             return function(value) {
+                //TODO When http://trac.osgeo.org/openlayers/ticket/3131
+                // is resolved, change the 5 lines below to
+                // return value.format(format);
                 var date = value;
                 if (typeof value == "string") {
                      date = Date.parseDate(value.replace(/Z$/, ""), "c");

@@ -236,6 +236,8 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                                 format = this.dateFormat + " " + this.timeFormat;
                             }
                             fieldCfg.editable = false;
+                            //TODO When http://trac.osgeo.org/openlayers/ticket/3131
+                            // is resolved, remove the listeners assignment below
                             listeners = {
                                 "startedit": function(el, value) {
                                     if (!(value instanceof Date)) {
@@ -248,6 +250,9 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                             };
                             customRenderers[name] = (function() {
                                 return function(value) {
+                                    //TODO When http://trac.osgeo.org/openlayers/ticket/3131
+                                    // is resolved, change the 5 lines below to
+                                    // return value.format(format);
                                     var date = value;
                                     if (typeof value == "string") {
                                         date = Date.parseDate(value.replace(/Z$/, ""), "c");
@@ -460,7 +465,8 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             var feature = this.feature;
             if (feature.state === this.getDirtyState()) {
                 if (save === true) {
-                    //TODO consider handling date types in the OpenLayers.Format
+                    //TODO When http://trac.osgeo.org/openlayers/ticket/3131
+                    // is resolved, remove the if clause below
                     if (this.schema) {
                         var attribute, rec;
                         for (var i in feature.attributes) {
