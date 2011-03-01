@@ -211,6 +211,8 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                     attributes[this.fields[i]] = null;
                 }
             }
+            var ucFields = this.fields ?
+                this.fields.join(",").toUpperCase().split(",") : [];
             this.schema.each(function(r) {
                 var type = r.get("type");
                 if (type.match(/^[^:]*:?((Multi)?(Point|Line|Polygon|Curve|Surface|Geometry))/)) {
@@ -219,7 +221,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                 }
                 var name = r.get("name");
                 if (this.fields) {
-                    if (this.fields.indexOf(name) == -1) {
+                    if (ucFields.indexOf(name.toUpperCase()) == -1) {
                         this.excludeFields.push(name);
                     }
                 }
@@ -322,7 +324,8 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             scope: this
         });
         
-        var excludeFields = this.excludeFields;
+        var ucExcludeFields = this.excludeFields ?
+            this.excludeFields.join(",").toUpperCase().split(",") : [];
         this.grid = new Ext.grid.PropertyGrid({
             border: false,
             source: feature.attributes,
@@ -331,7 +334,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             viewConfig: {
                 forceFit: true,
                 getRowClass: function(record) {
-                    if (excludeFields && excludeFields.indexOf(record.get("name")) !== -1) {
+                    if (ucExcludeFields.indexOf(record.get("name").toUpperCase()) !== -1) {
                         return "x-hide-nosize";
                     }
                 }
