@@ -133,7 +133,7 @@ gxp.plugins.WMSFilterView = Ext.extend(gxp.plugins.Tool, {
                             name: featureManager.layerRecord.get("name"),
                             userStyles: [style]
                         }]
-                    }).replace(/( xmlns:[^>]*|sld:)/g, "")
+                    }).replace(/( (xmlns|xsi):[^\"]*\"[^\"]*"|sld:)/g, "")
                 }));
                 this.filterLayer.setVisibility(true);
             },
