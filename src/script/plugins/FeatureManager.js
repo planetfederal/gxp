@@ -496,13 +496,13 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
             if (callback) {
                 var me = this;
                 // unregister previous listener, if any
-                me._activeQuery && me.un("query", me._activeQuery)
+                me._activeQuery && me.un("query", me._activeQuery);
                 this.on("query", me._activeQuery = function(tool, store) {
                     delete me._activeQuery;
                     this.un("query", arguments.callee, this);
                     var len = store.getCount();
                     if (store.getCount() == 0) {
-                        callback.call(scope, [])
+                        callback.call(scope, []);
                     } else {
                         // wait until the features are added to the layer,
                         // so it is easier for listeners that e.g. want to
@@ -775,7 +775,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      *  Gets the extent to use for the root of the paging quad-tree.
      */
     getPagingExtent: function(meth) {
-        layer = this.layerRecord.getLayer();
+        var layer = this.layerRecord.getLayer();
         var filter;
         if (this.filter instanceof OpenLayers.Filter.Spatial && this.filter.type === OpenLayers.Filter.Spatial.BBOX) {
             filter = this.filter;
