@@ -726,7 +726,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                         condition.allowEmpty === false && this.setPage({
                             index: index % this.pages.length,
                             allowEmpty: false,
-                            lonLat: page.extent.getCenterLonLat()
+                            lonLat: new OpenLayers.LonLat(page.extent.right, page.extent.bottom)
                         });
                     } else if (this.pages.indexOf(page) == i) {
                         callback.call(this, page);
