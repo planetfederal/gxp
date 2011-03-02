@@ -257,6 +257,9 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
         });
         
         featureLayer.events.on({
+            "beforefeatureremoved": function(evt) {
+                this.selectControl.unselect(evt.feature);
+            },
             "featureunselected": function(evt) {
                 if(popup) {
                     popup.close();

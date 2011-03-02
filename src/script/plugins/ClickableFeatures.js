@@ -131,23 +131,20 @@ gxp.plugins.ClickableFeatures = Ext.extend(gxp.plugins.Tool, {
                             featureManager.loadFeatures(
                                 filter, function(features) {
                                     this.autoLoadedFeature = features[0];
-                                    this.selectControl.select(features[0]);
+                                    this.select(features[0]);
                                 }, this
                             );
                         }.createDelegate(this);
                         
                         var feature = featureManager.featureLayer.getFeatureByFid(fid);                        
                         if (feature) {
-                            var popup = this.popup;
-                            this.selectControl.unselectAll(
-                                popup && popup.editing && {except: popup.feature});
-                            this.selectControl.select(feature);
+                            this.select(feature);
                         } else if (featureManager.paging) {
                             var lonLat = this.target.mapPanel.map.getLonLatFromPixel(evt.xy);
                             featureManager.setPage({lonLat: lonLat}, function() {
                                 var feature = featureManager.featureLayer.getFeatureByFid(fid);
                                 if (feature) {
-                                    this.selectControl.select(feature);
+                                    this.select(feature);
                                 } else if (this.autoLoadFeatures === true) {
                                     autoLoad();
                                 }
@@ -160,6 +157,15 @@ gxp.plugins.ClickableFeatures = Ext.extend(gxp.plugins.Tool, {
                 scope: this
             }
         });
+    },
+    
+    /** private: method[select]
+     *  :arg feature: ``OpenLayers.Feature.Vector``
+     */
+    select: function(feature) {
+        this.selectControl.unselectAll(
+            this.popup && this.popup.editing && {except: this.popup.feature});
+        this.selectControl.select(feature);
     }
     
 });
