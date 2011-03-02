@@ -185,14 +185,6 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
             "beforelayerchange": intercept.createDelegate(this, "setLayer", 1),
             "beforesetpage": intercept.createDelegate(this, "setPage", 1),
             "beforeclearfeatures": intercept.createDelegate(this, "clearFeatures", 1),
-            "query": function() {
-                if (popup && !popup.isDestroyed) {
-                    // restore selection for current popup
-                    featureManager.featureLayer.selectedFeatures.indexOf(popup.feature) == -1 ?
-                        popup.close() :
-                        this.selectControl.select(popup.feature);
-                }
-            },
             scope: this
         });
         
