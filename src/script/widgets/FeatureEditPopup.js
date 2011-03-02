@@ -233,11 +233,15 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                     switch(type.split(":").pop()) {
                         case "date":
                             format = this.dateFormat;
+                            fieldCfg.editable = false;
                         case "dateTime":
                             if (!format) {
                                 format = this.dateFormat + " " + this.timeFormat;
+                                // make dateTime fields editable because the
+                                // date picker does not allow to edit time
+                                fieldCfg.editable = true;
                             }
-                            fieldCfg.editable = false;
+                            fieldCfg.format = format;
                             //TODO When http://trac.osgeo.org/openlayers/ticket/3131
                             // is resolved, remove the listeners assignment below
                             listeners = {
