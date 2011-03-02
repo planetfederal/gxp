@@ -102,6 +102,13 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      *  URLs (e.g. "/geoserver").  Default is ``true``.
      */
     relativeUploadOnly: true,
+
+    /** api: config[selectedIndex]
+     * ``Integer``
+     * The index of the source combo box that we should start with.
+     * Default is 0.
+     */
+    selectedIndex: 0,
     
     /** private: property[selectedSource]
      *  :class:`gxp.plugins.LayerSource`
@@ -157,7 +164,6 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      * Constructs a window with a capabilities grid.
      */
     initCapGrid: function() {
-        
         var source, data = [];        
         for (var id in this.target.layerSources) {
             source = this.target.layerSources[id];
@@ -195,8 +201,10 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             }
         };
 
+        var idx = this.selectedIndex;
+
         var capGridPanel = new Ext.grid.GridPanel({
-            store: this.target.layerSources[data[0][0]].store,
+            store: this.target.layerSources[data[idx][0]].store,
             layout: "fit",
             region: "center",
             autoScroll: true,
@@ -222,7 +230,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             allowBlank: false,
             forceSelection: true,
             mode: "local",
-            value: data[0][0],
+            value: data[idx][0],
             listeners: {
                 select: function(combo, record, index) {
                     var source = this.target.layerSources[record.get("id")];
@@ -322,7 +330,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     capGridPanel.getSelectionModel().clearSelections();
                 },
                 show: function(win) {
-                    this.setSelectedSource(this.target.layerSources[data[0][0]]);
+                    this.setSelectedSource(this.target.layerSources[data[idx][0]]);
                 },
                 scope: this
             }
