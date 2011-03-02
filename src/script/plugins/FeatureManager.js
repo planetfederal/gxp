@@ -725,7 +725,8 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                         // been the one for our location
                         condition.allowEmpty === false && this.setPage({
                             index: index % this.pages.length,
-                            allowEmpty: false
+                            allowEmpty: false,
+                            lonLat: page.extent.getCenterLonLat()
                         });
                     } else if (this.pages.indexOf(page) == i) {
                         callback.call(this, page);
@@ -915,11 +916,16 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
             return;
         }
         if (this.fireEvent("beforesetpage", this, condition, callback, scope) !== false) {
+            var maxExtent;
             if (!condition) {
                 // choose a page on the top left
                 var extent = this.getPagingExtent("getExtent");
+                maxExtent = this.getPagingExtent("getMaxExtent");
                 condition = {
-                    lonLat: new OpenLayers.LonLat(extent.left, extent.top),
+                    lonLat: new OpenLayers.LonLat(
+                        Math.max(maxExtent.left, extent.left),
+                        Math.min(maxExtent.top, extent.top)
+                    ),
                     allowEmpty: false
                 };
             }
@@ -931,7 +937,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
             this.page = null;
             if (!this.pages) {
                 var layer = this.layerRecord.getLayer();
-                var queryExtent = this.getPagingExtent("getMaxExtent");
+                var queryExtent = maxExtent || this.getPagingExtent("getMaxExtent");
                 this.pages = [{extent: queryExtent}];
                 condition.index = 0;
             } else if (condition.lonLat) {
