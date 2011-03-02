@@ -103,12 +103,11 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      */
     relativeUploadOnly: true,
 
-    /** api: config[selectedIndex]
+    /** api: config[startSourceId]
      * ``Integer``
-     * The index of the source combo box that we should start with.
-     * Default is 0.
+     * The identifier of the source that we should start with.
      */
-    selectedIndex: 0,
+    startSourceId: null,
     
     /** private: property[selectedSource]
      *  :class:`gxp.plugins.LayerSource`
@@ -149,7 +148,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         return actions;
     },
         
-    /** private: method[showCapabilitiesGrid]
+    /** api: method[showCapabilitiesGrid]
      * Shows the window with a capabilities grid.
      */
     showCapabilitiesGrid: function() {
@@ -201,7 +200,14 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             }
         };
 
-        var idx = this.selectedIndex;
+        var idx = 0;
+        if (this.startSourceId !== null) {
+            sources.each(function(record) {
+                if (record.get("id") === this.startSourceId) {
+                    idx = sources.indexOf(record);
+                }
+            }, this);
+        }
 
         var capGridPanel = new Ext.grid.GridPanel({
             store: this.target.layerSources[data[idx][0]].store,
