@@ -37,6 +37,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      addStyleText: "Add",
     /** api: config[addStyleTip] (i18n) */
      addStyleTip: "Add a new style",
+    /** api: config[chooseStyleText] (i18n) */    
+    chooseStyleText: "Choose style",
     /** api: config[addStyleText] (i18n) */
      deleteStyleText: "Remove",
     /** api: config[addStyleTip] (i18n) */
@@ -53,6 +55,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      addRuleText: "Add",
     /** api: config[addStyleTip] (i18n) */
      addRuleTip: "Add a new rule",
+    /** api: config[newRuleText] (i18n) */
+     newRuleText: "New Rule",
     /** api: config[addStyleText] (i18n) */
      deleteRuleText: "Remove",
     /** api: config[addStyleTip] (i18n) */
@@ -550,7 +554,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
 
         var ruleDlg = new Ext.Window({
             title: String.format(this.ruleWindowTitle,
-                rule.title || rule.name || "New Rule"),
+                rule.title || rule.name || this.newRuleText),
             width: 340,
             autoHeight: true,
             modal: true,
@@ -897,7 +901,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     addStylesCombo: function() {
         var store = this.stylesStore;
         var combo = new Ext.form.ComboBox(Ext.apply({
-            fieldLabel: "Choose style",
+            fieldLabel: this.chooseStyleText,
             store: store,
             editable: false,
             displayField: "title",

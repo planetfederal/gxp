@@ -124,7 +124,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                 }
             }, {
                 xtype: "tbtext",
-                text: "Size: "
+                text: this.sizeText + ": "
             }, {
                 xtype: "numberfield",
                 allowNegative: false,

@@ -128,6 +128,8 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
     
     /** i18n */
     labelFeaturesText: "Label Features",
+    labelsText: "Labels",
+    basicText: "Basic",
     advancedText: "Advanced",
     limitByScaleText: "Limit by scale",
     limitByConditionText: "Limit by condition",
@@ -207,7 +209,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
         });
         
         this.items = [{
-            title: "Labels",
+            title: this.labelsText,
             autoScroll: true,
             bodyStyle: {"padding": "10px"},
             items: [{
@@ -234,7 +236,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
         }];
         if (this.getSymbolTypeFromRule(this.rule) || this.symbolType) {
             this.items = [{
-                title: "Basic",
+                title: this.basicText,
                 autoScroll: true,
                 items: [this.createHeaderPanel(), this.createSymbolizerPanel()]
             }, this.items[0], {

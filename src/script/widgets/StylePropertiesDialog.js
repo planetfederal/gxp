@@ -20,6 +20,13 @@ Ext.namespace("gxp");
  */
 gxp.StylePropertiesDialog = Ext.extend(Ext.Container, {
     
+    /* i18n */
+    titleText: "General",
+    nameFieldText: "Name",
+    titleFieldText: "Title",
+    abstractFieldText: "Abstract",
+    /* ~i18n */
+    
     /** api: config[userStyle]
      *  ``OpenLayers.Style``
      */
@@ -48,7 +55,7 @@ gxp.StylePropertiesDialog = Ext.extend(Ext.Container, {
             layout: "form",
             items: [{
                 xtype: "fieldset",
-                title: "General",
+                title: this.titleText,
                 labelWidth: 75,
                 defaults: {
                     xtype: "textfield",
@@ -57,17 +64,17 @@ gxp.StylePropertiesDialog = Ext.extend(Ext.Container, {
                 },
                 items: [{
                     xtype: this.initialConfig.nameEditable ? "textfield" : "displayfield",
-                    fieldLabel: "Name",
+                    fieldLabel: this.nameFieldText,
                     name: "name",
                     value: this.userStyle.name,
                     maskRe: /[A-Za-z0-9_]/
                 }, {
-                    fieldLabel: "Title",
+                    fieldLabel: this.titleFieldText,
                     name: "title",
                     value: this.userStyle.title
                 }, {
                     xtype: "textarea",
-                    fieldLabel: "Abstract",
+                    fieldLabel: this.abstractFieldText,
                     name: "description",
                     value: this.userStyle.description
                 }]

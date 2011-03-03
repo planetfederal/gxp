@@ -1,6 +1,10 @@
 
 GeoExt.Lang.add("en", {
 
+    "gxp.menu.LayerMenu.prototype": {
+        layerText: "Layer"
+    },
+
     "gxp.plugins.AddLayers.prototype": {
         addMenuText: "Add layers",
         addActionTip: "Add layers",
@@ -8,6 +12,9 @@ GeoExt.Lang.add("en", {
         untitledText: "Untitled",
         addLayerSourceErrorText: "Error getting WMS capabilities ({msg}).\nPlease check the url and try again.",
         availableLayersText: "Available Layers",
+        expanderTemplateText: "<p><b>Abstract:</b> {abstract}</p>",
+        panelTitleText: "Title",
+        layerSelectionText: "View available data from:",
         doneText: "Done",
         uploadText: "Upload Data"
     },
@@ -219,6 +226,8 @@ GeoExt.Lang.add("en", {
     "gxp.RulePanel.prototype": {
         scaleSliderTemplate: "{scaleType} Scale 1:{scale}",
         labelFeaturesText: "Label Features",
+        labelsText: "Labels",
+        basicText: "Basic",
         advancedText: "Advanced",
         limitByScaleText: "Limit by scale",
         limitByConditionText: "Limit by condition",
@@ -228,7 +237,26 @@ GeoExt.Lang.add("en", {
     
     "gxp.ScaleLimitPanel.prototype": {
         scaleSliderTemplate: "{scaleType} Scale 1:{scale}",
+        minScaleLimitText: "Min scale limit",
         maxScaleLimitText: "Max scale limit"
+    },
+    
+    "gxp.StrokeSymbolizer.prototype": {
+        solidStrokeName: "solid",
+        dashStrokeName: "dash",
+        dotStrokeName: "dot",
+        titleText: "Stroke",
+        styleText: "Style",
+        colorText: "Color",
+        widthText: "Width",
+        opacityText: "Opacity"
+    },
+    
+    "gxp.StylePropertiesDialog.prototype": {   
+        titleText: "General",
+        nameFieldText: "Name",
+        titleFieldText: "Title",
+        abstractFieldText: "Abstract"
     },
     
     "gxp.TextSymbolizer.prototype": {
@@ -265,6 +293,7 @@ GeoExt.Lang.add("en", {
     "gxp.WMSStylesDialog.prototype": {
          addStyleText: "Add",
          addStyleTip: "Add a new style",
+         chooseStyleText: "Choose style",
          deleteStyleText: "Remove",
          deleteStyleTip: "Delete the selected style",
          editStyleText: "Edit",
@@ -273,6 +302,7 @@ GeoExt.Lang.add("en", {
          duplicateStyleTip: "Duplicate the selected style",
          addRuleText: "Add",
          addRuleTip: "Add a new rule",
+         newRuleText: "New Rule",
          deleteRuleText: "Remove",
          deleteRuleTip: "Delete the selected rule",
          editRuleText: "Edit",

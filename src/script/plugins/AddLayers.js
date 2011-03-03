@@ -68,6 +68,24 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      */
     availableLayersText: "Available Layers",
 
+    /** api: config[availableLayersText]
+     *  ``String``
+     *  Text for the grid expander (i18n).
+     */
+    expanderTemplateText: "<p><b>Abstract:</b> {abstract}</p>",
+    
+    /** api: config[availableLayersText]
+     *  ``String``
+     *  Text for the layer title (i18n).
+     */
+    panelTitleText: "Title",
+
+    /** api: config[availableLayersText]
+     *  ``String``
+     *  Text for the layer selection (i18n).
+     */
+    layerSelectionText: "View available data from:",
+    
     /** api: config[doneText]
      *  ``String``
      *  Text for Done button (i18n).
@@ -176,7 +194,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         });
 
         var expander = new Ext.grid.RowExpander({
-            tpl: new Ext.Template("<p><b>Abstract:</b> {abstract}</p>")
+            tpl: new Ext.Template(this.expanderTemplateText)
         });
         
         var addLayers = function() {
@@ -218,7 +236,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             plugins: [expander],
             colModel: new Ext.grid.ColumnModel([
                 expander,
-                {id: "title", header: "Title", dataIndex: "title", sortable: true},
+                {id: "title", header: this.panelTitleText, dataIndex: "title", sortable: true},
                 {header: "Id", dataIndex: "name", width: 150, sortable: true}
             ]),
             listeners: {
@@ -254,7 +272,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         if (this.target.proxy || data.length > 1) {
             capGridToolbar = [
                 new Ext.Toolbar.TextItem({
-                    text: "View available data from:"
+                    text: this.layerSelectionText
                 }),
                 sourceComboBox
             ];

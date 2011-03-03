@@ -24,6 +24,17 @@ Ext.namespace("gxp");
  */
 gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
     
+    /* i18n */
+    solidStrokeName: "solid",
+    dashStrokeName: "dash",
+    dotStrokeName: "dot",
+    titleText: "Stroke",
+    styleText: "Style",
+    colorText: "Color",
+    widthText: "Width",
+    opacityText: "Opacity",
+    /* ~i18n */
+    
     /** api: config[symbolizer]
      *  ``Object``
      *  A symbolizer object that will be used to fill in form values.
@@ -60,11 +71,13 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
      *  display name.  Default is [["solid", "solid"], ["2 4", "dash"],
      *  ["1 4", "dot"]].
      */
-    dashStyles: [["solid", "solid"], ["4 4", "dash"], ["2 4", "dot"]],
+    dashStyles: null,
     
     border: false,
     
     initComponent: function() {
+        
+        this.dashStyles = this.dashStyles || [["solid", this.solidStrokeName], ["4 4", this.dashStrokeName], ["2 4", this.dotStrokeName]];
         
         if(!this.symbolizer) {
             this.symbolizer = {};
@@ -77,7 +90,7 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
 
         this.items = [{
             xtype: "fieldset",
-            title: "Stroke",
+            title: this.titleText,
             autoHeight: true,
             checkboxToggle: this.checkboxToggle,
             collapsed: this.checkboxToggle === true &&
@@ -89,7 +102,7 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
             items: [{
                 xtype: "combo",
                 name: "style",
-                fieldLabel: "Style",
+                fieldLabel: this.styleText,
                 store: new Ext.data.SimpleStore({
                     data: this.dashStyles,
                     fields: ["value", "display"]
@@ -111,7 +124,7 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
             }, {
                 xtype: "gxp_colorfield",
                 name: "color",
-                fieldLabel: "Color",
+                fieldLabel: this.colorText,
                 emptyText: OpenLayers.Renderer.defaultSymbolizer.strokeColor,
                 value: this.symbolizer.strokeColor,
                 defaultBackground: this.defaultColor ||
@@ -129,7 +142,7 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
             }, {
                 xtype: "numberfield",
                 name: "width",
-                fieldLabel: "Width",
+                fieldLabel: this.widthText,
                 allowNegative: false,
                 emptyText: OpenLayers.Renderer.defaultSymbolizer.strokeWidth,
                 value: this.symbolizer.strokeWidth,
@@ -148,7 +161,7 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
             }, {
                 xtype: "slider",
                 name: "opacity",
-                fieldLabel: "Opacity",
+                fieldLabel: this.opacityText,
                 values: [(("strokeOpacity" in this.symbolizer) ? this.symbolizer.strokeOpacity : OpenLayers.Renderer.defaultSymbolizer.strokeOpacity) * 100],
                 isFormField: true,
                 listeners: {

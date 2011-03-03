@@ -1,6 +1,10 @@
 
 GeoExt.Lang.add("ca", {
 
+    "gxp.menu.LayerMenu.prototype": {
+        layerText: "Capa"
+    },
+    
     "gxp.plugins.AddLayers.prototype": {
         addMenuText: "Afegeix Capa",
         addActionTip: "Afegeix Capa",
@@ -8,37 +12,40 @@ GeoExt.Lang.add("ca", {
         untitledText: "Sense Títol",
         addLayerSourceErrorText: "Error obtenint les capabilities del WMS ({msg}).\nSi us plau, comproveu la URL i torneu-ho a intentar.",
         availableLayersText: "Capes disponibles",
+        expanderTemplateText: "<p><b>Resum:</b> {abstract}</p>",
+        panelTitleText: "Títol",
+        layerSelectionText: "Veure dades disponibles de:",
         doneText: "Fet",
-        uploadText: "Upload Data"
+        uploadText: "Puja dades"
     },
     
     "gxp.plugins.BingSource.prototype": {
-        title: "Bing Layers",
-        roadTitle: "Bing Roads",
-        aerialTitle: "Bing Aerial",
-        labeledAerialTitle: "Bing Aerial With Labels"
+        title: "Capes Bing",
+        roadTitle: "Bing Carrerer",
+        aerialTitle: "Bing Fotografia Aèria",
+        labeledAerialTitle: "Bing Fotografia Aèria amb Etiquetes"
     },    
 
     "gxp.plugins.FeatureEditor.prototype": {
-        createFeatureActionTip: "Create a new feature",
-        editFeatureActionTip: "Edit existing feature"
+        createFeatureActionTip: "Crea nou element",
+        editFeatureActionTip: "Edita element existent"
     },
     
     "gxp.plugins.FeatureGrid.prototype": {
-        displayFeatureText: "Display on map",
-        firstPageTip: "First page",
-        previousPageTip: "Previous page",
-        zoomPageExtentTip: "Zoom to page extent",
-        nextPageTip: "Next page",
-        nextPageTip: "Last page"
+        displayFeatureText: "Mostra al mapa",
+        firstPageTip: "Primera pàgina",
+        previousPageTip: "Pàgina anterior",
+        zoomPageExtentTip: "Ajusta vista a l'extensió de la pàgina",
+        nextPageTip: "Pàgina següent",
+        nextPageTip: "Pàgina anterior"
     },
     
     "gxp.plugins.GoogleSource.prototype": {
-        title: "Google Layers",
-        roadmapAbstract: "Show street map",
-        satelliteAbstract: "Show satellite imagery",
-        hybridAbstract: "Show imagery with street names",
-        terrainAbstract: "Show street map with terrain"
+        title: "Capes Google",
+        roadmapAbstract: "Mostra carrerer",
+        satelliteAbstract: "Mostra imatges de satèl·lit",
+        hybridAbstract: "Mostra imatges amb noms de carrer",
+        terrainAbstract: "Mostra carrerer amb terreny"
     },
 
     "gxp.plugins.LayerProperties.prototype": {
@@ -53,8 +60,8 @@ GeoExt.Lang.add("ca", {
     },
 
     "gxp.plugins.Legend.prototype": { 
-        menuText: "Llegenda",
-        tooltip: "Llegenda"
+        menuText: "Mostra Llegenda",
+        tooltip: "Mostra Llegenda"
     },
 
     "gxp.plugins.Measure.prototype": {
@@ -78,14 +85,14 @@ GeoExt.Lang.add("ca", {
     },
 
     "gxp.plugins.OSMSource.prototype": {
-        title: "OpenStreetMap Layers",
-        mapnikAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
-        osmarenderAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>"
+        title: "Capes OpenStreetMap",
+        mapnikAttribution: "Dades CC-By-SA de <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
+        osmarenderAttribution: "Daded CC-By-SA de <a href='http://openstreetmap.org/'>OpenStreetMap</a>"
     },
 
     "gxp.plugins.Print.prototype": {
-        menuText: "Imprimeix",
-        tooltip: "Imprimeix",
+        menuText: "Imprimeix mapa",
+        tooltip: "Imprimeix mapa",
         previewText: "Vista prèvia",
         notAllNotPrintableText: "No es poden imprimir totes les capes",
         nonePrintableText: "No es pot imprimir cap de les capes del mapa"
@@ -93,24 +100,33 @@ GeoExt.Lang.add("ca", {
 
     "gxp.plugins.MapQuestSource.prototype": {
         title: "MapQuest Layers",
-        osmAttribution: "Tiles Courtesy of <a href='http://open.mapquest.co.uk/' target='_blank'>MapQuest</a> <img src='http://developer.mapquest.com/content/osm/mq_logo.png' border='0'>",
+        osmAttribution: "Tessel·les cortesia de <a href='http://open.mapquest.co.uk/' target='_blank'>MapQuest</a> <img src='http://developer.mapquest.com/content/osm/mq_logo.png' border='0'>",
         osmTitle: "MapQuest OpenStreetMap",
-        naipAttribution: "Tiles Courtesy of <a href='http://open.mapquest.co.uk/' target='_blank'>MapQuest</a> <img src='http://developer.mapquest.com/content/osm/mq_logo.png' border='0'>",
-        naipTitle: "MapQuest Imagery"
+        naipAttribution: "Tessel·les cortesia de <a href='http://open.mapquest.co.uk/' target='_blank'>MapQuest</a> <img src='http://developer.mapquest.com/content/osm/mq_logo.png' border='0'>",
+        naipTitle: "MapQuest Imatge"
     },
 
     "gxp.plugins.QueryForm.prototype": {
-        queryActionText: "Query",
-        queryMenuText: "Query layer",
-        queryActionTip: "Query the selected layer",
-        queryByLocationText: "Query by location",
-        currentTextText: "Current extent",
-        queryByAttributesText: "Query by attributes"
+        queryActionText: "Consulta",
+        queryMenuText: "Consulta layer",
+        queryActionTip: "Consulta la capa sel·leccionada",
+        queryByLocationText: "Consulta per lloc",
+        currentTextText: "Extensió de la vista actual",
+        queryByAttributesText: "Consulta per atributs",
+        queryMsg: "Consultant...",
+        cancelButtonText: "Cancel·la",
+        noFeaturesTitle: "Sense coincidències",
+        noFeaturesMessage: "La vostra consulta no ha produït resultats."
     },
 
     "gxp.plugins.RemoveLayer.prototype": {
         removeMenuText: "Elimina Capa",
         removeActionTip: "Elimina Capa"
+    },
+    
+    "gxp.plugins.Styler.prototype": {
+        menuText: "Edita Estils",
+        tooltip: "Gestiona els estils de les capes"
     },
 
     "gxp.plugins.WMSGetFeatureInfo.prototype": {
@@ -126,118 +142,140 @@ GeoExt.Lang.add("ca", {
     },
     
     "gxp.plugins.ZoomToExtent.prototype": {
-        menuText: "Zoom To Max Extent",
-        tooltip: "Zoom To Max Extent"
+        menuText: "Mostra l'extensió total",
+        tooltip: "Mostra l'extensió total"
     },
     
     "gxp.plugins.ZoomToDataExtent.prototype": {
-        menuText: "Zoom to layer extent",
-        tooltip: "Zoom to layer extent"
+        menuText: "Mostra tota la capa",
+        tooltip: "Mostra tota la capa"
     },
 
     "gxp.plugins.ZoomToLayerExtent.prototype": {
-        menuText: "Ajusta vista a l'extensió de la capa",
-        tooltip: "Ajusta vista a l'extensió de la capa"
+        menuText: "Mostra tota la capa",
+        tooltip: "Mostra tota la capa"
     },
     
     "gxp.plugins.ZoomToSelectedFeatures.prototype": {
-        menuText: "Zoom to selected features",
-        tooltip: "Zoom to selected features"
+        menuText: "Mostra els elements seleccionats",
+        tooltip: "Mostra els elements seleccionats"
     },
 
     "gxp.FeatureEditPopup.prototype": {
-        closeMsgTitle: "Save Changes?",
-        closeMsg: "This feature has unsaved changes. Would you like to save your changes?",
-        deleteMsgTitle: "Delete Feature?",
-        deleteMsg: "Are you sure you want to delete this feature?",
-        editButtonText: "Edit",
-        editButtonTooltip: "Make this feature editable",
-        deleteButtonText: "Delete",
-        deleteButtonTooltip: "Delete this feature",
-        cancelButtonText: "Cancel",
-        cancelButtonTooltip: "Stop editing, discard changes",
-        saveButtonText: "Save",
-        saveButtonTooltip: "Save changes"
+        closeMsgTitle: "Desitgeu desar els canvis?",
+        closeMsg: "Els canvis en aquest element no s'han desat. Desitja desar-los?",
+        deleteMsgTitle: "Desitgeu esborrar l'element?",
+        deleteMsg: "Esteu segurs de voler esborrar aquest element?",
+        editButtonText: "Edita",
+        editButtonTooltip: "Fes que aquest element sigui editable",
+        deleteButtonText: "Esborra",
+        deleteButtonTooltip: "Esborra aquest element",
+        cancelButtonText: "Cancel·la",
+        cancelButtonTooltip: "Deixa d'editar, descarta els canvis",
+        saveButtonText: "Desa",
+        saveButtonTooltip: "Desa els canvis"
     },
     
     "gxp.FillSymbolizer.prototype": {
-        fillText: "Fill",
+        fillText: "Farcit",
         colorText: "Color",
-        opacityText: "Opacity"
+        opacityText: "Opacitat"
     },
     
     "gxp.FilterBuilder.prototype": {
-        builderTypeNames: ["any", "all", "none", "not all"],
-        preComboText: "Match",
-        postComboText: "of the following:",
-        addConditionText: "add condition",
-        addGroupText: "add group",
-        removeConditionText: "remove condition"
+        builderTypeNames: ["alguna de", "totes", "cap de", "no totes"],
+        preComboText: "Acompleix",
+        postComboText: "les condicions següents:",
+        addConditionText: "afegeix condició",
+        addGroupText: "afegeix grup",
+        removeConditionText: "treu condició"
     },
     
     "gxp.grid.CapabilitiesGrid.prototype": {
-        nameHeaderText : "Name",
-        titleHeaderText : "Title",
-        queryableHeaderText : "Queryable",
+        nameHeaderText : "Nom",
+        titleHeaderText : "Títol",
+        queryableHeaderText : "Consultable",
         layerSelectionLabel: "Llista les capes de:",
-        layerAdditionLabel: "or add a new server.",
+        layerAdditionLabel: "o afegeix un altre servidor.",
         expanderTemplateText: "<p><b>Resum:</b> {abstract}</p>"
     },
     
     "gxp.PointSymbolizer.prototype": {
-        graphicCircleText: "circle",
-        graphicSquareText: "square",
+        graphicCircleText: "cercle",
+        graphicSquareText: "quadrat",
         graphicTriangleText: "triangle",
-        graphicStarText: "star",
-        graphicCrossText: "cross",
+        graphicStarText: "estrella",
+        graphicCrossText: "creu",
         graphicXText: "x",
-        graphicExternalText: "external",
+        graphicExternalText: "extern",
         urlText: "URL",
-        opacityText: "opacity",
-        symbolText: "Symbol",
-        sizeText: "Size",
-        rotationText: "Rotation"
+        opacityText: "opacitat",
+        symbolText: "Símbol",
+        sizeText: "Mides",
+        rotationText: "Gir"
     },
 
     "gxp.QueryPanel.prototype": {
-        queryByLocationText: "Query by location",
-        currentTextText: "Current extent",
-        queryByAttributesText: "Query by attributes",
-        layerText: "Layer"
+        queryByLocationText: "Consulta per lloc",
+        currentTextText: "Vista actual",
+        queryByAttributesText: "Consulta per atributs",
+        layerText: "Capa"
     },
     
     "gxp.RulePanel.prototype": {
-        scaleSliderTemplate: "{scaleType} Scale 1:{scale}",
-        labelFeaturesText: "Label Features",
-        advancedText: "Advanced",
-        limitByScaleText: "Limit by scale",
-        limitByConditionText: "Limit by condition",
-        symbolText: "Symbol",
-        nameText: "Name"
+        scaleSliderTemplate: "{scaleType} Escala 1:{scale}",
+        labelFeaturesText: "Etiqueta elements",
+        labelsText: "Etiquetes",
+        basicText: "Bàsic",
+        advancedText: "Avançat",
+        limitByScaleText: "Restringeix per escala",
+        limitByConditionText: "Restringeix per condició",
+        symbolText: "Símbol",
+        nameText: "Nom"
     },
     
     "gxp.ScaleLimitPanel.prototype": {
-        scaleSliderTemplate: "{scaleType} Scale 1:{scale}",
-        maxScaleLimitText: "Max scale limit"
+        scaleSliderTemplate: "{scaleType} Escala 1:{scale}",
+        minScaleLimitText: "Escala mínima",
+        maxScaleLimitText: "Escala màxima"
+    },
+    
+    "gxp.StrokeSymbolizer.prototype": {
+        solidStrokeName: "continu",
+        dashStrokeName: "guions",
+        dotStrokeName: "punts",
+        titleText: "Traç",
+        styleText: "Estil",
+        colorText: "Color",
+        widthText: "Amplada",
+        opacityText: "Opacitad"
+    },
+    
+    "gxp.StylePropertiesDialog.prototype": {   
+        titleText: "General",
+        nameFieldText: "Nom",
+        titleFieldText: "Títol",
+        abstractFieldText: "Resum"
     },
     
     "gxp.TextSymbolizer.prototype": {
-        labelValuesText: "Label values",
+        labelValuesText: "Etiquetatge",
         haloText: "Halo",
-        sizeText: "Size"
+        sizeText: "Mida"
     },
     
     "gxp.WMSLayerPanel.prototype": {
-        aboutText: "About",
-        titleText: "Title",
-        nameText: "Name",
-        descriptionText: "Description",
-        displayText: "Display",
-        opacityText: "Opacity",
+        aboutText: "Quant a",
+        titleText: "Títol",
+        nameText: "Nom",
+        descriptionText: "Descriptció",
+        displayText: "Mostra",
+        opacityText: "Opacitat",
         formatText: "Format",
         transparentText: "Transparent",
-        cacheText: "Cache",
-        cacheFieldText: "Use cached version"
+        cacheText: "Caché",
+        cacheFieldText: "Utiliza la versió en caché",
+        stylesText: "Estils"
     },
 
     "gxp.EmbedMapDialog.prototype": {
@@ -249,23 +287,50 @@ GeoExt.Lang.add("ca", {
         smallSizeLabel: 'Petita',
         premiumSizeLabel: 'Premium',
         largeSizeLabel: 'Gran'
+   },
+    
+    "gxp.WMSStylesDialog.prototype": {
+        addStyleText: "Afegeix",
+        addStyleTip: "Afegeix nou estil",
+        chooseStyleText: "Escull estil",
+        deleteStyleText: "Treu",
+        deleteStyleTip: "Esborra l'estil sel·leccionat",
+        editStyleText: "Canvia",
+        editStyleTip: "Edita l'estil sel·leccionat",
+        duplicateStyleText: "Clona",
+        duplicateStyleTip: "Duplica l'estil sel·leccionat",
+        addRuleText: "Afegeix",
+        addRuleTip: "Afegeix nova regla",
+        newRuleText: "Nova regla",
+        deleteRuleText: "Treu",
+        deleteRuleTip: "Esborra la regla sel·leccionada",
+        editRuleText: "Edita",
+        editRuleTip: "Edita la regla sel·leccionada",
+        duplicateRuleText: "Clona",
+        duplicateRuleTip: "Duplica la regla sel·leccionada",
+        cancelText: "Cancel·la",
+        saveText: "Desa",
+        styleWindowTitle: "Estil: {0}",
+        ruleWindowTitle: "Regla: {0}",
+        stylesFieldsetTitle: "Estils",
+        rulesFieldsetTitle: "Regles"
     },
 
     "gxp.LayerUploadPanel.prototype": {
-        titleLabel: "Title",
-        titleEmptyText: "Layer title",
-        abstractLabel: "Description",
-        abstractEmptyText: "Layer description",
-        fileLabel: "Data",
-        fieldEmptyText: "Browse for data archive...",
-        uploadText: "Upload",
-        waitMsgText: "Uploading your data...",
-        invalidFileExtensionText: "File extension must be one of: ",
-        optionsText: "Options",
-        workspaceLabel: "Workspace",
-        workspaceEmptyText: "Default workspace",
-        dataStoreLabel: "Store",
-        dataStoreEmptyText: "Default datastore"
+        titleLabel: "Títol",
+        titleEmptyText: "Títol de la capa",
+        abstractLabel: "Descripció",
+        abstractEmptyText: "Descripció de la capa",
+        fileLabel: "Dades",
+        fieldEmptyText: "Navegueu per les dades...",
+        uploadText: "Puja",
+        waitMsgText: "Pugeu les vostres dades...",
+        invalidFileExtensionText: "L'extensió del fitxer ha de ser alguna d'aquestes: ",
+        optionsText: "Opcions",
+        workspaceLabel: "Espai de treball",
+        workspaceEmptyText: "Espai de treball per defecte",
+        dataStoreLabel: "Magatzem",
+        dataStoreEmptyText: "Magatzem de dades per defecte"
     }
 
 });
