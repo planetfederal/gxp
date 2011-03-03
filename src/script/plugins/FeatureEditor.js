@@ -140,6 +140,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
             }
         }
 
+        var intercepting = false;
         // intercept calls to methods that change the feature store - allows us
         // to persist unsaved changes before calling the original function
         function intercept(mgr, fn) {
@@ -147,9 +148,10 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
             // remove mgr and fn, which will leave us with the original
             // arguments of the intercepted loadFeatures or setLayer function
             fnArgs.splice(0, 2);
-            if (popup && !popup.isDestroyed) {
+            if (!intercepting && popup && !popup.isDestroyed) {
                 if (popup.editing) {
                     function doIt() {
+                        intercepting = true;
                         unregisterDoIt.call(this);
                         if (fn === "setLayer") {
                             this.target.selectLayer(fnArgs[0]);
@@ -176,6 +178,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                 }
                 return !popup.editing;
             }
+            intercepting = false;
         };
         featureManager.on({
             "beforequery": intercept.createDelegate(this, "loadFeatures", 1),
