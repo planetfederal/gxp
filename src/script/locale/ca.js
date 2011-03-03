@@ -6,9 +6,10 @@ GeoExt.Lang.add("ca", {
     },
     
     "gxp.plugins.AddLayers.prototype": {
-        addMenuText: "Afegeix Capa",
-        addActionTip: "Afegeix Capa",
+        addMenuText: "Afegeix Capes",
+        addActionTip: "Afegeix Capes",
         addServerText: "Afegeix servidor",
+        addButtonText: "Afegeix Capes",
         untitledText: "Sense Títol",
         addLayerSourceErrorText: "Error obtenint les capabilities del WMS ({msg}).\nSi us plau, comproveu la URL i torneu-ho a intentar.",
         availableLayersText: "Capes disponibles",
@@ -268,7 +269,7 @@ GeoExt.Lang.add("ca", {
         aboutText: "Quant a",
         titleText: "Títol",
         nameText: "Nom",
-        descriptionText: "Descriptció",
+        descriptionText: "Descripció",
         displayText: "Mostra",
         opacityText: "Opacitat",
         formatText: "Format",
@@ -331,6 +332,13 @@ GeoExt.Lang.add("ca", {
         workspaceEmptyText: "Espai de treball per defecte",
         dataStoreLabel: "Magatzem",
         dataStoreEmptyText: "Magatzem de dades per defecte"
+    },
+    
+    "gxp.NewSourceWindow.prototype": {
+        title: "Afegeix Servidor...",
+        cancelText: "Cancel·la",
+        addServerText: "Afegeix Servidor",
+        contactingServerText: "Connectant amb el Servidor..."
     }
 
 });

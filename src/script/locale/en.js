@@ -9,6 +9,7 @@ GeoExt.Lang.add("en", {
         addMenuText: "Add layers",
         addActionTip: "Add layers",
         addServerText: "Add a New Server",
+        addButtonText: "Add layers",
         untitledText: "Untitled",
         addLayerSourceErrorText: "Error getting WMS capabilities ({msg}).\nPlease check the url and try again.",
         availableLayersText: "Available Layers",
@@ -332,6 +333,13 @@ GeoExt.Lang.add("en", {
         workspaceEmptyText: "Default workspace",
         dataStoreLabel: "Store",
         dataStoreEmptyText: "Default datastore"
+    },
+    
+    "gxp.NewSourceWindow.prototype": {
+        title: "Add New Server...",
+        cancelText: "Cancel",
+        addServerText: "Add Server",
+        contactingServerText: "Contacting Server..."
     }
 
 });

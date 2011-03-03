@@ -43,13 +43,19 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      *  Text for add action tooltip (i18n).
      */
     addActionTip: "Add layers",
-
+   
     /** api: config[addServerText]
      *  ``String``
      *  Text for add server button (i18n).
      */
     addServerText: "Add a New Server",
 
+    /** api: config[addButtonText]
+     *  ``String``
+     *  Text for add layers button (i18n).
+     */
+    addButtonText: "Add layers",
+    
     /** api: config[untitledText]
      *  ``String``
      *  Text for an untitled layer (i18n).
@@ -320,7 +326,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         var bbarItems = [
             "->",
             new Ext.Button({
-                text: "Add Layers",
+                text: this.addButtonText,
                 iconCls: "gxp-icon-addlayers",
                 handler: addLayers,
                 scope : this

@@ -6,9 +6,10 @@ GeoExt.Lang.add("es", {
     },
     
     "gxp.plugins.AddLayers.prototype": {
-        addMenuText: "Añadir Capa",
-        addActionTip: "Añadir Capa",
+        addMenuText: "Añadir Capas",
+        addActionTip: "Añadir Capas",
         addServerText: "Añadir servidor",
+        addButtonText: "Añadir Capas",
         untitledText: "Sin Título",
         addLayerSourceErrorText: "Error obteniendo capabilities de WMS ({msg}).\nPor favor, compruebe la URL y vuelva a intentarlo.",
         availableLayersText: "Capas disponibles",
@@ -275,7 +276,7 @@ GeoExt.Lang.add("es", {
         transparentText: "Transparente",
         cacheText: "Caché",
         cacheFieldText: "Usar la versión en caché",
-        stylesText: "Estils"
+        stylesText: "Estilos"
     },
 
     "gxp.EmbedMapDialog.prototype": {
@@ -331,6 +332,13 @@ GeoExt.Lang.add("es", {
         workspaceEmptyText: "Espacio de trabajo por defecto",
         dataStoreLabel: "Almacén de datos",
         dataStoreEmptyText: "Almacén de datos por defecto"
+    },
+    
+    "gxp.NewSourceWindow.prototype": {
+        title: "Añadir Servidor...",
+        cancelText: "Cancelar",
+        addServerText: "Añadir Servidor",
+        contactingServerText: "Conectando con el Servidor..."
     }
 
 });
