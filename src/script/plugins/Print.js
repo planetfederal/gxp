@@ -179,7 +179,7 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                     modal: true,
                     border: false,
                     resizable: false,
-                    width: 465,
+                    width: 360,
                     items: [
                         new GeoExt.ux.PrintPreview({
                             autoHeight: true,
@@ -230,8 +230,8 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                     }
                 });
                 printWindow.setWidth(
-                    Math.max(printWindow.items.get(0).printMapPanel.getWidth() + 22,
-                    w + 22)
+                    Math.max(printWindow.items.get(0).printMapPanel.getWidth(),
+                    w + 20)
                 );
                 printWindow.center();
             }
