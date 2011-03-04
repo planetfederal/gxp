@@ -226,6 +226,13 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
         this.selectControl = new OpenLayers.Control.SelectFeature(featureLayer, {
             clickout: false,
             multipleKey: "fakeKey",
+            unselect: function() {
+                // TODO consider a beforefeatureunselected event for
+                // OpenLayers.Layer.Vector
+                if (!featureManager.featureStore.getModifiedRecords().length) {
+                    OpenLayers.Control.SelectFeature.prototype.unselect.apply(this, arguments);
+                }
+            },
             eventListeners: {
                 "activate": function() {
                     if (this.autoLoadFeatures === true || featureManager.paging) {
