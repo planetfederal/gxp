@@ -145,10 +145,9 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                 autoActivateControl: false,
                 listeners: {
                     "beforerowselect": function() {
-                        if(this.selectControl.active && !this._selectingFeature) {
+                        if(this.selectControl.active || featureManager.featureStore.getModifiedRecords().length) {
                             return false;
                         }
-                        delete this._selectingFeature;
                     },
                     scope: this
                 }
