@@ -1,44 +1,52 @@
 
 GeoExt.Lang.add("es", {
 
+    "gxp.menu.LayerMenu.prototype": {
+        layerText: "Capa"
+    },
+    
     "gxp.plugins.AddLayers.prototype": {
-        addMenuText: "Añadir Capa",
-        addActionTip: "Añadir Capa",
+        addMenuText: "Añadir Capas",
+        addActionTip: "Añadir Capas",
         addServerText: "Añadir servidor",
+        addButtonText: "Añadir Capas",
         untitledText: "Sin Título",
         addLayerSourceErrorText: "Error obteniendo capabilities de WMS ({msg}).\nPor favor, compruebe la URL y vuelva a intentarlo.",
         availableLayersText: "Capas disponibles",
+        expanderTemplateText: "<p><b>Resumen:</b> {abstract}</p>",
+        panelTitleText: "Título",
+        layerSelectionText: "Ver datos disponibles de:",
         doneText: "Hecho",
-        uploadText: "Upload Data"
+        uploadText: "Subir Datos"
     },
     
     "gxp.plugins.BingSource.prototype": {
-        title: "Bing Layers",
-        roadTitle: "Bing Roads",
-        aerialTitle: "Bing Aerial",
-        labeledAerialTitle: "Bing Aerial With Labels"
+        title: "Capas Bing",
+        roadTitle: "Bing Carreteras",
+        aerialTitle: "Bing Foto Aérea",
+        labeledAerialTitle: "Bing Híbrido"
     },    
 
     "gxp.plugins.FeatureEditor.prototype": {
-        createFeatureActionTip: "Create a new feature",
-        editFeatureActionTip: "Edit existing feature"
+        createFeatureActionTip: "Crear nuevo elemento",
+        editFeatureActionTip: "Editar elemento existente"
     },
     
     "gxp.plugins.FeatureGrid.prototype": {
-        displayFeatureText: "Display on map",
-        firstPageTip: "First page",
-        previousPageTip: "Previous page",
-        zoomPageExtentTip: "Zoom to page extent",
-        nextPageTip: "Next page",
-        nextPageTip: "Last page"
+        displayFeatureText: "Mostrar en el mapa",
+        firstPageTip: "Primera página",
+        previousPageTip: "Página anterior",
+        zoomPageExtentTip: "Zoom a la extensión de la página",
+        nextPageTip: "Página siguiente",
+        nextPageTip: "Última página"
     },
     
     "gxp.plugins.GoogleSource.prototype": {
-        title: "Google Layers",
-        roadmapAbstract: "Show street map",
-        satelliteAbstract: "Show satellite imagery",
-        hybridAbstract: "Show imagery with street names",
-        terrainAbstract: "Show street map with terrain"
+        title: "Capas Google",
+        roadmapAbstract: "Mostrar Callejero",
+        satelliteAbstract: "Mostrar imágenes aéreas",
+        hybridAbstract: "Mostrar imágenes con nombres de calle",
+        terrainAbstract: "Mostrar callejero con terreno"
     },
 
     "gxp.plugins.LayerProperties.prototype": {
@@ -49,7 +57,7 @@ GeoExt.Lang.add("es", {
     "gxp.plugins.LayerTree.prototype": {
         rootNodeText: "Capas",
         overlayNodeText: "Capas superpuestas",
-        baseNodeText: "Capa de base"
+        baseNodeText: "Capa base"
     },
 
     "gxp.plugins.Legend.prototype": { 
@@ -78,39 +86,48 @@ GeoExt.Lang.add("es", {
     },
 
     "gxp.plugins.OSMSource.prototype": {
-        title: "OpenStreetMap Layers",
-        mapnikAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
-        osmarenderAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>"
+        title: "Capas OpenStreetMap",
+        mapnikAttribution: "Datos CC-By-SA de <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
+        osmarenderAttribution: "Datos CC-By-SA de <a href='http://openstreetmap.org/'>OpenStreetMap</a>"
     },
 
     "gxp.plugins.Print.prototype": {
-        menuText: "Imprimir",
-        tooltip: "Imprimir",
+        menuText: "Imprimir mapa",
+        tooltip: "Imprimir mapa",
         previewText: "Vista previa",
         notAllNotPrintableText: "No se pueden imprimir todas las capas",
         nonePrintableText: "No se puede imprimir ninguna de las capas del mapa"
     },
 
     "gxp.plugins.MapQuestSource.prototype": {
-        title: "MapQuest Layers",
-        osmAttribution: "Tiles Courtesy of <a href='http://open.mapquest.co.uk/' target='_blank'>MapQuest</a> <img src='http://developer.mapquest.com/content/osm/mq_logo.png' border='0'>",
+        title: "Capas MapQuest",
+        osmAttribution: "Teselas cortesía de <a href='http://open.mapquest.co.uk/' target='_blank'>MapQuest</a> <img src='http://developer.mapquest.com/content/osm/mq_logo.png' border='0'>",
         osmTitle: "MapQuest OpenStreetMap",
-        naipAttribution: "Tiles Courtesy of <a href='http://open.mapquest.co.uk/' target='_blank'>MapQuest</a> <img src='http://developer.mapquest.com/content/osm/mq_logo.png' border='0'>",
-        naipTitle: "MapQuest Imagery"
+        naipAttribution: "Teselas cortesía de <a href='http://open.mapquest.co.uk/' target='_blank'>MapQuest</a> <img src='http://developer.mapquest.com/content/osm/mq_logo.png' border='0'>",
+        naipTitle: "MapQuest Imágenes"
     },
 
     "gxp.plugins.QueryForm.prototype": {
-        queryActionText: "Query",
-        queryMenuText: "Query layer",
-        queryActionTip: "Query the selected layer",
-        queryByLocationText: "Query by location",
-        currentTextText: "Current extent",
-        queryByAttributesText: "Query by attributes"
+        queryActionText: "Consultar",
+        queryMenuText: "Consultar capa",
+        queryActionTip: "Consultar la capa seleccionada",
+        queryByLocationText: "Consultar por localización",
+        currentTextText: "Extensión actual",
+        queryByAttributesText: "Consultar por atributos",
+        queryMsg: "Consultando...",
+        cancelButtonText: "Cancelar",
+        noFeaturesTitle: "Sin coincidencias",
+        noFeaturesMessage: "Su consulta no produjo resultados."
     },
 
     "gxp.plugins.RemoveLayer.prototype": {
         removeMenuText: "Eliminar Capa",
         removeActionTip: "Eliminar Capa"
+    },
+    
+    "gxp.plugins.Styler.prototype": {
+        menuText: "Editar estilos",
+        tooltip: "Gestionar estilos de capa"
     },
 
     "gxp.plugins.WMSGetFeatureInfo.prototype": {
@@ -126,122 +143,144 @@ GeoExt.Lang.add("es", {
     },
     
     "gxp.plugins.ZoomToExtent.prototype": {
-        menuText: "Zoom To Max Extent",
-        tooltip: "Zoom To Max Extent"
+        menuText: "Ver extensión total",
+        tooltip: "Ver extensión total"
     },
     
     "gxp.plugins.ZoomToDataExtent.prototype": {
-        menuText: "Zoom to layer extent",
-        tooltip: "Zoom to layer extent"
+        menuText: "Ver toda la capa",
+        tooltip: "Ver toda la capa"
     },
 
     "gxp.plugins.ZoomToLayerExtent.prototype": {
-        menuText: "Ajustar vista a la extensión de esta capa",
-        tooltip: "Ajustar vista a la extensión de esta capa"
+        menuText: "Ver toda la la capa",
+        tooltip: "Ver toda la capa"
     },
     
     "gxp.plugins.ZoomToSelectedFeatures.prototype": {
-        menuText: "Zoom to selected features",
-        tooltip: "Zoom to selected features"
+        menuText: "Ver los elementos seleccionados",
+        tooltip: "Ver los elementos seleccionados"
     },
 
     "gxp.FeatureEditPopup.prototype": {
-        closeMsgTitle: "Save Changes?",
-        closeMsg: "This feature has unsaved changes. Would you like to save your changes?",
-        deleteMsgTitle: "Delete Feature?",
-        deleteMsg: "Are you sure you want to delete this feature?",
-        editButtonText: "Edit",
-        editButtonTooltip: "Make this feature editable",
-        deleteButtonText: "Delete",
-        deleteButtonTooltip: "Delete this feature",
-        cancelButtonText: "Cancel",
-        cancelButtonTooltip: "Stop editing, discard changes",
-        saveButtonText: "Save",
-        saveButtonTooltip: "Save changes"
+        closeMsgTitle: "¿Desea guardar los cambios?",
+        closeMsg: "Los cambios en este elemento no se han guardado. ¿Desea guardar los cambios?",
+        deleteMsgTitle: "¿Desea borrar el elemento?",
+        deleteMsg: "¿Está seguro de querer borrar este elemento?",
+        editButtonText: "Editar",
+        editButtonTooltip: "Hacer editable este elemento",
+        deleteButtonText: "Borrar",
+        deleteButtonTooltip: "Borrar este elemento",
+        cancelButtonText: "Cancelar",
+        cancelButtonTooltip: "Dejar de editar, descartar cambios",
+        saveButtonText: "Guardar",
+        saveButtonTooltip: "Guardar cambios"
     },
     
     "gxp.FillSymbolizer.prototype": {
-        fillText: "Fill",
+        fillText: "Relleno",
         colorText: "Color",
-        opacityText: "Opacity"
+        opacityText: "Opacidad"
     },
     
     "gxp.FilterBuilder.prototype": {
-        builderTypeNames: ["any", "all", "none", "not all"],
-        preComboText: "Match",
-        postComboText: "of the following:",
-        addConditionText: "add condition",
-        addGroupText: "add group",
-        removeConditionText: "remove condition"
+        builderTypeNames: ["cualquiera de", "todas", "ninguna de", "no todas"],
+        preComboText: "Cumplir",
+        postComboText: "las condiciones siguientes:",
+        addConditionText: "añadir condición",
+        addGroupText: "añadir grupo",
+        removeConditionText: "eliminar condición"
     },
     
     "gxp.grid.CapabilitiesGrid.prototype": {
-        nameHeaderText : "Name",
-        titleHeaderText : "Title",
-        queryableHeaderText : "Queryable",
+        nameHeaderText : "Nombre",
+        titleHeaderText : "Título",
+        queryableHeaderText : "Consultable",
         layerSelectionLabel: "Ver datos disponibles de:",
-        layerAdditionLabel: "or add a new server.",
+        layerAdditionLabel: "o añadir otro servidor.",
         expanderTemplateText: "<p><b>Resumen:</b> {abstract}</p>"
     },
     
     "gxp.PointSymbolizer.prototype": {
-        graphicCircleText: "circle",
-        graphicSquareText: "square",
-        graphicTriangleText: "triangle",
-        graphicStarText: "star",
-        graphicCrossText: "cross",
+        graphicCircleText: "círculo",
+        graphicSquareText: "cuadrado",
+        graphicTriangleText: "triángulo",
+        graphicStarText: "estrella",
+        graphicCrossText: "cruz",
         graphicXText: "x",
-        graphicExternalText: "external",
+        graphicExternalText: "externo",
         urlText: "URL",
-        opacityText: "opacity",
-        symbolText: "Symbol",
-        sizeText: "Size",
-        rotationText: "Rotation"
+        opacityText: "opacidad",
+        symbolText: "Símbolo",
+        sizeText: "Tamaño",
+        rotationText: "Giro"
     },
 
     "gxp.QueryPanel.prototype": {
-        queryByLocationText: "Query by location",
-        currentTextText: "Current extent",
-        queryByAttributesText: "Query by attributes",
-        layerText: "Layer"
+        queryByLocationText: "Consultar por localización",
+        currentTextText: "Extensión actual",
+        queryByAttributesText: "Consultar por atributo",
+        layerText: "Capa"
     },
     
     "gxp.RulePanel.prototype": {
-        scaleSliderTemplate: "{scaleType} Scale 1:{scale}",
-        labelFeaturesText: "Label Features",
-        advancedText: "Advanced",
-        limitByScaleText: "Limit by scale",
-        limitByConditionText: "Limit by condition",
-        symbolText: "Symbol",
-        nameText: "Name"
+        scaleSliderTemplate: "{scaleType} Escala 1:{scale}",
+        labelFeaturesText: "Etiquetado de elementos",
+        labelsText: "Etiquetas",
+        basicText: "Básico",
+        advancedText: "Advanzado",
+        limitByScaleText: "Limitar por escala",
+        limitByConditionText: "Limitar por condición",
+        symbolText: "Símbolo",
+        nameText: "Nombre"
     },
     
     "gxp.ScaleLimitPanel.prototype": {
-        scaleSliderTemplate: "{scaleType} Scale 1:{scale}",
-        maxScaleLimitText: "Max scale limit"
+        scaleSliderTemplate: "{scaleType} Escala 1:{scale}",
+        minScaleLimitText: "Escala mínima",
+        maxScaleLimitText: "Escala máxima"
+    },
+    
+    "gxp.StrokeSymbolizer.prototype": {
+        solidStrokeName: "continuo",
+        dashStrokeName: "guiones",
+        dotStrokeName: "puntos",
+        titleText: "Trazo",
+        styleText: "Estilo",
+        colorText: "Color",
+        widthText: "Ancho",
+        opacityText: "Opacidad"
+    },
+    
+    "gxp.StylePropertiesDialog.prototype": {   
+        titleText: "General",
+        nameFieldText: "Nombre",
+        titleFieldText: "Título",
+        abstractFieldText: "Resumen"
     },
     
     "gxp.TextSymbolizer.prototype": {
-        labelValuesText: "Label values",
+        labelValuesText: "Etiquetado",
         haloText: "Halo",
-        sizeText: "Size"
+        sizeText: "Tamaño"
     },
     
     "gxp.WMSLayerPanel.prototype": {
-        aboutText: "About",
-        titleText: "Title",
-        nameText: "Name",
-        descriptionText: "Description",
-        displayText: "Display",
-        opacityText: "Opacity",
-        formatText: "Format",
-        transparentText: "Transparent",
-        cacheText: "Cache",
-        cacheFieldText: "Use cached version"
+        aboutText: "Acerca de",
+        titleText: "Título",
+        nameText: "Nombre",
+        descriptionText: "Descripción",
+        displayText: "Mostrar",
+        opacityText: "Opacidad",
+        formatText: "Formato",
+        transparentText: "Transparente",
+        cacheText: "Caché",
+        cacheFieldText: "Usar la versión en caché",
+        stylesText: "Estilos"
     },
 
     "gxp.EmbedMapDialog.prototype": {
-        publishMessage: "¡Su mapa ya puede publicarse en otras webs! Simplemente copie el siguiente código HTML en el lugar donde desee incrustarlo:",
+        publishMessage: "¡Ya puede publicar su mapa en otras webs! Simplemente copie el siguiente código HTML en el lugar donde desee incrustarlo:",
         heightLabel: 'Alto',
         widthLabel: 'Ancho',
         mapSizeLabel: 'Tamaño',
@@ -250,22 +289,56 @@ GeoExt.Lang.add("es", {
         premiumSizeLabel: 'Premium',
         largeSizeLabel: 'Grande'
     },
+    
+    "gxp.WMSStylesDialog.prototype": {
+        addStyleText: "Añadir",
+        addStyleTip: "Añadir un estilo",
+        chooseStyleText: "Escoger estilo",
+        deleteStyleText: "Quitar",
+        deleteStyleTip: "Borrar el estilo seleccionado",
+        editStyleText: "Cambiar",
+        editStyleTip: "Editar el estilo seleccionado",
+        duplicateStyleText: "Clonar",
+        duplicateStyleTip: "Duplicar el estilo seleccionado",
+        addRuleText: "Añadir",
+        addRuleTip: "Añadir una regla",
+        newRuleText: "Nueva regla",
+        deleteRuleText: "Quitar",
+        deleteRuleTip: "Borrar la regla seleccionada",
+        editRuleText: "Cambiar",
+        editRuleTip: "Editar la regla seleccionada",
+        duplicateRuleText: "Duplicar",
+        duplicateRuleTip: "Duplicar la regla seleccionada",
+        cancelText: "Cancelar",
+        saveText: "Guardar",
+        styleWindowTitle: "Estilo: {0}",
+        ruleWindowTitle: "Regla: {0}",
+        stylesFieldsetTitle: "Estilos",
+        rulesFieldsetTitle: "Reglas"
+    },
 
     "gxp.LayerUploadPanel.prototype": {
-        titleLabel: "Title",
-        titleEmptyText: "Layer title",
-        abstractLabel: "Description",
-        abstractEmptyText: "Layer description",
-        fileLabel: "Data",
-        fieldEmptyText: "Browse for data archive...",
-        uploadText: "Upload",
-        waitMsgText: "Uploading your data...",
-        invalidFileExtensionText: "File extension must be one of: ",
-        optionsText: "Options",
-        workspaceLabel: "Workspace",
-        workspaceEmptyText: "Default workspace",
-        dataStoreLabel: "Store",
-        dataStoreEmptyText: "Default datastore"
+        titleLabel: "Título",
+        titleEmptyText: "Título de la capa",
+        abstractLabel: "Descripción",
+        abstractEmptyText: "Descripción de la capa",
+        fileLabel: "Datos",
+        fieldEmptyText: "Navegue por los datos...",
+        uploadText: "Subir",
+        waitMsgText: "Suba sus datos data...",
+        invalidFileExtensionText: "El fichero debe tener alguna de estas extensiones: ",
+        optionsText: "Opciones",
+        workspaceLabel: "Espacio de trabajo",
+        workspaceEmptyText: "Espacio de trabajo por defecto",
+        dataStoreLabel: "Almacén de datos",
+        dataStoreEmptyText: "Almacén de datos por defecto"
+    },
+    
+    "gxp.NewSourceWindow.prototype": {
+        title: "Añadir Servidor...",
+        cancelText: "Cancelar",
+        addServerText: "Añadir Servidor",
+        contactingServerText: "Conectando con el Servidor..."
     }
 
 });

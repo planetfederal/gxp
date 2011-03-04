@@ -72,7 +72,9 @@
         "plugins/Navigation.js",
         "plugins/LayerProperties.js",
         "plugins/Legend.js",
-        "plugins/Print.js"
+        "plugins/Print.js",
+        "locale/es.js",
+        "locale/ca.js"
     );
     
     var scripts = document.getElementsByTagName("script");
@@ -102,4 +104,9 @@
     if(!appendable) {
         document.write(pieces.join(""));
     }
+    
+    if (GeoExt.Lang) {
+        GeoExt.Lang.set(OpenLayers.Util.getParameters()["lang"] || GeoExt.Lang.locale);
+    }
+
 })();

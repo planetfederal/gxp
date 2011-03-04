@@ -22,14 +22,32 @@ Ext.namespace("gxp");
 gxp.NewSourceWindow = Ext.extend(Ext.Window, {
 
     /** api: config[title]
-     * The title defaults to 'Add New Server...'
+     *  ``String``
+     *  Window title (i18n).
      */
     title: "Add New Server...",
 
+    /** api: config[cancelText]
+     *  ``String``
+     *  Text for cancel button (i18n).
+     */
+    cancelText: "Cancel",
+    
+    /** api: config[addServerText]
+     *  ``String``
+     *  Text for add server button (i18n).
+     */
+    addServerText: "Add Server",
+    
+    /** api: config[contactingServerText]
+     *  ``String``
+     *  Text for server contact (i18n).
+     */
+    contactingServerText: "Contacting Server...",
+    
     /** api: config[bodyStyle]
      * The default bodyStyle sets the padding to 0px
-     */ 
-
+     */
     bodyStyle: "padding: 0px",
 
     /** api: config[width]
@@ -82,7 +100,7 @@ gxp.NewSourceWindow = Ext.extend(Ext.Window, {
 
         this.bbar = [
             new Ext.Button({
-                text: "Cancel",
+                text: this.cancelText,
                 handler: function() {
                     this.hide();
                 },
@@ -90,7 +108,7 @@ gxp.NewSourceWindow = Ext.extend(Ext.Window, {
             }),
             new Ext.Toolbar.Fill(),
             new Ext.Button({
-                text: "Add Server",
+                text: this.addServerText,
                 iconCls: "add",
                 handler: function() {
                     // Clear validation before trying again.
@@ -108,7 +126,7 @@ gxp.NewSourceWindow = Ext.extend(Ext.Window, {
         gxp.NewSourceWindow.superclass.initComponent.call(this);
 
         this.form.on("render", function() {
-            this.loadMask = new Ext.LoadMask(this.form.getEl(), {msg:"Contacting Server..."});
+            this.loadMask = new Ext.LoadMask(this.form.getEl(), {msg:this.contactingServerText});
         }, this);
 
         this.on("hide", function() {

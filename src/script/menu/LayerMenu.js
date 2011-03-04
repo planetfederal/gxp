@@ -20,6 +20,12 @@ Ext.namespace("gxp.menu");
  */   
 gxp.menu.LayerMenu = Ext.extend(Ext.menu.Menu, {
     
+    /** api: config[layerText]
+     *  ``String``
+     *  Text for added layer (i18n).
+     */
+    layerText: "Layer",
+    
     /** api: config[layers]
      *  ``GeoExt.data.LayerStore``
      *  The store containing layer records to be viewed in this menu.
@@ -66,7 +72,7 @@ gxp.menu.LayerMenu = Ext.extend(Ext.menu.Menu, {
         this.add(
             {
                 iconCls: "gxp-layer-visibility",
-                text: "Layer",
+                text: this.layerText,
                 canActivate: false
             },
             "-"
