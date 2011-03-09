@@ -100,15 +100,20 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
                             }
                         }
                         if (editableStyles) {
-                            Ext.Ajax.request({
-                                method: "PUT",
-                                url: url + "/styles",
-                                callback: function(options, success, response) {
-                                    // we expect a 405 error code here if we are dealing
-                                    // with GeoServer and have write access.
-                                    actions[0].setDisabled(response.status != 405);                        
-                                }
-                            });
+                            var authorized = this.target.isAuthorized();
+                            if (typeof authorized == "boolean") {
+                                actions[0].setDisabled(autorized);
+                            } else {
+                                Ext.Ajax.request({
+                                    method: "PUT",
+                                    url: url + "/styles",
+                                    callback: function(options, success, response) {
+                                        // we expect a 405 error code here if we are dealing
+                                        // with GeoServer and have write access.
+                                        actions[0].setDisabled(response.status != 405);                        
+                                    }
+                                });
+                            }
                         }
                     }
                 }, this);

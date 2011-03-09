@@ -479,18 +479,24 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     button.hide();
                     var show = false;
                     if (this.isEligibleForUpload(source)) {
-                        // only works with GeoServer
-                        // if url is http://example.com/geoserver/ows, we want
-                        // http://example.com/geoserver/rest.
-                        var parts = source.url.split("/");
-                        parts.pop();
-                        parts.push("rest");
-                        // this sets the url for the layer upload panel
-                        url = parts.join("/");
-                        // only show button if upload URL returns a 405 for GET
-                        getStatus(url + "/upload", function(status) {
-                            button.setVisible(status === 405);
-                        }, this);
+                        var authorized = this.target.isAuthorized();
+                        if (typeof authorized == "boolean") {
+                            button.setVisible(autorized);
+                        } else {
+                            // only works with GeoServer
+                            // if url is http://example.com/geoserver/ows, we
+                            // want http://example.com/geoserver/rest.
+                            var parts = source.url.split("/");
+                            parts.pop();
+                            parts.push("rest");
+                            // this sets the url for the layer upload panel
+                            url = parts.join("/");
+                            // only show button if upload URL returns a 405 for
+                            // GET
+                            getStatus(url + "/upload", function(status) {
+                                button.setVisible(status === 405);
+                            }, this);
+                        }
                     }
                 },
                 scope: this

@@ -159,6 +159,19 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
      *  Only available if this viewer is wrapped into an
      *  :class:`Ext.form.ViewerField`.
      */
+    
+    /** api: property[authorizedRoles]
+     *  ``Array`` Roles the application is authorized for. This property is
+     *  usually set by a component that authenticates the user (e.g. a login
+     *  window). After authentication, if the client is authorized to do
+     *  everything,  this should be set to ``["ROLE_ADMINISTRATOR"]``.
+     *
+     *  If this property is undefined, the ``isAuthorized()`` method will
+     *  return undefined, so plugins can check for that to do their own auth
+     *  checks in this case. So if the application uses an authentication
+     *  component (e.g. a login window), it is recommended to set this to
+     *  ``[]`` (equivalent to "not authorized to do anything") initially.
+     */
      
     /** private: method[constructor]
      *  Construct the viewer.
@@ -597,6 +610,22 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         }, this);
         
         return state;
+    },
+    
+    /** api: method[isAuthorized]
+     *  :arg role: ``String`` optional, default is "ROLE_ADMINISTRATOR"
+     *  :returns: ``Boolean`` of ``undefined`` if the ``authorizedRoles``
+     *      property is not set.
+     *
+     *  Returns true if the client is authorized with the provided role.
+     */
+    isAuthorized: function(role) {
+        var authorized = undefined;
+        if (this.authorizedRoles) {
+            role = role || "ROLE_ADMINISTRATOR";
+            authorized = this.authorizedRoles.indexOf(role) !== -1;
+        }
+        return authorized;
     },
     
     /** api: method[destroy]
