@@ -30,6 +30,11 @@ gxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
     /** api: ptype = gxp_measure */
     ptype: "gxp_measure",
 
+    /** api: config[outputTarget]
+     *  ``String`` Popups created by this tool are added to the map by default.
+     */
+    outputTarget: "map",
+
     /** api: config[lengthMenuText]
      *  ``String``
      *  Text for measure length menu item (i18n).
@@ -149,7 +154,8 @@ gxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
             eventListeners: {
                 measurepartial: function(event) {
                     cleanup();
-                    measureToolTip = new Ext.ToolTip({
+                    measureToolTip = this.addOutput({
+                        xtype: 'tooltip',
                         html: makeString(event),
                         title: title,
                         autoHide: false,
@@ -168,7 +174,8 @@ gxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                 },
                 measure: function(event) {
                     cleanup();
-                    measureToolTip = new Ext.ToolTip({
+                    measureToolTip = this.addOutput({
+                        xtype: 'tooltip',
                         target: Ext.getBody(),
                         html: makeString(event),
                         title: title,

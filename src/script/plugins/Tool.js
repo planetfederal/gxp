@@ -357,9 +357,13 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
                     return p instanceof Ext.Window;
                 }).close();
             } else {
-                cmp.ownerCt.remove(cmp);
-                if (cmp.ownerCt instanceof Ext.Window) {
-                    cmp.ownerCt[cmp.ownerCt.closeAction]();
+                if (cmp.ownerCt) {
+                    cmp.ownerCt.remove(cmp);
+                    if (cmp.ownerCt instanceof Ext.Window) {
+                        cmp.ownerCt[cmp.ownerCt.closeAction]();
+                    }
+                } else {
+                    cmp.remove();
                 }
             }
         }
