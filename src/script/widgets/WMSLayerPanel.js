@@ -293,15 +293,18 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                 anchor: "99%",
                 listeners: {
                     select: function(combo) {
+                        var format = combo.getValue();
                         layer.mergeNewParams({
-                            format: combo.getValue()
+                            format: format
                         });
+                        Ext.getCmp('transparent').setDisabled(format == "image/jpeg");
                         this.fireEvent("change");
                     },
                     scope: this
                 }
             }, {
                 xtype: "checkbox",
+                id: 'transparent',
                 fieldLabel: this.transparentText,
                 checked: transparent,
                 listeners: {
