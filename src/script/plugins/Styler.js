@@ -102,7 +102,7 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
                         if (editableStyles) {
                             var authorized = this.target.isAuthorized();
                             if (typeof authorized == "boolean") {
-                                actions[0].setDisabled(autorized);
+                                actions[0].setDisabled(authorized);
                             } else {
                                 Ext.Ajax.request({
                                     method: "PUT",
