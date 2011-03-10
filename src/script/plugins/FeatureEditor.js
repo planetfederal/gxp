@@ -407,10 +407,17 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
      */
     onLayerChange: function(mgr, layer, schema) {
         this.schema = schema;
-        this.actions[0].setDisabled(!schema);
-        this.actions[1].setDisabled(!schema);
-        if (!schema) {
-            // not a wfs capable layer
+        var disable;
+        var authorized = this.target.isAuthorized();
+        if (typeof authorized == "boolean") {
+            disable = (!schema || !authorized);
+        } else {
+            disable = !schema;
+        }
+        this.actions[0].setDisabled(disable);
+        this.actions[1].setDisabled(disable);
+        if (disable) {
+            // not a wfs capable layer or not authorized
             return;
         }
 
