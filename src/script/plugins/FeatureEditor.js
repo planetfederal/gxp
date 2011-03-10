@@ -38,14 +38,6 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
      */
     createFeatureActionTip: "Create a new feature",
 
-
-    /** api: config[featureEditPopupType]
-     *  ``String``
-     *  The xtype for a popup to create when editing features.  Default is 
-     *  "gxp_featureeditpopup".
-     */
-    featureEditPopupType: "gxp_featureeditpopup",
-
     /** api: config[createFeatureActionText]
      *  ``String``
      *  Create new feature text.
@@ -298,7 +290,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                 var featureStore = featureManager.featureStore;
                 if(this.selectControl.active) {
                     popup = this.addOutput({
-                        xtype: this.featureEditPopupType,
+                        xtype: "gxp_featureeditpopup",
                         collapsible: true,
                         feature: feature,
                         vertexRenderIntent: "vertex",
