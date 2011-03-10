@@ -481,7 +481,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     if (this.isEligibleForUpload(source)) {
                         var authorized = this.target.isAuthorized();
                         if (typeof authorized == "boolean") {
-                            button.setVisible(autorized);
+                            button.setVisible(authorized);
                         } else {
                             // only works with GeoServer
                             // if url is http://example.com/geoserver/ows, we
