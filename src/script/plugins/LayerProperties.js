@@ -86,6 +86,7 @@ gxp.plugins.LayerProperties = Ext.extend(gxp.plugins.Tool, {
         return gxp.plugins.LayerProperties.superclass.addOutput.call(this, Ext.apply({
             //TODO create generic gxp_layerpanel
             xtype: record.get("properties") || "gxp_layerpanel",
+            authorized: this.target.isAuthorized(),
             layerRecord: record,
             source: this.target.getSource(record),
             defaults: {

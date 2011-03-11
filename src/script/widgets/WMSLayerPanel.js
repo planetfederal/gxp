@@ -166,17 +166,22 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                     fn: function(cmp) {
                         var render = !this.editableStyles;
                         if (!render) {
-                            Ext.Ajax.request({
-                                method: "PUT",
-                                url: url + "/styles",
-                                callback: function(options, success, response) {
-                                    // we expect a 405 error code here if we are dealing with
-                                    // GeoServer and have write access. Otherwise we will
-                                    // create the panel in readonly mode.
-                                    cmp.editable = (response.status == 405);
-                                    cmp.ownerCt.doLayout();
-                                }
-                            });
+                            if (typeof this.authorized == 'boolean') {
+                                cmp.editable = this.authorized;
+                                cmp.ownerCt.doLayout();
+                            } else {
+                                Ext.Ajax.request({
+                                    method: "PUT",
+                                    url: url + "/styles",
+                                    callback: function(options, success, response) {
+                                        // we expect a 405 error code here if we are dealing with
+                                        // GeoServer and have write access. Otherwise we will
+                                        // create the panel in readonly mode.
+                                        cmp.editable = (response.status == 405);
+                                        cmp.ownerCt.doLayout();
+                                    }
+                                });
+                            }
                         }
                         return render;
                     },
