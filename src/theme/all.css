@@ -252,3 +252,20 @@
     z-index: 3;
     color: #777;
 }
+/* gxp_scaleoverlay */
+div.map-overlay {
+    z-index: 1000;
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+}
+div.map-overlay div.overlay-element {
+    display:inline;
+    float: left;
+    margin: 5px;
+}
+.overlay-scaleline {
+    bottom: 0px;
+    left: 0px;
+    margin-top: 0px;
+}
