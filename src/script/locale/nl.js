@@ -294,7 +294,10 @@ GeoExt.Lang.add("nl", {
         workspaceEmptyText: "Standaard werkruimte",
         dataStoreLabel: "Archief",
         dataStoreEmptyText: "Standaard archief"
+    },
+
+    "gxp.ScaleOverlay.prototype": { 
+        zoomLevelText: "Zoom niveau"
     }
 
 });
-

@@ -266,7 +266,10 @@ GeoExt.Lang.add("fr", {
         workspaceEmptyText: "Espace de travail par défaut",
         dataStoreLabel: "Magasin de données",
         dataStoreEmptyText: "Magasin de données par défaut"
+    },
+
+    "gxp.ScaleOverlay.prototype": { 
+        zoomLevelText: "Zoom level"
     }
 
 });
-

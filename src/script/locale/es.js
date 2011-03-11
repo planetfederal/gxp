@@ -339,7 +339,10 @@ GeoExt.Lang.add("es", {
         cancelText: "Cancelar",
         addServerText: "Añadir Servidor",
         contactingServerText: "Conectando con el Servidor..."
+    },
+
+    "gxp.ScaleOverlay.prototype": { 
+        zoomLevelText: "Zoom level"
     }
 
 });
-
