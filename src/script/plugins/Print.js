@@ -36,6 +36,13 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      */
     printService: null,
 
+    /** api: config[customParams]
+     *  ``Object`` Key-value pairs of custom data to be sent to the print
+     *  service. Optional. This is e.g. useful for complex layout definitions
+     *  on the server side that require additional parameters.
+     */
+    customParams: null,
+
     /** api: config[menuText]
      *  ``String``
      *  Text for print menu item (i18n).
@@ -81,6 +88,7 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
 
             var printProvider = new GeoExt.data.PrintProvider({
                 url: this.printService,
+                customParams: this.customParams,
                 autoLoad: false,
                 listeners: {
                     beforeprint: function() {
