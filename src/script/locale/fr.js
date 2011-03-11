@@ -269,7 +269,7 @@ GeoExt.Lang.add("fr", {
     },
 
     "gxp.ScaleOverlay.prototype": { 
-        zoomLevelText: "Zoom level"
+        zoomLevelText: "Niveau de zoom"
     }
 
 });

@@ -342,7 +342,7 @@ GeoExt.Lang.add("ca", {
     },
 
     "gxp.ScaleOverlay.prototype": {
-        zoomLevelText: "Zoom level"
+        zoomLevelText: "Escala"
     }
 
 });
