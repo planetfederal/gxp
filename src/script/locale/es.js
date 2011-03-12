@@ -135,6 +135,11 @@ GeoExt.Lang.add("es", {
         popupTitle: "Información de elementos"
     },
 
+    "gxp.plugins.WMSSource.prototype": {
+        noCompatibleSRSTitle: "Warning",
+        noCompatibleSRSText: "This layer cannot be added to the map since it is not available in any projection that is compatible with the map projection"
+    },
+
     "gxp.plugins.Zoom.prototype": {
         zoomInMenuText: "Acercar",
         zoomOutMenuText: "Alejar",

@@ -92,6 +92,10 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      */
     baseParams: null,
 
+    /** i18n */
+    noCompatibleSRSTitle: "Warning",
+    noCompatibleSRSText: "This layer cannot be added to the map since it is not available in any projection that is compatible with the map projection",
+
     /** private: property[format]
      *  ``OpenLayers.Format`` Optional custom format to use on the 
      *  WMSCapabilitiesStore store instead of the default.
@@ -223,6 +227,16 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             // compatible projection that equals the map projection. This helps
             // us in dealing with the different EPSG codes for web mercator.
             var layerProjection = this.getProjection(original);
+            if (layerProjection === null) {
+                // show a message box that the layer cannot be added 
+                Ext.Msg.show({
+                    title: this.noCompatibleSRSTitle,
+                    msg: this.noCompatibleSRSText,
+                    buttons: Ext.Msg.OK,
+                    icon: Ext.MessageBox.WARNING
+                });
+                return null;
+            }
 
             var nativeExtent = original.get("bbox")[projection.getCode()];
             var swapAxis = OpenLayers.Layer.WMS.prototype.reverseAxisOrder.call(
