@@ -31,6 +31,12 @@ GeoExt.Lang.add("nl", {
         nextPageTip: "Volgende pagina",
         nextPageTip: "Laatste pagina"
     },
+
+    "gxp.plugins.GoogleEarth.prototype": {
+        apiKeyPrompt: "Geef a.u.b. de Google API key voor ",
+        menuText: "3D weergave",
+        tooltip: "Bekijk kaart in 3D"
+    },
     
     "gxp.plugins.GoogleSource.prototype": {
         title: "Google Maps kaartlagen",

@@ -48,6 +48,7 @@
         "plugins/ClickableFeatures.js",
         "plugins/DeleteSelectedFeatures.js",
         "plugins/GoogleGeocoder.js",
+        "plugins/GoogleEarth.js",
         "plugins/WMSFilterView.js",
         "plugins/WMSRasterStylesDialog.js",
         "plugins/WMSGetFeatureInfo.js",

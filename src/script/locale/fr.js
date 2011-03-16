@@ -32,6 +32,12 @@ GeoExt.Lang.add("fr", {
         nextPageTip: "Page suivante",
         nextPageTip: "Dernière page"
     },
+
+    "gxp.plugins.GoogleEarth.prototype": {
+        apiKeyPrompt: "Please enter the Google API key for ",
+        menuText: "Passer à la visionneuse 3D",
+        tooltip: "Passer à la visionneuse 3D"
+    },
     
     "gxp.plugins.GoogleSource.prototype": {
         title: "Calques Google",

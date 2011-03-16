@@ -40,6 +40,12 @@ GeoExt.Lang.add("es", {
         nextPageTip: "Página siguiente",
         nextPageTip: "Última página"
     },
+
+    "gxp.plugins.GoogleEarth.prototype": {
+        apiKeyPrompt: "Please enter the Google API key for ",
+        menuText: "Vista 3D",
+        tooltip: "Vista 3D"
+    },
     
     "gxp.plugins.GoogleSource.prototype": {
         title: "Capas Google",

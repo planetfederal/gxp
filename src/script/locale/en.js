@@ -40,6 +40,12 @@ GeoExt.Lang.add("en", {
         nextPageTip: "Next page",
         nextPageTip: "Last page"
     },
+
+    "gxp.plugins.GoogleEarth.prototype": {
+        apiKeyPrompt: "Please enter the Google API key for ",
+        menuText: "3D Viewer",
+        tooltip: "Switch to 3D Viewer"
+    },
     
     "gxp.plugins.GoogleSource.prototype": {
         title: "Google Layers",
