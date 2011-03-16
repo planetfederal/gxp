@@ -24,8 +24,44 @@ Ext.namespace("gxp.plugins");
  *  .. class:: GoogleEarth(config)
  *
  *    Provides an action for switching between normal map view and 
- *    Google Earth view. This assumes that the map panel has been set
- *    up with a card layout.
+ *    Google Earth view.
+ */
+/** api: example
+ *  This tool can only be used if ``portalItems`` of :class:`gxp.Viewer` is set up 
+ *  in the following way (or similar, the requirement is to have a panel with a card
+ *  layout which has 2 items: the map and the Google Earth panel):
+ *
+ *  .. code-block:: javascript
+ *      portalItems: [{
+ *          region: "center",
+ *          layout: "border",
+ *          border: false,
+ *           items: [{
+ *               xtype: "panel", 
+ *               id: "panel", 
+ *               tbar: [], 
+ *               layout: "card", 
+ *               region: "center", 
+ *               activeItem: 0, 
+ *               items: [
+ *               "map", {
+ *                   xtype: 'gxp_googleearthpanel', 
+ *                   mapPanel: "map"
+ *               }
+ *           ]
+ *      } 
+ *
+ * Then make sure the tools go into the tbar of the panel, instead of the
+ * "map.tbar" which is the default, an example is:
+ *
+ *  .. code-block:: javascript
+ *    tools: [
+ *        {
+ *            actionTarget: "panel.tbar",
+ *            ptype: "gxp_googleearth",
+ *            apiKey: 'ABQIAAAAeDjUod8ItM9dBg5_lz0esxTnme5EwnLVtEDGnh-lFVzRJhbdQhQBX5VH8Rb3adNACjSR5kaCLQuBmw'
+ *        }
+ *    ] 
  */
 gxp.plugins.GoogleEarth = Ext.extend(gxp.plugins.Tool, {
     
