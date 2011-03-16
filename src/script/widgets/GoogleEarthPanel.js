@@ -182,7 +182,7 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
     addLayer: function(layer, order) {
         var lyr = layer.getLayer();
         var ows = (lyr && lyr.url);
-        if (this.earth && lyr instanceof OpenLayers.Layer.WMS && ows instanceof string) {
+        if (this.earth && lyr instanceof OpenLayers.Layer.WMS && ows instanceof String) {
             var add = this.fireEvent("beforeadd", layer);
             if (add !== false) {
                 var name = lyr.id;
