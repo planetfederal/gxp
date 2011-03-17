@@ -105,7 +105,8 @@ Ext.onReady(function() {
         defaultSourceType: "gxp_wmssource",
         sources: {
             local: {
-                url: "/geoserver/wms"
+                url: "/geoserver/wms",
+                version: "1.1.1"
             },
             google: {
                 ptype: "gxp_googlesource"
