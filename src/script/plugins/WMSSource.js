@@ -238,10 +238,9 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 return null;
             }
 
-            var nativeExtent = original.get("bbox")[projection.getCode()];
-            var swapAxis = OpenLayers.Layer.WMS.prototype.reverseAxisOrder.call(
-                Ext.applyIf({map: this.target.mapPanel.map}, layer)
-            );
+            var projCode = projection.getCode();
+            var nativeExtent = original.get("bbox")[projCode];
+            var swapAxis = layer.params.VERSION >= "1.3" && !!layer.yx[projCode];
             var maxExtent = 
                 (nativeExtent && OpenLayers.Bounds.fromArray(nativeExtent.bbox, swapAxis)) || 
                 OpenLayers.Bounds.fromArray(original.get("llbbox")).transform(new OpenLayers.Projection("EPSG:4326"), projection);
