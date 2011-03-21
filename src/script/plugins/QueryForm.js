@@ -9,7 +9,6 @@
 /**
  * @requires plugins/Tool.js
  * @include widgets/FilterBuilder.js
- * @include plugins/FeatureGrid.js
  */
 
 /** api: (define)
@@ -223,7 +222,7 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
                 scope: this
             }]
         }, config || {});
-        var queryForm = gxp.plugins.FeatureGrid.superclass.addOutput.call(this, config);
+        var queryForm = gxp.plugins.QueryForm.superclass.addOutput.call(this, config);
         
         var addFilterBuilder = function(mgr, rec, schema) {
             queryForm.attributeFieldset.removeAll();
