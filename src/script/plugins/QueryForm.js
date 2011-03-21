@@ -9,6 +9,7 @@
 /**
  * @requires plugins/Tool.js
  * @include widgets/FilterBuilder.js
+ * @include plugins/FeatureGrid.js
  */
 
 /** api: (define)
