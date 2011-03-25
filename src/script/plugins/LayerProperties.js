@@ -42,6 +42,16 @@ gxp.plugins.LayerProperties = Ext.extend(gxp.plugins.Tool, {
      */
     toolTip: "Layer Properties",
     
+    /** api: config[layerPanelConfig]
+     *  ``Object`` Additional configuration options for the layer type specific
+     *  properties panels, keyed by xtype, e.g.:
+     *
+     *  .. code-block:: javascript
+     *      layerPanelConfig: {
+     *          "gxp_wmslayerpanel": {rasterStyling: true}
+     *      }
+     */
+    
     constructor: function(config) {
         gxp.plugins.LayerProperties.superclass.constructor.apply(this, arguments);
         
@@ -78,14 +88,20 @@ gxp.plugins.LayerProperties = Ext.extend(gxp.plugins.Tool, {
     },
     
     addOutput: function(config) {
+        config = config || {};
         var record = this.target.selectedLayer;
         var origCfg = this.initialConfig.outputConfig || {};
         this.outputConfig.title = origCfg.title ||
             this.menuText + ": " + record.get("title");
         
+        //TODO create generic gxp_layerpanel
+        var xtype = record.get("properties") || "gxp_layerpanel";
+        var panelConfig = this.layerPanelConfig;
+        if (panelConfig && panelConfig[xtype]) {
+            Ext.apply(config, panelConfig[xtype]);
+        }
         return gxp.plugins.LayerProperties.superclass.addOutput.call(this, Ext.apply({
-            //TODO create generic gxp_layerpanel
-            xtype: record.get("properties") || "gxp_layerpanel",
+            xtype: xtype,
             authorized: this.target.isAuthorized(),
             layerRecord: record,
             source: this.target.getSource(record),

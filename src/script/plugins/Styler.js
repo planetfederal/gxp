@@ -52,6 +52,12 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
      */
     sameOriginStyling: true,
     
+    /** api: config[rasterStyling]
+     *  ``Boolean`` If set to true, single-band raster styling will be
+     *  supported. Default is ``false``.
+     */
+    rasterStyling: false,
+    
     constructor: function(config) {
         gxp.plugins.Styler.superclass.constructor.apply(this, arguments);
         
@@ -86,7 +92,11 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
             var source = this.target.getSource(record);
             if (source instanceof gxp.plugins.WMSSource) {
                 source.describeLayer(record, function(rec) {
-                    if (rec && rec.get("owsType") == "WFS") {
+                    var owsTypes = ["WFS"];
+                    if (this.rasterStyling === true) {
+                        owsTypes.push("WCS");
+                    }
+                    if (rec && owsTypes.indexOf(rec.get("owsType")) !== -1) {
                         if (record && record.get("styles")) {
                             var source = this.target.layerSources[record.get("source")];
                             var url = source.url.split(
@@ -133,6 +143,11 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
             this.menuText + ": " + record.get("title");
 
         Ext.apply(config, gxp.WMSStylesDialog.createGeoServerStylerConfig(record));
+        if (this.rasterStyling === true) {
+            config.plugins.push({
+                ptype: "gxp_wmsrasterstylesdialog"
+            });
+        }
         Ext.applyIf(config, {style: "padding: 10px"});
         
         var output = gxp.plugins.Styler.superclass.addOutput.call(this, config);

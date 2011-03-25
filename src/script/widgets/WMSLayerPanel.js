@@ -42,12 +42,18 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
     /** api: config[sameOriginStyling]
      *  ``Boolean``
      *  Only allow editing of styles for layers whose sources have a URL that
-     *  matches the origin of this applicaiton.  It is strongly discouraged to 
+     *  matches the origin of this application.  It is strongly discouraged to 
      *  do styling through the proxy as all authorization headers and cookies 
      *  are shared with all remotesources.  Default is ``true``.
      */
     sameOriginStyling: true,
 
+    /** api: config[rasterStyling]
+     *  ``Boolean`` If set to true, single-band raster styling will be
+     *  supported.  Default is ``false``.
+     */
+    rasterStyling: false,
+    
     /** private: property[editableStyles]
      *  ``Boolean``
      */
@@ -157,6 +163,11 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
         var config = gxp.WMSStylesDialog.createGeoServerStylerConfig(
             this.layerRecord, url
         );
+        if (this.rasterStyling === true) {
+            config.plugins.push({
+                ptype: "gxp_wmsrasterstylesdialog"
+            });
+        }
         return Ext.apply(config, {
             title: this.stylesText,
             style: "padding: 10px",
