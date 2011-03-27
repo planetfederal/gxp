@@ -25,8 +25,15 @@
  */
 (function() {
     function keepRaw(data) {
+        var format = this.meta.format;
         if (typeof data === "string" || data.nodeType) {
-            data = this.meta.format.read(data);
+            data = format.read(data);
+            // cache the data for the single read that readRecord does
+            var origRead = format.read;
+            format.read = function() {
+                format.read = origRead;
+                return data;
+            };
         }
         // here is the new part
         this.raw = data;
