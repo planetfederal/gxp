@@ -824,6 +824,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
         }
         this.featureStore.setOgcFilter(filter);
         //TODO the protocol could use a setFilter method
+        // http://trac.osgeo.org/openlayers/ticket/3201
         this.hitCountProtocol.filter = filter;
         this.hitCountProtocol.options.filter = filter;
         return filter;
