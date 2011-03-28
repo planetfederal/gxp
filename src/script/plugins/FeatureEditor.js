@@ -32,6 +32,18 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
     /** api: ptype = gxp_featureeditor */
     ptype: "gxp_featureeditor",
 
+    /** api: config[iconClsAdd]
+     *  ``String``
+     *  iconCls to use for the add button.
+     */
+    iconClsAdd: "gxp-icon-addfeature",
+
+    /** api: config[iconClsEdit]
+     *  ``String``
+     *  iconCls to use for the edit button.
+     */
+    iconClsEdit: "gxp-icon-editfeature",
+
     /** api: config[createFeatureActionTip]
      *  ``String``
      *  Tooltip string for create new feature action (i18n).
@@ -373,7 +385,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
         var actions = gxp.plugins.FeatureEditor.superclass.addActions.call(this, [new GeoExt.Action({
             tooltip: this.createFeatureActionTip,
             text: this.createFeatureActionText,
-            iconCls: "gxp-icon-addfeature",
+            iconCls: this.iconClsAdd,
             disabled: true,
             hidden: this.readOnly,
             toggleGroup: toggleGroup,
@@ -385,7 +397,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
         }), new GeoExt.Action({
             tooltip: this.editFeatureActionTip,
             text: this.editFeatureActionText,
-            iconCls: "gxp-icon-editfeature",
+            iconCls: this.iconClsEdit,
             disabled: true,
             toggleGroup: toggleGroup,
             enableToggle: true,
