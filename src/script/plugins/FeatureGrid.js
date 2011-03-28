@@ -8,6 +8,7 @@
 
 /**
  * @requires plugins/ClickableFeatures.js
+ * @include widgets/grid/FeatureGrid.js
  */
 
 /** api: (define)
