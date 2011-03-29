@@ -97,8 +97,6 @@ gxp.plugins.WMSCSource = Ext.extend(gxp.plugins.WMSSource, {
                     srs === this.getMapProjection().getCode()) {
                         var bbox = tileSet.bbox[srs].bbox;
                         layer.addOptions({resolutions: tileSet.resolutions,
-                            restrictedExtent: layer.maxExtent,
-                            maxExtent: OpenLayers.Bounds.fromArray(bbox, layer.params.VERSION >= "1.3" && !!layer.yx[srs]),
                             tileSize: new OpenLayers.Size(tileSet.width, tileSet.height),
                             tileOrigin: new OpenLayers.LonLat(bbox[0], bbox[1])});
                         layer.params.TILED = config.tiled || false; // set to true when http://projects.opengeo.org/suite/ticket/1286 is closed
