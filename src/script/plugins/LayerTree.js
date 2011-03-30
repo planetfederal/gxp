@@ -188,9 +188,12 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
                 contextmenu: function(node, e) {
                     if(node && node.layer) {
                         node.select();
-                        var c = node.getOwnerTree().contextMenu;
-                        c.contextNode = node;
-                        c.items.getCount() > 0 && c.showAt(e.getXY());
+                        var tree = node.getOwnerTree();
+                        if (tree.getSelectionModel().getSelectedNode() === node) {
+                            var c = tree.contextMenu;
+                            c.contextNode = node;
+                            c.items.getCount() > 0 && c.showAt(e.getXY());
+                        }
                     }
                 },
                 beforemovenode: function(tree, node, oldParent, newParent, i) {
