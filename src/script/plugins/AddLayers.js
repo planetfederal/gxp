@@ -199,9 +199,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             data: data
         });
 
-        var expander = new Ext.grid.RowExpander({
-            tpl: new Ext.Template(this.expanderTemplateText)
-        });
+        var expander = this.createExpander();
         
         var addLayers = function() {
             var key = sourceComboBox.getValue();
@@ -518,6 +516,16 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             (this.relativeUploadOnly ? (source.url.charAt(0) === "/") : true) &&
             (this.nonUploadSources || []).indexOf(source.id) === -1
         );
+    },
+    
+    /** api: config[createExpander]
+     *  ``Function`` Returns an ``Ext.grid.RowExpander``. Can be overridden
+     *  by applications/subclasses to provide a custom expander.
+     */
+    createExpander: function() {
+        return new Ext.grid.RowExpander({
+            tpl: new Ext.Template(this.expanderTemplateText)
+        });
     }
 
 });
