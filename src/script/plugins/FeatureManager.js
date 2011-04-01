@@ -42,9 +42,16 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
     maxFeatures: 100,
     
     /** api: config[paging]
-     *  ``Boolean`` Should quad-tree paging be enabled? Default is true.
+     *  ``Boolean`` Should paging be enabled? Default is true.
      */
     paging: true,
+
+    /** api: config[pagingType]
+     * ``Integer`` Paging type to use, one of: 
+     * gxp.plugins.FeatureManager.QUADTREE_PAGING or
+     * gxp.plugins.FeatureManager.WFS_PAGING
+     */
+    pagingType: null,
     
     /** api: config[autoZoomPage]
      *  ``Boolean`` Set to true to always zoom the map to the currently
@@ -133,15 +140,27 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
     style: null,
     
     /** private: property[pages]
-     *  ``Array`` of page objects for paging mode
+     *  ``Array`` of page objects for paging mode when in QUADTREE paging mode.
      */
     pages: null,
-    
+
     /** private: property[page]
      *  ``Object`` The page currently loaded (for paging mode). Has extent
-     *  and numFeatures properties
+     *  and numFeatures properties, only used when in QUADTREE paging mode.
      */
     page: null,
+
+    /** private: property[numPages]
+     *  ``Integer`` The number of pages available, only used when in WFS
+     *  paging mode.
+     */
+    numPages: null,
+
+    /** private: property[pageIndex]
+     *  ``Integer`` The index of the current page, starts at 0, only used in
+     *  WFS paging mode.
+     */
+    pageIndex: null,
     
     /** private: method[constructor]
      */
@@ -235,6 +254,8 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
              *    setPage method
              *  * scope     - ``Object`` the scope argument passed to the
              *    setPage method
+             *  * pageIndex - ``Integer`` the index of the page
+             *  * numPages  - ``Integer`` the number of pages
              */
             "setpage",
             
@@ -260,6 +281,10 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
              */
             "clearfeatures"
         );
+
+        if (config && !config.pagingType) {
+            this.pagingType = gxp.plugins.FeatureManager.QUADTREE_PAGING;
+        }
         
         // change autoSetLayer default if passed a layer config
         if (config && config.layer) {
@@ -368,6 +393,19 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
             this.un("layerchange", this.setSchema, this);
             this.setLayer();
             return true;
+        }
+    },
+
+    /** api: method[getPageExtent]
+     *  :returns: ``OpenLayers.Bounds`` the bounds of the current page
+     *
+     *  Get the extent of the current page.
+     */
+    getPageExtent: function() {
+        if (this.pagingType === gxp.plugins.FeatureManager.QUADTREE_PAGING) {
+            return this.page.extent;
+        } else {
+            return this.featureStore.layer.getDataExtent();
         }
     },
     
@@ -838,9 +876,14 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      *  Load the next page.
      */
     nextPage: function(callback, scope) {
-        var page = this.page;
-        this.page = null;
-        var index = (this.pages.indexOf(page) + 1) % this.pages.length;
+        var index;
+        if (this.pagingType === gxp.plugins.FeatureManager.QUADTREE_PAGING) {
+            var page = this.page;
+            this.page = null;
+            index = (this.pages.indexOf(page) + 1) % this.pages.length;
+        } else {
+            index = this.pageIndex+1 % this.numPages;
+        }
         this.setPage({index: index, allowEmpty: false}, callback, scope);
     },
     
@@ -852,9 +895,17 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      *  Load the previous page.
      */
     previousPage: function(callback, scope) {
-        var index = this.pages.indexOf(this.page) - 1;
-        if (index < 0) {
-            index = this.pages.length - 1;
+        var index;
+        if (this.pagingType === gxp.plugins.FeatureManager.QUADTREE_PAGING) {
+            index = this.pages.indexOf(this.page) - 1;
+            if (index < 0) {
+                index = this.pages.length - 1;
+            }
+        } else {
+            index = this.pageIndex-1;
+            if (index < 0) {
+                index = this.numPages - 1;
+            }
         }
         this.setPage({index: index, allowEmpty: false, next: this.page}, callback);
     },
@@ -908,64 +959,104 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      *      featureManager.setPage();
      */
     setPage: function(condition, callback, scope) {
-        if (this.filter instanceof OpenLayers.Filter.FeatureId) {
-            // no paging for FeatureId filters - these cannot be combined with
-            // BBOX filters
-            this.featureStore.load({callback: function() {
-                callback && callback.call(scope);
-            }});
-            return;
-        }
-        if (this.fireEvent("beforesetpage", this, condition, callback, scope) !== false) {
-            var maxExtent;
-            if (!condition) {
-                // choose a page on the top left
-                var extent = this.getPagingExtent("getExtent");
-                maxExtent = this.getPagingExtent("getMaxExtent");
-                condition = {
-                    lonLat: new OpenLayers.LonLat(
-                        Math.max(maxExtent.left, extent.left),
-                        Math.min(maxExtent.top, extent.top)
-                    ),
-                    allowEmpty: false
-                };
+        if (this.pagingType === gxp.plugins.FeatureManager.QUADTREE_PAGING) {
+            if (this.filter instanceof OpenLayers.Filter.FeatureId) {
+                // no paging for FeatureId filters - these cannot be combined with
+                // BBOX filters
+                this.featureStore.load({callback: function() {
+                    callback && callback.call(scope);
+                }});
+                return;
             }
-            condition.index = condition.index || 0;
-            if (condition.index == "last") {
-                condition.index = this.pages.length - 1;
-                condition.next = this.pages[0];
+            if (this.fireEvent("beforesetpage", this, condition, callback, scope) !== false) {
+                var maxExtent;
+                if (!condition) {
+                    // choose a page on the top left
+                    var extent = this.getPagingExtent("getExtent");
+                    maxExtent = this.getPagingExtent("getMaxExtent");
+                    condition = {
+                        lonLat: new OpenLayers.LonLat(
+                            Math.max(maxExtent.left, extent.left),
+                            Math.min(maxExtent.top, extent.top)
+                        ),
+                        allowEmpty: false
+                    };
+                }
+                condition.index = condition.index || 0;
+                if (condition.index == "last") {
+                    condition.index = this.pages.length - 1;
+                    condition.next = this.pages[0];
+                }
+                this.page = null;
+                if (!this.pages) {
+                    var layer = this.layerRecord.getLayer();
+                    var queryExtent = maxExtent || this.getPagingExtent("getMaxExtent");
+                    this.pages = [{extent: queryExtent}];
+                    condition.index = 0;
+                } else if (condition.lonLat) {
+                    for (var i=this.pages.length-1; i>=0; --i) {
+                        if (this.pages[i].extent.containsLonLat(condition.lonLat)) {
+                            condition.index = i;
+                            break;
+                        }
+                    }
+                }
+                this.processPage(this.pages[condition.index], condition,
+                    function(page) {
+                        var map = this.target.mapPanel.map;
+                        this.page = page;
+                        this.setPageFilter(page);
+                        if (this.autoZoomPage && !map.getExtent().containsLonLat(page.extent.getCenterLonLat())) {
+                            map.zoomToExtent(page.extent);
+                        }
+                        var pageIndex = this.pages.indexOf(this.page);
+                        this.fireEvent("setpage", this, condition, callback, scope, pageIndex, this.pages.length);
+                        this.featureStore.load({callback: function() {
+                            callback && callback.call(scope, page);
+                        }});
+                    }, this
+                );
             }
-            this.page = null;
-            if (!this.pages) {
-                var layer = this.layerRecord.getLayer();
-                var queryExtent = maxExtent || this.getPagingExtent("getMaxExtent");
-                this.pages = [{extent: queryExtent}];
-                condition.index = 0;
-            } else if (condition.lonLat) {
-                for (var i=this.pages.length-1; i>=0; --i) {
-                    if (this.pages[i].extent.containsLonLat(condition.lonLat)) {
-                        condition.index = i;
-                        break;
+        } else {
+            if (this.fireEvent("beforesetpage", this, condition, callback, scope) !== false) {
+                if (!condition) {
+                    this.hitCountProtocol.read({
+                        callback: function(response) {
+                            this.numPages = Math.ceil(response.numberOfFeatures/this.maxFeatures);
+                            this.pageIndex = 0;
+                            this.fireEvent("setpage", this, condition, callback, scope, this.pageIndex, this.numPages);
+                            this.featureStore.load({output: "object", callback: function() {
+                                callback && callback.call(scope);
+                            }});
+                        },
+                        scope: this
+                    });
+                } else {
+                    if (condition.index != null) {
+                        if (condition.index === "last") {
+                            this.pageIndex = this.numPages-1;
+                        } else if (condition.index === "first") {
+                            this.pageIndex = 0;
+                        } else {
+                            this.pageIndex = condition.index;
+                        }
+                        var startIndex = this.pageIndex*this.maxFeatures;
+                        this.fireEvent("setpage", this, condition, callback, scope, this.pageIndex, this.numPages);
+                        this.featureStore.load({startIndex: startIndex, callback: function() {
+                            callback && callback.call(scope);
+                        }});
                     }
                 }
             }
-            this.processPage(this.pages[condition.index], condition,
-                function(page) {
-                    var map = this.target.mapPanel.map;
-                    this.page = page;
-                    this.setPageFilter(page);
-                    if (this.autoZoomPage && !map.getExtent().containsLonLat(page.extent.getCenterLonLat())) {
-                        map.zoomToExtent(page.extent);
-                    }
-                    this.fireEvent("setpage", this, condition, callback, scope);
-                    this.featureStore.load({callback: function() {
-                        callback && callback.call(scope, page);
-                    }});
-                }, this
-            );
         }
     }
     
 });
+
+/**
+ * Paging types
+ */
+gxp.plugins.FeatureManager.QUADTREE_PAGING = 0;
+gxp.plugins.FeatureManager.WFS_PAGING = 1;
 
 Ext.preg(gxp.plugins.FeatureManager.prototype.ptype, gxp.plugins.FeatureManager);

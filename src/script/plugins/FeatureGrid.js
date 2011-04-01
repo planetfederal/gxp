@@ -181,7 +181,7 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                 disabled: true,
                 hidden: featureManager.autoZoomPage,
                 handler: function() {
-                    map.zoomToExtent(featureManager.page.extent);
+                    map.zoomToExtent(featureManager.getPageExtent());
                 }
             }, {
                 iconCls: "x-tbar-page-next",
@@ -247,14 +247,14 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
         if (this.alwaysDisplayOnMap || this.selectOnMap) {
             featureManager.showLayer(this.id, this.displayMode);
         }
-        
-        featureManager.paging && featureManager.on("setpage", function(mgr) {
-            var paging = mgr.pages && mgr.pages.length;
+       
+        featureManager.paging && featureManager.on("setpage", function(mgr, condition, callback, scope, pageIndex, numPages) {
+            var paging = (numPages > 0);
             featureGrid.zoomToPageButton.setDisabled(!paging);
-            var prev = paging && mgr.pages.indexOf(mgr.page) !== 0;
+            var prev = (paging && (pageIndex !== 0));
             featureGrid.firstPageButton.setDisabled(!prev);
             featureGrid.prevPageButton.setDisabled(!prev);
-            var next = paging && mgr.pages.indexOf(mgr.page) !== mgr.pages.length - 1;
+            var next = (paging && (pageIndex !== numPages-1));
             featureGrid.lastPageButton.setDisabled(!next);
             featureGrid.nextPageButton.setDisabled(!next);
         }, this);
