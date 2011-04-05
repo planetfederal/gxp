@@ -102,7 +102,7 @@ gxp.plugins.WMSCSource = Ext.extend(gxp.plugins.WMSSource, {
                             tileSize: new OpenLayers.Size(tileSet.width, tileSet.height),
                             tileOrigin: new OpenLayers.LonLat(bbox[0], bbox[1])
                         });
-                        layer.params.TILED = config.tiled || false; // set to true when http://projects.opengeo.org/suite/ticket/1286 is closed
+                        layer.params.TILED = true;
                         break;
                     }
                 }
