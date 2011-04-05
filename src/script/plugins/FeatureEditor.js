@@ -82,6 +82,12 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
      *  info tool, without editing capabilities. Default is false.
      */
     readOnly: false,
+
+    /** api: config[modifyOnly]
+     *  ``Boolean`` Set to true to use the FeatureEditor merely as a feature
+     *  modify tool, i.e. there is no option to add new features.
+     */
+    modifyOnly: false,
     
     /** api: config[autoLoadFeatures]
      *  ``Boolean`` Should this tool load features on click? If set to true,
@@ -387,7 +393,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
             text: this.createFeatureActionText,
             iconCls: this.iconClsAdd,
             disabled: true,
-            hidden: this.readOnly,
+            hidden: this.modifyOnly || this.readOnly,
             toggleGroup: toggleGroup,
             enableToggle: true,
             allowDepress: true,
