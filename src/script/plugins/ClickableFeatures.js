@@ -139,7 +139,7 @@ gxp.plugins.ClickableFeatures = Ext.extend(gxp.plugins.Tool, {
                         var feature = featureManager.featureLayer.getFeatureByFid(fid);                        
                         if (feature) {
                             this.select(feature);
-                        } else if (featureManager.paging) {
+                        } else if (featureManager.paging && featureManager.pagingType === gxp.plugins.FeatureManager.QUADTREE_PAGING) {
                             var lonLat = this.target.mapPanel.map.getLonLatFromPixel(evt.xy);
                             featureManager.setPage({lonLat: lonLat}, function() {
                                 var feature = featureManager.featureLayer.getFeatureByFid(fid);
