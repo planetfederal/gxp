@@ -87,6 +87,7 @@ gxp.plugins.WMSCSource = Ext.extend(gxp.plugins.WMSSource, {
             caps.vendorSpecific.tileSets : null;
         if (tileSets !== null) {
             var layer = record.get("layer");
+            var mapSRS = this.getMapProjection().getCode();
             for (var i=0, len=tileSets.length; i<len; i++) {
                 var tileSet = tileSets[i];
                 if (tileSet.layers === layer.params.LAYERS) {
@@ -94,11 +95,13 @@ gxp.plugins.WMSCSource = Ext.extend(gxp.plugins.WMSSource, {
                     for (var key in tileSet.srs) {
                         srs = key;
                     }
-                    if (srs === this.getMapProjection().getCode()) {
+                    if (srs === mapSRS) {
                         var bbox = tileSet.bbox[srs].bbox;
-                        layer.addOptions({resolutions: tileSet.resolutions,
+                        layer.addOptions({
+                            resolutions: tileSet.resolutions,
                             tileSize: new OpenLayers.Size(tileSet.width, tileSet.height),
-                            tileOrigin: new OpenLayers.LonLat(bbox[0], bbox[1])});
+                            tileOrigin: new OpenLayers.LonLat(bbox[0], bbox[1])
+                        });
                         layer.params.TILED = config.tiled || false; // set to true when http://projects.opengeo.org/suite/ticket/1286 is closed
                         break;
                     }
