@@ -86,9 +86,9 @@ gxp.plugins.WMSCSource = Ext.extend(gxp.plugins.WMSSource, {
         var tileSets = (caps && caps.vendorSpecific && caps.vendorSpecific) ? 
             caps.vendorSpecific.tileSets : null;
         if (tileSets !== null) {
+            var layer = record.get("layer");
             for (var i=0, len=tileSets.length; i<len; i++) {
                 var tileSet = tileSets[i];
-                var layer = record.get("layer");
                 var srs = null; 
                 for (var key in tileSet.srs) {
                     srs = key;
