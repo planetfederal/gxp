@@ -139,12 +139,14 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
             );
         }
     },
-    
-    /** private: method[createColumnModel]
+
+    /** api: method[getColumns]
      *  :arg store: ``GeoExt.data.FeatureStore``
-     *  :return: ``Ext.grid.ColumnModel``
+     *  :return: ``Array``
+     *  
+     *  Gets the configuration for the column model.
      */
-    createColumnModel: function(store) {
+    getColumns: function(store) {
         function getRenderer(format) {
             return function(value) {
                 //TODO When http://trac.osgeo.org/openlayers/ticket/3131
@@ -194,6 +196,15 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
                 });
             }
         }, this);
+        return columns;
+    },
+    
+    /** private: method[createColumnModel]
+     *  :arg store: ``GeoExt.data.FeatureStore``
+     *  :return: ``Ext.grid.ColumnModel``
+     */
+    createColumnModel: function(store) {
+        var columns = this.getColumns(store);
         return new Ext.grid.ColumnModel(columns);
     }
 });
