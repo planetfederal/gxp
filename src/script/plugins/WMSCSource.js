@@ -87,18 +87,26 @@ gxp.plugins.WMSCSource = Ext.extend(gxp.plugins.WMSSource, {
             caps.vendorSpecific.tileSets : null;
         if (tileSets !== null) {
             var layer = record.get("layer");
-            var srs = this.getMapProjection().getCode();
+            var mapProjection = this.getMapProjection();
+            // look for tileset with same name and equivalent projection
             for (var i=0, len=tileSets.length; i<len; i++) {
                 var tileSet = tileSets[i];
-                if (tileSet.layers === layer.params.LAYERS && (srs in tileSet.srs)) {
-                    var bbox = tileSet.bbox[srs].bbox;
-                    layer.addOptions({
-                        resolutions: tileSet.resolutions,
-                        tileSize: new OpenLayers.Size(tileSet.width, tileSet.height),
-                        tileOrigin: new OpenLayers.LonLat(bbox[0], bbox[1])
-                    });
-                    layer.params.TILED = true;
-                    break;
+                if (tileSet.layers === layer.params.LAYERS) {
+                    var tileProjection;
+                    for (var srs in tileSet.srs) {
+                        tileProjection = new OpenLayers.Projection(srs);
+                        break;
+                    }
+                    if (mapProjection.equals(tileProjection)) {
+                        var bbox = tileSet.bbox[srs].bbox;
+                        layer.addOptions({
+                            resolutions: tileSet.resolutions,
+                            tileSize: new OpenLayers.Size(tileSet.width, tileSet.height),
+                            tileOrigin: new OpenLayers.LonLat(bbox[0], bbox[1])
+                        });
+                        layer.params.TILED = true;
+                        break;
+                    }
                 }
             }
         }
