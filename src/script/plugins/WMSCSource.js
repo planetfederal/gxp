@@ -104,7 +104,8 @@ gxp.plugins.WMSCSource = Ext.extend(gxp.plugins.WMSSource, {
                             tileSize: new OpenLayers.Size(tileSet.width, tileSet.height),
                             tileOrigin: new OpenLayers.LonLat(bbox[0], bbox[1])
                         });
-                        layer.params.TILED = true;
+                        // unless explicitly configured otherwise, use cached version
+                        layer.params.TILED = (config.cached !== false) && true;
                         break;
                     }
                 }
@@ -121,8 +122,10 @@ gxp.plugins.WMSCSource = Ext.extend(gxp.plugins.WMSSource, {
      */
     getConfigForRecord: function(record) {
         var config = gxp.plugins.WMSCSource.superclass.getConfigForRecord.apply(this, arguments);
+        // the "tiled" property is already used to indicate singleTile
+        // the "cached" property will indicate whether to send the TILED param
         return Ext.apply(config, {
-            tiled: !!record.getLayer().params.TILED
+            cached: !!record.getLayer().params.TILED
         });
     }
     
