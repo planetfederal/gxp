@@ -39,6 +39,12 @@ gxp.NewSourceWindow = Ext.extend(Ext.Window, {
      */
     addServerText: "Add Server",
     
+    /** api: config[invalidURLText]
+     *  ``String``
+     *  Message to display when an invalid URL is entered (i18n).
+     */
+    invalidURLText: "Enter a valid URL to a WMS endpoint (e.g. http://example.com/geoserver/wms)",
+
     /** api: config[contactingServerText]
      *  ``String``
      *  Text for server contact (i18n).
@@ -70,7 +76,6 @@ gxp.NewSourceWindow = Ext.extend(Ext.Window, {
      * Fired with the URL that the user provided as a parameter when the form 
      * is submitted.
      */
-
     initComponent: function() {
 
         this.addEvents("server-added");
@@ -80,11 +85,7 @@ gxp.NewSourceWindow = Ext.extend(Ext.Window, {
             allowBlank: false,
             width: 240,
             msgTarget: "under",
-            vtype: "url",
-            validator: OpenLayers.Function.bind(function() {
-                // use previous error
-                return (this.error == null) ? true : this.error;
-            }, this)
+            validator: this.urlValidator.createDelegate(this)
         });
 
         this.form = new Ext.form.FormPanel({
@@ -151,6 +152,41 @@ gxp.NewSourceWindow = Ext.extend(Ext.Window, {
             this.addSource(url, success, failure, this);
         }, this);
 
+    },
+    
+    /** private: property[urlRegExp]
+     *  `RegExp`
+     *
+     *  We want to allow protocol or scheme relative URL  
+     *  (e.g. //example.com/).  We also want to allow username and 
+     *  password in the URL (e.g. http://user:pass@example.com/).
+     *  We also want to support virtual host names without a top
+     *  level domain (e.g. http://localhost:9080/).  It also makes sense
+     *  to limit scheme to http and https.
+     *  The Ext "url" vtype does not support any of this.
+     *  This doesn't have to be completely strict.  It is meant to help
+     *  the user avoid typos.
+     */
+    urlRegExp: /^(http(s)?:)?\/\/([\w%]+:[\w%]+@)?([^@\/:]+)(:\d+)?\//i,
+    
+    /** private: method[urlValidator]
+     *  :arg url: `String`
+     *  :returns: `Boolean` The url looks valid.
+     *  
+     *  This method checks to see that a user entered URL looks valid.  It also
+     *  does form validation based on the `error` property set when a response
+     *  is parsed.
+     */
+    urlValidator: function(url) {
+        var valid;
+        if (!this.urlRegExp.test(url)) {
+            valid = this.invalidURLText;
+        } else {
+            valid = !this.error || this.error;
+        }
+        // clear previous error message
+        this.error = null;
+        return valid;
     },
 
     /** private: method[setLoading]

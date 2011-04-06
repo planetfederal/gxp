@@ -275,6 +275,14 @@ GeoExt.Lang.add("fr", {
         dataStoreEmptyText: "Magasin de données par défaut"
     },
 
+    "gxp.NewSourceWindow.prototype": {
+        title: "Add New Server...",
+        cancelText: "Cancel",
+        addServerText: "Add Server",
+        invalidURLText: "Enter a valid URL to a WMS endpoint (e.g. http://example.com/geoserver/wms)",
+        contactingServerText: "Contacting Server..."
+    },
+
     "gxp.ScaleOverlay.prototype": { 
         zoomLevelText: "Niveau de zoom"
     }

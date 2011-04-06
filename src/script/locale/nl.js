@@ -303,6 +303,14 @@ GeoExt.Lang.add("nl", {
         dataStoreEmptyText: "Standaard archief"
     },
 
+    "gxp.NewSourceWindow.prototype": {
+        title: "Add New Server...",
+        cancelText: "Cancel",
+        addServerText: "Add Server",
+        invalidURLText: "Enter a valid URL to a WMS endpoint (e.g. http://example.com/geoserver/wms)",
+        contactingServerText: "Contacting Server..."
+    },
+
     "gxp.ScaleOverlay.prototype": { 
         zoomLevelText: "Zoom niveau"
     }

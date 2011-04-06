@@ -18,6 +18,87 @@
             
             instance.destroy();
         }
+        
+        function test_urlRegExp(t) {
+            
+            var cases = [{
+                url: "http://example.com/", valid: true
+            }, {
+                url: "http://example.com/geoserver/ows", valid: true
+            }, {
+                url: "http://example.com/geoserver/ows?foo=bar", valid: true
+            }, {
+                url: "http://user:pass@example.com/", valid: true
+            }, {
+                url: "http://hostalias/geoserver/ows", valid: true
+            }, {
+                url: "http://localhost:9080/geoserver/ows", valid: true
+            }, {
+                url: "//example.com/geoserver/ows?foo=bar", valid: true
+            }, {
+                url: "bogus", valid: false
+            }, {
+                url: "bogus/geoserver/ows", valid: false
+            }, {
+                url: "http://bogus", valid: false
+            }, {
+                url: "http://bogus.com", valid: false
+            }, {
+                url: "http://bogus.com:80", valid: false
+            }, {
+                url: "http://user@bogus.com/", valid: false
+            }];
+            
+            var num = cases.length;
+            t.plan(num);
+            
+            var regex = gxp.NewSourceWindow.prototype.urlRegExp;
+            
+            var c;
+            for (var i=0; i<num; ++i) {
+                c = cases[i];
+                t.eq(regex.test(c.url), c.valid, c.url);
+            }
+            
+        }
+        
+        function test_urlValidator(t) {
+
+            var cases = [{
+                url: "http://example.com/geoserver/wms", valid: true
+            }, {
+                url: "bogus", valid: false
+            }, {
+                url: "http://example.com/geoserver/ows", previousError: "Couldn't load caps doc", valid: false
+            }];
+
+            var num = cases.length;
+            t.plan(num * 2);
+
+            var win = new gxp.NewSourceWindow();
+            var c, got, exp, msg;
+            for (var i=0; i<num; ++i) {
+                c = cases[i];
+                // set previous error (if any)
+                win.error = c.previousError;
+                got = win.urlValidator(c.url);
+                if (!c.previousError) {
+                    // no previous error, expect true or invalid url text
+                    exp = c.valid || win.invalidURLText;
+                } else {
+                    // previous error, expect the previous error message
+                    exp = c.previousError;
+                }
+                msg = c.url + (c.previousError ? " " + c.previousError : "");
+                // confirm that validator returned what we expect
+                t.eq(got, exp, msg);
+                // assert that the win.error property is set to null after validation
+                t.eq(win.error, null, "error set to null: " + msg);
+            }
+            
+            win.destroy();
+            
+        }
 
     </script>
   </head>

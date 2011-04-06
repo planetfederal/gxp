@@ -345,6 +345,7 @@ GeoExt.Lang.add("es", {
         title: "Añadir Servidor...",
         cancelText: "Cancelar",
         addServerText: "Añadir Servidor",
+        invalidURLText: "Enter a valid URL to a WMS endpoint (e.g. http://example.com/geoserver/wms)",
         contactingServerText: "Conectando con el Servidor..."
     },
 
