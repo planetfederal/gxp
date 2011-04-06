@@ -29,7 +29,8 @@ GeoExt.Lang.add("nl", {
         previousPageTip: "Vorige pagina",
         zoomPageExtentTip: "Zoom naar de uitsnede van de pagina",
         nextPageTip: "Volgende pagina",
-        nextPageTip: "Laatste pagina"
+        nextPageTip: "Laatste pagina",
+        totalMsg: "Totaal: {0} rijen"
     },
 
     "gxp.plugins.GoogleEarth.prototype": {

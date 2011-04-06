@@ -150,6 +150,12 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      */
     page: null,
 
+    /** private: property[numberOfFeatures]
+     *  ``Integer`` The total number of features returned by the query, only
+     *  used when in WFS paging mode.
+     */
+    numberOfFeatures: null,
+
     /** private: property[numPages]
      *  ``Integer`` The number of pages available, only used when in WFS
      *  paging mode.
@@ -1021,8 +1027,10 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
             if (this.fireEvent("beforesetpage", this, condition, callback, scope) !== false) {
                 if (!condition) {
                     this.hitCountProtocol.read({
+                        filter: this.filter,
                         callback: function(response) {
-                            this.numPages = Math.ceil(response.numberOfFeatures/this.maxFeatures);
+                            this.numberOfFeatures = response.numberOfFeatures;
+                            this.numPages = Math.ceil(this.numberOfFeatures/this.maxFeatures);
                             this.pageIndex = 0;
                             this.fireEvent("setpage", this, condition, callback, scope, this.pageIndex, this.numPages);
                             this.featureStore.load({output: "object", callback: function() {

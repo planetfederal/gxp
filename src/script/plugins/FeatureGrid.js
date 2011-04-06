@@ -37,6 +37,12 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
      *  ``GeoExt.data.AttributeStore``
      */
     schema: null,
+
+    /** api: config[showTotalResults]
+     *  ``Boolean`` If set to true, the total number of records will be shown
+     *  in the bottom toolbar of the grid, if available.
+     */
+    showTotalResults: false,
     
     /** api: config[alwaysDisplayOnMap]
      *  ``Boolean`` If set to true, the features that are shown in the grid
@@ -110,6 +116,12 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
      *  Tooltip string for last page action (i18n).
      */
     lastPageTip: "Last page",
+
+    /** api: config[totalMsg]
+     *  ``String``
+     *  String template for showing total number of records (i18n).
+     */
+    totalMsg: "Total: {0} records",
     
     /** api: method[addOutput]
      */
@@ -154,6 +166,7 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                 }
             };
         }
+        this.displayItem = new Ext.Toolbar.TextItem({});
         config = Ext.apply({
             xtype: "gxp_featuregrid",
             sm: new GeoExt.grid.FeatureSelectionModel(smCfg),
@@ -199,7 +212,7 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                 handler: function() {
                     featureManager.setPage({index: "last"});
                 }
-            }] : []).concat(["->"].concat(!this.alwaysDisplayOnMap ? [{
+            }, {xtype: 'tbspacer', width: 10}, this.displayItem] : []).concat(["->"].concat(!this.alwaysDisplayOnMap ? [{
                 text: this.displayFeatureText,
                 enableToggle: true,
                 toggleHandler: function(btn, pressed) {
@@ -216,6 +229,14 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                             ownerCt.collapse();
                     }).bind(this);
                     var onPopulate = (function() {
+                        if (this.showTotalResults === true && featureManager.numberOfFeatures !== null) {
+                            this.displayItem.setText(
+                                String.format(
+                                    this.totalMsg,
+                                    featureManager.numberOfFeatures
+                                )
+                            );
+                        }
                         this.selectOnMap && this.selectControl.activate();
                         this.autoExpand && typeof ownerCt.expand == "function" &&
                             ownerCt.expand();

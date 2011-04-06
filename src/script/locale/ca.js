@@ -38,7 +38,8 @@ GeoExt.Lang.add("ca", {
         previousPageTip: "Pàgina anterior",
         zoomPageExtentTip: "Ajusta vista a l'extensió de la pàgina",
         nextPageTip: "Pàgina següent",
-        nextPageTip: "Pàgina anterior"
+        nextPageTip: "Pàgina anterior",
+        totalMsg: "Total: {0} records"
     },
 
     "gxp.plugins.GoogleEarth.prototype": { 
