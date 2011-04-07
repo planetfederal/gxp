@@ -68,7 +68,7 @@ gxp.plugins.GoogleEarth = Ext.extend(gxp.plugins.Tool, {
     /** api: ptype = gxp_googleearth */
     ptype: "gxp_googleearth",
 
-   /** config: property[apiKey]
+    /** config: property[apiKey]
      *  ``String`` The API key required for adding the Google Maps script
      */
 
