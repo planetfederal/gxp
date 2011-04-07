@@ -614,18 +614,13 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
     
     /** api: method[isAuthorized]
      *  :arg role: ``String`` optional, default is "ROLE_ADMINISTRATOR"
-     *  :returns: ``Boolean`` of ``undefined`` if the ``authorizedRoles``
-     *      property is not set.
+     *  :returns: ``Boolean`` The user is authorized for the given role.
      *
      *  Returns true if the client is authorized with the provided role.
      */
     isAuthorized: function(role) {
-        var authorized = undefined;
-        if (this.authorizedRoles) {
-            role = role || "ROLE_ADMINISTRATOR";
-            authorized = this.authorizedRoles.indexOf(role) !== -1;
-        }
-        return authorized;
+        var roles = this.authorizedRoles || [];
+        return (roles.indexOf(role || "ROLE_ADMINISTRATOR") !== -1);
     },
     
     /** api: method[destroy]
