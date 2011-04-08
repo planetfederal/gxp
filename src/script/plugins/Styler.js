@@ -117,13 +117,13 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
      *  enable the launch action.
      */
     checkIfStyleable: function(rec) {
-        var editableStyles = false;
-        var record = this.targetLayerRecord; // TODO: this may have changed while waiting for describeLayer
-        var owsTypes = ["WFS"];
-        if (this.rasterStyling === true) {
-            owsTypes.push("WCS");
-        }
         if (rec && owsTypes.indexOf(rec.get("owsType")) !== -1) {
+            var editableStyles = false;
+            var record = this.targetLayerRecord; // TODO: this may have changed while waiting for describeLayer
+            var owsTypes = ["WFS"];
+            if (this.rasterStyling === true) {
+                owsTypes.push("WCS");
+            }
             if (record && record.get("styles")) {
                 var source = this.target.layerSources[record.get("source")];
                 var url = source.url.split(
