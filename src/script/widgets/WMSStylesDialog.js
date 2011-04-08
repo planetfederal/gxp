@@ -867,30 +867,33 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      *      request result was returned.
      */
     describeLayer: function(callback) {
-        if(this.layerDescription) {
-            callback.call(this);
-            return;
+        if (this.layerDescription) {
+            // always return before calling callback
+            window.setTimeout(function() {
+                callback.call(this);
+            }, 0);
+        } else {
+            var layer = this.layerRecord.getLayer();
+            Ext.Ajax.request({
+                url: layer.url,
+                params: {
+                    "SERVICE": "WMS",
+                    "VERSION": layer.params["VERSION"],
+                    "REQUEST": "DescribeLayer",
+                    "LAYERS": [layer.params["LAYERS"]].join(",")
+                },
+                method: "GET",
+                disableCaching: false,
+                success: function(response) {
+                    var result = new OpenLayers.Format.WMSDescribeLayer().read(
+                        response.responseXML && response.responseXML.documentElement ?
+                            response.responseXML : response.responseText);
+                    this.layerDescription = result[0];
+                },
+                callback: callback,
+                scope: this
+            });
         }
-        var layer = this.layerRecord.getLayer();
-        Ext.Ajax.request({
-            url: layer.url,
-            params: {
-                "SERVICE": "WMS",
-                "VERSION": layer.params["VERSION"],
-                "REQUEST": "DescribeLayer",
-                "LAYERS": [layer.params["LAYERS"]].join(",")
-            },
-            method: "GET",
-            disableCaching: false,
-            success: function(response) {
-                var result = new OpenLayers.Format.WMSDescribeLayer().read(
-                    response.responseXML && response.responseXML.documentElement ?
-                        response.responseXML : response.responseText);
-                this.layerDescription = result[0];
-            },
-            callback: callback,
-            scope: this
-        });
     },
     
     /** private: method[addStylesCombo]
