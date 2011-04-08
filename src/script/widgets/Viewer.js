@@ -623,6 +623,22 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         return (roles.indexOf(role || "ROLE_ADMINISTRATOR") !== -1);
     },
     
+    /** api: method[isAuthenticated]
+     *  :returns: ``Boolean`` The user has authenticated.
+     *
+     *  Determines whether a user has logged in.
+     */
+    isAuthenticated: function(role) {
+        // TODO: revisit this
+        // If the application supports authentication, we expect a list of
+        // authorized roles to be set (length zero if user has not logged in).
+        // If the application does not support authentication, authorizedRoles
+        // should be undefined.  In this case, we return true so that components
+        // that require authentication can still be enabled.  This leaves the
+        // authentication challenge up to the browser.
+        return !this.authorizedRoles || this.authorizedRoles.length > 0;
+    },
+    
     /** api: method[destroy]
      */
     destroy: function() {
