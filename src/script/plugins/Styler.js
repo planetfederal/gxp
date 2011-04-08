@@ -89,20 +89,20 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
         
         this.launchAction = actions[0];
         this.target.on({
-            layerselectionchange: this.determineIfStyleable,
+            layerselectionchange: this.handleLayerChange,
             scope: this
         });
         
         return actions;
     },
     
-    /** private: method[determineIfStyleable]
-     *  :arg record: ``GeoExt.data.LayerRector``
+    /** private: method[handleLayerChange]
+     *  :arg record: ``GeoExt.data.LayerRecord``
      *
      *  Determine if a particular layer can be styled and decide whether to 
      *  enable the launch action.
      */
-    determineIfStyleable: function(record) {
+    handleLayerChange: function(record) {
         var editableStyles = false;
         var source = this.target.getSource(record);
         if (source instanceof gxp.plugins.WMSSource) {
