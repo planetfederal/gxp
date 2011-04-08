@@ -357,9 +357,16 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      *  Get a DescribeLayer response from this source's WMS.
      */
     describeLayer: function(rec, callback, scope) {
-        !this.describeLayerStore && this.initDescribeLayerStore();
         if (!this.describeLayerStore) {
-            callback.call(scope, false);
+            this.initDescribeLayerStore();
+        }
+        function delayedCallback(arg) {
+            window.setTimeout(function() {
+                callback.call(scope, arg);
+            }, 0);
+        }
+        if (!this.describeLayerStore) {
+            delayedCallback(false);
             return;
         }
         if (!this.describedLayers) {
@@ -401,7 +408,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         } else if ((index = this.describeLayerStore.findExact("layerName", layerName)) == -1) {
             this.describeLayerStore.on("load", cb, this);
         } else {
-            callback.call(scope, this.describeLayerStore.getAt(index));
+            delayedCallback(this.describeLayerStore.getAt(index));
         }
     },
     
