@@ -128,7 +128,9 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
                     }
                 }, this);
             }
-            editableStyles || actions[0].disable();
+            if (!editableStyles) {
+                actions[0].disable();
+            }
         }, this);
         
         return actions;
