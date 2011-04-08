@@ -135,21 +135,21 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
                 } else {
                     editableStyles = true;
                 }
-            }
-            if (editableStyles) {
-                var authorized = this.target.isAuthorized();
-                if (typeof authorized == "boolean") {
-                    this.launchAction.setDisabled(!authorized);
-                } else {
-                    Ext.Ajax.request({
-                        method: "PUT",
-                        url: url + "/styles",
-                        callback: function(options, success, response) {
-                            // we expect a 405 error code here if we are dealing
-                            // with GeoServer and have write access.
-                            this.launchAction.setDisabled(response.status != 405);                        
-                        }
-                    });
+                if (editableStyles) {
+                    var authorized = this.target.isAuthorized();
+                    if (typeof authorized == "boolean") {
+                        this.launchAction.setDisabled(!authorized);
+                    } else {
+                        Ext.Ajax.request({
+                            method: "PUT",
+                            url: url + "/styles",
+                            callback: function(options, success, response) {
+                                // we expect a 405 error code here if we are dealing
+                                // with GeoServer and have write access.
+                                this.launchAction.setDisabled(response.status != 405);                        
+                            }
+                        });
+                    }
                 }
             }
         }
