@@ -617,10 +617,24 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
      *  :returns: ``Boolean`` The user is authorized for the given role.
      *
      *  Returns true if the client is authorized with the provided role.
+     *  In cases where the application doesn't explicitly handle authentication,
+     *  the user is assumed to be authorized for all roles.  This results in
+     *  authentication challenges from the browser when an action requires 
+     *  credentials.
      */
     isAuthorized: function(role) {
-        var roles = this.authorizedRoles || [];
-        return (roles.indexOf(role || "ROLE_ADMINISTRATOR") !== -1);
+        /**
+         * If the application doesn't support authentication, we expect 
+         * authorizedRoles to be undefined.  In this case, from the UI 
+         * perspective, we treat the user as if they are authorized to do
+         * anything.  This will result in just-in-time authentication challenges
+         * from the browser where authentication credentials are needed.
+         * If the application does support authentication, we expect
+         * authorizedRoles to be a list of roles for which the user is 
+         * authorized.
+         */
+        return !this.authorizedRoles || 
+            (this.authorizedRoles.indexOf(role || "ROLE_ADMINISTRATOR") !== -1);
     },
     
     /** api: method[isAuthenticated]
@@ -632,13 +646,14 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
      *  will prompt for credentials when needed.
      */
     isAuthenticated: function(role) {
-        // TODO: revisit this
-        // If the application supports authentication, we expect a list of
-        // authorized roles to be set (length zero if user has not logged in).
-        // If the application does not support authentication, authorizedRoles
-        // should be undefined.  In this case, we return true so that components
-        // that require authentication can still be enabled.  This leaves the
-        // authentication challenge up to the browser.
+        /**
+         * If the application supports authentication, we expect a list of
+         * authorized roles to be set (length zero if user has not logged in).
+         * If the application does not support authentication, authorizedRoles
+         * should be undefined.  In this case, we return true so that components
+         * that require authentication can still be enabled.  This leaves the
+         * authentication challenge up to the browser.
+         */
         return !this.authorizedRoles || this.authorizedRoles.length > 0;
     },
     
