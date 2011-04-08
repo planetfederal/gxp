@@ -626,7 +626,10 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
     /** api: method[isAuthenticated]
      *  :returns: ``Boolean`` The user has authenticated.
      *
-     *  Determines whether a user has logged in.
+     *  Determines whether a user has logged in.  In cases where the application
+     *  doesn't provide a login dialog, the user will be considered logged in.
+     *  In this same case, where components require authentication, the browser
+     *  will prompt for credentials when needed.
      */
     isAuthenticated: function(role) {
         // TODO: revisit this
