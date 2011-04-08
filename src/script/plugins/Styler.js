@@ -103,56 +103,67 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
      */
     handleLayerChange: function(record) {
         this.launchAction.disable();
-        this.targetLayerRecord = record;
-        var source = this.target.getSource(record);
-        if (source instanceof gxp.plugins.WMSSource) {
-            source.describeLayer(record, this.checkIfStyleable, this);
+        if (record && record.get("styles")) {
+            var source = this.target.getSource(record);
+            if (source instanceof gxp.plugins.WMSSource) {
+                source.describeLayer(record, function(describeRec) {
+                    this.checkIfStyleable(record, describeRec);
+                }, this);
+            }
         }
     },
-            
+
     /** private: method[checkIfStyleable]
-     *  :arg record: ``GeoExt.data.LayerRecord``
+     *  :arg layerRec: ``GeoExt.data.LayerRecord``
+     *  :arg describeRec: ``Ext.data.Record`` Record from a 
+     *      `GeoExt.data.DescribeLayerStore``.
      *
-     *  Determine if a particular layer can be styled and decide whether to 
-     *  enable the launch action.
+     *  Given a layer record and the corresponding describe layer record, 
+     *  determine if the target layer can be styled.  If so, enable the launch 
+     *  action.
      */
-    checkIfStyleable: function(rec) {
-        if (rec && owsTypes.indexOf(rec.get("owsType")) !== -1) {
+    checkIfStyleable: function(layerRec, describeRec) {
+        var owsTypes = ["WFS"];
+        if (this.rasterStyling === true) {
+            owsTypes.push("WCS");
+        }
+        if (describeRec && owsTypes.indexOf(describeRec.get("owsType")) !== -1) {
             var editableStyles = false;
-            var record = this.targetLayerRecord; // TODO: this may have changed while waiting for describeLayer
-            var owsTypes = ["WFS"];
-            if (this.rasterStyling === true) {
-                owsTypes.push("WCS");
+            var source = this.target.layerSources[layerRec.get("source")];
+            var url = source.url.split("?")
+                .shift().replace(/\/(wms|ows)\/?$/, "/rest/styles");
+            if (this.sameOriginStyling) {
+                // this could be made more robust
+                // for now, only style for sources with relative url
+                editableStyles = url.charAt(0) === "/";
+            } else {
+                editableStyles = true;
             }
-            if (record && record.get("styles")) {
-                var source = this.target.layerSources[record.get("source")];
-                var url = source.url.split(
-                    "?").shift().replace(/\/(wms|ows)\/?$/, "/rest");
-                if (this.sameOriginStyling) {
-                    // this could be made more robust
-                    // for now, only style for sources with relative url
-                    editableStyles = url.charAt(0) === "/";
-                } else {
-                    editableStyles = true;
-                }
-                if (editableStyles) {
-                    var authorized = this.target.isAuthorized();
-                    if (typeof authorized == "boolean") {
-                        this.launchAction.setDisabled(!authorized);
-                    } else {
-                        Ext.Ajax.request({
-                            method: "PUT",
-                            url: url + "/styles",
-                            callback: function(options, success, response) {
-                                // we expect a 405 error code here if we are dealing
-                                // with GeoServer and have write access.
-                                this.launchAction.setDisabled(response.status != 405);                        
-                            }
-                        });
-                    }
+            if (editableStyles) {
+                if (this.target.isAuthorized()) {
+                    // check if service is available
+                    this.enableActionIfAvailable(url);
                 }
             }
         }
+    },
+    
+    /** private: method[enableActionIfAvailable]
+     *  :arg url: ``String`` URL of style service
+     * 
+     *  Enable the launch action if the service is available.
+     */
+    enableActionIfAvailable: function(url) {
+        Ext.Ajax.request({
+            method: "PUT",
+            url: url,
+            callback: function(options, success, response) {
+                // we expect a 405 error code here if we are dealing
+                // with GeoServer and have write access.
+                this.launchAction.setDisabled(response.status !== 405);                        
+            },
+            scope: this
+        });
     },
     
     addOutput: function(config) {
