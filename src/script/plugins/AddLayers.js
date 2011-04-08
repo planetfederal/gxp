@@ -485,14 +485,16 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                         parts.push("rest");
                         // this sets the url for the layer upload panel
                         url = parts.join("/");
-                        // determine availability of upload functionality based
-                        // on a 405 for GET
-                        getStatus(url + "/upload", function(status) {
-                            var available = (status === 405);
-                            var authorized = this.target.isAuthorized();
-                            // allow upload if authorized and available
-                            button.setVisible(authorized && available);
-                        }, this);
+                        if (this.target.isAuthenticated()) {
+                            // determine availability of upload functionality based
+                            // on a 405 for GET
+                            getStatus(url + "/upload", function(status) {
+                                var available = (status === 405);
+                                var authorized = this.target.isAuthorized();
+                                // allow upload if authorized and available
+                                button.setVisible(authorized && available);
+                            }, this);
+                        }
                     }
                 },
                 scope: this
