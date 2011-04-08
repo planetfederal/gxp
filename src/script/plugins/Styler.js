@@ -103,6 +103,7 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
      *  enable the launch action.
      */
     handleLayerChange: function(record) {
+        this.launchAction.disable();
         var editableStyles = false;
         var source = this.target.getSource(record);
         if (source instanceof gxp.plugins.WMSSource) {
@@ -142,9 +143,6 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
                     }
                 }
             }, this);
-        }
-        if (!editableStyles) {
-            this.launchAction.disable();
         }
     },
     
