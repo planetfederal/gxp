@@ -425,13 +425,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
      */
     onLayerChange: function(mgr, layer, schema) {
         this.schema = schema;
-        var disable;
-        var authorized = this.target.isAuthorized();
-        if (typeof authorized == "boolean") {
-            disable = (!schema || !authorized);
-        } else {
-            disable = !schema;
-        }
+        var disable = !schema || !this.target.isAuthorized();
         this.actions[0].setDisabled(disable);
         this.actions[1].setDisabled(disable);
         if (disable) {
