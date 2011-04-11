@@ -81,7 +81,6 @@ gxp.plugins.GoogleEarth = Ext.extend(gxp.plugins.Tool, {
      */
     constructor: function(config) {
         gxp.plugins.GoogleEarth.superclass.constructor.apply(this, arguments);
-        this.loadScript();
     },
 
     loadScript: function() {
