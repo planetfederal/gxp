@@ -91,35 +91,6 @@ gxp.plugins.GoogleEarth = Ext.extend(gxp.plugins.Tool, {
         gxp.plugins.GoogleEarth.superclass.constructor.apply(this, arguments);
     },
 
-    loadScript: function() {
-
-        if (!this.initialConfig.apiKey) {
-            Ext.Msg.prompt("Google API Key",
-                this.apiKeyPrompt + window.location.hostname +
-                    " <sup><a target='_blank' href='http://code.google.com/apis/earth/'>?</a></sup>",
-                function(btn, key) {
-                    if (btn === "ok") {
-                        this.initialConfig.apiKey = key;
-                        this.loadScript();
-                    } else {
-                        return false;
-                    }
-                }, this
-            );
-            return;
-        }
-        
-        gxp.plugins.GoogleEarth.loader.onLoad({
-            apiKey: this.initialConfig.apiKey,
-            callback: function() {
-                this.actions[0].enable();
-            },
-            // TODO: add errback
-            scope: this
-        });
-
-    },
-
     /** api: method[addActions]
      */
     addActions: function() {
@@ -143,20 +114,45 @@ gxp.plugins.GoogleEarth = Ext.extend(gxp.plugins.Tool, {
             scope: this
         }];
         var result = gxp.plugins.GoogleEarth.superclass.addActions.apply(this, [actions]);
-        if (gxp.plugins.GoogleEarth.loader.ready) {
-            this.actions[0].enable();
-        } else {
-            gxp.plugins.GoogleEarth.loader.on({
-                ready: function() {
+
+        // get API key before loading
+        this.getAPIKey(function(key) {
+            this.initialConfig.apiKey = key;
+            gxp.plugins.GoogleEarth.loader.onLoad({
+                apiKey: this.initialConfig.apiKey,
+                callback: function() {
                     this.actions[0].enable();
                 },
+                // TODO: add errback
                 scope: this
             });
-            if (!gxp.plugins.GoogleEarth.loader.loading) {
-                this.loadScript();
-            }
-        }
+        });
+
         return result;
+    },
+    
+    /** private: method[keyAPIKey]
+     *  :arg callback: ``Function`` To be called with API key.
+     */
+    getAPIKey: function(callback) {
+        
+        var self = this;
+        if (this.initialConfig.apiKey) {
+            window.setTimeout(function() {
+                callback.call(self, self.initialConfig.apiKey);
+            }, 0);
+        } else {
+            Ext.Msg.prompt("Google API Key",
+                this.apiKeyPrompt + window.location.hostname +
+                    " <sup><a target='_blank' href='http://code.google.com/apis/earth/'>?</a></sup>",
+                function(btn, key) {
+                    if (btn === "ok") {
+                        callback.call(this, key);
+                    }
+                }, this
+            );
+        }
+        
     }
 
 });
