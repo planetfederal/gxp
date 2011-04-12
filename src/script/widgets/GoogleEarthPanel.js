@@ -73,7 +73,13 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
              *  returns ``false``, the layer will not be added.  Listeners
              *  will be called with a single argument: the layer record.
              */
-            "beforeadd"
+            "beforeadd",
+            /** api: event[failure]
+             *  Fires when there is a failure creating the instance.  Listeners
+             *  will receive two arguments: this plugin and the failure code
+             *  (see the Google Earth API docs for details on the failure codes).
+             */
+            "failure"
         );
 
         gxp.GoogleEarthPanel.superclass.initComponent.call(this);
@@ -98,7 +104,13 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
         function render() {
             if (this.rendered) {
                 this.layerCache = {};
-                google.earth.createInstance(this.body.dom, this.onEarthReady.createDelegate(this), function(){});
+                google.earth.createInstance(
+                    this.body.dom, 
+                    this.onEarthReady.createDelegate(this), 
+                    (function(code) {
+                        this.fireEvent("failure", this, code);
+                    }).createDelegate(this)
+                );
             }
         };
         this.on("show", render, this);
