@@ -90,47 +90,63 @@ gxp.plugins.GoogleEarth = Ext.extend(gxp.plugins.Tool, {
     constructor: function(config) {
         gxp.plugins.GoogleEarth.superclass.constructor.apply(this, arguments);
     },
-
+    
     /** api: method[addActions]
      */
     addActions: function() {
         var actions = [{
             menuText: this.menuText,
-            disabled: true,
             enableToggle: true,
             iconCls: "gxp-icon-googleearth",
             tooltip: this.tooltip,
             toggleHandler: function(button, state) {
-                var layout = (this.target.mapPanel.ownerCt && this.target.mapPanel.ownerCt.getLayout());
-                if (layout && layout instanceof Ext.layout.CardLayout) {
-                    if (state === true) {
-                        layout.setActiveItem(1);
-                        button.enable();
-                    } else {
-                        layout.setActiveItem(0);
-                    }
-                }
+                // we unpress the button so that it will only show pressed
+                // on successful display
+                button.toggle(false, true);
+                this.togglePanelDisplay(state);
             },
             scope: this
         }];
         var result = gxp.plugins.GoogleEarth.superclass.addActions.apply(this, [actions]);
 
-        // get API key before loading
-        this.getAPIKey(function(key) {
-            this.initialConfig.apiKey = key;
-            gxp.plugins.GoogleEarth.loader.onLoad({
-                apiKey: this.initialConfig.apiKey,
-                callback: function() {
-                    this.actions[0].enable();
-                },
-                // TODO: add errback
-                scope: this
-            });
-        });
-
         return result;
     },
-    
+
+    /** private: method[togglePanelDisplay]
+     *  :arg displayed: ``Boolean`` Display the Google Earth panel.
+     */
+    togglePanelDisplay: function(displayed) {
+        var ownerCt = this.target.mapPanel.ownerCt;
+        var layout = ownerCt && ownerCt.getLayout();
+        if (layout && layout instanceof Ext.layout.CardLayout) {
+            if (displayed === true) {
+                // get API key before displaying
+                this.getAPIKey(function(key) {
+                    this.initialConfig.apiKey = key;
+                    gxp.plugins.GoogleEarth.loader.onLoad({
+                        apiKey: this.initialConfig.apiKey,
+                        callback: function() {
+                            // display the panel
+                            layout.setActiveItem(1);
+                            // enable action press any buttons associated with the action
+                            this.actions[0].enable();
+                            this.actions[0].each(function(cmp) {
+                                if (cmp.toggle) {
+                                    cmp.toggle(true, true);
+                                }
+                            });
+                        },
+                        // TODO: add errback for handling load failures
+                        scope: this
+                    });
+                });
+            } else {
+                // hide the panel
+                layout.setActiveItem(0);
+            }
+        }
+    },
+
     /** private: method[keyAPIKey]
      *  :arg callback: ``Function`` To be called with API key.
      */
