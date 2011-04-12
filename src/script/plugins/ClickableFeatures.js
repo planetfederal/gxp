@@ -159,12 +159,15 @@ gxp.plugins.ClickableFeatures = Ext.extend(gxp.plugins.Tool, {
         });
     },
     
-    /** private: method[select]
+    /** api: method[select]
      *  :arg feature: ``OpenLayers.Feature.Vector``
+     *
+     *  Action to perform when a feature is selected. The default action is to
+     *  unselect existing selections and select the feature using the built-in
+     *  SelectFeature control. To be overridden by subclasses.
      */
     select: function(feature) {
-        this.selectControl.unselectAll(
-            this.popup && this.popup.editing && {except: this.popup.feature});
+        this.selectControl.unselectAll();
         this.selectControl.select(feature);
     }
     

@@ -460,8 +460,16 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
         } else {
             button.disable();
         }
-    }
+    },
     
+    /** private: method[select]
+     *  :arg feature: ``OpenLayers.Feature.Vector``
+     */
+    select: function(feature) {
+        this.selectControl.unselectAll(
+            this.popup && this.popup.editing && {except: this.popup.feature});
+        this.selectControl.select(feature);
+    }
 });
 
 Ext.preg(gxp.plugins.FeatureEditor.prototype.ptype, gxp.plugins.FeatureEditor);
