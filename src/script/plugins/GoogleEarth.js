@@ -236,6 +236,11 @@ gxp.plugins.GoogleEarth.loader = new (Ext.extend(Ext.util.Observable, {
      *  Called when all resources required by this plugin type have loaded.
      */
     loadScript: function(options) {
+        
+        // remove any previous loader to ensure that the key is applied
+        if (window.google) {
+            delete google.loader;
+        }
 
         var params = {
             key: options.apiKey,
