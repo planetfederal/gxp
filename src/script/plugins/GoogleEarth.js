@@ -79,6 +79,21 @@ gxp.plugins.GoogleEarth = Ext.extend(gxp.plugins.Tool, {
     /** config: property[apiKey]
      *  ``String`` The API key required for adding the Google Maps script
      */
+    
+    /** config: property[apiKeys]
+     *  ``Object``
+     *  If the ``apiKey`` property is not set, this object can be provided as a
+     *  lookup of API keys for multiple URL.  Each key in the object should be
+     *  a hostname (e.g. "example.com"), and each value should be a complete 
+     *  API key.
+     *
+     *  .. code-block:: javascript
+     *  apiKeys: {
+     *      "localhost": "ABQIAAAAeDjUod8ItM9dBg5_lz0esxTnme5EwnLVtEDGnh-lFVzRJhbdQhQBX5VH8Rb3adNACjSR5kaCLQuBmw",
+     *      "amazonaws.com": "ABQIAAAAeDjUod8ItM9dBg5_lz0esxSMhkig1Gd5B_2j4H1Xz7hsATFBFhTFmk4SPyFr1scv-qEckPQXdkSU2Q",
+     *      "skygone.net": "ABQIAAAAeDjUod8ItM9dBg5_lz0esxR03nynjj8hU7YxAbflQ5_cAeANHhStetrADxN1a67rfdDnX5uWtV-b8g"
+     *  }
+     */
 
     //i18n
     apiKeyPrompt: "Please enter the Google API key for ",
@@ -123,7 +138,7 @@ gxp.plugins.GoogleEarth = Ext.extend(gxp.plugins.Tool, {
                     gxp.plugins.GoogleEarth.loader.unload();
                 },
                 scope: this
-            })
+            });
         }
 
         return gxp.plugins.GoogleEarth.superclass.addActions.apply(this, [actions]);
@@ -165,17 +180,32 @@ gxp.plugins.GoogleEarth = Ext.extend(gxp.plugins.Tool, {
         }
     },
 
-    /** private: method[keyAPIKey]
+    /** private: method[getAPIKey]
      *  :arg callback: ``Function`` To be called with API key.
      */
     getAPIKey: function(callback) {
-        
-        var self = this;
-        if (this.initialConfig.apiKey) {
-            window.setTimeout(function() {
-                callback.call(self, self.initialConfig.apiKey);
-            }, 0);
+        var key = this.initialConfig.apiKey;
+        var keys = this.initialConfig.apiKeys;
+        if (!key && keys) {
+            var hostname = this.getHostName();
+            for (var candidate in keys) {
+                // check if case-insensitive match
+                if ((new RegExp("^(.*\\.)?" + candidate + "$", "i")).test(hostname)) {
+                    key = keys[candidate];
+                    break;
+                }
+            }
+        }
+        if (key) {
+            // return then call callback
+            window.setTimeout(
+                (function() {
+                    callback.call(this, key);
+                }).createDelegate(this), 
+                0
+            );
         } else {
+            // prompt if we still don't have a key
             Ext.Msg.prompt("Google API Key",
                 this.apiKeyPrompt + window.location.hostname +
                     " <sup><a target='_blank' href='http://code.google.com/apis/earth/'>?</a></sup>",
@@ -186,7 +216,15 @@ gxp.plugins.GoogleEarth = Ext.extend(gxp.plugins.Tool, {
                 }, this
             );
         }
-        
+    },
+
+    /** private: method[getHostName]
+     *  :returns: ``String`` The current host name (no port).
+     * 
+     *  This method is here mainly for mocking in tests.
+     */
+    getHostName: function() {
+        return window.location.host.split(":").shift();
     }
 
 });
