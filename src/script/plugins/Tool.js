@@ -145,7 +145,7 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
     /** private: method[constructor]
      */
     constructor: function(config) {
-        this.initialConfig = config;
+        this.initialConfig = config || {};
         this.active = false;
         Ext.apply(this, config);
         if (!this.id) {
