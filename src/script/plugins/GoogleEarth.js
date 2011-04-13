@@ -107,15 +107,33 @@ gxp.plugins.GoogleEarth = Ext.extend(gxp.plugins.Tool, {
             },
             scope: this
         }];
-        var result = gxp.plugins.GoogleEarth.superclass.addActions.apply(this, [actions]);
+        
+        // TODO: this split between the tool and the panel needs work
+        var ownerCt = this.target.mapPanel.ownerCt;
+        var layout = ownerCt && ownerCt.getLayout();
+        if (layout && layout instanceof Ext.layout.CardLayout) {
+            // TODO: remove this assumption (rework the layout to fully separate the two views - tools and all)
+            var panel = ownerCt.get(1);
+            panel.on({
+                pluginfailure: function(cmp, code) {
+                    // assume API key is bad 
+                    // could check code === "ERR_API_KEY" but I can't find
+                    // this documented
+                    delete this.initialConfig.apiKey;
+                    gxp.plugins.GoogleEarth.loader.unload();
+                },
+                scope: this
+            })
+        }
 
-        return result;
+        return gxp.plugins.GoogleEarth.superclass.addActions.apply(this, [actions]);
     },
 
     /** private: method[togglePanelDisplay]
      *  :arg displayed: ``Boolean`` Display the Google Earth panel.
      */
     togglePanelDisplay: function(displayed) {
+        // TODO: this split between the tool and the panel needs work
         var ownerCt = this.target.mapPanel.ownerCt;
         var layout = ownerCt && ownerCt.getLayout();
         if (layout && layout instanceof Ext.layout.CardLayout) {
@@ -235,7 +253,7 @@ gxp.plugins.GoogleEarth.loader = new (Ext.extend(Ext.util.Observable, {
         if (this.ready) {
             // call this in the next turn for consistent return before callback
             window.setTimeout(function() {
-                options.callback.call(options.scope);                
+                options.callback.call(options.scope);
             }, 0);
         } else if (!this.loading) {
             this.loadScript(options);
@@ -277,24 +295,37 @@ gxp.plugins.GoogleEarth.loader = new (Ext.extend(Ext.util.Observable, {
         var timeout = options.timeout || gxp.plugins.GoogleSource.prototype.timeout;
         window.setTimeout((function() {
             if (!gxp.plugins.GoogleEarth.loader.ready) {
-                this.loading = false;
-                this.ready = false;
-                document.getElementsByTagName("head")[0].removeChild(script);
-                errback.call(options.scope);
                 this.fireEvent("failure");
-                this.purgeListeners();
+                this.unload();
             }
         }).createDelegate(this), timeout);
         
         // register callback for ready
         this.on({
             ready: options.callback,
+            failure: options.errback || Ext.emptyFn,
             scope: options.scope
         });
 
         this.loading = true;
         document.getElementsByTagName("head")[0].appendChild(script);
+        this.script = script;
 
+    },
+    
+    /** api: method[unload]
+     *  Clean up resources created by loading.
+     */
+    unload: function() {
+        this.purgeListeners();
+        if (this.script) {
+            document.getElementsByTagName("head")[0].removeChild(this.script);
+            delete this.script;
+        }
+        this.loading = false;
+        this.ready = false;
+        delete google.loader;
+        delete google.earth;
     }
 
 }))();
