@@ -188,15 +188,20 @@ default. Only works for actions that are a <tt class="docutils literal"><span cl
 
 <dl class="describe">
 <dt>
+<tt class="descname">defaultGroup</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt> The name of the default group, i.e. the group that will be
+used when none is specified. Defaults to <tt class="docutils literal"><span class="pre">default</span></tt>.</dd></dl>
+
+<dl class="describe">
+<dt>
 <tt class="descname">groups</tt></dt>
-<dd><p><tt class="docutils literal"><span class="pre">Object</span></tt> The groups to show in the layer tree. Keys are group names
-(empty string for the default group), and values are either group
-titles or an object with <tt class="docutils literal"><span class="pre">title</span></tt> and <tt class="docutils literal"><span class="pre">exclusive</span></tt> properties.
-<tt class="docutils literal"><span class="pre">exclusive</span></tt> means that nodes will have radio buttons instead of
-checkboxes, so only one layer of the group can be active at a time.
-Optional, the default is</p>
+<dd><p><tt class="docutils literal"><span class="pre">Object</span></tt> The groups to show in the layer tree. Keys are group names,
+and values are either group titles or an object with <tt class="docutils literal"><span class="pre">title</span></tt> and
+<tt class="docutils literal"><span class="pre">exclusive</span></tt> properties. <tt class="docutils literal"><span class="pre">exclusive</span></tt> means that nodes will have
+radio buttons instead of checkboxes, so only one layer of the group can
+be active at a time. Optional, the default is</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span class="nx">groups</span><span class="o">:</span> <span class="p">{</span>
-    <span class="s2">&quot;&quot;</span><span class="o">:</span> <span class="s2">&quot;Overlays&quot;</span><span class="p">,</span> <span class="c1">// title can be overridden with overlayNodeText</span>
+    <span class="s2">&quot;default&quot;</span><span class="o">:</span> <span class="s2">&quot;Overlays&quot;</span><span class="p">,</span> <span class="c1">// title can be overridden with overlayNodeText</span>
     <span class="s2">&quot;background&quot;</span><span class="o">:</span> <span class="p">{</span>
         <span class="nx">title</span><span class="o">:</span> <span class="s2">&quot;Base Layers&quot;</span><span class="p">,</span> <span class="c1">// can be overridden with baseNodeText</span>
         <span class="nx">exclusive</span><span class="o">:</span> <span class="kc">true</span>
