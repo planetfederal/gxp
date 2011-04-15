@@ -49,11 +49,11 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
      */
     baseNodeText: "Base Layers",
 
-    /** api: config[groupConfig]
+    /** api: config[groups]
      *  ``Object`` The groups to show in the layer tree. The key of the object
      *  has the group name and the value the group title. Optional.
      */
-    groupConfig: null,
+    groups: null,
 
     /** private: method[addOutput]
      *  :arg config: ``Object``
@@ -141,9 +141,9 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
             });
         };
 
-        if (this.groupConfig !== null) {
-            for (var key in this.groupConfig) {
-                treeRoot.appendChild(createOverlayContainer(this.groupConfig[key], key));
+        if (this.groups !== null) {
+            for (var key in this.groups) {
+                treeRoot.appendChild(createOverlayContainer(this.groups[key], key));
             }
         } else {
             treeRoot.appendChild(createOverlayContainer(this.overlayNodeText, null));
