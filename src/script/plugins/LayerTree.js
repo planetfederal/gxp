@@ -50,17 +50,16 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
     baseNodeText: "Base Layers",
     
     /** api: config[groups]
-     *  ``Object`` The groups to show in the layer tree. Keys are group names
-     *  (empty string for the default group), and values are either group
-     *  titles or an object with ``title`` and ``exclusive`` properties.
-     *  ``exclusive`` means that nodes will have radio buttons instead of
-     *  checkboxes, so only one layer of the group can be active at a time.
-     *  Optional, the default is
+     *  ``Object`` The groups to show in the layer tree. Keys are group names,
+     *  and values are either group titles or an object with ``title`` and
+     *  ``exclusive`` properties. ``exclusive`` means that nodes will have
+     *  radio buttons instead of checkboxes, so only one layer of the group can
+     *  be active at a time. Optional, the default is
      *
      *  .. code-block:: javascript
      *
      *      groups: {
-     *          "": "Overlays", // title can be overridden with overlayNodeText
+     *          "default": "Overlays", // title can be overridden with overlayNodeText
      *          "background": {
      *              title: "Base Layers", // can be overridden with baseNodeText
      *              exclusive: true
@@ -69,6 +68,12 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
      */
     groups: null,
     
+    /** api: config[defaultGroup]
+     *  ``String`` The name of the default group, i.e. the group that will be
+     *  used when none is specified. Defaults to ``default``.
+     */
+    defaultGroup: "default",
+    
     /** private: method[constructor]
      *  :arg config: ``Object``
      */
@@ -76,7 +81,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
         gxp.plugins.LayerTree.superclass.constructor.apply(this, arguments);
         if (!this.groups) {
             this.groups = {
-                "": this.overlayNodeText,
+                "default": this.overlayNodeText,
                 "background": {
                     title: this.baseNodeText,
                     exclusive: true
@@ -117,7 +122,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
             allowDrop: false
         });
         
-        var groupConfig;
+        var groupConfig, defaultGroup = this.defaultGroup;
         for (var group in this.groups) {
             groupConfig = typeof this.groups[group] == "string" ?
                 {title: this.groups[group]} : this.groups[group];
@@ -125,14 +130,14 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
                 text: groupConfig.title,
                 iconCls: "gxp-folder",
                 expanded: true,
-                group: group || undefined,
+                group: group == defaultGroup ? undefined : group,
                 loader: new GeoExt.tree.LayerLoader({
                     baseAttrs: groupConfig.exclusive ?
                         {checkedGroup: group} : undefined,
                     store: this.target.mapPanel.layers,
                     filter: (function(group) {
                         return function(record) {
-                            return record.get("group") == (group || null) &&
+                            return (record.get("group") || defaultGroup) == group &&
                                 record.getLayer().displayInLayerSwitcher == true;
                         };
                     })(group),
