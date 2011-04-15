@@ -102,6 +102,12 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     then this is an optional object to pass to the constructor of the
     associated ``OpenLayers.Control``.
 
+.. describe:: customParams
+
+    ``Object`` Key-value pairs of custom data to be sent to the print
+    service. Optional. This is e.g. useful for complex layout definitions
+    on the server side that require additional parameters.
+
 .. describe:: defaultAction
 
     ``Number`` Optional index of an action that should be active by

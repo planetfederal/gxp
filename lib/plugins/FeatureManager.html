@@ -249,7 +249,14 @@ be created.</dd></dl>
 <dl class="describe">
 <dt>
 <tt class="descname">paging</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> Should quad-tree paging be enabled? Default is true.</dd></dl>
+<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> Should paging be enabled? Default is true.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">pagingType</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Integer</span></tt> Paging type to use, one of:
+gxp.plugins.FeatureManager.QUADTREE_PAGING or
+gxp.plugins.FeatureManager.WFS_PAGING</dd></dl>
 
 <dl class="describe">
 <dt>
@@ -367,6 +374,20 @@ this.actions will be added.</td>
 <p>Dectivates this tool. When deactivated, this tool won&#8217;t listen to layer
 changes on the application and load features for the selected layer.
 The current featureLayer will be cleared.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gxp.plugins.FeatureManager.getPageExtent">
+<tt class="descclassname">FeatureManager.</tt><tt class="descname">getPageExtent</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.FeatureManager.getPageExtent" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">OpenLayers.Bounds</span></tt> the bounds of the current page</td>
+</tr>
+</tbody>
+</table>
+<p>Get the extent of the current page.</p>
 </dd></dl>
 
 <dl class="method">
@@ -689,6 +710,8 @@ method</li>
 setPage method</li>
 <li>scope     - <tt class="docutils literal"><span class="pre">Object</span></tt> the scope argument passed to the
 setPage method</li>
+<li>pageIndex - <tt class="docutils literal"><span class="pre">Integer</span></tt> the index of the page</li>
+<li>numPages  - <tt class="docutils literal"><span class="pre">Integer</span></tt> the number of pages</li>
 </ul>
 </dd></dl>
 

@@ -37,6 +37,11 @@ Configuration properties in addition to
 those listed for `Ext.grid.GridPanel <http://extjs.com/deploy/dev/docs/?class=Ext.grid.GridPanel>`_.
 
 
+.. describe:: dateFormat
+
+    ``String`` Date format. Default is the value of
+    ``Ext.form.DateField.prototype.format``.
+
 .. describe:: ignoreFields
 
     ``Array`` of field names from the store's records that should not be
@@ -53,6 +58,17 @@ those listed for `Ext.grid.GridPanel <http://extjs.com/deploy/dev/docs/?class=Ex
     ``OpenLayers.Map`` If provided, a layer with the features from this
     grid will be added to the map.
 
+.. describe:: schema
+
+    ``GeoExt.data.AttributeStore``
+    Optional schema for the grid. If provided, appropriate field
+    renderers (e.g. for date or boolean fields) will be used.
+
+.. describe:: timeFormat
+
+    ``String`` Time format. Default is the value of
+    ``Ext.form.TimeField.prototype.format``.
+
 
 
 
@@ -65,6 +81,13 @@ Public methods in addition to those
 listed for `Ext.grid.GridPanel <http://extjs.com/deploy/dev/docs/?class=Ext.grid.GridPanel>`_.
 
 
+.. method:: FeatureGrid.getColumns
+
+    :arg store: ``GeoExt.data.FeatureStore``
+    :return: ``Array``
+    
+    Gets the configuration for the column model.
+
 .. method:: FeatureGrid.initComponent
 
     Initializes the FeatureGrid.
@@ -72,6 +95,8 @@ listed for `Ext.grid.GridPanel <http://extjs.com/deploy/dev/docs/?class=Ext.grid
 .. method:: FeatureGrid.setStore
 
     :arg store: ``GeoExt.data.FeatureStore``
+    :arg schema: ``GeoExt.data.AttributeStore`` Optional schema to
+        determine appropriate field renderers for the grid.
     
     Sets the store for this grid, reconfiguring the column model
 

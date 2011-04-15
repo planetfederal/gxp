@@ -148,10 +148,7 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
 
 .. describe:: outputTarget
 
-    ``String`` Where to add the tool's output container? This can be any
-    string that references an ``Ext.Container`` property on the portal, or
-    "map" to access the viewer's main map. If not provided, a window will
-    be created.
+    ``String`` Popups created by this tool are added to the map by default.
 
 .. describe:: toggleGroup
 

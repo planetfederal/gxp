@@ -198,6 +198,14 @@ listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.uti
 
     Removes all output created by this tool
 
+.. method:: ClickableFeatures.select
+
+    :arg feature: ``OpenLayers.Feature.Vector``
+    
+    Action to perform when a feature is selected. The default action is to
+    unselect existing selections and select the feature using the built-in
+    SelectFeature control. To be overridden by subclasses.
+
 
 
 

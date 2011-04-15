@@ -97,6 +97,11 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     ``String``
     Text for add action tooltip (i18n).
 
+.. describe:: addButtonText
+
+    ``String``
+    Text for add layers button (i18n).
+
 .. describe:: addLayerSourceErrorText
 
     ``String``
@@ -120,13 +125,18 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
 .. describe:: availableLayersText
 
     ``String``
-    Text for the available layers (i18n).
+    Text for the layer selection (i18n).
 
 .. describe:: controlOptions
 
     ``Object`` If this tool is associated with an ``OpenLayers.Control``
     then this is an optional object to pass to the constructor of the
     associated ``OpenLayers.Control``.
+
+.. describe:: createExpander
+
+    ``Function`` Returns an ``Ext.grid.RowExpander``. Can be overridden
+    by applications/subclasses to provide a custom expander.
 
 .. describe:: defaultAction
 
@@ -172,6 +182,11 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     ``Boolean``
     If ``upload`` is enabled, only show the button for sources with relative
     URLs (e.g. "/geoserver").  Default is ``true``.
+
+.. describe:: startSourceId
+
+    ``Integer``
+    The identifier of the source that we should start with.
 
 .. describe:: toggleGroup
 
@@ -243,6 +258,10 @@ listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.uti
 .. method:: AddLayers.removeOutput
 
     Removes all output created by this tool
+
+.. method:: AddLayers.showCapabilitiesGrid
+
+    Shows the window with a capabilities grid.
 
 
 

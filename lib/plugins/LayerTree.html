@@ -41,7 +41,7 @@
           <a href="LayerSource.html" title="gxp.plugins.LayerSource"
              accesskey="P">previous</a> |</li>
         <li><a href="../../index.html">GXP</a> &raquo;</li>
-          <li><a href="../plugins.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
+          <li><a href="../plugins.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -185,6 +185,26 @@ associated <tt class="docutils literal"><span class="pre">OpenLayers.Control</sp
 <tt class="descname">defaultAction</tt></dt>
 <dd><tt class="docutils literal"><span class="pre">Number</span></tt> Optional index of an action that should be active by
 default. Only works for actions that are a <tt class="docutils literal"><span class="pre">GeoExt.Action</span></tt> instance.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">groups</tt></dt>
+<dd><p><tt class="docutils literal"><span class="pre">Object</span></tt> The groups to show in the layer tree. Keys are group names
+(empty string for the default group), and values are either group
+titles or an object with <tt class="docutils literal"><span class="pre">title</span></tt> and <tt class="docutils literal"><span class="pre">exclusive</span></tt> properties.
+<tt class="docutils literal"><span class="pre">exclusive</span></tt> means that nodes will have radio buttons instead of
+checkboxes, so only one layer of the group can be active at a time.
+Optional, the default is</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">groups</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;&quot;</span><span class="o">:</span> <span class="s2">&quot;Overlays&quot;</span><span class="p">,</span> <span class="c1">// title can be overridden with overlayNodeText</span>
+    <span class="s2">&quot;background&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">title</span><span class="o">:</span> <span class="s2">&quot;Base Layers&quot;</span><span class="p">,</span> <span class="c1">// can be overridden with baseNodeText</span>
+        <span class="nx">exclusive</span><span class="o">:</span> <span class="kc">true</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="describe">
 <dt>
@@ -343,7 +363,7 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
           <a href="LayerSource.html" title="gxp.plugins.LayerSource"
              >previous</a> |</li>
         <li><a href="../../index.html">GXP</a> &raquo;</li>
-          <li><a href="../plugins.html" ><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
+          <li><a href="../plugins.html" ><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

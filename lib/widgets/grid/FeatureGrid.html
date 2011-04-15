@@ -110,6 +110,12 @@
 those listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.grid.GridPanel">Ext.grid.GridPanel</a>.</p>
 <dl class="describe">
 <dt>
+<tt class="descname">dateFormat</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt> Date format. Default is the value of
+<tt class="docutils literal"><span class="pre">Ext.form.DateField.prototype.format</span></tt>.</dd></dl>
+
+<dl class="describe">
+<dt>
 <tt class="descname">ignoreFields</tt></dt>
 <dd><tt class="docutils literal"><span class="pre">Array</span></tt> of field names from the store&#8217;s records that should not be
 displayed in the grid.</dd></dl>
@@ -127,11 +133,40 @@ If the <tt class="docutils literal"><span class="pre">map</span></tt> config pro
 <dd><tt class="docutils literal"><span class="pre">OpenLayers.Map</span></tt> If provided, a layer with the features from this
 grid will be added to the map.</dd></dl>
 
+<dl class="describe">
+<dt>
+<tt class="descname">schema</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">GeoExt.data.AttributeStore</span></tt>
+Optional schema for the grid. If provided, appropriate field
+renderers (e.g. for date or boolean fields) will be used.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">timeFormat</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt> Time format. Default is the value of
+<tt class="docutils literal"><span class="pre">Ext.form.TimeField.prototype.format</span></tt>.</dd></dl>
+
 </div>
 <div class="section" id="public-methods">
 <h2>Public Methods<a class="headerlink" href="#public-methods" title="Permalink to this headline">¶</a></h2>
 <p>Public methods in addition to those
 listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.grid.GridPanel">Ext.grid.GridPanel</a>.</p>
+<dl class="method">
+<dt id="gxp.grid.FeatureGrid.getColumns">
+<tt class="descclassname">FeatureGrid.</tt><tt class="descname">getColumns</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.grid.FeatureGrid.getColumns" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>store</em> &#8211; <tt class="docutils literal"><span class="pre">GeoExt.data.FeatureStore</span></tt></td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">Array</span></tt></td>
+</tr>
+</tbody>
+</table>
+<p>Gets the configuration for the column model.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="gxp.grid.FeatureGrid.initComponent">
 <tt class="descclassname">FeatureGrid.</tt><tt class="descname">initComponent</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.grid.FeatureGrid.initComponent" title="Permalink to this definition">¶</a></dt>
@@ -144,7 +179,12 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>store</em> &#8211; <tt class="docutils literal"><span class="pre">GeoExt.data.FeatureStore</span></tt></td>
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><em>store</em> &#8211; <tt class="docutils literal"><span class="pre">GeoExt.data.FeatureStore</span></tt></li>
+<li><em>schema</em> &#8211; <tt class="docutils literal"><span class="pre">GeoExt.data.AttributeStore</span></tt> Optional schema to
+determine appropriate field renderers for the grid.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>

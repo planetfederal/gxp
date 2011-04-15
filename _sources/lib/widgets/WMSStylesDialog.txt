@@ -31,7 +31,8 @@ xtype
 
     Note: when this component is included in a build,
     ``OpenLayers.Renderer.defaultSymbolizer`` will be set to the SLD
-    defaults.
+    defaults.  In addition, the OpenLayers SLD v1 parser will be patched
+    to support vendor specific extensions added to SLD by GeoTools.
 
 
     

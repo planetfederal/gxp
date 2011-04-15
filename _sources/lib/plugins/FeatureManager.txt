@@ -167,7 +167,13 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
 
 .. describe:: paging
 
-    ``Boolean`` Should quad-tree paging be enabled? Default is true.
+    ``Boolean`` Should paging be enabled? Default is true.
+
+.. describe:: pagingType
+
+    ``Integer`` Paging type to use, one of:
+    gxp.plugins.FeatureManager.QUADTREE_PAGING or
+    gxp.plugins.FeatureManager.WFS_PAGING
 
 .. describe:: symbolizer
 
@@ -257,6 +263,12 @@ listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.uti
     Dectivates this tool. When deactivated, this tool won't listen to layer
     changes on the application and load features for the selected layer.
     The current featureLayer will be cleared.
+
+.. method:: FeatureManager.getPageExtent
+
+    :returns: ``OpenLayers.Bounds`` the bounds of the current page
+    
+    Get the extent of the current page.
 
 .. method:: FeatureManager.hideLayer
 
@@ -491,6 +503,8 @@ listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.uti
       setPage method
     * scope     - ``Object`` the scope argument passed to the
       setPage method
+    * pageIndex - ``Integer`` the index of the page
+    * numPages  - ``Integer`` the number of pages
 
 
 

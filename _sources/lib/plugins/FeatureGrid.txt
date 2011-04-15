@@ -188,6 +188,11 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     set to true when no feature editor or feature info tool is used with
     the underlying feature manager. Default is false.
 
+.. describe:: showTotalResults
+
+    ``Boolean`` If set to true, the total number of records will be shown
+    in the bottom toolbar of the grid, if available.
+
 .. describe:: toggleGroup
 
     ``String`` If this tool should be radio-button style toggled with other
@@ -201,6 +206,11 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     its own rules.  If a pixel tolerance is provided, it will be included in
     requests for features to inform the server to look in a buffer around
     features.
+
+.. describe:: totalMsg
+
+    ``String``
+    String template for showing total number of records (i18n).
 
 .. describe:: zoomFirstPageTip
 
@@ -256,6 +266,14 @@ listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.uti
 .. method:: FeatureGrid.removeOutput
 
     Removes all output created by this tool
+
+.. method:: FeatureGrid.select
+
+    :arg feature: ``OpenLayers.Feature.Vector``
+    
+    Action to perform when a feature is selected. The default action is to
+    unselect existing selections and select the feature using the built-in
+    SelectFeature control. To be overridden by subclasses.
 
 
 

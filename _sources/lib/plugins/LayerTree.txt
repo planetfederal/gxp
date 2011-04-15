@@ -113,6 +113,25 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     ``Number`` Optional index of an action that should be active by
     default. Only works for actions that are a ``GeoExt.Action`` instance.
 
+.. describe:: groups
+
+    ``Object`` The groups to show in the layer tree. Keys are group names
+    (empty string for the default group), and values are either group
+    titles or an object with ``title`` and ``exclusive`` properties.
+    ``exclusive`` means that nodes will have radio buttons instead of
+    checkboxes, so only one layer of the group can be active at a time.
+    Optional, the default is
+    
+    .. code-block:: javascript
+    
+        groups: {
+            "": "Overlays", // title can be overridden with overlayNodeText
+            "background": {
+                title: "Base Layers", // can be overridden with baseNodeText
+                exclusive: true
+            }
+        }
+
 .. describe:: outputAction
 
     ``Number`` The ``actions`` array index of the action that should

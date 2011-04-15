@@ -295,6 +295,22 @@ this.actions will be added.</td>
 <tt class="descclassname">ClickableFeatures.</tt><tt class="descname">removeOutput</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.ClickableFeatures.removeOutput" title="Permalink to this definition">¶</a></dt>
 <dd>Removes all output created by this tool</dd></dl>
 
+<dl class="method">
+<dt id="gxp.plugins.ClickableFeatures.select">
+<tt class="descclassname">ClickableFeatures.</tt><tt class="descname">select</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.ClickableFeatures.select" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>feature</em> &#8211; <tt class="docutils literal"><span class="pre">OpenLayers.Feature.Vector</span></tt></td>
+</tr>
+</tbody>
+</table>
+<p>Action to perform when a feature is selected. The default action is to
+unselect existing selections and select the feature using the built-in
+SelectFeature control. To be overridden by subclasses.</p>
+</dd></dl>
+
 </div>
 <div class="section" id="events">
 <h2>Events<a class="headerlink" href="#events" title="Permalink to this headline">¶</a></h2>

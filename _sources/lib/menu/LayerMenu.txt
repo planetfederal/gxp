@@ -38,6 +38,11 @@ those listed for `Ext.menu.Menu <http://extjs.com/deploy/dev/docs/?class=Ext.men
     ``GeoExt.data.LayerStore``
     The store containing layer records to be viewed in this menu.
 
+.. describe:: layerText
+
+    ``String``
+    Text for added layer (i18n).
+
 
 
 

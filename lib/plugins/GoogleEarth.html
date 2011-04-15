@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>gxp.plugins.Tool &mdash; GXP v0.1</title>
+    <title>gxp.plugins.GoogleEarth &mdash; GXP v0.1</title>
     <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -21,8 +21,8 @@
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="top" title="GXP v0.1" href="../../index.html" />
     <link rel="up" title="gxp.plugins" href="../plugins.html" />
-    <link rel="next" title="gxp.plugins.WMSCSource" href="WMSCSource.html" />
-    <link rel="prev" title="gxp.plugins.Styler" href="Styler.html" /> 
+    <link rel="next" title="gxp.plugins.GoogleGeocoder" href="GoogleGeocoder.html" />
+    <link rel="prev" title="gxp.plugins.GeoServerStyleWriter" href="GeoServerStyleWriter.html" /> 
   </head>
   <body>
     <div class="related">
@@ -35,20 +35,21 @@
           <a href="../../modindex.html" title="Global Module Index"
              accesskey="M">modules</a> |</li>
         <li class="right" >
-          <a href="WMSCSource.html" title="gxp.plugins.WMSCSource"
+          <a href="GoogleGeocoder.html" title="gxp.plugins.GoogleGeocoder"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="Styler.html" title="gxp.plugins.Styler"
+          <a href="GeoServerStyleWriter.html" title="gxp.plugins.GeoServerStyleWriter"
              accesskey="P">previous</a> |</li>
         <li><a href="../../index.html">GXP</a> &raquo;</li>
-          <li><a href="../plugins.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
+          <li><a href="../plugins.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
             <h3><a href="../../index.html">Table Of Contents</a></h3>
             <ul>
-<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">gxp.plugins.Tool</span></tt></a><ul>
+<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">gxp.plugins.GoogleEarth</span></tt></a><ul>
+<li><a class="reference external" href="#example-use">Example Use</a></li>
 <li><a class="reference external" href="#config-options">Config Options</a></li>
 <li><a class="reference external" href="#public-properties">Public Properties</a></li>
 <li><a class="reference external" href="#public-methods">Public Methods</a></li>
@@ -58,14 +59,14 @@
 </ul>
 
             <h4>Previous topic</h4>
-            <p class="topless"><a href="Styler.html"
-                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins.Styler</span></tt></a></p>
+            <p class="topless"><a href="GeoServerStyleWriter.html"
+                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins.GeoServerStyleWriter</span></tt></a></p>
             <h4>Next topic</h4>
-            <p class="topless"><a href="WMSCSource.html"
-                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.plugins.WMSCSource</span></tt></a></p>
+            <p class="topless"><a href="GoogleGeocoder.html"
+                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.plugins.GoogleGeocoder</span></tt></a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
-              <li><a href="../../_sources/lib/plugins/Tool.txt"
+              <li><a href="../../_sources/lib/plugins/GoogleEarth.txt"
                      rel="nofollow">Show Source</a></li>
             </ul>
           <div id="searchbox" style="display: none">
@@ -89,25 +90,61 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="gxp-plugins-tool">
-<h1><a title="gxp.plugins.Tool" class="reference internal" href="#gxp.plugins.Tool"><tt class="xref docutils literal"><span class="pre">gxp.plugins.Tool</span></tt></a><a class="headerlink" href="#gxp-plugins-tool" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="gxp-plugins-googleearth">
+<h1><a title="gxp.plugins.GoogleEarth" class="reference internal" href="#gxp.plugins.GoogleEarth"><tt class="xref docutils literal"><span class="pre">gxp.plugins.GoogleEarth</span></tt></a><a class="headerlink" href="#gxp-plugins-googleearth" title="Permalink to this headline">¶</a></h1>
 <dl class="meta docutils">
 <dt>Extends</dt>
 <dd><ul class="first last simple">
 <li><a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a></li>
+<li><a title="gxp.plugins.Tool" class="reference external" href="Tool.html#gxp.plugins.Tool"><tt class="xref docutils literal"><span class="pre">gxp.plugins.Tool</span></tt></a></li>
 </ul>
 </dd>
 <dt>ptype</dt>
-<dd><tt class="docutils literal"><span class="pre">gxp_tool</span></tt></dd>
+<dd><tt class="docutils literal"><span class="pre">gxp_googleearth</span></tt></dd>
 </dl>
 <dl class="class">
-<dt id="gxp.plugins.Tool">
-<em class="property">class </em><tt class="descclassname">gxp.plugins.</tt><tt class="descname">Tool</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#gxp.plugins.Tool" title="Permalink to this definition">¶</a></dt>
-<dd>Base class for plugins that add tool functionality to
-<a title="gxp.Viewer" class="reference external" href="../widgets/Viewer.html#gxp.Viewer"><tt class="xref docutils literal"><span class="pre">gxp.Viewer</span></tt></a>. These plugins are used by adding configuration
-objects for them to the <tt class="docutils literal"><span class="pre">tools</span></tt> array of the viewer&#8217;s config object,
-using their <tt class="docutils literal"><span class="pre">ptype</span></tt>.</dd></dl>
+<dt id="gxp.plugins.GoogleEarth">
+<em class="property">class </em><tt class="descclassname">gxp.plugins.</tt><tt class="descname">GoogleEarth</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#gxp.plugins.GoogleEarth" title="Permalink to this definition">¶</a></dt>
+<dd>Provides an action for switching between normal map view and
+Google Earth view.</dd></dl>
 
+<div class="section" id="example-use">
+<h2>Example Use<a class="headerlink" href="#example-use" title="Permalink to this headline">¶</a></h2>
+<p>This tool can only be used if <tt class="docutils literal"><span class="pre">portalItems</span></tt> of <a title="gxp.Viewer" class="reference external" href="../widgets/Viewer.html#gxp.Viewer"><tt class="xref docutils literal"><span class="pre">gxp.Viewer</span></tt></a> is set up
+in the following way (or similar, the requirement is to have a panel with a card
+layout which has 2 items: the map and the Google Earth panel):</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">portalItems</span><span class="o">:</span> <span class="p">[{</span>
+    <span class="nx">region</span><span class="o">:</span> <span class="s2">&quot;center&quot;</span><span class="p">,</span>
+    <span class="nx">layout</span><span class="o">:</span> <span class="s2">&quot;border&quot;</span><span class="p">,</span>
+    <span class="nx">border</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+     <span class="nx">items</span><span class="o">:</span> <span class="p">[{</span>
+         <span class="nx">xtype</span><span class="o">:</span> <span class="s2">&quot;panel&quot;</span><span class="p">,</span>
+         <span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;panel&quot;</span><span class="p">,</span>
+         <span class="nx">tbar</span><span class="o">:</span> <span class="p">[],</span>
+         <span class="nx">layout</span><span class="o">:</span> <span class="s2">&quot;card&quot;</span><span class="p">,</span>
+         <span class="nx">region</span><span class="o">:</span> <span class="s2">&quot;center&quot;</span><span class="p">,</span>
+         <span class="nx">activeItem</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+         <span class="nx">items</span><span class="o">:</span> <span class="p">[</span>
+         <span class="s2">&quot;map&quot;</span><span class="p">,</span> <span class="p">{</span>
+             <span class="nx">xtype</span><span class="o">:</span> <span class="s1">&#39;gxp_googleearthpanel&#39;</span><span class="p">,</span>
+             <span class="nx">mapPanel</span><span class="o">:</span> <span class="s2">&quot;map&quot;</span>
+         <span class="p">}</span>
+     <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>hen make sure the tools go into the tbar of the panel, instead of the
+map.tbar&#8221; which is the default, an example is:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">tools</span><span class="o">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="nx">actionTarget</span><span class="o">:</span> <span class="s2">&quot;panel.tbar&quot;</span><span class="p">,</span>
+        <span class="nx">ptype</span><span class="o">:</span> <span class="s2">&quot;gxp_googleearth&quot;</span><span class="p">,</span>
+        <span class="nx">apiKey</span><span class="o">:</span> <span class="s1">&#39;ABQIAAAAeDjUod8ItM9dBg5_lz0esxTnme5EwnLVtEDGnh-lFVzRJhbdQhQBX5VH8Rb3adNACjSR5kaCLQuBmw&#39;</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="config-options">
 <h2>Config Options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
 <p>Configuration properties in addition to
@@ -217,8 +254,8 @@ tools, this string is to identify the toggle group.</dd></dl>
 <p>Public properties in addition to those
 listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a>.</p>
 <dl class="attribute">
-<dt id="gxp.plugins.Tool.active">
-<tt class="descclassname">Tool.</tt><tt class="descname">active</tt><a class="headerlink" href="#gxp.plugins.Tool.active" title="Permalink to this definition">¶</a></dt>
+<dt id="gxp.plugins.GoogleEarth.active">
+<tt class="descclassname">GoogleEarth.</tt><tt class="descname">active</tt><a class="headerlink" href="#gxp.plugins.GoogleEarth.active" title="Permalink to this definition">¶</a></dt>
 <dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> Is the tool currently active?</dd></dl>
 
 </div>
@@ -227,8 +264,8 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
 <p>Public methods in addition to those
 listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a>.</p>
 <dl class="method">
-<dt id="gxp.plugins.Tool.activate">
-<tt class="descclassname">Tool.</tt><tt class="descname">activate</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.Tool.activate" title="Permalink to this definition">¶</a></dt>
+<dt id="gxp.plugins.GoogleEarth.activate">
+<tt class="descclassname">GoogleEarth.</tt><tt class="descname">activate</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.GoogleEarth.activate" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -241,29 +278,18 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
 </dd></dl>
 
 <dl class="method">
-<dt id="gxp.plugins.Tool.addActions">
-<tt class="descclassname">Tool.</tt><tt class="descname">addActions</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.Tool.addActions" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>actions</em> &#8211; <tt class="docutils literal"><span class="pre">Array</span></tt> Optional actions to add. If not provided,
-this.actions will be added.</td>
-</tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">Array</span></tt> The actions added.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="gxp.plugins.Tool.addOutput">
-<tt class="descclassname">Tool.</tt><tt class="descname">addOutput</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.Tool.addOutput" title="Permalink to this definition">¶</a></dt>
+<dt id="gxp.plugins.GoogleEarth.addActions">
+<tt class="descclassname">GoogleEarth.</tt><tt class="descname">addActions</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.GoogleEarth.addActions" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="gxp.plugins.Tool.deactivate">
-<tt class="descclassname">Tool.</tt><tt class="descname">deactivate</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.Tool.deactivate" title="Permalink to this definition">¶</a></dt>
+<dt id="gxp.plugins.GoogleEarth.addOutput">
+<tt class="descclassname">GoogleEarth.</tt><tt class="descname">addOutput</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.GoogleEarth.addOutput" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="gxp.plugins.GoogleEarth.deactivate">
+<tt class="descclassname">GoogleEarth.</tt><tt class="descname">deactivate</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.GoogleEarth.deactivate" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -276,9 +302,44 @@ this.actions will be added.</td>
 </dd></dl>
 
 <dl class="method">
-<dt id="gxp.plugins.Tool.removeOutput">
-<tt class="descclassname">Tool.</tt><tt class="descname">removeOutput</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.Tool.removeOutput" title="Permalink to this definition">¶</a></dt>
+<dt id="gxp.plugins.GoogleEarth.gxp.plugins.GoogleEarth.loader.onLoad">
+<tt class="descclassname">GoogleEarth.gxp.plugins.GoogleEarth.loader.</tt><tt class="descname">onLoad</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.GoogleEarth.gxp.plugins.GoogleEarth.loader.onLoad" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>options</em> &#8211; <tt class="docutils literal"><span class="pre">Object</span></tt></td>
+</tr>
+</tbody>
+</table>
+<p>Options:</p>
+<ul>
+<li><p class="first">apiKey - <tt class="docutils literal"><span class="pre">String</span></tt> API key for Google Earth plugin.</p>
+</li>
+<li><p class="first">callback - <tt class="docutils literal"><span class="pre">Function</span></tt> Called when script loads.</p>
+</li>
+<li><p class="first">errback - <tt class="docutils literal"><span class="pre">Function</span></tt> Called if loading fails.</p>
+</li>
+<li><dl class="first docutils">
+<dt>timeout - <tt class="docutils literal"><span class="pre">Number</span></tt> Time to wait before deciding that loading failed</dt>
+<dd><p class="first last">(in milliseconds).</p>
+</dd>
+</dl>
+</li>
+<li><p class="first">scope - <tt class="docutils literal"><span class="pre">Object</span></tt> The <tt class="docutils literal"><span class="pre">this</span></tt> object for callbacks.</p>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="gxp.plugins.GoogleEarth.removeOutput">
+<tt class="descclassname">GoogleEarth.</tt><tt class="descname">removeOutput</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.GoogleEarth.removeOutput" title="Permalink to this definition">¶</a></dt>
 <dd>Removes all output created by this tool</dd></dl>
+
+<dl class="method">
+<dt id="gxp.plugins.GoogleEarth.unload">
+<tt class="descclassname">GoogleEarth.</tt><tt class="descname">unload</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.GoogleEarth.unload" title="Permalink to this definition">¶</a></dt>
+<dd>Clean up resources created by loading.</dd></dl>
 
 </div>
 <div class="section" id="events">
@@ -290,7 +351,7 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
 <tt class="descname">activate</tt></dt>
 <dd><p>Fired when the tool is activated.</p>
 <p>Listener arguments:
-* tool - <a title="gxp.plugins.Tool" class="reference internal" href="#gxp.plugins.Tool"><tt class="xref docutils literal"><span class="pre">gxp.plugins.Tool</span></tt></a> the activated tool</p>
+* tool - <a title="gxp.plugins.Tool" class="reference external" href="Tool.html#gxp.plugins.Tool"><tt class="xref docutils literal"><span class="pre">gxp.plugins.Tool</span></tt></a> the activated tool</p>
 </dd></dl>
 
 <dl class="describe">
@@ -298,7 +359,7 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
 <tt class="descname">deactivate</tt></dt>
 <dd><p>Fired when the tool is deactivated.</p>
 <p>Listener arguments:
-* tool - <a title="gxp.plugins.Tool" class="reference internal" href="#gxp.plugins.Tool"><tt class="xref docutils literal"><span class="pre">gxp.plugins.Tool</span></tt></a> the deactivated tool</p>
+* tool - <a title="gxp.plugins.Tool" class="reference external" href="Tool.html#gxp.plugins.Tool"><tt class="xref docutils literal"><span class="pre">gxp.plugins.Tool</span></tt></a> the deactivated tool</p>
 </dd></dl>
 
 </div>
@@ -320,13 +381,13 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
           <a href="../../modindex.html" title="Global Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="WMSCSource.html" title="gxp.plugins.WMSCSource"
+          <a href="GoogleGeocoder.html" title="gxp.plugins.GoogleGeocoder"
              >next</a> |</li>
         <li class="right" >
-          <a href="Styler.html" title="gxp.plugins.Styler"
+          <a href="GeoServerStyleWriter.html" title="gxp.plugins.GeoServerStyleWriter"
              >previous</a> |</li>
         <li><a href="../../index.html">GXP</a> &raquo;</li>
-          <li><a href="../plugins.html" ><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
+          <li><a href="../plugins.html" ><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

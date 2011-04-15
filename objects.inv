@@ -33,6 +33,7 @@ gxp.QueryPanel class lib/widgets/QueryPanel.html
 gxp.plugins.MapQuestSource.getProjection method lib/plugins/MapQuestSource.html
 gxp.plugins.GoogleSource.title attribute lib/plugins/GoogleSource.html
 gxp.plugins.Navigation.activate method lib/plugins/Navigation.html
+gxp.Viewer.isAuthenticated method lib/widgets/Viewer.html
 gxp.plugins.LayerSource.init method lib/plugins/LayerSource.html
 gxp.plugins.AddLayers.addActions method lib/plugins/AddLayers.html
 gxp.plugins.LayerProperties.deactivate method lib/plugins/LayerProperties.html
@@ -50,6 +51,8 @@ gxp.plugins.GeoServerStyleWriter class lib/plugins/GeoServerStyleWriter.html
 gxp.plugins.FeatureManager.removeOutput method lib/plugins/FeatureManager.html
 gxp.plugins.WMSGetFeatureInfo.deactivate method lib/plugins/WMSGetFeatureInfo.html
 gxp.plugins.OSMSource.init method lib/plugins/OSMSource.html
+gxp.plugins.ClickableFeatures.select method lib/plugins/ClickableFeatures.html
+gxp.plugins.GoogleEarth.addOutput method lib/plugins/GoogleEarth.html
 gxp.plugins.FeatureGrid.removeOutput method lib/plugins/FeatureGrid.html
 gxp.form.ColorField.getHexValue method lib/widgets/form/ColorField.html
 gxp.data.WFSProtocolProxy.setFilter method lib/data/WFSProtocolProxy.html
@@ -76,6 +79,7 @@ gxp.plugins.ZoomToDataExtent.active attribute lib/plugins/ZoomToDataExtent.html
 gxp.plugins.WMSFilterView.deactivate method lib/plugins/WMSFilterView.html
 gxp.plugins.Legend.addActions method lib/plugins/Legend.html
 gxp.plugins.ZoomToSelectedFeatures.removeOutput method lib/plugins/ZoomToSelectedFeatures.html
+gxp.plugins.AddLayers.showCapabilitiesGrid method lib/plugins/AddLayers.html
 gxp.plugins.GoogleSource.createLayerRecord method lib/plugins/GoogleSource.html
 gxp.plugins.Styler.activate method lib/plugins/Styler.html
 gxp.plugins.AddLayers.activate method lib/plugins/AddLayers.html
@@ -87,9 +91,10 @@ gxp.plugins.LayerSource class lib/plugins/LayerSource.html
 gxp.plugins.NavigationHistory.addActions method lib/plugins/NavigationHistory.html
 gxp.plugins.WMSFilterView.removeOutput method lib/plugins/WMSFilterView.html
 gxp.util.gxp.util.uniqueName function lib/util.html
+gxp.Viewer.authorizedRoles attribute lib/widgets/Viewer.html
 gxp.data.WFSProtocolProxy class lib/data/WFSProtocolProxy.html
 gxp.plugins.QueryForm.activate method lib/plugins/QueryForm.html
-gxp.plugins.ZoomToDataExtent.extent method lib/plugins/ZoomToDataExtent.html
+gxp.form.ComparisonComboBox class lib/widgets/form/ComparisonComboBox.html
 gxp.LayerUploadForm class lib/widgets/LayerUploadForm.html
 gxp.plugins.FeatureManager.addActions method lib/plugins/FeatureManager.html
 gxp.Viewer.field attribute lib/widgets/Viewer.html
@@ -115,17 +120,18 @@ gxp.plugins.Measure.activate method lib/plugins/Measure.html
 gxp.plugins.FeatureToField.addOutput method lib/plugins/FeatureToField.html
 gxp.plugins.GoogleSource.gxp.plugins.GoogleSource.loader.onLoad method lib/plugins/GoogleSource.html
 gxp.plugins.FeatureManager.loadFeatures method lib/plugins/FeatureManager.html
-gxp.WMSStylesDialog.changeStyle method lib/widgets/WMSStylesDialog.html
+gxp.plugins.GoogleEarth.active attribute lib/plugins/GoogleEarth.html
 gxp.plugins.DeleteSelectedFeatures.deactivate method lib/plugins/DeleteSelectedFeatures.html
 gxp.plugins.ZoomToSelectedFeatures.deactivate method lib/plugins/ZoomToSelectedFeatures.html
 gxp.plugins.LayerTree.addActions method lib/plugins/LayerTree.html
-gxp.plugins.ZoomToSelectedFeatures.addOutput method lib/plugins/ZoomToSelectedFeatures.html
+gxp.QueryPanel.getFilter method lib/widgets/QueryPanel.html
 gxp.FeatureEditPopup.feature attribute lib/widgets/FeatureEditPopup.html
 gxp.plugins.MapQuestSource.getConfigForRecord method lib/plugins/MapQuestSource.html
 gxp.QueryPanel.query method lib/widgets/QueryPanel.html
 gxp.plugins.Styler.deactivate method lib/plugins/Styler.html
 gxp.plugins.WMSRasterStylesDialog.activate method lib/plugins/WMSRasterStylesDialog.html
 gxp.plugins.MapQuestSource.title attribute lib/plugins/MapQuestSource.html
+gxp.plugins.GoogleEarth.activate method lib/plugins/GoogleEarth.html
 gxp.plugins.FeatureEditor.activate method lib/plugins/FeatureEditor.html
 gxp.plugins.WMSGetFeatureInfo.activate method lib/plugins/WMSGetFeatureInfo.html
 gxp.plugins.SnappingAgent.addActions method lib/plugins/SnappingAgent.html
@@ -140,7 +146,7 @@ gxp.plugins.SnappingAgent.activate method lib/plugins/SnappingAgent.html
 gxp.plugins.LayerSource.createLayerRecord method lib/plugins/LayerSource.html
 gxp.plugins.ClickableFeatures.activate method lib/plugins/ClickableFeatures.html
 gxp.plugins.BingSource class lib/plugins/BingSource.html
-gxp.form.ComparisonComboBox class lib/widgets/form/ComparisonComboBox.html
+gxp.plugins.ZoomToDataExtent.extent method lib/plugins/ZoomToDataExtent.html
 gxp.plugins.ZoomToExtent.addOutput method lib/plugins/ZoomToExtent.html
 gxp.plugins.WMSCSource.createLayerRecord method lib/plugins/WMSCSource.html
 gxp.plugins.BingSource.init method lib/plugins/BingSource.html
@@ -149,10 +155,11 @@ gxp.plugins.QueryForm.active attribute lib/plugins/QueryForm.html
 gxp.plugins.OLSource.createLayerRecord method lib/plugins/OLSource.html
 gxp.plugins.LayerSource.getConfigForRecord method lib/plugins/LayerSource.html
 gxp.plugins.FeatureGrid.active attribute lib/plugins/FeatureGrid.html
+gxp.plugins.WMSRasterStylesDialog.addActions method lib/plugins/WMSRasterStylesDialog.html
 gxp.plugins.LayerTree.removeOutput method lib/plugins/LayerTree.html
 gxp.plugins.QueryForm.addOutput method lib/plugins/QueryForm.html
 gxp.plugins.WMSSource.getSchema method lib/plugins/WMSSource.html
-gxp.plugins.WMSSource.createStore method lib/plugins/WMSSource.html
+gxp.plugins.ZoomToDataExtent.removeOutput method lib/plugins/ZoomToDataExtent.html
 gxp.plugins.WMSSource.getConfigForRecord method lib/plugins/WMSSource.html
 gxp.plugins.GoogleSource.getConfigForRecord method lib/plugins/GoogleSource.html
 gxp.plugins.ZoomToLayerExtent.addOutput method lib/plugins/ZoomToLayerExtent.html
@@ -162,6 +169,7 @@ gxp.StylePropertiesDialog.userStyle attribute lib/widgets/StylePropertiesDialog.
 gxp.plugins.ZoomToLayerExtent.activate method lib/plugins/ZoomToLayerExtent.html
 gxp.plugins.RemoveLayer.deactivate method lib/plugins/RemoveLayer.html
 gxp.plugins.NavigationHistory.removeOutput method lib/plugins/NavigationHistory.html
+gxp.grid.FeatureGrid.getColumns method lib/widgets/grid/FeatureGrid.html
 gxp.plugins.WMSSource.createLayerRecord method lib/plugins/WMSSource.html
 gxp.plugins.ZoomToLayerExtent class lib/plugins/ZoomToLayerExtent.html
 gxp.plugins.RemoveLayer.addOutput method lib/plugins/RemoveLayer.html
@@ -169,7 +177,7 @@ gxp.plugins.NavigationHistory.addOutput method lib/plugins/NavigationHistory.htm
 gxp.EmbedMapDialog.url attribute lib/widgets/EmbedMapDialog.html
 gxp.plugins.Zoom.activate method lib/plugins/Zoom.html
 gxp.EmbedMapDialog.getIframeHTML method lib/widgets/EmbedMapDialog.html
-gxp.plugins.WMSCSource.getConfigForRecord method lib/plugins/WMSCSource.html
+gxp.plugins.GoogleEarth class lib/plugins/GoogleEarth.html
 gxp.grid.CapabilitiesGrid class lib/widgets/grid/CapabilitiesGrid.html
 gxp.Viewer.selectLayer method lib/widgets/Viewer.html
 gxp.plugins.WMSCSource.init method lib/plugins/WMSCSource.html
@@ -185,6 +193,7 @@ gxp.plugins.RemoveLayer.activate method lib/plugins/RemoveLayer.html
 gxp.plugins.OSMSource.createLayerRecord method lib/plugins/OSMSource.html
 gxp.plugins.OSMSource.getConfigForRecord method lib/plugins/OSMSource.html
 gxp.plugins.LayerProperties.removeOutput method lib/plugins/LayerProperties.html
+gxp.plugins.WMSSource.createStore method lib/plugins/WMSSource.html
 gxp.plugins.SnappingAgent.active attribute lib/plugins/SnappingAgent.html
 gxp.plugins.BingSource.getConfigForRecord method lib/plugins/BingSource.html
 gxp.grid.FeatureGrid.initComponent method lib/widgets/grid/FeatureGrid.html
@@ -210,7 +219,7 @@ gxp.slider.gxp.slider.Tip class lib/widgets/tips/SliderTip.html
 gxp.plugins.LayerSource.title attribute lib/plugins/LayerSource.html
 gxp.FeatureEditPopup class lib/widgets/FeatureEditPopup.html
 gxp.plugins.FeatureToField class lib/plugins/FeatureToField.html
-gxp.plugins.WMSRasterStylesDialog.addActions method lib/plugins/WMSRasterStylesDialog.html
+gxp.plugins.FeatureGrid.select method lib/plugins/FeatureGrid.html
 gxp.plugins.WMSCSource.getSchema method lib/plugins/WMSCSource.html
 gxp.FillSymbolizer class lib/widgets/FillSymbolizer.html
 gxp.plugins.Measure.active attribute lib/plugins/Measure.html
@@ -218,17 +227,21 @@ gxp.plugins.ZoomToExtent.removeOutput method lib/plugins/ZoomToExtent.html
 gxp.plugins.SnappingAgent.removeOutput method lib/plugins/SnappingAgent.html
 gxp.plugins.SelectedFeatureActions.addActions method lib/plugins/SelectedFeatureActions.html
 gxp.plugins.FeatureGrid.addOutput method lib/plugins/FeatureGrid.html
+gxp.plugins.GoogleEarth.addActions method lib/plugins/GoogleEarth.html
 gxp.plugins.GeoServerStyleWriter.deletedStyles attribute lib/plugins/GeoServerStyleWriter.html
 gxp.plugins.WMSCSource class lib/plugins/WMSCSource.html
 gxp.plugins.LayerSource.getProjection method lib/plugins/LayerSource.html
 gxp.plugins.Measure.removeOutput method lib/plugins/Measure.html
+gxp.plugins.GoogleEarth.deactivate method lib/plugins/GoogleEarth.html
 gxp.EmbedMapDialog class lib/widgets/EmbedMapDialog.html
 gxp.plugins.Tool class lib/plugins/Tool.html
 gxp.plugins.AddLayers.deactivate method lib/plugins/AddLayers.html
 gxp.plugins.Zoom.addActions method lib/plugins/Zoom.html
 gxp.plugins.ZoomToSelectedFeatures.addActions method lib/plugins/ZoomToSelectedFeatures.html
 gxp.plugins.SelectedFeatureActions.activate method lib/plugins/SelectedFeatureActions.html
+gxp.plugins.FeatureManager.getPageExtent method lib/plugins/FeatureManager.html
 gxp.plugins.FeatureManager.schema attribute lib/plugins/FeatureManager.html
+gxp.plugins.FeatureEditor.select method lib/plugins/FeatureEditor.html
 gxp.plugins.FeatureToField.deactivate method lib/plugins/FeatureToField.html
 gxp.plugins.NavigationHistory.activate method lib/plugins/NavigationHistory.html
 gxp.plugins.OSMSource class lib/plugins/OSMSource.html
@@ -237,6 +250,7 @@ gxp.plugins.Zoom.deactivate method lib/plugins/Zoom.html
 gxp.plugins.Styler.addActions method lib/plugins/Styler.html
 gxp.plugins.FeatureGrid class lib/plugins/FeatureGrid.html
 gxp.form.ColorField.setValue method lib/widgets/form/ColorField.html
+gxp.plugins.GoogleEarth.gxp.plugins.GoogleEarth.loader.onLoad method lib/plugins/GoogleEarth.html
 gxp.plugins.WMSCSource.describeLayer method lib/plugins/WMSCSource.html
 gxp.plugins.WMSFilterView.addActions method lib/plugins/WMSFilterView.html
 gxp.RulePanel.symbolType attribute lib/widgets/RulePanel.html
@@ -254,6 +268,7 @@ gxp.plugins.ZoomToExtent.activate method lib/plugins/ZoomToExtent.html
 gxp.form.FontComboBox.defaultFont attribute lib/widgets/form/FontComboBox.html
 gxp.plugins.FeatureManager.featureLayer attribute lib/plugins/FeatureManager.html
 gxp.Viewer.getSource method lib/widgets/Viewer.html
+gxp.plugins.GoogleEarth.removeOutput method lib/plugins/GoogleEarth.html
 gxp.QueryPanel.geometryType attribute lib/widgets/QueryPanel.html
 gxp.plugins.WMSFilterView.active attribute lib/plugins/WMSFilterView.html
 gxp.plugins.ClickableFeatures.active attribute lib/plugins/ClickableFeatures.html
@@ -267,8 +282,8 @@ gxp.PolygonSymbolizer class lib/widgets/PolygonSymbolizer.html
 gxp.plugins.Measure class lib/plugins/Measure.html
 gxp.plugins.WMSGetFeatureInfo.active attribute lib/plugins/WMSGetFeatureInfo.html
 gxp.TextSymbolizer class lib/widgets/TextSymbolizer.html
-gxp.plugins.ZoomToDataExtent.removeOutput method lib/plugins/ZoomToDataExtent.html
 gxp.plugins.ZoomToExtent.deactivate method lib/plugins/ZoomToExtent.html
+gxp.plugins.WMSCSource.getConfigForRecord method lib/plugins/WMSCSource.html
 gxp.plugins.Legend.removeOutput method lib/plugins/Legend.html
 gxp.plugins.AddLayers.addOutput method lib/plugins/AddLayers.html
 gxp.form.GoogleGeocoderComboBox class lib/widgets/form/GoogleGeocoderComboBox.html
@@ -278,7 +293,7 @@ gxp.plugins.FeatureManager.layerRecord attribute lib/plugins/FeatureManager.html
 gxp.plugins.LayerTree.active attribute lib/plugins/LayerTree.html
 gxp.plugins.WMSGetFeatureInfo.addActions method lib/plugins/WMSGetFeatureInfo.html
 gxp.plugins.ClickableFeatures.addActions method lib/plugins/ClickableFeatures.html
-gxp.plugins.NavigationHistory.active attribute lib/plugins/NavigationHistory.html
+gxp.plugins.FeatureManager.setPage method lib/plugins/FeatureManager.html
 gxp.plugins.StyleWriter class lib/plugins/StyleWriter.html
 gxp.plugins.FeatureManager.nextPage method lib/plugins/FeatureManager.html
 gxp.plugins.BingSource.createLayerRecord method lib/plugins/BingSource.html
@@ -304,7 +319,7 @@ gxp.plugins.ZoomToLayerExtent.deactivate method lib/plugins/ZoomToLayerExtent.ht
 gxp.plugins.Print.addOutput method lib/plugins/Print.html
 gxp.plugins.FeatureManager.featureStore attribute lib/plugins/FeatureManager.html
 gxp.plugins.MapQuestSource.createStore method lib/plugins/MapQuestSource.html
-gxp.plugins.FeatureManager.setPage method lib/plugins/FeatureManager.html
+gxp.plugins.NavigationHistory.active attribute lib/plugins/NavigationHistory.html
 gxp.plugins.LayerProperties.addActions method lib/plugins/LayerProperties.html
 gxp.plugins.ZoomToLayerExtent.active attribute lib/plugins/ZoomToLayerExtent.html
 gxp.plugins.FeatureManager.visible method lib/plugins/FeatureManager.html
@@ -324,10 +339,12 @@ gxp.plugins.Navigation.removeOutput method lib/plugins/Navigation.html
 gxp.plugins.Navigation class lib/plugins/Navigation.html
 gxp.WMSStylesDialog.addStyle method lib/widgets/WMSStylesDialog.html
 gxp.plugins.WMSCSource.store attribute lib/plugins/WMSCSource.html
+gxp.WMSStylesDialog.changeStyle method lib/widgets/WMSStylesDialog.html
 gxp.plugins.OSMSource.title attribute lib/plugins/OSMSource.html
 gxp.form.FontComboBox class lib/widgets/form/FontComboBox.html
 gxp.plugins.Legend.activate method lib/plugins/Legend.html
 gxp.QueryPanel.attributeQuery attribute lib/widgets/QueryPanel.html
+gxp.Viewer.isAuthorized method lib/widgets/Viewer.html
 gxp.plugins.LayerProperties.active attribute lib/plugins/LayerProperties.html
 gxp.plugins.WMSRasterStylesDialog.addOutput method lib/plugins/WMSRasterStylesDialog.html
 gxp.plugins.WMSSource.title attribute lib/plugins/WMSSource.html
@@ -345,7 +362,7 @@ gxp.plugins.OLSource class lib/plugins/OLSource.html
 gxp.plugins.BingSource.createStore method lib/plugins/BingSource.html
 gxp.plugins.WMSFilterView class lib/plugins/WMSFilterView.html
 gxp.plugins.OLSource.getProjection method lib/plugins/OLSource.html
-gxp.QueryPanel.getFilter method lib/widgets/QueryPanel.html
+gxp.plugins.ZoomToSelectedFeatures.addOutput method lib/plugins/ZoomToSelectedFeatures.html
 gxp.plugins.LayerTree class lib/plugins/LayerTree.html
 gxp.plugins.Print.deactivate method lib/plugins/Print.html
 gxp.plugins.FeatureManager.activate method lib/plugins/FeatureManager.html
@@ -360,6 +377,7 @@ gxp.plugins.LayerProperties.activate method lib/plugins/LayerProperties.html
 gxp.form.ViewerField.viewer attribute lib/widgets/form/ViewerField.html
 gxp.plugins.FeatureEditor.addActions method lib/plugins/FeatureEditor.html
 gxp.plugins.ZoomToLayerExtent.addActions method lib/plugins/ZoomToLayerExtent.html
+gxp.plugins.GoogleEarth.unload method lib/plugins/GoogleEarth.html
 gxp.plugins.ZoomToDataExtent class lib/plugins/ZoomToDataExtent.html
 gxp.plugins.MapQuestSource.createLayerRecord method lib/plugins/MapQuestSource.html
 gxp.plugins.FeatureToField.removeOutput method lib/plugins/FeatureToField.html
@@ -375,6 +393,7 @@ gxp.plugins.WMSGetFeatureInfo class lib/plugins/WMSGetFeatureInfo.html
 gxp.plugins.Print.removeOutput method lib/plugins/Print.html
 gxp.plugins.GoogleGeocoder class lib/plugins/GoogleGeocoder.html
 gxp.plugins.WMSGetFeatureInfo.removeOutput method lib/plugins/WMSGetFeatureInfo.html
+gxp.ScaleOverlay class lib/widgets/ScaleOverlay.html
 gxp.plugins.LayerTree.addOutput method lib/plugins/LayerTree.html
 gxp.plugins.FeatureEditor class lib/plugins/FeatureEditor.html
 gxp.plugins.WMSFilterView.activate method lib/plugins/WMSFilterView.html

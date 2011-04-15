@@ -169,6 +169,12 @@ Text for add action tooltip (i18n).</dd></dl>
 
 <dl class="describe">
 <dt>
+<tt class="descname">addButtonText</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt>
+Text for add layers button (i18n).</dd></dl>
+
+<dl class="describe">
+<dt>
 <tt class="descname">addLayerSourceErrorText</tt></dt>
 <dd><tt class="docutils literal"><span class="pre">String</span></tt>
 Text for an error message when WMS GetCapabilities retrieval fails (i18n).</dd></dl>
@@ -195,7 +201,7 @@ activating it. Default is true.</dd></dl>
 <dt>
 <tt class="descname">availableLayersText</tt></dt>
 <dd><tt class="docutils literal"><span class="pre">String</span></tt>
-Text for the available layers (i18n).</dd></dl>
+Text for the layer selection (i18n).</dd></dl>
 
 <dl class="describe">
 <dt>
@@ -203,6 +209,12 @@ Text for the available layers (i18n).</dd></dl>
 <dd><tt class="docutils literal"><span class="pre">Object</span></tt> If this tool is associated with an <tt class="docutils literal"><span class="pre">OpenLayers.Control</span></tt>
 then this is an optional object to pass to the constructor of the
 associated <tt class="docutils literal"><span class="pre">OpenLayers.Control</span></tt>.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">createExpander</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Function</span></tt> Returns an <tt class="docutils literal"><span class="pre">Ext.grid.RowExpander</span></tt>. Can be overridden
+by applications/subclasses to provide a custom expander.</dd></dl>
 
 <dl class="describe">
 <dt>
@@ -255,6 +267,12 @@ be created.</dd></dl>
 <dd><tt class="docutils literal"><span class="pre">Boolean</span></tt>
 If <tt class="docutils literal"><span class="pre">upload</span></tt> is enabled, only show the button for sources with relative
 URLs (e.g. &#8220;/geoserver&#8221;).  Default is <tt class="docutils literal"><span class="pre">true</span></tt>.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">startSourceId</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Integer</span></tt>
+The identifier of the source that we should start with.</dd></dl>
 
 <dl class="describe">
 <dt>
@@ -340,6 +358,11 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
 <dt id="gxp.plugins.AddLayers.removeOutput">
 <tt class="descclassname">AddLayers.</tt><tt class="descname">removeOutput</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.AddLayers.removeOutput" title="Permalink to this definition">¶</a></dt>
 <dd>Removes all output created by this tool</dd></dl>
+
+<dl class="method">
+<dt id="gxp.plugins.AddLayers.showCapabilitiesGrid">
+<tt class="descclassname">AddLayers.</tt><tt class="descname">showCapabilitiesGrid</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.AddLayers.showCapabilitiesGrid" title="Permalink to this definition">¶</a></dt>
+<dd>Shows the window with a capabilities grid.</dd></dl>
 
 </div>
 <div class="section" id="events">

@@ -156,6 +156,21 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     the field order from this list will be used, and fields missing in the
     list will be excluded.
 
+.. describe:: iconClsAdd
+
+    ``String``
+    iconCls to use for the add button.
+
+.. describe:: iconClsEdit
+
+    ``String``
+    iconCls to use for the edit button.
+
+.. describe:: modifyOnly
+
+    ``Boolean`` Set to true to use the FeatureEditor merely as a feature
+    modify tool, i.e. there is no option to add new features.
+
 .. describe:: outputAction
 
     ``Number`` The ``actions`` array index of the action that should
@@ -251,6 +266,14 @@ listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.uti
 .. method:: FeatureEditor.removeOutput
 
     Removes all output created by this tool
+
+.. method:: FeatureEditor.select
+
+    :arg feature: ``OpenLayers.Feature.Vector``
+    
+    Action to perform when a feature is selected. The default action is to
+    unselect existing selections and select the feature using the built-in
+    SelectFeature control. To be overridden by subclasses.
 
 
 

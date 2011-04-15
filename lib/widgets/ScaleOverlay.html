@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>gxp.GoogleEarthPanel &mdash; GXP v0.1</title>
+    <title>gxp.ScaleOverlay &mdash; GXP v0.1</title>
     <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -21,8 +21,8 @@
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="top" title="GXP v0.1" href="../../index.html" />
     <link rel="up" title="Widgets" href="../widgets.html" />
-    <link rel="next" title="gxp.GoogleStreetViewPanel" href="GoogleStreetViewPanel.html" />
-    <link rel="prev" title="gxp.FilterBuilder" href="FilterBuilder.html" /> 
+    <link rel="next" title="gxp.StrokeSymbolizer" href="StrokeSymbolizer.html" />
+    <link rel="prev" title="gxp.ScaleLimitPanel" href="ScaleLimitPanel.html" /> 
   </head>
   <body>
     <div class="related">
@@ -35,10 +35,10 @@
           <a href="../../modindex.html" title="Global Module Index"
              accesskey="M">modules</a> |</li>
         <li class="right" >
-          <a href="GoogleStreetViewPanel.html" title="gxp.GoogleStreetViewPanel"
+          <a href="StrokeSymbolizer.html" title="gxp.StrokeSymbolizer"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="FilterBuilder.html" title="gxp.FilterBuilder"
+          <a href="ScaleLimitPanel.html" title="gxp.ScaleLimitPanel"
              accesskey="P">previous</a> |</li>
         <li><a href="../../index.html">GXP</a> &raquo;</li>
           <li><a href="../widgets.html" accesskey="U">Widgets</a> &raquo;</li> 
@@ -48,22 +48,21 @@
         <div class="sphinxsidebarwrapper">
             <h3><a href="../../index.html">Table Of Contents</a></h3>
             <ul>
-<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">gxp.GoogleEarthPanel</span></tt></a><ul>
+<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">gxp.ScaleOverlay</span></tt></a><ul>
 <li><a class="reference external" href="#config-options">Config Options</a></li>
-<li><a class="reference external" href="#events">Events</a></li>
 </ul>
 </li>
 </ul>
 
             <h4>Previous topic</h4>
-            <p class="topless"><a href="FilterBuilder.html"
-                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.FilterBuilder</span></tt></a></p>
+            <p class="topless"><a href="ScaleLimitPanel.html"
+                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.ScaleLimitPanel</span></tt></a></p>
             <h4>Next topic</h4>
-            <p class="topless"><a href="GoogleStreetViewPanel.html"
-                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.GoogleStreetViewPanel</span></tt></a></p>
+            <p class="topless"><a href="StrokeSymbolizer.html"
+                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.StrokeSymbolizer</span></tt></a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
-              <li><a href="../../_sources/lib/widgets/GoogleEarthPanel.txt"
+              <li><a href="../../_sources/lib/widgets/ScaleOverlay.txt"
                      rel="nofollow">Show Source</a></li>
             </ul>
           <div id="searchbox" style="display: none">
@@ -87,54 +86,32 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="gxp-googleearthpanel">
-<h1><a title="gxp.GoogleEarthPanel" class="reference internal" href="#gxp.GoogleEarthPanel"><tt class="xref docutils literal"><span class="pre">gxp.GoogleEarthPanel</span></tt></a><a class="headerlink" href="#gxp-googleearthpanel" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="gxp-scaleoverlay">
+<h1><a title="gxp.ScaleOverlay" class="reference internal" href="#gxp.ScaleOverlay"><tt class="xref docutils literal"><span class="pre">gxp.ScaleOverlay</span></tt></a><a class="headerlink" href="#gxp-scaleoverlay" title="Permalink to this headline">¶</a></h1>
 <dl class="meta docutils">
 <dt>Extends</dt>
 <dd><ul class="first last simple">
-<li><a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.Panel">Ext.Panel</a></li>
+<li><a class="reference external" href="http://dev.sencha.com/deploy/dev/docs/?class=Ext.Panel">Ext.Panel</a></li>
 </ul>
 </dd>
 <dt>xtype</dt>
-<dd><tt class="docutils literal"><span class="pre">gxp_googleearthpanel</span></tt></dd>
+<dd><tt class="docutils literal"><span class="pre">gxp_scaleoverlay</span></tt></dd>
 </dl>
 <dl class="class">
-<dt id="gxp.GoogleEarthPanel">
-<em class="property">class </em><tt class="descclassname">gxp.</tt><tt class="descname">GoogleEarthPanel</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#gxp.GoogleEarthPanel" title="Permalink to this definition">¶</a></dt>
-<dd>Create a panel for showing a 3D visualization of
-a map with the Google Earth plugin.
-See <a class="reference external" href="http://code.google.com/apis/earth/">http://code.google.com/apis/earth/</a> for plugin api
-documentation.</dd></dl>
+<dt id="gxp.ScaleOverlay">
+<em class="property">class </em><tt class="descclassname">gxp.</tt><tt class="descname">ScaleOverlay</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#gxp.ScaleOverlay" title="Permalink to this definition">¶</a></dt>
+<dd>Create a panel for showing a ScaleLine control and a combobox for
+selecting the map scale.</dd></dl>
 
 <div class="section" id="config-options">
 <h2>Config Options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
 <p>Configuration properties in addition to
-those listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.Panel">Ext.Panel</a>.</p>
+those listed for <a class="reference external" href="http://dev.sencha.com/deploy/dev/docs/?class=Ext.Panel">Ext.Panel</a>.</p>
 <dl class="describe">
 <dt>
-<tt class="descname">mapPanel</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">GeoExt.MapPanel</span> <span class="pre">|</span> <span class="pre">String</span></tt>
-The map panel associated with this panel.  If a MapPanel instance is
-not provided, a MapPanel id must be provided.</dd></dl>
-
-</div>
-<div class="section" id="events">
-<h2>Events<a class="headerlink" href="#events" title="Permalink to this headline">¶</a></h2>
-<p>Events in addition to those
-listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.Panel">Ext.Panel</a>.</p>
-<dl class="describe">
-<dt>
-<tt class="descname">beforeadd</tt></dt>
-<dd>Fires before a layer is added to the 3D view.  If a listener
-returns <tt class="docutils literal"><span class="pre">false</span></tt>, the layer will not be added.  Listeners
-will be called with a single argument: the layer record.</dd></dl>
-
-<dl class="describe">
-<dt>
-<tt class="descname">pluginfailure</tt></dt>
-<dd>Fires when there is a failure creating the instance.  Listeners
-will receive two arguments: this plugin and the failure code
-(see the Google Earth API docs for details on the failure codes).</dd></dl>
+<tt class="descname">map</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">OpenLayers.Map</span></tt> or <tt class="xref docutils literal"><span class="pre">GeoExt.MapPanel</span></tt>
+The map for which to show the scale info.</dd></dl>
 
 </div>
 </div>
@@ -155,10 +132,10 @@ will receive two arguments: this plugin and the failure code
           <a href="../../modindex.html" title="Global Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="GoogleStreetViewPanel.html" title="gxp.GoogleStreetViewPanel"
+          <a href="StrokeSymbolizer.html" title="gxp.StrokeSymbolizer"
              >next</a> |</li>
         <li class="right" >
-          <a href="FilterBuilder.html" title="gxp.FilterBuilder"
+          <a href="ScaleLimitPanel.html" title="gxp.ScaleLimitPanel"
              >previous</a> |</li>
         <li><a href="../../index.html">GXP</a> &raquo;</li>
           <li><a href="../widgets.html" >Widgets</a> &raquo;</li> 

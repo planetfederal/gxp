@@ -238,6 +238,24 @@ list will be excluded.</dd></dl>
 
 <dl class="describe">
 <dt>
+<tt class="descname">iconClsAdd</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt>
+iconCls to use for the add button.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">iconClsEdit</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt>
+iconCls to use for the edit button.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">modifyOnly</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> Set to true to use the FeatureEditor merely as a feature
+modify tool, i.e. there is no option to add new features.</dd></dl>
+
+<dl class="describe">
+<dt>
 <tt class="descname">outputAction</tt></dt>
 <dd><tt class="docutils literal"><span class="pre">Number</span></tt> The <tt class="docutils literal"><span class="pre">actions</span></tt> array index of the action that should
 trigger this tool&#8217;s output. Only valid if <tt class="docutils literal"><span class="pre">actions</span></tt> is configured.
@@ -349,6 +367,22 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
 <dt id="gxp.plugins.FeatureEditor.removeOutput">
 <tt class="descclassname">FeatureEditor.</tt><tt class="descname">removeOutput</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.FeatureEditor.removeOutput" title="Permalink to this definition">¶</a></dt>
 <dd>Removes all output created by this tool</dd></dl>
+
+<dl class="method">
+<dt id="gxp.plugins.FeatureEditor.select">
+<tt class="descclassname">FeatureEditor.</tt><tt class="descname">select</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.FeatureEditor.select" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>feature</em> &#8211; <tt class="docutils literal"><span class="pre">OpenLayers.Feature.Vector</span></tt></td>
+</tr>
+</tbody>
+</table>
+<p>Action to perform when a feature is selected. The default action is to
+unselect existing selections and select the feature using the built-in
+SelectFeature control. To be overridden by subclasses.</p>
+</dd></dl>
 
 </div>
 <div class="section" id="events">

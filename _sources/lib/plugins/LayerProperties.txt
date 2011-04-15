@@ -107,6 +107,17 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     ``Number`` Optional index of an action that should be active by
     default. Only works for actions that are a ``GeoExt.Action`` instance.
 
+.. describe:: layerPanelConfig
+
+    ``Object`` Additional configuration options for the layer type specific
+    properties panels, keyed by xtype, e.g.:
+    
+    .. code-block:: javascript
+    
+        layerPanelConfig: {
+            "gxp_wmslayerpanel": {rasterStyling: true}
+        }
+
 .. describe:: menuText
 
     ``String``

@@ -275,6 +275,12 @@ the underlying feature manager. Default is false.</dd></dl>
 
 <dl class="describe">
 <dt>
+<tt class="descname">showTotalResults</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> If set to true, the total number of records will be shown
+in the bottom toolbar of the grid, if available.</dd></dl>
+
+<dl class="describe">
+<dt>
 <tt class="descname">toggleGroup</tt></dt>
 <dd><tt class="docutils literal"><span class="pre">String</span></tt> If this tool should be radio-button style toggled with other
 tools, this string is to identify the toggle group.</dd></dl>
@@ -288,6 +294,12 @@ the server decides whether a pixel click intersects a feature based on
 its own rules.  If a pixel tolerance is provided, it will be included in
 requests for features to inform the server to look in a buffer around
 features.</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">totalMsg</tt></dt>
+<dd><tt class="docutils literal"><span class="pre">String</span></tt>
+String template for showing total number of records (i18n).</dd></dl>
 
 <dl class="describe">
 <dt>
@@ -363,6 +375,22 @@ this.actions will be added.</td>
 <dt id="gxp.plugins.FeatureGrid.removeOutput">
 <tt class="descclassname">FeatureGrid.</tt><tt class="descname">removeOutput</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.FeatureGrid.removeOutput" title="Permalink to this definition">¶</a></dt>
 <dd>Removes all output created by this tool</dd></dl>
+
+<dl class="method">
+<dt id="gxp.plugins.FeatureGrid.select">
+<tt class="descclassname">FeatureGrid.</tt><tt class="descname">select</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.FeatureGrid.select" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>feature</em> &#8211; <tt class="docutils literal"><span class="pre">OpenLayers.Feature.Vector</span></tt></td>
+</tr>
+</tbody>
+</table>
+<p>Action to perform when a feature is selected. The default action is to
+unselect existing selections and select the feature using the built-in
+SelectFeature control. To be overridden by subclasses.</p>
+</dd></dl>
 
 </div>
 <div class="section" id="events">

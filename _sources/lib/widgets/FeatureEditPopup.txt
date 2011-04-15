@@ -38,6 +38,11 @@ Configuration properties.
     ``Boolean`` Set to true to provide a Delete button for deleting the
     feature. Default is false.
 
+.. describe:: dateFormat
+
+    ``String`` Date format. Default is the value of
+    ``Ext.form.DateField.prototype.format``.
+
 .. describe:: editing
 
     ``Boolean`` Set to true to open the popup in editing mode.
@@ -69,6 +74,11 @@ Configuration properties.
     ``GeoExt.data.AttributeStore`` Optional. If provided, available
     feature attributes will be determined from the schema instead of using
     the attributes that the feature has currently set.
+
+.. describe:: timeFormat
+
+    ``String`` Time format. Default is the value of
+    ``Ext.form.TimeField.prototype.format``.
 
 .. describe:: vertexRenderIntent
 

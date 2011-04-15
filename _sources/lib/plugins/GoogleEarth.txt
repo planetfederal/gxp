@@ -1,7 +1,7 @@
 
 .. currentmodule:: gxp.plugins
 
-:class:`gxp.plugins.Styler`
+:class:`gxp.plugins.GoogleEarth`
 ================================================================================
 
 
@@ -18,14 +18,57 @@ Extends
 
 
 ptype
-    ``gxp_styler``
+    ``gxp_googleearth``
 
 
 
-.. class:: Styler(config)
+.. class:: GoogleEarth(config)
 
-  Plugin providing a styles editing dialog for geoserver layers.
+  Provides an action for switching between normal map view and
+  Google Earth view.
 
+
+
+Example Use
+-----------
+
+This tool can only be used if ``portalItems`` of :class:`gxp.Viewer` is set up
+in the following way (or similar, the requirement is to have a panel with a card
+layout which has 2 items: the map and the Google Earth panel):
+
+.. code-block:: javascript
+
+    portalItems: [{
+        region: "center",
+        layout: "border",
+        border: false,
+         items: [{
+             xtype: "panel",
+             id: "panel",
+             tbar: [],
+             layout: "card",
+             region: "center",
+             activeItem: 0,
+             items: [
+             "map", {
+                 xtype: 'gxp_googleearthpanel',
+                 mapPanel: "map"
+             }
+         ]
+    }
+
+hen make sure the tools go into the tbar of the panel, instead of the
+map.tbar" which is the default, an example is:
+
+.. code-block:: javascript
+
+  tools: [
+      {
+          actionTarget: "panel.tbar",
+          ptype: "gxp_googleearth",
+          apiKey: 'ABQIAAAAeDjUod8ItM9dBg5_lz0esxTnme5EwnLVtEDGnh-lFVzRJhbdQhQBX5VH8Rb3adNACjSR5kaCLQuBmw'
+      }
+  ]
 
     
 
@@ -107,11 +150,6 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     ``Number`` Optional index of an action that should be active by
     default. Only works for actions that are a ``GeoExt.Action`` instance.
 
-.. describe:: menuText
-
-    ``String``
-    Text for layer properties menu item (i18n).
-
 .. describe:: outputAction
 
     ``Number`` The ``actions`` array index of the action that should
@@ -133,28 +171,10 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     "map" to access the viewer's main map. If not provided, a window will
     be created.
 
-.. describe:: rasterStyling
-
-    ``Boolean`` If set to true, single-band raster styling will be
-    supported. Default is ``false``.
-
-.. describe:: sameOriginStyling
-
-    ``Boolean``
-    Only allow editing of styles for layers whose sources have a URL that
-    matches the origin of this applicaiton.  It is strongly discouraged to
-    do styling through commonly used proxies as all authorization headers
-    and cookies are shared with all remote sources.  Default is ``true``.
-
 .. describe:: toggleGroup
 
     ``String`` If this tool should be radio-button style toggled with other
     tools, this string is to identify the toggle group.
-
-.. describe:: tooltip
-
-    ``String``
-    Text for layer properties action tooltip (i18n).
 
 
 
@@ -166,7 +186,7 @@ Public properties in addition to those
 listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
 
 
-.. attribute:: Styler.active
+.. attribute:: GoogleEarth.active
 
     ``Boolean`` Is the tool currently active?
 
@@ -180,29 +200,46 @@ Public methods in addition to those
 listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
 
 
-.. method:: Styler.activate
+.. method:: GoogleEarth.activate
 
     :returns: ``Boolean`` true when this tool was activated
     
     Activates this tool.
 
-.. method:: Styler.addActions
+.. method:: GoogleEarth.addActions
 
     
 
-.. method:: Styler.addOutput
+.. method:: GoogleEarth.addOutput
 
     
 
-.. method:: Styler.deactivate
+.. method:: GoogleEarth.deactivate
 
     :returns: ``Boolean`` true when this tool was deactivated
     
     Deactivates this tool.
 
-.. method:: Styler.removeOutput
+.. method:: GoogleEarth.gxp.plugins.GoogleEarth.loader.onLoad
+
+    :arg options: ``Object``
+    
+    Options:
+    
+    * apiKey - ``String`` API key for Google Earth plugin.
+    * callback - ``Function`` Called when script loads.
+    * errback - ``Function`` Called if loading fails.
+    * timeout - ``Number`` Time to wait before deciding that loading failed
+        (in milliseconds).
+    * scope - ``Object`` The ``this`` object for callbacks.
+
+.. method:: GoogleEarth.removeOutput
 
     Removes all output created by this tool
+
+.. method:: GoogleEarth.unload
+
+    Clean up resources created by loading.
 
 
 
