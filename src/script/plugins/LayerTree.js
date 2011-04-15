@@ -48,7 +48,13 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
      *  Text for baselayer node of layer tree (i18n).
      */
     baseNodeText: "Base Layers",
-    
+
+    /** api: config[groupConfig]
+     *  ``Object`` The groups to show in the layer tree. The key of the object
+     *  has the group name and the value the group title. Optional.
+     */
+    groupConfig: null,
+
     /** private: method[addOutput]
      *  :arg config: ``Object``
      */
@@ -69,7 +75,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
                 }
             }
         };
-        
+
         // create our own layer node UI class, using the TreeNodeUIEventMixin
         var LayerNodeUI = Ext.extend(GeoExt.tree.LayerNodeUI,
             new GeoExt.tree.TreeNodeUIEventMixin());
@@ -80,42 +86,69 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
             isTarget: false,
             allowDrop: false
         });
-        treeRoot.appendChild(new GeoExt.tree.LayerContainer({
-            text: this.overlayNodeText,
-            iconCls: "gxp-folder",
-            expanded: true,
-            loader: new GeoExt.tree.LayerLoader({
-                store: this.target.mapPanel.layers,
-                filter: function(record) {
+
+        var createOverlayContainer = function(text, group) {
+            var filterFunc;
+            if (group === null) {
+                // we want to contain everything that has no group
+                filterFunc = function(record) {
                     return !record.get("group") &&
                         record.getLayer().displayInLayerSwitcher == true;
-                },
-                createNode: function(attr) {
-                    attr.uiProvider = LayerNodeUI;
-                    var layer = attr.layer;
-                    var store = attr.layerStore;
-                    if (layer && store) {
-                        var record = store.getAt(store.findBy(function(r) {
-                            return r.getLayer() === layer;
-                        }));
-                        if (record && !record.get("queryable")) {
-                            attr.iconCls = "gxp-tree-rasterlayer-icon";
-                        }
-                    }
-                    var node = GeoExt.tree.LayerLoader.prototype.createNode.apply(this, [attr]);
-                    addListeners(node, record);
-                    return node;
-                }
-            }),
-            singleClickExpand: true,
-            allowDrag: false,
-            listeners: {
-                append: function(tree, node) {
-                    node.expand();
-                }
+                };
+            } else {
+                filterFunc = function(record) {
+                    return record.get("group") === group &&
+                        record.getLayer().displayInLayerSwitcher == true;
+                };
             }
-        }));
-        
+            return new GeoExt.tree.LayerContainer({
+                text: text,
+                iconCls: "gxp-folder",
+                expanded: true,
+                loader: new GeoExt.tree.LayerLoader({
+                    store: target.mapPanel.layers,
+                    filter: filterFunc,
+                    createNode: function(attr) {
+                        attr.uiProvider = LayerNodeUI;
+                        if (group !== null) {
+                            // no drag and drop support for groups for now
+                            // TODO allow at least drag and drop within the 
+                            // group container.
+                            attr.allowDrag = false;
+                        }
+                        var layer = attr.layer;
+                        var store = attr.layerStore;
+                        if (layer && store) {
+                            var record = store.getAt(store.findBy(function(r) {
+                                return r.getLayer() === layer;
+                            }));
+                            if (record && !record.get("queryable")) {
+                                attr.iconCls = "gxp-tree-rasterlayer-icon";
+                            }
+                        }
+                        var node = GeoExt.tree.LayerLoader.prototype.createNode.apply(this, [attr]);
+                        addListeners(node, record);
+                        return node;
+                    }
+                }),
+                singleClickExpand: true,
+                allowDrag: false,
+                listeners: {
+                    append: function(tree, node) {
+                        node.expand();
+                    }
+                }
+            });
+        };
+
+        if (this.groupConfig !== null) {
+            for (var key in this.groupConfig) {
+                treeRoot.appendChild(createOverlayContainer(this.groupConfig[key], key));
+            }
+        } else {
+            treeRoot.appendChild(createOverlayContainer(this.overlayNodeText, null));
+        }
+
         treeRoot.appendChild(new GeoExt.tree.LayerContainer({
             text: this.baseNodeText,
             iconCls: "gxp-folder",
