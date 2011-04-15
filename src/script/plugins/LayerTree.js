@@ -69,6 +69,9 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
      */
     groups: null,
     
+    /** private: method[constructor]
+     *  :arg config: ``Object``
+     */
     constructor: function(config) {
         gxp.plugins.LayerTree.superclass.constructor.apply(this, arguments);
         if (!this.groups) {
