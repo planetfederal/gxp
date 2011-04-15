@@ -32,6 +32,7 @@ Ext.namespace("gxp.plugins");
  *  layout which has 2 items: the map and the Google Earth panel):
  *
  *  .. code-block:: javascript
+ *
  *      portalItems: [{
  *          region: "center",
  *          layout: "border",
@@ -55,6 +56,7 @@ Ext.namespace("gxp.plugins");
  * "map.tbar" which is the default, an example is:
  *
  *  .. code-block:: javascript
+ *
  *    tools: [
  *        {
  *            actionTarget: "panel.tbar",
@@ -88,11 +90,12 @@ gxp.plugins.GoogleEarth = Ext.extend(gxp.plugins.Tool, {
      *  API key.
      *
      *  .. code-block:: javascript
-     *  apiKeys: {
-     *      "localhost": "ABQIAAAAeDjUod8ItM9dBg5_lz0esxTnme5EwnLVtEDGnh-lFVzRJhbdQhQBX5VH8Rb3adNACjSR5kaCLQuBmw",
-     *      "amazonaws.com": "ABQIAAAAeDjUod8ItM9dBg5_lz0esxSMhkig1Gd5B_2j4H1Xz7hsATFBFhTFmk4SPyFr1scv-qEckPQXdkSU2Q",
-     *      "skygone.net": "ABQIAAAAeDjUod8ItM9dBg5_lz0esxR03nynjj8hU7YxAbflQ5_cAeANHhStetrADxN1a67rfdDnX5uWtV-b8g"
-     *  }
+     *
+     *    apiKeys: {
+     *        "localhost": "ABQIAAAAeDjUod8ItM9dBg5_lz0esxTnme5EwnLVtEDGnh-lFVzRJhbdQhQBX5VH8Rb3adNACjSR5kaCLQuBmw",
+     *        "amazonaws.com": "ABQIAAAAeDjUod8ItM9dBg5_lz0esxSMhkig1Gd5B_2j4H1Xz7hsATFBFhTFmk4SPyFr1scv-qEckPQXdkSU2Q",
+     *        "skygone.net": "ABQIAAAAeDjUod8ItM9dBg5_lz0esxR03nynjj8hU7YxAbflQ5_cAeANHhStetrADxN1a67rfdDnX5uWtV-b8g"
+     *    }
      */
 
     //i18n

@@ -47,6 +47,7 @@ gxp.plugins.LayerProperties = Ext.extend(gxp.plugins.Tool, {
      *  properties panels, keyed by xtype, e.g.:
      *
      *  .. code-block:: javascript
+     *
      *      layerPanelConfig: {
      *          "gxp_wmslayerpanel": {rasterStyling: true}
      *      }
