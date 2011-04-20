@@ -30,7 +30,8 @@ GeoExt.Lang.add("nl", {
         zoomPageExtentTip: "Zoom naar de uitsnede van de pagina",
         nextPageTip: "Volgende pagina",
         nextPageTip: "Laatste pagina",
-        totalMsg: "Totaal: {0} rijen"
+        totalMsg: "Totaal: {0} rijen",
+        zoomToSelectedText: "Zoom naar selectie"
     },
 
     "gxp.plugins.GoogleEarth.prototype": {

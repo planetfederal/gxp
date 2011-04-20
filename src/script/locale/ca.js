@@ -39,7 +39,8 @@ GeoExt.Lang.add("ca", {
         zoomPageExtentTip: "Ajusta vista a l'extensió de la pàgina",
         nextPageTip: "Pàgina següent",
         nextPageTip: "Pàgina anterior",
-        totalMsg: "Total: {0} records"
+        totalMsg: "Total: {0} records",
+        zoomToSelectedText: "Zoom to selected"
     },
 
     "gxp.plugins.GoogleEarth.prototype": { 

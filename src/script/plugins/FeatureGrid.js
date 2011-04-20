@@ -43,6 +43,12 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
      *  in the bottom toolbar of the grid, if available.
      */
     showTotalResults: false,
+
+    /** api: config[showZoomToSelected]
+     *  ``Boolean`` If set to true, a button for zooming to the selected row(s)
+     *  will be shown.
+     */
+    showZoomToSelected: false,
     
     /** api: config[alwaysDisplayOnMap]
      *  ``Boolean`` If set to true, the features that are shown in the grid
@@ -80,7 +86,13 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
      *  the underlying feature manager. Default is false.
      */
     selectOnMap: false,
-    
+
+    /** api: config[zoomToSelectedText]
+     * ``String``
+     * Text for zoom to selected button (i18n).
+     */
+    zoomToSelectedText: "Zoom to selected",
+
     /** api: config[displayFeatureText]
      * ``String``
      * Text for feature display button (i18n).
@@ -167,9 +179,10 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
             };
         }
         this.displayItem = new Ext.Toolbar.TextItem({});
+        var sm = new GeoExt.grid.FeatureSelectionModel(smCfg);
         config = Ext.apply({
             xtype: "gxp_featuregrid",
-            sm: new GeoExt.grid.FeatureSelectionModel(smCfg),
+            sm: sm,
             autoScroll: true,
             bbar: (featureManager.paging ? [{
                 iconCls: "x-tbar-page-first",
@@ -212,7 +225,30 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                 handler: function() {
                     featureManager.setPage({index: "last"});
                 }
-            }, {xtype: 'tbspacer', width: 10}, this.displayItem] : []).concat(["->"].concat(!this.alwaysDisplayOnMap ? [{
+            }, {xtype: 'tbspacer', width: 10}, this.displayItem] : []).concat(["->"].concat(this.showZoomToSelected === true ?
+                [{
+                    text: this.zoomToSelectedText,
+                    handler: function() {
+                        var selected = sm.getSelections();
+                        var bounds = null;
+                        for (var i=0,ii=selected.length; i<ii; ++i) {
+                            var row = selected[i];
+                            var feature = row.get("feature");
+                            if (feature && feature.geometry) {
+                                if (bounds === null) {
+                                    bounds = feature.geometry.getBounds().clone();
+                                } else {
+                                    bounds.extend(feature.geometry.getBounds());
+                                }
+                            }
+                        }
+                        if (bounds !== null) {
+                            map.zoomToExtent(bounds, true);
+                        }
+                    },
+                    scope: this,
+                    iconCls: "gxp-icon-zoom-to"
+                }] : []).concat(!this.alwaysDisplayOnMap ? [{
                 text: this.displayFeatureText,
                 enableToggle: true,
                 toggleHandler: function(btn, pressed) {

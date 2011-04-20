@@ -31,7 +31,8 @@ GeoExt.Lang.add("fr", {
         zoomPageExtentTip: "Zoom sur la page",
         nextPageTip: "Page suivante",
         nextPageTip: "Dernière page",
-        totalMsg: "Total: {0} records"
+        totalMsg: "Total: {0} records",
+        zoomToSelectedText: "Zoom to selected"
     },
 
     "gxp.plugins.GoogleEarth.prototype": {
