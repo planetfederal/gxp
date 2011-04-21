@@ -275,6 +275,11 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
                         action = Ext.apply(new Ext.menu.Item(action),
                             {text: action.initialConfig.menuText}
                         );
+                    } else if (!(ct instanceof Ext.Toolbar)) {
+                        // only Ext.menu.Menu and Ext.Toolbar containers
+                        // support the Action interface. So if our container is
+                        // something else, we create a button with the action.
+                        action = new Ext.Button(action);
                     }
                     action = (index === null) ? ct.add(action) : ct.insert(index, action);
                     if (index !== null) {
