@@ -92,6 +92,13 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      */
     layerSelectionText: "View available data from:",
     
+    /** api: config[instructionsText]
+     *  ``String``
+     *  Text for additional instructions at the bottom of the grid (i18n).
+     *  None by default.
+     */
+    instructionsText: null,
+    
     /** api: config[doneText]
      *  ``String``
      *  Text for Done button (i18n).
@@ -233,9 +240,8 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
 
         var capGridPanel = new Ext.grid.GridPanel({
             store: this.target.layerSources[data[idx][0]].store,
-            layout: "fit",
-            region: "center",
             autoScroll: true,
+            flex: 1,
             autoExpandColumn: "title",
             plugins: [expander],
             colModel: new Ext.grid.ColumnModel([
@@ -321,6 +327,25 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             }
         });
         
+        var items = {
+            xtype: "container",
+            region: "center",
+            layout: "vbox",
+            items: [capGridPanel]
+        };
+        if (this.instructionsText) {
+            items.items.push({
+                xtype: "box",
+                autoHeight: true,
+                autoEl: {
+                    tag: "p",
+                    cls: "x-form-item",
+                    style: "padding-left: 5px; padding-right: 5px"
+                },
+                html: this.instructionsText
+            });
+        }
+        
         var bbarItems = [
             "->",
             new Ext.Button({
@@ -350,7 +375,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             height: 300,
             width: 450,
             modal: true,
-            items: [capGridPanel],
+            items: items,
             tbar: capGridToolbar,
             bbar: bbarItems,
             listeners: {
