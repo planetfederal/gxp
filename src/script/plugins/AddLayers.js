@@ -97,7 +97,6 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      *  Text for additional instructions at the bottom of the grid (i18n).
      *  None by default.
      */
-    instructionsText: null,
     
     /** api: config[doneText]
      *  ``String``
