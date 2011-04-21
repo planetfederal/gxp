@@ -6,7 +6,7 @@ GeoExt.Lang.add("es", {
     },
     
     "gxp.plugins.AddLayers.prototype": {
-        addMenuText: "Añadir Capas",
+        addActionMenuText: "Añadir Capas",
         addActionTip: "Añadir Capas",
         addServerText: "Añadir servidor",
         addButtonText: "Añadir Capas",
@@ -39,8 +39,7 @@ GeoExt.Lang.add("es", {
         zoomPageExtentTip: "Zoom a la extensión de la página",
         nextPageTip: "Página siguiente",
         nextPageTip: "Última página",
-        totalMsg: "Total: {0} records",
-        zoomToSelectedText: "Zoom to selected"
+        totalMsg: "Total: {0} records"
     },
 
     "gxp.plugins.GoogleEarth.prototype": {

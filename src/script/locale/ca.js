@@ -6,7 +6,7 @@ GeoExt.Lang.add("ca", {
     },
     
     "gxp.plugins.AddLayers.prototype": {
-        addMenuText: "Afegeix Capes",
+        addActionMenuText: "Afegeix Capes",
         addActionTip: "Afegeix Capes",
         addServerText: "Afegeix servidor",
         addButtonText: "Afegeix Capes",
@@ -39,8 +39,7 @@ GeoExt.Lang.add("ca", {
         zoomPageExtentTip: "Ajusta vista a l'extensió de la pàgina",
         nextPageTip: "Pàgina següent",
         nextPageTip: "Pàgina anterior",
-        totalMsg: "Total: {0} records",
-        zoomToSelectedText: "Zoom to selected"
+        totalMsg: "Total: {0} records"
     },
 
     "gxp.plugins.GoogleEarth.prototype": { 

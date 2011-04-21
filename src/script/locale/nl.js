@@ -2,7 +2,7 @@
 GeoExt.Lang.add("nl", {
 
     "gxp.plugins.AddLayers.prototype": {
-        addMenuText: "Voeg kaartlagen toe",
+        addActionMenuText: "Voeg kaartlagen toe",
         addActionTip: "Voeg kaartlagen toe",
         addServerText: "Voeg service toe",
         untitledText: "Onbekend",
@@ -30,8 +30,7 @@ GeoExt.Lang.add("nl", {
         zoomPageExtentTip: "Zoom naar de uitsnede van de pagina",
         nextPageTip: "Volgende pagina",
         nextPageTip: "Laatste pagina",
-        totalMsg: "Totaal: {0} rijen",
-        zoomToSelectedText: "Zoom naar selectie"
+        totalMsg: "Totaal: {0} rijen"
     },
 
     "gxp.plugins.GoogleEarth.prototype": {

@@ -2,7 +2,7 @@
 GeoExt.Lang.add("fr", {
 
     "gxp.plugins.AddLayers.prototype": {
-        addMenuText: "Ajouter des calques",
+        addActionMenuText: "Ajouter des calques",
         addActionTip: "Ajouter des calques",
         addServerText: "Ajouter un nouveau serveur",
         untitledText: "Sans titre",
@@ -31,8 +31,7 @@ GeoExt.Lang.add("fr", {
         zoomPageExtentTip: "Zoom sur la page",
         nextPageTip: "Page suivante",
         nextPageTip: "Dernière page",
-        totalMsg: "Total: {0} records",
-        zoomToSelectedText: "Zoom to selected"
+        totalMsg: "Total: {0} records"
     },
 
     "gxp.plugins.GoogleEarth.prototype": {
