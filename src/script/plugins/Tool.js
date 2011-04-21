@@ -281,7 +281,8 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
                         // something else, we create a button with the action.
                         action = new Ext.Button(action);
                     }
-                    action = (index === null) ? ct.add(action) : ct.insert(index, action);
+                    var addedAction = (index === null) ? ct.add(action) : ct.insert(index, action);
+                    action = action instanceof Ext.Button ? action : addedAction;
                     if (index !== null) {
                         index += 1;
                     }
