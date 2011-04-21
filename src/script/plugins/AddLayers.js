@@ -374,7 +374,8 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             bbarItems.unshift(uploadButton);
         }
 
-        this.capGrid = new Ext.Window({
+        //TODO use addOutput here instead of just applying outputConfig
+        this.capGrid = new Ext.Window(Ext.apply({
             title: this.availableLayersText,
             closeAction: "hide",
             layout: "border",
@@ -393,7 +394,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 },
                 scope: this
             }
-        });
+        }, this.initialConfig.outputConfig));
         
     },
     
