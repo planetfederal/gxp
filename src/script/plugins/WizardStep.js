@@ -86,9 +86,9 @@ gxp.plugins.WizardStep = Ext.extend(gxp.plugins.Tool, {
     setValid: function(valid, data) {
         this.valid = valid;
         if (valid) {
-            this.output.ownerCt.fireEvent("valid", this, data);
+            this.output[0].ownerCt.fireEvent("wizardstepvalid", this, data);
         } else {
-            this.output.ownerCt.fireEvent("invalid", this);
+            this.output[0].ownerCt.fireEvent("wizardstepinvalid", this);
         }
     },
 

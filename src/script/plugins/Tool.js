@@ -311,6 +311,14 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
     },
     
     /** api: method[addOutput]
+     *  :arg config: ``Object`` configuration for the ``Ext.Component`` to be
+     *      added to the ``outputTarget``. Properties of this configuration
+     *      will be overridden by the applications ``outputConfig`` for the
+     *      tool instance.
+     *  :return: ``Ext.Component`` The component added to the ``outputTarget``. 
+     *
+     *  Adds output to the tool's ``outputTarget``. This method is meant to be
+     *  called and/or overridden by subclasses.
      */
     addOutput: function(config) {
         if (!config && !this.outputConfig) {
