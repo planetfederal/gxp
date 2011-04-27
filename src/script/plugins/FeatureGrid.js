@@ -122,6 +122,20 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
      *  String template for showing total number of records (i18n).
      */
     totalMsg: "Total: {0} records",
+
+    /** private: method[displayTotalResults]
+     */
+    displayTotalResults: function() {
+        var featureManager = this.target.tools[this.featureManager];
+        if (this.showTotalResults === true && featureManager.numberOfFeatures !== null) {
+            this.displayItem.setText(
+                String.format(
+                    this.totalMsg,
+                    featureManager.numberOfFeatures
+                )
+            );
+        }
+    },
     
     /** api: method[addOutput]
      */
@@ -224,19 +238,13 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
             listeners: {
                 "added": function(cmp, ownerCt) {
                     var onClear = (function() {
+                        this.displayTotalResults();
                         this.selectOnMap && this.selectControl.deactivate();
                         this.autoCollapse && typeof ownerCt.collapse == "function" &&
                             ownerCt.collapse();
                     }).bind(this);
                     var onPopulate = (function() {
-                        if (this.showTotalResults === true && featureManager.numberOfFeatures !== null) {
-                            this.displayItem.setText(
-                                String.format(
-                                    this.totalMsg,
-                                    featureManager.numberOfFeatures
-                                )
-                            );
-                        }
+                        this.displayTotalResults();
                         this.selectOnMap && this.selectControl.activate();
                         this.autoExpand && typeof ownerCt.expand == "function" &&
                             ownerCt.expand();
