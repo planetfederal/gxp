@@ -6,6 +6,7 @@
  * of the license.
  */
 
+//TODO remove the WMSStylesDialog and GeoServerStyleWriter includes
 /**
  * @include widgets/WMSStylesDialog.js
  * @include plugins/GeoServerStyleWriter.js
@@ -112,7 +113,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
         }
         
         // only add the Styles panel if we know for sure that we have styles
-        if (this.layerRecord.get("styles")) {
+        if (gxp.WMSStylesDialog && this.layerRecord.get("styles")) {
             var url = (this.source || this.layerRecord.get("layer")).url.split(
                 "?").shift().replace(/\/(wms|ows)\/?$/, "/rest");
             if (this.sameOriginStyling) {
