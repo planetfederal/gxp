@@ -12,13 +12,16 @@
 
 /** api: (define)
  *  module = gxp.plugins
- *  class = Tool
- *  base_link = `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_
+ *  class = WizardStep
+ */
+
+/** api: (extends)
+ *  plugins/Tool.js
  */
 Ext.namespace("gxp.plugins");
 
 /** api: constructor
- *  .. class:: Tool(config)
+ *  .. class:: WizardStep(config)
  *
  *    Base class for application plugins that are part of a wizard interface.
  *    To use this in an application, the outputTarget of each wizard step needs
