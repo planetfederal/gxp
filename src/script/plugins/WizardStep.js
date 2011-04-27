@@ -28,9 +28,76 @@ Ext.namespace("gxp.plugins");
  *    to go into the same container, with no other items in it. Also, the
  *    container needs to be configured with the
  *    :class:`gxp.plugins.WizardContainer` plugin.
+ *
+ *    A typical viewer with a wizard interface would have a container like
+ *    this in its ``portalItems``:
+ *
+ *    .. code-block:: javascript
+ *
+ *      {
+ *          layout: "accordion",
+ *          width: 280,
+ *          items: [{
+ *              id: "step1",
+ *              title: "Step 1 - do something"
+ *          }, {
+ *              id: "step2",
+ *              title: "Step 2 - do more"
+ *          }],
+ *          plugins: [gxp.plugins.WizardContainer]
+ *      }
+ *
+ *    The wizard step plugins that inherit from this base class would then be
+ *    configured like this in the viewer's ``tools`` configuration:
+ *
+ *    .. code-block:: javascript
+ *
+ *      {
+ *          ptype: "app_step1",
+ *          outputTarget: "step1"
+ *      }, {
+ *          ptype: "app_stap2",
+ *          outputTarget: "step2"
+ *      }
+ *
+ *    The app_step1 plugin could look like this:
+ *
+ *    .. code-block:: javascript
+ *
+ *      app.Step1 = Ext.extend(gxp.plugins.WizardStep, {
+ *
+ *          // autoActivate is false by default, but for many workflows it
+ *          // makes sense to start with step 1 active
+ *          autoActivate: true,
+ *
+ *          addOutput: function(config) {
+ *              return app.Step1.superclass.addOutput({
+ *                  xtype: "form",
+ *                  monitorValid: true,
+ *                  items: [{
+ *                      xtype: "textfield",
+ *                      ref: "myValue",
+ *                      allowBlank: false
+ *                  }],
+ *                  listeners: {
+ *                      "clientvalidation": function(cmp, valid) {
+ *                          // Set the valid state of this wizard step. If it
+ *                          // is valid, the pane for step 2 will be enabled,
+ *                          // and disabled otherwise.
+ *                          this.setValid(valid, {step1Value: cmp.myValue})
+ *                      }
+ *                  }
+ *              });
+ *          }
+ *
+ *      });
  */   
 gxp.plugins.WizardStep = Ext.extend(gxp.plugins.Tool, {
     
+    /** api: config[autoActivate]
+     *  ``Boolean`` Activate the tool as soon as the application is ready?
+     *  Default is false.
+     */
     autoActivate: false,
     
     /** private: property[index]
