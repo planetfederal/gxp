@@ -186,7 +186,14 @@ listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.uti
 
 .. method:: ClickableFeatures.addOutput
 
+    :arg config: ``Object`` configuration for the ``Ext.Component`` to be
+        added to the ``outputTarget``. Properties of this configuration
+        will be overridden by the applications ``outputConfig`` for the
+        tool instance.
+    :return: ``Ext.Component`` The component added to the ``outputTarget``.
     
+    Adds output to the tool's ``outputTarget``. This method is meant to be
+    called and/or overridden by subclasses.
 
 .. method:: ClickableFeatures.deactivate
 

@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>gxp.plugins.SnappingAgent &mdash; GXP v0.1</title>
+    <title>gxp.plugins.WizardStep &mdash; GXP v0.1</title>
     <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -21,8 +21,8 @@
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="top" title="GXP v0.1" href="../../index.html" />
     <link rel="up" title="gxp.plugins" href="../plugins.html" />
-    <link rel="next" title="gxp.plugins.StyleWriter" href="StyleWriter.html" />
-    <link rel="prev" title="gxp.plugins.SelectedFeatureActions" href="SelectedFeatureActions.html" /> 
+    <link rel="next" title="gxp.plugins.Zoom" href="Zoom.html" />
+    <link rel="prev" title="gxp.plugins.WizardContainer" href="WizardContainer.html" /> 
   </head>
   <body>
     <div class="related">
@@ -35,20 +35,20 @@
           <a href="../../modindex.html" title="Global Module Index"
              accesskey="M">modules</a> |</li>
         <li class="right" >
-          <a href="StyleWriter.html" title="gxp.plugins.StyleWriter"
+          <a href="Zoom.html" title="gxp.plugins.Zoom"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="SelectedFeatureActions.html" title="gxp.plugins.SelectedFeatureActions"
+          <a href="WizardContainer.html" title="gxp.plugins.WizardContainer"
              accesskey="P">previous</a> |</li>
         <li><a href="../../index.html">GXP</a> &raquo;</li>
-          <li><a href="../plugins.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
+          <li><a href="../plugins.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
             <h3><a href="../../index.html">Table Of Contents</a></h3>
             <ul>
-<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">gxp.plugins.SnappingAgent</span></tt></a><ul>
+<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">gxp.plugins.WizardStep</span></tt></a><ul>
 <li><a class="reference external" href="#config-options">Config Options</a></li>
 <li><a class="reference external" href="#public-properties">Public Properties</a></li>
 <li><a class="reference external" href="#public-methods">Public Methods</a></li>
@@ -58,14 +58,14 @@
 </ul>
 
             <h4>Previous topic</h4>
-            <p class="topless"><a href="SelectedFeatureActions.html"
-                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins.SelectedFeatureActions</span></tt></a></p>
+            <p class="topless"><a href="WizardContainer.html"
+                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins.WizardContainer</span></tt></a></p>
             <h4>Next topic</h4>
-            <p class="topless"><a href="StyleWriter.html"
-                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.plugins.StyleWriter</span></tt></a></p>
+            <p class="topless"><a href="Zoom.html"
+                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.plugins.Zoom</span></tt></a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
-              <li><a href="../../_sources/lib/plugins/SnappingAgent.txt"
+              <li><a href="../../_sources/lib/plugins/WizardStep.txt"
                      rel="nofollow">Show Source</a></li>
             </ul>
           <div id="searchbox" style="display: none">
@@ -89,8 +89,8 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="gxp-plugins-snappingagent">
-<h1><a title="gxp.plugins.SnappingAgent" class="reference internal" href="#gxp.plugins.SnappingAgent"><tt class="xref docutils literal"><span class="pre">gxp.plugins.SnappingAgent</span></tt></a><a class="headerlink" href="#gxp-plugins-snappingagent" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="gxp-plugins-wizardstep">
+<h1><a title="gxp.plugins.WizardStep" class="reference internal" href="#gxp.plugins.WizardStep"><tt class="xref docutils literal"><span class="pre">gxp.plugins.WizardStep</span></tt></a><a class="headerlink" href="#gxp-plugins-wizardstep" title="Permalink to this headline">¶</a></h1>
 <dl class="meta docutils">
 <dt>Extends</dt>
 <dd><ul class="first last simple">
@@ -99,12 +99,74 @@
 </ul>
 </dd>
 <dt>ptype</dt>
-<dd><tt class="docutils literal"><span class="pre">gxp_snappingagent</span></tt></dd>
+<dd><tt class="docutils literal"><span class="pre">gxp_tool</span></tt></dd>
 </dl>
 <dl class="class">
-<dt id="gxp.plugins.SnappingAgent">
-<em class="property">class </em><tt class="descclassname">gxp.plugins.</tt><tt class="descname">SnappingAgent</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#gxp.plugins.SnappingAgent" title="Permalink to this definition">¶</a></dt>
-<dd>Plugin for managing snapping while editing.</dd></dl>
+<dt id="gxp.plugins.WizardStep">
+<em class="property">class </em><tt class="descclassname">gxp.plugins.</tt><tt class="descname">WizardStep</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#gxp.plugins.WizardStep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for application plugins that are part of a wizard interface.
+To use this in an application, the outputTarget of each wizard step needs
+to go into the same container, with no other items in it. Also, the
+container needs to be configured with the
+<a title="gxp.plugins.WizardContainer" class="reference external" href="WizardContainer.html#gxp.plugins.WizardContainer"><tt class="xref docutils literal"><span class="pre">gxp.plugins.WizardContainer</span></tt></a> plugin.</p>
+<p>A typical viewer with a wizard interface would have a container like
+this in its <tt class="docutils literal"><span class="pre">portalItems</span></tt>:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+    <span class="nx">layout</span><span class="o">:</span> <span class="s2">&quot;accordion&quot;</span><span class="p">,</span>
+    <span class="nx">width</span><span class="o">:</span> <span class="mi">280</span><span class="p">,</span>
+    <span class="nx">items</span><span class="o">:</span> <span class="p">[{</span>
+        <span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;step1&quot;</span><span class="p">,</span>
+        <span class="nx">title</span><span class="o">:</span> <span class="s2">&quot;Step 1 - do something&quot;</span>
+    <span class="p">},</span> <span class="p">{</span>
+        <span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;step2&quot;</span><span class="p">,</span>
+        <span class="nx">title</span><span class="o">:</span> <span class="s2">&quot;Step 2 - do more&quot;</span>
+    <span class="p">}],</span>
+    <span class="nx">plugins</span><span class="o">:</span> <span class="p">[</span><span class="nx">gxp</span><span class="p">.</span><span class="nx">plugins</span><span class="p">.</span><span class="nx">WizardContainer</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The wizard step plugins that inherit from this base class would then be
+configured like this in the viewer&#8217;s <tt class="docutils literal"><span class="pre">tools</span></tt> configuration:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="p">{</span>
+    <span class="nx">ptype</span><span class="o">:</span> <span class="s2">&quot;app_step1&quot;</span><span class="p">,</span>
+    <span class="nx">outputTarget</span><span class="o">:</span> <span class="s2">&quot;step1&quot;</span>
+<span class="p">},</span> <span class="p">{</span>
+    <span class="nx">ptype</span><span class="o">:</span> <span class="s2">&quot;app_stap2&quot;</span><span class="p">,</span>
+    <span class="nx">outputTarget</span><span class="o">:</span> <span class="s2">&quot;step2&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The app_step1 plugin could look like this:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">app</span><span class="p">.</span><span class="nx">Step1</span> <span class="o">=</span> <span class="nx">Ext</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="nx">gxp</span><span class="p">.</span><span class="nx">plugins</span><span class="p">.</span><span class="nx">WizardStep</span><span class="p">,</span> <span class="p">{</span>
+
+    <span class="c1">// autoActivate is false by default, but for many workflows it</span>
+    <span class="c1">// makes sense to start with step 1 active</span>
+    <span class="nx">autoActivate</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+
+    <span class="nx">addOutput</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">app</span><span class="p">.</span><span class="nx">Step1</span><span class="p">.</span><span class="nx">superclass</span><span class="p">.</span><span class="nx">addOutput</span><span class="p">({</span>
+            <span class="nx">xtype</span><span class="o">:</span> <span class="s2">&quot;form&quot;</span><span class="p">,</span>
+            <span class="nx">monitorValid</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="nx">items</span><span class="o">:</span> <span class="p">[{</span>
+                <span class="nx">xtype</span><span class="o">:</span> <span class="s2">&quot;textfield&quot;</span><span class="p">,</span>
+                <span class="nx">ref</span><span class="o">:</span> <span class="s2">&quot;myValue&quot;</span><span class="p">,</span>
+                <span class="nx">allowBlank</span><span class="o">:</span> <span class="kc">false</span>
+            <span class="p">}],</span>
+            <span class="nx">listeners</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;clientvalidation&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">cmp</span><span class="p">,</span> <span class="nx">valid</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="c1">// Set the valid state of this wizard step. If it</span>
+                    <span class="c1">// is valid, the pane for step 2 will be enabled,</span>
+                    <span class="c1">// and disabled otherwise.</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">setValid</span><span class="p">(</span><span class="nx">valid</span><span class="p">,</span> <span class="p">{</span><span class="nx">step1Value</span><span class="o">:</span> <span class="nx">cmp</span><span class="p">.</span><span class="nx">myValue</span><span class="p">})</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">});</span>
+    <span class="p">}</span>
+
+<span class="p">});</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <div class="section" id="config-options">
 <h2>Config Options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
@@ -163,14 +225,15 @@ should configure a defaultAction to make sure that an action is active.</p>
 <dl class="describe">
 <dt>
 <tt class="descname">autoActivate</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> Set to false if the tool should be initialized without
-activating it. Default is true.</dd></dl>
+<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> Activate the tool as soon as the application is ready?
+Default is false.</dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">controlOptions</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">Object</span></tt> Options for the <tt class="docutils literal"><span class="pre">OpenLayers.Control.Snapping</span></tt> used with
-this tool.</dd></dl>
+<dd><tt class="docutils literal"><span class="pre">Object</span></tt> If this tool is associated with an <tt class="docutils literal"><span class="pre">OpenLayers.Control</span></tt>
+then this is an optional object to pass to the constructor of the
+associated <tt class="docutils literal"><span class="pre">OpenLayers.Control</span></tt>.</dd></dl>
 
 <dl class="describe">
 <dt>
@@ -204,12 +267,6 @@ be created.</dd></dl>
 
 <dl class="describe">
 <dt>
-<tt class="descname">targets</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">Array</span></tt> Shortcut to the targets control option of the
-<tt class="docutils literal"><span class="pre">OpenLayers.Control.Snapping</span></tt> used with this tool.</dd></dl>
-
-<dl class="describe">
-<dt>
 <tt class="descname">toggleGroup</tt></dt>
 <dd><tt class="docutils literal"><span class="pre">String</span></tt> If this tool should be radio-button style toggled with other
 tools, this string is to identify the toggle group.</dd></dl>
@@ -220,8 +277,8 @@ tools, this string is to identify the toggle group.</dd></dl>
 <p>Public properties in addition to those
 listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a>.</p>
 <dl class="attribute">
-<dt id="gxp.plugins.SnappingAgent.active">
-<tt class="descclassname">SnappingAgent.</tt><tt class="descname">active</tt><a class="headerlink" href="#gxp.plugins.SnappingAgent.active" title="Permalink to this definition">¶</a></dt>
+<dt id="gxp.plugins.WizardStep.active">
+<tt class="descclassname">WizardStep.</tt><tt class="descname">active</tt><a class="headerlink" href="#gxp.plugins.WizardStep.active" title="Permalink to this definition">¶</a></dt>
 <dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> Is the tool currently active?</dd></dl>
 
 </div>
@@ -230,8 +287,8 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
 <p>Public methods in addition to those
 listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a>.</p>
 <dl class="method">
-<dt id="gxp.plugins.SnappingAgent.activate">
-<tt class="descclassname">SnappingAgent.</tt><tt class="descname">activate</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.SnappingAgent.activate" title="Permalink to this definition">¶</a></dt>
+<dt id="gxp.plugins.WizardStep.activate">
+<tt class="descclassname">WizardStep.</tt><tt class="descname">activate</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.WizardStep.activate" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -244,8 +301,8 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
 </dd></dl>
 
 <dl class="method">
-<dt id="gxp.plugins.SnappingAgent.addActions">
-<tt class="descclassname">SnappingAgent.</tt><tt class="descname">addActions</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.SnappingAgent.addActions" title="Permalink to this definition">¶</a></dt>
+<dt id="gxp.plugins.WizardStep.addActions">
+<tt class="descclassname">WizardStep.</tt><tt class="descname">addActions</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.WizardStep.addActions" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -260,8 +317,8 @@ this.actions will be added.</td>
 </dd></dl>
 
 <dl class="method">
-<dt id="gxp.plugins.SnappingAgent.addOutput">
-<tt class="descclassname">SnappingAgent.</tt><tt class="descname">addOutput</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.SnappingAgent.addOutput" title="Permalink to this definition">¶</a></dt>
+<dt id="gxp.plugins.WizardStep.addOutput">
+<tt class="descclassname">WizardStep.</tt><tt class="descname">addOutput</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.WizardStep.addOutput" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -280,23 +337,8 @@ called and/or overridden by subclasses.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gxp.plugins.SnappingAgent.addSnappingControl">
-<tt class="descclassname">SnappingAgent.</tt><tt class="descname">addSnappingControl</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.SnappingAgent.addSnappingControl" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>layer</em> &#8211; <tt class="docutils literal"><span class="pre">OpenLayers.Layer.Vector</span></tt> An editable vector layer.</td>
-</tr>
-</tbody>
-</table>
-<p>Prepares a snapping control for the provided layer.  All target
-configuration is derived from the configuration of this snapping agent.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="gxp.plugins.SnappingAgent.deactivate">
-<tt class="descclassname">SnappingAgent.</tt><tt class="descname">deactivate</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.SnappingAgent.deactivate" title="Permalink to this definition">¶</a></dt>
+<dt id="gxp.plugins.WizardStep.deactivate">
+<tt class="descclassname">WizardStep.</tt><tt class="descname">deactivate</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.WizardStep.deactivate" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -309,9 +351,28 @@ configuration is derived from the configuration of this snapping agent.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gxp.plugins.SnappingAgent.removeOutput">
-<tt class="descclassname">SnappingAgent.</tt><tt class="descname">removeOutput</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.SnappingAgent.removeOutput" title="Permalink to this definition">¶</a></dt>
+<dt id="gxp.plugins.WizardStep.removeOutput">
+<tt class="descclassname">WizardStep.</tt><tt class="descname">removeOutput</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.WizardStep.removeOutput" title="Permalink to this definition">¶</a></dt>
 <dd>Removes all output created by this tool</dd></dl>
+
+<dl class="method">
+<dt id="gxp.plugins.WizardStep.setValid">
+<tt class="descclassname">WizardStep.</tt><tt class="descname">setValid</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.WizardStep.setValid" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><em>valid</em> &#8211; <tt class="docutils literal"><span class="pre">Boolean</span></tt> is the step&#8217;s state valid?</li>
+<li><em>data</em> &#8211; <tt class="docutils literal"><span class="pre">Object</span></tt> data gathered by this step. Only required if
+<tt class="docutils literal"><span class="pre">valid</span></tt> is true.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Implementations should call this method to change their valid state</p>
+</dd></dl>
 
 </div>
 <div class="section" id="events">
@@ -353,13 +414,13 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
           <a href="../../modindex.html" title="Global Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="StyleWriter.html" title="gxp.plugins.StyleWriter"
+          <a href="Zoom.html" title="gxp.plugins.Zoom"
              >next</a> |</li>
         <li class="right" >
-          <a href="SelectedFeatureActions.html" title="gxp.plugins.SelectedFeatureActions"
+          <a href="WizardContainer.html" title="gxp.plugins.WizardContainer"
              >previous</a> |</li>
         <li><a href="../../index.html">GXP</a> &raquo;</li>
-          <li><a href="../plugins.html" ><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
+          <li><a href="../plugins.html" ><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins</span></tt></a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

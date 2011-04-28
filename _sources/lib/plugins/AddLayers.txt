@@ -92,6 +92,16 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     want to hide the actions, set actionTarget to false. In this case, you
     should configure a defaultAction to make sure that an action is active.
 
+.. describe:: addActionMenuText
+
+    ``String``
+    Text for add menu item (i18n).
+
+.. describe:: addActionText
+
+    ``String``
+    Text for the Add action. None by default.
+
 .. describe:: addActionTip
 
     ``String``
@@ -106,11 +116,6 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
 
     ``String``
     Text for an error message when WMS GetCapabilities retrieval fails (i18n).
-
-.. describe:: addMenuText
-
-    ``String``
-    Text for add menu item (i18n).
 
 .. describe:: addServerText
 
@@ -147,6 +152,12 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
 
     ``String``
     Text for Done button (i18n).
+
+.. describe:: instructionsText
+
+    ``String``
+    Text for additional instructions at the bottom of the grid (i18n).
+    None by default.
 
 .. describe:: nonUploadSources
 
@@ -247,7 +258,14 @@ listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.uti
 
 .. method:: AddLayers.addOutput
 
+    :arg config: ``Object`` configuration for the ``Ext.Component`` to be
+        added to the ``outputTarget``. Properties of this configuration
+        will be overridden by the applications ``outputConfig`` for the
+        tool instance.
+    :return: ``Ext.Component`` The component added to the ``outputTarget``.
     
+    Adds output to the tool's ``outputTarget``. This method is meant to be
+    called and/or overridden by subclasses.
 
 .. method:: AddLayers.deactivate
 

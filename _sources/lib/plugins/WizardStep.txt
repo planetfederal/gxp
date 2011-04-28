@@ -1,7 +1,7 @@
 
 .. currentmodule:: gxp.plugins
 
-:class:`gxp.plugins.Measure`
+:class:`gxp.plugins.WizardStep`
 ================================================================================
 
 
@@ -18,13 +18,80 @@ Extends
 
 
 ptype
-    ``gxp_measure``
+    ``gxp_tool``
 
 
 
-.. class:: Measure(config)
+.. class:: WizardStep(config)
 
-  Provides two actions for measuring length and area.
+  Base class for application plugins that are part of a wizard interface.
+  To use this in an application, the outputTarget of each wizard step needs
+  to go into the same container, with no other items in it. Also, the
+  container needs to be configured with the
+  :class:`gxp.plugins.WizardContainer` plugin.
+
+  A typical viewer with a wizard interface would have a container like
+  this in its ``portalItems``:
+
+  .. code-block:: javascript
+
+    {
+        layout: "accordion",
+        width: 280,
+        items: [{
+            id: "step1",
+            title: "Step 1 - do something"
+        }, {
+            id: "step2",
+            title: "Step 2 - do more"
+        }],
+        plugins: [gxp.plugins.WizardContainer]
+    }
+
+  The wizard step plugins that inherit from this base class would then be
+  configured like this in the viewer's ``tools`` configuration:
+
+  .. code-block:: javascript
+
+    {
+        ptype: "app_step1",
+        outputTarget: "step1"
+    }, {
+        ptype: "app_stap2",
+        outputTarget: "step2"
+    }
+
+  The app_step1 plugin could look like this:
+
+  .. code-block:: javascript
+
+    app.Step1 = Ext.extend(gxp.plugins.WizardStep, {
+
+        // autoActivate is false by default, but for many workflows it
+        // makes sense to start with step 1 active
+        autoActivate: true,
+
+        addOutput: function(config) {
+            return app.Step1.superclass.addOutput({
+                xtype: "form",
+                monitorValid: true,
+                items: [{
+                    xtype: "textfield",
+                    ref: "myValue",
+                    allowBlank: false
+                }],
+                listeners: {
+                    "clientvalidation": function(cmp, valid) {
+                        // Set the valid state of this wizard step. If it
+                        // is valid, the pane for step 2 will be enabled,
+                        // and disabled otherwise.
+                        this.setValid(valid, {step1Value: cmp.myValue})
+                    }
+                }
+            });
+        }
+
+    });
 
 
     
@@ -91,20 +158,10 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     want to hide the actions, set actionTarget to false. In this case, you
     should configure a defaultAction to make sure that an action is active.
 
-.. describe:: areaMenuText
-
-    ``String``
-    Text for measure area menu item (i18n).
-
-.. describe:: areaTooltip
-
-    ``String``
-    Text for measure area action tooltip (i18n).
-
 .. describe:: autoActivate
 
-    ``Boolean`` Set to false if the tool should be initialized without
-    activating it. Default is true.
+    ``Boolean`` Activate the tool as soon as the application is ready?
+    Default is false.
 
 .. describe:: controlOptions
 
@@ -116,21 +173,6 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
 
     ``Number`` Optional index of an action that should be active by
     default. Only works for actions that are a ``GeoExt.Action`` instance.
-
-.. describe:: lengthMenuText
-
-    ``String``
-    Text for measure length menu item (i18n).
-
-.. describe:: lengthTooltip
-
-    ``String``
-    Text for measure length action tooltip (i18n).
-
-.. describe:: measureTooltip
-
-    ``String``
-    Text for measure action tooltip (i18n).
 
 .. describe:: outputAction
 
@@ -148,7 +190,10 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
 
 .. describe:: outputTarget
 
-    ``String`` Popups created by this tool are added to the map by default.
+    ``String`` Where to add the tool's output container? This can be any
+    string that references an ``Ext.Container`` property on the portal, or
+    "map" to access the viewer's main map. If not provided, a window will
+    be created.
 
 .. describe:: toggleGroup
 
@@ -165,7 +210,7 @@ Public properties in addition to those
 listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
 
 
-.. attribute:: Measure.active
+.. attribute:: WizardStep.active
 
     ``Boolean`` Is the tool currently active?
 
@@ -179,17 +224,19 @@ Public methods in addition to those
 listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
 
 
-.. method:: Measure.activate
+.. method:: WizardStep.activate
 
     :returns: ``Boolean`` true when this tool was activated
     
     Activates this tool.
 
-.. method:: Measure.addActions
+.. method:: WizardStep.addActions
 
-    
+    :arg actions: ``Array`` Optional actions to add. If not provided,
+        this.actions will be added.
+    :returns: ``Array`` The actions added.
 
-.. method:: Measure.addOutput
+.. method:: WizardStep.addOutput
 
     :arg config: ``Object`` configuration for the ``Ext.Component`` to be
         added to the ``outputTarget``. Properties of this configuration
@@ -200,15 +247,23 @@ listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.uti
     Adds output to the tool's ``outputTarget``. This method is meant to be
     called and/or overridden by subclasses.
 
-.. method:: Measure.deactivate
+.. method:: WizardStep.deactivate
 
     :returns: ``Boolean`` true when this tool was deactivated
     
     Deactivates this tool.
 
-.. method:: Measure.removeOutput
+.. method:: WizardStep.removeOutput
 
     Removes all output created by this tool
+
+.. method:: WizardStep.setValid
+
+    :arg valid: ``Boolean`` is the step's state valid?
+    :arg data: ``Object`` data gathered by this step. Only required if
+        ``valid`` is true.
+    
+    Implementations should call this method to change their valid state
 
 
 

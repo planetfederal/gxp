@@ -1,7 +1,7 @@
 
 .. currentmodule:: gxp.plugins
 
-:class:`gxp.plugins.Measure`
+:class:`gxp.plugins.WizardContainer`
 ================================================================================
 
 
@@ -18,13 +18,20 @@ Extends
 
 
 ptype
-    ``gxp_measure``
+    ``gxp_tool``
 
 
 
-.. class:: Measure(config)
+.. class:: WizardContainer(config)
 
-  Provides two actions for measuring length and area.
+  Static plugin for adding wizard step validation management to containers
+  that hold the output from :class:`gxp.plugins.WizardStep`
+  implementations. Events shown here are fired by the container that is
+  extended with this plugin.
+
+  Detailed instructions on how to work with wizard containers and wizard
+  step plugins can be found in the :class:`gxp.plugins.WizardStep`
+  documentation.
 
 
     
@@ -91,16 +98,6 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     want to hide the actions, set actionTarget to false. In this case, you
     should configure a defaultAction to make sure that an action is active.
 
-.. describe:: areaMenuText
-
-    ``String``
-    Text for measure area menu item (i18n).
-
-.. describe:: areaTooltip
-
-    ``String``
-    Text for measure area action tooltip (i18n).
-
 .. describe:: autoActivate
 
     ``Boolean`` Set to false if the tool should be initialized without
@@ -116,21 +113,6 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
 
     ``Number`` Optional index of an action that should be active by
     default. Only works for actions that are a ``GeoExt.Action`` instance.
-
-.. describe:: lengthMenuText
-
-    ``String``
-    Text for measure length menu item (i18n).
-
-.. describe:: lengthTooltip
-
-    ``String``
-    Text for measure length action tooltip (i18n).
-
-.. describe:: measureTooltip
-
-    ``String``
-    Text for measure action tooltip (i18n).
 
 .. describe:: outputAction
 
@@ -148,7 +130,10 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
 
 .. describe:: outputTarget
 
-    ``String`` Popups created by this tool are added to the map by default.
+    ``String`` Where to add the tool's output container? This can be any
+    string that references an ``Ext.Container`` property on the portal, or
+    "map" to access the viewer's main map. If not provided, a window will
+    be created.
 
 .. describe:: toggleGroup
 
@@ -165,7 +150,7 @@ Public properties in addition to those
 listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
 
 
-.. attribute:: Measure.active
+.. attribute:: WizardContainer.active
 
     ``Boolean`` Is the tool currently active?
 
@@ -179,17 +164,19 @@ Public methods in addition to those
 listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_.
 
 
-.. method:: Measure.activate
+.. method:: WizardContainer.activate
 
     :returns: ``Boolean`` true when this tool was activated
     
     Activates this tool.
 
-.. method:: Measure.addActions
+.. method:: WizardContainer.addActions
 
-    
+    :arg actions: ``Array`` Optional actions to add. If not provided,
+        this.actions will be added.
+    :returns: ``Array`` The actions added.
 
-.. method:: Measure.addOutput
+.. method:: WizardContainer.addOutput
 
     :arg config: ``Object`` configuration for the ``Ext.Component`` to be
         added to the ``outputTarget``. Properties of this configuration
@@ -200,13 +187,13 @@ listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.uti
     Adds output to the tool's ``outputTarget``. This method is meant to be
     called and/or overridden by subclasses.
 
-.. method:: Measure.deactivate
+.. method:: WizardContainer.deactivate
 
     :returns: ``Boolean`` true when this tool was deactivated
     
     Deactivates this tool.
 
-.. method:: Measure.removeOutput
+.. method:: WizardContainer.removeOutput
 
     Removes all output created by this tool
 
