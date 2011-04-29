@@ -57,3 +57,5 @@ gxp.plugins.WizardContainer = {
     }
 
 };
+
+Ext.preg("gxp_wizardcontainer", gxp.plugins.WizardContainer);

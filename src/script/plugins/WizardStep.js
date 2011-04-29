@@ -113,16 +113,37 @@ gxp.plugins.WizardStep = Ext.extend(gxp.plugins.Tool, {
      */
     valid: false,
     
+    /** api: property[wizardContainer]
+     *  ``Ext.Container`` The container that holds all wizard steps. Available
+     *  after this tool's output was added to its container.
+     */
+    wizardContainer: null,
+    
+    /** api: property[wizardData]
+     *  ``Object`` Merged object of all properties that wizard steps send as
+     *  2nd argument of the setValid method.
+     */
+    wizardData: null,
+    
+    /** private: method[constructor]
+     */
+    constructor: function(config) {
+        gxp.plugins.WizardStep.superclass.constructor.apply(this, arguments);
+        this.wizardData = {};
+    },
+    
     /** private: method[addOutput]
      *  :arg config: ``Object
      */
     addOutput: function(config) {
         var output = Ext.ComponentMgr.create(Ext.apply(config, this.outputConfig));
         output.on("added",function(cmp, ct) {
+            this.wizardContainer = ct.ownerCt;
             this.index = ct.ownerCt.items.indexOf(ct);
             ct.setDisabled(this.index != 0);
-            ct.on({
-                "wizardstepvalid": function(plugin) {
+            ct.ownerCt.on({
+                "wizardstepvalid": function(plugin, data) {
+                    Ext.apply(this.wizardData, data);
                     if (this.previousStepsCompleted(this)) {
                         ct.enable();
                     }
@@ -153,9 +174,9 @@ gxp.plugins.WizardStep = Ext.extend(gxp.plugins.Tool, {
     setValid: function(valid, data) {
         this.valid = valid;
         if (valid) {
-            this.output[0].ownerCt.fireEvent("wizardstepvalid", this, data);
+            this.wizardContainer.fireEvent("wizardstepvalid", this, data);
         } else {
-            this.output[0].ownerCt.fireEvent("wizardstepinvalid", this);
+            this.wizardContainer.fireEvent("wizardstepinvalid", this);
         }
     },
 
