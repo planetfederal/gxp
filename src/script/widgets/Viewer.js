@@ -370,6 +370,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             }, mapConfig),
             center: config.center && new OpenLayers.LonLat(config.center[0], config.center[1]),
             resolutions: config.resolutions,
+            forceInitialExtent: true,
             layers: null,
             items: this.mapItems,
             tbar: config.tbar || {hidden: true}
@@ -415,14 +416,13 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
     initPortal: function() {
         
         var config = this.portalConfig || {};
-        var Constructor = config.renderTo ? Ext.Panel : Ext.Viewport;
         
         if (this.portalItems.length === 0) {
             this.mapPanel.region = "center";
             this.portalItems.push(this.mapPanel);
         }
         
-        this.portal = new Constructor(Ext.applyIf(this.portalConfig || {}, {
+        this.portal = Ext.ComponentMgr.create(Ext.applyIf(config, {
             layout: "fit",
             hideBorders: true,
             items: {
@@ -430,7 +430,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                 deferredRender: false,
                 items: this.portalItems
             }
-        }));
+        }), config.renderTo ? "panel" : "viewport");
         
         this.fireEvent("portalready");
     },
@@ -482,16 +482,6 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             var records = baseRecords.concat(overlayRecords);
             if (records.length) {
                 panel.layers.add(records);
-
-                // set map center
-                if(panel.center) {
-                    // zoom does not have to be defined
-                    map.setCenter(panel.center, panel.zoom);
-                } else if (panel.extent) {
-                    map.zoomToExtent(panel.extent);
-                } else {
-                    map.zoomToMaxExtent();
-                }
             }
             
         }        
