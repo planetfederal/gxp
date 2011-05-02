@@ -277,16 +277,22 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
             featureManager.showLayer(this.id, this.displayMode);
         }
        
-        featureManager.paging && featureManager.on("setpage", function(mgr, condition, callback, scope, pageIndex, numPages) {
-            var paging = (numPages > 0);
-            featureGrid.zoomToPageButton.setDisabled(!paging);
-            var prev = (paging && (pageIndex !== 0));
-            featureGrid.firstPageButton.setDisabled(!prev);
-            featureGrid.prevPageButton.setDisabled(!prev);
-            var next = (paging && (pageIndex !== numPages-1));
-            featureGrid.lastPageButton.setDisabled(!next);
-            featureGrid.nextPageButton.setDisabled(!next);
-        }, this);
+        featureManager.paging && featureManager.on({
+            "beforesetpage": function() {
+                featureGrid.zoomToPageButton.disable();
+            },
+            "setpage": function(mgr, condition, callback, scope, pageIndex, numPages) {
+                var paging = (numPages > 0);
+                featureGrid.zoomToPageButton.setDisabled(!paging);
+                var prev = (paging && (pageIndex !== 0));
+                featureGrid.firstPageButton.setDisabled(!prev);
+                featureGrid.prevPageButton.setDisabled(!prev);
+                var next = (paging && (pageIndex !== numPages-1));
+                featureGrid.lastPageButton.setDisabled(!next);
+                featureGrid.nextPageButton.setDisabled(!next);
+            },
+            scope: this
+        });
                 
         featureManager.on("layerchange", function(mgr, rec, schema) {
             //TODO use schema instead of store to configure the fields
