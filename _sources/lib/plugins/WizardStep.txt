@@ -214,6 +214,16 @@ listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.uti
 
     ``Boolean`` Is the tool currently active?
 
+.. attribute:: WizardStep.wizardContainer
+
+    ``Ext.Container`` The container that holds all wizard steps. Available
+    after this tool's output was added to its container.
+
+.. attribute:: WizardStep.wizardData
+
+    ``Object`` Merged object of all properties that wizard steps send as
+    2nd argument of the setValid method.
+
 
 
 
