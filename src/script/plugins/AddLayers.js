@@ -243,9 +243,15 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 }
             }, this);
         }
+        
+        var store = this.target.layerSources[data[idx][0]].store;
+        if (store.getCount() === 0) {
+            // assume a lazy source
+            store.load();
+        }
 
         var capGridPanel = new Ext.grid.GridPanel({
-            store: this.target.layerSources[data[idx][0]].store,
+            store: store,
             autoScroll: true,
             flex: 1,
             autoExpandColumn: "title",
