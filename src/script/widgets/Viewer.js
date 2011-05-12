@@ -312,9 +312,11 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
     addLayerSource: function(options) {
         var id = options.id || Ext.id(null, "gxp-source-");
         var source;
+        var config = options.config;
+        config.id = id;
         try {
             source = Ext.ComponentMgr.createPlugin(
-                options.config, this.defaultSourceType
+                config, this.defaultSourceType
             );
         } catch (err) {
             throw new Error("Could not create new source plugin with ptype: " + options.config.ptype);
