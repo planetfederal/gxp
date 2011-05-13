@@ -56,6 +56,21 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
      *  ``String``
      *  URL for GeoServer RESTConfig root.  E.g. "http://example.com/geoserver/rest".
      */
+    
+    /** api: config[workspace]
+     *  ``String`` GeoServer workspace. Optional. If provided, no "Workspace"
+     *  option will be shown in the dialog.
+     */
+
+    /** api: config[workspace]
+     *  ``String`` GeoServer store. Optional. If provided, no "Store"
+     *  option will be shown in the dialog.
+     */
+
+    /** api: config[crs]
+     *  ``String`` CRS of upload data. Optional. If provided, no "CRS"
+     *  option will be shown in the dialog.
+     */
 
     /** private: method[constructor]
      */
@@ -104,14 +119,27 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
             title: this.optionsText,
             checkboxToggle: true,
             collapsed: true,
+            hidden: this.workspace && this.store && this.crs,
             hideMode: "offsets",
             defaults: {
                 anchor: "97%"
             },
             items: [
-                this.createWorkspacesCombo(),
-                this.createDataStoresCombo(),
-                {
+                this.workspace ? {
+                    xtype: "hidden",
+                    name: "workspace",
+                    value: this.workspace
+                } : this.createWorkspacesCombo(),
+                this.store ? {
+                    xtype: "hidden",
+                    name: "store",
+                    value: this.store
+                } : this.createDataStoresCombo(),
+                this.crs ? {
+                    xtype: "hidden",
+                    name: "crs",
+                    value: this.crs
+                } : {
                     xtype: "textfield",
                     name: "crs",
                     // anchor: "90%",
