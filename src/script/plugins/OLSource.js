@@ -98,6 +98,7 @@ gxp.plugins.OLSource = Ext.extend(gxp.plugins.LayerSource, {
             
             // create a layer record for this layer
             var Record = GeoExt.data.LayerRecord.create([
+                {name: "name", type: "string"},
                 {name: "source", type: "string"}, 
                 {name: "group", type: "string"},
                 {name: "fixed", type: "boolean"},
@@ -108,6 +109,7 @@ gxp.plugins.OLSource = Ext.extend(gxp.plugins.LayerSource, {
             var data = {
                 layer: layer,
                 title: layer.name,
+                name: config.name || layer.name,
                 source: config.source,
                 group: config.group,
                 fixed: ("fixed" in config) ? config.fixed : false,

@@ -120,11 +120,47 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      */
     schemaCache: null,
     
+    /** private: property[ready]
+     *  ``Boolean``
+     */
+    ready: false,
+    
     /** api: config[version]
      *  ``String``
      *  If specified, the version string will be included in WMS GetCapabilities
      *  requests.  By default, no version is set.
      */
+     
+    /** private: method[isLazy]
+     *  :returns: ``Boolean``
+     *
+     *  The store for a lazy source will not be loaded upon creation.  A source
+     *  determines whether or not it is lazy given the configured layers for
+     *  the target.  If the layer configs have all the information needed to 
+     *  construct layer records, the source can be lazy.
+     */
+    isLazy: function() {
+        var lazy = true;
+        var mapConfig = this.target.initialConfig.map;
+        if (mapConfig && mapConfig.layers) {
+            var layerConfig;
+            for (var i=0, ii=mapConfig.layers.length; i<ii; ++i) {
+                layerConfig = mapConfig.layers[i];
+                if (layerConfig.source === this.id) {
+                    if (!this.layerConfigComplete(layerConfig)) {
+                        lazy = false;
+                        break;
+                    }
+                }
+            }
+        }
+        return lazy;
+    },
+    
+    layerConfigComplete: function(config) {
+        // for now, we assume the the layer config is incomplete
+        return false;
+    },
 
     /** api: method[createStore]
      *
@@ -138,6 +174,8 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         if (this.version) {
             baseParams.VERSION = this.version;
         }
+
+        var lazy = this.isLazy();
         
         this.store = new GeoExt.data.WMSCapabilitiesStore({
             // Since we want our parameters (e.g. VERSION) to override any in the 
@@ -149,7 +187,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             url: this.trimUrl(this.url, baseParams),
             baseParams: baseParams,
             format: this.format,
-            autoLoad: true,
+            autoLoad: !lazy,
             listeners: {
                 load: function() {
                     // The load event is fired even if a bogus capabilities doc 
@@ -162,7 +200,10 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                         if (!this.title) {
                             this.title = this.store.reader.raw.service.title;                        
                         }
-                        this.fireEvent("ready", this);
+                        if (!this.ready) {
+                            this.ready = true;
+                            this.fireEvent("ready", this);
+                        }
                     }
                 },
                 exception: function(proxy, type, action, options, response, arg) {
@@ -179,6 +220,12 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 scope: this
             }
         });
+        if (lazy) {
+            // lazy sources are "immediately" ready - in the next turn
+            window.setTimeout((function() {
+                this.fireEvent("ready", this);
+            }).createDelegate(this), 0);
+        }
     },
     
     /** private: method[trimUrl]

@@ -64,7 +64,8 @@ gxp.form.GoogleGeocoderComboBox = Ext.extend(Ext.form.ComboBox, {
         
         // only enable when Google Maps API is available
         this.disabled = true;
-        if (!window.google) {
+        var ready = !!(window.google && google.maps);
+        if (!ready) {
             if (!gxp.plugins || !gxp.plugins.GoogleSource) {
                 throw new Error("The gxp.form.GoogleGeocoderComboBox requres the gxp.plugins.GoogleSource or the Google Maps V3 API to be loaded.");
             }
