@@ -59,12 +59,14 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
     
     /** api: config[workspace]
      *  ``String`` GeoServer workspace. Optional. If provided, no "Workspace"
-     *  option will be shown in the dialog.
+     *  option will be shown in the dialog, and no workspaceselected event will
+     *  be fired. If provided, ``store`` also needs to be provided.
      */
 
-    /** api: config[workspace]
+    /** api: config[store]
      *  ``String`` GeoServer store. Optional. If provided, no "Store"
-     *  option will be shown in the dialog.
+     *  option will be shown in the dialog, and no datastoreselected event will
+     *  be fired.
      */
 
     /** api: config[crs]
