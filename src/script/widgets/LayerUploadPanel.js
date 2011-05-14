@@ -121,23 +121,23 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
             title: this.optionsText,
             checkboxToggle: true,
             collapsed: true,
-            hidden: this.workspace && this.store && this.crs,
+            hidden: this.workspace != undefined && this.store != undefined && this.crs != undefined,
             hideMode: "offsets",
             defaults: {
                 anchor: "97%"
             },
             items: [
-                this.workspace ? {
+                this.workspace != undefined ? {
                     xtype: "hidden",
                     name: "workspace",
                     value: this.workspace
                 } : this.createWorkspacesCombo(),
-                this.store ? {
+                this.store != undefined ? {
                     xtype: "hidden",
                     name: "store",
                     value: this.store
                 } : this.createDataStoresCombo(),
-                this.crs ? {
+                this.crs != undefined ? {
                     xtype: "hidden",
                     name: "crs",
                     value: this.crs
