@@ -193,8 +193,8 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
         }
         var feature = this.feature;
         if (!this.location) {
-            this.location = feature
-        };
+            this.location = feature;
+        }
         
         this.anchored = !this.editing;
         
@@ -234,6 +234,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                         case "date":
                             format = this.dateFormat;
                             fieldCfg.editable = false;
+                            break;
                         case "dateTime":
                             if (!format) {
                                 format = this.dateFormat + " " + this.timeFormat;
