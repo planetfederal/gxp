@@ -29,12 +29,12 @@ gxp.form.AutoCompleteComboBox = Ext.extend(Ext.form.ComboBox, {
     /** api: xtype = gxp_autocompletecombo */
     xtype: "gxp_autocompletecombo",
 
-    /** api: config[id]
+    /** api: config[fieldName]
      *  ``String``
-     *  The id of the combo, this needs to be the same as the search field 
-     *  name.
+     *  The name of the field/attribute to search on. The "name" of this form
+     *  field will also default to fieldName if not provided explicitly. 
      */ 
-    id: null,
+    fieldName: null,
 
     /**
      * api: config[featureType]
@@ -130,18 +130,21 @@ gxp.form.AutoCompleteComboBox = Ext.extend(Ext.form.ComboBox, {
      *  Override
      */
     initComponent: function() {
-        var fields = [{name: this.id}];
-        var propertyNames = [this.id];
+        var fields = [{name: this.fieldName}];
+        var propertyNames = [this.fieldName];
         if (this.geometryName !== null) {
             fields.push({name: this.geometryName});
             propertyNames.push(this.geometryName);
         }
-        this.name = this.valueField = this.displayField = this.id;
-        this.tpl = new Ext.XTemplate('<tpl for="."><div class="x-form-field">','{'+this.name+'}','</div></tpl>');
+        if (!this.name) {
+            this.name = this.fieldName;
+        }
+        this.valueField = this.displayField = this.fieldName;
+        this.tpl = new Ext.XTemplate('<tpl for="."><div class="x-form-field">','{'+this.fieldName+'}','</div></tpl>');
         this.itemSelector = 'div.x-form-field';
         this.store = new Ext.data.Store({
             fields: fields,
-            reader: new gxp.data.AutoCompleteReader({uniqueField: this.id}, propertyNames),
+            reader: new gxp.data.AutoCompleteReader({uniqueField: this.fieldName}, propertyNames),
             proxy: new gxp.data.AutoCompleteProxy({protocol: new OpenLayers.Protocol.WFS({
                 version: "1.1.0",
                 url: this.url,
@@ -152,7 +155,7 @@ gxp.form.AutoCompleteComboBox = Ext.extend(Ext.form.ComboBox, {
                 maxFeatures: this.maxFeatures
             }), setParamsAsOptions: true}),
             sortInfo: this.customSortInfo && {
-                field: this.id,
+                field: this.fieldName,
                 direction: this.customSortInfo.direction
             }
         });
