@@ -40,6 +40,12 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
      */
     source: null,
     
+    /** api: config[styling]
+     *  ``Boolean``
+     *  Show a "Styles" tab. Default is true.
+     */
+    styling: true,
+    
     /** api: config[sameOriginStyling]
      *  ``Boolean``
      *  Only allow editing of styles for layers whose sources have a URL that
@@ -113,7 +119,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
         }
         
         // only add the Styles panel if we know for sure that we have styles
-        if (gxp.WMSStylesDialog && this.layerRecord.get("styles")) {
+        if (this.styling && gxp.WMSStylesDialog && this.layerRecord.get("styles")) {
             var url = (this.source || this.layerRecord.get("layer")).url.split(
                 "?").shift().replace(/\/(wms|ows)\/?$/, "/rest");
             if (this.sameOriginStyling) {
