@@ -130,6 +130,11 @@ Ext.onReady(function() {
                 source: "local",
                 name: "usa:states",
                 selected: true
+            }],
+            items: [{
+                xtype: "gx_zoomslider",
+                vertical: true,
+                height: 100
             }]
         }
     });

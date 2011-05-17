@@ -312,24 +312,33 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
     addLayerSource: function(options) {
         var id = options.id || Ext.id(null, "gxp-source-");
         var source;
+        var config = options.config;
+        config.id = id;
         try {
             source = Ext.ComponentMgr.createPlugin(
-                options.config, this.defaultSourceType
+                config, this.defaultSourceType
             );
         } catch (err) {
             throw new Error("Could not create new source plugin with ptype: " + options.config.ptype);
         }
         source.on({
-            ready: function() {
-                var callback = options.callback || Ext.emptyFn;
-                callback.call(options.scope || this, id);
+            ready: {
+                fn: function() {
+                    var callback = options.callback || Ext.emptyFn;
+                    callback.call(options.scope || this, id);
+                },
+                scope: this,
+                single: true
             },
-            failure: function() {
-                var fallback = options.fallback || Ext.emptyFn;
-                delete this.layerSources[id];
-                fallback.apply(options.scope || this, arguments);
-            },
-            scope: this
+            failure: {
+                fn: function() {
+                    var fallback = options.fallback || Ext.emptyFn;
+                    delete this.layerSources[id];
+                    fallback.apply(options.scope || this, arguments);
+                },
+                scope: this,
+                single: true
+            }
         });
         this.layerSources[id] = source;
         source.init(this);

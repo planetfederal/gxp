@@ -56,7 +56,7 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
      *  ``String``
      *  URL for GeoServer RESTConfig root.  E.g. "http://example.com/geoserver/rest".
      */
-
+    
     /** private: method[constructor]
      */
     constructor: function(config) {
@@ -104,6 +104,7 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
             title: this.optionsText,
             checkboxToggle: true,
             collapsed: true,
+            hidden: this.workspace != undefined && this.store != undefined && this.crs != undefined,
             hideMode: "offsets",
             defaults: {
                 anchor: "97%"
