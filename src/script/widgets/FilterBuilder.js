@@ -211,7 +211,7 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
                             break;
                         }
                     } else if(!child || child.type === null ||
-                              child.property === null || child.value === null) {
+                              child.property === null || child[filter.type === OpenLayers.Filter.Comparison.BETWEEN ? "lowerBoundary" : "value"] === null) {
                         filter = false;
                         break;
                     }
@@ -219,7 +219,7 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
             }
         } else {
             if(!filter || filter.type === null || filter.property === null ||
-               filter.value === null) {
+               filter[filter.type === OpenLayers.Filter.Comparison.BETWEEN ? "lowerBoundary" : "value"] === null) {
                 filter = false;
             }
         }

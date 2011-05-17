@@ -135,24 +135,27 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
      * Creates a panel config containing filter parts.
      */
     createFilterItems: function() {
-        
+        var isBetween = this.filter.type === OpenLayers.Filter.Comparison.BETWEEN;
         return [
             this.attributesComboConfig, {
                 xtype: "gxp_comparisoncombo",
-                disabled: true,
+                disabled: this.filter.property == null,
                 allowBlank: this.allowBlank,
                 value: this.filter.type,
                 listeners: {
                     select: function(combo, record) {
                         this.items.get(2).enable();
-                        this.filter.type = record.get("value");
+                        this.items.get(3).enable();
+                        this.items.get(4).enable();
+                        this.setFilterType(record.get("value"));
                         this.fireEvent("change", this.filter);
                     },
                     scope: this
                 }
             }, {
                 xtype: "textfield",
-                disabled: true,
+                disabled: this.filter.type == null,
+                hidden: isBetween,
                 value: this.filter.value,
                 width: 50,
                 grow: true,
@@ -160,14 +163,63 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
                 anchor: "100%",
                 allowBlank: this.allowBlank,
                 listeners: {
-                    change: function(el, value) {
+                    "change": function(field, value) {
                         this.filter.value = value;
+                        this.fireEvent("change", this.filter);
+                    },
+                    scope: this
+                }
+            }, {
+                xtype: "textfield",
+                disabled: this.filter.type == null,
+                hidden: !isBetween,
+                value: this.filter.lowerBoundary,
+                grow: true,
+                growMin: 30,
+                anchor: "100%",
+                allowBlank: this.allowBlank,
+                listeners: {
+                    "change": function(field, value) {
+                        this.filter.lowerBoundary = value;
+                        this.fireEvent("change", this.filter);
+                    },
+                    "autosize": function(field, width) {
+                        field.setWidth(width);
+                        field.ownerCt.doLayout();
+                    },
+                    scope: this
+                }
+            }, {
+                xtype: "textfield",
+                disabled: this.filter.type == null,
+                hidden: !isBetween,
+                grow: true,
+                growMin: 30,
+                value: this.filter.upperBoundary,
+                allowBlank: this.allowBlank,
+                listeners: {
+                    "change": function(field, value) {
+                        this.filter.upperBoundary = value;
                         this.fireEvent("change", this.filter);
                     },
                     scope: this
                 }
             }
         ];
+    },
+    
+    setFilterType: function(type) {
+        this.filter.type = type;
+        if (type === OpenLayers.Filter.Comparison.BETWEEN) {
+            this.items.get(2).hide();
+            this.items.get(3).show();
+            this.items.get(4).show();
+        } else {
+            this.items.get(2).show();
+            this.items.get(3).hide();
+            this.items.get(4).hide();
+        }
+        this.doLayout();
     }
 
 });
