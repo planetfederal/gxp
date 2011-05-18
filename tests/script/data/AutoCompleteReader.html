@@ -10,11 +10,21 @@
     <script type="text/javascript">
        
         function test_AutoCompleteReader(t) {
-            t.plan(1);
+            t.plan(3);
             
-            var instance = new gxp.data.AutoCompleteReader({});
+            var instance = new gxp.data.AutoCompleteReader({uniqueField: 'field1'}, ['field1', 'field2']);
             
             t.ok(instance instanceof gxp.data.AutoCompleteReader, "Instance created successfully");
+
+            var features = [
+                new OpenLayers.Feature.Vector(null, {'field1': 'bar', 'field2': 'foo1'}),
+                new OpenLayers.Feature.Vector(null, {'field1': 'bar', 'field2': 'foo2'})
+            ];
+
+            var response = {features: features};
+            t.eq(response.features.length, 2, "Initially there are 2 features");
+            instance.read(response);
+            t.eq(response.features.length, 1, "After filtering out duplicates there is 1 feature");
         }
 
     </script>
