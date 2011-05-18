@@ -33,6 +33,11 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
      */
     ignoreFields: null,
     
+    /** api: config[propertyNames]
+     *  ``Object`` Property name/display name pairs. If specified, the display
+     *  name will be shown as column header instead of the property name.
+     */
+    
     /** api: config[layer]
      *  ``OpenLayers.Layer.Vector``
      *  The vector layer that will be synchronized with the layer store.
@@ -188,7 +193,8 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
             if (this.ignoreFields.indexOf(name) === -1) {
                 columns.push({
                     dataIndex: name,
-                    header: name,
+                    header: this.propertyNames ?
+                        (this.propertyNames[name] || name) : name,
                     sortable: true,
                     xtype: xtype,
                     format: format,
