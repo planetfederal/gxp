@@ -10,12 +10,28 @@
     <script type="text/javascript">
        
         function test_AutoCompleteProxy(t) {
-            t.plan(1);
+            t.plan(6);
             
-            var instance = new gxp.data.AutoCompleteProxy({});
-            
+            var field = 'field1';
+
+            var instance = new gxp.data.AutoCompleteProxy({protocol: new OpenLayers.Protocol.WFS({
+                version: "1.1.0",
+                url: "/local/wfs?",
+                featureType: "foo",
+                propertyNames: [field]
+            }), setParamsAsOptions: true});
+
             t.ok(instance instanceof gxp.data.AutoCompleteProxy, "Instance created successfully");
-            
+
+            var searchValue = "water";
+            var params = {query: searchValue};
+            instance.doRequest("read", null, params);
+
+            t.ok(params.filter instanceof OpenLayers.Filter.Comparison, "comparison filter created");
+            t.eq(params.filter.type, OpenLayers.Filter.Comparison.LIKE, "like filter created");
+            t.eq(params.filter.property, field, "Property set correctly on filter");
+            t.eq(params.filter.value, "*"+searchValue+"*", "Value set correctly on filter");
+            t.eq(params.query, undefined, "query is reset"); 
             instance.destroy();
         }
 
