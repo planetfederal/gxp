@@ -10,12 +10,24 @@
     <script type="text/javascript">
        
         function test_AutoCompleteComboBox(t) {
-            t.plan(1);
+            t.plan(8);
             
-            var instance = new gxp.form.AutoCompleteComboBox();
+            var fieldName = "FOO";
+            var instance = new gxp.form.AutoCompleteComboBox({fieldName: fieldName});
             
             t.ok(instance instanceof gxp.form.AutoCompleteComboBox, "Instance created successfully");
-            
+
+            t.eq(instance.displayField, fieldName, "displayField set to fieldName");
+            t.eq(instance.valueField, fieldName, "valueField set to fieldName");
+            t.eq(instance.name, fieldName, "name set to fieldName if not specified");
+            t.ok(instance.store.reader instanceof gxp.data.AutoCompleteReader, "reader created correctly");
+            t.ok(instance.store.proxy instanceof gxp.data.AutoCompleteProxy, "proxy created correctly");
+            var length = instance.store.fields.length;
+            instance.destroy();
+
+            instance = new gxp.form.AutoCompleteComboBox({fieldName: fieldName, geometryName: "GEOM", name: "BAR"});
+            t.eq(instance.name, "BAR", "name not set to fieldName if specified");
+            t.eq(instance.store.fields.length-length, 1, "1 extra field expected since geometryName is specified");
             instance.destroy();
         }
 
