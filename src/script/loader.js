@@ -2,6 +2,8 @@
 
     var jsfiles = new Array(
         "util.js",
+        "data/AutoCompleteProxy.js",
+        "data/AutoCompleteReader.js",
         "data/WFSFeatureStore.js",
         "data/WFSProtocolProxy.js",
         "menu/LayerMenu.js",
@@ -23,6 +25,7 @@
         "widgets/ScaleLimitPanel.js",
         "widgets/TextSymbolizer.js",
         "widgets/Viewer.js",
+        "widgets/form/AutoCompleteComboBox.js",
         "widgets/form/ComparisonComboBox.js",
         "widgets/form/ColorField.js",
         "widgets/form/FilterField.js",
