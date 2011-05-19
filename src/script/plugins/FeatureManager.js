@@ -987,8 +987,15 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                 if (!condition) {
                     // choose a page on the top left
                     var extent = this.getPagingExtent("getExtent");
+                    var lonLat = new OpenLayers.LonLat(extent.left, extent.top);
+                    // detect corner coordinate outside maxExtent and fall back
+                    // to maxExtent
+                    var maxExtent = this.target.mapPanel.map.getMaxExtent();
+                    if (!maxExtent.containsLonLat(lonLat, true)) {
+                        lonLat = new OpenLayers.LonLat(maxExtent.left, maxExtent.top);
+                    }
                     condition = {
-                        lonLat: new OpenLayers.LonLat(extent.left, extent.top),
+                        lonLat: lonLat,
                         allowEmpty: false
                     };
                 }
