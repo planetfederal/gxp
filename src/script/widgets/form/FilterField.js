@@ -24,6 +24,16 @@ Ext.namespace("gxp.form");
  */
 gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
     
+    /** api:config[lowerBoundaryTip]
+     *  ``String`` tooltip for the lower boundary textfield (i18n)
+     */
+    lowerBoundaryTip: "lower boundary",
+     
+    /** api:config[upperBoundaryTip]
+     *  ``String`` tooltip for the lower boundary textfield (i18n)
+     */
+    upperBoundaryTip: "upper boundary",
+     
     /**
      * Property: filter
      * {OpenLayers.Filter} Optional non-logical filter provided in the initial
@@ -174,6 +184,7 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
                 disabled: this.filter.type == null,
                 hidden: !isBetween,
                 value: this.filter.lowerBoundary,
+                tooltip: this.lowerBoundaryTip,
                 grow: true,
                 growMin: 30,
                 anchor: "100%",
@@ -182,6 +193,12 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
                     "change": function(field, value) {
                         this.filter.lowerBoundary = value;
                         this.fireEvent("change", this.filter);
+                    },
+                    "render": function(c) {
+                        Ext.QuickTips.register({
+                            target: c.getEl(),
+                            text: this.lowerBoundaryTip
+                        });
                     },
                     "autosize": function(field, width) {
                         field.setWidth(width);
@@ -201,6 +218,12 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
                     "change": function(field, value) {
                         this.filter.upperBoundary = value;
                         this.fireEvent("change", this.filter);
+                    },
+                    "render": function(c) {
+                        Ext.QuickTips.register({
+                            target: c.getEl(),
+                            text: this.upperBoundaryTip
+                        });
                     },
                     scope: this
                 }
