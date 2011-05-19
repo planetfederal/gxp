@@ -99,6 +99,7 @@ gxp.plugins.WMSCSource = Ext.extend(gxp.plugins.WMSSource, {
                     }
                     if (mapProjection.equals(tileProjection)) {
                         var bbox = tileSet.bbox[srs].bbox;
+                        layer.projection = tileProjection;
                         layer.addOptions({
                             resolutions: tileSet.resolutions,
                             tileSize: new OpenLayers.Size(tileSet.width, tileSet.height),

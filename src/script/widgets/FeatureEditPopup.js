@@ -76,6 +76,11 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
     /** private: property[excludeFields]
      */
     
+    /** api: config[propertyNames]
+     *  ``Object`` Property name/display name pairs. If specified, the display
+     *  name will be shown in the name column instead of the property name.
+     */
+
     /** api: config[readOnly]
      *  ``Boolean`` Set to true to disable editing. Default is false.
      */
@@ -265,7 +270,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                                         date = Date.parseDate(value.replace(/Z$/, ""), "c");
                                     }
                                     return date ? date.format(format) : value;
-                                }
+                                };
                             })();
                             break;
                         case "boolean":
@@ -273,7 +278,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                                 "startedit": function(el, value) {
                                     this.setValue(Boolean(value));
                                 }
-                            }
+                            };
                             break;
                     }
                 }
@@ -336,6 +341,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             source: feature.attributes,
             customEditors: customEditors,
             customRenderers: customRenderers,
+            propertyNames: this.propertyNames,
             viewConfig: {
                 forceFit: true,
                 getRowClass: function(record) {
