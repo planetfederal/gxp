@@ -364,7 +364,8 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             }
         }
 
-        this.mapPanel = new GeoExt.MapPanel(Ext.applyIf({
+        this.mapPanel = Ext.ComponentMgr.create(Ext.applyIf({
+            xtype: config.xtype || "gx_mappanel",
             map: Ext.applyIf({
                 theme: mapConfig.theme || null,
                 controls: mapConfig.controls || [
