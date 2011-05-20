@@ -306,7 +306,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
             "featureselected": function(evt) {
                 var feature = evt.feature;
                 var featureStore = featureManager.featureStore;
-                if(this.selectControl.active) {
+                if(this.selectControl.active && feature.geometry !== null) {
                     popup = this.addOutput({
                         xtype: "gxp_featureeditpopup",
                         collapsible: true,
