@@ -115,7 +115,8 @@ gxp.plugins.OLSource = Ext.extend(gxp.plugins.LayerSource, {
                 fixed: ("fixed" in config) ? config.fixed : false,
                 selected: ("selected" in config) ? config.selected : false,
                 type: config.type,
-                args: config.args
+                args: config.args,
+                properties: ("properties" in config) ? config.properties : undefined
             };
             record = new Record(data, layer.id);
 
