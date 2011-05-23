@@ -1138,7 +1138,7 @@ Ext.reg('gxp_wmsstylesdialog', gxp.WMSStylesDialog);
  * vendor specific extensions introduced by GeoTools.
  */
 
-OpenLayers.Format && OpenLayers.Format.SLD && OpenLayers.Format.SLD.v1 (function() {
+OpenLayers.Format && OpenLayers.Format.SLD && OpenLayers.Format.SLD.v1 && (function() {
     
     // read/write GeoTools custom VendorOption elements
     OpenLayers.Format.SLD.v1.prototype.readers.sld["VendorOption"] = function(node, obj) {
