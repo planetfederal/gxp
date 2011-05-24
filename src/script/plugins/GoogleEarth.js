@@ -87,13 +87,14 @@ gxp.plugins.GoogleEarth = Ext.extend(gxp.plugins.Tool, {
      *  If the ``apiKey`` property is not set, this object can be provided as a
      *  lookup of API keys for multiple URL.  Each key in the object should be
      *  a hostname (e.g. "example.com"), and each value should be a complete 
-     *  API key.
+     *  API key.  Include the port number if different than 80.
      *
      *  .. code-block:: javascript
      *
      *    apiKeys: {
      *        "localhost": "ABQIAAAAeDjUod8ItM9dBg5_lz0esxTnme5EwnLVtEDGnh-lFVzRJhbdQhQBX5VH8Rb3adNACjSR5kaCLQuBmw",
-     *        "example.com": "-your-key-here-"
+     *        "example.com": "-your-key-here-",
+     *        "example.com:8080": "-your-key-here-"
      *    }
      */
 
@@ -189,10 +190,17 @@ gxp.plugins.GoogleEarth = Ext.extend(gxp.plugins.Tool, {
         var key = this.initialConfig.apiKey;
         var keys = this.initialConfig.apiKeys;
         if (!key && keys) {
-            var hostname = this.getHostName();
+            var host = this.getHost();
+            var hasPort = /:\d+$/;
+            var completeCandidate;
             for (var candidate in keys) {
+                if (!hasPort.test(candidate)) {
+                    completeCandidate = candidate + ":80";
+                } else {
+                    completeCandidate = candidate;
+                }
                 // check if case-insensitive match
-                if ((new RegExp("^(.*\\.)?" + candidate + "$", "i")).test(hostname)) {
+                if ((new RegExp("^(.*\\.)?" + completeCandidate + "$", "i")).test(host)) {
                     key = keys[candidate];
                     break;
                 }
@@ -220,13 +228,15 @@ gxp.plugins.GoogleEarth = Ext.extend(gxp.plugins.Tool, {
         }
     },
 
-    /** private: method[getHostName]
-     *  :returns: ``String`` The current host name (no port).
+    /** private: method[getHost]
+     *  :returns: ``String`` The current host name and port.
      * 
      *  This method is here mainly for mocking in tests.
      */
-    getHostName: function() {
-        return window.location.host.split(":").shift();
+    getHost: function() {
+        var name = window.location.host.split(":").shift();
+        var port = window.location.port || "80";
+        return name + ":" + port;
     }
 
 });
