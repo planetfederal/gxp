@@ -59,6 +59,11 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
      *  Optional object with properties to be serialized as vendor specific
      *  parameters in the requests (e.g. {buffer: 10}).
      */
+    
+    /** api: config[paramsFromLayer]
+     *  ``Array`` List of param names that should be taken from the layer and
+     *  added to the GetFeatureInfo request (e.g. ["CQL_FILTER"]).
+     */
      
     /** api: method[addActions]
      */
@@ -99,11 +104,19 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
 
             info.controls = [];
             queryableLayers.each(function(x){
+                var layer = x.getLayer();
+                var vendorParams = Ext.apply({}, this.vendorParams), param;
+                if (this.layerParams) {
+                    for (var i=this.layerParams.length-1; i>=0; --i) {
+                        param = this.layerParams[i].toUpperCase();
+                        vendorParams[param] = layer.params[param];
+                    }
+                }
                 var control = new OpenLayers.Control.WMSGetFeatureInfo({
-                    url: x.getLayer().url,
+                    url: layer.url,
                     queryVisible: true,
-                    layers: [x.getLayer()],
-                    vendorParams: this.vendorParams,
+                    layers: [layer],
+                    vendorParams: vendorParams,
                     eventListeners: {
                         getfeatureinfo: function(evt) {
                             var match = evt.text.match(/<body[^>]*>([\s\S]*)<\/body>/);
