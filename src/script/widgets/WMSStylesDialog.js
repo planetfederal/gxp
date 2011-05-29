@@ -1044,6 +1044,9 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     tbItems.get(2).disable();
                     tbItems.get(3).disable();
                 },
+                "rulemoved": function() {
+                    this.markModified();
+                },
                 "afterlayout": function() {
                     // restore selection
                     //TODO QA: avoid accessing private properties/methods
@@ -1093,7 +1096,7 @@ gxp.WMSStylesDialog.createGeoServerStylerConfig = function(layerRecord, url) {
         }],
         listeners: {
             "styleselected": function(cmp, style) {
-                cmp.modified && layer.mergeNewParams({
+                layer.mergeNewParams({
                     styles: style
                 });
             },
