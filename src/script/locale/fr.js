@@ -84,6 +84,23 @@ GeoExt.Lang.add("fr", {
         nextTooltip: "Zoom sur une Next"
     },
 
+    "gxp.plugins.MapBoxSource.prototype": {
+        title: "MapBox Layers",
+        blueMarbleTopoBathyJanTitle: "Blue Marble Topography & Bathymetry (January)",
+        blueMarbleTopoBathyJulTitle: "Blue Marble Topography & Bathymetry (July)",
+        blueMarbleTopoJanTitle: "Blue Marble Topography (January)",
+        blueMarbleTopoJulTitle: "Blue Marble Topography (July)",
+        controlRoomTitle: "Control Room",
+        geographyClassTitle: "Geography Class",
+        naturalEarthHypsoTitle: "Natural Earth Hypsometric",
+        naturalEarthHypsoBathyTitle: "Natural Earth Hypsometric & Bathymetry",
+        naturalEarth1Title: "Natural Earth I",
+        naturalEarth2Title: "Natural Earth II",
+        worldDarkTitle: "World Dark",
+        worldLightTitle: "World Light",
+        worldPrintTitle: "World Print"
+    },
+
     "gxp.plugins.OSMSource.prototype": {
         title: "Calques OpenStreetMap",
         mapnikAttribution: "Les données CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
