@@ -423,6 +423,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      */
     setLayer: function(layerRecord) {
         var change = this.fireEvent("beforelayerchange", this, layerRecord);
+        this.featureLayer.projection = this.getProjection(layerRecord);
         if (change !== false) {
             if (layerRecord !== this.layerRecord) {
                 this.clearFeatureStore();
@@ -597,6 +598,21 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
         }
     },
     
+    /** private: method[getProjection]
+     *  :arg record: ``GeoExt.data.LayerRecord``
+     *  :returns: ``OpenLayers.Projection``
+     *
+     *  Gets the appropriate projection to use for feature requests.
+     */
+    getProjection: function(record) {
+        var projection = this.target.mapPanel.map.getProjectionObject();
+        var layerProj = record.getLayer().projection;
+        if (layerProj && layerProj.equals(projection)) {
+            projection = layerProj;
+        }
+        return layerProj;
+    },
+    
     /** private: method[setFeatureStore]
      *  :arg filter: ``OpenLayers.Filter``
      *  :arg autoLoad: ``Boolean``
@@ -641,8 +657,9 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                             fields.push(field);
                         }
                     }, this);
+                    
                     var protocolOptions = {
-                        srsName: this.target.mapPanel.map.getProjection(),
+                        srsName: this.getProjection(record).getCode(),
                         url: schema.url,
                         featureType: schema.reader.raw.featureTypes[0].typeName,
                         featureNS: schema.reader.raw.targetNamespace,
