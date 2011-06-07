@@ -148,12 +148,14 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
         for (name in mapTypes) {
             mapType = google.maps.MapTypeId[name];
             layers.push(new OpenLayers.Layer.GoogleNG({
-                    type: mapType,
-                    typeName: name,
-                    restrictedExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
-                    projection: this.projection
-                }
-            ));
+                // TODO: get MapType object name
+                // http://code.google.com/p/gmaps-api-issues/issues/detail?id=2562
+                name: "Google " + mapType.replace(/\w/, function(c) {return c.toUpperCase();}),
+                type: mapType,
+                typeName: name,
+                restrictedExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
+                projection: this.projection
+            }));
         }
         this.store = new GeoExt.data.LayerStore({
             layers: layers,
