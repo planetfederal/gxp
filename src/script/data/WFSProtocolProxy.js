@@ -209,8 +209,15 @@ gxp.data.WFSProtocolProxy = Ext.extend(GeoExt.data.ProtocolProxy, {
             o.callback.call(o.scope, data, response.priv, true);
         } else {
             // TODO: determine from response if exception was "response" or "remote"
-            this.fireEvent("exception", this, "response", o.action, o, response);
-            o.callback.call(o.scope, [], response.priv, false);
+            var request = response.priv;
+            if (request.status >= 200 && request.status < 300) {
+                // service exception with 200
+                this.fireEvent("exception", this, "remote", o.action, o, response.error, o.records)
+            } else {
+                // non 200 status
+                this.fireEvent("exception", this, "response", o.action, o, request);
+            }
+            o.callback.call(o.scope, [], request, false);
         }
         
     }
