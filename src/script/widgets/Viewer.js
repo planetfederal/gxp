@@ -298,7 +298,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                 id: key,
                 config: config,
                 callback: done,
-                fallback: function() {
+                fallback: function(source, msg, details) {
                     // TODO: log these issues somewhere that the app can display
                     // them after loading.
                     // console.log(arguments);

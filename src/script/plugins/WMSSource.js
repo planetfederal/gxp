@@ -207,16 +207,33 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                         }
                     }
                 },
-                exception: function(proxy, type, action, options, response, arg) {
+                exception: function(proxy, type, action, options, response, error) {
                     delete this.store;
-                    var msg;
+                    var msg, details = "";
                     if (type === "response") {
-                        msg = arg || "Invalid response from server.";
+                        msg = "Invalid response from server.";
+                        var status = response.status;
+                        if (status >= 200 && status < 300) {
+                            // TODO: consider pushing this into GeoExt
+                            var report = error.arg.exceptionReport;
+                            if (report && report.exceptions) {
+                                details = [];
+                                Ext.each(report.exceptions, function(obj) {
+                                    details.push(obj.text);
+                                });
+                                details = details.join("\n");
+                            } else {
+                                details = "Unknown error (no exception report).";
+                            }
+                        } else {
+                            details = "Status: " + status;
+                        }
                     } else {
                         msg = "Trouble creating layer store from response.";
+                        details = "Unable to handle response.";
                     }
                     // TODO: decide on signature for failure listeners
-                    this.fireEvent("failure", this, msg, Array.prototype.slice.call(arguments));
+                    this.fireEvent("failure", this, msg, details);
                 },
                 scope: this
             }
