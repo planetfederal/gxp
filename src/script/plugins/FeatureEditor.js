@@ -146,7 +146,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
         var popup;
         var featureManager = this.target.tools[this.featureManager];
         var featureLayer = featureManager.featureLayer;
-
+        
         // optionally set up snapping
         var snapId = this.snappingAgent;
         if (snapId) {
@@ -203,6 +203,17 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
             "beforelayerchange": intercept.createDelegate(this, "setLayer", 1),
             "beforesetpage": intercept.createDelegate(this, "setPage", 1),
             "beforeclearfeatures": intercept.createDelegate(this, "clearFeatures", 1),
+            "layerchange": function() {
+                featureManager.featureStore.on({
+                    exception: function(proxy, type, action, options, response, records) {
+                        if (type === "remote") {
+                            // response is service exception
+                        } else {
+                            // non-200 response from server
+                        }
+                    }
+                });
+            },
             scope: this
         });
         
