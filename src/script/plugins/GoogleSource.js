@@ -137,28 +137,25 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
         // TODO: We may also be able to determine the MAX_ZOOM_LEVEL for each
         // layer type. If not, consider setting them on the OpenLayers level.
         var mapTypes = {
-            "ROADMAP": {"abstract": this.roadmapAbstract, MAX_ZOOM_LEVEL: 20},
+            "ROADMAP": {"abstract": this.roadmapAbstract},
             "SATELLITE": {"abstract": this.satelliteAbstract},
             "HYBRID": {"abstract": this.hybridAbstract},
-            "TERRAIN": {"abstract": this.terrainAbstract, MAX_ZOOM_LEVEL: 15}
+            "TERRAIN": {"abstract": this.terrainAbstract}
         };
         
         var layers = [];
         var name, mapType;
         for (name in mapTypes) {
             mapType = google.maps.MapTypeId[name];
-            layers.push(new OpenLayers.Layer.Google(
+            layers.push(new OpenLayers.Layer.GoogleNG({
                 // TODO: get MapType object name
                 // http://code.google.com/p/gmaps-api-issues/issues/detail?id=2562
-                "Google " + mapType.replace(/\w/, function(c) {return c.toUpperCase();}), {
-                    type: mapType,
-                    typeName: name,
-                    MAX_ZOOM_LEVEL: mapTypes[name].MAX_ZOOM_LEVEL,
-                    maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
-                    restrictedExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
-                    projection: this.projection
-                }
-            ));
+                name: "Google " + mapType.replace(/\w/, function(c) {return c.toUpperCase();}),
+                type: mapType,
+                typeName: name,
+                restrictedExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
+                projection: this.projection
+            }));
         }
         this.store = new GeoExt.data.LayerStore({
             layers: layers,
