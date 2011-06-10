@@ -157,13 +157,10 @@ gxp.plugins.MapBoxSource = Ext.extend(gxp.plugins.LayerSource, {
                 {name: "source", type: "string"},
                 {name: "name", type: "string", mapping: "layername"},
                 {name: "abstract", type: "string", mapping: "attribution"},
-                {name: "group", type: "string", defaultValue: "background"},
-                {name: "fixed", type: "boolean", defaultValue: true},
+                {name: "group", type: "string"},
+                {name: "fixed", type: "boolean"},
                 {name: "selected", type: "boolean"}
             ]
-        });
-        this.store.each(function(l) {
-            l.set("group", "background");
         });
         this.fireEvent("ready", this);
 
