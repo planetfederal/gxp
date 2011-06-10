@@ -93,6 +93,7 @@ gxp.plugins.MapBoxSource = Ext.extend(gxp.plugins.LayerSource, {
     naturalEarth2Title: "Natural Earth II",
     worldDarkTitle: "World Dark",
     worldLightTitle: "World Light",
+    worldGlassTitle: "World Glass",
     worldPrintTitle: "World Print",
 
     /** api: method[createStore]
@@ -126,6 +127,7 @@ gxp.plugins.MapBoxSource = Ext.extend(gxp.plugins.LayerSource, {
             {name: "natural-earth-2", numZoomLevels: 7},
             {name: "world-dark", numZoomLevels: 12},
             {name: "world-light", numZoomLevels: 12},
+            {name: "world-glass", numZoomLevels: 11},
             {name: "world-print", numZoomLevels: 10}
         ];
         
