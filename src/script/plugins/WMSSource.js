@@ -189,6 +189,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             baseParams: baseParams,
             format: this.format,
             autoLoad: !lazy,
+            layerParams: {exceptions: null},
             listeners: {
                 load: function() {
                     // The load event is fired even if a bogus capabilities doc 
