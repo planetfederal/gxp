@@ -44,6 +44,10 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
      */
     iconClsEdit: "gxp-icon-editfeature",
 
+    /** i18n **/
+    exceptionTitle: "Save Failed",
+    exceptionText: "Trouble saving features",
+
     /** api: config[createFeatureActionTip]
      *  ``String``
      *  Tooltip string for create new feature action (i18n).
@@ -203,17 +207,6 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
             "beforelayerchange": intercept.createDelegate(this, "setLayer", 1),
             "beforesetpage": intercept.createDelegate(this, "setPage", 1),
             "beforeclearfeatures": intercept.createDelegate(this, "clearFeatures", 1),
-            "layerchange": function() {
-                featureManager.featureStore.on({
-                    exception: function(proxy, type, action, options, response, records) {
-                        if (type === "remote") {
-                            // response is service exception
-                        } else {
-                            // non-200 response from server
-                        }
-                    }
-                });
-            },
             scope: this
         });
         
@@ -347,6 +340,27 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                                         fn: function() {
                                             if (popup && popup.isVisible()) {
                                                 popup.enable();
+                                            }
+                                        },
+                                        single: true
+                                    },
+                                    exception: {
+                                        fn: function(proxy, type, action, options, response, records) {
+                                            if (type === "remote") {
+                                                // response is service exception
+                                                // TODO: deal with message from response
+                                            } else {
+                                                // non-200 response from server
+                                                // TODO: add at least status to message
+                                            }
+                                            Ext.Msg.show({
+                                                title: this.exceptionTitle,
+                                                msg: this.exceptionText,
+                                                icon: Ext.MessageBox.WARNING
+                                            });
+                                            if (popup && popup.isVisible()) {
+                                                popup.enable();
+                                                popup.startEditing();
                                             }
                                         },
                                         single: true
