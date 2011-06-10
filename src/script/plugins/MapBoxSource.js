@@ -113,29 +113,29 @@ gxp.plugins.MapBoxSource = Ext.extend(gxp.plugins.LayerSource, {
             buffer: 1
         };
         
-        var names = [
-             "blue-marble-topo-bathy-jan",
-             "blue-marble-topo-bathy-jul",
-             "blue-marble-topo-jan",
-             "blue-marble-topo-jul",
-             "control-room",
-             "geography-class",
-             "natural-earth-hypso",
-             "natural-earth-hypso-bathy",
-             "natural-earth-1",
-             "natural-earth-2",
-             "world-dark",
-             "world-light",
-             "world-print"
+        var configs = [
+            {name: "blue-marble-topo-bathy-jan", numZoomLevels: 9},
+            {name: "blue-marble-topo-bathy-jul", numZoomLevels: 9},
+            {name: "blue-marble-topo-jan", numZoomLevels: 9},
+            {name: "blue-marble-topo-jul", numZoomLevels: 9},
+            {name: "control-room", numZoomLevels: 9},
+            {name: "geography-class", numZoomLevels: 9},
+            {name: "natural-earth-hypso", numZoomLevels: 7},
+            {name: "natural-earth-hypso-bathy", numZoomLevels: 7},
+            {name: "natural-earth-1", numZoomLevels: 7},
+            {name: "natural-earth-2", numZoomLevels: 7},
+            {name: "world-dark", numZoomLevels: 12},
+            {name: "world-light", numZoomLevels: 12},
+            {name: "world-print", numZoomLevels: 10}
         ];
         
-        var len = names.length;
+        var len = configs.length;
         var layers = new Array(len);
-        var name;
+        var config;
         for (var i=0; i<len; ++i) {
-            name = names[i];
+            config = configs[i];
             layers[i] = new OpenLayers.Layer.TMS(
-                this[OpenLayers.String.camelize(name) + "Title"],
+                this[OpenLayers.String.camelize(config.name) + "Title"],
                 [
                     "http://a.tiles.mapbox.com/mapbox/",
                     "http://b.tiles.mapbox.com/mapbox/",
@@ -146,7 +146,8 @@ gxp.plugins.MapBoxSource = Ext.extend(gxp.plugins.LayerSource, {
                     attribution: "<a href='http://mapbox.com'>MapBox</a> | <a href='http://mapbox.com/tos'>Terms of Service</a>",
                     type: "png",
                     tileOrigin: new OpenLayers.LonLat(-128 * 156543.0339, -128 * 156543.0339),
-                    layername: name
+                    layername: config.name,
+                    numZoomLevels: config.numZoomLevels
                 }, options)
             );
         }
