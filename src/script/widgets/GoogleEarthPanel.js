@@ -74,6 +74,10 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
              *  will be called with a single argument: the layer record.
              */
             "beforeadd",
+            /** api: event[earthready]
+             *  Fires when the Earth is ready.
+             */
+            "earthready",
             /** api: event[pluginfailure]
              *  Fires when there is a failure creating the instance.  Listeners
              *  will receive two arguments: this plugin and the failure code
@@ -159,7 +163,10 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
         this.layers.on("update", this.updateLayers, this);
         
         this.layers.on("add", this.updateLayers, this);
-        
+
+        // Let any listeners know that we're ready
+        this.fireEvent("earthready");
+
         // Set up events. Notice global google namespace.
         // google.earth.addEventListener(this.earth.getView(), 
             // "viewchangeend", 
