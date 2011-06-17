@@ -217,15 +217,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                         if (status >= 200 && status < 300) {
                             // TODO: consider pushing this into GeoExt
                             var report = error.arg.exceptionReport;
-                            if (report && report.exceptions) {
-                                details = [];
-                                Ext.each(report.exceptions, function(obj) {
-                                    details.push(obj.text);
-                                });
-                                details = details.join("\n");
-                            } else {
-                                details = "Unknown error (no exception report).";
-                            }
+                            details = gxp.util.getOGCExceptionText(report);
                         } else {
                             details = "Status: " + status;
                         }

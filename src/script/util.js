@@ -16,6 +16,29 @@ gxp.util = {
      */
     _uniqueNames: {},
 
+    /** api: function[getOGCExceptionText]
+     *  :arg report: ``Object`` The exception report object
+     *  :return: ``String`` A single string representing the possible stack of
+     *      exception messages.
+     *
+     *  Get a string message from an OGC exception report object.
+     */ 
+    getOGCExceptionText: function(report) {
+        var msg;
+        if (report && report.exceptions) {
+            msg = [];
+            Ext.each(report.exceptions, function(obj) {
+                Ext.each(obj.texts, function(text) {
+                    msg.push(text);
+                });
+            });
+            msg = msg.join("\n");
+        } else {
+            msg = "Unknown error (no exception report).";
+        }
+        return msg;
+    },
+
     /** api: function[dispatch]
      *  :arg functions: ``Array(Function)`` List of functions to be called.
      *      All functions will be called with two arguments - a callback to

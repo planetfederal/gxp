@@ -346,17 +346,19 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                                     },
                                     exception: {
                                         fn: function(proxy, type, action, options, response, records) {
+                                            var msg = this.exceptionText;
                                             if (type === "remote") {
                                                 // response is service exception
-                                                // TODO: deal with message from response
+                                                msg = gxp.util.getOGCExceptionText(response.exceptionReport);
                                             } else {
                                                 // non-200 response from server
-                                                // TODO: add at least status to message
+                                                msg = "Status: " + response.status;
                                             }
                                             Ext.Msg.show({
                                                 title: this.exceptionTitle,
-                                                msg: this.exceptionText,
-                                                icon: Ext.MessageBox.WARNING
+                                                msg: msg,
+                                                icon: Ext.MessageBox.ERROR,
+                                                buttons: {ok: true}
                                             });
                                             if (popup && popup.isVisible()) {
                                                 popup.enable();
