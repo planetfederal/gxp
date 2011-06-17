@@ -349,7 +349,9 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                                             var msg = this.exceptionText;
                                             if (type === "remote") {
                                                 // response is service exception
-                                                msg = gxp.util.getOGCExceptionText(response.exceptionReport);
+                                                if (response.exceptionReport) {
+                                                    msg = gxp.util.getOGCExceptionText(response.exceptionReport);
+                                                }
                                             } else {
                                                 // non-200 response from server
                                                 msg = "Status: " + response.status;
