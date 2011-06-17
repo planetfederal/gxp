@@ -78,6 +78,7 @@
         "plugins/LayerProperties.js",
         "plugins/Legend.js",
         "plugins/Print.js",
+        "plugins/LoadingIndicator.js",
         "locale/es.js",
         "locale/ca.js"
     );

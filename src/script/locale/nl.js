@@ -63,6 +63,10 @@ GeoExt.Lang.add("nl", {
         tooltip: "Toon legenda"
     },
 
+    "gxp.plugins.LoadingIndicator.prototype": {
+        loadingMapMessage: "Laden van de kaart..."
+    },
+
     "gxp.plugins.MapBoxSource.prototype": {
         title: "MapBox Layers",
         blueMarbleTopoBathyJanTitle: "Blue Marble Topography & Bathymetry (January)",
