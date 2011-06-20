@@ -353,7 +353,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         
         // split initial map configuration into map and panel config
         if (this.initialConfig.map) {
-            var props = "theme,controls,resolutions,projection,units,maxExtent,restrictedExtent,maxResolution,numZoomLevels".split(",");
+            var props = "theme,controls,resolutions,projection,units,maxExtent,restrictedExtent,maxResolution,numZoomLevels,panMethod".split(",");
             var prop;
             for (var i=props.length-1; i>=0; --i) {
                 prop = props[i];
