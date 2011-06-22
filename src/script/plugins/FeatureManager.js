@@ -285,7 +285,19 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
              *
              *  * tool - :class:`gxp.plugins.FeatureManager` this tool
              */
-            "clearfeatures"
+            "clearfeatures",
+
+            /** api: event[beforesave]
+             *  Fired before a transaction is saved.
+             *
+             *  Listener arguments:
+             *
+             *  * tool - :class:`gxp.plugins.FeatureManager` this tool
+             *  * store - :class:`gxp.data.WFSFeatureStore`
+             *  * params - ``Object`` The params object which can be used to
+             *    manipulate a transaction request.
+             */
+            "beforesave"
         );
 
         if (config && !config.pagingType) {
@@ -684,6 +696,9 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                         autoLoad: autoLoad,
                         autoSave: false,
                         listeners: {
+                            "beforewrite": function(store, action, rs, options) {
+                                this.fireEvent("beforesave", this, this.featureStore, options.params);
+                            },
                             "write": function() {
                                 this.redrawMatchingLayers(record);
                             },
