@@ -356,6 +356,9 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                                                 // non-200 response from server
                                                 msg = "Status: " + response.status;
                                             }
+                                            // fire an event on the feature manager
+                                            featureManager.fireEvent("exception", featureManager, 
+                                                response.exceptionReport || {}, msg);
                                             Ext.Msg.show({
                                                 title: this.exceptionTitle,
                                                 msg: msg,

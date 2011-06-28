@@ -297,7 +297,18 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
              *  * params - ``Object`` The params object which can be used to
              *    manipulate a transaction request.
              */
-            "beforesave"
+            "beforesave",
+
+            /** api: event[exception]
+             * Fired when an exception occurs.
+             *
+             * Listener arguments:
+             *
+             * * tool - :class:`gxp.plugins.FeatureManager`` this tool
+             * * exceptionReport - ``Object`` The exceptionReport object
+             * * msg - ``String`` The exception message
+             */
+            "exception"
         );
 
         if (config && !config.pagingType) {
