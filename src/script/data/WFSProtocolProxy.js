@@ -216,7 +216,7 @@ gxp.data.WFSProtocolProxy = Ext.extend(GeoExt.data.ProtocolProxy, {
             var request = response.priv;
             if (request.status >= 200 && request.status < 300) {
                 // service exception with 200
-                this.fireEvent("exception", this, "remote", o.action, o, response.error, o.records)
+                this.fireEvent("exception", this, "remote", o.action, o, response.error, o.records);
             } else {
                 // non 200 status
                 this.fireEvent("exception", this, "response", o.action, o, request);
