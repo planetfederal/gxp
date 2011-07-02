@@ -101,9 +101,16 @@ gxp.data.WFSProtocolProxy = Ext.extend(GeoExt.data.ProtocolProxy, {
                 records = [records];
             }
             // get features from records
-            var features = new Array(records.length);
+            var features = new Array(records.length), feature;
             Ext.each(records, function(r, i) {
                 features[i] = r.getFeature();
+                feature = features[i];
+                feature.modified = Ext.apply(feature.modified || {}, {
+                    attributes: Ext.apply(
+                        (feature.modified && feature.modified.attributes) || {},
+                        r.modified
+                    )
+                });
             }, this);
 
             
@@ -150,6 +157,8 @@ gxp.data.WFSProtocolProxy = Ext.extend(GeoExt.data.ProtocolProxy, {
                     } else if(state == OpenLayers.State.INSERT) {
                         feature.fid = insertIds[j];
                         ++j;
+                    } else if (feature.modified) {
+                        feature.modified = {};
                     }
                     feature.state = null;
                 }
