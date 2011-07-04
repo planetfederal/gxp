@@ -358,7 +358,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                                             }
                                             // fire an event on the feature manager
                                             featureManager.fireEvent("exception", featureManager, 
-                                                response.exceptionReport || {}, msg);
+                                                response.exceptionReport || {}, msg, records);
                                             Ext.Msg.show({
                                                 title: this.exceptionTitle,
                                                 msg: msg,

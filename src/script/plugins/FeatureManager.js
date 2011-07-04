@@ -307,6 +307,8 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
              * * tool - :class:`gxp.plugins.FeatureManager`` this tool
              * * exceptionReport - ``Object`` The exceptionReport object
              * * msg - ``String`` The exception message
+             * * records - ``Array`` of ``GeoExt.data.FeatureRecord`` 
+             *   The features involved in the failing transaction.
              */
             "exception"
         );
