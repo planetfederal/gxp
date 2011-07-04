@@ -60,6 +60,14 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
      *  supported.  Default is ``false``.
      */
     rasterStyling: false,
+
+    /** private: property[transparent]
+     *  ``Boolean``
+     *  Used to store the previous state of the transparent checkbox before
+     *  changing the image format to jpeg (and automagically changing
+     *  the checkbox to disabled and unchecked).
+     */
+    transparent: null,
     
     /** private: property[editableStyles]
      *  ``Boolean``
@@ -320,6 +328,13 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                         layer.mergeNewParams({
                             format: format
                         });
+                        if (format == "image/jpeg") {
+                            this.transparent = Ext.getCmp('transparent').getValue();
+                            Ext.getCmp('transparent').setValue(false);
+                        } else if (this.transparent !== null) {
+                            Ext.getCmp('transparent').setValue(this.transparent);
+                            this.transparent = null;
+                        }
                         Ext.getCmp('transparent').setDisabled(format == "image/jpeg");
                         this.fireEvent("change");
                     },
