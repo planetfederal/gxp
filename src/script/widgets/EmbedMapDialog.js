@@ -109,7 +109,9 @@ gxp.EmbedMapDialog = Ext.extend(Ext.Container, {
             '" width="' + this.widthField.getValue() +'" src="' + 
             gxp.util.getAbsoluteUrl(this.url) + '"></iframe>'
         );
-        this.snippetArea.focus(true, 100);
+        if (this.snippetArea.isVisible() === true) {
+            this.snippetArea.focus(true, 100);
+        }
     },
     
     /** private: method[getConfig]
