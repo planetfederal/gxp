@@ -110,7 +110,7 @@ gxp.util = {
      */
     getAbsoluteUrl: function(url) {
         var a;
-        if(Ext.isIE && !Ext.isIE9) {
+        if(Ext.isIE6 || Ext.isIE7 || Ext.isIE8) {
             a = document.createElement("<a href='" + url + "'/>");
             a.style.display = "none";
             document.body.appendChild(a);
