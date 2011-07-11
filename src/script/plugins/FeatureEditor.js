@@ -314,7 +314,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                     popup = this.addOutput({
                         xtype: "gxp_featureeditpopup",
                         collapsible: true,
-                        feature: feature,
+                        feature: featureStore.getByFeature(feature),
                         vertexRenderIntent: "vertex",
                         readOnly: this.readOnly,
                         fields: this.fields,

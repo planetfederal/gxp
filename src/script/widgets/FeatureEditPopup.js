@@ -40,7 +40,8 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
     layout: "fit",
     
     /** api: config[feature]
-     *  ``OpenLayers.Feature.Vector`` The feature to edit and display.
+     *  ``OpenLayers.Feature.Vector``|``GeoExt.data.FeatureRecord`` The feature
+     *  to edit and display.
      */
     
     /** api: config[vertexRenderIntent]
@@ -197,6 +198,9 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             this.timeFormat = Ext.form.TimeField.prototype.format;
         }
         var feature = this.feature;
+        if (feature instanceof GeoExt.data.FeatureRecord) {
+            feature = this.feature = feature.getFeature();
+        }
         if (!this.location) {
             this.location = feature;
         }
