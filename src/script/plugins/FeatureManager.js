@@ -124,6 +124,11 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      */
     geometryType: null,
     
+    /** api: config[multi]
+     *  ``Boolean`` If set to true, geometries will be casted to Multi
+     *  geometries before writing. No casting will be done for reading.
+     */
+    
     /** private: property[toolsShowingLayer]
      *  ``Object`` keyed by tool id - tools that currently need to show the
      *  layer. Each entry holds a String, which is either "default" or
@@ -700,7 +705,8 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                         fields: fields,
                         proxy: {
                             protocol: {
-                                outputFormat: this.format 
+                                outputFormat: this.format,
+                                multi: this.multi
                             }
                         },
                         maxFeatures: this.maxFeatures,

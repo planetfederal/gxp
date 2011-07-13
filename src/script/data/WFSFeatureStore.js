@@ -30,6 +30,11 @@ gxp.data.WFSFeatureStore = Ext.extend(GeoExt.data.FeatureStore, {
      *  Optional filter to set on the WFSProtocolProxy.
      */
     
+    /** api: config[multi]
+     *  ``Boolean`` If set to true, geometries will be casted to Multi
+     *  geometries before writing. No casting will be done for reading.
+     */
+
     /** api: method[setOgcFilter]
      *  :arg ogcFilter: ``OpenLayers.Filter`` Update the filter used by the
      *      protocol proxy.  You must manually call load or reload to trigger
@@ -50,7 +55,8 @@ gxp.data.WFSFeatureStore = Ext.extend(GeoExt.data.FeatureStore, {
                 geometryName: config.geometryName,
                 schema: config.schema,
                 filter: config.ogcFilter,
-                maxFeatures: config.maxFeatures
+                maxFeatures: config.maxFeatures,
+                multi: config.multi
             }, config.proxy));
         }
         if(!config.writer) {

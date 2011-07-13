@@ -51,6 +51,11 @@ gxp.data.WFSProtocolProxy = Ext.extend(GeoExt.data.ProtocolProxy, {
              *  limit set by default.
              */
 
+            /** api: config[multi]
+             *  ``Boolean`` If set to true, geometries will be casted to Multi
+             *  geometries before writing. No casting will be done for reading.
+             */
+
         });
         
         // create the protocol if none provided
@@ -64,7 +69,8 @@ gxp.data.WFSProtocolProxy = Ext.extend(GeoExt.data.ProtocolProxy, {
                 geometryName: config.geometryName,
                 schema: config.schema,
                 filter: config.filter,
-                maxFeatures: config.maxFeatures
+                maxFeatures: config.maxFeatures,
+                multi: config.multi
             }, config.protocol));
         }
 
