@@ -360,13 +360,14 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                                             featureManager.fireEvent("exception", featureManager, 
                                                 response.exceptionReport || {}, msg, records);
                                             // only show dialog if there is no listener registered
-                                            if (featureManager.hasListener("exception") === false) {
-                                                Ext.Msg.show({
-                                                    title: this.exceptionTitle,
-                                                    msg: msg,
-                                                    icon: Ext.MessageBox.ERROR,
-                                                    buttons: {ok: true}
-                                                });
+                                            if (featureManager.hasListener("exception") === false && 
+                                                featureStore.hasListener("exception") === false) {
+                                                    Ext.Msg.show({
+                                                        title: this.exceptionTitle,
+                                                        msg: msg,
+                                                        icon: Ext.MessageBox.ERROR,
+                                                        buttons: {ok: true}
+                                                    });
                                             }
                                             if (popup && popup.isVisible()) {
                                                 popup.enable();
