@@ -716,13 +716,13 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                         autoSave: false,
                         listeners: {
                             "beforewrite": function(store, action, rs, options) {
-                                this.fireEvent("beforesave", this, this.featureStore, options.params);
+                                this.fireEvent("beforesave", this, store, options.params);
                             },
-                            "write": function() {
+                            "write": function(store, action, result, res, rs) {
                                 this.redrawMatchingLayers(record);
                             },
-                            "load": function() {
-                                this.fireEvent("query", this, this.featureStore, this.filter);
+                            "load": function(store, rs, options) {
+                                this.fireEvent("query", this, store, this.filter);
                             },
                             scope: this
                         }
