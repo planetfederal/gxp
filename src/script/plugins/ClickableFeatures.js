@@ -135,8 +135,10 @@ gxp.plugins.ClickableFeatures = Ext.extend(gxp.plugins.Tool, {
                         var autoLoad = function() {
                             featureManager.loadFeatures(
                                 filter, function(features) {
-                                    this.autoLoadedFeature = features[0];
-                                    this.select(features[0]);
+                                    if (features.length) {
+                                        this.autoLoadedFeature = features[0];
+                                        this.select(features[0]);
+                                    }
                                 }, this
                             );
                         }.createDelegate(this);
