@@ -208,7 +208,10 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                 disabled: true,
                 hidden: featureManager.autoZoomPage,
                 handler: function() {
-                    map.zoomToExtent(featureManager.getPageExtent());
+                    var extent = featureManager.getPageExtent();
+                    if (extent !== null) {
+                        map.zoomToExtent(extent);
+                    }
                 }
             }, {
                 iconCls: "x-tbar-page-next",
