@@ -73,7 +73,7 @@ gxp.plugins.ZoomToSelectedFeatures = Ext.extend(gxp.plugins.ZoomToExtent, {
                     bounds = extent.clone();
                 }
             }
-        };
+        }
         return bounds;
      },
     
@@ -85,11 +85,13 @@ gxp.plugins.ZoomToSelectedFeatures = Ext.extend(gxp.plugins.ZoomToExtent, {
 
         var layer = this.target.tools[this.featureManager].featureLayer;
         layer.events.on({
-            "featureselected": function() {
-                actions[0].isDisabled() && actions[0].enable();
+            "featureselected": function(evt) {
+                if (actions[0].isDisabled() && evt.feature.geometry !== null) {
+                    actions[0].enable();
+                }
             },
             "featureunselected": function() {
-                layer.selectedFeatures.length == 0 && actions[0].disable();
+                layer.selectedFeatures.length === 0 && actions[0].disable();
             }
         });
         
