@@ -197,7 +197,8 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
             } else {
                 name = f.name;
             }
-            if (this.ignoreFields.indexOf(name) === -1) {
+            if (this.ignoreFields.indexOf(name) === -1 &&
+                (this.includeFields === null || this.includeFields.indexOf(name) >= 0)) {
                 columns.push({
                     dataIndex: name,
                     header: this.propertyNames ?
