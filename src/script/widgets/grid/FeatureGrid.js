@@ -32,6 +32,12 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
      *  displayed in the grid.
      */
     ignoreFields: null,
+
+    /** api: config[includeFields]
+     * ``Array`` of field names from the store's records that should be 
+     * displayed in the grid. All other fields will be ignored.
+     */
+    includeFields: null,
     
     /** api: config[propertyNames]
      *  ``Object`` Property name/display name pairs. If specified, the display
@@ -108,8 +114,8 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
      *  Clean up anything created here before calling super onDestroy.
      */
     onDestroy: function() {
-        if(this.initialConfig && this.initialConfig.map
-           && !this.initialConfig.layer) {
+        if(this.initialConfig && this.initialConfig.map &&
+           !this.initialConfig.layer) {
             // we created the layer, let's destroy it
             this.layer.destroy();
             delete this.layer;
@@ -140,8 +146,7 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
         } else {
             this.reconfigure(
                 new Ext.data.Store(),
-                new Ext.grid.ColumnModel({columns: []})
-            );
+                new Ext.grid.ColumnModel({columns: []}));
         }
     },
 
@@ -173,6 +178,7 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
                 switch (type) {
                     case "date":
                         format = this.dateFormat;
+                        break;
                     case "datetime":
                         format = format ? format : this.dateFormat + " " + this.timeFormat;
                         xtype = undefined;
@@ -186,6 +192,7 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
                         break;
                     default:
                         xtype = "numbercolumn";
+                        break;
                 }
             } else {
                 name = f.name;
