@@ -38,6 +38,11 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
      * displayed in the grid. All other fields will be ignored.
      */
     includeFields: null,
+
+    /** api: config[fieldVisibility]
+     * ``Object`` Property name/visibility name pairs. Optional. If specified,
+     * only columns with a value of true will be initially shown.
+     */
     
     /** api: config[propertyNames]
      *  ``Object`` Property name/display name pairs. If specified, the display
@@ -201,6 +206,8 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
                 (this.includeFields === null || this.includeFields.indexOf(name) >= 0)) {
                 columns.push({
                     dataIndex: name,
+                    hidden: this.fieldVisibility ?
+                        (!this.fieldVisibility[name]) : false,
                     header: this.propertyNames ?
                         (this.propertyNames[name] || name) : name,
                     sortable: true,
