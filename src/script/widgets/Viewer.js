@@ -221,7 +221,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         // private array of pending getLayerRecord requests
         this.createLayerRecordQueue = [];
 
-        this.loadConfig(config, this.applyConfig);
+        (config.loadConfig || this.loadConfig).call(this, config, this.applyConfig);
         gxp.Viewer.superclass.constructor.apply(this, arguments);
         
     },
