@@ -944,11 +944,17 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         var legend = new GeoExt.WMSLegend({
             showTitle: false,
             layerRecord: this.layerRecord,
+            autoScroll: true,
             defaults: {
                 listeners: {
-                    "render": function() {
-                        this.getEl().on({
-                            "load": this.doLayout,
+                    "render": function(cmp) {
+                        cmp.getEl().on({
+                            load: function() {
+                                this.doLayout();
+                                if (cmp.getEl().getHeight() > 250) {
+                                    legend.setHeight(250);
+                                }
+                            },
                             "error": this.removeRulesFieldSet,
                             scope: this
                         });
