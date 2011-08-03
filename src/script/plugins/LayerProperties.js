@@ -109,6 +109,16 @@ gxp.plugins.LayerProperties = Ext.extend(gxp.plugins.Tool, {
             defaults: {
                 style: "padding: 10px",
                 autoHeight: this.outputConfig.autoHeight
+            },
+            listeners: {
+                added: function(cmp) {
+                    if (!this.outputTarget) {
+                        cmp.on("afterrender", function() {
+                            cmp.ownerCt.ownerCt.center();
+                        }, this, {single: true});
+                    }
+                },
+                scope: this
             }
         }, config));
     }
