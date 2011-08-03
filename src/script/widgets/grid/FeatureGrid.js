@@ -49,6 +49,11 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
      *  name will be shown as column header instead of the property name.
      */
     
+     /** api: config[customRenderers]
+      *  ``Object`` Property name/renderer pairs. If specified for a field name,
+      *  the custom renderer will be used instead of the type specific one.
+      */
+
     /** api: config[layer]
      *  ``OpenLayers.Layer.Vector``
      *  The vector layer that will be synchronized with the layer store.
@@ -174,7 +179,9 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
                 return date ? date.format(format) : value;
             };
         }
-        var columns = [], name, type, xtype, format, renderer;
+        var columns = [],
+            customRenderers = this.customRenderers || {},
+            name, type, xtype, format, renderer;
         (this.schema || store.fields).each(function(f) {
             if (this.schema) {
                 name = f.get("name");
@@ -203,7 +210,7 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
                 name = f.name;
             }
             if (this.ignoreFields.indexOf(name) === -1 &&
-                (this.includeFields === null || this.includeFields.indexOf(name) >= 0)) {
+               (this.includeFields === null || this.includeFields.indexOf(name) >= 0)) {
                 columns.push({
                     dataIndex: name,
                     hidden: this.fieldVisibility ?
@@ -213,7 +220,8 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
                     sortable: true,
                     xtype: xtype,
                     format: format,
-                    renderer: xtype ? undefined : renderer
+                    renderer: customRenderers[name] ||
+                        (xtype ? undefined : renderer)
                 });
             }
         }, this);
