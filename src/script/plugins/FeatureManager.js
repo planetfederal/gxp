@@ -446,15 +446,18 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
     },
     
     /** api: method[setLayer]
-     *  :arg layerRecord: ``GeoExt.data.LayerRecord``
+     *  :arg layerRecord: ``GeoExt.data.LayerRecord``. If not provided, the
+     *      current layer will be unset.
      *  :returns: ``Boolean`` The layer was changed.
      *
      *  Sets the layer for this tool
      */
     setLayer: function(layerRecord) {
         var change = this.fireEvent("beforelayerchange", this, layerRecord);
-        this.featureLayer.projection = this.getProjection(layerRecord);
         if (change !== false) {
+            if (layerRecord) {
+                this.featureLayer.projection = this.getProjection(layerRecord);
+            }
             if (layerRecord !== this.layerRecord) {
                 this.clearFeatureStore();
                 this.layerRecord = layerRecord;
