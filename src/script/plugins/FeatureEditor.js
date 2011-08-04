@@ -290,7 +290,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                 this.selectControl.unselect(evt.feature);
             },
             "featureunselected": function(evt) {
-                if(popup) {
+                if (popup && !popup.hidden) {
                     popup.close();
                 }
             },
