@@ -81,7 +81,12 @@ gxp.plugins.SnappingAgent = Ext.extend(gxp.plugins.Tool, {
                     var map = this.target.mapPanel.map;
                     var layer = new OpenLayers.Layer.Vector(snapTarget.name, {
                         protocol: featureManager.featureStore.proxy.protocol,
-                        strategies: [new OpenLayers.Strategy.BBOX({ratio: 1.5})],
+                        strategies: [new OpenLayers.Strategy.BBOX({
+                            ratio: 1.5,
+                            // we update manually, because usually the layer is
+                            // invisble and the strategy would not update anyway
+                            autoActivate: false
+                        })],
                         displayInLayerSwitcher: false,
                         visibility: false,
                         minResolution: snapTarget.minResolution,
@@ -90,16 +95,12 @@ gxp.plugins.SnappingAgent = Ext.extend(gxp.plugins.Tool, {
                     map.addLayer(layer);
                     map.events.on({
                         moveend: function() {
-                            var min = snapTarget.minResolution || Number.NEGATIVE_INFINITY;
-                            var max = snapTarget.maxResolution || Number.POSITIVE_INFINITY;
-                            var resolution = map.getResolution();
-                            if (min <= resolution && resolution < max) {
-                                layer.strategies[0].update();
-                            }
+                            this.update(snapTarget);
                         },
                         scope: this
                     });
                     snapTarget.layer = layer;
+                    this.update(snapTarget);
                     this.snappingTargets.push(snapTarget);
                     for (var i=0, ii=this.controls.length; i<ii; ++i) {
                         this.controls[i].addTarget(snapTarget);
@@ -107,7 +108,7 @@ gxp.plugins.SnappingAgent = Ext.extend(gxp.plugins.Tool, {
                     this.target.on({
                         featureedit: function(featureManager, layerCfg) {
                             if (layerCfg.name == name && layerCfg.source == source) {
-                                layer.strategies[0].update({force: true});
+                                this.update(snapTarget, {force: true});
                             }
                         },
                         scope: this
@@ -121,6 +122,23 @@ gxp.plugins.SnappingAgent = Ext.extend(gxp.plugins.Tool, {
         delete snapTarget.name;
 
         featureManager.init(this.target);
+    },
+    
+    /** private: method[update]
+     *  :arg snapTarget: ``Object`` The snapTarget to update
+     *  :arg options: ``Object`` 1st argument for
+     *      OpenLayers.Strategy.BBOX::update
+     *
+     *  Checks if features need to be loaded for the snapTarget, and loads them
+     *  by calling update on the BBOX strategy.
+     */
+    update: function(snapTarget, options) {
+        var min = snapTarget.minResolution || Number.NEGATIVE_INFINITY;
+        var max = snapTarget.maxResolution || Number.POSITIVE_INFINITY;
+        var resolution = this.target.mapPanel.map.getResolution();
+        if (min <= resolution && resolution < max) {
+            snapTarget.layer.strategies[0].update(options);
+        }
     },
     
     /** api: method[addSnappingControl]
