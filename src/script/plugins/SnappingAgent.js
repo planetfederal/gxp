@@ -104,10 +104,19 @@ gxp.plugins.SnappingAgent = Ext.extend(gxp.plugins.Tool, {
                     for (var i=0, ii=this.controls.length; i<ii; ++i) {
                         this.controls[i].addTarget(snapTarget);
                     }
+                    this.target.on({
+                        featureedit: function(featureManager, layerCfg) {
+                            if (layerCfg.name == name && layerCfg.source == source) {
+                                layer.strategies[0].update({force: true});
+                            }
+                        },
+                        scope: this
+                    });
                 },
                 scope: this
             }
         });
+        var name = snapTarget.name, source = snapTarget.source;
         delete snapTarget.source;
         delete snapTarget.name;
 

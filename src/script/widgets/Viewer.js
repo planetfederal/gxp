@@ -210,7 +210,18 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
              *  * layerRecord - ``GeoExt.data.LayerRecord`` the record of the
              *    selected layer, or null if no layer is selected.
              */
-            "layerselectionchange"
+            "layerselectionchange",
+            
+            /** api: event[featureedit]
+             *  Fired when features were edited.
+             *
+             *  Listener arguments:
+             *  * featureManager - ``gxp.plugins.FeatureManager`` the
+             *    the feature manager that was used for editing
+             *  * layer - ``Object`` object with name and source of the layer
+             *    that was edited
+             */
+            "featureedit"
         );
         
         Ext.apply(this, {

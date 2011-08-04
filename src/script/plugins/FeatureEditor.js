@@ -341,6 +341,11 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                                             if (popup && popup.isVisible()) {
                                                 popup.enable();
                                             }
+                                            var layer = featureManager.layerRecord;
+                                            this.target.fireEvent("featureedit", featureManager, {
+                                                name: layer.get("name"),
+                                                source: layer.get("source")
+                                            });
                                         },
                                         single: true
                                     },

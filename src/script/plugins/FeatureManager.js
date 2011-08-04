@@ -383,6 +383,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
             ready: function() {
                 this.target.mapPanel.map.addLayer(this.featureLayer);
             },
+            //TODO add featureedit listener; update the store
             scope: this
         });
         this.on({
