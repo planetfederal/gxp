@@ -287,7 +287,9 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
         
         featureLayer.events.on({
             "beforefeatureremoved": function(evt) {
-                this.selectControl.unselect(evt.feature);
+                if (evt.feature === this.popup.feature) {
+                    this.selectControl.unselect(evt.feature);
+                }
             },
             "featureunselected": function(evt) {
                 if (popup && !popup.hidden) {
@@ -330,7 +332,10 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                                     this.selectControl.unselect(feature);
                                 }
                                 if (feature === this.autoLoadedFeature) {
-                                    featureStore.remove(featureStore.getRecordFromFeature(feature));
+                                    if (feature.layer) {
+                                        feature.layer.removeFeatures([evt.feature]);
+                                    }
+                                    this.autoLoadedFeature = null;
                                 }
                             },
                             "featuremodified": function(popup, feature) {
