@@ -843,11 +843,16 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     getStyles: function(callback) {
         var layer = this.layerRecord.getLayer();
         if(this.editable === true) {
+            var version = layer.params["VERSION"];
+            if (parseFloat(version) > 1.1) {
+                //TODO don't force 1.1.1, fall back instead
+                version = "1.1.1";
+            }
             Ext.Ajax.request({
                 url: layer.url,
                 params: {
                     "SERVICE": "WMS",
-                    "VERSION": layer.params["VERSION"],
+                    "VERSION": version,
                     "REQUEST": "GetStyles",
                     "LAYERS": [layer.params["LAYERS"]].join(",")
                 },
@@ -875,11 +880,16 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             }, 0);
         } else {
             var layer = this.layerRecord.getLayer();
+            var version = layer.params["VERSION"];
+            if (parseFloat(version) > 1.1) {
+                //TODO don't force 1.1.1, fall back instead
+                version = "1.1.1";
+            }
             Ext.Ajax.request({
                 url: layer.url,
                 params: {
                     "SERVICE": "WMS",
-                    "VERSION": layer.params["VERSION"],
+                    "VERSION": version,
                     "REQUEST": "DescribeLayer",
                     "LAYERS": [layer.params["LAYERS"]].join(",")
                 },
