@@ -205,7 +205,7 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
                 feature = features[i];
                 config.push(Ext.applyIf({
                     xtype: "propertygrid",
-                    title: title + (feature.fid ? feature.fid : ""),
+                    title: feature.fid ? feature.fid : title,
                     source: feature.attributes
                 }, baseConfig));
             }
