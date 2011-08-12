@@ -54,6 +54,14 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
      */
     popupTitle: "Feature Info",
     
+    /** api: config[format]
+     *  ``String`` Either "html" or "grid". If set to "grid", GML will be
+     *  requested from the server and displayed in an Ext.PropertyGrid.
+     *  Otherwise, the html output from the server will be displayed as-is.
+     *  Default is "html".
+     */
+    format: "html",
+    
     /** api: config[vendorParams]
      *  ``Object``
      *  Optional object with properties to be serialized as vendor specific
@@ -116,14 +124,18 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
                     url: layer.url,
                     queryVisible: true,
                     layers: [layer],
+                    infoFormat: this.format == "html" ? "text/html" : "application/vnd.ogc.gml",
                     vendorParams: vendorParams,
                     eventListeners: {
                         getfeatureinfo: function(evt) {
-                            var match = evt.text.match(/<body[^>]*>([\s\S]*)<\/body>/);
-                            if (match && !match[1].match(/^\s*$/)) {
-                                this.displayPopup(
-                                    evt, x.get("title") || x.get("name"), match[1]
-                                );
+                            var title = x.get("title") || x.get("name");
+                            if (this.format == "html") {
+                                var match = evt.text.match(/<body[^>]*>([\s\S]*)<\/body>/);
+                                if (match && !match[1].match(/^\s*$/)) {
+                                    this.displayPopup(evt, title, match[1]);
+                                }
+                            } else {
+                                this.displayPopup(evt, title);
                             }
                         },
                         scope: this
@@ -179,15 +191,30 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
             popup = this.popupCache[popupKey];
         }
 
-        // extract just the body content
-        popup.add({
+        var baseConfig = {
             title: title,
             layout: "fit",
-            html: text,
             autoScroll: true,
             autoWidth: true,
             collapsible: true
-        });
+        };
+        var features = evt.features, config = [];
+        if (!text && features) {
+            var feature;
+            for (var i=0,ii=features.length; i<ii; ++i) {
+                feature = features[i];
+                config.push(Ext.applyIf({
+                    xtype: "propertygrid",
+                    title: title + (feature.fid ? feature.fid : ""),
+                    source: feature.attributes
+                }, baseConfig));
+            }
+        } else if (text) {
+            config.push(Ext.applyIf({
+                html: text
+            }, baseConfig));
+        }
+        popup.add(config);
         popup.doLayout();
     }
     
