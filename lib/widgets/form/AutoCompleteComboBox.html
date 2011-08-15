@@ -1,0 +1,187 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>gxp.form.AutoCompleteComboBox &mdash; GXP v0.1</title>
+    <link rel="stylesheet" href="../../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="GXP v0.1" href="../../../index.html" />
+    <link rel="up" title="Widgets" href="../../widgets.html" />
+    <link rel="next" title="gxp.form.ColorField" href="ColorField.html" />
+    <link rel="prev" title="gxp.WMSStylesDialog" href="../WMSStylesDialog.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ColorField.html" title="gxp.form.ColorField"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../WMSStylesDialog.html" title="gxp.WMSStylesDialog"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">GXP</a> &raquo;</li>
+          <li><a href="../../widgets.html" accesskey="U">Widgets</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">gxp.form.AutoCompleteComboBox</span></tt></a><ul>
+<li><a class="reference internal" href="#config-options">Config Options</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../WMSStylesDialog.html"
+                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.WMSStylesDialog</span></tt></a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ColorField.html"
+                        title="next chapter"><tt class="docutils literal"><span class="pre">gxp.form.ColorField</span></tt></a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../_sources/lib/widgets/form/AutoCompleteComboBox.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="gxp-form-autocompletecombobox">
+<h1><a class="reference internal" href="#gxp.form.AutoCompleteComboBox" title="gxp.form.AutoCompleteComboBox"><tt class="xref py py-class docutils literal"><span class="pre">gxp.form.AutoCompleteComboBox</span></tt></a><a class="headerlink" href="#gxp-form-autocompletecombobox" title="Permalink to this headline">¶</a></h1>
+<dl class="meta docutils">
+<dt>Extends</dt>
+<dd><ul class="first last simple">
+<li><a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.form.ComboBox">Ext.form.ComboBox</a></li>
+</ul>
+</dd>
+<dt>xtype</dt>
+<dd><tt class="docutils literal"><span class="pre">gxp_autocompletecombo</span></tt></dd>
+</dl>
+<dl class="class">
+<dt id="gxp.form.AutoCompleteComboBox">
+<em class="property">class </em><tt class="descclassname">gxp.form.</tt><tt class="descname">AutoCompleteComboBox</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#gxp.form.AutoCompleteComboBox" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Creates an autocomplete combo box that issues queries to a WFS typename.</p>
+<div class="section" id="config-options">
+<h2>Config Options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
+<p>Configuration properties in addition to
+those listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.form.ComboBox">Ext.form.ComboBox</a>.</p>
+<dl class="describe">
+<dt>
+<tt class="descname">customSortInfo</tt></dt>
+<dd><p><tt class="docutils literal"><span class="pre">Object</span></tt>
+Providing custom sort info allows sorting of a single field value by
+multiple parts within that value.  For example, a value representing
+a street address like &#8220;1234 Main Street&#8221; would make sense to sort first
+by &#8220;Main Street&#8221; (case insensitive) and then by &#8220;1234&#8221; (as an integer).
+The <tt class="docutils literal"><span class="pre">customSortInfo</span></tt> object must contain <tt class="docutils literal"><span class="pre">matcher</span></tt> and <tt class="docutils literal"><span class="pre">parts</span></tt>
+properties.</p>
+<p>The <tt class="docutils literal"><span class="pre">matcher</span></tt> value will be used to create a regular expression (with
+<tt class="docutils literal"><span class="pre">new</span> <span class="pre">RegExp(matcher)</span></tt>).  This regular expression is assumed to have
+grouping parentheses for each part of the value to be compared.</p>
+<p>The <tt class="docutils literal"><span class="pre">parts</span></tt> value must be an array with the same length as the number
+of groups, or parts of the value to be compared.  Each item in the
+<tt class="docutils literal"><span class="pre">parts</span></tt> array may have an <tt class="docutils literal"><span class="pre">order</span></tt> property and a <tt class="docutils literal"><span class="pre">sortType</span></tt>
+property.  The optional <tt class="docutils literal"><span class="pre">order</span></tt> value determines precedence for a part
+(e.g. part with order 0 will be compared before part with order 1).
+The optional <tt class="docutils literal"><span class="pre">sortType</span></tt> value must be a string matching one of the
+<tt class="docutils literal"><span class="pre">Ext.data.SortTypes</span></tt> methods (e.g. &#8220;asFloat&#8221;).</p>
+<p>Example custom sort info to match addresses like &#8220;123 Main St&#8221; first by
+street name and then by number:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">customSortInfo</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">matcher</span><span class="o">:</span> <span class="s2">&quot;^(\\d+)\\s(.*)$&quot;</span><span class="p">,</span>
+    <span class="nx">parts</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span><span class="nx">order</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">sortType</span><span class="o">:</span> <span class="s2">&quot;asInt&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="nx">order</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">sortType</span><span class="o">:</span> <span class="s2">&quot;asUCString&quot;</span><span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">fieldName</tt></dt>
+<dd><p><tt class="docutils literal"><span class="pre">String</span></tt>
+The name of the field/attribute to search on. The &#8220;name&#8221; of this form
+field will also default to fieldName if not provided explicitly.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ColorField.html" title="gxp.form.ColorField"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../WMSStylesDialog.html" title="gxp.WMSStylesDialog"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">GXP</a> &raquo;</li>
+          <li><a href="../../widgets.html" >Widgets</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2008-2011, The Open Planning Project.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

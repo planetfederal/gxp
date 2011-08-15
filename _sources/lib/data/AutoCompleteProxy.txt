@@ -1,0 +1,25 @@
+
+.. currentmodule:: gxp.data
+
+:class:`gxp.data.AutoCompleteProxy`
+================================================================================
+
+
+
+.. class:: AutoCompleteProxy(config)
+
+  A protocol proxy that will add the filter before doing the request.
+  params.query contains the text entered by the user, when he enters more
+  than minChars characters.
+
+
+    
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,24 @@
+
+.. currentmodule:: gxp.data
+
+:class:`gxp.data.AutoCompleteReader`
+================================================================================
+
+
+
+.. class:: AutoCompleteReader(config)
+
+  A feature reader which filters out duplicates. Used for autocomplete
+  search fields.
+
+
+    
+
+
+
+
+
+
+
+
+
