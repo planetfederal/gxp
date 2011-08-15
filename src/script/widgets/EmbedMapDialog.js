@@ -95,7 +95,7 @@ gxp.EmbedMapDialog = Ext.extend(Ext.Container, {
     /** api: method[getIframeHTML]
      *  :returns: ``String`` the HTML needed to create the iframe
      *
-     *  Get the HTML needed to created the iframe.
+     *  Get the HTML needed to create the iframe.
      */
     getIframeHTML: function() {
         return this.snippetArea.getValue();
@@ -107,8 +107,7 @@ gxp.EmbedMapDialog = Ext.extend(Ext.Container, {
         this.snippetArea.setValue(
             '<iframe style="border: none;" height="' + this.heightField.getValue() +
             '" width="' + this.widthField.getValue() +'" src="' + 
-            gxp.util.getAbsoluteUrl(this.url) + '"></iframe>'
-        );
+            gxp.util.getAbsoluteUrl(this.url) + '"></iframe>');
         if (this.snippetArea.isVisible() === true) {
             this.snippetArea.focus(true, 100);
         }
@@ -209,5 +208,5 @@ gxp.EmbedMapDialog = Ext.extend(Ext.Container, {
     }
 });
 
-/** api: xtype = gx_embedmapdialog */
+/** api: xtype = gxp_embedmapdialog */
 Ext.reg('gxp_embedmapdialog', gxp.EmbedMapDialog);
