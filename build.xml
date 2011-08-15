@@ -11,33 +11,6 @@
     <target name="init">
         <mkdir dir="${build}"/>
 
-        <echo message="pulling in ringo (ignore fatal warning)"/>
-        <mkdir dir="${build}/ringo"/>
-        <exec executable="git" dir="${build}/ringo" failonerror="false">
-            <arg line="clone -nq git://github.com/ringo/ringojs.git ."/>
-        </exec>
-        <exec executable="git" dir="${build}/ringo" failonerror="true">
-            <arg line="pull origin master"/>
-        </exec>
-        <exec executable="git" dir="${build}/ringo" failonerror="true">
-            <arg line="checkout 7af8f2bba20890e4860973fea5254b55bd00c7d7"/>
-        </exec>
-
-        <echo message="building ringo jars"/>
-        <ant dir="${build}/ringo" target="jar" inheritAll="false"/>
-
-        <echo message="pulling in buildkit (ignore fatal warning)"/>
-        <mkdir dir="${build}/buildkit"/>
-        <exec executable="git" dir="${build}/buildkit" failonerror="false">
-            <arg line="clone -nq git://github.com/tschaub/buildkit.git ."/>
-        </exec>
-        <exec executable="git" dir="${build}/buildkit" failonerror="true">
-            <arg line="pull origin master"/>
-        </exec>
-        <exec executable="git" dir="${build}/buildkit" failonerror="true">
-            <arg line="checkout 86eacbd7b3bf62b8e99f46911dd5a633464b8570"/>
-        </exec>
-
         <echo message="pulling in submodules"/>
         <exec executable="git" failonerror="true">
             <arg line="submodule init"/>
@@ -67,6 +40,7 @@
             <arg path="${src}/doc"/>
             <arg path="${build}/doc"/>
         </exec>
+        <delete dir="${build}/doc/_sources"/>
     </target>
 
     <target name="dist" depends="clean, init, doc" description="prepare lib for distribution">
