@@ -4,4 +4,4 @@ src/doc/lib/menu
 src/doc/lib/plugins
 src/doc/lib/widgets
 src/doc/lib/util.rst
-build/gxp
+build/

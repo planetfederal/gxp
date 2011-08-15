@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="gxp" default="dist" basedir=".">
+<project name="gxp" default="dist">
 
     <description>
         GXP Build File
@@ -24,7 +24,7 @@
         </exec>
 
         <echo message="building ringo jars"/>
-        <ant dir="${build}/ringo" target="jar"/>
+        <ant dir="${build}/ringo" target="jar" inheritAll="false"/>
 
         <echo message="pulling in buildkit (ignore fatal warning)"/>
         <mkdir dir="${build}/buildkit"/>
