@@ -17,7 +17,7 @@
  *
  *      Create a new popup which displays the attributes of a feature and
  *      makes the feature editable,
- *      using an ``OpenLayers.Control.MofidyFeature``.
+ *      using an ``OpenLayers.Control.ModifyFeature``.
  */
 Ext.namespace("gxp");
 gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
