@@ -26,6 +26,22 @@ Extends
     
 
 
+Config Options
+--------------
+
+Configuration properties in addition to
+those listed for `Ext.form.CompositeField <http://extjs.com/deploy/dev/docs/?class=Ext.form.CompositeField>`_.
+
+
+.. describe:: lowerBoundaryTip
+
+    ``String`` tooltip for the lower boundary textfield (i18n)
+
+.. describe:: upperBoundaryTip
+
+    ``String`` tooltip for the lower boundary textfield (i18n)
+
+
 
 
 

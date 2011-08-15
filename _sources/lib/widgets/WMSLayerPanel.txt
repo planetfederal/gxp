@@ -75,6 +75,11 @@ those listed for `Ext.TabPanel <http://extjs.com/deploy/dev/docs/?class=Ext.TabP
     Source for the layer. Optional. If not provided, ``sameOriginStyling``
     will be ignored.
 
+.. describe:: styling
+
+    ``Boolean``
+    Show a "Styles" tab. Default is true.
+
 
 
 

@@ -21,7 +21,7 @@ xtype
 
     Create a new popup which displays the attributes of a feature and
     makes the feature editable,
-    using an ``OpenLayers.Control.MofidyFeature``.
+    using an ``OpenLayers.Control.ModifyFeature``.
 
 
     
@@ -55,7 +55,8 @@ Configuration properties.
 
 .. describe:: feature
 
-    ``OpenLayers.Feature.Vector`` The feature to edit and display.
+    ``OpenLayers.Feature.Vector``|``GeoExt.data.FeatureRecord`` The feature
+    to edit and display.
 
 .. describe:: fields
 
@@ -64,6 +65,11 @@ Configuration properties.
     not provided, fields will be derived from attributes. If provided,
     the field order from this list will be used, and fields missing in the
     list will be excluded.
+
+.. describe:: propertyNames
+
+    ``Object`` Property name/display name pairs. If specified, the display
+    name will be shown in the name column instead of the property name.
 
 .. describe:: readOnly
 

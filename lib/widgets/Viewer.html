@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -12,12 +14,13 @@
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
         VERSION:     '0.1',
-        COLLAPSE_MODINDEX: false,
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="top" title="GXP v0.1" href="../../index.html" />
     <link rel="up" title="Widgets" href="../widgets.html" />
@@ -32,8 +35,8 @@
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../../modindex.html" title="Global Module Index"
-             accesskey="M">modules</a> |</li>
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="WMSLayerPanel.html" title="gxp.WMSLayerPanel"
              accesskey="N">next</a> |</li>
@@ -46,42 +49,42 @@
     </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-            <h3><a href="../../index.html">Table Of Contents</a></h3>
-            <ul>
-<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">gxp.Viewer</span></tt></a><ul>
-<li><a class="reference external" href="#example-use">Example Use</a></li>
-<li><a class="reference external" href="#config-options">Config Options</a></li>
-<li><a class="reference external" href="#public-properties">Public Properties</a></li>
-<li><a class="reference external" href="#public-methods">Public Methods</a></li>
-<li><a class="reference external" href="#events">Events</a></li>
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">gxp.Viewer</span></tt></a><ul>
+<li><a class="reference internal" href="#example-use">Example Use</a></li>
+<li><a class="reference internal" href="#config-options">Config Options</a></li>
+<li><a class="reference internal" href="#public-properties">Public Properties</a></li>
+<li><a class="reference internal" href="#public-methods">Public Methods</a></li>
+<li><a class="reference internal" href="#events">Events</a></li>
 </ul>
 </li>
 </ul>
 
-            <h4>Previous topic</h4>
-            <p class="topless"><a href="TextSymbolizer.html"
-                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.TextSymbolizer</span></tt></a></p>
-            <h4>Next topic</h4>
-            <p class="topless"><a href="WMSLayerPanel.html"
-                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.WMSLayerPanel</span></tt></a></p>
-            <h3>This Page</h3>
-            <ul class="this-page-menu">
-              <li><a href="../../_sources/lib/widgets/Viewer.txt"
-                     rel="nofollow">Show Source</a></li>
-            </ul>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="../../search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="TextSymbolizer.html"
+                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.TextSymbolizer</span></tt></a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="WMSLayerPanel.html"
+                        title="next chapter"><tt class="docutils literal"><span class="pre">gxp.WMSLayerPanel</span></tt></a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/lib/widgets/Viewer.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
 
@@ -91,7 +94,7 @@
           <div class="body">
             
   <div class="section" id="gxp-viewer">
-<h1><a title="gxp.Viewer" class="reference internal" href="#gxp.Viewer"><tt class="xref docutils literal"><span class="pre">gxp.Viewer</span></tt></a><a class="headerlink" href="#gxp-viewer" title="Permalink to this headline">¶</a></h1>
+<h1><a class="reference internal" href="#gxp.Viewer" title="gxp.Viewer"><tt class="xref py py-class docutils literal"><span class="pre">gxp.Viewer</span></tt></a><a class="headerlink" href="#gxp-viewer" title="Permalink to this headline">¶</a></h1>
 <dl class="meta docutils">
 <dt>Extends</dt>
 <dd><ul class="first last simple">
@@ -102,10 +105,11 @@
 <dl class="class">
 <dt id="gxp.Viewer">
 <em class="property">class </em><tt class="descclassname">gxp.</tt><tt class="descname">Viewer</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#gxp.Viewer" title="Permalink to this definition">¶</a></dt>
-<dd>A map viewer application framework that can be extended with plugins
+<dd><p>A map viewer application framework that can be extended with plugins
 for layer sources and tools. Types of viewers that can be built with
 this framework range from simple map viewers to complex web-based GIS
-applications with capabilities like feature editing, styling and more.</dd></dl>
+applications with capabilities like feature editing, styling and more.</p>
+</dd></dl>
 
 <div class="section" id="example-use">
 <h2>Example Use<a class="headerlink" href="#example-use" title="Permalink to this headline">¶</a></h2>
@@ -136,21 +140,24 @@ those listed for <a class="reference external" href="http://extjs.com/deploy/dev
 <dl class="describe">
 <dt>
 <tt class="descname">defaultSourceType</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">String</span></tt>
-The default layer source plugin type.</dd></dl>
+<dd><p><tt class="docutils literal"><span class="pre">String</span></tt>
+The default layer source plugin type.</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">defaultToolType</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">String</span></tt>
-The default tool plugin type. Default is &#8220;gxp_tool&#8221;</dd></dl>
+<dd><p><tt class="docutils literal"><span class="pre">String</span></tt>
+The default tool plugin type. Default is &#8220;gxp_tool&#8221;</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">field</tt></dt>
-<dd><a title="gxp.form.ViewerField" class="reference external" href="form/ViewerField.html#gxp.form.ViewerField"><tt class="xref docutils literal"><span class="pre">gxp.form.ViewerField</span></tt></a> Optional - set by
-<a title="gxp.form.ViewerField" class="reference external" href="form/ViewerField.html#gxp.form.ViewerField"><tt class="xref docutils literal"><span class="pre">gxp.form.ViewerField</span></tt></a> so plugins like
-<a title="gxp.plugins.FeatureToField" class="reference external" href="../plugins/FeatureToField.html#gxp.plugins.FeatureToField"><tt class="xref docutils literal"><span class="pre">gxp.plugins.FeatureToField</span></tt></a> can set the form field&#8217;s value.</dd></dl>
+<dd><p><a class="reference internal" href="form/ViewerField.html#gxp.form.ViewerField" title="gxp.form.ViewerField"><tt class="xref py py-class docutils literal"><span class="pre">gxp.form.ViewerField</span></tt></a> Optional - set by
+<a class="reference internal" href="form/ViewerField.html#gxp.form.ViewerField" title="gxp.form.ViewerField"><tt class="xref py py-class docutils literal"><span class="pre">gxp.form.ViewerField</span></tt></a> so plugins like
+<a class="reference internal" href="../plugins/FeatureToField.html#gxp.plugins.FeatureToField" title="gxp.plugins.FeatureToField"><tt class="xref py py-class docutils literal"><span class="pre">gxp.plugins.FeatureToField</span></tt></a> can set the form field&#8217;s value.</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
@@ -163,11 +170,11 @@ exceptions:</p>
 </li>
 <li><p class="first">items: not available - use <tt class="docutils literal"><span class="pre">mapItems</span></tt> instead</p>
 </li>
-<li><p class="first">tbar: not available - use <tt class="xref docutils literal"><span class="pre">gxp.Tool</span></tt> plugins to populate
+<li><p class="first">tbar: not available - use <tt class="xref py py-class docutils literal"><span class="pre">gxp.Tool</span></tt> plugins to populate
 the tbar</p>
 </li>
 <li><p class="first">layers: <tt class="docutils literal"><span class="pre">Array(Object)</span></tt>. Each object has a <tt class="docutils literal"><span class="pre">source</span></tt> property
-referencing a <a title="gxp.plugins.LayerSource" class="reference external" href="../plugins/LayerSource.html#gxp.plugins.LayerSource"><tt class="xref docutils literal"><span class="pre">gxp.plugins.LayerSource</span></tt></a>. The viewer will call
+referencing a <a class="reference internal" href="../plugins/LayerSource.html#gxp.plugins.LayerSource" title="gxp.plugins.LayerSource"><tt class="xref py py-class docutils literal"><span class="pre">gxp.plugins.LayerSource</span></tt></a>. The viewer will call
 the <tt class="docutils literal"><span class="pre">createLayerRecord</span></tt> of this source with the object as
 argument, which will result in a layer being created with the
 configuration provided here.</p>
@@ -179,11 +186,11 @@ sources that maintain a store)</li>
 <li>visibility: <tt class="docutils literal"><span class="pre">Boolean</span></tt> - initial layer visibility</li>
 <li>opacity: <tt class="docutils literal"><span class="pre">Number</span></tt> - initial layer.opacity</li>
 <li>group: <tt class="docutils literal"><span class="pre">String</span></tt> - group for the layer when the viewer also uses a
-<a title="gxp.plugins.LayerTree" class="reference external" href="../plugins/LayerTree.html#gxp.plugins.LayerTree"><tt class="xref docutils literal"><span class="pre">gxp.plugins.LayerTree</span></tt></a>. Set this to &#8220;background&#8221; to make
+<a class="reference internal" href="../plugins/LayerTree.html#gxp.plugins.LayerTree" title="gxp.plugins.LayerTree"><tt class="xref py py-class docutils literal"><span class="pre">gxp.plugins.LayerTree</span></tt></a>. Set this to &#8220;background&#8221; to make
 the layer a base layer</li>
 <li>fixed: <tt class="docutils literal"><span class="pre">Boolean</span></tt> - Set to true to prevent the layer from being
-removed by a <a title="gxp.plugins.RemoveLayer" class="reference external" href="../plugins/RemoveLayer.html#gxp.plugins.RemoveLayer"><tt class="xref docutils literal"><span class="pre">gxp.plugins.RemoveLayer</span></tt></a> tool and from being
-dragged in a <a title="gxp.plugins.LayerTree" class="reference external" href="../plugins/LayerTree.html#gxp.plugins.LayerTree"><tt class="xref docutils literal"><span class="pre">gxp.plugins.LayerTree</span></tt></a></li>
+removed by a <a class="reference internal" href="../plugins/RemoveLayer.html#gxp.plugins.RemoveLayer" title="gxp.plugins.RemoveLayer"><tt class="xref py py-class docutils literal"><span class="pre">gxp.plugins.RemoveLayer</span></tt></a> tool and from being
+dragged in a <a class="reference internal" href="../plugins/LayerTree.html#gxp.plugins.LayerTree" title="gxp.plugins.LayerTree"><tt class="xref py py-class docutils literal"><span class="pre">gxp.plugins.LayerTree</span></tt></a></li>
 <li>selected: <tt class="docutils literal"><span class="pre">Boolean</span></tt> - Set to true to mark the layer selected</li>
 </ul>
 </li>
@@ -208,39 +215,44 @@ in <tt class="docutils literal"><span class="pre">OpenLayers.Map.theme</span></t
 <dl class="describe">
 <dt>
 <tt class="descname">mapItems</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">Array(Ext.Component)</span></tt>
+<dd><p><tt class="docutils literal"><span class="pre">Array(Ext.Component)</span></tt>
 Any items to be added to the map panel. A typical item to put on a map
-would be a <tt class="docutils literal"><span class="pre">GeoExt.ZoomSlider</span></tt>.</dd></dl>
+would be a <tt class="docutils literal"><span class="pre">GeoExt.ZoomSlider</span></tt>.</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">portalConfig</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">Object</span></tt> Configuration object for the wrapping container of the
+<dd><p><tt class="docutils literal"><span class="pre">Object</span></tt> Configuration object for the wrapping container of the
 viewer. This will be an <tt class="docutils literal"><span class="pre">Ext.Panel</span></tt> if it has a <tt class="docutils literal"><span class="pre">renderTo</span></tt>
-property, or an <tt class="docutils literal"><span class="pre">Ext.Viewport</span></tt> otherwise.</dd></dl>
+property, or an <tt class="docutils literal"><span class="pre">Ext.Viewport</span></tt> otherwise.</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">portalItems</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">Array</span></tt> Items for the portal. A MapPanel will automatically be added
-to the portal, unless <tt class="docutils literal"><span class="pre">portalConfig</span></tt> has <tt class="docutils literal"><span class="pre">items</span></tt> configured.</dd></dl>
+<dd><p><tt class="docutils literal"><span class="pre">Array</span></tt> Items for the portal. A MapPanel will automatically be added
+to the portal, unless <tt class="docutils literal"><span class="pre">portalConfig</span></tt> has <tt class="docutils literal"><span class="pre">items</span></tt> configured.</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">sources</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">Object</span></tt> Layer source configurations for this viewer, keyed by source
+<dd><p><tt class="docutils literal"><span class="pre">Object</span></tt> Layer source configurations for this viewer, keyed by source
 id. The source id will be used to reference the layer source in the
-<tt class="docutils literal"><span class="pre">layers</span></tt> array of the <tt class="docutils literal"><span class="pre">map</span></tt> object.</dd></dl>
+<tt class="docutils literal"><span class="pre">layers</span></tt> array of the <tt class="docutils literal"><span class="pre">map</span></tt> object.</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">tools</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">Array(</span></tt> <a title="gxp.plugins.Tool" class="reference external" href="../plugins/Tool.html#gxp.plugins.Tool"><tt class="xref docutils literal"><span class="pre">gxp.plugins.Tool</span></tt></a> <tt class="docutils literal"><span class="pre">)</span></tt>
+<dd><p><tt class="docutils literal"><span class="pre">Array(</span></tt> <a class="reference internal" href="../plugins/Tool.html#gxp.plugins.Tool" title="gxp.plugins.Tool"><tt class="xref py py-class docutils literal"><span class="pre">gxp.plugins.Tool</span></tt></a> <tt class="docutils literal"><span class="pre">)</span></tt>
 Any tools to be added to the viewer. Tools are plugins that will be
 plugged into this viewer&#8217;s <tt class="docutils literal"><span class="pre">portal</span></tt>. The <tt class="docutils literal"><span class="pre">tools</span></tt> array is usually
 populated with configuration objects for plugins (using a ptype),
 rather than instances. A default ptype can be configured with this
-viewer&#8217;s <tt class="docutils literal"><span class="pre">defaultToolType</span></tt> option.</dd></dl>
+viewer&#8217;s <tt class="docutils literal"><span class="pre">defaultToolType</span></tt> option.</p>
+</dd></dl>
 
 </div>
 <div class="section" id="public-properties">
@@ -264,25 +276,29 @@ component (e.g. a login window), it is recommended to set this to
 <dl class="attribute">
 <dt id="gxp.Viewer.field">
 <tt class="descclassname">Viewer.</tt><tt class="descname">field</tt><a class="headerlink" href="#gxp.Viewer.field" title="Permalink to this definition">¶</a></dt>
-<dd><a title="gxp.form.ViewerField" class="reference external" href="form/ViewerField.html#gxp.form.ViewerField"><tt class="xref docutils literal"><span class="pre">gxp.form.ViewerField</span></tt></a> Used by plugins to access the form field.
+<dd><p><a class="reference internal" href="form/ViewerField.html#gxp.form.ViewerField" title="gxp.form.ViewerField"><tt class="xref py py-class docutils literal"><span class="pre">gxp.form.ViewerField</span></tt></a> Used by plugins to access the form field.
 Only available if this viewer is wrapped into an
-<tt class="xref docutils literal"><span class="pre">Ext.form.ViewerField</span></tt>.</dd></dl>
+<tt class="xref py py-class docutils literal"><span class="pre">Ext.form.ViewerField</span></tt>.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="gxp.Viewer.portalItems">
 <tt class="descclassname">Viewer.</tt><tt class="descname">portalItems</tt><a class="headerlink" href="#gxp.Viewer.portalItems" title="Permalink to this definition">¶</a></dt>
-<dd><tt class="docutils literal"><span class="pre">Array(Ext.Component)</span></tt>
-Items that make up the portal.</dd></dl>
+<dd><p><tt class="docutils literal"><span class="pre">Array(Ext.Component)</span></tt>
+Items that make up the portal.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="gxp.Viewer.selectedLayer">
 <tt class="descclassname">Viewer.</tt><tt class="descname">selectedLayer</tt><a class="headerlink" href="#gxp.Viewer.selectedLayer" title="Permalink to this definition">¶</a></dt>
-<dd><tt class="docutils literal"><span class="pre">GeoExt.data.LayerRecord</span></tt> The currently selected layer</dd></dl>
+<dd><p><tt class="docutils literal"><span class="pre">GeoExt.data.LayerRecord</span></tt> The currently selected layer</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="gxp.Viewer.tools">
 <tt class="descclassname">Viewer.</tt><tt class="descname">tools</tt><a class="headerlink" href="#gxp.Viewer.tools" title="Permalink to this definition">¶</a></dt>
-<dd><tt class="docutils literal"><span class="pre">Object</span></tt> Storage of tool instances for this viewer, keyed by id</dd></dl>
+<dd><p><tt class="docutils literal"><span class="pre">Object</span></tt> Storage of tool instances for this viewer, keyed by id</p>
+</dd></dl>
 
 </div>
 <div class="section" id="public-methods">
@@ -297,11 +313,11 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><em>config</em> &#8211; <tt class="docutils literal"><span class="pre">Object</span></tt> A minimal layer configuration object with source
+<li><strong>config</strong> &#8211; <tt class="docutils literal"><span class="pre">Object</span></tt> A minimal layer configuration object with source
 and name properties.</li>
-<li><em>callback</em> &#8211; <tt class="docutils literal"><span class="pre">Function</span></tt> A function to be called with the layer
+<li><strong>callback</strong> &#8211; <tt class="docutils literal"><span class="pre">Function</span></tt> A function to be called with the layer
 record that corresponds to the given config.</li>
-<li><em>scope</em> &#8211; <tt class="docutils literal"><span class="pre">Object</span></tt> Optional scope for the callback.</li>
+<li><strong>scope</strong> &#8211; <tt class="docutils literal"><span class="pre">Object</span></tt> Optional scope for the callback.</li>
 </ul>
 </td>
 </tr>
@@ -325,7 +341,7 @@ configured before the call.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>config</em> &#8211; <tt class="docutils literal"><span class="pre">Object</span></tt> A minimal layer configuration object with source
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config</strong> &#8211; <tt class="docutils literal"><span class="pre">Object</span></tt> A minimal layer configuration object with source
 and name properties.</td>
 </tr>
 <tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">GeoExt.data.LayerRecord</span></tt></td>
@@ -342,7 +358,7 @@ and name properties.</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>layerRec</em> &#8211; <tt class="docutils literal"><span class="pre">GeoExt.data.LayerRecord</span></tt> the layer to get the
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>layerRec</strong> &#8211; <tt class="docutils literal"><span class="pre">GeoExt.data.LayerRecord</span></tt> the layer to get the
 source for.</td>
 </tr>
 </tbody>
@@ -373,7 +389,7 @@ will prompt for credentials when needed.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>role</em> &#8211; <tt class="docutils literal"><span class="pre">String</span></tt> optional, default is &#8220;ROLE_ADMINISTRATOR&#8221;</td>
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>role</strong> &#8211; <tt class="docutils literal"><span class="pre">String</span></tt> optional, default is &#8220;ROLE_ADMINISTRATOR&#8221;</td>
 </tr>
 <tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">Boolean</span></tt> The user is authorized for the given role.</td>
 </tr>
@@ -393,7 +409,7 @@ credentials.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>config</em> &#8211; <tt class="docutils literal"><span class="pre">Object</span></tt> The config object passed to the constructor.</td>
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config</strong> &#8211; <tt class="docutils literal"><span class="pre">Object</span></tt> The config object passed to the constructor.</td>
 </tr>
 </tbody>
 </table>
@@ -408,7 +424,7 @@ any configuration before applyConfig is called.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>record</em> &#8211; <tt class="docutils literal"><span class="pre">GeoExt.data.LayerRecord`</span></tt> Layer record.  Call with no
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>record</strong> &#8211; <tt class="docutils literal"><span class="pre">GeoExt.data.LayerRecord`</span></tt> Layer record.  Call with no
 layer record to remove layer selection.</td>
 </tr>
 <tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">Boolean</span></tt> Layers were set as selected.</td>
@@ -438,6 +454,20 @@ selected layer, or null if no layer is selected.</li>
 
 <dl class="describe">
 <dt>
+<tt class="descname">featureedit</tt></dt>
+<dd><p>Fired when features were edited.</p>
+<p>Listener arguments:
+* featureManager - <tt class="docutils literal"><span class="pre">gxp.plugins.FeatureManager</span></tt> the</p>
+<blockquote>
+<div>the feature manager that was used for editing</div></blockquote>
+<ul class="simple">
+<li>layer - <tt class="docutils literal"><span class="pre">Object</span></tt> object with name and source of the layer
+that was edited</li>
+</ul>
+</dd></dl>
+
+<dl class="describe">
+<dt>
 <tt class="descname">layerselectionchange</tt></dt>
 <dd><p>Fired when the selected set of layers changes.</p>
 <p>Listeners arguments:</p>
@@ -450,12 +480,14 @@ selected layer, or null if no layer is selected.</li>
 <dl class="describe">
 <dt>
 <tt class="descname">portalready</tt></dt>
-<dd>Fires after the portal is initialized.</dd></dl>
+<dd><p>Fires after the portal is initialized.</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">ready</tt></dt>
-<dd>Fires when application is ready for user interaction.</dd></dl>
+<dd><p>Fires when application is ready for user interaction.</p>
+</dd></dl>
 
 </div>
 </div>
@@ -473,7 +505,7 @@ selected layer, or null if no layer is selected.</li>
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../../modindex.html" title="Global Module Index"
+          <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="WMSLayerPanel.html" title="gxp.WMSLayerPanel"
@@ -486,8 +518,8 @@ selected layer, or null if no layer is selected.</li>
       </ul>
     </div>
     <div class="footer">
-      &copy; Copyright 2008-2011, The Open Planning Project.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+        &copy; Copyright 2008-2011, The Open Planning Project.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>
 </html>

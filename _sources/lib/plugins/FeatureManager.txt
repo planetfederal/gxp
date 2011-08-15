@@ -144,6 +144,11 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
 
     ``Number`` Default is 100
 
+.. describe:: multi
+
+    ``Boolean`` If set to true, geometries will be casted to Multi
+    geometries before writing. No casting will be done for reading.
+
 .. describe:: outputAction
 
     ``Number`` The ``actions`` array index of the action that should
@@ -314,7 +319,8 @@ listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.uti
 
 .. method:: FeatureManager.setLayer
 
-    :arg layerRecord: ``GeoExt.data.LayerRecord``
+    :arg layerRecord: ``GeoExt.data.LayerRecord``. If not provided, the
+        current layer will be unset.
     :returns: ``Boolean`` The layer was changed.
     
     Sets the layer for this tool
@@ -439,6 +445,17 @@ listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.uti
     * scope - ``Object`` the scope argument passed to the
       loadFeatures method
 
+.. describe:: beforesave
+
+    Fired before a transaction is saved.
+    
+    Listener arguments:
+    
+    * tool - :class:`gxp.plugins.FeatureManager` this tool
+    * store - :class:`gxp.data.WFSFeatureStore`
+    * params - ``Object`` The params object which can be used to
+      manipulate a transaction request.
+
 .. describe:: beforsetpage
 
     Fired if paging is on, before a different page is requested. This
@@ -470,6 +487,18 @@ listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.uti
     
     Listener arguments:
     * tool - :class:`gxp.plugins.Tool` the deactivated tool
+
+.. describe:: exception
+
+    Fired when an exception occurs.
+    
+    Listener arguments:
+    
+    * tool - :class:`gxp.plugins.FeatureManager`` this tool
+    * exceptionReport - ``Object`` The exceptionReport object
+    * msg - ``String`` The exception message
+    * records - ``Array`` of ``GeoExt.data.FeatureRecord``
+      The features involved in the failing transaction.
 
 .. describe:: layerchange
 

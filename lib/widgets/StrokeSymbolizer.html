@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -12,12 +14,13 @@
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
         VERSION:     '0.1',
-        COLLAPSE_MODINDEX: false,
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="top" title="GXP v0.1" href="../../index.html" />
     <link rel="up" title="Widgets" href="../widgets.html" />
@@ -32,8 +35,8 @@
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../../modindex.html" title="Global Module Index"
-             accesskey="M">modules</a> |</li>
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="StylePropertiesDialog.html" title="gxp.StylePropertiesDialog"
              accesskey="N">next</a> |</li>
@@ -46,38 +49,38 @@
     </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-            <h3><a href="../../index.html">Table Of Contents</a></h3>
-            <ul>
-<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">gxp.StrokeSymbolizer</span></tt></a><ul>
-<li><a class="reference external" href="#config-options">Config Options</a></li>
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">gxp.StrokeSymbolizer</span></tt></a><ul>
+<li><a class="reference internal" href="#config-options">Config Options</a></li>
 </ul>
 </li>
 </ul>
 
-            <h4>Previous topic</h4>
-            <p class="topless"><a href="ScaleOverlay.html"
-                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.ScaleOverlay</span></tt></a></p>
-            <h4>Next topic</h4>
-            <p class="topless"><a href="StylePropertiesDialog.html"
-                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.StylePropertiesDialog</span></tt></a></p>
-            <h3>This Page</h3>
-            <ul class="this-page-menu">
-              <li><a href="../../_sources/lib/widgets/StrokeSymbolizer.txt"
-                     rel="nofollow">Show Source</a></li>
-            </ul>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="../../search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ScaleOverlay.html"
+                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.ScaleOverlay</span></tt></a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="StylePropertiesDialog.html"
+                        title="next chapter"><tt class="docutils literal"><span class="pre">gxp.StylePropertiesDialog</span></tt></a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/lib/widgets/StrokeSymbolizer.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
 
@@ -87,7 +90,7 @@
           <div class="body">
             
   <div class="section" id="gxp-strokesymbolizer">
-<h1><a title="gxp.StrokeSymbolizer" class="reference internal" href="#gxp.StrokeSymbolizer"><tt class="xref docutils literal"><span class="pre">gxp.StrokeSymbolizer</span></tt></a><a class="headerlink" href="#gxp-strokesymbolizer" title="Permalink to this headline">¶</a></h1>
+<h1><a class="reference internal" href="#gxp.StrokeSymbolizer" title="gxp.StrokeSymbolizer"><tt class="xref py py-class docutils literal"><span class="pre">gxp.StrokeSymbolizer</span></tt></a><a class="headerlink" href="#gxp-strokesymbolizer" title="Permalink to this headline">¶</a></h1>
 <dl class="meta docutils">
 <dt>Extends</dt>
 <dd><ul class="first last simple">
@@ -100,7 +103,8 @@
 <dl class="class">
 <dt id="gxp.StrokeSymbolizer">
 <em class="property">class </em><tt class="descclassname">gxp.</tt><tt class="descname">StrokeSymbolizer</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#gxp.StrokeSymbolizer" title="Permalink to this definition">¶</a></dt>
-<dd>Form for configuring a symbolizer stroke.</dd></dl>
+<dd><p>Form for configuring a symbolizer stroke.</p>
+</dd></dl>
 
 <div class="section" id="config-options">
 <h2>Config Options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
@@ -109,40 +113,45 @@ those listed for <a class="reference external" href="http://extjs.com/deploy/dev
 <dl class="describe">
 <dt>
 <tt class="descname">checkboxToggle</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> Set to false if the &#8220;Fill&#8221; fieldset should not be
-toggleable. Default is true.</dd></dl>
+<dd><p><tt class="docutils literal"><span class="pre">Boolean</span></tt> Set to false if the &#8220;Fill&#8221; fieldset should not be
+toggleable. Default is true.</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">colorManager</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">Function</span></tt>
+<dd><p><tt class="docutils literal"><span class="pre">Function</span></tt>
 Optional color manager constructor to be used as a plugin for the color
-field.</dd></dl>
+field.</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">dashStyles</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">Array(Array)</span></tt>
+<dd><p><tt class="docutils literal"><span class="pre">Array(Array)</span></tt>
 A list of [value, name] pairs for stroke dash styles.
 The first item in each list is the value and the second is the
 display name.  Default is [[&#8220;solid&#8221;, &#8220;solid&#8221;], [&#8220;2 4&#8221;, &#8220;dash&#8221;],
-[&#8220;1 4&#8221;, &#8220;dot&#8221;]].</dd></dl>
+[&#8220;1 4&#8221;, &#8220;dot&#8221;]].</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">defaultColor</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">String</span></tt> Default background color for the Color field. This
+<dd><p><tt class="docutils literal"><span class="pre">String</span></tt> Default background color for the Color field. This
 color will be displayed when no strokeColor value for the symbolizer
 is available. Defaults to the <tt class="docutils literal"><span class="pre">strokeColor</span></tt> property of
-<tt class="docutils literal"><span class="pre">OpenLayers.Renderer.defaultSymbolizer</span></tt>.</dd></dl>
+<tt class="docutils literal"><span class="pre">OpenLayers.Renderer.defaultSymbolizer</span></tt>.</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">symbolizer</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">Object</span></tt>
+<dd><p><tt class="docutils literal"><span class="pre">Object</span></tt>
 A symbolizer object that will be used to fill in form values.
 This object will be modified when values change.  Clone first if
-you do not want your symbolizer modified.</dd></dl>
+you do not want your symbolizer modified.</p>
+</dd></dl>
 
 </div>
 </div>
@@ -160,7 +169,7 @@ you do not want your symbolizer modified.</dd></dl>
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../../modindex.html" title="Global Module Index"
+          <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="StylePropertiesDialog.html" title="gxp.StylePropertiesDialog"
@@ -173,8 +182,8 @@ you do not want your symbolizer modified.</dd></dl>
       </ul>
     </div>
     <div class="footer">
-      &copy; Copyright 2008-2011, The Open Planning Project.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+        &copy; Copyright 2008-2011, The Open Planning Project.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>
 </html>

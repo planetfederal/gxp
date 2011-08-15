@@ -36,6 +36,11 @@ those listed for `Ext.data.Store <http://extjs.com/deploy/dev/docs/?class=Ext.da
     Optional limit for number of features requested in a read.  No limit
     set by default.
 
+.. describe:: multi
+
+    ``Boolean`` If set to true, geometries will be casted to Multi
+    geometries before writing. No casting will be done for reading.
+
 .. describe:: ogcFilter
 
     ``OpenLayers.Filter``

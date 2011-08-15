@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -12,12 +14,13 @@
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
         VERSION:     '0.1',
-        COLLAPSE_MODINDEX: false,
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="top" title="GXP v0.1" href="../../index.html" />
     <link rel="up" title="gxp.plugins" href="../plugins.html" />
@@ -32,8 +35,8 @@
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../../modindex.html" title="Global Module Index"
-             accesskey="M">modules</a> |</li>
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="LayerProperties.html" title="gxp.plugins.LayerProperties"
              accesskey="N">next</a> |</li>
@@ -46,42 +49,42 @@
     </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-            <h3><a href="../../index.html">Table Of Contents</a></h3>
-            <ul>
-<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">gxp.plugins.GoogleSource</span></tt></a><ul>
-<li><a class="reference external" href="#example-use">Example Use</a></li>
-<li><a class="reference external" href="#config-options">Config Options</a></li>
-<li><a class="reference external" href="#public-properties">Public Properties</a></li>
-<li><a class="reference external" href="#public-methods">Public Methods</a></li>
-<li><a class="reference external" href="#events">Events</a></li>
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">gxp.plugins.GoogleSource</span></tt></a><ul>
+<li><a class="reference internal" href="#example-use">Example Use</a></li>
+<li><a class="reference internal" href="#config-options">Config Options</a></li>
+<li><a class="reference internal" href="#public-properties">Public Properties</a></li>
+<li><a class="reference internal" href="#public-methods">Public Methods</a></li>
+<li><a class="reference internal" href="#events">Events</a></li>
 </ul>
 </li>
 </ul>
 
-            <h4>Previous topic</h4>
-            <p class="topless"><a href="GoogleGeocoder.html"
-                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins.GoogleGeocoder</span></tt></a></p>
-            <h4>Next topic</h4>
-            <p class="topless"><a href="LayerProperties.html"
-                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.plugins.LayerProperties</span></tt></a></p>
-            <h3>This Page</h3>
-            <ul class="this-page-menu">
-              <li><a href="../../_sources/lib/plugins/GoogleSource.txt"
-                     rel="nofollow">Show Source</a></li>
-            </ul>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="../../search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="GoogleGeocoder.html"
+                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.plugins.GoogleGeocoder</span></tt></a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="LayerProperties.html"
+                        title="next chapter"><tt class="docutils literal"><span class="pre">gxp.plugins.LayerProperties</span></tt></a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/lib/plugins/GoogleSource.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
 
@@ -91,12 +94,12 @@
           <div class="body">
             
   <div class="section" id="gxp-plugins-googlesource">
-<h1><tt class="xref docutils literal"><span class="pre">gxp.plugins.GoogleSource</span></tt><a class="headerlink" href="#gxp-plugins-googlesource" title="Permalink to this headline">¶</a></h1>
+<h1><tt class="xref py py-class docutils literal"><span class="pre">gxp.plugins.GoogleSource</span></tt><a class="headerlink" href="#gxp-plugins-googlesource" title="Permalink to this headline">¶</a></h1>
 <dl class="meta docutils">
 <dt>Extends</dt>
 <dd><ul class="first last simple">
 <li><a class="reference external" href="http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable">Ext.util.Observable</a></li>
-<li><a title="gxp.plugins.LayerSource" class="reference external" href="LayerSource.html#gxp.plugins.LayerSource"><tt class="xref docutils literal"><span class="pre">gxp.plugins.LayerSource</span></tt></a></li>
+<li><a class="reference internal" href="LayerSource.html#gxp.plugins.LayerSource" title="gxp.plugins.LayerSource"><tt class="xref py py-class docutils literal"><span class="pre">gxp.plugins.LayerSource</span></tt></a></li>
 </ul>
 </dd>
 <dt>ptype</dt>
@@ -105,7 +108,7 @@
 <dl class="class">
 <dt id="gxp.plugins.GoolgeSource">
 <em class="property">class </em><tt class="descclassname">gxp.plugins.</tt><tt class="descname">GoolgeSource</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#gxp.plugins.GoolgeSource" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plugin for using Google layers with <a title="gxp.Viewer" class="reference external" href="../widgets/Viewer.html#gxp.Viewer"><tt class="xref docutils literal"><span class="pre">gxp.Viewer</span></tt></a> instances. The
+<dd><p>Plugin for using Google layers with <a class="reference internal" href="../widgets/Viewer.html#gxp.Viewer" title="gxp.Viewer"><tt class="xref py py-class docutils literal"><span class="pre">gxp.Viewer</span></tt></a> instances. The
 plugin uses the GMaps v3 API and also takes care of loading the
 required Google resources.</p>
 <p>Available layer names for this source are &#8220;ROADMAP&#8221;, &#8220;SATELLITE&#8221;,
@@ -114,7 +117,7 @@ required Google resources.</p>
 
 <div class="section" id="example-use">
 <h2>Example Use<a class="headerlink" href="#example-use" title="Permalink to this headline">¶</a></h2>
-<p>The configuration in the <tt class="docutils literal"><span class="pre">sources</span></tt> property of the <a title="gxp.Viewer" class="reference external" href="../widgets/Viewer.html#gxp.Viewer"><tt class="xref docutils literal"><span class="pre">gxp.Viewer</span></tt></a> is
+<p>The configuration in the <tt class="docutils literal"><span class="pre">sources</span></tt> property of the <a class="reference internal" href="../widgets/Viewer.html#gxp.Viewer" title="gxp.Viewer"><tt class="xref py py-class docutils literal"><span class="pre">gxp.Viewer</span></tt></a> is
 straightforward:</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span class="s2">&quot;google&quot;</span><span class="o">:</span> <span class="p">{</span>
     <span class="nx">ptype</span><span class="o">:</span> <span class="s2">&quot;gxp_google&quot;</span>
@@ -137,32 +140,37 @@ those listed for <a class="reference external" href="http://extjs.com/deploy/dev
 <dl class="describe">
 <dt>
 <tt class="descname">hybridAbstract</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">String</span></tt>
-Description of the HYBRID layer (i18n).</dd></dl>
+<dd><p><tt class="docutils literal"><span class="pre">String</span></tt>
+Description of the HYBRID layer (i18n).</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">roadmapAbstract</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">String</span></tt>
-Description of the ROADMAP layer (i18n).</dd></dl>
+<dd><p><tt class="docutils literal"><span class="pre">String</span></tt>
+Description of the ROADMAP layer (i18n).</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">satelliteAbstract</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">String</span></tt>
-Description of the SATELLITE layer (i18n).</dd></dl>
+<dd><p><tt class="docutils literal"><span class="pre">String</span></tt>
+Description of the SATELLITE layer (i18n).</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">terrainAbstract</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">String</span></tt>
-Description of the TERRAIN layer (i18n).</dd></dl>
+<dd><p><tt class="docutils literal"><span class="pre">String</span></tt>
+Description of the TERRAIN layer (i18n).</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">title</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">String</span></tt>
-A descriptive title for this layer source (i18n).</dd></dl>
+<dd><p><tt class="docutils literal"><span class="pre">String</span></tt>
+A descriptive title for this layer source (i18n).</p>
+</dd></dl>
 
 </div>
 <div class="section" id="public-properties">
@@ -172,14 +180,16 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
 <dl class="attribute">
 <dt id="gxp.plugins.GoogleSource.store">
 <tt class="descclassname">GoogleSource.</tt><tt class="descname">store</tt><a class="headerlink" href="#gxp.plugins.GoogleSource.store" title="Permalink to this definition">¶</a></dt>
-<dd><tt class="docutils literal"><span class="pre">GeoExt.data.LayerStore</span></tt> containing records with &#8220;ROADMAP&#8221;,
-&#8220;SATELLITE&#8221;, &#8220;HYBRID&#8221; and &#8220;TERRAIN&#8221; name fields.</dd></dl>
+<dd><p><tt class="docutils literal"><span class="pre">GeoExt.data.LayerStore</span></tt> containing records with &#8220;ROADMAP&#8221;,
+&#8220;SATELLITE&#8221;, &#8220;HYBRID&#8221; and &#8220;TERRAIN&#8221; name fields.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="gxp.plugins.GoogleSource.title">
 <tt class="descclassname">GoogleSource.</tt><tt class="descname">title</tt><a class="headerlink" href="#gxp.plugins.GoogleSource.title" title="Permalink to this definition">¶</a></dt>
-<dd><tt class="docutils literal"><span class="pre">String</span></tt>
-A descriptive title for this layer source.</dd></dl>
+<dd><p><tt class="docutils literal"><span class="pre">String</span></tt>
+A descriptive title for this layer source.</p>
+</dd></dl>
 
 </div>
 <div class="section" id="public-methods">
@@ -193,7 +203,7 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>config</em> &#8211; <tt class="docutils literal"><span class="pre">Object</span></tt>  The application config for this layer.</td>
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config</strong> &#8211; <tt class="docutils literal"><span class="pre">Object</span></tt>  The application config for this layer.</td>
 </tr>
 <tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">GeoExt.data.LayerRecord</span></tt></td>
 </tr>
@@ -205,7 +215,8 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
 <dl class="method">
 <dt id="gxp.plugins.GoogleSource.createStore">
 <tt class="descclassname">GoogleSource.</tt><tt class="descname">createStore</tt><big>(</big><big>)</big><a class="headerlink" href="#gxp.plugins.GoogleSource.createStore" title="Permalink to this definition">¶</a></dt>
-<dd>Creates a store of layer records.  Fires &#8220;ready&#8221; when store is loaded.</dd></dl>
+<dd><p>Creates a store of layer records.  Fires &#8220;ready&#8221; when store is loaded.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="gxp.plugins.GoogleSource.getConfigForRecord">
@@ -214,7 +225,7 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>record</em> &#8211; <tt class="xref docutils literal"><span class="pre">GeoExt.data.LayerRecord</span></tt></td>
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>record</strong> &#8211; <tt class="xref py py-class docutils literal"><span class="pre">GeoExt.data.LayerRecord</span></tt></td>
 </tr>
 <tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">Object</span></tt></td>
 </tr>
@@ -230,7 +241,7 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>layerRecord</em> &#8211; <tt class="docutils literal"><span class="pre">GeoExt.data.LayerRecord</span></tt> a record from this
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>layerRecord</strong> &#8211; <tt class="docutils literal"><span class="pre">GeoExt.data.LayerRecord</span></tt> a record from this
 source&#8217;s store</td>
 </tr>
 <tr class="field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">OpenLayers.Projection</span></tt> A suitable projection for the
@@ -252,7 +263,7 @@ that fits the map projection, null will be returned.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>options</em> &#8211; <tt class="docutils literal"><span class="pre">Object</span></tt></td>
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>options</strong> &#8211; <tt class="docutils literal"><span class="pre">Object</span></tt></td>
 </tr>
 </tbody>
 </table>
@@ -280,11 +291,11 @@ that fits the map projection, null will be returned.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>target</em> &#8211; <tt class="docutils literal"><span class="pre">Object</span></tt> The object initializing this plugin.</td>
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>target</strong> &#8211; <tt class="docutils literal"><span class="pre">Object</span></tt> The object initializing this plugin.</td>
 </tr>
 </tbody>
 </table>
-<p>Calls <a title="gxp.plugins.GoogleSource.createStore" class="reference internal" href="#gxp.plugins.GoogleSource.createStore"><tt class="xref docutils literal"><span class="pre">createStore()</span></tt></a> with a callback that fires the &#8216;ready&#8217; event.</p>
+<p>Calls <a class="reference internal" href="#gxp.plugins.GoogleSource.createStore" title="gxp.plugins.GoogleSource.createStore"><tt class="xref py py-meth docutils literal"><span class="pre">createStore()</span></tt></a> with a callback that fires the &#8216;ready&#8217; event.</p>
 </dd></dl>
 
 </div>
@@ -295,12 +306,14 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
 <dl class="describe">
 <dt>
 <tt class="descname">failure</tt></dt>
-<dd>Fires if the layer source fails to load.</dd></dl>
+<dd><p>Fires if the layer source fails to load.</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">ready</tt></dt>
-<dd>Fires when the layer source is ready for action.</dd></dl>
+<dd><p>Fires when the layer source is ready for action.</p>
+</dd></dl>
 
 </div>
 </div>
@@ -318,7 +331,7 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../../modindex.html" title="Global Module Index"
+          <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="LayerProperties.html" title="gxp.plugins.LayerProperties"
@@ -331,8 +344,8 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
       </ul>
     </div>
     <div class="footer">
-      &copy; Copyright 2008-2011, The Open Planning Project.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+        &copy; Copyright 2008-2011, The Open Planning Project.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>
 </html>

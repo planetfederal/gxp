@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -12,12 +14,13 @@
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
         VERSION:     '0.1',
-        COLLAPSE_MODINDEX: false,
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="top" title="GXP v0.1" href="../../index.html" />
     <link rel="up" title="Widgets" href="../widgets.html" />
@@ -32,8 +35,8 @@
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../../modindex.html" title="Global Module Index"
-             accesskey="M">modules</a> |</li>
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="FillSymbolizer.html" title="gxp.FillSymbolizer"
              accesskey="N">next</a> |</li>
@@ -46,39 +49,39 @@
     </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-            <h3><a href="../../index.html">Table Of Contents</a></h3>
-            <ul>
-<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">gxp.FeatureEditPopup</span></tt></a><ul>
-<li><a class="reference external" href="#config-options">Config Options</a></li>
-<li><a class="reference external" href="#public-properties">Public Properties</a></li>
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">gxp.FeatureEditPopup</span></tt></a><ul>
+<li><a class="reference internal" href="#config-options">Config Options</a></li>
+<li><a class="reference internal" href="#public-properties">Public Properties</a></li>
 </ul>
 </li>
 </ul>
 
-            <h4>Previous topic</h4>
-            <p class="topless"><a href="EmbedMapDialog.html"
-                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.EmbedMapDialog</span></tt></a></p>
-            <h4>Next topic</h4>
-            <p class="topless"><a href="FillSymbolizer.html"
-                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.FillSymbolizer</span></tt></a></p>
-            <h3>This Page</h3>
-            <ul class="this-page-menu">
-              <li><a href="../../_sources/lib/widgets/FeatureEditPopup.txt"
-                     rel="nofollow">Show Source</a></li>
-            </ul>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="../../search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="EmbedMapDialog.html"
+                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.EmbedMapDialog</span></tt></a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="FillSymbolizer.html"
+                        title="next chapter"><tt class="docutils literal"><span class="pre">gxp.FillSymbolizer</span></tt></a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/lib/widgets/FeatureEditPopup.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
 
@@ -88,7 +91,7 @@
           <div class="body">
             
   <div class="section" id="gxp-featureeditpopup">
-<h1><a title="gxp.FeatureEditPopup" class="reference internal" href="#gxp.FeatureEditPopup"><tt class="xref docutils literal"><span class="pre">gxp.FeatureEditPopup</span></tt></a><a class="headerlink" href="#gxp-featureeditpopup" title="Permalink to this headline">¶</a></h1>
+<h1><a class="reference internal" href="#gxp.FeatureEditPopup" title="gxp.FeatureEditPopup"><tt class="xref py py-class docutils literal"><span class="pre">gxp.FeatureEditPopup</span></tt></a><a class="headerlink" href="#gxp-featureeditpopup" title="Permalink to this headline">¶</a></h1>
 <dl class="meta docutils">
 <dt>xtype</dt>
 <dd><tt class="docutils literal"><span class="pre">gxp_featureeditpopup</span></tt></dd>
@@ -96,9 +99,10 @@
 <dl class="class">
 <dt id="gxp.FeatureEditPopup">
 <em class="property">class </em><tt class="descclassname">gxp.</tt><tt class="descname">FeatureEditPopup</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#gxp.FeatureEditPopup" title="Permalink to this definition">¶</a></dt>
-<dd>Create a new popup which displays the attributes of a feature and
+<dd><p>Create a new popup which displays the attributes of a feature and
 makes the feature editable,
-using an <tt class="docutils literal"><span class="pre">OpenLayers.Control.MofidyFeature</span></tt>.</dd></dl>
+using an <tt class="docutils literal"><span class="pre">OpenLayers.Control.ModifyFeature</span></tt>.</p>
+</dd></dl>
 
 <div class="section" id="config-options">
 <h2>Config Options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
@@ -106,64 +110,82 @@ using an <tt class="docutils literal"><span class="pre">OpenLayers.Control.Mofid
 <dl class="describe">
 <dt>
 <tt class="descname">allowDelete</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> Set to true to provide a Delete button for deleting the
-feature. Default is false.</dd></dl>
+<dd><p><tt class="docutils literal"><span class="pre">Boolean</span></tt> Set to true to provide a Delete button for deleting the
+feature. Default is false.</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">dateFormat</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">String</span></tt> Date format. Default is the value of
-<tt class="docutils literal"><span class="pre">Ext.form.DateField.prototype.format</span></tt>.</dd></dl>
+<dd><p><tt class="docutils literal"><span class="pre">String</span></tt> Date format. Default is the value of
+<tt class="docutils literal"><span class="pre">Ext.form.DateField.prototype.format</span></tt>.</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">editing</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> Set to true to open the popup in editing mode.
-Default is false.</dd></dl>
+<dd><p><tt class="docutils literal"><span class="pre">Boolean</span></tt> Set to true to open the popup in editing mode.
+Default is false.</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">excludeFields</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">Array</span></tt> Optional list of field names (case sensitive) that are to be
-excluded from the property grid.</dd></dl>
+<dd><p><tt class="docutils literal"><span class="pre">Array</span></tt> Optional list of field names (case sensitive) that are to be
+excluded from the property grid.</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">feature</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">OpenLayers.Feature.Vector</span></tt> The feature to edit and display.</dd></dl>
+<dd><p><tt class="docutils literal"><span class="pre">OpenLayers.Feature.Vector``|``GeoExt.data.FeatureRecord</span></tt> The feature
+to edit and display.</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">fields</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">Array</span></tt>
+<dd><p><tt class="docutils literal"><span class="pre">Array</span></tt>
 List of field config names corresponding to feature attributes.  If
 not provided, fields will be derived from attributes. If provided,
 the field order from this list will be used, and fields missing in the
-list will be excluded.</dd></dl>
+list will be excluded.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">propertyNames</tt></dt>
+<dd><p><tt class="docutils literal"><span class="pre">Object</span></tt> Property name/display name pairs. If specified, the display
+name will be shown in the name column instead of the property name.</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">readOnly</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">Boolean</span></tt> Set to true to disable editing. Default is false.</dd></dl>
+<dd><p><tt class="docutils literal"><span class="pre">Boolean</span></tt> Set to true to disable editing. Default is false.</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">schema</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">GeoExt.data.AttributeStore</span></tt> Optional. If provided, available
+<dd><p><tt class="docutils literal"><span class="pre">GeoExt.data.AttributeStore</span></tt> Optional. If provided, available
 feature attributes will be determined from the schema instead of using
-the attributes that the feature has currently set.</dd></dl>
+the attributes that the feature has currently set.</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">timeFormat</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">String</span></tt> Time format. Default is the value of
-<tt class="docutils literal"><span class="pre">Ext.form.TimeField.prototype.format</span></tt>.</dd></dl>
+<dd><p><tt class="docutils literal"><span class="pre">String</span></tt> Time format. Default is the value of
+<tt class="docutils literal"><span class="pre">Ext.form.TimeField.prototype.format</span></tt>.</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">vertexRenderIntent</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">String</span></tt> renderIntent for feature vertices when modifying. Undefined
-by default.</dd></dl>
+<dd><p><tt class="docutils literal"><span class="pre">String</span></tt> renderIntent for feature vertices when modifying. Undefined
+by default.</p>
+</dd></dl>
 
 </div>
 <div class="section" id="public-properties">
@@ -172,7 +194,8 @@ by default.</dd></dl>
 <dl class="attribute">
 <dt id="gxp.FeatureEditPopup.feature">
 <tt class="descclassname">FeatureEditPopup.</tt><tt class="descname">feature</tt><a class="headerlink" href="#gxp.FeatureEditPopup.feature" title="Permalink to this definition">¶</a></dt>
-<dd><tt class="docutils literal"><span class="pre">OpenLayers.Feature.Vector</span></tt> The feature being edited/displayed.</dd></dl>
+<dd><p><tt class="docutils literal"><span class="pre">OpenLayers.Feature.Vector</span></tt> The feature being edited/displayed.</p>
+</dd></dl>
 
 </div>
 </div>
@@ -190,7 +213,7 @@ by default.</dd></dl>
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../../modindex.html" title="Global Module Index"
+          <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="FillSymbolizer.html" title="gxp.FillSymbolizer"
@@ -203,8 +226,8 @@ by default.</dd></dl>
       </ul>
     </div>
     <div class="footer">
-      &copy; Copyright 2008-2011, The Open Planning Project.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+        &copy; Copyright 2008-2011, The Open Planning Project.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>
 </html>

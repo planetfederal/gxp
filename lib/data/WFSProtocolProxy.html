@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -12,12 +14,13 @@
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
         VERSION:     '0.1',
-        COLLAPSE_MODINDEX: false,
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="top" title="GXP v0.1" href="../../index.html" />
     <link rel="up" title="gxp.data" href="../data.html" />
@@ -32,8 +35,8 @@
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../../modindex.html" title="Global Module Index"
-             accesskey="M">modules</a> |</li>
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="../menu.html" title="gxp.menu"
              accesskey="N">next</a> |</li>
@@ -41,44 +44,44 @@
           <a href="WFSFeatureStore.html" title="gxp.data.WFSFeatureStore"
              accesskey="P">previous</a> |</li>
         <li><a href="../../index.html">GXP</a> &raquo;</li>
-          <li><a href="../data.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.data</span></tt></a> &raquo;</li> 
+          <li><a href="../data.html" accesskey="U"><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.data</span></tt></a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-            <h3><a href="../../index.html">Table Of Contents</a></h3>
-            <ul>
-<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">gxp.data.WFSProtocolProxy</span></tt></a><ul>
-<li><a class="reference external" href="#config-options">Config Options</a></li>
-<li><a class="reference external" href="#public-methods">Public Methods</a></li>
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">gxp.data.WFSProtocolProxy</span></tt></a><ul>
+<li><a class="reference internal" href="#config-options">Config Options</a></li>
+<li><a class="reference internal" href="#public-methods">Public Methods</a></li>
 </ul>
 </li>
 </ul>
 
-            <h4>Previous topic</h4>
-            <p class="topless"><a href="WFSFeatureStore.html"
-                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.data.WFSFeatureStore</span></tt></a></p>
-            <h4>Next topic</h4>
-            <p class="topless"><a href="../menu.html"
-                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.menu</span></tt></a></p>
-            <h3>This Page</h3>
-            <ul class="this-page-menu">
-              <li><a href="../../_sources/lib/data/WFSProtocolProxy.txt"
-                     rel="nofollow">Show Source</a></li>
-            </ul>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="../../search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="WFSFeatureStore.html"
+                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.data.WFSFeatureStore</span></tt></a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../menu.html"
+                        title="next chapter"><tt class="docutils literal"><span class="pre">gxp.menu</span></tt></a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/lib/data/WFSProtocolProxy.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
 
@@ -88,7 +91,7 @@
           <div class="body">
             
   <div class="section" id="gxp-data-wfsprotocolproxy">
-<h1><a title="gxp.data.WFSProtocolProxy" class="reference internal" href="#gxp.data.WFSProtocolProxy"><tt class="xref docutils literal"><span class="pre">gxp.data.WFSProtocolProxy</span></tt></a><a class="headerlink" href="#gxp-data-wfsprotocolproxy" title="Permalink to this headline">¶</a></h1>
+<h1><a class="reference internal" href="#gxp.data.WFSProtocolProxy" title="gxp.data.WFSProtocolProxy"><tt class="xref py py-class docutils literal"><span class="pre">gxp.data.WFSProtocolProxy</span></tt></a><a class="headerlink" href="#gxp-data-wfsprotocolproxy" title="Permalink to this headline">¶</a></h1>
 <dl class="meta docutils">
 <dt>Extends</dt>
 <dd><ul class="first last simple">
@@ -112,15 +115,24 @@ those listed for <a class="reference external" href="http://extjs.com/deploy/dev
 <dl class="describe">
 <dt>
 <tt class="descname">maxFeatures</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">Number</span></tt>
+<dd><p><tt class="docutils literal"><span class="pre">Number</span></tt>
 Optional limit for number of features requested in a read.  No
-limit set by default.</dd></dl>
+limit set by default.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt>
+<tt class="descname">multi</tt></dt>
+<dd><p><tt class="docutils literal"><span class="pre">Boolean</span></tt> If set to true, geometries will be casted to Multi
+geometries before writing. No casting will be done for reading.</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">version</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">String</span></tt>
-WFS version.  Default is &#8220;1.1.0&#8221;.</dd></dl>
+<dd><p><tt class="docutils literal"><span class="pre">String</span></tt>
+WFS version.  Default is &#8220;1.1.0&#8221;.</p>
+</dd></dl>
 
 </div>
 <div class="section" id="public-methods">
@@ -134,7 +146,7 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>filter</em> &#8211; <tt class="docutils literal"><span class="pre">OpenLayers.Filter</span></tt> Filter to be set on the WFS protocol.</td>
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filter</strong> &#8211; <tt class="docutils literal"><span class="pre">OpenLayers.Filter</span></tt> Filter to be set on the WFS protocol.</td>
 </tr>
 </tbody>
 </table>
@@ -157,7 +169,7 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../../modindex.html" title="Global Module Index"
+          <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="../menu.html" title="gxp.menu"
@@ -166,12 +178,12 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
           <a href="WFSFeatureStore.html" title="gxp.data.WFSFeatureStore"
              >previous</a> |</li>
         <li><a href="../../index.html">GXP</a> &raquo;</li>
-          <li><a href="../data.html" ><tt class="docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.data</span></tt></a> &raquo;</li> 
+          <li><a href="../data.html" ><tt class="docutils literal docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">gxp.data</span></tt></a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-      &copy; Copyright 2008-2011, The Open Planning Project.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+        &copy; Copyright 2008-2011, The Open Planning Project.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>
 </html>

@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -12,17 +14,18 @@
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
         VERSION:     '0.1',
-        COLLAPSE_MODINDEX: false,
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
     <link rel="top" title="GXP v0.1" href="../../../index.html" />
     <link rel="up" title="Widgets" href="../../widgets.html" />
     <link rel="next" title="gxp.form.ComparisonComboBox" href="ComparisonComboBox.html" />
-    <link rel="prev" title="gxp.WMSStylesDialog" href="../WMSStylesDialog.html" /> 
+    <link rel="prev" title="gxp.form.AutoCompleteComboBox" href="AutoCompleteComboBox.html" /> 
   </head>
   <body>
     <div class="related">
@@ -32,13 +35,13 @@
           <a href="../../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../../../modindex.html" title="Global Module Index"
-             accesskey="M">modules</a> |</li>
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="ComparisonComboBox.html" title="gxp.form.ComparisonComboBox"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="../WMSStylesDialog.html" title="gxp.WMSStylesDialog"
+          <a href="AutoCompleteComboBox.html" title="gxp.form.AutoCompleteComboBox"
              accesskey="P">previous</a> |</li>
         <li><a href="../../../index.html">GXP</a> &raquo;</li>
           <li><a href="../../widgets.html" accesskey="U">Widgets</a> &raquo;</li> 
@@ -46,40 +49,40 @@
     </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-            <h3><a href="../../../index.html">Table Of Contents</a></h3>
-            <ul>
-<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">gxp.form.ColorField</span></tt></a><ul>
-<li><a class="reference external" href="#config-options">Config Options</a></li>
-<li><a class="reference external" href="#public-properties">Public Properties</a></li>
-<li><a class="reference external" href="#public-methods">Public Methods</a></li>
+  <h3><a href="../../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">gxp.form.ColorField</span></tt></a><ul>
+<li><a class="reference internal" href="#config-options">Config Options</a></li>
+<li><a class="reference internal" href="#public-properties">Public Properties</a></li>
+<li><a class="reference internal" href="#public-methods">Public Methods</a></li>
 </ul>
 </li>
 </ul>
 
-            <h4>Previous topic</h4>
-            <p class="topless"><a href="../WMSStylesDialog.html"
-                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.WMSStylesDialog</span></tt></a></p>
-            <h4>Next topic</h4>
-            <p class="topless"><a href="ComparisonComboBox.html"
-                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.form.ComparisonComboBox</span></tt></a></p>
-            <h3>This Page</h3>
-            <ul class="this-page-menu">
-              <li><a href="../../../_sources/lib/widgets/form/ColorField.txt"
-                     rel="nofollow">Show Source</a></li>
-            </ul>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="../../../search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="AutoCompleteComboBox.html"
+                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.form.AutoCompleteComboBox</span></tt></a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ComparisonComboBox.html"
+                        title="next chapter"><tt class="docutils literal"><span class="pre">gxp.form.ComparisonComboBox</span></tt></a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../_sources/lib/widgets/form/ColorField.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
 
@@ -89,7 +92,7 @@
           <div class="body">
             
   <div class="section" id="gxp-form-colorfield">
-<h1><a title="gxp.form.ColorField" class="reference internal" href="#gxp.form.ColorField"><tt class="xref docutils literal"><span class="pre">gxp.form.ColorField</span></tt></a><a class="headerlink" href="#gxp-form-colorfield" title="Permalink to this headline">¶</a></h1>
+<h1><a class="reference internal" href="#gxp.form.ColorField" title="gxp.form.ColorField"><tt class="xref py py-class docutils literal"><span class="pre">gxp.form.ColorField</span></tt></a><a class="headerlink" href="#gxp-form-colorfield" title="Permalink to this headline">¶</a></h1>
 <dl class="meta docutils">
 <dt>Extends</dt>
 <dd><ul class="first last simple">
@@ -100,10 +103,11 @@
 <dl class="class">
 <dt id="gxp.form.ColorField">
 <em class="property">class </em><tt class="descclassname">gxp.form.</tt><tt class="descname">ColorField</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#gxp.form.ColorField" title="Permalink to this definition">¶</a></dt>
-<dd>A text field that colors its own background based on the input value.
+<dd><p>A text field that colors its own background based on the input value.
 The value may be any one of the 16 W3C supported CSS color names
 (<a class="reference external" href="http://www.w3.org/TR/css3-color/">http://www.w3.org/TR/css3-color/</a>).  The value can also be an arbitrary
-RGB hex value prefixed by a &#8216;#&#8217; (e.g. &#8216;#FFCC66&#8217;).</dd></dl>
+RGB hex value prefixed by a &#8216;#&#8217; (e.g. &#8216;#FFCC66&#8217;).</p>
+</dd></dl>
 
 <div class="section" id="config-options">
 <h2>Config Options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
@@ -112,8 +116,9 @@ those listed for <a class="reference external" href="http://extjs.com/deploy/dev
 <dl class="describe">
 <dt>
 <tt class="descname">defaultBackground</tt></dt>
-<dd>The default background color if the symbolizer has no fillColor set.
-Defaults to #ffffff.</dd></dl>
+<dd><p>The default background color if the symbolizer has no fillColor set.
+Defaults to #ffffff.</p>
+</dd></dl>
 
 </div>
 <div class="section" id="public-properties">
@@ -123,9 +128,10 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
 <dl class="attribute">
 <dt id="gxp.form.ColorField.cssColors">
 <tt class="descclassname">ColorField.</tt><tt class="descname">cssColors</tt><a class="headerlink" href="#gxp.form.ColorField.cssColors" title="Permalink to this definition">¶</a></dt>
-<dd><tt class="docutils literal"><span class="pre">Object</span></tt>
+<dd><p><tt class="docutils literal"><span class="pre">Object</span></tt>
 Properties are supported CSS color names.  Values are RGB hex strings
-(prefixed with &#8216;#&#8217;).</dd></dl>
+(prefixed with &#8216;#&#8217;).</p>
+</dd></dl>
 
 </div>
 <div class="section" id="public-methods">
@@ -173,7 +179,7 @@ except for the case when the value has not been changed.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>value</em> &#8211; <tt class="docutils literal"><span class="pre">Object</span></tt></td>
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> &#8211; <tt class="docutils literal"><span class="pre">Object</span></tt></td>
 </tr>
 </tbody>
 </table>
@@ -198,21 +204,21 @@ instead of the hex code.</p>
           <a href="../../../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../../../modindex.html" title="Global Module Index"
+          <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="ComparisonComboBox.html" title="gxp.form.ComparisonComboBox"
              >next</a> |</li>
         <li class="right" >
-          <a href="../WMSStylesDialog.html" title="gxp.WMSStylesDialog"
+          <a href="AutoCompleteComboBox.html" title="gxp.form.AutoCompleteComboBox"
              >previous</a> |</li>
         <li><a href="../../../index.html">GXP</a> &raquo;</li>
           <li><a href="../../widgets.html" >Widgets</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-      &copy; Copyright 2008-2011, The Open Planning Project.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+        &copy; Copyright 2008-2011, The Open Planning Project.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>
 </html>

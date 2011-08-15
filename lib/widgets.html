@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -12,12 +14,13 @@
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
         VERSION:     '0.1',
-        COLLAPSE_MODINDEX: false,
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="GXP v0.1" href="../index.html" />
     <link rel="next" title="gxp.EmbedMapDialog" href="widgets/EmbedMapDialog.html" />
@@ -31,8 +34,8 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../modindex.html" title="Global Module Index"
-             accesskey="M">modules</a> |</li>
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="widgets/EmbedMapDialog.html" title="gxp.EmbedMapDialog"
              accesskey="N">next</a> |</li>
@@ -44,46 +47,46 @@
     </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-            <h3><a href="../index.html">Table Of Contents</a></h3>
-            <ul>
-<li><a class="reference external" href="#">Widgets</a><ul>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Widgets</a><ul>
 </ul>
 </li>
-<li><a class="reference external" href="#gxp-form"><tt class="docutils literal"><span class="pre">gxp.form</span></tt></a><ul>
+<li><a class="reference internal" href="#gxp-form"><tt class="docutils literal"><span class="pre">gxp.form</span></tt></a><ul>
 </ul>
 </li>
-<li><a class="reference external" href="#gxp-grid"><tt class="docutils literal"><span class="pre">gxp.grid</span></tt></a><ul>
+<li><a class="reference internal" href="#gxp-grid"><tt class="docutils literal"><span class="pre">gxp.grid</span></tt></a><ul>
 </ul>
 </li>
-<li><a class="reference external" href="#gxp-slider"><tt class="docutils literal"><span class="pre">gxp.slider</span></tt></a><ul>
+<li><a class="reference internal" href="#gxp-slider"><tt class="docutils literal"><span class="pre">gxp.slider</span></tt></a><ul>
 </ul>
 </li>
 </ul>
 
-            <h4>Previous topic</h4>
-            <p class="topless"><a href="util.html"
-                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.util</span></tt></a></p>
-            <h4>Next topic</h4>
-            <p class="topless"><a href="widgets/EmbedMapDialog.html"
-                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.EmbedMapDialog</span></tt></a></p>
-            <h3>This Page</h3>
-            <ul class="this-page-menu">
-              <li><a href="../_sources/lib/widgets.txt"
-                     rel="nofollow">Show Source</a></li>
-            </ul>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="../search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="util.html"
+                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.util</span></tt></a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="widgets/EmbedMapDialog.html"
+                        title="next chapter"><tt class="docutils literal"><span class="pre">gxp.EmbedMapDialog</span></tt></a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/lib/widgets.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
 
@@ -95,58 +98,66 @@
   <div class="section" id="widgets">
 <h1>Widgets<a class="headerlink" href="#widgets" title="Permalink to this headline">¶</a></h1>
 <p>GXP widgets are a collection of specialized map related components.</p>
+<div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference external" href="widgets/EmbedMapDialog.html"><tt class="docutils literal"><span class="pre">gxp.EmbedMapDialog</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="widgets/FeatureEditPopup.html"><tt class="docutils literal"><span class="pre">gxp.FeatureEditPopup</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="widgets/FillSymbolizer.html"><tt class="docutils literal"><span class="pre">gxp.FillSymbolizer</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="widgets/FilterBuilder.html"><tt class="docutils literal"><span class="pre">gxp.FilterBuilder</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="widgets/GoogleEarthPanel.html"><tt class="docutils literal"><span class="pre">gxp.GoogleEarthPanel</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="widgets/GoogleStreetViewPanel.html"><tt class="docutils literal"><span class="pre">gxp.GoogleStreetViewPanel</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="widgets/LayerUploadForm.html"><tt class="docutils literal"><span class="pre">gxp.LayerUploadForm</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="widgets/LayerUploadPanel.html"><tt class="docutils literal"><span class="pre">gxp.LayerUploadPanel</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="widgets/LineSymbolizer.html"><tt class="docutils literal"><span class="pre">gxp.LineSymbolizer</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="widgets/NewSourceWindow.html"><tt class="docutils literal"><span class="pre">gxp.NewSourceWindow</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="widgets/PointSymbolizer.html"><tt class="docutils literal"><span class="pre">gxp.PointSymbolizer</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="widgets/PolygonSymbolizer.html"><tt class="docutils literal"><span class="pre">gxp.PolygonSymbolizer</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="widgets/QueryPanel.html"><tt class="docutils literal"><span class="pre">gxp.QueryPanel</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="widgets/RulePanel.html"><tt class="docutils literal"><span class="pre">gxp.RulePanel</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="widgets/ScaleLimitPanel.html"><tt class="docutils literal"><span class="pre">gxp.ScaleLimitPanel</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="widgets/ScaleOverlay.html"><tt class="docutils literal"><span class="pre">gxp.ScaleOverlay</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="widgets/StrokeSymbolizer.html"><tt class="docutils literal"><span class="pre">gxp.StrokeSymbolizer</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="widgets/StylePropertiesDialog.html"><tt class="docutils literal"><span class="pre">gxp.StylePropertiesDialog</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="widgets/TextSymbolizer.html"><tt class="docutils literal"><span class="pre">gxp.TextSymbolizer</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="widgets/Viewer.html"><tt class="docutils literal"><span class="pre">gxp.Viewer</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="widgets/WMSLayerPanel.html"><tt class="docutils literal"><span class="pre">gxp.WMSLayerPanel</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="widgets/WMSStylesDialog.html"><tt class="docutils literal"><span class="pre">gxp.WMSStylesDialog</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="widgets/EmbedMapDialog.html"><tt class="docutils literal"><span class="pre">gxp.EmbedMapDialog</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="widgets/FeatureEditPopup.html"><tt class="docutils literal"><span class="pre">gxp.FeatureEditPopup</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="widgets/FillSymbolizer.html"><tt class="docutils literal"><span class="pre">gxp.FillSymbolizer</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="widgets/FilterBuilder.html"><tt class="docutils literal"><span class="pre">gxp.FilterBuilder</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="widgets/GoogleEarthPanel.html"><tt class="docutils literal"><span class="pre">gxp.GoogleEarthPanel</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="widgets/GoogleStreetViewPanel.html"><tt class="docutils literal"><span class="pre">gxp.GoogleStreetViewPanel</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="widgets/LayerUploadPanel.html"><tt class="docutils literal"><span class="pre">gxp.LayerUploadPanel</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="widgets/LineSymbolizer.html"><tt class="docutils literal"><span class="pre">gxp.LineSymbolizer</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="widgets/NewSourceWindow.html"><tt class="docutils literal"><span class="pre">gxp.NewSourceWindow</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="widgets/PointSymbolizer.html"><tt class="docutils literal"><span class="pre">gxp.PointSymbolizer</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="widgets/PolygonSymbolizer.html"><tt class="docutils literal"><span class="pre">gxp.PolygonSymbolizer</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="widgets/QueryPanel.html"><tt class="docutils literal"><span class="pre">gxp.QueryPanel</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="widgets/RulePanel.html"><tt class="docutils literal"><span class="pre">gxp.RulePanel</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="widgets/ScaleLimitPanel.html"><tt class="docutils literal"><span class="pre">gxp.ScaleLimitPanel</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="widgets/ScaleOverlay.html"><tt class="docutils literal"><span class="pre">gxp.ScaleOverlay</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="widgets/StrokeSymbolizer.html"><tt class="docutils literal"><span class="pre">gxp.StrokeSymbolizer</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="widgets/StylePropertiesDialog.html"><tt class="docutils literal"><span class="pre">gxp.StylePropertiesDialog</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="widgets/TextSymbolizer.html"><tt class="docutils literal"><span class="pre">gxp.TextSymbolizer</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="widgets/Viewer.html"><tt class="docutils literal"><span class="pre">gxp.Viewer</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="widgets/WMSLayerPanel.html"><tt class="docutils literal"><span class="pre">gxp.WMSLayerPanel</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="widgets/WMSStylesDialog.html"><tt class="docutils literal"><span class="pre">gxp.WMSStylesDialog</span></tt></a></li>
 </ul>
+</div>
 </div>
 <div class="section" id="gxp-form">
-<h1><tt class="xref docutils literal"><span class="pre">gxp.form</span></tt><a class="headerlink" href="#gxp-form" title="Permalink to this headline">¶</a></h1>
+<h1><tt class="xref py py-mod docutils literal"><span class="pre">gxp.form</span></tt><a class="headerlink" href="#gxp-form" title="Permalink to this headline">¶</a></h1>
 <p>A collection of grid related classes.</p>
+<div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference external" href="widgets/form/ColorField.html"><tt class="docutils literal"><span class="pre">gxp.form.ColorField</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="widgets/form/ComparisonComboBox.html"><tt class="docutils literal"><span class="pre">gxp.form.ComparisonComboBox</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="widgets/form/FilterField.html"><tt class="docutils literal"><span class="pre">gxp.form.FilterField</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="widgets/form/FontComboBox.html"><tt class="docutils literal"><span class="pre">gxp.form.FontComboBox</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="widgets/form/GoogleGeocoderComboBox.html"><tt class="docutils literal"><span class="pre">gxp.form.GoogleGeocoderComboBox</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="widgets/form/ViewerField.html"><tt class="docutils literal"><span class="pre">gxp.form.ViewerField</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="widgets/form/AutoCompleteComboBox.html"><tt class="docutils literal"><span class="pre">gxp.form.AutoCompleteComboBox</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="widgets/form/ColorField.html"><tt class="docutils literal"><span class="pre">gxp.form.ColorField</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="widgets/form/ComparisonComboBox.html"><tt class="docutils literal"><span class="pre">gxp.form.ComparisonComboBox</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="widgets/form/FilterField.html"><tt class="docutils literal"><span class="pre">gxp.form.FilterField</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="widgets/form/FontComboBox.html"><tt class="docutils literal"><span class="pre">gxp.form.FontComboBox</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="widgets/form/GoogleGeocoderComboBox.html"><tt class="docutils literal"><span class="pre">gxp.form.GoogleGeocoderComboBox</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="widgets/form/ViewerField.html"><tt class="docutils literal"><span class="pre">gxp.form.ViewerField</span></tt></a></li>
 </ul>
+</div>
 </div>
 <div class="section" id="gxp-grid">
-<h1><tt class="xref docutils literal"><span class="pre">gxp.grid</span></tt><a class="headerlink" href="#gxp-grid" title="Permalink to this headline">¶</a></h1>
-<p>The <tt class="xref docutils literal"><span class="pre">gxp.grid</span></tt> module contains classes that extend map related
+<h1><tt class="xref py py-mod docutils literal"><span class="pre">gxp.grid</span></tt><a class="headerlink" href="#gxp-grid" title="Permalink to this headline">¶</a></h1>
+<p>The <tt class="xref py py-mod docutils literal"><span class="pre">gxp.grid</span></tt> module contains classes that extend map related
 functionality to <tt class="docutils literal"><span class="pre">Ext.grid</span></tt> classes.</p>
+<div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference external" href="widgets/grid/CapabilitiesGrid.html"><tt class="docutils literal"><span class="pre">gxp.grid.CapabilitiesGrid</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="widgets/grid/FeatureGrid.html"><tt class="docutils literal"><span class="pre">gxp.grid.FeatureGrid</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="widgets/grid/CapabilitiesGrid.html"><tt class="docutils literal"><span class="pre">gxp.grid.CapabilitiesGrid</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="widgets/grid/FeatureGrid.html"><tt class="docutils literal"><span class="pre">gxp.grid.FeatureGrid</span></tt></a></li>
 </ul>
 </div>
+</div>
 <div class="section" id="gxp-slider">
-<h1><tt class="xref docutils literal"><span class="pre">gxp.slider</span></tt><a class="headerlink" href="#gxp-slider" title="Permalink to this headline">¶</a></h1>
+<h1><tt class="xref py py-mod docutils literal"><span class="pre">gxp.slider</span></tt><a class="headerlink" href="#gxp-slider" title="Permalink to this headline">¶</a></h1>
 <p>A collection of slider related classes</p>
+<div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference external" href="widgets/tips/SliderTip.html"><tt class="docutils literal"><span class="pre">gxp.slider.Tip</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="widgets/tips/SliderTip.html"><tt class="docutils literal"><span class="pre">gxp.slider.Tip</span></tt></a></li>
 </ul>
+</div>
 </div>
 
 
@@ -162,7 +173,7 @@ functionality to <tt class="docutils literal"><span class="pre">Ext.grid</span><
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../modindex.html" title="Global Module Index"
+          <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="widgets/EmbedMapDialog.html" title="gxp.EmbedMapDialog"
@@ -174,8 +185,8 @@ functionality to <tt class="docutils literal"><span class="pre">Ext.grid</span><
       </ul>
     </div>
     <div class="footer">
-      &copy; Copyright 2008-2011, The Open Planning Project.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+        &copy; Copyright 2008-2011, The Open Planning Project.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>
 </html>

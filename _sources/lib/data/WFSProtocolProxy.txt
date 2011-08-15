@@ -43,6 +43,11 @@ those listed for `Ext.data.DataProxy <http://extjs.com/deploy/dev/docs/?class=Ex
     Optional limit for number of features requested in a read.  No
     limit set by default.
 
+.. describe:: multi
+
+    ``Boolean`` If set to true, geometries will be casted to Multi
+    geometries before writing. No casting will be done for reading.
+
 .. describe:: version
 
     ``String``

@@ -58,7 +58,7 @@ those listed for `Ext.Panel <http://extjs.com/deploy/dev/docs/?class=Ext.Panel>`
 .. describe:: builderTypeNames
 
     ``Array``
-    A list of labels for that correspond to builder type constants.
+    A list of labels that correspond to builder type constants.
     These will be the option names available in the builder type combo.
     Default is ``["any", "all", "none", "not all"]``.
 
@@ -71,7 +71,7 @@ those listed for `Ext.Panel <http://extjs.com/deploy/dev/docs/?class=Ext.Panel>`
 .. describe:: postComboText
 
     ``String``
-    String to display before filter type combo.  Default is
+    String to display after filter type combo.  Default is
     ``"of the following:"``.
 
 .. describe:: preComboText

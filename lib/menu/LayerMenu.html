@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -12,12 +14,13 @@
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
         VERSION:     '0.1',
-        COLLAPSE_MODINDEX: false,
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="top" title="GXP v0.1" href="../../index.html" />
     <link rel="up" title="gxp.menu" href="../menu.html" />
@@ -32,8 +35,8 @@
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../../modindex.html" title="Global Module Index"
-             accesskey="M">modules</a> |</li>
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="../plugins.html" title="gxp.plugins"
              accesskey="N">next</a> |</li>
@@ -46,38 +49,38 @@
     </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-            <h3><a href="../../index.html">Table Of Contents</a></h3>
-            <ul>
-<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">gxp.menu.LayerMenu</span></tt></a><ul>
-<li><a class="reference external" href="#config-options">Config Options</a></li>
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">gxp.menu.LayerMenu</span></tt></a><ul>
+<li><a class="reference internal" href="#config-options">Config Options</a></li>
 </ul>
 </li>
 </ul>
 
-            <h4>Previous topic</h4>
-            <p class="topless"><a href="../menu.html"
-                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.menu</span></tt></a></p>
-            <h4>Next topic</h4>
-            <p class="topless"><a href="../plugins.html"
-                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.plugins</span></tt></a></p>
-            <h3>This Page</h3>
-            <ul class="this-page-menu">
-              <li><a href="../../_sources/lib/menu/LayerMenu.txt"
-                     rel="nofollow">Show Source</a></li>
-            </ul>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="../../search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../menu.html"
+                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.menu</span></tt></a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../plugins.html"
+                        title="next chapter"><tt class="docutils literal"><span class="pre">gxp.plugins</span></tt></a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/lib/menu/LayerMenu.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
 
@@ -87,7 +90,7 @@
           <div class="body">
             
   <div class="section" id="gxp-menu-layermenu">
-<h1><a title="gxp.menu.LayerMenu" class="reference internal" href="#gxp.menu.LayerMenu"><tt class="xref docutils literal"><span class="pre">gxp.menu.LayerMenu</span></tt></a><a class="headerlink" href="#gxp-menu-layermenu" title="Permalink to this headline">¶</a></h1>
+<h1><a class="reference internal" href="#gxp.menu.LayerMenu" title="gxp.menu.LayerMenu"><tt class="xref py py-class docutils literal"><span class="pre">gxp.menu.LayerMenu</span></tt></a><a class="headerlink" href="#gxp-menu-layermenu" title="Permalink to this headline">¶</a></h1>
 <dl class="meta docutils">
 <dt>Extends</dt>
 <dd><ul class="first last simple">
@@ -98,7 +101,8 @@
 <dl class="class">
 <dt id="gxp.menu.LayerMenu">
 <em class="property">class </em><tt class="descclassname">gxp.menu.</tt><tt class="descname">LayerMenu</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#gxp.menu.LayerMenu" title="Permalink to this definition">¶</a></dt>
-<dd>A menu to control layer visibility.</dd></dl>
+<dd><p>A menu to control layer visibility.</p>
+</dd></dl>
 
 <div class="section" id="config-options">
 <h2>Config Options<a class="headerlink" href="#config-options" title="Permalink to this headline">¶</a></h2>
@@ -107,14 +111,16 @@ those listed for <a class="reference external" href="http://extjs.com/deploy/dev
 <dl class="describe">
 <dt>
 <tt class="descname">layers</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">GeoExt.data.LayerStore</span></tt>
-The store containing layer records to be viewed in this menu.</dd></dl>
+<dd><p><tt class="docutils literal"><span class="pre">GeoExt.data.LayerStore</span></tt>
+The store containing layer records to be viewed in this menu.</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">layerText</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">String</span></tt>
-Text for added layer (i18n).</dd></dl>
+<dd><p><tt class="docutils literal"><span class="pre">String</span></tt>
+Text for added layer (i18n).</p>
+</dd></dl>
 
 </div>
 </div>
@@ -132,7 +138,7 @@ Text for added layer (i18n).</dd></dl>
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../../modindex.html" title="Global Module Index"
+          <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="../plugins.html" title="gxp.plugins"
@@ -145,8 +151,8 @@ Text for added layer (i18n).</dd></dl>
       </ul>
     </div>
     <div class="footer">
-      &copy; Copyright 2008-2011, The Open Planning Project.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+        &copy; Copyright 2008-2011, The Open Planning Project.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>
 </html>

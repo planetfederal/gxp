@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -12,15 +14,16 @@
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
         VERSION:     '0.1',
-        COLLAPSE_MODINDEX: false,
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="GXP v0.1" href="../index.html" />
-    <link rel="next" title="gxp.data.WFSFeatureStore" href="data/WFSFeatureStore.html" />
+    <link rel="next" title="gxp.data.AutoCompleteProxy" href="data/AutoCompleteProxy.html" />
     <link rel="prev" title="gxp.slider.Tip" href="widgets/tips/SliderTip.html" /> 
   </head>
   <body>
@@ -31,10 +34,10 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../modindex.html" title="Global Module Index"
-             accesskey="M">modules</a> |</li>
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
-          <a href="data/WFSFeatureStore.html" title="gxp.data.WFSFeatureStore"
+          <a href="data/AutoCompleteProxy.html" title="gxp.data.AutoCompleteProxy"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="widgets/tips/SliderTip.html" title="gxp.slider.Tip"
@@ -44,30 +47,30 @@
     </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-            <h4>Previous topic</h4>
-            <p class="topless"><a href="widgets/tips/SliderTip.html"
-                                  title="previous chapter"><tt class="docutils literal"><span class="pre">gxp.slider.Tip</span></tt></a></p>
-            <h4>Next topic</h4>
-            <p class="topless"><a href="data/WFSFeatureStore.html"
-                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.data.WFSFeatureStore</span></tt></a></p>
-            <h3>This Page</h3>
-            <ul class="this-page-menu">
-              <li><a href="../_sources/lib/data.txt"
-                     rel="nofollow">Show Source</a></li>
-            </ul>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="../search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="widgets/tips/SliderTip.html"
+                        title="previous chapter"><tt class="docutils literal"><span class="pre">gxp.slider.Tip</span></tt></a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="data/AutoCompleteProxy.html"
+                        title="next chapter"><tt class="docutils literal"><span class="pre">gxp.data.AutoCompleteProxy</span></tt></a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/lib/data.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
 
@@ -76,14 +79,18 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="gxp-data">
-<span id="module-gxp.data"></span><h1><tt class="xref docutils literal"><span class="pre">gxp.data</span></tt><a class="headerlink" href="#gxp-data" title="Permalink to this headline">¶</a></h1>
-<p>The <tt class="xref docutils literal"><span class="pre">gxp.data</span></tt> module contains classes that extend map related
+  <span class="target" id="module-gxp.data"></span><div class="section" id="gxp-data">
+<h1><a class="reference internal" href="#module-gxp.data" title="gxp.data: A collection of map data related classes."><tt class="xref py py-mod docutils literal"><span class="pre">gxp.data</span></tt></a><a class="headerlink" href="#gxp-data" title="Permalink to this headline">¶</a></h1>
+<p>The <a class="reference internal" href="#module-gxp.data" title="gxp.data: A collection of map data related classes."><tt class="xref py py-mod docutils literal"><span class="pre">gxp.data</span></tt></a> module contains classes that extend map related
 functionality to <tt class="docutils literal"><span class="pre">Ext.data</span></tt> classes.</p>
+<div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference external" href="data/WFSFeatureStore.html"><tt class="docutils literal"><span class="pre">gxp.data.WFSFeatureStore</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="data/WFSProtocolProxy.html"><tt class="docutils literal"><span class="pre">gxp.data.WFSProtocolProxy</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="data/AutoCompleteProxy.html"><tt class="docutils literal"><span class="pre">gxp.data.AutoCompleteProxy</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="data/AutoCompleteReader.html"><tt class="docutils literal"><span class="pre">gxp.data.AutoCompleteReader</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="data/WFSFeatureStore.html"><tt class="docutils literal"><span class="pre">gxp.data.WFSFeatureStore</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="data/WFSProtocolProxy.html"><tt class="docutils literal"><span class="pre">gxp.data.WFSProtocolProxy</span></tt></a></li>
 </ul>
+</div>
 </div>
 
 
@@ -99,10 +106,10 @@ functionality to <tt class="docutils literal"><span class="pre">Ext.data</span><
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../modindex.html" title="Global Module Index"
+          <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="data/WFSFeatureStore.html" title="gxp.data.WFSFeatureStore"
+          <a href="data/AutoCompleteProxy.html" title="gxp.data.AutoCompleteProxy"
              >next</a> |</li>
         <li class="right" >
           <a href="widgets/tips/SliderTip.html" title="gxp.slider.Tip"
@@ -111,8 +118,8 @@ functionality to <tt class="docutils literal"><span class="pre">Ext.data</span><
       </ul>
     </div>
     <div class="footer">
-      &copy; Copyright 2008-2011, The Open Planning Project.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+        &copy; Copyright 2008-2011, The Open Planning Project.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>
 </html>

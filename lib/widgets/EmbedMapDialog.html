@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -12,12 +14,13 @@
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
         VERSION:     '0.1',
-        COLLAPSE_MODINDEX: false,
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="top" title="GXP v0.1" href="../../index.html" />
     <link rel="up" title="Widgets" href="../widgets.html" />
@@ -32,8 +35,8 @@
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../../modindex.html" title="Global Module Index"
-             accesskey="M">modules</a> |</li>
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="FeatureEditPopup.html" title="gxp.FeatureEditPopup"
              accesskey="N">next</a> |</li>
@@ -46,41 +49,41 @@
     </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-            <h3><a href="../../index.html">Table Of Contents</a></h3>
-            <ul>
-<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">gxp.EmbedMapDialog</span></tt></a><ul>
-<li><a class="reference external" href="#example-use">Example Use</a></li>
-<li><a class="reference external" href="#config-options">Config Options</a></li>
-<li><a class="reference external" href="#public-properties">Public Properties</a></li>
-<li><a class="reference external" href="#public-methods">Public Methods</a></li>
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">gxp.EmbedMapDialog</span></tt></a><ul>
+<li><a class="reference internal" href="#example-use">Example Use</a></li>
+<li><a class="reference internal" href="#config-options">Config Options</a></li>
+<li><a class="reference internal" href="#public-properties">Public Properties</a></li>
+<li><a class="reference internal" href="#public-methods">Public Methods</a></li>
 </ul>
 </li>
 </ul>
 
-            <h4>Previous topic</h4>
-            <p class="topless"><a href="../widgets.html"
-                                  title="previous chapter">Widgets</a></p>
-            <h4>Next topic</h4>
-            <p class="topless"><a href="FeatureEditPopup.html"
-                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.FeatureEditPopup</span></tt></a></p>
-            <h3>This Page</h3>
-            <ul class="this-page-menu">
-              <li><a href="../../_sources/lib/widgets/EmbedMapDialog.txt"
-                     rel="nofollow">Show Source</a></li>
-            </ul>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="../../search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../widgets.html"
+                        title="previous chapter">Widgets</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="FeatureEditPopup.html"
+                        title="next chapter"><tt class="docutils literal"><span class="pre">gxp.FeatureEditPopup</span></tt></a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/lib/widgets/EmbedMapDialog.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
 
@@ -90,7 +93,7 @@
           <div class="body">
             
   <div class="section" id="gxp-embedmapdialog">
-<h1><a title="gxp.EmbedMapDialog" class="reference internal" href="#gxp.EmbedMapDialog"><tt class="xref docutils literal"><span class="pre">gxp.EmbedMapDialog</span></tt></a><a class="headerlink" href="#gxp-embedmapdialog" title="Permalink to this headline">¶</a></h1>
+<h1><a class="reference internal" href="#gxp.EmbedMapDialog" title="gxp.EmbedMapDialog"><tt class="xref py py-class docutils literal"><span class="pre">gxp.EmbedMapDialog</span></tt></a><a class="headerlink" href="#gxp-embedmapdialog" title="Permalink to this headline">¶</a></h1>
 <dl class="meta docutils">
 <dt>Extends</dt>
 <dd><ul class="first last simple">
@@ -98,7 +101,7 @@
 </ul>
 </dd>
 <dt>xtype</dt>
-<dd><tt class="docutils literal"><span class="pre">gx_embedmapdialog</span></tt></dd>
+<dd><tt class="docutils literal"><span class="pre">gxp_embedmapdialog</span></tt></dd>
 </dl>
 <dl class="class">
 <dt id="gxp.EmbedMapDialog">
@@ -108,7 +111,7 @@
 <p>A dialog for configuring a map iframe to embed on external web pages.</p>
 <div class="section" id="example-use">
 <h2>Example Use<a class="headerlink" href="#example-use" title="Permalink to this headline">¶</a></h2>
-<p>Show a <a title="gxp.EmbedMapDialog" class="reference internal" href="#gxp.EmbedMapDialog"><tt class="xref docutils literal"><span class="pre">gxp.EmbedMapDialog</span></tt></a> in a window, using &#8220;viewer.html&#8221; in the
+<p>Show a <a class="reference internal" href="#gxp.EmbedMapDialog" title="gxp.EmbedMapDialog"><tt class="xref py py-class docutils literal"><span class="pre">gxp.EmbedMapDialog</span></tt></a> in a window, using &#8220;viewer.html&#8221; in the
 current path as url:</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span class="k">new</span> <span class="nx">Ext</span><span class="p">.</span><span class="nx">Window</span><span class="p">({</span>
      <span class="nx">title</span><span class="o">:</span> <span class="s2">&quot;Export Map&quot;</span><span class="p">,</span>
@@ -130,9 +133,10 @@ those listed for <a class="reference external" href="http://extjs.com/deploy/dev
 <dl class="describe">
 <dt>
 <tt class="descname">url</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">String</span></tt> the url to use as the iframe&#8217;s src of the embed snippet. Can
+<dd><p><tt class="docutils literal"><span class="pre">String</span></tt> the url to use as the iframe&#8217;s src of the embed snippet. Can
 be a url relative to the current href and will be converted to an
-absolute one.</dd></dl>
+absolute one.</p>
+</dd></dl>
 
 </div>
 <div class="section" id="public-properties">
@@ -142,9 +146,10 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
 <dl class="attribute">
 <dt id="gxp.EmbedMapDialog.url">
 <tt class="descclassname">EmbedMapDialog.</tt><tt class="descname">url</tt><a class="headerlink" href="#gxp.EmbedMapDialog.url" title="Permalink to this definition">¶</a></dt>
-<dd><tt class="docutils literal"><span class="pre">String</span></tt> the url to use as the iframe&#8217;s src of the embed snippet. Can
+<dd><p><tt class="docutils literal"><span class="pre">String</span></tt> the url to use as the iframe&#8217;s src of the embed snippet. Can
 be a url relative to the current href and will be converted to an
-absolute one.</dd></dl>
+absolute one.</p>
+</dd></dl>
 
 </div>
 <div class="section" id="public-methods">
@@ -162,7 +167,7 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
 </tr>
 </tbody>
 </table>
-<p>Get the HTML needed to created the iframe.</p>
+<p>Get the HTML needed to create the iframe.</p>
 </dd></dl>
 
 </div>
@@ -181,7 +186,7 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../../modindex.html" title="Global Module Index"
+          <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="FeatureEditPopup.html" title="gxp.FeatureEditPopup"
@@ -194,8 +199,8 @@ listed for <a class="reference external" href="http://extjs.com/deploy/dev/docs/
       </ul>
     </div>
     <div class="footer">
-      &copy; Copyright 2008-2011, The Open Planning Project.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+        &copy; Copyright 2008-2011, The Open Planning Project.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>
 </html>

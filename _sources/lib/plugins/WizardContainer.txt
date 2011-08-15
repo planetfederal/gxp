@@ -221,5 +221,13 @@ listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.uti
     Listener arguments:
     * tool - :class:`gxp.plugins.Tool` the deactivated tool
 
+.. describe:: wizardstepexpanded
+
+    Triggered when a wizard step is expanded.
+    
+    Listener arguments:
+    
+    * ``Number`` - the index of the expanded wizard step
+
 
 

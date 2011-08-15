@@ -37,10 +37,20 @@ Public functions.
     
     Converts the provided url to an absolute url.
 
+.. function:: gxp.util.getOGCExceptionText
+
+    :arg report: ``Object`` The exception report object
+    :return: ``String`` A single string representing the possible stack of
+        exception messages.
+    
+    Get a string message from an OGC exception report object.
+
 .. function:: gxp.util.md5
 
     :arg data: ``String``
     :returns: ``String`` md5 hash
+    
+    Encrypts the specified string using MD5.
 
 .. function:: gxp.util.uniqueName
 

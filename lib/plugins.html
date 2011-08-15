@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -12,12 +14,13 @@
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
         VERSION:     '0.1',
-        COLLAPSE_MODINDEX: false,
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="GXP v0.1" href="../index.html" />
     <link rel="next" title="gxp.plugins.AddLayers" href="plugins/AddLayers.html" />
@@ -31,8 +34,8 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../modindex.html" title="Global Module Index"
-             accesskey="M">modules</a> |</li>
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="plugins/AddLayers.html" title="gxp.plugins.AddLayers"
              accesskey="N">next</a> |</li>
@@ -44,30 +47,30 @@
     </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-            <h4>Previous topic</h4>
-            <p class="topless"><a href="menu/LayerMenu.html"
-                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.menu.LayerMenu</span></tt></a></p>
-            <h4>Next topic</h4>
-            <p class="topless"><a href="plugins/AddLayers.html"
-                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.plugins.AddLayers</span></tt></a></p>
-            <h3>This Page</h3>
-            <ul class="this-page-menu">
-              <li><a href="../_sources/lib/plugins.txt"
-                     rel="nofollow">Show Source</a></li>
-            </ul>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="../search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="menu/LayerMenu.html"
+                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.menu.LayerMenu</span></tt></a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="plugins/AddLayers.html"
+                        title="next chapter"><tt class="docutils literal"><span class="pre">gxp.plugins.AddLayers</span></tt></a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/lib/plugins.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
 
@@ -76,64 +79,68 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="gxp-plugins">
-<span id="module-gxp.plugins"></span><h1><tt class="xref docutils literal"><span class="pre">gxp.plugins</span></tt><a class="headerlink" href="#gxp-plugins" title="Permalink to this headline">¶</a></h1>
-<p>The <tt class="xref docutils literal"><span class="pre">gxp.plugins</span></tt> module contains components and classes that add
+  <span class="target" id="module-gxp.plugins"></span><div class="section" id="gxp-plugins">
+<h1><a class="reference internal" href="#module-gxp.plugins" title="gxp.plugins: A collection of plugin classes."><tt class="xref py py-mod docutils literal"><span class="pre">gxp.plugins</span></tt></a><a class="headerlink" href="#gxp-plugins" title="Permalink to this headline">¶</a></h1>
+<p>The <a class="reference internal" href="#module-gxp.plugins" title="gxp.plugins: A collection of plugin classes."><tt class="xref py py-mod docutils literal"><span class="pre">gxp.plugins</span></tt></a> module contains components and classes that add
 functionality to other classes. There are two groups of special plugins that
-plug into <a title="gxp.Viewer" class="reference external" href="widgets/Viewer.html#gxp.Viewer"><tt class="xref docutils literal"><span class="pre">gxp.Viewer</span></tt></a>:</p>
+plug into <a class="reference internal" href="widgets/Viewer.html#gxp.Viewer" title="gxp.Viewer"><tt class="xref py py-class docutils literal"><span class="pre">gxp.Viewer</span></tt></a>:</p>
 <ul class="simple">
-<li><a title="gxp.plugins.Tool" class="reference external" href="plugins/Tool.html#gxp.plugins.Tool"><tt class="xref docutils literal"><span class="pre">gxp.plugins.Tool</span></tt></a> and its subclasses are viewer tools. These usually
+<li><a class="reference internal" href="plugins/Tool.html#gxp.plugins.Tool" title="gxp.plugins.Tool"><tt class="xref py py-class docutils literal"><span class="pre">gxp.plugins.Tool</span></tt></a> and its subclasses are viewer tools. These usually
 consist of one ore more <tt class="docutils literal"><span class="pre">Ext.Action</span></tt> actions that the viewer adds to a
 toolbar or context menu, and output in an <tt class="docutils literal"><span class="pre">Ext.Container</span></tt> that will be
 added to the viewer&#8217;s layout.</li>
-<li><a title="gxp.plugins.LayerSource" class="reference external" href="plugins/LayerSource.html#gxp.plugins.LayerSource"><tt class="xref docutils literal"><span class="pre">gxp.plugins.LayerSource</span></tt></a> and its subclasses add support for specific
+<li><a class="reference internal" href="plugins/LayerSource.html#gxp.plugins.LayerSource" title="gxp.plugins.LayerSource"><tt class="xref py py-class docutils literal"><span class="pre">gxp.plugins.LayerSource</span></tt></a> and its subclasses add support for specific
 layer sources to the viewer, and allows it to build layers from a simple
 configuration object.</li>
 </ul>
+<div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference external" href="plugins/AddLayers.html"><tt class="docutils literal"><span class="pre">gxp.plugins.AddLayers</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/BingSource.html"><tt class="docutils literal"><span class="pre">gxp.plugins.BingSource</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/ClickableFeatures.html"><tt class="docutils literal"><span class="pre">gxp.plugins.ClickableFeatures</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/DeleteSelectedFeatures.html"><tt class="docutils literal"><span class="pre">gxp.plugins.DeleteSelectedFeatures</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/FeatureEditor.html"><tt class="docutils literal"><span class="pre">gxp.plugins.FeatureEditor</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/FeatureGrid.html"><tt class="docutils literal"><span class="pre">gxp.plugins.FeatureGrid</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/FeatureManager.html"><tt class="docutils literal"><span class="pre">gxp.plugins.FeatureManager</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/FeatureToField.html"><tt class="docutils literal"><span class="pre">gxp.plugins.FeatureToField</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/GeoServerStyleWriter.html"><tt class="docutils literal"><span class="pre">gxp.plugins.GeoServerStyleWriter</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/GoogleEarth.html"><tt class="docutils literal"><span class="pre">gxp.plugins.GoogleEarth</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/GoogleGeocoder.html"><tt class="docutils literal"><span class="pre">gxp.plugins.GoogleGeocoder</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/GoogleSource.html"><tt class="docutils literal"><span class="pre">gxp.plugins.GoogleSource</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/LayerProperties.html"><tt class="docutils literal"><span class="pre">gxp.plugins.LayerProperties</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/LayerSource.html"><tt class="docutils literal"><span class="pre">gxp.plugins.LayerSource</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/LayerTree.html"><tt class="docutils literal"><span class="pre">gxp.plugins.LayerTree</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/Legend.html"><tt class="docutils literal"><span class="pre">gxp.plugins.Legend</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/MapQuestSource.html"><tt class="docutils literal"><span class="pre">gxp.plugins.MapQuestSource</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/Measure.html"><tt class="docutils literal"><span class="pre">gxp.plugins.Measure</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/Navigation.html"><tt class="docutils literal"><span class="pre">gxp.plugins.Navigation</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/NavigationHistory.html"><tt class="docutils literal"><span class="pre">gxp.plugins.NavigationHistory</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/OLSource.html"><tt class="docutils literal"><span class="pre">gxp.plugins.OLSource</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/OSMSource.html"><tt class="docutils literal"><span class="pre">gxp.plugins.OSMSource</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/Print.html"><tt class="docutils literal"><span class="pre">gxp.plugins.Print</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/QueryForm.html"><tt class="docutils literal"><span class="pre">gxp.plugins.QueryForm</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/RemoveLayer.html"><tt class="docutils literal"><span class="pre">gxp.plugins.RemoveLayer</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/SelectedFeatureActions.html"><tt class="docutils literal"><span class="pre">gxp.plugins.SelectedFeatureActions</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/SnappingAgent.html"><tt class="docutils literal"><span class="pre">gxp.plugins.SnappingAgent</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/StyleWriter.html"><tt class="docutils literal"><span class="pre">gxp.plugins.StyleWriter</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/Styler.html"><tt class="docutils literal"><span class="pre">gxp.plugins.Styler</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/Tool.html"><tt class="docutils literal"><span class="pre">gxp.plugins.Tool</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/WMSCSource.html"><tt class="docutils literal"><span class="pre">gxp.plugins.WMSCSource</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/WMSFilterView.html"><tt class="docutils literal"><span class="pre">gxp.plugins.WMSFilterView</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/WMSGetFeatureInfo.html"><tt class="docutils literal"><span class="pre">gxp.plugins.WMSGetFeatureInfo</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/WMSRasterStylesDialog.html"><tt class="docutils literal"><span class="pre">gxp.plugins.WMSRasterStylesDialog</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/WMSSource.html"><tt class="docutils literal"><span class="pre">gxp.plugins.WMSSource</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/WizardContainer.html"><tt class="docutils literal"><span class="pre">gxp.plugins.WizardContainer</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/WizardStep.html"><tt class="docutils literal"><span class="pre">gxp.plugins.WizardStep</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/Zoom.html"><tt class="docutils literal"><span class="pre">gxp.plugins.Zoom</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/ZoomToDataExtent.html"><tt class="docutils literal"><span class="pre">gxp.plugins.ZoomToDataExtent</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/ZoomToExtent.html"><tt class="docutils literal"><span class="pre">gxp.plugins.ZoomToExtent</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/ZoomToLayerExtent.html"><tt class="docutils literal"><span class="pre">gxp.plugins.ZoomToLayerExtent</span></tt></a></li>
-<li class="toctree-l1"><a class="reference external" href="plugins/ZoomToSelectedFeatures.html"><tt class="docutils literal"><span class="pre">gxp.plugins.ZoomToSelectedFeatures</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/AddLayers.html"><tt class="docutils literal"><span class="pre">gxp.plugins.AddLayers</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/BingSource.html"><tt class="docutils literal"><span class="pre">gxp.plugins.BingSource</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/ClickableFeatures.html"><tt class="docutils literal"><span class="pre">gxp.plugins.ClickableFeatures</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/DeleteSelectedFeatures.html"><tt class="docutils literal"><span class="pre">gxp.plugins.DeleteSelectedFeatures</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/FeatureEditor.html"><tt class="docutils literal"><span class="pre">gxp.plugins.FeatureEditor</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/FeatureGrid.html"><tt class="docutils literal"><span class="pre">gxp.plugins.FeatureGrid</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/FeatureManager.html"><tt class="docutils literal"><span class="pre">gxp.plugins.FeatureManager</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/FeatureToField.html"><tt class="docutils literal"><span class="pre">gxp.plugins.FeatureToField</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/GeoServerStyleWriter.html"><tt class="docutils literal"><span class="pre">gxp.plugins.GeoServerStyleWriter</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/GoogleEarth.html"><tt class="docutils literal"><span class="pre">gxp.plugins.GoogleEarth</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/GoogleGeocoder.html"><tt class="docutils literal"><span class="pre">gxp.plugins.GoogleGeocoder</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/GoogleSource.html"><tt class="docutils literal"><span class="pre">gxp.plugins.GoogleSource</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/LayerProperties.html"><tt class="docutils literal"><span class="pre">gxp.plugins.LayerProperties</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/LayerSource.html"><tt class="docutils literal"><span class="pre">gxp.plugins.LayerSource</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/LayerTree.html"><tt class="docutils literal"><span class="pre">gxp.plugins.LayerTree</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/Legend.html"><tt class="docutils literal"><span class="pre">gxp.plugins.Legend</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/LoadingIndicator.html"><tt class="docutils literal"><span class="pre">gxp.plugins.LoadingIndicator</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/MapBoxSource.html"><tt class="docutils literal"><span class="pre">gxp.plugins.MapBoxSource</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/MapQuestSource.html"><tt class="docutils literal"><span class="pre">gxp.plugins.MapQuestSource</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/Measure.html"><tt class="docutils literal"><span class="pre">gxp.plugins.Measure</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/Navigation.html"><tt class="docutils literal"><span class="pre">gxp.plugins.Navigation</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/NavigationHistory.html"><tt class="docutils literal"><span class="pre">gxp.plugins.NavigationHistory</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/OLSource.html"><tt class="docutils literal"><span class="pre">gxp.plugins.OLSource</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/OSMSource.html"><tt class="docutils literal"><span class="pre">gxp.plugins.OSMSource</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/Print.html"><tt class="docutils literal"><span class="pre">gxp.plugins.Print</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/QueryForm.html"><tt class="docutils literal"><span class="pre">gxp.plugins.QueryForm</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/RemoveLayer.html"><tt class="docutils literal"><span class="pre">gxp.plugins.RemoveLayer</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/SelectedFeatureActions.html"><tt class="docutils literal"><span class="pre">gxp.plugins.SelectedFeatureActions</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/SnappingAgent.html"><tt class="docutils literal"><span class="pre">gxp.plugins.SnappingAgent</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/StyleWriter.html"><tt class="docutils literal"><span class="pre">gxp.plugins.StyleWriter</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/Styler.html"><tt class="docutils literal"><span class="pre">gxp.plugins.Styler</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/Tool.html"><tt class="docutils literal"><span class="pre">gxp.plugins.Tool</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/WMSCSource.html"><tt class="docutils literal"><span class="pre">gxp.plugins.WMSCSource</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/WMSFilterView.html"><tt class="docutils literal"><span class="pre">gxp.plugins.WMSFilterView</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/WMSGetFeatureInfo.html"><tt class="docutils literal"><span class="pre">gxp.plugins.WMSGetFeatureInfo</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/WMSRasterStylesDialog.html"><tt class="docutils literal"><span class="pre">gxp.plugins.WMSRasterStylesDialog</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/WMSSource.html"><tt class="docutils literal"><span class="pre">gxp.plugins.WMSSource</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/WizardContainer.html"><tt class="docutils literal"><span class="pre">gxp.plugins.WizardContainer</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/WizardStep.html"><tt class="docutils literal"><span class="pre">gxp.plugins.WizardStep</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/Zoom.html"><tt class="docutils literal"><span class="pre">gxp.plugins.Zoom</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/ZoomToDataExtent.html"><tt class="docutils literal"><span class="pre">gxp.plugins.ZoomToDataExtent</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/ZoomToExtent.html"><tt class="docutils literal"><span class="pre">gxp.plugins.ZoomToExtent</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/ZoomToLayerExtent.html"><tt class="docutils literal"><span class="pre">gxp.plugins.ZoomToLayerExtent</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins/ZoomToSelectedFeatures.html"><tt class="docutils literal"><span class="pre">gxp.plugins.ZoomToSelectedFeatures</span></tt></a></li>
 </ul>
+</div>
 </div>
 
 
@@ -149,7 +156,7 @@ configuration object.</li>
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../modindex.html" title="Global Module Index"
+          <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="plugins/AddLayers.html" title="gxp.plugins.AddLayers"
@@ -161,8 +168,8 @@ configuration object.</li>
       </ul>
     </div>
     <div class="footer">
-      &copy; Copyright 2008-2011, The Open Planning Project.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+        &copy; Copyright 2008-2011, The Open Planning Project.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>
 </html>

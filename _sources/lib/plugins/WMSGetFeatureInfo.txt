@@ -109,6 +109,13 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
     ``Number`` Optional index of an action that should be active by
     default. Only works for actions that are a ``GeoExt.Action`` instance.
 
+.. describe:: format
+
+    ``String`` Either "html" or "grid". If set to "grid", GML will be
+    requested from the server and displayed in an Ext.PropertyGrid.
+    Otherwise, the html output from the server will be displayed as-is.
+    Default is "html".
+
 .. describe:: infoActionTip
 
     ``String``
@@ -131,6 +138,11 @@ those listed for `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=E
 .. describe:: outputTarget
 
     ``String`` Popups created by this tool are added to the map by default.
+
+.. describe:: paramsFromLayer
+
+    ``Array`` List of param names that should be taken from the layer and
+    added to the GetFeatureInfo request (e.g. ["CQL_FILTER"]).
 
 .. describe:: popupTitle
 

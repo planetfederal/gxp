@@ -37,15 +37,30 @@ Configuration properties in addition to
 those listed for `Ext.grid.GridPanel <http://extjs.com/deploy/dev/docs/?class=Ext.grid.GridPanel>`_.
 
 
+.. describe:: customRenderers
+
+    ``Object`` Property name/renderer pairs. If specified for a field name,
+    the custom renderer will be used instead of the type specific one.
+
 .. describe:: dateFormat
 
     ``String`` Date format. Default is the value of
     ``Ext.form.DateField.prototype.format``.
 
+.. describe:: fieldVisibility
+
+    ``Object`` Property name/visibility name pairs. Optional. If specified,
+    only columns with a value of true will be initially shown.
+
 .. describe:: ignoreFields
 
     ``Array`` of field names from the store's records that should not be
     displayed in the grid.
+
+.. describe:: includeFields
+
+    ``Array`` of field names from the store's records that should be
+    displayed in the grid. All other fields will be ignored.
 
 .. describe:: layer
 
@@ -57,6 +72,11 @@ those listed for `Ext.grid.GridPanel <http://extjs.com/deploy/dev/docs/?class=Ex
 
     ``OpenLayers.Map`` If provided, a layer with the features from this
     grid will be added to the map.
+
+.. describe:: propertyNames
+
+    ``Object`` Property name/display name pairs. If specified, the display
+    name will be shown as column header instead of the property name.
 
 .. describe:: schema
 

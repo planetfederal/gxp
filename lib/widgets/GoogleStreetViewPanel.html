@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -12,16 +14,17 @@
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
         VERSION:     '0.1',
-        COLLAPSE_MODINDEX: false,
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="top" title="GXP v0.1" href="../../index.html" />
     <link rel="up" title="Widgets" href="../widgets.html" />
-    <link rel="next" title="gxp.LayerUploadForm" href="LayerUploadForm.html" />
+    <link rel="next" title="gxp.LayerUploadPanel" href="LayerUploadPanel.html" />
     <link rel="prev" title="gxp.GoogleEarthPanel" href="GoogleEarthPanel.html" /> 
   </head>
   <body>
@@ -32,10 +35,10 @@
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../../modindex.html" title="Global Module Index"
-             accesskey="M">modules</a> |</li>
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
-          <a href="LayerUploadForm.html" title="gxp.LayerUploadForm"
+          <a href="LayerUploadPanel.html" title="gxp.LayerUploadPanel"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="GoogleEarthPanel.html" title="gxp.GoogleEarthPanel"
@@ -46,38 +49,38 @@
     </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-            <h3><a href="../../index.html">Table Of Contents</a></h3>
-            <ul>
-<li><a class="reference external" href="#"><tt class="docutils literal"><span class="pre">gxp.GoogleStreetViewPanel</span></tt></a><ul>
-<li><a class="reference external" href="#config-options">Config Options</a></li>
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">gxp.GoogleStreetViewPanel</span></tt></a><ul>
+<li><a class="reference internal" href="#config-options">Config Options</a></li>
 </ul>
 </li>
 </ul>
 
-            <h4>Previous topic</h4>
-            <p class="topless"><a href="GoogleEarthPanel.html"
-                                  title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.GoogleEarthPanel</span></tt></a></p>
-            <h4>Next topic</h4>
-            <p class="topless"><a href="LayerUploadForm.html"
-                                  title="next chapter"><tt class="docutils literal"><span class="pre">gxp.LayerUploadForm</span></tt></a></p>
-            <h3>This Page</h3>
-            <ul class="this-page-menu">
-              <li><a href="../../_sources/lib/widgets/GoogleStreetViewPanel.txt"
-                     rel="nofollow">Show Source</a></li>
-            </ul>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="../../search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="GoogleEarthPanel.html"
+                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">gxp.GoogleEarthPanel</span></tt></a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="LayerUploadPanel.html"
+                        title="next chapter"><tt class="docutils literal"><span class="pre">gxp.LayerUploadPanel</span></tt></a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/lib/widgets/GoogleStreetViewPanel.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
 
@@ -87,7 +90,7 @@
           <div class="body">
             
   <div class="section" id="gxp-googlestreetviewpanel">
-<h1><tt class="xref docutils literal"><span class="pre">gxp.GoogleStreetViewPanel</span></tt><a class="headerlink" href="#gxp-googlestreetviewpanel" title="Permalink to this headline">¶</a></h1>
+<h1><tt class="xref py py-class docutils literal"><span class="pre">gxp.GoogleStreetViewPanel</span></tt><a class="headerlink" href="#gxp-googlestreetviewpanel" title="Permalink to this headline">¶</a></h1>
 <dl class="meta docutils">
 <dt>Extends</dt>
 <dd><ul class="first last simple">
@@ -104,27 +107,31 @@ those listed for <a class="reference external" href="http://dev.sencha.com/deplo
 <dl class="describe">
 <dt>
 <tt class="descname">heading</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">Number</span></tt>  The camera heading in degrees relative to true north. True north
+<dd><p><tt class="docutils literal"><span class="pre">Number</span></tt>  The camera heading in degrees relative to true north. True north
 is 0 degrees, east is 90 degrees, south is 180 degrees, west is 270
-degrees.</dd></dl>
+degrees.</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">location</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">OpenLayers.LonLat</span></tt>  The panorama location</dd></dl>
+<dd><p><tt class="docutils literal"><span class="pre">OpenLayers.LonLat</span></tt>  The panorama location</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">pitch</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">Number</span></tt>  The camera pitch in degrees, relative to the street view
+<dd><p><tt class="docutils literal"><span class="pre">Number</span></tt>  The camera pitch in degrees, relative to the street view
 vehicle. Ranges from 90 degrees (directly upwards) to -90 degrees
-(directly downwards).</dd></dl>
+(directly downwards).</p>
+</dd></dl>
 
 <dl class="describe">
 <dt>
 <tt class="descname">zoom</tt></dt>
-<dd><tt class="docutils literal"><span class="pre">Number</span></tt>  The zoom level. Fully zoomed-out is level 0, zooming in
-increases the zoom level.</dd></dl>
+<dd><p><tt class="docutils literal"><span class="pre">Number</span></tt>  The zoom level. Fully zoomed-out is level 0, zooming in
+increases the zoom level.</p>
+</dd></dl>
 
 </div>
 </div>
@@ -142,10 +149,10 @@ increases the zoom level.</dd></dl>
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../../modindex.html" title="Global Module Index"
+          <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="LayerUploadForm.html" title="gxp.LayerUploadForm"
+          <a href="LayerUploadPanel.html" title="gxp.LayerUploadPanel"
              >next</a> |</li>
         <li class="right" >
           <a href="GoogleEarthPanel.html" title="gxp.GoogleEarthPanel"
@@ -155,8 +162,8 @@ increases the zoom level.</dd></dl>
       </ul>
     </div>
     <div class="footer">
-      &copy; Copyright 2008-2011, The Open Planning Project.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+        &copy; Copyright 2008-2011, The Open Planning Project.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>
 </html>
