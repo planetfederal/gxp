@@ -126,6 +126,8 @@ gxp.util = {
     /** api: function[md5]
      *  :arg data: ``String``
      *  :returns: ``String`` md5 hash
+     *
+     *  Encrypts the specified string using MD5.
      */
     md5: (function() {
 
