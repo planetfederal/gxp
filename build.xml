@@ -22,6 +22,9 @@
             <arg line="submodule update"/>
         </exec>
 
+        <echo message="building ringo jars"/>
+        <ant dir="externals/ringo" target="jar" inheritAll="false"/>
+
     </target>
     
     <target name="parsedocs" description="parse docs source from scripts">
