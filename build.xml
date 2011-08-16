@@ -71,11 +71,11 @@
             <fileset dir="examples"/>
         </copy>
         <replace dir="${build}/examples" 
-            token="../../openlayers/lib/OpenLayers.js" 
+            token="../externals/openlayers/lib/OpenLayers.js" 
             value="../script/OpenLayers.js" 
             includes="**/*.html"/>
         <replace dir="${build}/examples" 
-            token="../../geoext/lib/GeoExt.js" 
+            token="../externals/geoext/lib/GeoExt.js" 
             value="../script/GeoExt.js" 
             includes="**/*.html"/>
         <replace dir="${build}/examples" 
@@ -87,13 +87,18 @@
             value="../theme/gxp/all.css" 
             includes="**/*.html"/>
         <replace dir="${build}/examples" 
-            token="../../openlayers/theme" 
+            token="../externals/openlayers/theme" 
             value="../theme/openlayers" 
             includes="**/*.html"/>
         <replace dir="${build}/examples" 
-            token="../../geoext/resources" 
+            token="../externals/geoext/resources" 
             value="../theme/geoext" 
             includes="**/*.html"/>
+
+        <!-- special handling for OL controls that use this img dir -->
+        <copy todir="${build}/script/img">
+            <fileset dir="externals/openlayers/img"/>
+        </copy>
     </target>
     
     <target name="dist" depends="clean, init, doc, buildjs, examples" description="prepare lib for distribution">
