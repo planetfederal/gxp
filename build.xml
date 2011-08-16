@@ -79,7 +79,7 @@
     </target>
 
     <target name="clean" description="remove previous build">
-        <delete dir="${build}/doc"/>
+        <delete dir="${build}"/>
     </target>
 
 </project>
