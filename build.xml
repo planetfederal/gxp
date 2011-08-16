@@ -24,20 +24,8 @@
 
         <echo message="building ringo jars"/>
         <ant dir="externals/ringo" target="jar" inheritAll="false"/>
-
     </target>
 
-    <target name="buildjs">
-
-        <mkdir dir="${build}/script"/>
-        <java jar="externals/ringo/run.jar" fork="true" failonerror="true">
-            <sysproperty key="ringo.home" path="externals/ringo"/>
-            <arg path="externals/buildkit/lib/buildkit/build.js"/>
-            <arg line="-o ${build}/script buildjs.cfg"/>
-        </java>
-
-    </target>
-    
     <target name="parsedocs" description="parse docs source from scripts">
         <echo>Parsing doc sources.</echo>
         <exec executable="jst" failonerror="true">
@@ -45,7 +33,7 @@
         </exec>
     </target>
     
-    <target name="doc" depends="init, parsedocs" description="build documentation">
+    <target name="doc" depends="parsedocs" description="build documentation">
         <echo>Building docs.</echo>
         <exec executable="sphinx-build" failonerror="true">
             <arg line="-b html"/>
@@ -57,7 +45,36 @@
         <delete dir="${build}/doc/_sources"/>
     </target>
 
-    <target name="dist" depends="clean, init, doc" description="prepare lib for distribution">
+    <target name="buildjs">
+        <echo>Building JavaScript.</echo>
+        <mkdir dir="${build}/script"/>
+        <java jar="externals/ringo/run.jar" fork="true" failonerror="true">
+            <sysproperty key="ringo.home" path="externals/ringo"/>
+            <arg path="externals/buildkit/lib/buildkit/build.js"/>
+            <arg line="-o ${build}/script buildjs.cfg"/>
+        </java>
+    </target>
+    
+    <target name="examples">
+        <echo>Publishing examples with updated paths to scripts.</echo>
+        <copy todir="${build}/examples" overwrite="true">
+            <fileset dir="examples/"/>
+        </copy>
+        <replace dir="${build}/examples" 
+            token="../../openlayers/lib/OpenLayers.js" 
+            value="../script/OpenLayers.js" 
+            includes="**/*.html"/>
+        <replace dir="${build}/examples" 
+            token="../../geoext/lib/GeoExt.js" 
+            value="../script/GeoExt.js" 
+            includes="**/*.html"/>
+        <replace dir="${build}/examples" 
+            token="../src/script/loader.js" 
+            value="../script/gxp.js" 
+            includes="**/*.html"/>
+    </target>
+    
+    <target name="dist" depends="clean, init, doc, buildjs, examples" description="prepare lib for distribution">
         <echo>Preparing for distribution.</echo>
     </target>
 
