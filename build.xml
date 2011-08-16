@@ -57,8 +57,18 @@
     
     <target name="examples">
         <echo>Publishing examples with updated paths to scripts.</echo>
+        <mkdir dir="${build}/theme"/>
+        <copy todir="${build}/theme/openlayers">
+            <fileset dir="externals/openlayers/theme"/>
+        </copy>
+        <copy todir="${build}/theme/geoext">
+            <fileset dir="externals/geoext/resources"/>
+        </copy>
+        <copy todir="${build}/theme/gxp">
+            <fileset dir="${src}/theme"/>
+        </copy>
         <copy todir="${build}/examples" overwrite="true">
-            <fileset dir="examples/"/>
+            <fileset dir="examples"/>
         </copy>
         <replace dir="${build}/examples" 
             token="../../openlayers/lib/OpenLayers.js" 
@@ -71,6 +81,18 @@
         <replace dir="${build}/examples" 
             token="../src/script/loader.js" 
             value="../script/gxp.js" 
+            includes="**/*.html"/>
+        <replace dir="${build}/examples" 
+            token="../src/theme/all.css" 
+            value="../theme/gxp/all.css" 
+            includes="**/*.html"/>
+        <replace dir="${build}/examples" 
+            token="../../openlayers/theme" 
+            value="../theme/openlayers" 
+            includes="**/*.html"/>
+        <replace dir="${build}/examples" 
+            token="../../geoext/resources" 
+            value="../theme/geoext" 
             includes="**/*.html"/>
     </target>
     

@@ -3,8 +3,8 @@ GIT_BRANCH=$2
 
 cd build
 
-DIRS=$(find doc script examples -type d)
-FILES=$(find doc script examples type f)
+DIRS=$(find doc script theme examples -type d)
+FILES=$(find doc script theme examples -type f)
 REPO=http://gxp.opengeo.org/
 
 curl -u $CREDENTIALS -X MKCOL "${REPO}${GIT_BRANCH}"
