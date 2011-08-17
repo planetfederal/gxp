@@ -147,8 +147,15 @@ gxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
         };
 
         var measureToolTip;
-        this.controlOptions = this.controlOptions || {};
-        Ext.applyIf(this.controlOptions, {
+        var controlOptions = {};
+        if (this.initialConfig.controlOptions) {
+            for (var key in this.initialConfig.controlOptions) {
+                if (this.initialConfig.controlOptions.hasOwnProperty(key)) {
+                    controlOptions[key] = this.initialConfig.controlOptions[key];
+                }
+            }
+        }
+        Ext.applyIf(controlOptions, {
             geodesic: true,
             persist: true,
             handlerOptions: {layerOptions: {styleMap: styleMap}},
@@ -197,8 +204,9 @@ gxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                 scope: this
             }
         });
+        console.log(controlOptions);
         var measureControl = new OpenLayers.Control.Measure(handlerType, 
-            this.controlOptions);
+            controlOptions);
 
         return measureControl;
     },

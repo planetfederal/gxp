@@ -17,6 +17,15 @@
             t.ok(instance instanceof gxp.plugins.Measure, "Instance created successfully");
         }
 
+        function test_initialConfig(t) {
+            t.plan(2);
+            var controlOptions = {immediate: true};
+            var instance = new gxp.plugins.Measure({controlOptions: controlOptions});
+            var control = instance.createMeasureControl(OpenLayers.Handler.Path, "measure length");
+            t.ok(controlOptions.geodesic === undefined, "controlOptions initialConfig is not modified");
+            t.eq(control.immediate, true, "immediate option set correctly on Measure Control");
+        }
+
     </script>
   </head>
   <body>
