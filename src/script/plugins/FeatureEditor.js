@@ -184,7 +184,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                         } else {
                             mgr[fn].apply(mgr, fnArgs);
                         }
-                    };
+                    }
                     function unregisterDoIt() {
                         featureManager.featureStore.un("write", doIt, this);
                         popup.un("canceledit", doIt, this);
@@ -201,7 +201,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                 return !popup.editing;
             }
             intercepting = false;
-        };
+        }
         featureManager.on({
             "beforequery": intercept.createDelegate(this, "loadFeatures", 1),
             "beforelayerchange": intercept.createDelegate(this, "setLayer", 1),
@@ -320,6 +320,11 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                 var feature = evt.feature;
                 var featureStore = featureManager.featureStore;
                 if(this.selectControl.active && feature.geometry !== null) {
+                    // deactivate select control so no other features can be
+                    // selected until the popup is closed
+                    if (this.readOnly === false) {
+                        this.selectControl.deactivate();
+                    }
                     popup = this.addOutput({
                         xtype: "gxp_featureeditpopup",
                         collapsible: true,
@@ -335,6 +340,9 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                         height: 250,
                         listeners: {
                             "close": function() {
+                                if (this.readOnly === false) {
+                                    this.selectControl.activate();
+                                }
                                 if(feature.layer && feature.layer.selectedFeatures.indexOf(feature) !== -1) {
                                     this.selectControl.unselect(feature);
                                 }
