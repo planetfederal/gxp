@@ -320,6 +320,13 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                 var feature = evt.feature;
                 var featureStore = featureManager.featureStore;
                 if(this.selectControl.active && feature.geometry !== null) {
+                    // deactivate select control so no other features can be
+                    // selected until the popup is closed
+                    if (this.readOnly === false) {
+                        this.selectControl.deactivate();
+                        // deactivate will hide the layer, to show it again
+                        featureManager.showLayer(this.id);
+                    }
                     popup = this.addOutput({
                         xtype: "gxp_featureeditpopup",
                         collapsible: true,
@@ -420,11 +427,6 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                             scope: this
                         }
                     });
-                    // deactivate select control so no other features can be
-                    // selected until the popup is closed
-                    if (this.readOnly === false) {
-                        this.selectControl.deactivate();
-                    }
                     this.popup = popup;
                 }
             },
