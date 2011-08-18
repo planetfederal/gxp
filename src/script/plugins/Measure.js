@@ -198,7 +198,7 @@ gxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
             }
         });
         var measureControl = new OpenLayers.Control.Measure(handlerType, 
-            controlOptions);
+            this.controlOptions);
 
         return measureControl;
     },
