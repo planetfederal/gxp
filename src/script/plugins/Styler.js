@@ -58,6 +58,14 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
      */
     rasterStyling: false,
     
+    /** api: config[requireDescribeLayer]
+     *  ``Boolean`` If set to false, styling will be enabled for all WMS layers
+     *  that have "/ows" or "/wms" at the end of their base url in case the WMS
+     *  does not support DescribeLayer. Only set to false when rasterStyling is
+     *  set to true. Default is true.
+     */
+    requireDescribeLayer: true,
+    
     constructor: function(config) {
         gxp.plugins.Styler.superclass.constructor.apply(this, arguments);
         
@@ -123,11 +131,13 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
      *  action.
      */
     checkIfStyleable: function(layerRec, describeRec) {
-        var owsTypes = ["WFS"];
-        if (this.rasterStyling === true) {
-            owsTypes.push("WCS");
+        if (describeRec) {
+            var owsTypes = ["WFS"];
+            if (this.rasterStyling === true) {
+                owsTypes.push("WCS");
+            }
         }
-        if (describeRec && owsTypes.indexOf(describeRec.get("owsType")) !== -1) {
+        if (describeRec ? owsTypes.indexOf(describeRec.get("owsType")) !== -1 : !this.requireDescribeLayer) {
             var editableStyles = false;
             var source = this.target.layerSources[layerRec.get("source")];
             var url = source.url.split("?")
