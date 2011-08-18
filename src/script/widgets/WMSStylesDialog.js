@@ -464,10 +464,13 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             itemId: "rulesfieldset",
             title: this.rulesFieldsetTitle,
             autoScroll: true,
-            style: "margin-bottom: 0;"
+            style: "margin-bottom: 0;",
+            hideMode: "offsets",
+            hidden: true
         });
         var rulesToolbar = new Ext.Toolbar({
             style: "border-width: 0 1px 1px 1px;",
+            hidden: true,
             items: [
                 {
                     xtype: "button",
@@ -628,14 +631,16 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         this.selectedStyle.store.afterEdit(this.selectedStyle);
     },
     
-    /** private: method[removeRulesFieldSet[
-     *  Removes rulesFieldSet when the legend image cannot be loaded
+    /** private: method[setRulesFieldSetVisible]
+     *  :arg visible: ``Boolean``
+     *
+     *  Sets the visibility of the rules fieldset
      */
-    removeRulesFieldSet: function() {
-        // remove the toolbar
-        this.remove(this.items.get(3));
+    setRulesFieldSetVisible: function(visible) {
+        // the toolbar
+        this.items.get(3).setVisible(visible && this.editable);
         // and the fieldset itself
-        this.remove(this.items.get(2));
+        this.items.get(2).setVisible(visible);
         this.doLayout();
     },
 
@@ -959,13 +964,17 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 listeners: {
                     "render": function(cmp) {
                         cmp.getEl().on({
-                            load: function() {
-                                this.doLayout();
-                                if (cmp.getEl().getHeight() > 250) {
-                                    legend.setHeight(250);
+                            load: function(evt, img) {
+                                if (img.getAttribute("src") != cmp.defaultImgSrc) {
+                                    this.setRulesFieldSetVisible(true);
+                                    if (cmp.getEl().getHeight() > 250) {
+                                        legend.setHeight(250);
+                                    }
                                 }
                             },
-                            "error": this.removeRulesFieldSet,
+                            "error": function() {
+                                this.setRulesFieldSetVisible(false);
+                            },
                             scope: this
                         });
                     },
@@ -1075,7 +1084,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 scope: this
             }
         });
-        this.doLayout();
+        this.setRulesFieldSetVisible(true);
         return legend;
     },
     

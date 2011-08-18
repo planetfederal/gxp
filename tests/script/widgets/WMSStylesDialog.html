@@ -9,7 +9,7 @@
 
     <script type="text/javascript">
        
-        var mapPanels = [];
+        var mapPanels = [], log = {};
         function createWMSStylesDialog(editable) {
             var mapPanel = new GeoExt.MapPanel({
                 renderTo: document.body,
@@ -21,11 +21,17 @@
             });
             mapPanels.push(mapPanel);
             var record = mapPanel.layers.getAt(0);
-            record.set("styles", {name: "foo"});
+            record.set("styles", [{
+                name: "foo"
+            }]);
             return new gxp.WMSStylesDialog({
                 renderTo: document.body,
                 editable: editable,
-                layerRecord: record
+                layerRecord: record,
+                setRulesFieldSetVisible: function(visible) {
+                    log[this.id] = {visible: visible, editable: this.editable}
+                    gxp.WMSStylesDialog.prototype.setRulesFieldSetVisible.apply(this, arguments);
+                }
             });
         }
         
@@ -37,18 +43,25 @@
         }
         
         function test_WMSStylesDialog(t) {
-            t.plan(3);
+            t.plan(6);
             
             var editable = createWMSStylesDialog(true);
             var readonly = createWMSStylesDialog(false);
+            var invalid = createWMSStylesDialog(false);
+            invalid.layerRecord.set("styles", [{name: "foo", legend: {href: "invalidurl"}}]);
             
             t.ok(editable instanceof gxp.WMSStylesDialog, "Instance created successfully");
             
             t.delay_call(5, function() {
                 t.ok(editable.items.get(2).items.get(0) instanceof GeoExt.VectorLegend, "Vector legend for editable styles (needs a usa:states layer on /geoserver/wms to pass)");
                 t.ok(readonly.items.get(2).items.get(0) instanceof GeoExt.WMSLegend, "WMS legend for readonly styles");
+                t.eq(log[editable.id].visible, true, "valid vector legend visible (needs a usa:states layer on /geoserver/wms to pass)");
+                t.eq(log[editable.id].editable, true, "vector legend is editable (needs a usa:states layer on /geoserver/wms to pass)");
+                t.eq(log[readonly.id].visible, true, "valid image legend visible (needs a usa:states layer on /geoserver/wms to pass)");
+                t.eq(log[invalid.id].visible, false, "invalid image legend invisible");
                 editable.destroy();
                 readonly.destroy();
+                invalid.destroy();
                 destroy();
             });
         }
