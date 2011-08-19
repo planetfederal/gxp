@@ -61,6 +61,22 @@
             });
         }
 
+        function test_createLayerRecord_restUrl(t) {
+            t.plan(1);
+
+            var viewer = createViewer();
+            // add restUrl property to local source
+            viewer.sources.local.restUrl = "custom/url";
+            
+            t.delay_call(1, function() {
+                var source = viewer.layerSources.local;
+                
+                var record = source.createLayerRecord({name: "medford:zoning"});
+                t.eq(record.get("restUrl"), "custom/url", "restUrl");
+
+                viewer.destroy();
+            });
+        }
 
         function test_trimUrl(t) {
             
