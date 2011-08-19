@@ -65,6 +65,50 @@
                 destroy();
             });
         }
+        
+        function test_createGeoServerStylerConfig(t) {
+            t.plan(5);
+            
+            var Record = GeoExt.data.LayerRecord.create();
+            
+            var record = new Record({
+                layer: new OpenLayers.Layer(null, {url: "/test_geoserver/wms"}), 
+                title: "Test Layer"
+            }, "layer.1");
+
+            var config,
+                method = gxp.WMSStylesDialog.createGeoServerStylerConfig;
+            
+            // defaults
+            config = method(record);
+            t.ok(config.layerRecord === record, "a) layer record");
+            t.eq(config.plugins[0].baseUrl, "/test_geoserver/rest", "a) baseUrl");
+            
+            // url provided
+            config = method(record, "foo");
+            t.eq(config.plugins[0].baseUrl, "foo", "b) baseUrl");
+
+            // custom restUrl
+            record = new Record({
+                layer: new OpenLayers.Layer(null, {url: "/test_geoserver/wms"}), 
+                title: "Test Layer",
+                restUrl: "/custom_rest_url"
+            }, "layer.1");
+            config = method(record);
+            t.eq(config.plugins[0].baseUrl, "/custom_rest_url", "c) baseUrl");
+
+            // custom restUrl overridden
+            record = new Record({
+                layer: new OpenLayers.Layer(null, {url: "/test_geoserver/wms"}), 
+                title: "Test Layer",
+                restUrl: "/custom_rest_url"
+            }, "layer.1");
+            config = method(record, "/override");
+            t.eq(config.plugins[0].baseUrl, "/override", "d) baseUrl");
+
+
+            
+        }
 
 
         var xml = new OpenLayers.Format.XML(); 
