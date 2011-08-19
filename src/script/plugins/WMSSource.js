@@ -93,6 +93,15 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      *  ``String`` WMS service URL for this source
      */
 
+    /** private: config[restUrl]
+     *  ``String`` Optional URL for rest configuration endpoint.  Note that this
+     *  property is being added for a specific GeoNode case and it may be 
+     *  removed if an alternate solution is chosen (like a specific 
+     *  GeoNodeSource).  This is used where the rest config endpoint cannot
+     *  be derived from the source url (e.g. source url "/geoserver" and rest
+     *  config url "/other_rest_proxy").
+     */
+
     /** api: config[baseParams]
      *  ``Object`` Base parameters to use on the WMS GetCapabilities
      *  request.
@@ -338,6 +347,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 properties: "gxp_wmslayerpanel",
                 fixed: config.fixed,
                 selected: "selected" in config ? config.selected : false,
+                restUrl: this.restUrl,
                 layer: layer
             }, original.data);
             
@@ -347,7 +357,8 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 {name: "group", type: "string"},
                 {name: "properties", type: "string"},
                 {name: "fixed", type: "boolean"},
-                {name: "selected", type: "boolean"}
+                {name: "selected", type: "boolean"},
+                {name: "restUrl", type: "string"}
             ];
             original.fields.each(function(field) {
                 fields.push(field);

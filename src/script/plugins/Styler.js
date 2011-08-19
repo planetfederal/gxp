@@ -140,8 +140,15 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
         if (describeRec ? owsTypes.indexOf(describeRec.get("owsType")) !== -1 : !this.requireDescribeLayer) {
             var editableStyles = false;
             var source = this.target.layerSources[layerRec.get("source")];
-            var url = source.url.split("?")
-                .shift().replace(/\/(wms|ows)\/?$/, "/rest/styles");
+            var url;
+            // TODO: revisit this
+            var restUrl = layerRec.get("restUrl");
+            if (restUrl) {
+                url = restUrl + "/styles";
+            } else {
+                url = source.url.split("?")
+                    .shift().replace(/\/(wms|ows)\/?$/, "/rest/styles");
+            }
             if (this.sameOriginStyling) {
                 // this could be made more robust
                 // for now, only style for sources with relative url

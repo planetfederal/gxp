@@ -128,8 +128,12 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
         
         // only add the Styles panel if we know for sure that we have styles
         if (this.styling && gxp.WMSStylesDialog && this.layerRecord.get("styles")) {
-            var url = (this.source || this.layerRecord.get("layer")).url.split(
-                "?").shift().replace(/\/(wms|ows)\/?$/, "/rest");
+            // TODO: revisit this
+            var url = this.layerRecord.get("restUrl");
+            if (!url) {
+                url = (this.source || this.layerRecord.get("layer")).url.split(
+                    "?").shift().replace(/\/(wms|ows)\/?$/, "/rest");
+            }
             if (this.sameOriginStyling) {
                 // this could be made more robust
                 // for now, only style for sources with relative url
