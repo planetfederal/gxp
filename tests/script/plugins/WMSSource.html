@@ -17,10 +17,8 @@
             t.ok(instance instanceof gxp.plugins.WMSSource, "Instance created successfully");
         }
         
-        function test_createStore(t) {
-            t.plan(2);
-
-            var viewer = new gxp.Viewer({
+        function createViewer() {
+            return new gxp.Viewer({
                 sources: {
                     local: {
                         ptype: "gxp_wmssource",
@@ -33,12 +31,34 @@
                     zoom: 1
                 }
             });
+        }
+        
+        function test_createStore(t) {
+            t.plan(2);
+
+            var viewer = createViewer();
             
             t.delay_call(1, function() {
                 var source = viewer.layerSources.local;
                 t.ok(source.ready, "source ready");
                 t.eq(source.store.getCount(), 35, "35 layers in the store");
-            });            
+                viewer.destroy();
+            });
+        }
+
+        function test_createLayerRecord(t) {
+            t.plan(1);
+
+            var viewer = createViewer();
+            
+            t.delay_call(1, function() {
+                var source = viewer.layerSources.local;
+                
+                var record = source.createLayerRecord({name: "medford:zoning"});
+                t.eq(record.get("title"), "Medford, OR - Zoning", "record title");
+
+                viewer.destroy();
+            });
         }
 
 
