@@ -120,7 +120,7 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
                         vendorParams[param] = layer.params[param];
                     }
                 }
-                var control = new OpenLayers.Control.WMSGetFeatureInfo({
+                var control = new OpenLayers.Control.WMSGetFeatureInfo(Ext.apply({
                     url: layer.url,
                     queryVisible: true,
                     layers: [layer],
@@ -140,7 +140,7 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
                         },
                         scope: this
                     }
-                });
+                }, this.controlOptions));
                 map.addControl(control);
                 info.controls.push(control);
                 if(infoButton.pressed) {
