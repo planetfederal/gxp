@@ -70,6 +70,40 @@
             
         }
 
+        function test_checkIfStyleable_restUrl(t) {
+            t.plan(2);
+            
+            var viewer = createViewer();
+            
+            t.delay_call(1, function() {
+                var source = viewer.layerSources.local;
+                var styler = viewer.tools.styler;
+
+                // override for tests
+                var log = [];
+                styler.enableActionIfAvailable = function(url) {
+                    log.push(url);
+                };
+                // modify source url to something that looks like geoserver
+                source.url = "/geoserver/wms";
+                // modify source restUrl to something else
+                source.restUrl = "/custom_proxy";
+                
+                var rec = source.createLayerRecord({
+                    name: "medford:zoning",
+                    source: "local"
+                });
+                styler.checkIfStyleable(rec)
+                
+                t.eq(log.length, 1, "enableActionIfAvailable called");
+                t.eq(log[0], "/custom_proxy/styles", "enableActionIfAvailable called with custom styles endpoint");
+                
+                viewer.destroy();
+            });
+            
+        }
+
+
     </script>
   </head>
   <body>
