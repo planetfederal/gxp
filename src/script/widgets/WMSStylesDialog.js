@@ -1110,6 +1110,9 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
 gxp.WMSStylesDialog.createGeoServerStylerConfig = function(layerRecord, url) {
     var layer = layerRecord.getLayer();
     if (!url) {
+        url = layerRecord.get("restUrl");
+    }
+    if (!url) {
         url = layer.url.split("?").shift().replace(/\/(wms|ows)\/?$/, "/rest");
     }
     return {
