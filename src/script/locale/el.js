@@ -50,10 +50,10 @@ GeoExt.Lang.add("en", {
     
     "gxp.plugins.GoogleSource.prototype": {
         title: "Επιφάνειες Google",
-        roadmapAbstract: "Δείξε τον οδικό χάρτη",
-        satelliteAbstract: "Δείξε εικόνες από δορυφόρο",
-        hybridAbstract: "Δείξε εικόνες με ονόματα οδών",
-        terrainAbstract: "Δείξε οδικό χάρτη με ανάγλυφο εδάφους"
+        roadmapAbstract: "Προβολή οδικού χάρτη",
+        satelliteAbstract: "Προβολή εικόνων από δορυφόρο",
+        hybridAbstract: "Προβολή εικόνων με ονόματα οδών",
+        terrainAbstract: "Προβολή οδικού χάρτη με ανάγλυφο εδάφους"
     },
 
     "gxp.plugins.LayerProperties.prototype": {
@@ -68,8 +68,8 @@ GeoExt.Lang.add("en", {
     },
 
     "gxp.plugins.Legend.prototype": {
-        menuText: "Δείξε Υπόμνημα",
-        tooltip: "Δείξε Υπόμνημα"
+        menuText: "Προβολή Υπομνήματος",
+        tooltip: "Προβολή Υπομνήματος"
     },
 
     "gxp.plugins.LoadingIndicator.prototype": {
@@ -94,9 +94,9 @@ GeoExt.Lang.add("en", {
     },
 
     "gxp.plugins.Measure.prototype": {
-        lengthMenuText: "Μήκος",
+        lengthMenuText: "Απόσταση",
         areaMenuText: "Εμβαδόν",
-        lengthTooltip: "Υπολογίστε μήκος",
+        lengthTooltip: "Υπολογίστε απόσταση",
         areaTooltip: "Υπολογίστε εμβαδόν",
         measureTooltip: "Μέτρο"
     },
@@ -309,14 +309,14 @@ GeoExt.Lang.add("en", {
     },
 
     "gxp.EmbedMapDialog.prototype": {
-        publishMessage: "Your map is ready to be published to the web! Simply copy the following HTML to embed the map in your website:",
-        heightLabel: 'Height',
-        widthLabel: 'Width',
-        mapSizeLabel: 'Map Size',
-        miniSizeLabel: 'Mini',
-        smallSizeLabel: 'Small',
-        premiumSizeLabel: 'Premium',
-        largeSizeLabel: 'Large'
+        publishMessage: "Ο χάρτης σας είναι έτοιμος να δημοσιευτεί στο διαδίκτυο! Απλά αντιγράψτε τον ακόλουθο HTML κώδικα για να ενσωματώσετε τον χάρτη στην ιστοσελίδα σας:",
+        heightLabel: 'Ύψος',
+        widthLabel: 'Πλάτος',
+        mapSizeLabel: 'Μέγεθος Χάρτη',
+        miniSizeLabel: 'Μικρογραφία',
+        smallSizeLabel: 'Μικρό',
+        premiumSizeLabel: 'Εξαιρετικά ποιοτικό',
+        largeSizeLabel: 'Μεγάλος'
     },
     
     "gxp.WMSStylesDialog.prototype": {
