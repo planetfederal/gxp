@@ -140,6 +140,10 @@ gxp.grid.CapabilitiesGrid = Ext.extend(Ext.grid.GridPanel, {
             this.store.load();
         }
 
+        this.on('afterrender', function() {  
+            this.fireEvent('sourceselected', this, this.store);
+        }, this);
+
         if (!("expander" in this)){
             this.expander = new Ext.grid.RowExpander({
                 tpl : new Ext.Template(this.expanderTemplateText)
