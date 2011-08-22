@@ -6,7 +6,9 @@
  * of the license.
  */
 
-// @include widgets/NewSourceWindow.js
+/**
+ * @include widgets/NewSourceWindow.js
+ */
 
 /** api: (define)
  *  module = gxp.grid
