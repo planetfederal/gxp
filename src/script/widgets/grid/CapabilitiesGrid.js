@@ -193,7 +193,7 @@ gxp.grid.CapabilitiesGrid = Ext.extend(Ext.grid.GridPanel, {
                 }, this)).get("identifier"),
                 listeners: {
                     select: function(combo, record, index) {
-                        this.fireEvent("sourceselected", this, record);
+                        this.fireEvent("sourceselected", this, record.data.store);
                         this.reconfigure(record.data.store, this.getColumnModel());
                         if (this.expander) this.expander.ows = record.get("url");
                     },
