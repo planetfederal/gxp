@@ -48,6 +48,11 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
     /** private: property[mapPanel]
      *  ``GeoExt.MapPanel``
      */
+
+    /** api: config[proxy]
+     * ``String`` An optional proxy url which can be used to bypass the same
+     * origin policy. This will be set as ``OpenLayers.ProxyHost``.
+     */
     
     /** api: config[mapItems]
      *  ``Array(Ext.Component)``
@@ -371,7 +376,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                 if (prop in config) {
                     mapConfig[prop] = config[prop];
                     delete config[prop];
-                };
+                }
             }
         }
 
