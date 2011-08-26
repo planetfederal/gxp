@@ -67,7 +67,7 @@ gxp.form.GoogleGeocoderComboBox = Ext.extend(Ext.form.ComboBox, {
         var ready = !!(window.google && google.maps);
         if (!ready) {
             if (!gxp.plugins || !gxp.plugins.GoogleSource) {
-                throw new Error("The gxp.form.GoogleGeocoderComboBox requres the gxp.plugins.GoogleSource or the Google Maps V3 API to be loaded.");
+                throw new Error("The gxp.form.GoogleGeocoderComboBox requires the gxp.plugins.GoogleSource or the Google Maps V3 API to be loaded.");
             }
             gxp.plugins.GoogleSource.loader.onLoad({
                 callback: this.prepGeocoder,
