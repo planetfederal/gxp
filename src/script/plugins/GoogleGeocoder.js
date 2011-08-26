@@ -26,7 +26,8 @@ Ext.namespace("gxp.plugins");
  *
  *    Plugin for adding a GoogleGeocoderComboBox to a viewer.  The underlying
  *    GoogleGeocoderComboBox can be configured by setting this tool's 
- *    ``outputConfig`` property.
+ *    ``outputConfig`` property. The gxp.form.GoogleGeocoderComboBox requires 
+ *    the gxp.plugins.GoogleSource or the Google Maps V3 API to be loaded.
  */
 gxp.plugins.GoogleGeocoder = Ext.extend(gxp.plugins.Tool, {
     
