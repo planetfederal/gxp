@@ -317,8 +317,8 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                     // selected until the popup is closed
                     if (this.readOnly === false) {
                         this.selectControl.deactivate();
-                        // deactivate will hide the layer, to show it again
-                        featureManager.showLayer(this.id);
+                        // deactivate will hide the layer, so show it again
+                        featureManager.showLayer(this.id, this.showSelectedOnly && "selected");
                     }
                     popup = this.addOutput({
                         xtype: "gxp_featureeditpopup",
