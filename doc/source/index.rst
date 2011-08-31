@@ -15,6 +15,7 @@ Contents:
    basic/index
    viewer/index
    editor/index
+   styler/index
 
 Indices and tables
 ==================
