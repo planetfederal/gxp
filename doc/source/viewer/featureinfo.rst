@@ -2,7 +2,7 @@
 
 Adding a WMS GetFeatureInfo tool
 ================================
-On file system navigate to the file app/static/script/app/app.js in the myviewer directory. Open up this file in your favorite editor. Open up the API docs for gxp, and find a tool which could provide the WMS GetFeatureInfo functionality (look in the section titled gxp.plugins):
+On file system navigate to the file app/static/script/app/app.js in the myviewer directory. Open up this file in your favorite editor. Open up the API docs for GXP, and find a tool which could provide the WMS GetFeatureInfo functionality (look in the section titled gxp.plugins):
 
 http://gxp.opengeo.org/master/doc/
 
@@ -10,7 +10,7 @@ The following plugin looks like it could provide what we need:
 
 http://gxp.opengeo.org/master/doc/lib/plugins/WMSGetFeatureInfo.html
 
-Its ptype is gxp_wmsgetfeatureinfo, so we will add an entry in the tools configuration of app.js:
+Its ptype is "gxp_wmsgetfeatureinfo", so we will add an entry in the tools configuration of app.js:
 
 .. code-block:: javascript
 
@@ -30,7 +30,7 @@ Click on this button to activate the tool, and click on one of the USA states. Y
      :align: center
      :width: 1000px
 
-Let's say you want to influence the way that the popup looks, e.g. increase its width. Open up the file app.js again, and add a section called outputConfig to your tool configuration:
+Let's say you want to influence the way that the popup looks like, e.g. increase its width. Open up the file app.js again, and add a section called outputConfig to your tool configuration:
 
 .. code-block:: javascript
 
@@ -67,3 +67,5 @@ The button is now the second button in the toolbar:
   .. figure:: gxp-img7.png
      :align: center
      :width: 1000px
+
+In the :ref:`next section <gxp.viewer.legend>` we will learn how to add a legend to the viewer.

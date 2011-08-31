@@ -9,8 +9,7 @@ Then we will reconfigure the map options in EPSG:4326, so remove (or comment) th
 .. code-block:: javascript
 
     projection: "EPSG:4326",
-    center: [-97, 38],
-    zoom: 3
+    center: [-97, 38]
 
 Reload the application in your browser:
 
@@ -18,7 +17,7 @@ Reload the application in your browser:
      :align: center
      :width: 1000px
 
-We will now add a WMS of the world as our new base layer, first define a new source:
+We will now add a WMS of the world as our new base layer, first define a new source in the sources section:
 
 .. code-block:: javascript
 
@@ -45,6 +44,20 @@ This will result in:
 
 As a last step in our layer configuration, we will add a blank base layer to the application:
 
+.. code-block:: javascript
+
+    {
+        source: "ol",
+        type: "OpenLayers.Layer",
+        args: ["Blank"],
+        visibility: false,
+        group: "background"
+    }
+
+This will result in:
+
   .. figure:: gxp-img14.png
      :align: center
      :width: 1000px
+
+In the next section we will change the :ref:`locale of the viewer <gxp.viewer.locale>`.

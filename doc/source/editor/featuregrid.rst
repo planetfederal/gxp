@@ -3,7 +3,7 @@
 Adding a feature grid
 =====================
 
-A feature grid can be used to show the features in a table as well as in the map. First we will need to create a container for it in the layout. Open up app.js and edit the items section of portalConfig:
+A feature grid can be used to show the features in a table (as well as in the map). First we will need to create a Ext container for the grid in the layout. Open up app.js and edit the items section of portalConfig by adding a container in the south region:
 
 .. code-block:: javascript
 
@@ -46,3 +46,5 @@ When the button "Display on map" is pressed, all the features are rendered clien
   .. figure:: gxp-img21.png
      :align: center
      :width: 1000px
+
+In the next module we will learn how to :ref:`edit styles <gxp.styler>`.

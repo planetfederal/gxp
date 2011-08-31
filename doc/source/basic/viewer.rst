@@ -2,7 +2,7 @@
 
 Creating a Viewer
 =================
-The central object in the architecture of gxp is a gxp.Viewer. A viewer basically combines a map panel with tools, but it can do much more than that. By default a viewer will fill up the whole Ext viewport. The main configuration options for a gxp.Viewer are:
+The central object in the architecture of GXP is a gxp.Viewer. A viewer basically combines a map panel with tools, but it can do much more than that. By default a viewer will fill up the whole Ext viewport. The main configuration options for a gxp.Viewer are:
 
 * proxy: the proxy to use in order to bypass the same origin policy, will be set as OpenLayers.ProxyHost
 * portalItems: this is basically the Ext layout setup for the application. The viewer will create a map panel automatically.
@@ -16,7 +16,7 @@ We will see many of these options at work in the next sections.
 
 Setting up a new project
 ------------------------
-We will use the readygxp project to set up a new viewer application called myviewer. This assumes that you have set up git and ant on your system::
+We will use the ReadyGXP project to set up a new viewer application called myviewer. This assumes that you have set up git and ant on your system::
 
     curl -L https://github.com/opengeo/readygxp/raw/master/readygxp.sh | sh -s myviewer
 

@@ -14,7 +14,7 @@ and change it to (add allowAuth: true):
 
     [(/^\/geoserver\/(.*)/), require("./proxy").pass({url: geoserver, allowAuth: true, preserveHost: true})]
 
-Note, by default the styler plugin will only work if the application is run on the same domain and port as GeoServer. Now our proxy is setup to pass on the Authorization headers to GeoServer, but be wanred: never do this for a production proxy. So let's prepare our build profile (buildjs.cfg), and add plugins/Styler.js and widgets/WMSLayerPanel.js to the gxp section. Also add OpenLayers/Style2.js to the openlayers section, and GeoExt/widgets/VectorLegend.js to the geoext section. Restart the application using ant and refresh the browser:
+Note, by default the styler plugin will only work if the application is run on the same domain and port as GeoServer. Now our proxy is setup to pass on the Authorization headers to GeoServer, but be warned: never do this for a production proxy. So let's prepare our build profile (buildjs.cfg), and add plugins/Styler.js and widgets/WMSLayerPanel.js to the gxp section. Also add OpenLayers/Style2.js to the openlayers section, and GeoExt/widgets/VectorLegend.js to the geoext section. Restart the application using ant and refresh the browser:
 
   .. figure:: gxp-img22.png
      :align: center

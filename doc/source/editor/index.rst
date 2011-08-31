@@ -8,7 +8,7 @@ Editing tools in GXP
 
 .. rubric:: What this module covers
 
-In this module you will enhance the viewer application that you built in the previous module with editing tools.
+In this module you will enhance the viewer application that you have built in the previous module with editing tools.
 
 .. toctree::
     :maxdepth: 1

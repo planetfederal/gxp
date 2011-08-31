@@ -3,7 +3,7 @@
 GXP Resources
 =============
 
-The GXP library contains a wealth of functionality. Though the developers have worked hard to provide examples of that functionality and have organized the code in a way that allows other experienced developers to find their way around, may users find it a challenge to get started from scratch.
+The GXP library contains a wealth of functionality. Though the developers have worked hard to provide examples of that functionality and have organized the code in a way that allows other experienced developers to find their way around, many users find it a challenge to get started from scratch.
 
 Get the source code
 -------------------
@@ -45,3 +45,5 @@ Have a look at existing applications built on top of GXP to get ideas for your o
  * USGS https://github.com/opengeo/usgs
  * As-Built-Viewer https://github.com/opengeo/As-Built-Viewer
  * SFPark.org https://github.com/opengeo/sfpark.org
+
+In the :ref:`next section <gxp.viewer>` we will look at adding more tools and layers to our viewer.

@@ -1,8 +1,8 @@
 .. _gxp.viewer.legend:
 
-Adding a Legend tool
-================================
-We now want to add a legend to the bottom left area of the viewer application. Open up the api docs again, and search for a plugin that looks like it could provide legend functionality:
+Adding a legend tool
+====================
+We now want to add a legend to the bottom-left area of the viewer application. Open up the API docs again, and search for a plugin that could provide legend functionality:
 
 http://gxp.opengeo.org/master/doc/lib/plugins/Legend.html
 
@@ -62,3 +62,5 @@ Now the legend will show up in the container with the id “legendpanel” :
   .. figure:: gxp-img9.png
      :align: center
      :width: 1000px
+
+Next we will learn how to add a :ref:`Google geocoder field <gxp.viewer.geocoder>`.
