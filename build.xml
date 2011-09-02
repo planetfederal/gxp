@@ -101,7 +101,7 @@
         </copy>
     </target>
     
-    <target name="dist" depends="clean, init, buildjs, examples, maven-install" description="prepare lib for distribution">
+    <target name="dist" depends="clean, init, buildjs, examples, doc, maven-install" description="prepare lib for distribution">
         <echo>Preparing for distribution.</echo>
     </target>
 
