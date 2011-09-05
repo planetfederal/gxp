@@ -152,14 +152,9 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
         var featureLayer = featureManager.featureLayer;
         
         // optionally set up snapping
-        var snapId = this.snappingAgent;
-        if (snapId) {
-            var snappingAgent = this.target.tools[snapId];
-            if (snappingAgent) {
-                snappingAgent.addSnappingControl(featureLayer);
-            } else {
-                throw new Error("Unable to locate snapping agent: " + snapId);
-            }
+        var snappingAgent = this.getSnappingAgent();
+        if (snappingAgent) {
+            snappingAgent.addSnappingControl(featureLayer);
         }
 
         var intercepting = false;
@@ -203,7 +198,9 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
             intercepting = false;
         }
         featureManager.on({
+            // TODO: determine where these events should be unregistered
             "beforequery": intercept.createDelegate(this, "loadFeatures", 1),
+            "query": this.updateSnappingAgent,
             "beforelayerchange": intercept.createDelegate(this, "setLayer", 1),
             "beforesetpage": intercept.createDelegate(this, "setPage", 1),
             "beforeclearfeatures": intercept.createDelegate(this, "clearFeatures", 1),
@@ -472,6 +469,39 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
         featureManager.on("layerchange", this.onLayerChange, this);
         
         return actions;
+    },
+
+    /** private: getSnappingAgent
+     *  :returns: ``gxp.plugins.SnappingAgent``
+     */
+    getSnappingAgent: function() {
+        var agent;
+        var snapId = this.snappingAgent;
+        if (snapId) {
+            agent = this.target.tools[snapId];
+            if (!agent) {
+                throw new Error("Unable to locate snapping agent with id: " + snapId);
+            }
+        }
+        return agent;
+    },
+    
+    /** private: updateSnappingAgent
+     *  Called when the associated feature manager issues a query.
+     */
+    updateSnappingAgent: function(manager, store, filter) {
+        var agent = this.getSnappingAgent();
+        if (agent) {
+            // we do not want to snap to the current feature
+            if (filter && manager.layerRecord.get("name") === agent.targets[0].name) {
+                agent.snappingTargets[0].filter = new OpenLayers.Filter.Logical({
+                    type: OpenLayers.Filter.Logical.NOT, 
+                    filters: [filter]
+                });
+            } else {
+                agent.snappingTargets[0].filter = null;
+            }
+        }
     },
     
     /** private: method[onLayerChange]
