@@ -255,7 +255,13 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         var allow = this.fireEvent("beforelayerselectionchange", record);
         if (allow !== false) {
             changed = true;
+            if (this.selectedLayer) {
+                this.selectedLayer.set("selected", false);
+            }
             this.selectedLayer = record;
+            if (this.selectedLayer) {
+                this.selectedLayer.set("selected", true);
+            }
             this.fireEvent("layerselectionchange", record);
         }
         return changed;
