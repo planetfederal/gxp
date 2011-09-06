@@ -184,15 +184,16 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
                     beforeselect: function(selModel, node) {
                         var changed = true;
                         var layer = node && node.layer;
+                        var record;
                         if (layer) {
                             var store = node.layerStore;
-                            var record = store.getAt(store.findBy(function(r) {
+                            record = store.getAt(store.findBy(function(r) {
                                 return r.getLayer() === layer;
                             }));
-                            this.selectionChanging = true;
-                            changed = this.target.selectLayer(record);
-                            this.selectionChanging = false;
                         }
+                        this.selectionChanging = true;
+                        changed = this.target.selectLayer(record);
+                        this.selectionChanging = false;
                         return changed;
                     },
                     scope: this
