@@ -144,6 +144,28 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
      */
     schema: null,
     
+
+    /** private: method[constructor]
+     */
+    constructor: function(config) {
+        this.addEvents(
+            /** api: event[layereditable]
+             *  Fired when a layer is selected or unselected in the target 
+             *  viewer.  Listeners can use this method to determine when a 
+             *  layer is ready for editing.
+             *
+             *  Listener arguments:
+             *
+             *  * tool   - :class:`gxp.plugins.FeatureManager` This tool
+             *  * record - ``GeoExt.data.LayerRecord`` The selected layer record.
+             *    Will be ``null`` if no layer record is selected.
+             *  * editable - ``Boolean`` The layer is ready to be edited.
+             */
+            "layereditable"
+        );
+        gxp.plugins.FeatureEditor.superclass.constructor.apply(this, arguments);        
+    },
+
     /** api: method[addActions]
      */
     addActions: function() {
@@ -516,6 +538,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
         this.actions[1].setDisabled(disable);
         if (disable) {
             // not a wfs capable layer or not authorized
+            this.fireEvent("layereditable", this, layer, false);
             return;
         }
 
@@ -546,6 +569,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
         } else {
             button.disable();
         }
+        this.fireEvent("layereditable", this, layer, true);
     },
     
     /** private: method[select]
