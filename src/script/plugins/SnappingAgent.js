@@ -196,6 +196,7 @@ gxp.plugins.SnappingAgent = Ext.extend(gxp.plugins.Tool, {
         this.controls[editor.id] = control;
         editor.on({
             layereditable: this.onLayerEditable,
+            featureeditable: this.onFeatureEditable,
             scope: this
         });
     },
@@ -243,7 +244,53 @@ gxp.plugins.SnappingAgent = Ext.extend(gxp.plugins.Tool, {
             control.setTargets(targets);
             control.activate();
         }
+    },
+
+    /** private: method[onFeatureEditable]
+     *  :arg editor: :class:`gxp.plugins.SnappingAgent`
+     *  :arg record: ``OpenLayers.Feature.Vector``
+     *  :arg editable: ``Boolean``
+     *
+     *  Called when a feature is selected or unselected for editing.  The 
+     *  purpose of this listener is to set or unset any filter on snapping 
+     *  targets for the snapping control associated with the given editor
+     *  so features are not snapped to themselves during editing.
+     */
+    onFeatureEditable: function(editor, feature, editable) {
+        var manager = editor.getFeatureManager();
+        var editableLayer = manager.layerRecord;
+        var source = editableLayer.get("source");
+        var name = editableLayer.get("name");
+        var target, originalFilter, filter;
+        // check for editable layer in snapping targets
+        for (var i=0, ii=this.snappingTargets.length; i<ii; ++i) {
+            target = this.snappingTargets[i];
+            if (source === target.source && name === target.name) {
+                // editable layer is also snapping target
+                originalFilter = this.targets[i].filter;
+                if (!feature || !feature.fid || !editable) {
+                    // restore the original filter
+                    target.filter = originalFilter;
+                } else {
+                    filter = new OpenLayers.Filter.Logical({
+                        type: OpenLayers.Filter.Logical.NOT,
+                        filters: [
+                            new OpenLayers.Filter.FeatureId({fids: [feature.fid]})
+                        ]
+                    });
+                    if (originalFilter) {
+                        target.filter = new OpenLayers.Filter.Logical({
+                            type: OpenLayers.Filter.Logical.AND,
+                            filters: [originalFilter, filter]
+                        })
+                    } else {
+                        target.filter = filter;
+                    }
+                }
+            }
+        }
     }
+
 
 });
 
