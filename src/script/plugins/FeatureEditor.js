@@ -173,12 +173,6 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
         var featureManager = this.getFeatureManager();
         var featureLayer = featureManager.featureLayer;
         
-        // optionally set up snapping
-        var snappingAgent = this.getSnappingAgent();
-        if (snappingAgent) {
-            snappingAgent.addSnappingControl(featureLayer);
-        }
-
         var intercepting = false;
         // intercept calls to methods that change the feature store - allows us
         // to persist unsaved changes before calling the original function
@@ -490,6 +484,11 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
 
         featureManager.on("layerchange", this.onLayerChange, this);
         
+        var snappingAgent = this.getSnappingAgent();
+        if (snappingAgent) {
+            snappingAgent.registerEditor(this);
+        }
+        
         return actions;
     },
 
@@ -505,7 +504,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
     },
 
     /** private: getSnappingAgent
-     *  :returns: ``gxp.plugins.SnappingAgent``
+     *  :returns: :class:`gxp.plugins.SnappingAgent`
      */
     getSnappingAgent: function() {
         var agent;
