@@ -170,7 +170,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
      */
     addActions: function() {
         var popup;
-        var featureManager = this.target.tools[this.featureManager];
+        var featureManager = this.getFeatureManager();
         var featureLayer = featureManager.featureLayer;
         
         // optionally set up snapping
@@ -491,6 +491,17 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
         featureManager.on("layerchange", this.onLayerChange, this);
         
         return actions;
+    },
+
+    /** private: method[getFeatureManager]
+     *  :returns: :class:`gxp.plugins.FeatureManager`
+     */
+    getFeatureManager: function() {
+        var manager = this.target.tools[this.featureManager];
+        if (!manager) {
+            throw new Error("Unable to access feature manager by id: " + this.featureManager);
+        }
+        return manager;
     },
 
     /** private: getSnappingAgent
