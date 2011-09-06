@@ -161,7 +161,22 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
              *    Will be ``null`` if no layer record is selected.
              *  * editable - ``Boolean`` The layer is ready to be edited.
              */
-            "layereditable"
+            "layereditable",
+
+            /** api: event[featureeditable]
+             *  Fired when a feature is selected or unselected for editing.  
+             *  Listeners can use this method to determine when a feature is 
+             *  ready for editing.  Beware that this event is fired multiple 
+             *  times when a feature is unselected.
+             *
+             *  Listener arguments:
+             *
+             *  * tool   - :class:`gxp.plugins.FeatureManager` This tool
+             *  * feature - ``OpenLayers.Feature.Vector`` The feature.
+             *  * editable - ``Boolean`` The feature is ready to be edited.
+             */
+            "featureeditable"
+
         );
         gxp.plugins.FeatureEditor.superclass.constructor.apply(this, arguments);        
     },
@@ -305,6 +320,10 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                 }
             },
             "featureunselected": function(evt) {
+                var feature = evt.feature;
+                if (feature) {
+                    this.fireEvent("featureeditable", this, feature, false);
+                }
                 if (popup && !popup.hidden) {
                     popup.close();
                 }
@@ -324,6 +343,9 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
             },
             "featureselected": function(evt) {
                 var feature = evt.feature;
+                if (feature) {
+                    this.fireEvent("featureeditable", this, feature, true);
+                }
                 var featureStore = featureManager.featureStore;
                 if(this.selectControl.active && feature.geometry !== null) {
                     // deactivate select control so no other features can be
