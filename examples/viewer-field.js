@@ -17,7 +17,7 @@ Ext.onReady(function() {
                 featureManager: "featuremanager",
                 readOnly: true,
                 autoLoadFeatures: true,
-                actionTarget: null,
+                actionTarget: false,
                 defaultAction: 1,
                 outputConfig: {panIn: false, height: 220}
             }, {
