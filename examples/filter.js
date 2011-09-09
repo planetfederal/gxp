@@ -39,6 +39,7 @@ function showFE() {
 
 Ext.onReady(function() {
 
+    Ext.QuickTips.init();
     var win = new Ext.Window({
         title: "Comparison Filter",
         closable: false,
