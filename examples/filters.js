@@ -49,7 +49,7 @@ function showFE(panel) {
 }
 
 Ext.onReady(function() {
-
+    Ext.QuickTips.init();
     var panel1 = new Ext.Panel({
         title: "Filter Builder (no groups)",
         renderTo: "panel1",
