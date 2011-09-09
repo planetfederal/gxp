@@ -15,7 +15,7 @@
 /* Pan- and Zoom- Panel Styles*/
 
 .olControlPanPanel div {
-    background-image:url(../../../../externals/ext/resources/images/gray/panel/tool-sprites.gif);
+    background-image:url(http://extjs.cachefly.net/ext-3.4.0/resources/images/gray/panel/tool-sprites.gif);
     height:15px;
     width:15px;
     /* workaround for button height in IE */
@@ -47,7 +47,7 @@
 }
 
 .olControlZoomPanel div {
-    background-image:url(../../../../externals/ext/resources/images/gray/panel/tool-sprites.gif);
+    background-image:url(http://extjs.cachefly.net/ext-3.4.0/resources/images/gray/panel/tool-sprites.gif);
     height:15px;
     width:15px;
     /* workaround for button height in IE */
@@ -220,11 +220,11 @@
 }
 
 .x-tree-node img.gxp-folder, .x-tree-node-collapsed img.gxp-folder{
-    background: url(../../../../externals/ext/resources/images/default/tree/folder.gif);
+    background: url(http://extjs.cachefly.net/ext-3.4.0/resources/images/default/tree/folder.gif);
 }
 
 .x-tree-node-expanded img.gxp-folder {
-    background: url(../../../../externals/ext/resources/images/default/tree/folder-open.gif);
+    background: url(http://extjs.cachefly.net/ext-3.4.0/resources/images/default/tree/folder-open.gif);
 }
 
 /* gxp_layeruploadpanel */
