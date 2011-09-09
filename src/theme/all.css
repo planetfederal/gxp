@@ -182,7 +182,7 @@
 
 /* gxp_zoomtoextent */
 .x-btn .gxp-icon-zoomtoextent, .x-tree-node .gxp-icon-zoomtoextent { 
-    background-image: url(img/silk/arrow_out.png);
+    background-image: url(img/silk/arrow_inout.png);
 }
 
 /* gxp_navigationhistory */
