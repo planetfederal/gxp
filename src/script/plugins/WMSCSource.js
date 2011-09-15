@@ -85,11 +85,14 @@ gxp.plugins.WMSCSource = Ext.extend(gxp.plugins.WMSSource, {
         if (!record) {
             return;
         }
-        var caps = this.store.reader.raw.capability;
+        var caps;
+        if (this.store.reader.raw) {
+            caps = this.store.reader.raw.capability;
+        }
         var tileSets = (caps && caps.vendorSpecific && caps.vendorSpecific) ? 
             caps.vendorSpecific.tileSets : null;
+        var layer = record.get("layer");
         if (tileSets !== null) {
-            var layer = record.get("layer");
             var mapProjection = this.getMapProjection();
             // look for tileset with same name and equivalent projection
             for (var i=0, len=tileSets.length; i<len; i++) {
@@ -114,6 +117,11 @@ gxp.plugins.WMSCSource = Ext.extend(gxp.plugins.WMSSource, {
                     }
                 }
             }
+        } else if (this.forceLazy === true && config.cached === true) {
+            // if lazy loading is forced, and the cached version is explicitly
+            // requested, set TILED to true and assume that the tiling scheme
+            // for the layer works with the map bounds and resolutions.
+            layer.params.TILED = true;
         }
         return record;
     },
