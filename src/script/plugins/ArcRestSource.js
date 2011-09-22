@@ -36,60 +36,57 @@ gxp.plugins.ArcRestSource = Ext.extend(gxp.plugins.LayerSource, {
      *  Creates a store of layers.  This requires that the API script has already
      *  loaded.  Fires the "ready" event when the store is loaded.
      */
-    createStore: function()
-    {
-        var baseUrl =    this.url.split("?")[0];
+    createStore: function() {
+        var baseUrl = this.url.split("?")[0];
         var source = this;
 
         var processResult = function(response) {
-                var json = Ext.decode(response.responseText);
+            var json = Ext.decode(response.responseText);
 
-                if (json.capabilities.contains('Map'))
-                {
+            var layerProjection = source.getArcProjection(json.spatialReference.wkid);
 
-                var layerProjection = source.getArcProjection(json.spatialReference.wkid);
-
-                var layers = [];
-                for (var l=0; l < json.layers.length; l++) {
+            var layers = [];
+            if (layerProjection != null) {
+                for (var l = 0; l < json.layers.length; l++) {
                     var layer = json.layers[l];
                     var layerShow = "show:" + layer.id;
                     layers.push(new OpenLayers.Layer.ArcGIS93Rest(layer.name, baseUrl + "/export",
-                            {
-                                layers: layerShow,
-                                TRANSPARENT: true
-                            },
-                            {
-                                isBaseLayer: false,
-                                displayInLayerSwitcher: true,
-                                visibility: true,
-                                projection: layerProjection,
-                                queryable: json.capabilities.contains("Identify")}
+                        {
+                            layers: layerShow,
+                            TRANSPARENT: true
+                        },
+                        {
+                            isBaseLayer: false,
+                            displayInLayerSwitcher: true,
+                            visibility: true,
+                            projection: layerProjection,
+                            queryable: json.capabilities && json.capabilities.contains("Identify")}
                     ));
                 }
+            } else {
+                processFailure(response);
+            }
 
-                source.title =  json.documentInfo.Title;
+            source.title = json.documentInfo.Title;
 
-                source.store = new GeoExt.data.LayerStore({
-                    layers: layers,
-                    fields: [
-                        {name: "source", type: "string"},
-                        {name: "name", type: "string", mapping: "name"},
-                        {name: "group", type: "string", defaultValue: this.title},
-                        {name: "fixed", type: "boolean", defaultValue: true},
-                        {name: "queryable", type: "boolean", defaultValue: true},
-                        {name: "selected", type: "boolean"}
-                    ]
-                });
-                } else
-                    processFailure();
+            source.store = new GeoExt.data.LayerStore({
+                layers: layers,
+                fields: [
+                    {name: "source", type: "string"},
+                    {name: "name", type: "string", mapping: "name"},
+                    {name: "group", type: "string", defaultValue: this.title},
+                    {name: "fixed", type: "boolean", defaultValue: true},
+                    {name: "queryable", type: "boolean", defaultValue: true},
+                    {name: "selected", type: "boolean"}
+                ]
+            });
 
-                source.fireEvent("ready", source);
+
+            source.fireEvent("ready", source);
         };
 
-        var processFailure = function(response)
-        {
-            source.fireEvent("ready", source);
-            Ext.Msg.alert("No Layers", "Could not find any layers to map at " + this.url);
+        var processFailure = function(response) {
+            Ext.Msg.alert("No Layers", "Could not find any layers in a compatible projection");
         };
 
 
@@ -109,7 +106,7 @@ gxp.plugins.ArcRestSource = Ext.extend(gxp.plugins.LayerSource, {
 
 
 
-      /** api: method[getConfigForRecord]
+    /** api: method[getConfigForRecord]
      *  :arg record: :class:`GeoExt.data.LayerRecord`
      *  :returns: ``Object``
      *
@@ -143,7 +140,7 @@ gxp.plugins.ArcRestSource = Ext.extend(gxp.plugins.LayerSource, {
             record.set("queryable", config.queryable || true)
             record.set("source", config.source);
             record.set("name", config.name);
-            record.set("properties",  "gxp_wmslayerpanel");
+            record.set("properties", "gxp_wmslayerpanel");
             if ("group" in config) {
                 record.set("group", config.group);
             }
@@ -172,8 +169,8 @@ gxp.plugins.ArcRestSource = Ext.extend(gxp.plugins.LayerSource, {
         var layerSRS = "EPSG:" + srs + '';
         if (layerSRS !== projection.getCode()) {
             compatibleProjection = null;
-            if ((p=new OpenLayers.Projection(layerSRS)).equals(projection)) {
-                    compatibleProjection = p;
+            if ((p = new OpenLayers.Projection(layerSRS)).equals(projection)) {
+                compatibleProjection = p;
             }
         }
         return compatibleProjection;
