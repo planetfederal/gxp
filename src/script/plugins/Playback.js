@@ -68,7 +68,7 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
     resetTooltip:'Reset to the start',
     loopLabel:'Loop',
     loopTooltip:'Continously loop the animation',
-    normalPlaybackTooltip:'Return to normal playback',
+    normalTooltip:'Return to normal playback',
     pauseLabel:'Pause',
     pauseTooltip:'Pause',
 
@@ -79,8 +79,8 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
         Ext.applyIf(this,{
             playbackActions:["settings","slider","reset","play","fastforward","next","loop"],
             control:this.buildTimeManager(),
-            outputTarget:this.actionTarget?'map':null,
-            outputConfig:{'xtype':'tip',format:this.timeFormat}
+            outputTarget:'map',
+            outputConfig:{'xtype':'tip',format:this.timeFormat,height:'auto',closeable:false,title:false,width:210}
         })
     },
 
@@ -102,19 +102,28 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
             return gxp.plugins.Playback.superclass.addActions.apply(this, [actions]);
         }
         else{
-            this.timePanel = this.buildTimePanel(actions);
-            this.target.mapPanel.addItem(this.timePanel);
-            this.outputTarget = this.timePanel.id;
+            var panel = this.timePanel = this.buildTimePanel(actions);
+            panel.render(this.target.mapPanel.id);
+            panel.show();
+            panel.el.alignTo(this.target.mapPanel.getEl(),'tl-tl',[80,60]);
             this.outputConfig.defaultAlign = 't-b';
-            return gxp.plugins.Playback.superclass.addActions.apply(this);
+            panel.btnPlay.on({
+                "click": function(){
+                    this.addOutput(this.outputConfig)
+                },
+                scope: this,
+                single: true
+            });
         }
     },
     addOutput: function(config){
+        Ext.applyIf(this.outputConfig,{html:this.control.currentTime.format(this.timeFormat)})
         var output = gxp.plugins.Playback.superclass.addOutput.apply(this,[config]);
-        if(this.outputTarget=='map'){
-            output.alignTo(this.target.mapPanel.getEl(),'tl-tl',[30,-10])
+        output.show();
+        if(this.actionTarget){
+            output.el.alignTo(this.target.mapPanel.getEl(),'tl-tl',[60,60])
         }else{
-            output.alignTo(this.timePanel.slider.getEl(),output.defaultAlign,[0,-5])
+            output.el.alignTo(this.timePanel.timeSlider.getEl(), output.defaultAlign, [0, 5])
         }
     },
     /** private: method[buildActions]
@@ -124,30 +133,33 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
             'slider':{
             xtype: 'multislider',
             ref:'timeSlider',
+            values:[0],
             width:200,
             animate:false,
+            format:this.timeFormat,
             plugins: new Ext.slider.Tip({
                 getText: function(thumb){
-                    if (this.indexMap[thumb.index] != 'tail') {
-                        return (new Date(thumb.value).format(this.timeFormat));
+                    if (thumb.slider.indexMap[thumb.index] != 'tail') {
+                        return (new Date(thumb.value).format(thumb.slider.format));
                     }else{
-                        var formatInfo = gxp.plugins.Playback.prototype.smartIntervalFormat.call(this,thumb.slider.thumbs[0].value-thumb.value);
+                        var formatInfo = gxp.plugins.Playback.prototype.smartIntervalFormat.call(thumb,thumb.slider.thumbs[0].value-thumb.value);
                         return formatInfo.value + ' ' +formatInfo.units;
                     }
                 }
             }),
             listeners:{
-                'changecomplete':this.onSliderChangeComplete
+                'changecomplete':this.onSliderChangeComplete,
+                scope:this
             }
         },
             'reset': {
-                iconCls: 'gxp-icon-first',
+                iconCls: 'gxp-icon-reset',
                 ref:'btnReset',
                 handler: this.control.reset,
                 scope: this.control,
                 tooltip: this.resetTooltip,
                 menuText: this.resetLabel,
-                text: (this.labelButtons) ? this.resetLabel : undefined
+                text: (this.labelButtons) ? this.resetLabel : false
             },
             'pause': {
                 iconCls: 'gxp-icon-pause',
@@ -156,7 +168,7 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
                 scope: this.control,
                 tooltip: this.stopTooltip,
                 menuText: this.stopLabel,
-                text: (this.labelButtons) ? this.stopLabel : undefined,
+                text: (this.labelButtons) ? this.stopLabel : false,
                 toggleGroup: 'timecontrol',
                 enableToggle: true,
                 allowDepress: false
@@ -171,16 +183,16 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
                 allowDepress: true,
                 tooltip: this.playTooltip,
                 menuText: this.playLabel,
-                text: (this.labelButtons) ? this.playLabel : undefined
+                text: (this.labelButtons) ? this.playLabel : false
             },
             'next': {
-                iconCls: 'gxp-icon-next',
+                iconCls: 'gxp-icon-last',
                 ref:'btnNext',
                 handler: this.control.tick,
                 scope: this.control,
                 tooltip: this.nextTooltip,
                 menuText: this.nextLabel,
-                text: (this.labelButtons) ? this.nextLabel : undefined
+                text: (this.labelButtons) ? this.nextLabel : false
             },
             'end': {
                 iconCls: 'gxp-icon-last',
@@ -189,7 +201,7 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
                 scope: this,
                 tooltip: this.endTooltip,
                 menuText: this.endLabel,
-                text: (this.labelButtons) ? this.endLabel : undefined
+                text: (this.labelButtons) ? this.endLabel : false
             },
             'loop': {
                 iconCls: 'gxp-icon-loop',
@@ -201,7 +213,7 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
                 scope: this,
                 tooltip: this.loopTooltip,
                 menuText: this.loopLabel,
-                text: (this.labelButtons) ? this.loopLabel : undefined,
+                text: (this.labelButtons) ? this.loopLabel : false,
             },
             'fastforward': {
                 iconCls: 'gxp-icon-ffwd',
@@ -211,9 +223,10 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
                 allowDepress: true,
                 toggleHandler: this.toggleDoubleSpeed,
                 scope: this,
+                disabled:true,
                 tooltip: this.fastforwardTooltip,
                 menuText: this.fastforwardLabel,
-                text: (this.labelButtons) ? this.fastforwardLabel : undefined,
+                text: (this.labelButtons) ? this.fastforwardLabel : false,
             },
             'settings': {
                 iconCls: 'gxp-icon-settings',
@@ -222,7 +235,7 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
                 scope: this,
                 tooltip: this.settingsTooltip,
                 menuText: this.settingsLabel,
-                text: (this.labelButtons) ? this.settingsLabel : undefined
+                text: (this.labelButtons) ? this.settingsLabel : false
             }
         }
         var actConfigs = this.playbackActions;
@@ -235,8 +248,9 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
                 cfg=null;
             }
             if(cfg){
+                if(cfg==actionDefaults.play){this.outputAction=i}
                 //actions interface won't work with regular component config objects. needs instantiated components
-                if(cfg.xtype)cfg=Ext.create(cfg);
+                if(cfg.xtype)cfg=this[cfg.ref||cfg.xtype]=Ext.create(cfg);
                 actions.push(cfg);
             }
         }
@@ -255,54 +269,92 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
         indexMap[1]='minTime',indexMap[2]='maxTime';
       }
       if(this.playbackMode=='ranged'||this.playbackMode=='decay'){
-        values.push(minTime);
+        values.push(min);
         indexMap[indexMap.length]='tail'
       }
       return {'values':values,'map':indexMap,'maxValue':max,'minValue':min,'interval':interval}
     },
     buildTimeManager:function(){
+        this.controlOptions || (this.controlOptions={})
         if(this.playbackMode=='ranged' || this.playbackMode=='decay'){
-            this.controlOptions = Ext.apply(this.controlOptions||{},{
+            Ext.apply(this.controlOptions,{
                 agentOptions:{
-                    'WMS':{intervalMode:'range',rangeInterval:this.rangedPlayInterval},
-                    'Vector':{intervalMode:'range',rangeInterval:this.rangedPlayInterval}
+                    'WMS':{rangeMode:'range',rangeInterval:this.rangedPlayInterval},
+                    'Vector':{rangeMode:'range',rangeInterval:this.rangedPlayInterval}
+                },
+            })
+        }
+        else if(this.playbackMode=='cumulative'){
+            Ext.apply(this.controlOptions,{
+                agentOptions:{
+                    'WMS':{rangeMode:'cumulative'},
+                    'Vector':{rangeMode:'cumulative'}
                 },
             })
         }
         var ctl = new OpenLayers.Control.TimeManager(this.controlOptions);
         return ctl;
     },
+    buildTimePanel:function(actions){
+        return new Ext.Panel({
+            layout:'hbox',
+            width:400,
+            hideMode:'visibility',
+            cls:'gx-overlay-playback',
+            defaults:{xtype:'button',flex:1,scale:'small'},
+            items:[actions],
+            border:false,
+            frame:false,
+            unstyled:true,
+            floating:true,
+            shadow:false
+        });
+    },
     configureSlider: function(){
-        var sliderInfo = this.buildSliderValues();
-        var slider = this.outputTarget.slider;
-        slider.setMaxValue(sliderInfo.max);
-        slider.setMinValue(sliderInfo.min);
-        for (var i = 0; i < sliderInfo.values.length; i++) {
-            if (slider.thumbs[i]) {slider.setValue(sliderInfo.values[i], i)}
-            else {slider.addThumb(sliderInfo.values[i])}
+        if(this.playbackMode=='ranged' || this.playbackMode=='decay'){
+            this.control.incrementTime(this.rangedPlayInterval,this.control.units)
         }
+        var sliderInfo = this.buildSliderValues(),
+        slider = this.timeSlider,
+        tool = this;
         Ext.apply(slider, {
-            increment: sliderInfo.increment,
-            keyIncrement: sliderInfo.increment,
+            increment: sliderInfo.interval,
+            keyIncrement: sliderInfo.interval,
             indexMap: sliderInfo.map
         })
-        tailIndex = this.indexMap.indexOf('tail');
-        if(this.indexMap[1]=='min'){
+        slider.setMaxValue(sliderInfo.maxValue);
+        slider.setMinValue(sliderInfo.minValue);
+        for (var i = 0; i < sliderInfo.values.length; i++) {
+            if (slider.thumbs[i]) {slider.setValue(i,sliderInfo.values[i])}
+            else {slider.addThumb(sliderInfo.values[i])}
+        }
+        tailIndex = slider.indexMap.indexOf('tail');
+        if(slider.indexMap[1]=='min'){
             slider.thumbs[1].el.addClass('x-slider-min-thumb');
             slider.thumbs[2].el.addClass('x-slider-max-thumb');
         }
         if(tailIndex>-1){
             slider.thumbs[tailIndex].el.addClass('x-slider-tail-thumb');
+            slider.thumbs[tailIndex].constrain=false;
+            slider.thumbs[0].constrain=false;
         }
+        this.control.events.register('tick',this.control,function(evt){
+            var offset = evt.currentTime.getTime()-slider.values[0];
+            slider.setValue(0,slider.thumbs[0].value+offset);
+            if(tailIndex>-1)slider.setValue(tailIndex,slider.thumbs[tailIndex].value+offset)
+            tool.output[0] && tool.output[0].update(evt.currentTime.format(slider.format))
+        })
     },
     forwardToEnd: function(btn){
         var ctl = this.control;
         ctl.setTime(new Date(ctl.range[(ctl.step < 0) ? 0 : 1].getTime()))
     },
-    toogleAnimation:function(btn,pressed){
+    toggleAnimation:function(btn,pressed){
         this.control[pressed?'play':'stop']();
-        btn.toggleClass('gxp-icon-play','gxp-icon-pause');
+        btn.btnEl.toggleClass('gxp-icon-play').toggleClass('gxp-icon-pause');
+        btn.el.removeClass('x-btn-pressed');
         btn.setTooltip(pressed?this.pauseTooltip:this.playTooltip);
+        btn.refOwner.btnFastforward[pressed?'enable':'disable']();
         if(this.labelButtons && btn.text)btn.setText(pressed?this.pauseLabel:this.playLabel);
     },
     toggleLoopMode:function(btn,pressed){
@@ -310,17 +362,19 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
         btn.setTooltip(pressed?this.normalTooltip:this.loopTooltip);
         if(this.labelButtons && btn.text)btn.setText(pressed?this.normalLabel:this.loopLabel);
     },
-    toogleDoubleSpeed:function(btn,pressed){
+    toggleDoubleSpeed:function(btn,pressed){
         this.control.frameRate = this.control.frameRate*(pressed)?2:0.5;
+        this.control.stop();this.control.play();
         btn.setTooltip(pressed?this.normalTooltip:this.fastforwardTooltip);
     },
     onSliderChangeComplete: function(slider, value, thumb){
         var slideTime = new Date(value);
         //test if this is the main time slider
-        switch (this.indexMap[thumb.index]) {
+        switch (slider.indexMap[thumb.index]) {
             case 'primary':
                 this.control.setTime(slideTime);
-                slider.refOwner.timeDisplay.setValue(slideTime.format(this.timeFormat));
+                !this.output[0] && this.addOutput(this.outputConfig)
+                this.output[0].update(slideTime.format(this.timeFormat));
                 break;
             case 'min':
                 if (value >= this.control.intialRange[0].getTime()) {
@@ -353,24 +407,24 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
         }
     },
     smartIntervalFormat:function(diff){
-        var unitText, diffValue;
-        if(diff<6e3){
+        var unitText, diffValue, absDiff=Math.abs(diff);
+        if(absDiff<6e3){
             unitText='Seconds',
             diffValue=(Math.round(diff/1e2))/10;
         }
-        else if(diff<36e5){
+        else if(absDiff<36e5){
             unitText='Minutes',
             diffValue=(Math.round(diff/6e2))/10;
         }
-        else if(diff<864e5){
+        else if(absDiff<864e5){
             unitText='Hours',
             diffValue=(Math.round(diff/36e4))/10;
         }
-        else if(diff<2628e6){
+        else if(absDiff<2628e6){
             unitText='Days',
             diffValue=(Math.round(diff/864e4))/10;
         }
-        else if(diff<31536e6){
+        else if(absDiff<31536e6){
             unitText='Months',
             diffValue=(Math.round(diff/2628e5))/10;
         }else{

@@ -41,7 +41,10 @@ Ext.onReady(function() {
             controlOptions:{
                 units:OpenLayers.TimeUnit.HOURS,
                 step:6
-            }
+            },
+            //playbackMode:'ranged',
+            dynamicRange:false,
+            //rangedPlayInterval:18
         }],
         
         // layer sources
@@ -75,8 +78,8 @@ Ext.onReady(function() {
             }, {
                 source: "ol",
                 type: 'OpenLayers.Layer.WMS',
-                args: ["Irene Eye & Storm Winds", "http://mapstory.demo.opengeo.org:8080/geoserver/wms", {
-                    layers: "irene_11_pts,irene_11_radii",
+                args: ["Hurrican Irene", "http://mapstory.demo.opengeo.org:8080/geoserver/wms", {
+                    layers: "irene_11_pts,irene_11_radii,irene_11_lin",
                     transparent: true,
                     format: 'image/png',
                     srs: 'EPSG:900913',
@@ -101,21 +104,9 @@ Ext.onReady(function() {
                     time: startTime
                 }, {
                     metadata: {
-                        timeInterval: ['2011-08-18T12:00:00.000Z', '2011-08-29T00:00:00.000Z']
+                        timeInterval: ['2011-08-18T12:00:00.000Z', '2011-08-29T00:00:00.000Z'],
+                        allowRange:false
                     },
-                    singleTile: true,
-                    ratio: 1,
-                    transitionEffect: 'resize',
-                    visibility: true
-                }]
-            }, {
-                source: "ol",
-                type: 'OpenLayers.Layer.WMS',
-                args: ["Irene Storm Track", "http://mapstory.demo.opengeo.org:8080/geoserver/wms", {
-                    layers: "irene_11_lin",
-                    transparent: true,
-                    format: 'image/png',
-                    srs: 'EPSG:900913',
                     singleTile: true,
                     ratio: 1,
                     transitionEffect: 'resize',

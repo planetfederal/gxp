@@ -274,3 +274,79 @@ div.map-overlay div.overlay-element {
     left: 0px;
     margin-top: 0px;
 }
+/* gxp_playback */
+.gx-overlay-playback{
+    top:60px;
+    left:80px;
+    position:absolute;
+}
+.gx-overlay-playback .x-btn{
+    width:16px !important;height:16px !important;
+    background-repeat: no-repeat;
+}
+.x-btn .gxp-icon-reset{
+    background-image:url('img/silk/control_start_blue.png')
+}
+.x-btn .gxp-icon-settings{
+    background-image:url('img/silk/control_equalizer_blue.png')
+}
+.x-btn .gxp-icon-next{
+    background-image:url('img/silk/next.png')
+}
+.x-btn .gxp-icon-last{
+    background-image:url('img/silk/control_end_blue.png')
+}
+.x-btn .gxp-icon-play{
+    background-image:url('img/silk/control_play_blue.png')
+}
+.x-btn .gxp-icon-pause{
+    background-image:url('img/silk/control_pause_blue.png')
+}
+.x-btn .gxp-icon-stop{
+    background-image:url('img/silk/control_stop_blue.png')
+}
+.x-btn .gxp-icon-loop{
+    background-image:url('img/silk/control_repeat_blue.png')
+}
+.x-btn .gxp-icon-ffwd{
+    background-image:url('img/silk/control_fastforward_blue.png')
+}
+.x-btn-over .gxp-icon-reset{
+    background-image:url('img/silk/control_start.png')
+}
+.x-btn-over .gxp-icon-settings{
+    background-image:url('img/silk/control_equalizer.png')
+}
+.x-btn-over .gxp-icon-next{
+    background-image:url('img/silk/next_blue.png')
+}
+.x-btn-over .gxp-icon-last{
+    background-image:url('img/silk/control_end.png')
+}
+.x-btn-over .gxp-icon-play{
+    background-image:url('img/silk/control_play.png')
+}
+.x-btn-over .gxp-icon-pause{
+    background-image:url('img/silk/control_pause.png')
+}
+.x-btn-over .gxp-icon-stop{
+    background-image:url('img/silk/control_stop.png')
+}
+.x-btn-over .gxp-icon-loop{
+    background-image:url('img/silk/control_repeat.png')
+}
+.x-btn-over .gxp-icon-ffwd,.x-item-disabled .gxp-icon-ffwd{
+    background-image:url('img/silk/control_fastforward.png')
+}
+.x-slider-min-thumb{
+    background-image:url('img/silk/resultset_next.png')!important;
+    background-position:0 0 !important;
+}
+.x-slider-max-thumb{
+    background-image:url('img/silk/resultset_previous.png')!important;
+    background-position:0 0 !important;
+}
+.x-slider-tail-thumb{
+    background-image:url('img/silk/stop.png')!important;
+    background-position:0 0 !important;
+}
