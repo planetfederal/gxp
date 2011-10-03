@@ -417,7 +417,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         this.fireEvent("sourceselected", this, source);
     },
     
-    /** private: method[createUploadButton]
+    /** api: method[createUploadButton]
      *  If this tool is provided an ``upload`` property, a button will be created
      *  that launches a window with a :class:`gxp.LayerUploadPanel`.
      */
