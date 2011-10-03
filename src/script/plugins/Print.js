@@ -23,7 +23,8 @@ Ext.namespace("gxp.plugins");
 /** api: constructor
  *  .. class:: Print(config)
  *
- *    Provides an action to print the map.
+ *    Provides an action to print the map. Requires GeoExt.ux.PrintPreview,
+ *    which is currently mirrored at git://github.com/GeoNode/PrintPreview.git.
  */
 gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
     

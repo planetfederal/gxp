@@ -139,7 +139,14 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      *  If specified, the version string will be included in WMS GetCapabilities
      *  requests.  By default, no version is set.
      */
-     
+    
+    /** api: config[forceLazy]
+     *  ``Array`` If set to true, no GetCapabilities request will be sent and
+     *  missing srs and bbox properties will be replaced with the map
+     *  projection and maxExtent. Not all plugins will work with layers from
+     *  a source configured with ``forceLazy`` set to true.
+     */
+    
     /** private: method[isLazy]
      *  :returns: ``Boolean``
      *
@@ -157,8 +164,8 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             for (var i=0, ii=mapConfig.layers.length; i<ii; ++i) {
                 layerConfig = mapConfig.layers[i];
                 if (layerConfig.source === this.id) {
-                    if (!this.layerConfigComplete(layerConfig)) {
-                        lazy = false;
+                    lazy = this.layerConfigComplete(layerConfig);
+                    if (lazy === false) {
                         break;
                     }
                 }
@@ -168,8 +175,9 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
     },
     
     layerConfigComplete: function(config) {
-        // for now, we assume the the layer config is incomplete
-        return false;
+        // for now, we assume that the layer config is incomplete, unless
+        // forceLazy is set to true
+        return this.forceLazy === true;
     },
 
     /** api: method[createStore]
@@ -277,6 +285,33 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         );
     },
     
+    /** private: method[createLazyLayerRecord]
+     *  :arg config: ``Object`` The application config for this layer.
+     *  :returns: ``GeoExt.data.LayerRecord``
+     *
+     *  Create a minimal layer record
+     */
+    createLazyLayerRecord: function(config) {
+        var record = new this.store.recordType(config);
+        record.setLayer(new OpenLayers.Layer.WMS(
+            config.title || config.name,
+            this.url,
+            {layers: config.name}
+        ));
+        if (!config.srs) {
+            // assume the map projection if none was configured
+            record.set("srs", this.target.map.projection);
+        }
+        if (!config.bbox) {
+            var bbox = {};
+            bbox[record.get("srs")] = {
+                bbox: this.target.map.maxExtent
+            };
+            record.set("bbox", bbox);
+        }
+        return record;
+    },
+     
     /** api: method[createLayerRecord]
      *  :arg config:  ``Object``  The application config for this layer.
      *  :returns: ``GeoExt.data.LayerRecord``
@@ -284,10 +319,14 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      *  Create a layer record given the config.
      */
     createLayerRecord: function(config) {
-        var record;
+        var record, original;
         var index = this.store.findExact("name", config.name);
         if (index > -1) {
-            var original = this.store.getAt(index);
+            original = this.store.getAt(index);
+        } else if (this.layerConfigComplete(config)) {
+            original = this.createLazyLayerRecord(config);
+        }
+        if (original) {
 
             var layer = original.getLayer();
 
