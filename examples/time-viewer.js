@@ -13,6 +13,7 @@ Ext.onReady(function() {
                 xtype: "container",
                 layout: "fit",
                 region: "west",
+                fbar:[],
                 width: 200
             }],
             bbar: {id: "mybbar"}
@@ -43,8 +44,10 @@ Ext.onReady(function() {
                 step:6
             },
             //playbackMode:'ranged',
-            dynamicRange:false,
-            //rangedPlayInterval:18
+            //rangedPlayInterval:18,
+            outputConfig: {
+                dynamicRange: false
+            }
         }],
         
         // layer sources
@@ -86,7 +89,7 @@ Ext.onReady(function() {
                     time: startTime
                 }, {
                     metadata: {
-                        timeInterval: ['2011-08-18T12:00:00.000Z', '2011-08-29T00:00:00.000Z']
+                        timeInterval: [['2011-08-18T12:00:00.000Z','2011-08-29T00:00:00.000Z','PT6H']]
                     },
                     singleTile: true,
                     ratio: 1,
@@ -104,7 +107,7 @@ Ext.onReady(function() {
                     time: startTime
                 }, {
                     metadata: {
-                        timeInterval: ['2011-08-18T12:00:00.000Z', '2011-08-29T00:00:00.000Z'],
+                        timeInterval: [['2011-08-18T12:00:00.000Z','2011-08-29T00:00:00.000Z','PT6H']],
                         allowRange:false
                     },
                     singleTile: true,
