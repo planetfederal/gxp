@@ -11,7 +11,7 @@ var filter = new OpenLayers.Filter.Logical({
     filters: [
         new OpenLayers.Filter.Comparison({
             type: OpenLayers.Filter.Comparison.EQUAL_TO,
-            property: "population",
+            property: 'population',
             value: 1000
         }),
         new OpenLayers.Filter.Comparison({
