@@ -148,6 +148,7 @@ gxp.PlaybackPanel = Ext.extend(Ext.Panel, {
                 }),
                 listeners: {
                     'changecomplete': this.onSliderChangeComplete,
+                    'beforechange':function(slider){return !!this.control.units},
                     'show': function(slider){
                         tailIndex = slider.indexMap.indexOf('tail');
                         if (slider.indexMap[1] == 'min') {
