@@ -37,6 +37,7 @@
         "widgets/GoogleEarthPanel.js",
         "widgets/GoogleStreetViewPanel.js",
         "widgets/tips/SliderTip.js",
+        "widgets/PlaybackPanel.js",
         "plugins/LayerSource.js",
         "plugins/BingSource.js",
         "plugins/WMSSource.js",
@@ -79,6 +80,7 @@
         "plugins/Legend.js",
         "plugins/Print.js",
         "plugins/LoadingIndicator.js",
+        "plugins/Playback.js",
         "locale/es.js",
         "locale/ca.js"
     );
