@@ -66,14 +66,12 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
      */
     addOutput: function(config){
         config = config || {};
-        if (!this.outputConfig) {this.outputConfig = config}
         var panel = gxp.plugins.Playback.superclass.addOutput.call(this, Ext.apply(config,{
             xtype: 'gxp_playbackpanel',
             control: this.control || this.buildTimeManager(),
             mapPanel:this.target.mapPanel,
             playbackMode:this.playbackMode
-        }))
-        panel.show();
+        }));
         return panel;
     },
     addActions: function(actions){

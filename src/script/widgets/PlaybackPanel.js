@@ -79,23 +79,14 @@ gxp.PlaybackPanel = Ext.extend(Ext.Panel, {
         Ext.applyIf(this,{
             layout:'hbox',
             width:400,
-            hideMode:'visibility',
             cls:'gx-overlay-playback',
             defaults:{xtype:'button',flex:1,scale:'small'},
             items:this.buildPlaybackItems(),
             border:false,
             frame:false,
             unstyled:true,
-            floating:true,
             shadow:false,
-            timeDisplayConfig:{'xtype':'tip',format:this.timeFormat,height:'auto',closeable:false,title:false,width:210},
-            listeners:{
-                'show':function(cmp){
-                    var mapPanel = (this.viewer && this.viewer.mapPanel) || GeoExt.MapPanel.guess();
-                    //TODO make this configurable
-                    cmp.el.alignTo(mapPanel.getEl(),'tl-tl',[80,60]);
-                }
-            }
+            timeDisplayConfig:{'xtype':'tip',format:this.timeFormat,height:'auto',closeable:false,title:false,width:210}
         })
         gxp.PlaybackPanel.superclass.initComponent.call(this);       
     },
@@ -259,8 +250,9 @@ gxp.PlaybackPanel = Ext.extend(Ext.Panel, {
     },
     showTimeDisplay: function(config){
         if (!config) {config = this.timeDisplayConfig}
-        Ext.applyIf(config,{html:this.control.currentTime.format(this.timeFormat)})
-        this.timeDisplay = this.mapPanel.add(config);
+        Ext.applyIf(config,{html:this.control.currentTime.format(this.timeFormat)});
+        //TODO get rif of timeDisplay, and use the slider's tip instead
+        this.timeDisplay = this.add(config);
         this.timeDisplay.show();
         this.timeDisplay.el.alignTo(this.slider.getEl(), this.timeDisplay.defaultAlign, [0, 5])
     },

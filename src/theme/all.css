@@ -275,6 +275,12 @@ div.map-overlay div.overlay-element {
     margin-top: 0px;
 }
 /* gxp_playback */
+div.olMap div.gx-overlay-playback {
+    position: absolute;
+    z-index: 1000;
+    top: 22px;
+    left: 65px;
+}
 .gx-overlay-playback .x-btn{
     width:16px !important;height:16px !important;
     background-repeat: no-repeat;
