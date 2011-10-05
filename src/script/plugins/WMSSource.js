@@ -382,6 +382,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             var data = Ext.applyIf({
                 title: layer.name,
                 group: config.group,
+                infoFormat: config.infoFormat,
                 source: config.source,
                 properties: "gxp_wmslayerpanel",
                 fixed: config.fixed,
@@ -397,7 +398,8 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 {name: "properties", type: "string"},
                 {name: "fixed", type: "boolean"},
                 {name: "selected", type: "boolean"},
-                {name: "restUrl", type: "string"}
+                {name: "restUrl", type: "string"},
+                {name: "infoFormat", type: "string"}
             ];
             original.fields.each(function(field) {
                 fields.push(field);

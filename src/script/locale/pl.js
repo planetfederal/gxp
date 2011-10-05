@@ -284,7 +284,9 @@ GeoExt.Lang.add("pl", {
         transparentText: "Przeźr.",
         cacheText: "Cache",
         cacheFieldText: "Użyj wersji cache",
-        stylesText: "Style"
+        stylesText: "Style",
+        infoFormatText: "Info format",
+        infoFormatEmptyText: "Select a format"
     },
 
     "gxp.EmbedMapDialog.prototype": {
