@@ -101,25 +101,13 @@ gxp.PlaybackPanel = Ext.extend(Ext.Panel, {
     },
     /** private: method[buildPlaybackItems] */
     buildPlaybackItems: function(){
-        if(!this.control.units){
-            var ctl = this.control;
-            ctl.guessPlaybackRate();
-            ctl.events.on("rangemodified",this,function(){
-                var oldvals = {
-                    start: ctl.range[0].getTime(),
-                    end: ctl.range[1].getTime(),
-                    resolution: {
-                        units: ctl.units,
-                        step: ctl.step
-                    }
-                }
-                ctl.guessPlaybackRate();
-                if(ctl.range[0].getTime()!=oldvals.start||ctl.range[1].getTime()!=oldvals.end||ctl.units!=ol.units||ctl.step!=oldvals.step){
-                    this.reconfigureSlider(this.buildSliderValues());
-                }
-            })}
-        if(this.playbackMode=='ranged' || this.playbackMode=='decay'){
-            this.control.incrementTime(this.control.rangeInterval,this.control.units)
+        if (this.control.timeAgents) {
+            if (!this.control.units) {
+                this.control.guessPlaybackRate();
+            }
+            if (this.playbackMode == 'ranged' || this.playbackMode == 'decay') {
+                this.control.incrementTime(this.control.rangeInterval, this.control.units)
+            }
         }
         var sliderInfo = (this.control.units && this.buildSliderValues()) || {};
         var actionDefaults = {
@@ -131,7 +119,7 @@ gxp.PlaybackPanel = Ext.extend(Ext.Panel, {
                 increment: sliderInfo.interval,
                 keyIncrement: sliderInfo.interval,
                 indexMap: sliderInfo.map,
-                values: sliderInfo.values || [0],
+                values: sliderInfo.values,
                 width: 200,
                 animate: false,
                 format: this.timeFormat,
@@ -150,21 +138,11 @@ gxp.PlaybackPanel = Ext.extend(Ext.Panel, {
                     'changecomplete': this.onSliderChangeComplete,
                     'beforechange':function(slider){return !!this.control.units},
                     'afterrender': function(slider){
-                        console.log("Im shown!!");
-                        tailIndex = slider.indexMap.indexOf('tail');
-                        if (slider.indexMap[1] == 'min') {
-                            slider.thumbs[1].el.addClass('x-slider-min-thumb');
-                            slider.thumbs[2].el.addClass('x-slider-max-thumb');
-                        }
-                        if (tailIndex > -1) {
-                            slider.thumbs[tailIndex].el.addClass('x-slider-tail-thumb');
-                            slider.thumbs[tailIndex].constrain = false;
-                            slider.thumbs[0].constrain = false;
-                        }
                         var panel = this;
                         this.control.events.register('tick', this.control, function(evt){
                             var offset = evt.currentTime.getTime() - slider.thumbs[0].value;
                             slider.setValue(0, slider.thumbs[0].value + offset);
+                            var tailIndex = slider.indexMap?slider.indexMap.indexOf('tail'):-1;
                             if (tailIndex > -1) slider.setValue(tailIndex, slider.thumbs[tailIndex].value + offset)
                             panel.timeDisplay && panel.timeDisplay.update(evt.currentTime.format(slider.format))
                         })
@@ -276,6 +254,7 @@ gxp.PlaybackPanel = Ext.extend(Ext.Panel, {
             }
             cfg && actions.push(cfg);
         }
+        this.addReconfigListener();
         return actions;
     },
     showTimeDisplay: function(config){
@@ -284,6 +263,28 @@ gxp.PlaybackPanel = Ext.extend(Ext.Panel, {
         this.timeDisplay = this.mapPanel.add(config);
         this.timeDisplay.show();
         this.timeDisplay.el.alignTo(this.slider.getEl(), this.timeDisplay.defaultAlign, [0, 5])
+    },
+    addReconfigListener: function(){
+        var ctl = this.control;
+        ctl.guessPlaybackRate();
+        ctl.events.on("rangemodified", this, function(){
+            var oldvals = {
+                start: ctl.range[0].getTime(),
+                end: ctl.range[1].getTime(),
+                resolution: {
+                    units: ctl.units,
+                    step: ctl.step
+                }
+            }
+            ctl.guessPlaybackRate();
+            if (ctl.range[0].getTime() != oldvals.start || ctl.range[1].getTime() != oldvals.end || ctl.units != ol.units || ctl.step != oldvals.step) {
+                this.reconfigureSlider(this.buildSliderValues());
+                if (this.playbackMode == 'ranged' || this.playbackMode == 'decay') {
+                    this.control.incrementTime(this.control.rangeInterval, this.control.units)
+                }
+                this.setThumbStyles(this.slider)
+            }
+        })
     },
     buildSliderValues:function(){
       var indexMap = ['primary'],
@@ -314,6 +315,18 @@ gxp.PlaybackPanel = Ext.extend(Ext.Panel, {
         });
         for (var i = 0; i < sliderInfo.values.length; i++) {
             slider.setValue(i, sliderInfo.values[i])
+        }
+    },
+    setThumbStyles: function(slider){
+        tailIndex = slider.indexMap.indexOf('tail');
+        if (slider.indexMap[1] == 'min') {
+            slider.thumbs[1].el.addClass('x-slider-min-thumb');
+            slider.thumbs[2].el.addClass('x-slider-max-thumb');
+        }
+        if (tailIndex > -1) {
+            slider.thumbs[tailIndex].el.addClass('x-slider-tail-thumb');
+            slider.thumbs[tailIndex].constrain = false;
+            slider.thumbs[0].constrain = false;
         }
     },
     forwardToEnd: function(btn){
