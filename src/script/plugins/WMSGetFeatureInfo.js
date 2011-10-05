@@ -120,20 +120,28 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
                         vendorParams[param] = layer.params[param];
                     }
                 }
+                var infoFormat = x.get("infoFormat");
+                if (infoFormat === undefined) {
+                    // TODO: check if chosen format exists in infoFormats array
+                    // TODO: this will not work for WMS 1.3 (text/xml instead for GML)
+                    infoFormat = this.format == "html" ? "text/html" : "application/vnd.ogc.gml";
+                }
                 var control = new OpenLayers.Control.WMSGetFeatureInfo(Ext.applyIf({
                     url: layer.url,
                     queryVisible: true,
                     layers: [layer],
-                    infoFormat: this.format == "html" ? "text/html" : "application/vnd.ogc.gml",
+                    infoFormat: infoFormat,
                     vendorParams: vendorParams,
                     eventListeners: {
                         getfeatureinfo: function(evt) {
                             var title = x.get("title") || x.get("name");
-                            if (this.format == "html") {
+                            if (infoFormat == "text/html") {
                                 var match = evt.text.match(/<body[^>]*>([\s\S]*)<\/body>/);
                                 if (match && !match[1].match(/^\s*$/)) {
                                     this.displayPopup(evt, title, match[1]);
                                 }
+                            } else if (infoFormat == "text/plain") {
+                                this.displayPopup(evt, title, '<pre>' + evt.text + '</pre>');
                             } else {
                                 this.displayPopup(evt, title);
                             }
