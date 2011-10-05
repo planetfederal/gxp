@@ -361,6 +361,16 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 FORMAT: config.format,
                 TRANSPARENT: config.transparent
             }, layer.params);
+            
+            var singleTile = false;
+            if ("tiled" in config) {
+                singleTile = !config.tiled;
+            } else {
+                // for now, if layer has a time dimension, use single tile
+                if (original.data.dimensions && original.data.dimensions.time) {
+                    singleTile = true;
+                }
+            }
 
             layer = new OpenLayers.Layer.WMS(
                 config.title || layer.name, 
@@ -369,15 +379,16 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                     attribution: layer.attribution,
                     maxExtent: maxExtent,
                     restrictedExtent: maxExtent,
-                    singleTile: ("tiled" in config) ? !config.tiled : false,
+                    singleTile: singleTile,
                     ratio: config.ratio || 1,
                     visibility: ("visibility" in config) ? config.visibility : true,
                     opacity: ("opacity" in config) ? config.opacity : 1,
                     buffer: ("buffer" in config) ? config.buffer : 1,
-                    projection: layerProjection
+                    projection: layerProjection,
+                    dimensions: original.data.dimensions
                 }
             );
-
+            
             // data for the new record
             var data = Ext.applyIf({
                 title: layer.name,
