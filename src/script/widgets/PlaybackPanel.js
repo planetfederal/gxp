@@ -149,7 +149,8 @@ gxp.PlaybackPanel = Ext.extend(Ext.Panel, {
                 listeners: {
                     'changecomplete': this.onSliderChangeComplete,
                     'beforechange':function(slider){return !!this.control.units},
-                    'show': function(slider){
+                    'afterrender': function(slider){
+                        console.log("Im shown!!");
                         tailIndex = slider.indexMap.indexOf('tail');
                         if (slider.indexMap[1] == 'min') {
                             slider.thumbs[1].el.addClass('x-slider-min-thumb');
@@ -288,7 +289,7 @@ gxp.PlaybackPanel = Ext.extend(Ext.Panel, {
       var indexMap = ['primary'],
       values = [this.control.currentTime.getTime()],
       min=this.control.range[0].getTime(),
-      max=this.control.range[0].getTime(),
+      max=this.control.range[1].getTime(),
       then=new Date(min),
       interval=then['setUTC' + this.control.units](then['getUTC' + this.control.units]() + this.control.step) - min;
       if(this.dynamicRange){
