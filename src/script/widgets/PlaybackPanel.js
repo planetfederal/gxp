@@ -30,7 +30,7 @@ gxp.PlaybackPanel = Ext.extend(Ext.Panel, {
     initialTime:null,
     timeFormat:"l, F d, Y g:i:s A",
     slider:true,
-    dynamicRange:true,
+    dynamicRange:false,
     //api config
     //playback mode is one of: "track","cumulative","ranged",??"decay"??
     playbackMode:"track",
@@ -385,7 +385,7 @@ gxp.PlaybackPanel = Ext.extend(Ext.Panel, {
                     !this.timeDisplay && this.showTimeDisplay(this.timeDisplayConfig)
                     this.timeDisplay.update(slideTime.format(this.timeFormat));
                 }else if(this.control.snapToIntervals && this.control.intervals.length){
-                    var targetIndex = Math.floor((slideTime-this.control.range[0])/(this.control.range[1]-this.control.range[0])*(this.control.interval.length-1));
+                    var targetIndex = Math.floor((slideTime-this.control.range[0])/(this.control.range[1]-this.control.range[0])*(this.control.intervals.length-1));
                     this.control.setTime(this.control.intervals[targetIndex]);
                 }
                 break;
