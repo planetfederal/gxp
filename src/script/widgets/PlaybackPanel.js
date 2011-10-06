@@ -132,13 +132,21 @@ gxp.PlaybackPanel = Ext.extend(Ext.Panel, {
                 }),
                 listeners: {
                     'changecomplete': this.onSliderChangeComplete,
-                    'beforechange':function(slider){return !!(this.control.units||this.control.snapToIntervals)},
+                   'dragstart': function(){
+                        if(this.control.timer){
+                            this.control.stop();
+                            this.restartPlayback=true;
+                        }
+                    },
+                    'beforechange':function(slider){
+                        return !!(this.control.units || this.control.snapToIntervals);
+                    },
                     'afterrender': function(slider){
                         var panel = this;
                         this.control.events.register('tick', this.control, function(evt){
-                            var offset = evt.currentTime.getTime() - slider.thumbs[0].value;
-                            slider.setValue(0, evt.currentTime.getTime() + offset);
                             var tailIndex = slider.indexMap?slider.indexMap.indexOf('tail'):-1;
+                            var offset = (tailIndex>-1) ? evt.currentTime.getTime() - slider.thumbs[0].value : 0;
+                            slider.setValue(0, evt.currentTime.getTime() + offset);
                             if (tailIndex > -1) slider.setValue(tailIndex, slider.thumbs[tailIndex].value + offset)
                             panel.timeDisplay && panel.timeDisplay.update(evt.currentTime.format(slider.format))
                         })
@@ -384,8 +392,9 @@ gxp.PlaybackPanel = Ext.extend(Ext.Panel, {
                     this.control.setTime(slideTime);
                     !this.timeDisplay && this.showTimeDisplay(this.timeDisplayConfig)
                     this.timeDisplay.update(slideTime.format(this.timeFormat));
-                }else if(this.control.snapToIntervals && this.control.intervals.length){
-                    var targetIndex = Math.floor((slideTime-this.control.range[0])/(this.control.range[1]-this.control.range[0])*(this.control.intervals.length-1));
+                }
+                else if (this.control.snapToIntervals && this.control.intervals.length) {
+                    var targetIndex = Math.floor((slideTime - this.control.range[0]) / (this.control.range[1] - this.control.range[0]) * (this.control.intervals.length - 1));
                     this.control.setTime(this.control.intervals[targetIndex]);
                 }
                 break;
@@ -417,6 +426,9 @@ gxp.PlaybackPanel = Ext.extend(Ext.Panel, {
                         break;
                 }
                 this.control.rangeInterval = (slider.thumbs[0].value - value) / adj;
+        }
+        if (this.restartPlayback) {
+            this.control.play()
         }
     },
     smartIntervalFormat:function(diff){
