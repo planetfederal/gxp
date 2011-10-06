@@ -191,7 +191,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         var key = record.get("source") + "/" + record.get("name");
         var layer = new OpenLayers.Layer.Vector(key, {
             strategies: [new OpenLayers.Strategy.BBOX({
-                ratio: 1.5,
+                ratio: 1.1,
                 resFactor: 1,
                 autoActivate: false
             })],
@@ -201,6 +201,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         });
         layer.events.on({
             featuresadded: this.onFeaturesAdded,
+            loadstart: this.onLoadStart,
             scope: this
         });
         this.vectorLayers[key] = layer;
@@ -214,6 +215,14 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         this.updateTimelineEvents();
     },
     
+    /** private: method[onLoadStart]
+     *  Registered as a listener for layer loadstart.
+     */
+    onLoadStart: function() {
+        // TODO: we should not be clearing once for each layer here
+        this.eventSource.clear();
+    },
+
     /** private: method[updateTimelineEvents]
      *  :arg options: `Object` First arg to OpenLayers.Strategy.BBOX::update.
      */
