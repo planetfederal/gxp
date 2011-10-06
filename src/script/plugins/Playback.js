@@ -69,7 +69,6 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
         config = config || {};
         var panel = gxp.plugins.Playback.superclass.addOutput.call(this, Ext.apply(config,{
             xtype: 'gxp_playbackpanel',
-            control: this.control || this.buildTimeManager(),
             mapPanel:this.target.mapPanel,
             playbackMode:this.playbackMode
         }));
@@ -94,28 +93,6 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
                 this.addOutput();
             }
         }, this);
-    },
-    buildTimeManager:function(){
-        this.controlOptions || (this.controlOptions={})
-        if(this.playbackMode=='ranged' || this.playbackMode=='decay'){
-            Ext.apply(this.controlOptions,{
-                agentOptions:{
-                    'WMS':{rangeMode:'range',rangeInterval:this.rangedPlayInterval},
-                    'Vector':{rangeMode:'range',rangeInterval:this.rangedPlayInterval}
-                },
-            })
-        }
-        else if(this.playbackMode=='cumulative'){
-            Ext.apply(this.controlOptions,{
-                agentOptions:{
-                    'WMS':{rangeMode:'cumulative'},
-                    'Vector':{rangeMode:'cumulative'}
-                },
-            })
-        }
-        var ctl = this.control = new OpenLayers.Control.TimeManager(this.controlOptions);
-        this.target.mapPanel.map.addControl(ctl);
-        return ctl;
     }
 });
 

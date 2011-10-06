@@ -76,6 +76,9 @@ gxp.PlaybackPanel = Ext.extend(Ext.Panel, {
         if(!this.playbackActions){
             this.playbackActions = ["settings","slider","reset","play","fastforward","next","loop"]; 
         }
+        if(!this.control){
+            this.control = this.buildTimeManager();
+        }
         Ext.applyIf(this,{
             layout:'hbox',
             width:400,
@@ -102,7 +105,7 @@ gxp.PlaybackPanel = Ext.extend(Ext.Panel, {
                 }
             }
         }
-        var sliderInfo = (this.control.units && this.buildSliderValues()) || {};
+        var sliderInfo = ((this.control.units || this.control.snapToIntervals) && this.buildSliderValues()) || {};
         var actionDefaults = {
             'slider': {
                 xtype: 'multislider',
@@ -129,12 +132,12 @@ gxp.PlaybackPanel = Ext.extend(Ext.Panel, {
                 }),
                 listeners: {
                     'changecomplete': this.onSliderChangeComplete,
-                    'beforechange':function(slider){return !!this.control.units},
+                    'beforechange':function(slider){return !!(this.control.units||this.control.snapToIntervals)},
                     'afterrender': function(slider){
                         var panel = this;
                         this.control.events.register('tick', this.control, function(evt){
                             var offset = evt.currentTime.getTime() - slider.thumbs[0].value;
-                            slider.setValue(0, slider.thumbs[0].value + offset);
+                            slider.setValue(0, evt.currentTime.getTime() + offset);
                             var tailIndex = slider.indexMap?slider.indexMap.indexOf('tail'):-1;
                             if (tailIndex > -1) slider.setValue(tailIndex, slider.thumbs[tailIndex].value + offset)
                             panel.timeDisplay && panel.timeDisplay.update(evt.currentTime.format(slider.format))
@@ -258,6 +261,28 @@ gxp.PlaybackPanel = Ext.extend(Ext.Panel, {
         this.timeDisplay = this.add(config);
         this.timeDisplay.show();
         this.timeDisplay.el.alignTo(this.slider.getEl(), this.timeDisplay.defaultAlign, [0, 5])
+    },
+    buildTimeManager:function(){
+        this.controlOptions || (this.controlOptions={})
+        if(this.playbackMode=='ranged' || this.playbackMode=='decay'){
+            Ext.apply(this.controlOptions,{
+                agentOptions:{
+                    'WMS':{rangeMode:'range',rangeInterval:this.rangedPlayInterval},
+                    'Vector':{rangeMode:'range',rangeInterval:this.rangedPlayInterval}
+                },
+            })
+        }
+        else if(this.playbackMode=='cumulative'){
+            Ext.apply(this.controlOptions,{
+                agentOptions:{
+                    'WMS':{rangeMode:'cumulative'},
+                    'Vector':{rangeMode:'cumulative'}
+                },
+            })
+        }
+        var ctl = this.control = new OpenLayers.Control.TimeManager(this.controlOptions);
+        this.mapPanel.map.addControl(ctl);
+        return ctl;
     },
     addReconfigListener: function(){
         var ctl = this.control;
