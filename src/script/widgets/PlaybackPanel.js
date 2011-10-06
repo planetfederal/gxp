@@ -97,7 +97,9 @@ gxp.PlaybackPanel = Ext.extend(Ext.Panel, {
                 this.control.guessPlaybackRate();
             }
             if (this.playbackMode == 'ranged' || this.playbackMode == 'decay') {
-                this.control.incrementTime(this.control.rangeInterval, this.control.units)
+                if (this.control.units) {
+                    this.control.incrementTime(this.control.rangeInterval, this.control.units)
+                }
             }
         }
         var sliderInfo = (this.control.units && this.buildSliderValues()) || {};
@@ -137,6 +139,7 @@ gxp.PlaybackPanel = Ext.extend(Ext.Panel, {
                             if (tailIndex > -1) slider.setValue(tailIndex, slider.thumbs[tailIndex].value + offset)
                             panel.timeDisplay && panel.timeDisplay.update(evt.currentTime.format(slider.format))
                         })
+                        if(this.control.units && this.slider.thumbs.length>1){this.setThumbStyles(this.slider)}
                     },
                     scope: this
                 }
@@ -283,8 +286,12 @@ gxp.PlaybackPanel = Ext.extend(Ext.Panel, {
       values = [this.control.currentTime.getTime()],
       min=this.control.range[0].getTime(),
       max=this.control.range[1].getTime(),
-      then=new Date(min),
-      interval=then['setUTC' + this.control.units](then['getUTC' + this.control.units]() + this.control.step) - min;
+      then=new Date(min),interval;
+      if(this.control.units){
+          interval=then['setUTC' + this.control.units](then['getUTC' + this.control.units]() + this.control.step) - min;
+      }else{
+          interval = false;
+      }
       if(this.dynamicRange){
         var rangeAdj = (min-max)*.1;
         values.push(min=min-rangeAdj,max=max+rangeAdj);
@@ -348,9 +355,14 @@ gxp.PlaybackPanel = Ext.extend(Ext.Panel, {
         //test if this is the main time slider
         switch (slider.indexMap[thumb.index]) {
             case 'primary':
-                this.control.setTime(slideTime);
-                !this.timeDisplay && this.showTimeDisplay(this.timeDisplayConfig)
-                this.timeDisplay.update(slideTime.format(this.timeFormat));
+                if (!this.control.snapToIntervals && this.control.units) {
+                    this.control.setTime(slideTime);
+                    !this.timeDisplay && this.showTimeDisplay(this.timeDisplayConfig)
+                    this.timeDisplay.update(slideTime.format(this.timeFormat));
+                }else if(this.control.snapToIntervals && this.control.intervals.length){
+                    var targetIndex = Math.floor((slideTime-this.control.range[0])/(this.control.range[1]-this.control.range[0])*(this.control.interval.length-1));
+                    this.control.setTime(this.control.intervals[targetIndex]);
+                }
                 break;
             case 'min':
                 if (value >= this.control.intialRange[0].getTime()) {
