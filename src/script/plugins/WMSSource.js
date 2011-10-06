@@ -594,8 +594,41 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 callback.call(scope, false);
             }
         }, this);
-   },
+    },
     
+    /** api: method[getWFSProtocol]
+     *  :arg record: :class:`GeoExt.data.LayerRecord`
+     *  :arg callback: ``Function``
+     *  :arg scope: ``Object``
+     *  :returns: :class:`OpenLayers.Protocol.WFS`
+     *
+     *  Creates a WFS protocol for the given WMS layer record.
+     */
+    getWFSProtocol: function(record, callback, scope) {
+        this.getSchema(record, function(schema) {
+            var protocol = false;
+            if (schema) {
+                var geometryName;
+                var geomRegex = /gml:((Multi)?(Point|Line|Polygon|Curve|Surface|Geometry)).*/;
+                schema.each(function(r) {
+                    var match = geomRegex.exec(r.get("type"));
+                    if (match) {
+                        geometryName = r.get("name");
+                    }
+                }, this);
+                protocol = new OpenLayers.Protocol.WFS({
+                    version: "1.1.0",
+                    srsName: record.getLayer().projection.getCode(),
+                    url: schema.url,
+                    featureType: schema.reader.raw.featureTypes[0].typeName,
+                    featureNS: schema.reader.raw.targetNamespace,
+                    geometryName: geometryName
+                });
+            }
+            callback.call(scope, protocol);
+        }, this);
+    },
+
     /** api: method[getConfigForRecord]
      *  :arg record: :class:`GeoExt.data.LayerRecord`
      *  :returns: ``Object``
