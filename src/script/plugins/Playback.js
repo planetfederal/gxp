@@ -65,6 +65,7 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
      *  :arg config: ``Object``
      */
     addOutput: function(config){
+        delete this._ready;
         config = config || {};
         var panel = gxp.plugins.Playback.superclass.addOutput.call(this, Ext.apply(config,{
             xtype: 'gxp_playbackpanel',
@@ -75,7 +76,24 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
         return panel;
     },
     addActions: function(actions){
-        this.target.on('ready',this.addOutput,this);
+        this._ready = 0;
+        this.target.mapPanel.map.events.register('addlayer', this, function(e) {
+            var layer = e.layer;
+            if (layer instanceof OpenLayers.Layer.WMS && layer.dimensions && layer.dimensions.time) {
+                this.target.mapPanel.map.events.unregister('addlayer', this, arguments.callee);
+                this._ready += 1;
+                if (this._ready > 1) {
+                    this.addOutput();
+                }
+            }
+        });
+
+        this.target.on('ready',function() {
+            this._ready += 1;
+            if (this._ready > 1) {
+                this.addOutput();
+            }
+        }, this);
     },
     buildTimeManager:function(){
         this.controlOptions || (this.controlOptions={})

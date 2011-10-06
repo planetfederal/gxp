@@ -639,6 +639,8 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      *  Gets the appropriate projection to use for feature requests.
      */
     getProjection: function(record) {
+        // TODO: This method is suspect.  Determine what it should be doing
+        // and create tests to ensure it is doing the right thing.
         var projection = this.target.mapPanel.map.getProjectionObject();
         var layerProj = record.getLayer().projection;
         if (layerProj && layerProj.equals(projection)) {
