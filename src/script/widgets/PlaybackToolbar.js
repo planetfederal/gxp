@@ -303,9 +303,9 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         return ctl;
     },
     addReconfigListener: function(){
-        var ctl = this.control;
-        ctl.guessPlaybackRate();
-        ctl.events.register("rangemodified", this, function(){
+        this.control.guessPlaybackRate();
+        this.control.events.register("rangemodified", this, function(){
+            var ctl = this.control;
             if (!ctl.timeAgents || !ctl.timeAgents.length) {
                 //we don't have any time agents which means we should get rid of the time manager control
                 //we will automattically add the control back when a time layer is added via handlers on the
