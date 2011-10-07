@@ -428,7 +428,8 @@ gxp.PlaybackPanel = Ext.extend(Ext.Panel, {
                 this.control.rangeInterval = (slider.thumbs[0].value - value) / adj;
         }
         if (this.restartPlayback) {
-            this.control.play()
+            this.restartPlayback=false;
+            this.control.play();
         }
     },
     smartIntervalFormat:function(diff){
