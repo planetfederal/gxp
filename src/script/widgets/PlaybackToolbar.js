@@ -8,18 +8,18 @@
 
 /** api: (define)
  *  module = gxp
- *  class = PlaybackPanel
- *  base_link = `Ext.Panel <http://dev.sencha.com/deploy/dev/docs/?class=Ext.Panel>`_
+ *  class = PlaybackToolbar
+ *  base_link = `Ext.Toolbar <http://dev.sencha.com/deploy/dev/docs/?class=Ext.Toolbar>`_
  */
 Ext.namespace("gxp");
 
 /** api: constructor
- *  .. class:: PlaybackPanel(config)
+ *  .. class:: PlaybackToolbar(config)
  *   
  *      Create a panel for showing a ScaleLine control and a combobox for 
  *      selecting the map scale.
  */
-gxp.PlaybackPanel = Ext.extend(Ext.Panel, {
+gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
     
     /** api: config[control]
      *  ``OpenLayers.Control`` or :class:`OpenLayers.Control.TimeManager`
@@ -80,8 +80,6 @@ gxp.PlaybackPanel = Ext.extend(Ext.Panel, {
             this.control = this.buildTimeManager();
         }
         Ext.applyIf(this,{
-            layout:'hbox',
-            width:400,
             cls:'gx-overlay-playback',
             defaults:{xtype:'button',flex:1,scale:'small'},
             items:this.buildPlaybackItems(),
@@ -91,7 +89,7 @@ gxp.PlaybackPanel = Ext.extend(Ext.Panel, {
             shadow:false,
             timeDisplayConfig:{'xtype':'tip',format:this.timeFormat,height:'auto',closeable:false,title:false,width:210}
         })
-        gxp.PlaybackPanel.superclass.initComponent.call(this);       
+        gxp.PlaybackToolbar.superclass.initComponent.call(this);       
     },
     /** private: method[destroy]
      *  Destory the component.
@@ -483,5 +481,5 @@ gxp.PlaybackPanel = Ext.extend(Ext.Panel, {
     }
 });
 
-/** api: xtype = gxp_playbackpanel */
-Ext.reg('gxp_playbackpanel', gxp.PlaybackPanel);
+/** api: xtype = gxp_playbacktoolbar */
+Ext.reg('gxp_playbacktoolbar', gxp.PlaybackToolbar);

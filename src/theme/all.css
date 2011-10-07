@@ -281,6 +281,10 @@ div.olMap div.gx-overlay-playback {
     top: 22px;
     left: 65px;
 }
+.gx-overlay-playback.x-toolbar {
+    background: none;
+    border: none;
+}
 .gx-overlay-playback .x-btn{
     width:16px !important;height:16px !important;
     background-repeat: no-repeat;

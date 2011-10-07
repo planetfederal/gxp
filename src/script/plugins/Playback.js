@@ -8,7 +8,7 @@
 
 /**
  * @requires plugins/Tool.js
- * @requires widgets/PlaybackPanel.js
+ * @requires widgets/PlaybackToolbar.js
  */
 
 /** api: (define)
@@ -67,12 +67,12 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
     addOutput: function(config){
         delete this._ready;
         config = config || {};
-        var panel = gxp.plugins.Playback.superclass.addOutput.call(this, Ext.apply(config,{
-            xtype: 'gxp_playbackpanel',
+        var toolbar = gxp.plugins.Playback.superclass.addOutput.call(this, Ext.apply(config,{
+            xtype: 'gxp_playbacktoolbar',
             mapPanel:this.target.mapPanel,
             playbackMode:this.playbackMode
         }));
-        return panel;
+        return toolbar;
     },
     addActions: function(actions){
         this._ready = 0;
