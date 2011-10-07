@@ -295,7 +295,7 @@ gxp.PlaybackPanel = Ext.extend(Ext.Panel, {
     addReconfigListener: function(){
         var ctl = this.control;
         ctl.guessPlaybackRate();
-        ctl.events.on("rangemodified", this, function(){
+        ctl.events.register("rangemodified", this, function(){
             var oldvals = {
                 start: ctl.range[0].getTime(),
                 end: ctl.range[1].getTime(),
@@ -305,7 +305,7 @@ gxp.PlaybackPanel = Ext.extend(Ext.Panel, {
                 }
             }
             ctl.guessPlaybackRate();
-            if (ctl.range[0].getTime() != oldvals.start || ctl.range[1].getTime() != oldvals.end || ctl.units != ol.units || ctl.step != oldvals.step) {
+            if (ctl.range[0].getTime() != oldvals.start || ctl.range[1].getTime() != oldvals.end || ctl.units != oldvals.units || ctl.step != oldvals.step) {
                 this.reconfigureSlider(this.buildSliderValues());
                 if (this.playbackMode == 'ranged' || this.playbackMode == 'decay') {
                     this.control.incrementTime(this.control.rangeInterval, this.control.units)
