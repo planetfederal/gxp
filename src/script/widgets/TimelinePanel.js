@@ -237,17 +237,17 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         var features = event.features;
         var num = features.length;
         var events = new Array(num);
-        var attributes;
+        var attributes, str;
         for (var i=0; i<num; ++i) {
             attributes = features[i].attributes;
             events[i] = {
-                start: attributes["StartDate2"],
-                title: attributes["SideA"] + " v. " + attributes["SideB"],
+                start: OpenLayers.Date.parse(attributes["startdate2"]),
+                title: attributes["sidea"] + " v. " + attributes["sideb"],
                 durationEvent: false
             };
         }
         var feed = {
-            dateTimeFormat: "iso8601",
+            dateTimeFormat: "javascriptnative", //"iso8601",
             events: events
         };
         this.eventSource.loadJSON(feed, "http://mapstory.org/");
