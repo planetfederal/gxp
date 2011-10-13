@@ -125,7 +125,11 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                         } catch (err) {
                             // TODO: improve destroy
                         }
-                    }
+                    },
+                    printException: function(cmp, response) {
+                        this.target.displayXHRTrouble && this.target.displayXHRTrouble(response);
+                    },
+                    scope: this
                 }
             });
 
@@ -198,6 +202,7 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                     title: this.previewText,
                     modal: true,
                     border: false,
+                    autoHeight: true,
                     resizable: false,
                     width: 360,
                     items: [
@@ -205,10 +210,17 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                             autoHeight: true,
                             mapTitle: this.target.about && this.target.about["title"],
                             comment: this.target.about && this.target.about["abstract"],
+                            minWidth: 336,
                             printMapPanel: {
+                                height: Math.min(450, Ext.get(document.body).getHeight()-150),
+                                autoWidth: true,
+                                limitScales: true,
                                 map: Ext.applyIf({
                                     controls: [
-                                        new OpenLayers.Control.Navigation(),
+                                        new OpenLayers.Control.Navigation({
+                                            zoomWheelEnabled: false,
+                                            zoomBoxEnabled: false
+                                        }),
                                         new OpenLayers.Control.PanPanel(),
                                         new OpenLayers.Control.ZoomPanel(),
                                         new OpenLayers.Control.Attribution()
