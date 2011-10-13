@@ -86,6 +86,7 @@ gxp.plugins.Legend = Ext.extend(gxp.plugins.Tool, {
             xtype: 'gx_legendpanel',
             ascending: false,
             border: false,
+            hideMode: "offsets",
             layerStore: this.target.mapPanel.layers,
             defaults: {cls: 'gxp-legend-item'}
         }, config));
