@@ -33,9 +33,17 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
 
     /** api: config[printService]
      *  ``String``
-     *  URL of the print service.
+     *  URL of the print service. Specify either printService
+     *  or printCapabilities.
      */
     printService: null,
+
+    /** api: config[printCapabilities]
+     *  ``Object``
+     *  Capabilities object of the print service. Specify either printService
+     *  or printCapabilities.
+     */
+    printCapabilities: null,
 
     /** api: config[customParams]
      *  ``Object`` Key-value pairs of custom data to be sent to the print
@@ -85,9 +93,10 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
     addActions: function() {
 
         // don't add any action if there is no print service configured
-        if (this.printService !== null) {
+        if (this.printService !== null || this.printCapabilities !== null) {
 
             var printProvider = new GeoExt.data.PrintProvider({
+                capabilities: this.printCapabilities,
                 url: this.printService,
                 customParams: this.customParams,
                 autoLoad: false,
@@ -105,8 +114,10 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                         });
                     },
                     loadcapabilities: function() {
-                        printButton.initialConfig.disabled = false;
-                        printButton.enable();
+                        if (printButton) {
+                            printButton.initialConfig.disabled = false;
+                            printButton.enable();
+                        }
                     },
                     print: function() {
                         try {
@@ -122,7 +133,7 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                 menuText: this.menuText,
                 tooltip: this.tooltip,
                 iconCls: "gxp-icon-print",
-                disabled: true,
+                disabled: this.printCapabilities !== null ? false : true,
                 handler: function() {
                     var supported = getSupportedLayers();
                     if (supported.length > 0) {
