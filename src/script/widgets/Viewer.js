@@ -59,6 +59,11 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
      *  Any items to be added to the map panel. A typical item to put on a map
      *  would be a ``GeoExt.ZoomSlider``.
      */
+
+    /** api: config[mapPlugins]
+     *  ``Array(Ext.util.Observable)``
+     *  Any plugins to be added to the map panel, e.g. ``gxp.plugins.LoadingIndicator``.
+     */
      
     /** api: config[portalConfig]
      *  ``Object`` Configuration object for the wrapping container of the
@@ -405,6 +410,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             forceInitialExtent: true,
             layers: null,
             items: this.mapItems,
+            plugins: this.mapPlugins,
             tbar: config.tbar || {hidden: true}
         }, config));
         
