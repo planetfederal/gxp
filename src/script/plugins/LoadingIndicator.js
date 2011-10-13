@@ -52,48 +52,33 @@ gxp.plugins.LoadingIndicator = Ext.extend(gxp.plugins.Tool, {
      *  :arg target: ``Object``
      */
     init: function(target) {
-        this.map = target.map;
-        this.map.events.register("preaddlayer", this, function(e) {
+        target.map.events.register("preaddlayer", this, function(e) {
             var layer = e.layer;
-            layer.events.on({
-                "loadstart": this.onLoadStart,
-                "loadend": this.onLoadEnd,
-                scope: this
-            });
+            if (layer instanceof OpenLayers.Layer.WMS) {
+                layer.events.on({
+                    "loadstart": function() {
+                        this.layerCount++;
+                        if (!this.busyMask) {
+                            this.busyMask = new Ext.LoadMask(
+                                target.map.div, {
+                                    msg: this.loadingMapMessage
+                                }
+                            );
+                        }
+                        this.busyMask.show();
+                        layer.events.unregister("loadstart", this, arguments.callee);
+                    },
+                    "loadend": function() {
+                        this.layerCount--;
+                        if(this.layerCount === 0) {
+                            this.busyMask.hide();
+                        }
+                        layer.events.unregister("loadend", this, arguments.callee);
+                    },
+                    scope: this
+                });
+            } 
         });
-    },
-
-    /** private: method[onLoadEnd]
-     *  loadstart event handler.
-     */
-    onLoadStart: function(evt) {
-        var layer = evt.layer;
-        this.layerCount++;
-        if (!this.busyMask) {
-            this.busyMask = new Ext.LoadMask(
-                this.map.div, {
-                    msg: this.loadingMapMessage
-                }
-            );
-        }
-        this.busyMask.show();
-        if (this.onlyShowOnFirstLoad === true) {
-            layer.events.unregister("loadstart", this, arguments.callee);
-        }
-    },
-
-    /** private: method[onLoadEnd]
-     *  loadend event handler.
-     */
-    onLoadEnd: function(evt) {
-        var layer = evt.layer;
-        this.layerCount--;
-        if(this.layerCount === 0) {
-            this.busyMask.hide();
-        }
-        if (this.onlyShowOnFirstLoad === true) {
-            layer.events.unregister("loadend", this, arguments.callee);
-        }
     },
 
     /** private: method[destroy]
@@ -101,14 +86,6 @@ gxp.plugins.LoadingIndicator = Ext.extend(gxp.plugins.Tool, {
     destroy : function(){
         Ext.destroy(this.busyMask);
         this.busyMask = null;
-        if (this.map) {
-            for (var i=0, len=this.map.layers.length; i<len; ++i) {
-                var layer = this.map.layers[i];
-                layer.events.unregister("loadstart", this, this.onLoadStart);
-                layer.events.unregister("loadend", this, this.onLoadEnd);
-            }
-        }
-        this.map = null;
         gxp.plugins.LoadingIndicator.superclass.destroy.apply(this, arguments);
     }
 
