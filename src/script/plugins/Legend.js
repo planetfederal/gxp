@@ -78,6 +78,15 @@ gxp.plugins.Legend = Ext.extend(gxp.plugins.Tool, {
         return gxp.plugins.Legend.superclass.addActions.apply(this, [actions]);
     },
 
+    /** api: method[getLegendPanel]
+     *  :returns: ``GeoExt.LegendPanel``
+     *
+     *  Get the legend panel associated with this legend plugin.
+     */
+    getLegendPanel: function() {
+        return this.output[0];
+    },
+
     /** private: method[addOutput]
      *  :arg config: ``Object``
      */

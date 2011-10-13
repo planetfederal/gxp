@@ -52,6 +52,11 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      */
     customParams: null,
 
+    /** api: config[includeLegend]
+     *  ``Boolean`` Should we include the legend in the print? Defaults to false.
+     */
+    includeLegend: false,
+
     /** api: config[menuText]
      *  ``String``
      *  Text for print menu item (i18n).
@@ -198,6 +203,15 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
             }
 
             function createPrintWindow() {
+                var legend = null;
+                if (this.includeLegend === true) {
+                    for (var key in this.target.tools) {
+                        var tool = this.target.tools[key];
+                        if (tool.ptype === "gxp_legend") {
+                            legend = tool.getLegendPanel();
+                        }
+                    }
+                }
                 printWindow = new Ext.Window({
                     title: this.previewText,
                     modal: true,
@@ -239,7 +253,8 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                                 }]
                             },
                             printProvider: printProvider,
-                            includeLegend: false,
+                            includeLegend: this.includeLegend,
+                            legend: legend,
                             sourceMap: mapPanel
                         })
                     ],
