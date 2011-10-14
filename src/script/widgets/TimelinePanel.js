@@ -59,6 +59,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             width: 20,
             items: [{
                 xtype: "slider",
+                ref: "../rangeSlider",
                 vertical: true,
                 listeners: {
                     "changecomplete": function(slider, value) {
@@ -236,6 +237,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
     onMapMoveEnd: function() {
         this.updateTimelineEvents();
+        this.rangeSlider.setValue(0);
     },
     
     /** private: method[onLoadStart]
