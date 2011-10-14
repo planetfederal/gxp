@@ -43,6 +43,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
     
     layout: "border",
+
+    /** i18n */
+    layersText: "Layers",
     
     /** private: method[initComponent]
      */
@@ -51,6 +54,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         this.timelineContainer = new Ext.Container({
             region: "center"
         });
+
+        this.tbar = [{
+            text: this.layersText,
+            iconCls: "gxp-icon-layer-switcher"
+        }];
         
         this.items = [{
             region: "west",
@@ -74,7 +82,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                                 var filterMatcher = function(evt) {
                                     var start = evt.getStart();
                                     return (start >= newBegin && start <= newEnd);
-                                }
+                                };
                                 this.timeline.getBand(i).getEventPainter().setFilterMatcher(filterMatcher);
                             }
                             this.timeline.paint();
@@ -84,7 +92,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                     },
                     scope: this
                 },
-                height: 200
+                height: 175
             }]
         }, this.timelineContainer
         ];

@@ -111,6 +111,11 @@
     margin-bottom: 0;
 }
 
+/* gxp_timeline */
+.x-btn .gxp-icon-layer-switcher {
+   background-image: url(img/silk/layers.png);
+}
+
 /* gxp_googleearth */
 .x-btn .gxp-icon-googleearth, .x-menu-item .gxp-icon-googleearth, .x-tree-node .gxp-icon-googleearth {
     background-image: url(img/geosilk/google_earth.png);
