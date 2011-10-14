@@ -95,7 +95,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
 
         var theme = Timeline.ClassicTheme.create();
 
-        var d = Timeline.DateTime.parseGregorianDateTime("1978")
+        var d = Timeline.DateTime.parseGregorianDateTime("1978");
         var bandInfos = [
             Timeline.createBandInfo({
                 width: "80%", 
@@ -197,7 +197,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             })],
             protocol: protocol,
             displayInLayerSwitcher: false,
-            visibility: false,
+            visibility: false
         });
         layer.events.on({
             featuresadded: this.onFeaturesAdded,
