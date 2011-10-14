@@ -198,12 +198,12 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             record = records[i];
             var source = this.viewer.getSource(record);
             if (gxp.plugins.WMSSource && (source instanceof gxp.plugins.WMSSource)) {
-                source.getWFSProtocol(record, function(protocol) {
+                source.getWFSProtocol(record, function(protocol, schema) {
                     if (!protocol) {
                         // TODO: add logging to viewer
                         throw new Error("Failed to get protocol for record: " + record.get("name"));
                     }
-                    this.addVectorLayer(record, protocol);
+                    this.addVectorLayer(record, protocol, schema);
                 }, this);
             }
         }
@@ -211,7 +211,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     
     /** private: method[addVectorLayer]
      */
-    addVectorLayer: function(record, protocol) {
+    addVectorLayer: function(record, protocol, schema) {
         var key = record.get("source") + "/" + record.get("name");
         var layer = new OpenLayers.Layer.Vector(key, {
             strategies: [new OpenLayers.Strategy.BBOX({
@@ -224,7 +224,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             visibility: false
         });
         layer.events.on({
-            featuresadded: this.onFeaturesAdded,
+            featuresadded: this.onFeaturesAdded.createDelegate(this, [schema], 1),
             loadstart: this.onLoadStart,
             scope: this
         });
@@ -258,7 +258,15 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }
     },
     
-    onFeaturesAdded: function(event) {
+    onFeaturesAdded: function(event, schema) {
+        // find the first string field for display
+        var field = null;
+        schema.each(function(record) {
+            if (record.get('type') === 'xsd:string') {
+                field = record.get('name');
+                return false;
+            }
+        });
         var features = event.features;
         var num = features.length;
         var events = new Array(num);
@@ -267,7 +275,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             attributes = features[i].attributes;
             events[i] = {
                 start: OpenLayers.Date.parse(attributes["startdate2"]),
-                title: attributes["sidea"] + " v. " + attributes["sideb"],
+                title: attributes[field],
                 durationEvent: false
             };
         }

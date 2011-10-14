@@ -625,7 +625,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                     geometryName: geometryName
                 });
             }
-            callback.call(scope, protocol);
+            callback.call(scope, protocol, schema);
         }, this);
     },
 
