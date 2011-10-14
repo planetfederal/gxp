@@ -60,6 +60,29 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             items: [{
                 xtype: "slider",
                 vertical: true,
+                listeners: {
+                    "changecomplete": function(slider, value) {
+                        var src = this.eventSource;
+                        if (src.getLatestDate() !== null && src.getEarliestDate() !== null) {
+                            var range = src.getLatestDate() - src.getEarliestDate();
+                            var center = new Date(src.getEarliestDate().getTime() + range/2);
+                            var newRange = ((100-value)/100)*range;
+                            var newBegin = new Date(center.getTime() - newRange/2);
+                            var newEnd = new Date(center.getTime() + newRange/2);
+                            for (var i = 0; i < this.timeline.getBandCount(); i++) {
+                                var filterMatcher = function(evt) {
+                                    var start = evt.getStart();
+                                    return (start >= newBegin && start <= newEnd);
+                                }
+                                this.timeline.getBand(i).getEventPainter().setFilterMatcher(filterMatcher);
+                            }
+                            this.timeline.paint();
+                        } else {
+                            slider.setValue(0);
+                        }
+                    },
+                    scope: this
+                },
                 height: 200
             }]
         }, this.timelineContainer
