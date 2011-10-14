@@ -113,7 +113,10 @@
 
 /* gxp_timeline */
 .x-btn .gxp-icon-layer-switcher {
-   background-image: url(img/silk/layers.png);
+    background-image: url(img/silk/layers.png);
+}
+.x-btn .gxp-icon-note {
+    background-image: url(img/silk/note.png);
 }
 
 /* gxp_googleearth */

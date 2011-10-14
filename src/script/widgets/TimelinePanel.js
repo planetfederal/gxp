@@ -46,6 +46,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
 
     /** i18n */
     layersText: "Layers",
+    notesText: "Notes",
     
     /** private: method[initComponent]
      */
@@ -58,6 +59,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         this.tbar = [{
             text: this.layersText,
             iconCls: "gxp-icon-layer-switcher"
+        }, {
+            text: this.notesText,
+            iconCls: "gxp-icon-note"
         }];
         
         this.items = [{
