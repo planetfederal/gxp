@@ -72,6 +72,8 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
             mapPanel:this.target.mapPanel,
             playbackMode:this.playbackMode
         }));
+        this.relayEvents(toolbar,['timechange','rangemodified'])
+        this.playbackToolbar = toolbar;
         return toolbar;
     },
     addActions: function(actions){
@@ -93,6 +95,17 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
                 this.addOutput();
             }
         }, this);
+    },
+    /** api: method[setTime]
+     *  :arg time: {Date}
+     *  :return: {Boolean} - true if the time could be set to the supplied value
+     *          false if the time is outside the current range of the TimeManager
+     *          control.
+     *          
+     *  Set the time represented by the playback toolbar programatically
+     */
+    setTime: function(time){
+        return this.playbackToolbar.setTime(time);
     }
 });
 

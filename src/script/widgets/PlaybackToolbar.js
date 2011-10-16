@@ -89,6 +89,28 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
             shadow:false,
             timeDisplayConfig:{'xtype':'tip',format:this.timeFormat,height:'auto',closeable:false,title:false,width:210}
         })
+        this.addEvents(
+            /**
+             * Event: timechange
+             * Fires when the current time represented changes.
+             *
+             * Listener arguments:
+             * toolbar - {gxp.plugin.PlaybackToolbar} This playback toolbar
+             * currentTime - {Date} The current time represented in the TimeManager control
+             *      attached to this toolbar
+             */
+            "timechange",
+            /**
+             * Event: rangemodified
+             * Fires when the start and/or end times of the slider change
+             *
+             * Listener arguments:
+             * toolbar - {gxp.plugin.PlaybackToolbar} This playback toolbar
+             * range - {Array(Date)} The current time range for playback allowed in the
+             *      TimeManager control attached to this toolbar
+             */
+            "rangemodified"            
+        );
         gxp.PlaybackToolbar.superclass.initComponent.call(this);       
     },
     /** private: method[destroy]
@@ -102,6 +124,23 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
             this.control = null;
         }
         gxp.PlaybackPanel.superclass.destroy.call(this);
+    },
+    /** api: method[setTime]
+     *  :arg time: {Date}
+     *  :return: {Boolean} - true if the time could be set to the supplied value
+     *          false if the time is outside the current range of the TimeManager
+     *          control.
+     *          
+     *  Set the time represented by the playback toolbar programatically
+     */
+    setTime: function(time){
+        var timeVal = time.getTime()
+        if(timeVal<this.slider.minValue || timeVal>this.slider.maxValue){
+            return false;
+        }else{
+            this.slider.setValue(timeVal);
+            return true;
+        }
     },
     /** private: method[buildPlaybackItems] */
     buildPlaybackItems: function(){
@@ -159,6 +198,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                             slider.setValue(0, evt.currentTime.getTime() + offset);
                             if (tailIndex > -1) slider.setValue(tailIndex, slider.thumbs[tailIndex].value + offset)
                             panel.timeDisplay && panel.timeDisplay.update(evt.currentTime.format(slider.format))
+                            this.fireEvent('timechange',panel,this.currentTime)
                         })
                         if(this.control.units && this.slider.thumbs.length>1){this.setThumbStyles(this.slider)}
                     },
@@ -330,6 +370,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                         this.control.incrementTime(this.control.rangeInterval, this.control.units)
                     }
                     this.setThumbStyles(this.slider)
+                    this.fireEvent('rangemodified',this,ctl.range)
                 }
             }
         })
