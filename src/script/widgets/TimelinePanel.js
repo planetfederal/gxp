@@ -42,6 +42,12 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  Object mapping store/layer names to vector layers.
      */
     
+    /** private: property[clearOnLoad]
+     *  ``Boolean``
+     *  Indicates that timeline events should be cleared before new features are
+     *  added.
+     */
+
     layout: "border",
 
     /** i18n */
@@ -237,7 +243,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         });
         layer.events.on({
             featuresadded: this.onFeaturesAdded.createDelegate(this, [schema], 1),
-            loadstart: this.onLoadStart,
             scope: this
         });
         this.vectorLayers[key] = layer;
@@ -252,25 +257,27 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         this.rangeSlider.setValue(0);
     },
     
-    /** private: method[onLoadStart]
-     *  Registered as a listener for layer loadstart.
-     */
-    onLoadStart: function() {
-        // TODO: we should not be clearing once for each layer here
-        this.eventSource.clear();
-    },
-
     /** private: method[updateTimelineEvents]
      *  :arg options: `Object` First arg to OpenLayers.Strategy.BBOX::update.
      */
     updateTimelineEvents: function(options) {
-        // TODO: keep track of pending updates
+        // Loading will be triggered for all layers or no layers.  If loading
+        // is triggered, we want to remove existing events before adding any
+        // new ones.  With this flag set, events will be cleared before features
+        // are added to the first layer.  After clearing events, this flag will
+        // be reset so events are not cleared as features are added to 
+        // subsequent layers.
+        this.clearOnLoad = true;
         for (var key in this.vectorLayers) {
             this.vectorLayers[key].strategies[0].update(options);
         }
     },
     
     onFeaturesAdded: function(event, schema) {
+        if (this.clearOnLoad) {
+            this.eventSource.clear();
+            this.clearOnLoad = false;
+        }
         // find the first string field for display
         var field = null;
         schema.each(function(record) {
