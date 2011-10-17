@@ -37,7 +37,7 @@
         "widgets/GoogleEarthPanel.js",
         "widgets/GoogleStreetViewPanel.js",
         "widgets/tips/SliderTip.js",
-        "widgets/PlaybackPanel.js",
+        "widgets/PlaybackToolbar.js",
         "plugins/LayerSource.js",
         "plugins/BingSource.js",
         "plugins/WMSSource.js",
