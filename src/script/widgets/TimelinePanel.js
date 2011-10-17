@@ -37,9 +37,16 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  Timeline event source.
      */
     
-    /** private: property[vectorLayers]
+    /** private: property[layerLookup]
      *  ``Object``
-     *  Object mapping store/layer names to vector layers.
+     *  Mapping of store/layer names (e.g. "local/foo") to objects storing data
+     *  related to layers.  The values of each member are objects with the 
+     *  following properties:
+     *
+     *   * layer - {OpenLayers.Layer.Vector}
+     *   * titleAttr - {String}
+     *   * timeAttr - {String}
+     *  
      */
     
     /** private: property[clearOnLoad]
@@ -177,7 +184,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             this.unbindViewer();
         }
         this.viewer = viewer;
-        this.vectorLayers = {};
+        this.layerLookup = {};
         var layerStore = viewer.mapPanel.layers;
         if (layerStore.getCount() > 0) {
             this.onLayerStoreAdd(layerStore, layerStore.getRange());
@@ -205,7 +212,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             });
         }
         delete this.viewer;
-        delete this.vectorLayers;
+        delete this.layerLookup;
     },
     
     /** private: method[onLayerStoreAdd]
@@ -242,10 +249,21 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             visibility: false
         });
         layer.events.on({
-            featuresadded: this.onFeaturesAdded.createDelegate(this, [schema], 1),
+            featuresadded: this.onFeaturesAdded.createDelegate(this, [key], 1),
             scope: this
         });
-        this.vectorLayers[key] = layer;
+        // find the first string field for display
+        var titleAttr = null;
+        schema.each(function(record) {
+            if (record.get("type") === "xsd:string") {
+                titleAttr = record.get("name");
+                return false;
+            }
+        });
+        this.layerLookup[key] = {
+            layer: layer,
+            titleAttr: titleAttr
+        };
         this.viewer.mapPanel.map.addLayer(layer);
     },
 
@@ -268,33 +286,28 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         // be reset so events are not cleared as features are added to 
         // subsequent layers.
         this.clearOnLoad = true;
-        for (var key in this.vectorLayers) {
-            this.vectorLayers[key].strategies[0].update(options);
+        var layer;
+        for (var key in this.layerLookup) {
+            layer = this.layerLookup[key].layer;
+            layer.strategies[0].update(options);
         }
     },
     
-    onFeaturesAdded: function(event, schema) {
+    onFeaturesAdded: function(event, key) {
         if (this.clearOnLoad) {
             this.eventSource.clear();
             this.clearOnLoad = false;
         }
-        // find the first string field for display
-        var field = null;
-        schema.each(function(record) {
-            if (record.get('type') === 'xsd:string') {
-                field = record.get('name');
-                return false;
-            }
-        });
         var features = event.features;
         var num = features.length;
         var events = new Array(num);
         var attributes, str;
+        var titleAttr = this.layerLookup[key].titleAttr;
         for (var i=0; i<num; ++i) {
             attributes = features[i].attributes;
             events[i] = {
                 start: OpenLayers.Date.parse(attributes["startdate2"]),
-                title: attributes[field],
+                title: attributes[titleAttr],
                 durationEvent: false
             };
         }
