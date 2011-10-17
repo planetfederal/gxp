@@ -345,7 +345,9 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
                 autoHeight: !outputConfig.height,
                 layout: outputConfig.height ? "fit" : undefined,
                 items: [{
-                    defaults: {autoHeight: !outputConfig.height}
+                    defaults: Ext.applyIf({
+                        autoHeight: !outputConfig.height && !(outputConfig.defaults && outputConfig.defaults.height)
+                    }, outputConfig.defaults)
                 }]
             }, outputConfig)).show().items.get(0);
         }
