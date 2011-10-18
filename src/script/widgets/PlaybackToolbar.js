@@ -198,7 +198,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                             slider.setValue(0, evt.currentTime.getTime() + offset);
                             if (tailIndex > -1) slider.setValue(tailIndex, slider.thumbs[tailIndex].value + offset)
                             panel.timeDisplay && panel.timeDisplay.update(evt.currentTime.format(slider.format))
-                            this.fireEvent('timechange',panel,this.currentTime)
+                            panel.fireEvent('timechange', panel, this.currentTime);
                         })
                         if(this.control.units && this.slider.thumbs.length>1){this.setThumbStyles(this.slider)}
                     },
