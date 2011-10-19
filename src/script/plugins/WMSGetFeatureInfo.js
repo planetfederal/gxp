@@ -185,6 +185,13 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
                 map: this.target.mapPanel,
                 width: 250,
                 height: 300,
+                defaults: {
+                    title: title,
+                    layout: "fit",
+                    autoScroll: true,
+                    autoWidth: true,
+                    collapsible: true
+                },
                 listeners: {
                     close: (function(key) {
                         return function(panel){
@@ -199,23 +206,16 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
             popup = this.popupCache[popupKey];
         }
 
-        var baseConfig = {
-            title: title,
-            layout: "fit",
-            autoScroll: true,
-            autoWidth: true,
-            collapsible: true
-        };
         var features = evt.features, config = [];
         if (!text && features) {
             var feature;
             for (var i=0,ii=features.length; i<ii; ++i) {
                 feature = features[i];
-                config.push(Ext.applyIf({
+                config.push({
                     xtype: "propertygrid",
                     title: feature.fid ? feature.fid : title,
                     source: feature.attributes
-                }, baseConfig));
+                });
             }
         } else if (text) {
             config.push(Ext.applyIf({
