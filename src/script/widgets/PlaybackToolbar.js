@@ -123,6 +123,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
             this.control.destroy()
             this.control = null;
         }
+        gxp.PlaybackToolbar.superclass.destroy.call(this);
         gxp.PlaybackPanel.superclass.destroy.call(this);
     },
     /** api: method[setTime]
