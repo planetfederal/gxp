@@ -201,17 +201,17 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                 width: 200,
                 animate: false,
                 format: this.timeFormat,
-                plugins: new Ext.slider.Tip({
+                plugins: [new Ext.slider.Tip({
                     getText: function(thumb){
                         if (thumb.slider.indexMap[thumb.index] != 'tail') {
                             return (new Date(thumb.value).format(thumb.slider.format));
                         }
                         else {
-                            var formatInfo = gxp.plugins.Playback.prototype.smartIntervalFormat.call(thumb, thumb.slider.thumbs[0].value - thumb.value);
+                            var formatInfo = gxp.PlaybackToolbar.prototype.smartIntervalFormat.call(thumb, thumb.slider.thumbs[0].value - thumb.value);
                             return formatInfo.value + ' ' + formatInfo.units;
                         }
                     }
-                }),
+                })],
                 listeners: {
                     'changecomplete': this.onSliderChangeComplete,
                    'dragstart': function(){
@@ -225,12 +225,13 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                     },
                     'afterrender': function(slider){
                         var panel = this;
+                        this.sliderTip = slider.plugins[0];
                         this.control.events.register('tick', this.control, function(evt){
                             var tailIndex = slider.indexMap?slider.indexMap.indexOf('tail'):-1;
                             var offset = (tailIndex>-1) ? evt.currentTime.getTime() - slider.thumbs[0].value : 0;
                             slider.setValue(0, evt.currentTime.getTime() + offset);
                             if (tailIndex > -1) slider.setValue(tailIndex, slider.thumbs[tailIndex].value + offset)
-                            panel.timeDisplay && panel.timeDisplay.update(evt.currentTime.format(slider.format))
+                            panel.updateTimeDisplay()
                             panel.fireEvent('timechange', panel, this.currentTime);
                         })
                         if(this.control.units && this.slider.thumbs.length>1){this.setThumbStyles(this.slider)}
@@ -269,13 +270,6 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                 allowDepress: true,
                 tooltip: this.playTooltip,
                 menuText: this.playLabel,
-                listeners:{
-                    "click": function(){
-                        this.showTimeDisplay(this.timeDisplayConfig)
-                    },
-                    scope: this,
-                    single: true
-                },
                 text: (this.labelButtons) ? this.playLabel : false
             },
             'next': {
@@ -442,6 +436,11 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         for (var i = 0; i < sliderInfo.values.length; i++) {
             slider.setValue(i, sliderInfo.values[i])
         }
+        //set format of slider based on the interval steps
+        if(!sliderInfo.interval && this.control.intervals && this.control.intervals.length>2){
+            sliderInfo.interval = Math.round((sliderInfo.maxValue-sliderInfo.minValue)/this.control.intervals.length)
+        }
+        this.setTimeFormat(sliderInfo.interval)
     },
     setThumbStyles: function(slider){
         tailIndex = slider.indexMap.indexOf('tail');
@@ -477,6 +476,10 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         this.control.stop();this.control.play();
         btn.setTooltip(pressed?this.normalTooltip:this.fastforwardTooltip);
     },
+    updateTimeDisplay: function(){
+        this.sliderTip.onSlide(this.slider,null,this.slider.thumbs[0]);
+        this.sliderTip.el.alignTo(this.slider.el, 'b-t?', this.offsets);
+    },
     onSliderChangeComplete: function(slider, value, thumb){
         var slideTime = new Date(value);
         //test if this is the main time slider
@@ -484,8 +487,6 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
             case 'primary':
                 if (!this.control.snapToIntervals && this.control.units) {
                     this.control.setTime(slideTime);
-                    !this.timeDisplay && this.showTimeDisplay(this.timeDisplayConfig)
-                    this.timeDisplay.update(slideTime.format(this.timeFormat));
                 }
                 else if (this.control.snapToIntervals && this.control.intervals.length) {
                     var targetIndex = Math.floor((slideTime - this.control.range[0]) / (this.control.range[1] - this.control.range[0]) * (this.control.intervals.length - 1));
@@ -524,6 +525,30 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         if (this.restartPlayback) {
             this.restartPlayback=false;
             this.control.play();
+        }
+    },
+    setTimeFormat:function(increment){
+        if (increment) {
+            var resolution = this.smartIntervalFormat(increment).units;
+            var format = this.timeFormat;
+            switch (resolution) {
+                case 'Minutes':
+                    format = 'l, F d, Y g:i A'
+                    break;
+                case 'Hours':
+                    format = 'l, F d, Y g A'
+                    break;
+                case 'Days':
+                    format = 'l, F d, Y'
+                    break;
+                case 'Months':
+                    format = 'F, Y'
+                    break;
+                case 'Years':
+                    format = 'Y'
+                    break;
+            }
+            this.timeFormat = this.slider.format = format
         }
     },
     smartIntervalFormat:function(diff){
