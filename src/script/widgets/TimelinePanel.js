@@ -204,8 +204,18 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             bandInfos, 
             Timeline.HORIZONTAL
         );
+        for (var i = 0; i < this.timeline.getBandCount(); i++) {
+            // since the bands are linked we need to listen to one band only
+            i == 0 && this.timeline.getBand(i).addOnScrollListener(
+                this.setPlaybackCenter.createDelegate(this)
+            );
+        }
         this.eventSource = eventSource;
         
+    },
+
+    setPlaybackCenter: function(band) {
+        this.playbackTool && this.playbackTool.setTime(band.getCenterVisibleDate());
     },
     
     /** private: method[bindViewer]
