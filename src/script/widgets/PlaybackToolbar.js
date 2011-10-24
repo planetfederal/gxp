@@ -88,7 +88,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
             unstyled:true,
             shadow:false,
             timeDisplayConfig:{'xtype':'tip',format:this.timeFormat,height:'auto',closeable:false,title:false,width:210}
-        })
+        });
         this.addEvents(
             /**
              * Event: timechange
@@ -127,9 +127,9 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                             'mouseenter': function(evt, domEl){
                                 if (el.getStyle('opacity') < 1) {
                                     if (el.anim().isAnimated) {
-                                        el.anim().stop()
+                                        el.anim().stop();
                                     }
-                                    el.setOpacity(1, false)
+                                    el.setOpacity(1, false);
                                 }
                             },
                             'mouseleave': function(evt, domEl){
@@ -138,12 +138,12 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                                 });
                             },
                             'mousemove': function(evt, domEl){
-                                el.setOpacity(1, false)
+                                el.setOpacity(1, false);
                             }
-                        })
+                        });
                     }
                 }
-            })       
+            });
     },
     /** private: method[destroy]
      *  Destory the component.
@@ -152,7 +152,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         //kill the control but only if we created the control
         if(this.control && !this.initialConfig.control){
             this.control.map && this.control.map.removeControl(this.control);
-            this.control.destroy()
+            this.control.destroy();
             this.control = null;
         }
         gxp.PlaybackToolbar.superclass.destroy.call(this);
@@ -166,7 +166,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
      *  Set the time represented by the playback toolbar programatically
      */
     setTime: function(time){
-        var timeVal = time.getTime()
+        var timeVal = time.getTime();
         if(timeVal<this.slider.minValue || timeVal>this.slider.maxValue){
             return false;
         }else{
@@ -190,7 +190,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
             }
             if (this.playbackMode == 'ranged' || this.playbackMode == 'decay') {
                 if (this.control.units) {
-                    this.control.incrementTime(this.control.rangeInterval, this.control.units)
+                    this.control.incrementTime(this.control.rangeInterval, this.control.units);
                 }
             }
         }
@@ -198,9 +198,9 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         
         //set format of slider based on the interval steps
         if(!sliderInfo.interval && this.control.intervals && this.control.intervals.length>2){
-            var interval = Math.round((sliderInfo.maxValue-sliderInfo.minValue)/this.control.intervals.length)
+            var interval = Math.round((sliderInfo.maxValue-sliderInfo.minValue)/this.control.intervals.length);
         }
-        this.setTimeFormat(this.guessTimeFormat(sliderInfo.interval||interval))
+        this.setTimeFormat(this.guessTimeFormat(sliderInfo.interval||interval));
         
         var actionDefaults = {
             'slider': {
@@ -244,11 +244,15 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                             var tailIndex = slider.indexMap?slider.indexMap.indexOf('tail'):-1;
                             var offset = (tailIndex>-1) ? evt.currentTime.getTime() - slider.thumbs[0].value : 0;
                             slider.setValue(0, evt.currentTime.getTime() + offset);
-                            if (tailIndex > -1) slider.setValue(tailIndex, slider.thumbs[tailIndex].value + offset)
-                            panel.updateTimeDisplay()
+                            if (tailIndex > -1) {
+                                slider.setValue(tailIndex, slider.thumbs[tailIndex].value + offset);
+                            }
+                            panel.updateTimeDisplay();
                             panel.fireEvent('timechange', panel, this.currentTime);
-                        })
-                        if(this.control.units && this.slider.thumbs.length>1){this.setThumbStyles(this.slider)}
+                        });
+                        if(this.control.units && this.slider.thumbs.length>1) { 
+                            this.setThumbStyles(this.slider);
+                        }
                     },
                     scope: this
                 }
@@ -314,7 +318,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                 scope: this,
                 tooltip: this.loopTooltip,
                 menuText: this.loopLabel,
-                text: (this.labelButtons) ? this.loopLabel : false,
+                text: (this.labelButtons) ? this.loopLabel : false
             },
             'fastforward': {
                 iconCls: 'gxp-icon-ffwd',
@@ -327,7 +331,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                 disabled:true,
                 tooltip: this.fastforwardTooltip,
                 menuText: this.fastforwardLabel,
-                text: (this.labelButtons) ? this.fastforwardLabel : false,
+                text: (this.labelButtons) ? this.fastforwardLabel : false
             },
             'settings': {
                 iconCls: 'gxp-icon-settings',
@@ -338,7 +342,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                 menuText: this.settingsLabel,
                 text: (this.labelButtons) ? this.settingsLabel : false
             }
-        }
+        };
         var actConfigs = this.playbackActions;
         var actions =[];
         for(var i=0,len=actConfigs.length;i<len;i++){
@@ -354,30 +358,32 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         return actions;
     },
     showTimeDisplay: function(config){
-        if (!config) {config = this.timeDisplayConfig}
+        if (!config) {
+            config = this.timeDisplayConfig;
+        }
         Ext.applyIf(config,{html:this.control.currentTime.format(this.timeFormat)});
         //TODO get rif of timeDisplay, and use the slider's tip instead
         this.timeDisplay = this.add(config);
         this.timeDisplay.show();
-        this.timeDisplay.el.alignTo(this.slider.getEl(), this.timeDisplay.defaultAlign, [0, 5])
+        this.timeDisplay.el.alignTo(this.slider.getEl(), this.timeDisplay.defaultAlign, [0, 5]);
     },
     buildTimeManager:function(){
-        this.controlOptions || (this.controlOptions={})
+        this.controlOptions || (this.controlOptions={});
         if(this.playbackMode=='ranged' || this.playbackMode=='decay'){
             Ext.apply(this.controlOptions,{
                 agentOptions:{
                     'WMS':{rangeMode:'range',rangeInterval:this.rangedPlayInterval},
                     'Vector':{rangeMode:'range',rangeInterval:this.rangedPlayInterval}
-                },
-            })
+                }
+            });
         }
         else if(this.playbackMode=='cumulative'){
             Ext.apply(this.controlOptions,{
                 agentOptions:{
                     'WMS':{rangeMode:'cumulative'},
                     'Vector':{rangeMode:'cumulative'}
-                },
-            })
+                }
+            });
         }
         var ctl = this.control = new OpenLayers.Control.TimeManager(this.controlOptions);
         this.mapPanel.map.addControl(ctl);
@@ -403,18 +409,18 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                         units: ctl.units,
                         step: ctl.step
                     }
-                }
+                };
                 ctl.guessPlaybackRate();
                 if (ctl.range[0].getTime() != oldvals.start || ctl.range[1].getTime() != oldvals.end || ctl.units != oldvals.units || ctl.step != oldvals.step) {
                     this.reconfigureSlider(this.buildSliderValues());
                     if (this.playbackMode == 'ranged' || this.playbackMode == 'decay') {
-                        this.control.incrementTime(this.control.rangeInterval, this.control.units)
+                        this.control.incrementTime(this.control.rangeInterval, this.control.units);
                     }
-                    this.setThumbStyles(this.slider)
-                    this.fireEvent('rangemodified',this,ctl.range)
+                    this.setThumbStyles(this.slider);
+                    this.fireEvent('rangemodified',this,ctl.range);
                 }
             }
-        })
+        });
     },
     buildSliderValues:function(){
       var indexMap = ['primary'],
@@ -430,13 +436,14 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
       if(this.dynamicRange){
         var rangeAdj = (min-max)*.1;
         values.push(min=min-rangeAdj,max=max+rangeAdj);
-        indexMap[1]='minTime',indexMap[2]='maxTime';
+        indexMap[1]='minTime';
+        indexMap[2]='maxTime';
       }
       if(this.playbackMode=='ranged'||this.playbackMode=='decay'){
         values.push(min);
-        indexMap[indexMap.length]='tail'
+        indexMap[indexMap.length]='tail';
       }
-      return {'values':values,'map':indexMap,'maxValue':max,'minValue':min,'interval':interval}
+      return {'values':values,'map':indexMap,'maxValue':max,'minValue':min,'interval':interval};
     },
     reconfigureSlider: function(sliderInfo){
         var slider = this.slider;
@@ -448,13 +455,13 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
             indexMap: sliderInfo.map
         });
         for (var i = 0; i < sliderInfo.values.length; i++) {
-            slider.setValue(i, sliderInfo.values[i])
+            slider.setValue(i, sliderInfo.values[i]);
         }
         //set format of slider based on the interval steps
         if(!sliderInfo.interval && this.control.intervals && this.control.intervals.length>2){
-            sliderInfo.interval = Math.round((sliderInfo.maxValue-sliderInfo.minValue)/this.control.intervals.length)
+            sliderInfo.interval = Math.round((sliderInfo.maxValue-sliderInfo.minValue)/this.control.intervals.length);
         }
-        this.setTimeFormat(this.guessTimeFormat(sliderInfo.interval))
+        this.setTimeFormat(this.guessTimeFormat(sliderInfo.interval));
     },
     setThumbStyles: function(slider){
         tailIndex = slider.indexMap.indexOf('tail');
@@ -470,7 +477,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
     },
     forwardToEnd: function(btn){
         var ctl = this.control;
-        ctl.setTime(new Date(ctl.range[(ctl.step < 0) ? 0 : 1].getTime()))
+        ctl.setTime(new Date(ctl.range[(ctl.step < 0) ? 0 : 1].getTime()));
     },
     toggleAnimation:function(btn,pressed){
         this.control[pressed?'play':'stop']();
@@ -522,14 +529,19 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                 switch (this.control.units) {
                     case OpenLayers.TimeUnit.YEARS:
                         adj *= 12;
+                        break;
                     case OpenLayers.TimeUnit.MONTHS:
                         adj *= (365 / 12);
+                        break;
                     case OpenLayers.TimeUnit.DAYS:
                         adj *= 24;
+                        break;
                     case OpenLayers.TimeUnit.HOURS:
                         adj *= 60;
+                        break;
                     case OpenLayers.TimeUnit.MINUTES:
                         adj *= 60;
+                        break;
                     case OpenLayers.TimeUnit.SECONDS:
                         adj *= 1000;
                         break;
@@ -547,19 +559,19 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
             var format = this.timeFormat;
             switch (resolution) {
                 case 'Minutes':
-                    format = 'l, F d, Y g:i A'
+                    format = 'l, F d, Y g:i A';
                     break;
                 case 'Hours':
-                    format = 'l, F d, Y g A'
+                    format = 'l, F d, Y g A';
                     break;
                 case 'Days':
-                    format = 'l, F d, Y'
+                    format = 'l, F d, Y';
                     break;
                 case 'Months':
-                    format = 'F, Y'
+                    format = 'F, Y';
                     break;
                 case 'Years':
-                    format = 'Y'
+                    format = 'Y';
                     break;
             }
             return format;
@@ -568,29 +580,29 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
     smartIntervalFormat:function(diff){
         var unitText, diffValue, absDiff=Math.abs(diff);
         if(absDiff<5e3){
-            unitText='Seconds',
+            unitText='Seconds';
             diffValue=(Math.round(diff/1e2))/10;
         }
         else if(absDiff<35e5){
-            unitText='Minutes',
+            unitText='Minutes';
             diffValue=(Math.round(diff/6e2))/10;
         }
         else if(absDiff<828e5){
-            unitText='Hours',
+            unitText='Hours';
             diffValue=(Math.round(diff/36e4))/10;
         }
         else if(absDiff<250e7){
-            unitText='Days',
+            unitText='Days';
             diffValue=(Math.round(diff/864e4))/10;
         }
         else if(absDiff<311e8){
-            unitText='Months',
+            unitText='Months';
             diffValue=(Math.round(diff/2628e5))/10;
         }else{
-            unitText='Years',
+            unitText='Years';
             diffValue=(Math.round(diff/31536e5))/10;
         }
-        return {units:unitText,value:diffValue}
+        return {units:unitText,value:diffValue};
     }
 });
 
