@@ -529,22 +529,18 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                 break;
             case 'tail':
                 var adj = 1;
+                //Purposely falling through from control units down to seconds to avoid repeating the conversion factors
                 switch (this.control.units) {
                     case OpenLayers.TimeUnit.YEARS:
                         adj *= 12;
-                        break;
                     case OpenLayers.TimeUnit.MONTHS:
                         adj *= (365 / 12);
-                        break;
                     case OpenLayers.TimeUnit.DAYS:
                         adj *= 24;
-                        break;
                     case OpenLayers.TimeUnit.HOURS:
                         adj *= 60;
-                        break;
                     case OpenLayers.TimeUnit.MINUTES:
                         adj *= 60;
-                        break;
                     case OpenLayers.TimeUnit.SECONDS:
                         adj *= 1000;
                         break;
