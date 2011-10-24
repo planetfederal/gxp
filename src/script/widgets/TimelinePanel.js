@@ -155,6 +155,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  :arg currentTime: ``Date``
      */
     onTimeChange: function(toolbar, currentTime) {
+        this.setCenter(currentTime);
     },
 
     /** private: method[onRangeModify]
@@ -290,6 +291,13 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             }
         }
     },
+
+    setCenter: function(time) {
+        for (var i = 0; i < this.timeline.getBandCount(); i++) {
+            this.timeline.getBand(i).setCenterVisibleDate(time);
+        }
+        this.timeline.paint();
+    },
     
     /** private: method[addVectorLayer]
      */
@@ -299,6 +307,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         if (this.playbackTool) {
             // TODO consider putting an api method getRange on playback tool
             var range = this.playbackTool.playbackToolbar.control.range;
+            this.setCenter(this.playbackTool.playbackToolbar.control.currentTime);
             // create a PropertyIsBetween filter
             filter = new OpenLayers.Filter({
                 type: OpenLayers.Filter.Comparison.BETWEEN,
