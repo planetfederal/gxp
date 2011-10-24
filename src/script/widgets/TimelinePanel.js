@@ -24,6 +24,10 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  ``gxp.Viewer``
      */
 
+    /** api: config[playbackTool]
+     *  ``gxp.plugins.Playback``
+     */
+
     /** private: property[timeline]
      *  ``Timeline``
      */
@@ -64,7 +68,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     /** private: method[initComponent]
      */
     initComponent: function() {
-        
+
         this.timelineContainer = new Ext.Container({
             region: "center"
         });
@@ -130,8 +134,34 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             this.bindViewer(this.initialConfig.viewer);
         }
 
+        if (this.initialConfig.playbackTool) {
+            delete this.playbackTool;
+            this.bindPlaybackTool(this.initialConfig.playbackTool);
+        }
+
         gxp.TimelinePanel.superclass.initComponent.call(this);
         
+    },
+
+    bindPlaybackTool: function(playbackTool) {
+        this.playbackTool = playbackTool;
+        this.playbackTool.on("timechange", this.onTimeChange, this);
+        this.playbackTool.on("rangemodified", this.onRangeModify, this);
+    },
+
+    /**
+     * private: method[onTimeChange]
+     *  :arg toolbar: ``gxp.plugin.PlaybackToolbar``
+     *  :arg currentTime: ``Date``
+     */
+    onTimeChange: function(toolbar, currentTime) {
+    },
+
+    /** private: method[onRangeModify]
+     *  :arg toolbar: ``gxp.plugin.PlaybackToolbar``
+     *  :arg range: ``Array(Date)``
+     */
+    onRangeModify: function(toolbar, range) {
     },
 
     /** private: method[onLayout]
@@ -265,12 +295,25 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
     addVectorLayer: function(record, protocol, schema) {
         var key = this.getKey(record);
+        var filter = null;
+        if (this.playbackTool) {
+            // TODO consider putting an api method getRange on playback tool
+            var range = this.playbackTool.playbackToolbar.control.range;
+            // create a PropertyIsBetween filter
+            filter = new OpenLayers.Filter({
+                type: OpenLayers.Filter.Comparison.BETWEEN,
+                property: this.layerLookup[key].timeAttr,
+                lowerBoundary: OpenLayers.Date.toISOString(range[0]),
+                upperBoundary: OpenLayers.Date.toISOString(range[1])
+            });
+        }
         var layer = new OpenLayers.Layer.Vector(key, {
             strategies: [new OpenLayers.Strategy.BBOX({
                 ratio: 1.1,
                 resFactor: 1,
                 autoActivate: false
             })],
+            filter: filter,
             protocol: protocol,
             displayInLayerSwitcher: false,
             visibility: false
