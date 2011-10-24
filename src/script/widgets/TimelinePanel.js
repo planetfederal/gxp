@@ -24,6 +24,10 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  ``gxp.Viewer``
      */
 
+    /** api: config[playbackTool]
+     *  ``gxp.plugins.Playback``
+     */
+
     /** private: property[timeline]
      *  ``Timeline``
      */
@@ -64,7 +68,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     /** private: method[initComponent]
      */
     initComponent: function() {
-        
+
         this.timelineContainer = new Ext.Container({
             region: "center"
         });
@@ -130,8 +134,35 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             this.bindViewer(this.initialConfig.viewer);
         }
 
+        if (this.initialConfig.playbackTool) {
+            delete this.playbackTool;
+            this.bindPlaybackTool(this.initialConfig.playbackTool);
+        }
+
         gxp.TimelinePanel.superclass.initComponent.call(this);
         
+    },
+
+    bindPlaybackTool: function(playbackTool) {
+        this.playbackTool = playbackTool;
+        this.playbackTool.on("timechange", this.onTimeChange, this);
+        this.playbackTool.on("rangemodified", this.onRangeModify, this);
+    },
+
+    /**
+     * private: method[onTimeChange]
+     *  :arg toolbar: ``gxp.plugin.PlaybackToolbar``
+     *  :arg currentTime: ``Date``
+     */
+    onTimeChange: function(toolbar, currentTime) {
+        this.setCenter(currentTime);
+    },
+
+    /** private: method[onRangeModify]
+     *  :arg toolbar: ``gxp.plugin.PlaybackToolbar``
+     *  :arg range: ``Array(Date)``
+     */
+    onRangeModify: function(toolbar, range) {
     },
 
     /** private: method[onLayout]
@@ -173,8 +204,16 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             bandInfos, 
             Timeline.HORIZONTAL
         );
+        // since the bands are linked we need to listen to one band only
+        this.timeline.getBand(0).addOnScrollListener(
+            this.setPlaybackCenter.createDelegate(this)
+        );
         this.eventSource = eventSource;
         
+    },
+
+    setPlaybackCenter: function(band) {
+        this.playbackTool && this.playbackTool.setTime(band.getCenterVisibleDate());
     },
     
     /** private: method[bindViewer]
@@ -214,6 +253,33 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         delete this.viewer;
         delete this.layerLookup;
     },
+
+    /** private: method[getKey]
+     */
+    getKey: function(record) {
+        return record.get("source") + "/" + record.get("name");
+    },
+
+    /** private: method[getTimeAttribute]
+     */
+    getTimeAttribute: function(record, protocol, schema) {
+        var key = this.getKey(record);
+        Ext.Ajax.request({
+            method: "GET",
+            url: "/maps/time_info.json?",
+            params: {layer: record.get('name')},
+            success: function(response) {
+                var result = Ext.decode(response.responseText);
+                if (result && result.attribute) {
+                    this.layerLookup[key] = {
+                        timeAttr: result.attribute
+                    };
+                    this.addVectorLayer(record, protocol, schema);
+                }
+            },
+            scope: this
+        });
+    },
     
     /** private: method[onLayerStoreAdd]
      */
@@ -228,22 +294,43 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                         // TODO: add logging to viewer
                         throw new Error("Failed to get protocol for record: " + record.get("name"));
                     }
-                    this.addVectorLayer(record, protocol, schema);
+                    this.getTimeAttribute(record, protocol, schema);
                 }, this);
             }
         }
+    },
+
+    setCenter: function(time) {
+        for (var i = 0; i < this.timeline.getBandCount(); i++) {
+            this.timeline.getBand(i).setCenterVisibleDate(time);
+        }
+        this.timeline.paint();
     },
     
     /** private: method[addVectorLayer]
      */
     addVectorLayer: function(record, protocol, schema) {
-        var key = record.get("source") + "/" + record.get("name");
+        var key = this.getKey(record);
+        var filter = null;
+        if (this.playbackTool) {
+            // TODO consider putting an api method getRange on playback tool
+            var range = this.playbackTool.playbackToolbar.control.range;
+            this.setCenter(this.playbackTool.playbackToolbar.control.currentTime);
+            // create a PropertyIsBetween filter
+            filter = new OpenLayers.Filter({
+                type: OpenLayers.Filter.Comparison.BETWEEN,
+                property: this.layerLookup[key].timeAttr,
+                lowerBoundary: OpenLayers.Date.toISOString(range[0]),
+                upperBoundary: OpenLayers.Date.toISOString(range[1])
+            });
+        }
         var layer = new OpenLayers.Layer.Vector(key, {
             strategies: [new OpenLayers.Strategy.BBOX({
                 ratio: 1.1,
                 resFactor: 1,
                 autoActivate: false
             })],
+            filter: filter,
             protocol: protocol,
             displayInLayerSwitcher: false,
             visibility: false
@@ -252,6 +339,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             featuresadded: this.onFeaturesAdded.createDelegate(this, [key], 1),
             scope: this
         });
+
         // find the first string field for display
         var titleAttr = null;
         schema.each(function(record) {
@@ -260,10 +348,10 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 return false;
             }
         });
-        this.layerLookup[key] = {
+        Ext.apply(this.layerLookup[key], {
             layer: layer,
             titleAttr: titleAttr
-        };
+        });
         this.viewer.mapPanel.map.addLayer(layer);
     },
 
@@ -303,10 +391,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         var events = new Array(num);
         var attributes, str;
         var titleAttr = this.layerLookup[key].titleAttr;
+        var timeAttr = this.layerLookup[key].timeAttr;
         for (var i=0; i<num; ++i) {
             attributes = features[i].attributes;
             events[i] = {
-                start: OpenLayers.Date.parse(attributes["startdate2"]),
+                start: OpenLayers.Date.parse(attributes[timeAttr]),
                 title: attributes[titleAttr],
                 durationEvent: false
             };

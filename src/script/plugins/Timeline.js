@@ -30,6 +30,12 @@ gxp.plugins.Timeline = Ext.extend(gxp.plugins.Tool, {
     
     /** api: ptype = gxp_timeline */
     ptype: "gxp_timeline",
+
+    /** api: config[playbackTool]
+     *  ``String``
+     *  Id of the playback tool to which the timeline has to bind.
+     */
+    playbackTool: null,
     
     /** api: config[menuText]
      *  ``String``
@@ -81,7 +87,8 @@ gxp.plugins.Timeline = Ext.extend(gxp.plugins.Tool, {
     addOutput: function(config) {
         return gxp.plugins.Timeline.superclass.addOutput.call(this, Ext.apply({
             xtype: "gxp_timelinepanel",
-            viewer: this.target
+            viewer: this.target,
+            playbackTool: this.target.tools[this.playbackTool]
         }, config));
     }
 
