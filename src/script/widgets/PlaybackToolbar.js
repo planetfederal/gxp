@@ -170,7 +170,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         if(timeVal<this.slider.minValue || timeVal>this.slider.maxValue){
             return false;
         }else{
-            this.slider.setValue(timeVal);
+            this.slider.setValue(0,timeVal);
             return true;
         }
     },
