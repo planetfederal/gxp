@@ -381,6 +381,9 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         }
         var ctl = this.control = new OpenLayers.Control.TimeManager(this.controlOptions);
         this.mapPanel.map.addControl(ctl);
+        if (ctl.layers) {
+            this.fireEvent('rangemodified', this, ctl.range);
+        }
         return ctl;
     },
     addReconfigListener: function(){
