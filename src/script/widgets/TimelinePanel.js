@@ -97,11 +97,10 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                         var range = this.playbackTool.playbackToolbar.control.range;
                         range = this.calculateNewRange(range, value);
                         for (var key in this.layerLookup) {
-                            var filter = this.createTimeFilter(range, key);
                             var layer = this.layerLookup[key].layer;
-                            layer.filter = filter;
-                            layer.strategies[0].update();
+                            layer.filter = this.createTimeFilter(range, key);;
                         }
+                        this.updateTimelineEvents();
                     },
                     scope: this
                 },
