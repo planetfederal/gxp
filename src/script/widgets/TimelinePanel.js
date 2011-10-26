@@ -73,6 +73,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
     initComponent: function() {
 
+        Timeline.OriginalEventPainter.prototype._showBubble = 
+            this.handleEventClick.createDelegate(this);
+
         this.timelineContainer = new Ext.Container({
             region: "center"
         });
@@ -152,6 +155,16 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
 
         gxp.TimelinePanel.superclass.initComponent.call(this);
         
+    },
+
+    handleEventClick: function(x, y, evt) {
+        var fid = evt.getProperty("fid");
+        var key = evt.getProperty("key");
+        var layer = this.layerLookup[key].layer;
+        var feature = layer.getFeatureByFid(fid);
+        var centroid = feature.geometry.getCentroid();
+        var map = this.viewer.mapPanel.map;
+        map.setCenter(new OpenLayers.LonLat(centroid.x, centroid.y));
     },
 
     bindPlaybackTool: function(playbackTool) {
@@ -431,7 +444,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 start: OpenLayers.Date.parse(attributes[timeAttr]),
                 title: attributes[titleAttr],
                 durationEvent: false,
-                key: key
+                key: key,
+                fid: features[i].fid
             };
         }
         var feed = {
