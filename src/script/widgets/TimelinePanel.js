@@ -6,6 +6,10 @@
  * of the license.
  */
 
+/**
+ * @requires menu/TimelineMenu.js
+ */
+
 /** api: (define)
  *  module = gxp
  *  class = TimelinePanel
@@ -73,9 +77,25 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             region: "center"
         });
 
+        var me = this;
         this.tbar = [{
             text: this.layersText,
-            iconCls: "gxp-icon-layer-switcher"
+            iconCls: "gxp-icon-layer-switcher",
+            menu: new gxp.menu.TimelineMenu({
+                layers: this.viewer.mapPanel.layers,
+                property: 'timevisible',
+                onCheckChange: function(item, checked, record) {
+                    record.set('timevisible', checked);
+                    var filterMatcher = function(evt) {
+                        var key = evt.getProperty('key');
+                        if (key === me.getKey(record)) {
+                            return checked;
+                        }
+                    };
+                    me.timeline.getBand(0).getEventPainter().setFilterMatcher(filterMatcher);
+                    me.timeline.paint();
+                }
+            })
         }, {
             text: this.notesText,
             iconCls: "gxp-icon-note"
@@ -279,15 +299,19 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         var record;
         for (var i=0, ii=records.length; i<ii; ++i) {
             record = records[i];
-            var source = this.viewer.getSource(record);
-            if (gxp.plugins.WMSSource && (source instanceof gxp.plugins.WMSSource)) {
-                source.getWFSProtocol(record, function(protocol, schema) {
-                    if (!protocol) {
-                        // TODO: add logging to viewer
-                        throw new Error("Failed to get protocol for record: " + record.get("name"));
-                    }
-                    this.getTimeAttribute(record, protocol, schema);
-                }, this);
+            var layer = record.getLayer();
+            if (layer.dimensions && layer.dimensions.time) {
+                var source = this.viewer.getSource(record);
+                if (gxp.plugins.WMSSource && (source instanceof gxp.plugins.WMSSource)) {
+                    source.getWFSProtocol(record, function(protocol, schema) {
+                        if (!protocol) {
+                            // TODO: add logging to viewer
+                            throw new Error("Failed to get protocol for record: " + record.get("name"));
+                        }
+                        record.set('timevisible', true);
+                        this.getTimeAttribute(record, protocol, schema);
+                    }, this);
+                }
             }
         }
     },
@@ -406,7 +430,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             events[i] = {
                 start: OpenLayers.Date.parse(attributes[timeAttr]),
                 title: attributes[titleAttr],
-                durationEvent: false
+                durationEvent: false,
+                key: key
             };
         }
         var feed = {
