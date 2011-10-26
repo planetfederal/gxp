@@ -163,6 +163,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  :arg range: ``Array(Date)``
      */
     onRangeModify: function(toolbar, range) {
+        this.setRange(range);
     },
 
     /** private: method[onLayout]
@@ -300,11 +301,18 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }
     },
 
+    setRange: function(range) {
+        var firstBand = this.timeline.getBand(0);
+        firstBand.setMinVisibleDate(range[0]);
+        firstBand.setMaxVisibleDate(range[1]);
+        var secondBand = this.timeline.getBand(1);
+        secondBand.getEtherPainter().setHighlight(range[0], range[1]);
+    },
+
     setCenter: function(time) {
         for (var i = 0; i < this.timeline.getBandCount(); i++) {
             this.timeline.getBand(i).setCenterVisibleDate(time);
         }
-        this.timeline.paint();
     },
     
     /** private: method[addVectorLayer]
