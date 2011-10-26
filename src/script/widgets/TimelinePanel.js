@@ -90,25 +90,17 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 xtype: "slider",
                 ref: "../rangeSlider",
                 vertical: true,
+                value: 25,
                 listeners: {
                     "changecomplete": function(slider, value) {
-                        var src = this.eventSource;
-                        if (src.getLatestDate() !== null && src.getEarliestDate() !== null) {
-                            var range = src.getLatestDate() - src.getEarliestDate();
-                            var center = new Date(src.getEarliestDate().getTime() + range/2);
-                            var newRange = ((100-value)/100)*range;
-                            var newBegin = new Date(center.getTime() - newRange/2);
-                            var newEnd = new Date(center.getTime() + newRange/2);
-                            for (var i = 0; i < this.timeline.getBandCount(); i++) {
-                                var filterMatcher = function(evt) {
-                                    var start = evt.getStart();
-                                    return (start >= newBegin && start <= newEnd);
-                                };
-                                this.timeline.getBand(i).getEventPainter().setFilterMatcher(filterMatcher);
-                            }
-                            this.timeline.paint();
-                        } else {
-                            slider.setValue(0);
+                        // TODO consider whether or not it makes sense to use OpenLayers.Strategy.Filter
+                        var range = this.playbackTool.playbackToolbar.control.range;
+                        range = this.calculateNewRange(range, value);
+                        for (var key in this.layerLookup) {
+                            var filter = this.createTimeFilter(range, key);
+                            var layer = this.layerLookup[key].layer;
+                            layer.filter = filter;
+                            layer.strategies[0].update();
                         }
                     },
                     scope: this
@@ -155,7 +147,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  :arg currentTime: ``Date``
      */
     onTimeChange: function(toolbar, currentTime) {
-        this.setCenter(currentTime);
+        this.setCenterDate(currentTime);
     },
 
     /** private: method[onRangeModify]
@@ -309,10 +301,25 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         secondBand.getEtherPainter().setHighlight(range[0], range[1]);
     },
 
-    setCenter: function(time) {
-        for (var i = 0; i < this.timeline.getBandCount(); i++) {
-            this.timeline.getBand(i).setCenterVisibleDate(time);
+    setCenterDate: function(time) {
+        this.timeline.getBand(0).setCenterVisibleDate(time);
+    },
+
+    calculateNewRange: function(range, percentage) {
+        if (percentage === undefined) {
+            percentage = this.rangeSlider.getValue();
         }
+        var end = new Date(range[0].getTime() + ((percentage/100) * (range[1] - range[0])));
+        return [range[0], end];
+    },
+
+    createTimeFilter: function(range, key) {
+        return new OpenLayers.Filter({
+            type: OpenLayers.Filter.Comparison.BETWEEN,
+            property: this.layerLookup[key].timeAttr,
+            lowerBoundary: OpenLayers.Date.toISOString(range[0]),
+            upperBoundary: OpenLayers.Date.toISOString(range[1])
+        });
     },
     
     /** private: method[addVectorLayer]
@@ -323,14 +330,10 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         if (this.playbackTool) {
             // TODO consider putting an api method getRange on playback tool
             var range = this.playbackTool.playbackToolbar.control.range;
-            this.setCenter(this.playbackTool.playbackToolbar.control.currentTime);
+            range = this.calculateNewRange(range);
+            this.setCenterDate(this.playbackTool.playbackToolbar.control.currentTime);
             // create a PropertyIsBetween filter
-            filter = new OpenLayers.Filter({
-                type: OpenLayers.Filter.Comparison.BETWEEN,
-                property: this.layerLookup[key].timeAttr,
-                lowerBoundary: OpenLayers.Date.toISOString(range[0]),
-                upperBoundary: OpenLayers.Date.toISOString(range[1])
-            });
+            filter = this.createTimeFilter(range, key);
         }
         var layer = new OpenLayers.Layer.Vector(key, {
             strategies: [new OpenLayers.Strategy.BBOX({
@@ -368,7 +371,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
     onMapMoveEnd: function() {
         this.updateTimelineEvents();
-        this.rangeSlider.setValue(0);
     },
     
     /** private: method[updateTimelineEvents]
