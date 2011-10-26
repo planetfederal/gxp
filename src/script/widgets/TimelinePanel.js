@@ -292,7 +292,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             scope: this
         });
     },
-    
+
     /** private: method[onLayerStoreAdd]
      */
     onLayerStoreAdd: function(store, records) {
@@ -303,7 +303,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             if (layer.dimensions && layer.dimensions.time) {
                 var source = this.viewer.getSource(record);
                 if (gxp.plugins.WMSSource && (source instanceof gxp.plugins.WMSSource)) {
-                    source.getWFSProtocol(record, function(protocol, schema) {
+                    source.getWFSProtocol(record, function(protocol, schema, record) {
                         if (!protocol) {
                             // TODO: add logging to viewer
                             throw new Error("Failed to get protocol for record: " + record.get("name"));
