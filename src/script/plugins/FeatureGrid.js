@@ -144,7 +144,9 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
         var map = this.target.mapPanel.map, smCfg;
         // a minimal SelectFeature control - used just to provide select and
         // unselect, won't be added to the map unless selectOnMap is true
-        this.selectControl = new OpenLayers.Control.SelectFeature(featureManager.featureLayer);
+        this.selectControl = new OpenLayers.Control.SelectFeature(
+            featureManager.featureLayer, this.initialConfig.controlOptions
+        );
         if (this.selectOnMap) {
              if (featureManager.paging) {
                 this.selectControl.events.on({

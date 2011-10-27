@@ -57,13 +57,19 @@ gxp.plugins.ClickableFeatures = Ext.extend(gxp.plugins.Tool, {
      *  will be created when ``noFeatureClick`` is called for the first time.
      */
     
+    /** api: config[controlOptions]
+     *  ``Object`` Options for the ``OpenLayers.Control.SelectFeature`` used
+     *  with this tool.
+     */
+
     /** private: method[noFeatureClick]
      *  :arg evt: ``Object``
      */
     noFeatureClick: function(evt) {
         if (!this.selectControl) {
             this.selectControl = new OpenLayers.Control.SelectFeature(
-                this.target.tools[this.featureManager].featureLayer
+                this.target.tools[this.featureManager].featureLayer,
+                this.initialConfig.controlOptions
             );
         }
         var evtLL = this.target.mapPanel.map.getLonLatFromPixel(evt.xy);
