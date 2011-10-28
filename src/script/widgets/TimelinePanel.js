@@ -63,6 +63,10 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  added.
      */
 
+    /** private: property[currentRange]
+     *  ``Array`` The current range used in the WFS time filter
+     */
+
     /**
      * api: config[maxFeatures]
      * ``Integer``
@@ -135,7 +139,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                         range = this.calculateNewRange(range, value);
                         for (var key in this.layerLookup) {
                             var layer = this.layerLookup[key].layer;
-                            layer.filter = this.createTimeFilter(range, key);
+                            layer.filter = this.createTimeFilter(range, key, 0);
                         }
                         this.updateTimelineEvents({maxFeatures: this.maxFeatures});
                     },
@@ -353,6 +357,19 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
 
     setCenterDate: function(time) {
         this.timeline.getBand(0).setCenterVisibleDate(time);
+        // check if time is outside of current range, if so request new data
+        if (this.currentRange) {
+            if (time < this.currentRange[0] || time > this.currentRange[1]) {
+                var span = this.currentRange[1] - this.currentRange[0];
+                var start = new Date(time.getTime() - span/2);
+                var end = new Date(time.getTime() + span/2);
+                for (var key in this.layerLookup) {
+                    var layer = this.layerLookup[key].layer; 
+                    layer.filter = this.createTimeFilter([start, end], key, 0);
+                }
+                this.updateTimelineEvents({maxFeatures: this.maxFeatures});                
+            }
+        }
     },
 
     calculateNewRange: function(range, percentage) {
@@ -363,10 +380,10 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         return [range[0], end];
     },
 
-    createTimeFilter: function(range, key) {
-        // take a margin of 10% on both sides
-        var start = new Date(range[0].getTime() - this.bufferFraction * (range[1] - range[0]));
-        var end = new Date(range[1].getTime() + this.bufferFraction * (range[1] - range[0]));
+    createTimeFilter: function(range, key, fraction) {
+        var start = new Date(range[0].getTime() - fraction * (range[1] - range[0]));
+        var end = new Date(range[1].getTime() + fraction * (range[1] - range[0]));
+        this.currentRange = [start, end];
         return new OpenLayers.Filter({
             type: OpenLayers.Filter.Comparison.BETWEEN,
             property: this.layerLookup[key].timeAttr,
@@ -386,7 +403,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             range = this.calculateNewRange(range);
             this.setCenterDate(this.playbackTool.playbackToolbar.control.currentTime);
             // create a PropertyIsBetween filter
-            filter = this.createTimeFilter(range, key);
+            filter = this.createTimeFilter(range, key, this.bufferFraction);
         }
         var layer = new OpenLayers.Layer.Vector(key, {
             strategies: [new OpenLayers.Strategy.BBOX({
