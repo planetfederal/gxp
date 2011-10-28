@@ -407,8 +407,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }
         var layer = new OpenLayers.Layer.Vector(key, {
             strategies: [new OpenLayers.Strategy.BBOX({
-                ratio: 1.1,
-                resFactor: 1,
+                ratio: 1.5,
                 autoActivate: false
             })],
             filter: filter,
