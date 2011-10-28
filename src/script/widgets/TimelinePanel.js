@@ -63,6 +63,13 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  added.
      */
 
+    /**
+     * api: config[maxFeatures]
+     * ``Integer``
+     * The maximum number of features on a per layer basis. Defaults to 100.
+     */
+    maxFeatures: 100,
+
     layout: "border",
 
     /** i18n */
@@ -123,7 +130,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                             var layer = this.layerLookup[key].layer;
                             layer.filter = this.createTimeFilter(range, key);
                         }
-                        this.updateTimelineEvents();
+                        this.updateTimelineEvents({maxFeatures: this.maxFeatures});
                     },
                     scope: this
                 },
@@ -406,7 +413,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  Registered as a listener for map moveend.
      */
     onMapMoveEnd: function() {
-        this.updateTimelineEvents();
+        this.updateTimelineEvents({maxFeatures: this.maxFeatures});
     },
     
     /** private: method[updateTimelineEvents]
