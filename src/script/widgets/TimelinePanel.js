@@ -418,6 +418,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         });
         layer.events.on({
             featuresadded: this.onFeaturesAdded.createDelegate(this, [key], 1),
+            featuresremoved: this.onFeaturesRemoved,
             scope: this
         });
 
@@ -458,6 +459,13 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         for (var key in this.layerLookup) {
             layer = this.layerLookup[key].layer;
             layer.strategies[0].update(options);
+        }
+    },
+
+    onFeaturesRemoved: function(event) {
+        // clean up
+        for (var i=0, len=event.features.length; i<len; i++) {
+            event.features[i].destroy();
         }
     },
     
