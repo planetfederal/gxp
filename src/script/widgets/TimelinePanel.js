@@ -70,6 +70,13 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
     maxFeatures: 100,
 
+    /**
+     * api: config[bufferFraction]
+     * ``Float``
+     * The fraction to take around on both sides of a time filter. Defaults to 0.1.
+     */
+    bufferFraction: 0.1,
+
     layout: "border",
 
     /** i18n */
@@ -357,11 +364,14 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     },
 
     createTimeFilter: function(range, key) {
+        // take a margin of 10% on both sides
+        var start = new Date(range[0].getTime() - this.bufferFraction * (range[1] - range[0]));
+        var end = new Date(range[1].getTime() + this.bufferFraction * (range[1] - range[0]));
         return new OpenLayers.Filter({
             type: OpenLayers.Filter.Comparison.BETWEEN,
             property: this.layerLookup[key].timeAttr,
-            lowerBoundary: OpenLayers.Date.toISOString(range[0]),
-            upperBoundary: OpenLayers.Date.toISOString(range[1])
+            lowerBoundary: OpenLayers.Date.toISOString(start),
+            upperBoundary: OpenLayers.Date.toISOString(end)
         });
     },
     
