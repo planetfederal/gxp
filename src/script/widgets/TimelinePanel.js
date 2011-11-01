@@ -8,6 +8,7 @@
 
 /**
  * @requires menu/TimelineMenu.js
+ * @requires widgets/FeatureEditPopup.js
  */
 
 /** api: (define)
@@ -184,6 +185,20 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         var centroid = feature.geometry.getCentroid();
         var map = this.viewer.mapPanel.map;
         map.setCenter(new OpenLayers.LonLat(centroid.x, centroid.y));
+        if (this.popup) {
+            this.popup.destroy();
+            this.popup = null;
+        }
+        this.popup = new gxp.FeatureEditPopup({
+            feature: feature,
+            panIn: false,
+            width: 200,
+            height: 250,
+            collapsible: true,
+            readOnly: true,
+            hideMode: 'offsets'
+        });
+        this.popup.show();
     },
 
     bindPlaybackTool: function(playbackTool) {
