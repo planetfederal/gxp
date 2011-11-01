@@ -105,8 +105,16 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             text: this.layersText,
             iconCls: "gxp-icon-layer-switcher",
             menu: new gxp.menu.TimelineMenu({
+                getKey: this.getKey,
                 layers: this.viewer.mapPanel.layers,
                 property: 'timevisible',
+                /* TODO provide current value of titleAttr so combo can select that */
+                onSelect: function(combo, rec, idx, record) {
+                    var key = me.getKey(record);
+                    me.layerLookup[key].titleAttr = combo.getValue();
+                    // TODO do not reload data to change titleAttr
+                    me.updateTimelineEvents({maxFeatures: this.maxFeatures, force: true});
+                },
                 onCheckChange: function(item, checked, record) {
                     record.set('timevisible', checked);
                     var filterMatcher = function(evt) {
@@ -361,6 +369,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                             throw new Error("Failed to get protocol for record: " + record.get("name"));
                         }
                         record.set('timevisible', true);
+                        this.getTopToolbar().items.get(0).menu.addSchema(this.getKey(record), schema);
                         this.getTimeAttribute(record, protocol, schema);
                     }, this);
                 }

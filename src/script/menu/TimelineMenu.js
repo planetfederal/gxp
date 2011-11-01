@@ -21,12 +21,22 @@ Ext.namespace("gxp.menu");
  *    the events to show in the timeline.
  */   
 gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
+
+    /** api: config[getKey]
+     *  ``Function`` Function that takes a layer record and returns a key
+     *  for the schemaCache.
+     */
     
     /** api: config[layers]
      *  ``GeoExt.data.LayerStore``
      *  The store containing layer records to be viewed in this menu.
      */
     layers: null,
+
+    /** private: property[schemaCache]
+     *  ``Array`` An array that contains the attribute stores.
+     */
+    schemaCache: [],
     
     /** private: method[initComponent]
      *  Private method called to initialize the component.
@@ -44,10 +54,21 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
         gxp.menu.TimelineMenu.superclass.onRender.apply(this, arguments);
     },
 
+    /** api: method[addSchema]
+     *  :arg key: ``String`` The key to use for storing the schema.
+     *  :arg schema: ``GeoExt.AttributeStore``
+     *
+     *  Adds a schema to the schema cache.
+     */
+    addSchema: function(key, schema) {
+        this.schemaCache[key] = schema;
+    },
+
     /** private: method[beforeDestroy]
      *  Private method called during the destroy sequence.
      */
     beforeDestroy: function() {
+        this.schemaCache = null;
         if (this.layers && this.layers.on) {
             this.layers.un("add", this.onLayerAdd, this);
         }
@@ -63,9 +84,31 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
         this.layers.each(function(record) {
             var layer = record.getLayer();
             if(layer.displayInLayerSwitcher && layer.dimensions && layer.dimensions.time) {
+                var schema = this.schemaCache[this.getKey(record)];
                 var item = new Ext.menu.CheckItem({
                     text: record.get("title"),
                     checked: record.get(this.property),
+                    menu: new Ext.menu.Menu({
+                        plain: true,
+                        showSeparator: false,
+                        items: [{
+                            xtype: 'form',
+                            width: 300, 
+                            height: 50, 
+                            items: [{
+                                xtype: 'combo', 
+                                store: schema, 
+                                mode: 'local',
+                                triggerAction: 'all',
+                                listeners: {
+                                    "select": this.onSelect.createDelegate(this, [record], 3)
+                                },
+                                displayField: "name", 
+                                valueField: "name", 
+                                fieldLabel: "Label"
+                            }]
+                        }]
+                    }),
                     listeners: {
                         checkchange: this.onCheckChange.createDelegate(this, [record], 2)
                     }
