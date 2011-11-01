@@ -71,16 +71,16 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     /**
      * api: config[maxFeatures]
      * ``Integer``
-     * The maximum number of features on a per layer basis. Defaults to 100.
+     * The maximum number of features on a per layer basis. Defaults to 250.
      */
-    maxFeatures: 100,
+    maxFeatures: 250,
 
     /**
      * api: config[bufferFraction]
      * ``Float``
-     * The fraction to take around on both sides of a time filter. Defaults to 0.1.
+     * The fraction to take around on both sides of a time filter. Defaults to 0.5.
      */
-    bufferFraction: 0.1,
+    bufferFraction: 0.5,
 
     layout: "border",
 
