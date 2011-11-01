@@ -127,6 +127,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         this.items = [{
             region: "west",
             xtype: "container",
+            layout: "fit",
             margins: "10 5",
             width: 20,
             items: [{
@@ -146,8 +147,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                         this.updateTimelineEvents({maxFeatures: this.maxFeatures, force: true});
                     },
                     scope: this
-                },
-                height: 175
+                }
             }]
         }, this.timelineContainer
         ];
