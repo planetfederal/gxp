@@ -63,8 +63,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  added.
      */
 
-    /** private: property[currentRange]
-     *  ``Array`` The current range used in the WFS time filter
+    /** private: property[rangeInfo]
+     *  ``Object`` An object with 2 properties: current and original.
+     *  Current contains the original range with a fraction on both sides.
      */
 
     /**
@@ -357,10 +358,17 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
 
     setCenterDate: function(time) {
         this.timeline.getBand(0).setCenterVisibleDate(time);
-        // check if time is outside of current range, if so request new data
-        if (this.currentRange) {
-            if (time < this.currentRange[0] || time > this.currentRange[1]) {
-                var span = this.currentRange[1] - this.currentRange[0];
+        if (this.rangeInfo && this.rangeInfo.current) {
+            var currentRange = this.rangeInfo.current;
+            var originalRange = this.rangeInfo.original;
+            var originalSpan = originalRange[1] - originalRange[0];
+            var originalCenter = new Date(originalRange[0].getTime() + originalSpan/2);
+            var fractionRange = this.bufferFraction * originalSpan;
+            var lowerBound = new Date(originalCenter.getTime() - fractionRange);
+            var upperBound = new Date(originalCenter.getTime() + fractionRange);
+            // update once the time gets out of the buffered center
+            if (time < lowerBound || time > upperBound) {
+                var span = currentRange[1] - currentRange[0];
                 var start = new Date(time.getTime() - span/2);
                 var end = new Date(time.getTime() + span/2);
                 for (var key in this.layerLookup) {
@@ -383,7 +391,10 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     createTimeFilter: function(range, key, fraction) {
         var start = new Date(range[0].getTime() - fraction * (range[1] - range[0]));
         var end = new Date(range[1].getTime() + fraction * (range[1] - range[0]));
-        this.currentRange = [start, end];
+        this.rangeInfo = {
+            original: range,
+            current: [start, end]
+        };
         return new OpenLayers.Filter({
             type: OpenLayers.Filter.Comparison.BETWEEN,
             property: this.layerLookup[key].timeAttr,
