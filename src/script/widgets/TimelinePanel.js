@@ -375,6 +375,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                     var layer = this.layerLookup[key].layer; 
                     layer.filter = this.createTimeFilter([start, end], key, 0);
                 }
+                // TODO: instead of a full update, only get the data we are missing and
+                // remove events from the timeline that are out of the new range
                 this.updateTimelineEvents({force: true, maxFeatures: this.maxFeatures});                
             }
         }
