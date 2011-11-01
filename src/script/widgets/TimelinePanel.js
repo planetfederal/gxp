@@ -367,7 +367,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                     var layer = this.layerLookup[key].layer; 
                     layer.filter = this.createTimeFilter([start, end], key, 0);
                 }
-                this.updateTimelineEvents({maxFeatures: this.maxFeatures});                
+                this.updateTimelineEvents({force: true, maxFeatures: this.maxFeatures});                
             }
         }
     },
