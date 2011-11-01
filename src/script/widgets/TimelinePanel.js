@@ -191,6 +191,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }
         this.popup = new gxp.FeatureEditPopup({
             feature: feature,
+            propertyGridNameText: "Attributes",
+            title: evt.getProperty("title"),
             panIn: false,
             width: 200,
             height: 250,
