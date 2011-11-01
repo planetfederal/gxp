@@ -146,7 +146,16 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      *  projection and maxExtent. Not all plugins will work with layers from
      *  a source configured with ``forceLazy`` set to true.
      */
-    
+
+    /** private: method[constructor]
+     */
+    constructor: function(config) {
+        gxp.plugins.WMSSource.superclass.constructor.apply(this, arguments);
+        if (!this.format) {
+            this.format = new OpenLayers.Format.WMSCapabilities({keepData: true});
+        }
+    },
+
     /** private: method[isLazy]
      *  :returns: ``Boolean``
      *
