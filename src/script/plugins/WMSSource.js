@@ -242,6 +242,11 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                             msg = error;
                         } else {
                             msg = "Invalid response from server.";
+                            // special error handling in IE
+                            var data = this.format && this.format.data;
+                            if (data && data.parseError) {
+                                msg += "  " + data.parseError.reason + " - line: " + data.parseError.line;
+                            }
                             var status = response.status;
                             if (status >= 200 && status < 300) {
                                 // TODO: consider pushing this into GeoExt
