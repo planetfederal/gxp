@@ -233,6 +233,8 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                             this.fireEvent("ready", this);
                         }
                     }
+                    // clean up data stored on format after parsing is complete
+                    delete this.format.data;
                 },
                 exception: function(proxy, type, action, options, response, error) {
                     delete this.store;
@@ -262,6 +264,8 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                     }
                     // TODO: decide on signature for failure listeners
                     this.fireEvent("failure", this, msg, details);
+                    // clean up data stored on format after parsing is complete
+                    delete this.format.data;
                 },
                 scope: this
             }
