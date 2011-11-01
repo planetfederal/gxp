@@ -146,7 +146,16 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      *  projection and maxExtent. Not all plugins will work with layers from
      *  a source configured with ``forceLazy`` set to true.
      */
-    
+
+    /** private: method[constructor]
+     */
+    constructor: function(config) {
+        gxp.plugins.WMSSource.superclass.constructor.apply(this, arguments);
+        if (!this.format) {
+            this.format = new OpenLayers.Format.WMSCapabilities({keepData: true});
+        }
+    },
+
     /** private: method[isLazy]
      *  :returns: ``Boolean``
      *
@@ -224,6 +233,8 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                             this.fireEvent("ready", this);
                         }
                     }
+                    // clean up data stored on format after parsing is complete
+                    delete this.format.data;
                 },
                 exception: function(proxy, type, action, options, response, error) {
                     delete this.store;
@@ -233,6 +244,11 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                             msg = error;
                         } else {
                             msg = "Invalid response from server.";
+                            // special error handling in IE
+                            var data = this.format && this.format.data;
+                            if (data && data.parseError) {
+                                msg += "  " + data.parseError.reason + " - line: " + data.parseError.line;
+                            }
                             var status = response.status;
                             if (status >= 200 && status < 300) {
                                 // TODO: consider pushing this into GeoExt
@@ -248,6 +264,8 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                     }
                     // TODO: decide on signature for failure listeners
                     this.fireEvent("failure", this, msg, details);
+                    // clean up data stored on format after parsing is complete
+                    delete this.format.data;
                 },
                 scope: this
             }
