@@ -274,7 +274,10 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     },
 
     setPlaybackCenter: function(band) {
-        this.playbackTool && this.playbackTool.setTime(band.getCenterVisibleDate());
+        var time = band.getCenterVisibleDate();
+        this.playbackTool && this.playbackTool.setTime(time);
+        // TODO, remove this once we get the timechange event in
+        this.setCenterDate(time);
     },
     
     /** private: method[bindViewer]
