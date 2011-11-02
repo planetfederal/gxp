@@ -91,6 +91,7 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
                     menu: new Ext.menu.Menu({
                         plain: true,
                         showSeparator: false,
+                        menuHide: OpenLayers.Function.Void,
                         items: [{
                             xtype: 'form',
                             width: 300, 
