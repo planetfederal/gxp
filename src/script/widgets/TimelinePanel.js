@@ -229,21 +229,29 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         delete this._silent;
     },
 
-    /** private: method[onLayout]
-     *  Private method called after the panel has been rendered.
+    /** private: method[createTimeline]
      */
-    onLayout: function() {
-        gxp.TimelinePanel.superclass.onLayout.apply(this, arguments);
+    createTimeline: function(range) {
 
         var eventSource = new Timeline.DefaultEventSource(0);
 
         var theme = Timeline.ClassicTheme.create();
 
-        var d = Timeline.DateTime.parseGregorianDateTime("1978");
+        var span = range[1] - range[0];
+        var years  = ((((span/1000)/60)/60)/24)/365;
+        var intervalUnits = [];
+        if (years >= 50) {
+            intervalUnits.push(Timeline.DateTime.DECADE);
+            intervalUnits.push(Timeline.DateTime.CENTURY);
+        } else {
+            intervalUnits.push(Timeline.DateTime.YEAR);
+            intervalUnits.push(Timeline.DateTime.DECADE);
+        }
+        var d = new Date(range[0].getTime() + span/2);
         var bandInfos = [
             Timeline.createBandInfo({
                 width: "80%", 
-                intervalUnit: Timeline.DateTime.DECADE, 
+                intervalUnit: intervalUnits[0], 
                 intervalPixels: 200,
                 eventSource: eventSource,
                 date: d,
@@ -252,7 +260,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             }),
             Timeline.createBandInfo({
                 width: "20%", 
-                intervalUnit: Timeline.DateTime.CENTURY, 
+                intervalUnit: intervalUnits[1], 
                 intervalPixels: 200,
                 eventSource: eventSource,
                 date: d,
@@ -373,6 +381,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     },
 
     setRange: function(range) {
+        if (!this.timeline) {
+            this.createTimeline(range);
+        }
         var firstBand = this.timeline.getBand(0);
         firstBand.setMinVisibleDate(range[0]);
         firstBand.setMaxVisibleDate(range[1]);
