@@ -6,6 +6,10 @@
  * of the license.
  */
 
+/*
+ * @requires widgets/form/FilterField.js
+ */
+
 /** api: (define)
  *  module = gxp.menu
  *  class = TimelineMenu
@@ -22,11 +26,20 @@ Ext.namespace("gxp.menu");
  */   
 gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
 
+    /** i18n */
+    filterLabel: "Filter",
+    attributeLabel: "Label",
+
     /** api: config[layers]
      *  ``GeoExt.data.LayerStore``
      *  The store containing layer records to be viewed in this menu.
      */
     layers: null,
+
+    /** api: config[subMenuSize]
+     *  ``Array`` The width and height of the sub menu form panel.
+     */
+    subMenuSize: [350, 60],
 
     /** private: method[initComponent]
      *  Private method called to initialize the component.
@@ -72,11 +85,10 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
                     menu: new Ext.menu.Menu({
                         plain: true,
                         showSeparator: false,
-                        menuHide: OpenLayers.Function.Void,
                         items: [{
                             xtype: 'form',
-                            width: 300, 
-                            height: 50, 
+                            width: this.subMenuSize[0],
+                            height: this.subMenuSize[1], 
                             items: [{
                                 xtype: 'combo', 
                                 store: schema, 
@@ -91,7 +103,11 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
                                 },
                                 displayField: "name", 
                                 valueField: "name", 
-                                fieldLabel: "Label"
+                                fieldLabel: this.attributeLabel
+                            }, {
+                                xtype: "gxp_filterfield",
+                                fieldLabel: this.filterLabel,
+                                attributes: schema
                             }]
                         }]
                     }),
