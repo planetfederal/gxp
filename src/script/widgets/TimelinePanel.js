@@ -7,7 +7,6 @@
  */
 
 /**
- * @requires plugins/TimelineLayers.js
  * @requires widgets/FeatureEditPopup.js
  */
 
@@ -364,9 +363,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                             throw new Error("Failed to get protocol for record: " + record.get("name"));
                         }
                         record.set('timevisible', true);
-                        // TODO restore this
                         this.fireEvent("schemaready", this, this.getKey(record), schema);
-                        //this.getTopToolbar().items.get(0).menu.addSchema(this.getKey(record), schema);
                         this.getTimeAttribute(record, protocol, schema);
                     }, this);
                 }
