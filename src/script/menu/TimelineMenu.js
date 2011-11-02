@@ -28,8 +28,6 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
      */
     layers: null,
 
-    property: 'timevisible',
-
     /** private: method[initComponent]
      *  Private method called to initialize the component.
      */
@@ -66,10 +64,11 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
         this.layers.each(function(record) {
             var layer = record.getLayer();
             if(layer.displayInLayerSwitcher && layer.dimensions && layer.dimensions.time) {
-                var schema = this.timelinePanel.schemaCache[this.timelinePanel.getKey(record)];
+                var key = this.timelinePanel.getKey(record);
+                var schema = this.timelinePanel.schemaCache[key];
                 var item = new Ext.menu.CheckItem({
                     text: record.get("title"),
-                    checked: record.get(this.property),
+                    checked: (this.timelinePanel.layerLookup[key] && this.timelinePanel.layerLookup[key].visible) || true,
                     menu: new Ext.menu.Menu({
                         plain: true,
                         showSeparator: false,

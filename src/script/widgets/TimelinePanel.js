@@ -45,12 +45,12 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  Timeline event source.
      */
 
-    /** private: property[schemaCache]
+    /** api: property[schemaCache]
      *  ``Array`` An array that contains the attribute stores.
      */
     schemaCache: [],
-    
-    /** private: property[layerLookup]
+
+    /** api: property[layerLookup]
      *  ``Object``
      *  Mapping of store/layer names (e.g. "local/foo") to objects storing data
      *  related to layers.  The values of each member are objects with the 
@@ -59,6 +59,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *   * layer - {OpenLayers.Layer.Vector}
      *   * titleAttr - {String}
      *   * timeAttr - {String}
+     *   * visible - {Boolean}
      *  
      */
     
@@ -154,8 +155,10 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     },
 
     setLayerVisibility: function(item, checked, record) {
-        record.set('timevisible', checked);
         var keyToMatch = this.getKey(record);
+        Ext.apply(this.layerLookup[keyToMatch], {
+            visible: checked
+        });
         var filterMatcher = function(evt) {
             var key = evt.getProperty('key');
             if (key === keyToMatch) {
@@ -332,7 +335,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 var result = Ext.decode(response.responseText);
                 if (result && result.attribute) {
                     this.layerLookup[key] = {
-                        timeAttr: result.attribute
+                        timeAttr: result.attribute,
+                        visible: true
                     };
                     this.addVectorLayer(record, protocol, schema);
                 }
@@ -356,7 +360,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                             // TODO: add logging to viewer
                             throw new Error("Failed to get protocol for record: " + record.get("name"));
                         }
-                        record.set('timevisible', true);
                         this.schemaCache[this.getKey(record)] = schema;
                         this.getTimeAttribute(record, protocol, schema);
                     }, this);
