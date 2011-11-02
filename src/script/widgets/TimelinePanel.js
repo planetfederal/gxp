@@ -172,8 +172,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     setTimeAttribute: function(record, titleAttr) {
         var key = this.getKey(record);
         this.layerLookup[key].titleAttr = titleAttr;
-        // TODO do not reload data to change titleAttr
-        this.updateTimelineEvents({maxFeatures: this.maxFeatures, force: true});
+        this.clearOnLoad = true;
+        this.onFeaturesAdded({features: this.layerLookup[key].layer.features}, key);
     },
 
     handleEventClick: function(x, y, evt) {
@@ -501,7 +501,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             event.features[i].destroy();
         }
     },
-    
+
     onFeaturesAdded: function(event, key) {
         if (this.clearOnLoad) {
             this.eventSource.clear();
