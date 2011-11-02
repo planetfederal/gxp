@@ -46,9 +46,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
 
     /** api: property[schemaCache]
-     *  ``Array`` An array that contains the attribute stores.
+     *  ``Object`` An object that contains the attribute stores.
      */
-    schemaCache: [],
+    schemaCache: {},
 
     /** api: property[layerLookup]
      *  ``Object``
@@ -315,6 +315,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }
         delete this.viewer;
         delete this.layerLookup;
+        delete this.schemaCache;
     },
 
     /** private: method[getKey]
@@ -532,7 +533,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     beforeDestroy : function(){
         gxp.TimelinePanel.superclass.beforeDestroy.call(this);
         this.unbindViewer();
-        this.schemaCache = null;
     }
 
 });
