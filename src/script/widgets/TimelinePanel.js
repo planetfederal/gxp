@@ -232,6 +232,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
     onRangeModify: function(toolbar, range) {
         this.setRange(range);
+        delete this._silent;
     },
 
     /** private: method[onLayout]
@@ -274,6 +275,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             Timeline.HORIZONTAL
         );
         // since the bands are linked we need to listen to one band only
+        this._silent = true;
         this.timeline.getBand(0).addOnScrollListener(
             this.setPlaybackCenter.createDelegate(this)
         );
@@ -283,9 +285,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
 
     setPlaybackCenter: function(band) {
         var time = band.getCenterVisibleDate();
-        this.playbackTool && this.playbackTool.setTime(time);
-        // TODO, remove this once we get the timechange event in
-        this.setCenterDate(time);
+        this._silent !== true && this.playbackTool && this.playbackTool.setTime(time);
     },
     
     /** private: method[bindViewer]
