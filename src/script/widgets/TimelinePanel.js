@@ -172,8 +172,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     setTimeAttribute: function(record, titleAttr) {
         var key = this.getKey(record);
         this.layerLookup[key].titleAttr = titleAttr;
-        this.clearOnLoad = true;
-        this.onFeaturesAdded({features: this.layerLookup[key].layer.features}, key);
+        // there does not seem to be a way to remove certain events from the timeline
+        this.eventSource.clear();
+        for (var k in this.layerLookup) {
+            this.onFeaturesAdded({features: this.layerLookup[k].layer.features}, k);
+        }
     },
 
     handleEventClick: function(x, y, evt) {
