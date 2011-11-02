@@ -7,7 +7,7 @@
  */
 
 /**
- * @requires menu/TimelineMenu.js
+ * @requires plugins/TimelineLayers.js
  * @requires widgets/FeatureEditPopup.js
  */
 
@@ -85,10 +85,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
 
     layout: "border",
 
-    /** i18n */
-    layersText: "Layers",
-    notesText: "Notes",
-    
     /** private: method[initComponent]
      */
     initComponent: function() {
@@ -100,38 +96,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             region: "center"
         });
 
-        var me = this;
-        this.tbar = [{
-            text: this.layersText,
-            iconCls: "gxp-icon-layer-switcher",
-            menu: new gxp.menu.TimelineMenu({
-                getKey: this.getKey,
-                layers: this.viewer.mapPanel.layers,
-                property: 'timevisible',
-                /* TODO provide current value of titleAttr so combo can select that */
-                onSelect: function(combo, rec, idx, record) {
-                    var key = me.getKey(record);
-                    me.layerLookup[key].titleAttr = combo.getValue();
-                    // TODO do not reload data to change titleAttr
-                    me.updateTimelineEvents({maxFeatures: this.maxFeatures, force: true});
-                },
-                onCheckChange: function(item, checked, record) {
-                    record.set('timevisible', checked);
-                    var filterMatcher = function(evt) {
-                        var key = evt.getProperty('key');
-                        if (key === me.getKey(record)) {
-                            return checked;
-                        }
-                    };
-                    me.timeline.getBand(0).getEventPainter().setFilterMatcher(filterMatcher);
-                    me.timeline.paint();
-                }
-            })
-        }, {
-            text: this.notesText,
-            iconCls: "gxp-icon-note"
-        }];
-        
         this.items = [{
             region: "west",
             xtype: "container",
@@ -168,7 +132,18 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
              * Listener arguments:
              * panel - {<gxp.TimesliderPanel} This panel.
              */
-            "change"
+            "change",
+
+            /**
+             * Event: schemaready
+             * Fires when an attribute store (schema) is ready.
+             *
+             * Listener arguments:
+             * panel - {<gxp.TimesliderPanel} This panel.
+             * key - ``String``
+             * schema - ``GeoExt.AttributeStore``
+             */
+            "schemaready"
         );
         
         if (this.initialConfig.viewer) {
@@ -183,6 +158,26 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
 
         gxp.TimelinePanel.superclass.initComponent.call(this);
         
+    },
+
+    setLayerVisibility: function(item, checked, record) {
+        record.set('timevisible', checked);
+        var keyToMatch = this.getKey(record);
+        var filterMatcher = function(evt) {
+            var key = evt.getProperty('key');
+            if (key === keyToMatch) {
+                return checked;
+            }
+        };
+        this.timeline.getBand(0).getEventPainter().setFilterMatcher(filterMatcher);
+        this.timeline.paint();
+    },
+
+    setTimeAttribute: function(record, titleAttr) {
+        var key = this.getKey(record);
+        this.layerLookup[key].titleAttr = titleAttr;
+        // TODO do not reload data to change titleAttr
+        this.updateTimelineEvents({maxFeatures: this.maxFeatures, force: true});
     },
 
     handleEventClick: function(x, y, evt) {
@@ -369,7 +364,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                             throw new Error("Failed to get protocol for record: " + record.get("name"));
                         }
                         record.set('timevisible', true);
-                        this.getTopToolbar().items.get(0).menu.addSchema(this.getKey(record), schema);
+                        // TODO restore this
+                        this.fireEvent("schemaready", this, this.getKey(record), schema);
+                        //this.getTopToolbar().items.get(0).menu.addSchema(this.getKey(record), schema);
                         this.getTimeAttribute(record, protocol, schema);
                     }, this);
                 }

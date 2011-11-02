@@ -33,6 +33,8 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
      */
     layers: null,
 
+    property: 'timevisible',
+
     /** private: property[schemaCache]
      *  ``Array`` An array that contains the attribute stores.
      */
@@ -43,6 +45,10 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
      */
     initComponent: function() {
         gxp.menu.TimelineMenu.superclass.initComponent.apply(this, arguments);
+        this.timelinePanel = this.timelineTool && this.timelineTool.getTimelinePanel();
+        if (this.timelinePanel) {
+            this.timelinePanel.on("schemaready", this.addSchema, this);
+        }
         this.layers.on("add", this.onLayerAdd, this);
         this.onLayerAdd();
     },
@@ -55,12 +61,13 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
     },
 
     /** api: method[addSchema]
+     *  :arg timeline ``gxp.TimelinePanel``
      *  :arg key: ``String`` The key to use for storing the schema.
      *  :arg schema: ``GeoExt.AttributeStore``
      *
      *  Adds a schema to the schema cache.
      */
-    addSchema: function(key, schema) {
+    addSchema: function(timeline, key, schema) {
         this.schemaCache[key] = schema;
     },
 
@@ -84,7 +91,7 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
         this.layers.each(function(record) {
             var layer = record.getLayer();
             if(layer.displayInLayerSwitcher && layer.dimensions && layer.dimensions.time) {
-                var schema = this.schemaCache[this.getKey(record)];
+                var schema = this.schemaCache[this.timelinePanel.getKey(record)];
                 var item = new Ext.menu.CheckItem({
                     text: record.get("title"),
                     checked: record.get(this.property),
@@ -102,7 +109,10 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
                                 mode: 'local',
                                 triggerAction: 'all',
                                 listeners: {
-                                    "select": this.onSelect.createDelegate(this, [record], 3)
+                                    "select": function(combo) {
+                                        this.timelinePanel.setTimeAttribute(record, combo.getValue());
+                                    },
+                                    scope: this
                                 },
                                 displayField: "name", 
                                 valueField: "name", 
@@ -111,7 +121,10 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
                         }]
                     }),
                     listeners: {
-                        checkchange: this.onCheckChange.createDelegate(this, [record], 2)
+                        checkchange: function(item, checked) {
+                            this.timelinePanel.setLayerVisibility(item, checked, record);
+                        },
+                        scope: this
                     }
                 });
                 this.add(item);
