@@ -22,11 +22,6 @@ Ext.namespace("gxp.menu");
  */   
 gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
 
-    /** api: config[getKey]
-     *  ``Function`` Function that takes a layer record and returns a key
-     *  for the schemaCache.
-     */
-    
     /** api: config[layers]
      *  ``GeoExt.data.LayerStore``
      *  The store containing layer records to be viewed in this menu.
@@ -35,20 +30,12 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
 
     property: 'timevisible',
 
-    /** private: property[schemaCache]
-     *  ``Array`` An array that contains the attribute stores.
-     */
-    schemaCache: [],
-    
     /** private: method[initComponent]
      *  Private method called to initialize the component.
      */
     initComponent: function() {
         gxp.menu.TimelineMenu.superclass.initComponent.apply(this, arguments);
         this.timelinePanel = this.timelineTool && this.timelineTool.getTimelinePanel();
-        if (this.timelinePanel) {
-            this.timelinePanel.on("schemaready", this.addSchema, this);
-        }
         this.layers.on("add", this.onLayerAdd, this);
         this.onLayerAdd();
     },
@@ -60,22 +47,10 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
         gxp.menu.TimelineMenu.superclass.onRender.apply(this, arguments);
     },
 
-    /** api: method[addSchema]
-     *  :arg timeline ``gxp.TimelinePanel``
-     *  :arg key: ``String`` The key to use for storing the schema.
-     *  :arg schema: ``GeoExt.AttributeStore``
-     *
-     *  Adds a schema to the schema cache.
-     */
-    addSchema: function(timeline, key, schema) {
-        this.schemaCache[key] = schema;
-    },
-
     /** private: method[beforeDestroy]
      *  Private method called during the destroy sequence.
      */
     beforeDestroy: function() {
-        this.schemaCache = null;
         if (this.layers && this.layers.on) {
             this.layers.un("add", this.onLayerAdd, this);
         }
@@ -91,7 +66,7 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
         this.layers.each(function(record) {
             var layer = record.getLayer();
             if(layer.displayInLayerSwitcher && layer.dimensions && layer.dimensions.time) {
-                var schema = this.schemaCache[this.timelinePanel.getKey(record)];
+                var schema = this.timelinePanel.schemaCache[this.timelinePanel.getKey(record)];
                 var item = new Ext.menu.CheckItem({
                     text: record.get("title"),
                     checked: record.get(this.property),

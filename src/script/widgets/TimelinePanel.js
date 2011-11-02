@@ -44,6 +44,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  ``Object``
      *  Timeline event source.
      */
+
+    /** private: property[schemaCache]
+     *  ``Array`` An array that contains the attribute stores.
+     */
+    schemaCache: [],
     
     /** private: property[layerLookup]
      *  ``Object``
@@ -131,18 +136,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
              * Listener arguments:
              * panel - {<gxp.TimesliderPanel} This panel.
              */
-            "change",
-
-            /**
-             * Event: schemaready
-             * Fires when an attribute store (schema) is ready.
-             *
-             * Listener arguments:
-             * panel - {<gxp.TimesliderPanel} This panel.
-             * key - ``String``
-             * schema - ``GeoExt.AttributeStore``
-             */
-            "schemaready"
+            "change"
         );
         
         if (this.initialConfig.viewer) {
@@ -363,7 +357,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                             throw new Error("Failed to get protocol for record: " + record.get("name"));
                         }
                         record.set('timevisible', true);
-                        this.fireEvent("schemaready", this, this.getKey(record), schema);
+                        this.schemaCache[this.getKey(record)] = schema;
                         this.getTimeAttribute(record, protocol, schema);
                     }, this);
                 }
@@ -530,8 +524,14 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             events: events
         };
         this.eventSource.loadJSON(feed, "http://mapstory.org/");
+    },
+
+    beforeDestroy : function(){
+        gxp.TimelinePanel.superclass.beforeDestroy.call(this);
+        this.unbindViewer();
+        this.schemaCache = null;
     }
-    
+
 });
 
 /** api: xtype = gxp_timelinepanel */
