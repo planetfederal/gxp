@@ -94,6 +94,17 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
     initComponent: function() {
 
+        // http://code.google.com/p/simile-widgets/issues/detail?id=3
+        Timeline.DefaultEventSource.prototype.remove = function(id) {
+            this._events.remove(id);
+        };
+
+        SimileAjax.EventIndex.prototype.remove = function(id) {
+            var evt = this._idToEvent[id];
+            this._events.remove(evt);
+            delete this._idToEvent[id];
+        };
+
         Timeline.OriginalEventPainter.prototype._showBubble = 
             this.handleEventClick.createDelegate(this);
 
@@ -172,11 +183,14 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     setTimeAttribute: function(record, titleAttr) {
         var key = this.getKey(record);
         this.layerLookup[key].titleAttr = titleAttr;
-        // there does not seem to be a way to remove certain events from the timeline
-        this.eventSource.clear();
-        for (var k in this.layerLookup) {
-            this.onFeaturesAdded({features: this.layerLookup[k].layer.features}, k);
+        var iterator = this.eventSource.getAllEventIterator();
+        while (iterator.hasNext()) {
+            var evt = iterator.next();
+            if (evt.getProperty('key') === key) {
+                this.eventSource.remove(evt.getID());
+            }
         }
+        this.onFeaturesAdded({features: this.layerLookup[key].layer.features}, key);
     },
 
     handleEventClick: function(x, y, evt) {
