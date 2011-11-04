@@ -50,6 +50,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
     loadingMessage: "Loading Timeline data...",
 
+    /** api: config[instructionText]
+     *  ``String`` Message to show when there is too many data for the timeline (i18n)
+     */   
+    instructionText: "There are too many events to show in the timeline, please zoom in or move the vertical slider down",
+
     /** private: property[layerCount]
      * ``Integer`` The number of vector layers currently loading.
      */
@@ -93,9 +98,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     /**
      * api: config[maxFeatures]
      * ``Integer``
-     * The maximum number of features on a per layer basis. Defaults to 250.
+     * The maximum number of features in total for the timeline.
      */
-    maxFeatures: 250,
+    maxFeatures: 500,
 
     /**
      * api: config[bufferFraction]
@@ -146,9 +151,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                         range = this.calculateNewRange(range, value);
                         for (var key in this.layerLookup) {
                             var layer = this.layerLookup[key].layer;
-                            layer.filter = this.createTimeFilter(range, key, 0);
+                            this.setFilter(key, this.createTimeFilter(range, key, 0));
                         }
-                        this.updateTimelineEvents({maxFeatures: this.maxFeatures, force: true});
+                        this.updateTimelineEvents({force: true});
                     },
                     scope: this
                 }
@@ -438,11 +443,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 var end = new Date(time.getTime() + span/2);
                 for (var key in this.layerLookup) {
                     var layer = this.layerLookup[key].layer; 
-                    layer.filter = this.createTimeFilter([start, end], key, 0);
+                    this.setFilter(key, this.createTimeFilter([start, end], key, 0));
                 }
                 // TODO: instead of a full update, only get the data we are missing and
                 // remove events from the timeline that are out of the new range
-                this.updateTimelineEvents({force: true, maxFeatures: this.maxFeatures});                
+                this.updateTimelineEvents({force: true});                
             }
         }
     },
@@ -483,6 +488,23 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         if(this.layerCount === 0) {
             this.busyMask.hide();
         }
+    },
+
+    /** private: method[createHitCountProtocol]
+     */
+    createHitCountProtocol: function(protocolOptions) {
+        return new OpenLayers.Protocol.WFS(Ext.apply({
+            version: "1.1.0",
+            readOptions: {output: "object"},
+            resultType: "hits"
+        }, protocolOptions));
+    },
+
+    /** private: method[setFilter]
+     */
+    setFilter: function(key, filter) {
+        var layer = this.layerLookup[key].layer;
+        layer.filter = filter;
     },
     
     /** private: method[addVectorLayer]
@@ -526,7 +548,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         });
         Ext.apply(this.layerLookup[key], {
             layer: layer,
-            titleAttr: titleAttr
+            titleAttr: titleAttr,
+            hitCount: this.createHitCountProtocol(protocol.options)
         });
         this.viewer.mapPanel.map.addLayer(layer);
     },
@@ -535,25 +558,66 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  Registered as a listener for map moveend.
      */
     onMapMoveEnd: function() {
-        this.updateTimelineEvents({maxFeatures: this.maxFeatures});
+        this.updateTimelineEvents();
     },
     
     /** private: method[updateTimelineEvents]
      *  :arg options: `Object` First arg to OpenLayers.Strategy.BBOX::update.
      */
     updateTimelineEvents: function(options) {
-        // Loading will be triggered for all layers or no layers.  If loading
-        // is triggered, we want to remove existing events before adding any
-        // new ones.  With this flag set, events will be cleared before features
-        // are added to the first layer.  After clearing events, this flag will
-        // be reset so events are not cleared as features are added to 
-        // subsequent layers.
-        this.clearOnLoad = true;
-        var layer;
-        for (var key in this.layerLookup) {
+        var dispatchQueue = [];
+        var layer, key;
+        for (key in this.layerLookup) {
             layer = this.layerLookup[key].layer;
-            layer.strategies[0].update(options);
+            var protocol = this.layerLookup[key].hitCount;
+            // TODO: make OpenLayers BBOX Strategy's createFilter function api 
+            // and give it an optional bounds param so that we can just use 
+            // createFilter here instead
+            var filter = new OpenLayers.Filter.Spatial({
+                type: OpenLayers.Filter.Spatial.BBOX,
+                value: this.viewer.mapPanel.map.getExtent(),
+                projection: layer.projection
+            });
+            if (layer.filter) {
+                filter = new OpenLayers.Filter.Logical({
+                    type: OpenLayers.Filter.Logical.AND,
+                    filters: [layer.filter, filter]
+                });
+            }
+            // end of TODO
+            protocol.filter = protocol.options.filter = filter;
+            dispatchQueue.push(function(done, storage) {
+                protocol.read({
+                    callback: function(response) {
+                        if (storage.numberOfFeatures === undefined) {
+                            storage.numberOfFeatures = 0;
+                        }
+                        storage.numberOfFeatures += response.numberOfFeatures;
+                        done();
+                    }
+                });
+            });
         }
+        gxp.util.dispatch(dispatchQueue, function(storage) {
+            if (storage.numberOfFeatures <= this.maxFeatures) {
+                // Loading will be triggered for all layers or no layers.  If loading
+                // is triggered, we want to remove existing events before adding any
+                // new ones.  With this flag set, events will be cleared before features
+                // are added to the first layer.  After clearing events, this flag will
+                // be reset so events are not cleared as features are added to 
+                // subsequent layers.
+                this.clearOnLoad = true;
+                this.timelineContainer.el.unmask(true);
+                for (key in this.layerLookup) {
+                    layer = this.layerLookup[key].layer;
+                    layer.strategies[0].update(options);
+                }
+            } else {
+                // clear the timeline and show instruction text
+                this.timelineContainer.el.mask(this.instructionText, '');
+                this.eventSource.clear();
+            }
+        }, this);
     },
 
     onFeaturesRemoved: function(event) {
