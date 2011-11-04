@@ -269,7 +269,10 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     /** private: method[createTimeline]
      */
     createTimeline: function(range) {
-
+        if (!this.rendered) {
+            this.range = range;
+            return;
+        }
         var eventSource = new Timeline.DefaultEventSource(0);
 
         var theme = Timeline.ClassicTheme.create();
@@ -417,39 +420,53 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }
     },
 
+    onLayout: function() {
+        gxp.TimelinePanel.superclass.onLayout.call(this, arguments);
+        if (!this.timeline) {
+            this.setRange(this.range);
+            delete this.range;
+            this.updateTimelineEvents();
+        }
+    },
+
     setRange: function(range) {
         if (!this.timeline) {
             this.createTimeline(range);
         }
-        var firstBand = this.timeline.getBand(0);
-        firstBand.setMinVisibleDate(range[0]);
-        firstBand.setMaxVisibleDate(range[1]);
-        var secondBand = this.timeline.getBand(1);
-        secondBand.getEtherPainter().setHighlight(range[0], range[1]);
+        // if we were not rendered, the above will not have created the timeline
+        if (this.timeline) {
+            var firstBand = this.timeline.getBand(0);
+            firstBand.setMinVisibleDate(range[0]);
+            firstBand.setMaxVisibleDate(range[1]);
+            var secondBand = this.timeline.getBand(1);
+            secondBand.getEtherPainter().setHighlight(range[0], range[1]);
+        }
     },
 
     setCenterDate: function(time) {
-        this.timeline.getBand(0).setCenterVisibleDate(time);
-        if (this.rangeInfo && this.rangeInfo.current) {
-            var currentRange = this.rangeInfo.current;
-            var originalRange = this.rangeInfo.original;
-            var originalSpan = originalRange[1] - originalRange[0];
-            var originalCenter = new Date(originalRange[0].getTime() + originalSpan/2);
-            var fractionRange = this.bufferFraction * originalSpan;
-            var lowerBound = new Date(originalCenter.getTime() - fractionRange);
-            var upperBound = new Date(originalCenter.getTime() + fractionRange);
-            // update once the time gets out of the buffered center
-            if (time < lowerBound || time > upperBound) {
-                var span = currentRange[1] - currentRange[0];
-                var start = new Date(time.getTime() - span/2);
-                var end = new Date(time.getTime() + span/2);
-                for (var key in this.layerLookup) {
-                    var layer = this.layerLookup[key].layer; 
-                    this.setFilter(key, this.createTimeFilter([start, end], key, 0));
+        if (this.timeline) {
+            this.timeline.getBand(0).setCenterVisibleDate(time);
+            if (this.rangeInfo && this.rangeInfo.current) {
+                var currentRange = this.rangeInfo.current;
+                var originalRange = this.rangeInfo.original;
+                var originalSpan = originalRange[1] - originalRange[0];
+                var originalCenter = new Date(originalRange[0].getTime() + originalSpan/2);
+                var fractionRange = this.bufferFraction * originalSpan;
+                var lowerBound = new Date(originalCenter.getTime() - fractionRange);
+                var upperBound = new Date(originalCenter.getTime() + fractionRange);
+                // update once the time gets out of the buffered center
+                if (time < lowerBound || time > upperBound) {
+                    var span = currentRange[1] - currentRange[0];
+                    var start = new Date(time.getTime() - span/2);
+                    var end = new Date(time.getTime() + span/2);
+                    for (var key in this.layerLookup) {
+                        var layer = this.layerLookup[key].layer; 
+                        this.setFilter(key, this.createTimeFilter([start, end], key, 0));
+                    }
+                    // TODO: instead of a full update, only get the data we are missing and
+                    // remove events from the timeline that are out of the new range
+                    this.updateTimelineEvents({force: true});                
                 }
-                // TODO: instead of a full update, only get the data we are missing and
-                // remove events from the timeline that are out of the new range
-                this.updateTimelineEvents({force: true});                
             }
         }
     },
