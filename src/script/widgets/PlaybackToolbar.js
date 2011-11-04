@@ -40,7 +40,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
     rateAdjuster:false,
     //api config ->timeDisplayConfig:null,
     //api property
-    settingsPanel:null,
+    optionsWindow:null,
     // api config
     //playbackActions, default: ["settings","reset","play","fastforward","next","loop"]; also available are "pause" and "end"
     
@@ -181,6 +181,19 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
      */    
     setTimeFormat: function(format){
         this.timeFormat = this.slider.format = format;
+    },
+    /** api: method[setPlaybackMode]
+     *  :arg mode: {String} one of 'track','cumulative', or 'ranged'
+     *  
+     *  Set the playback mode of the control.
+     */
+    setPlaybackMode: function(mode){
+        this.playbackMode = mode;
+        this.reconfigureSlider(this.buildSliderValues());
+        if (this.playbackMode == 'ranged' || this.playbackMode == 'decay') {
+            this.control.incrementTime(this.control.rangeInterval, this.control.units);
+        }
+        this.setThumbStyles(this.slider);
     },    
     /** private: method[buildPlaybackItems] */
     buildPlaybackItems: function(){
@@ -336,8 +349,10 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
             'settings': {
                 iconCls: 'gxp-icon-settings',
                 ref:'btnSettings',
-                handler: this.openSettingsPanel,
+                toggleHandler: this.toggleOptionsWindow,
                 scope: this,
+                enableToggle:true,
+                allowDepress:true,
                 tooltip: this.settingsTooltip,
                 menuText: this.settingsLabel,
                 text: (this.labelButtons) ? this.settingsLabel : false
@@ -499,6 +514,18 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         this.control.frameRate = this.control.frameRate*(pressed)?2:0.5;
         this.control.stop();this.control.play();
         btn.setTooltip(pressed?this.normalTooltip:this.fastforwardTooltip);
+    },
+    toggleOptionsWindow:function(btn,pressed){
+        if(pressed && this.optionsWindow.hidden){
+            if(!this.optionsWindow.optionsPanel.timeManager){
+                this.optionsWindow.optionsPanel.timeManager = this.control;
+                this.optionsWindow.optionsPanel.playbackToolbar = this;
+            }
+            this.optionsWindow.show()
+        }
+        else if(!pressed && !this.optionsWindow.hidden){
+            this.optionsWindow.hide()
+        }
     },
     updateTimeDisplay: function(){
         this.sliderTip.onSlide(this.slider,null,this.slider.thumbs[0]);
