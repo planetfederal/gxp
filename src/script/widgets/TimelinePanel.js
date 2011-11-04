@@ -657,6 +657,14 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         this.eventSource.loadJSON(feed, "http://mapstory.org/");
     },
 
+    /** private: method[onResize]
+     *  Private method called after the panel has been resized.
+     */
+    onResize: function() {
+        gxp.TimelinePanel.superclass.onResize.apply(this, arguments);
+        this.timeline && this.timeline.layout();
+    },
+
     beforeDestroy : function(){
         gxp.TimelinePanel.superclass.beforeDestroy.call(this);
         for (var key in this.layerLookup) {
