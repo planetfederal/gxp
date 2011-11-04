@@ -45,6 +45,22 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  Timeline event source.
      */
 
+    /** api: config[loadingMessage]
+     *  ``String`` Message to show when the timeline is loading (i18n)
+     */
+    loadingMessage: "Loading Timeline data...",
+
+    /** private: property[layerCount]
+     * ``Integer`` The number of vector layers currently loading.
+     */
+    layerCount: 0,
+
+    /**
+     * private: property[busyMask]
+     * ``Ext.LoadMask`` The Ext load mask to show when busy.
+     */
+    busyMask: null,
+
     /** api: property[schemaCache]
      *  ``Object`` An object that contains the attribute stores.
      */
@@ -453,6 +469,21 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             upperBoundary: OpenLayers.Date.toISOString(end)
         });
     },
+
+    onLoadStart: function() {
+        this.layerCount++;
+        if (!this.busyMask) {
+            this.busyMask = new Ext.LoadMask(this.bwrap, {msg: this.loadingMessage});
+        }
+        this.busyMask.show();
+    },
+
+    onLoadEnd: function() {
+        this.layerCount--;
+        if(this.layerCount === 0) {
+            this.busyMask.hide();
+        }
+    },
     
     /** private: method[addVectorLayer]
      */
@@ -478,6 +509,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             visibility: false
         });
         layer.events.on({
+            loadstart: this.onLoadStart,
+            loadend: this.onLoadEnd,
             featuresadded: this.onFeaturesAdded.createDelegate(this, [key], 1),
             featuresremoved: this.onFeaturesRemoved,
             scope: this
@@ -560,7 +593,25 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
 
     beforeDestroy : function(){
         gxp.TimelinePanel.superclass.beforeDestroy.call(this);
+        for (var key in this.layerLookup) {
+            var layer = this.layerLookup[key].layer;
+            layer.events.un({
+                loadstart: this.onLoadStart,
+                loadend: this.onLoadEnd,
+                featuresremoved: this.onFeaturesRemoved,
+                scope: this
+            });
+            layer.destroy();
+        }
         this.unbindViewer();
+        if (this.rendered){
+            Ext.destroy(this.busyMask);
+        }
+        if (this.timeline) {
+            this.timeline.dispose();
+            this.timeline = null;
+        }
+        this.busyMask = null;
     }
 
 });
