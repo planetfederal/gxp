@@ -221,7 +221,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         var feature = layer.getFeatureByFid(fid);
         var centroid = feature.geometry.getCentroid();
         var map = this.viewer.mapPanel.map;
+        this._silent = true;
         map.setCenter(new OpenLayers.LonLat(centroid.x, centroid.y));
+        delete this._silent;
         if (this.popup) {
             this.popup.destroy();
             this.popup = null;
@@ -558,7 +560,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  Registered as a listener for map moveend.
      */
     onMapMoveEnd: function() {
-        this.updateTimelineEvents();
+        this._silent !== true && this.updateTimelineEvents();
     },
     
     /** private: method[updateTimelineEvents]
