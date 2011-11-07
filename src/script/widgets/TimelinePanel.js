@@ -605,8 +605,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             }
             // end of TODO
             protocol.filter = protocol.options.filter = filter;
-            dispatchQueue.push(function(done, storage) {
-                protocol.read({
+            var func = function(done, storage) {
+                this.read({
                     callback: function(response) {
                         if (storage.numberOfFeatures === undefined) {
                             storage.numberOfFeatures = 0;
@@ -615,7 +615,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                         done();
                     }
                 });
-            });
+            };
+            dispatchQueue.push(func.createDelegate(protocol));
         }
         gxp.util.dispatch(dispatchQueue, function(storage) {
             if (storage.numberOfFeatures <= this.maxFeatures) {
