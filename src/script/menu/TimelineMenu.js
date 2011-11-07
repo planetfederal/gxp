@@ -89,37 +89,92 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
                         },
                         showSeparator: false,
                         items: [{
-                            xtype: 'form',
+                            xtype: 'container',
                             width: this.subMenuSize[0],
                             height: this.subMenuSize[1], 
+                            layout:'vbox',
+                            defaults: {
+                                border: false
+                            },
+                            layoutConfig: {
+                                align: 'stretch',
+                                pack: 'start'
+                            },
                             items: [{
-                                xtype: 'combo',
-                                forceSelection: true,
-                                getListParent: function() {
-                                    return this.el.up('.x-menu');
-                                },
-                                store: schema, 
-                                mode: 'local',
-                                triggerAction: 'all',
-                                value: this.timelinePanel.layerLookup[key] ? this.timelinePanel.layerLookup[key].titleAttr : null,
-                                listeners: {
-                                    "select": function(combo) {
-                                        this.timelinePanel.setTitleAttribute(record, combo.getValue());
-                                    },
-                                    scope: this
-                                },
-                                displayField: "name", 
-                                valueField: "name", 
-                                fieldLabel: this.attributeLabel
-                            }, {
-                                xtype: "gxp_filterfield",
-                                attributesComboConfig: {
+                                xtype: 'form',
+                                labelWidth: 75,
+                                height: 30,
+                                items: [{
+                                    xtype: 'combo',
+                                    forceSelection: true,
                                     getListParent: function() {
                                         return this.el.up('.x-menu');
-                                    }
+                                    },
+                                    store: schema, 
+                                    mode: 'local',
+                                    triggerAction: 'all',
+                                    value: this.timelinePanel.layerLookup[key] ? this.timelinePanel.layerLookup[key].titleAttr : null,
+                                    listeners: {
+                                        "select": function(combo) {
+                                            this.timelinePanel.setTitleAttribute(record, combo.getValue());
+                                        },
+                                        scope: this
+                                    },
+                                    displayField: "name", 
+                                    valueField: "name", 
+                                    fieldLabel: this.attributeLabel
+                                }]
+                            }, {
+                                xtype: 'container',
+                                layout: 'hbox',
+                                layoutConfig: {
+                                    align: 'stretch',
+                                    pack: 'start'
                                 },
-                                fieldLabel: this.filterLabel,
-                                attributes: schema
+                                defaults: {
+                                    border: false
+                                },
+                                items: [{
+                                    width: 25,
+                                    xtype: 'container',
+                                    layout: 'fit',
+                                    items: [{
+                                        xtype: 'checkbox',
+                                        id: 'gxp_timelinemenu_cb',
+                                        listeners: {
+                                            'check': function(cb, checked) {
+                                                // TODO set filter on timeline
+                                            },
+                                            scope: this
+                                        }
+                                    }]
+                                }, {
+                                    flex: 1,
+                                    xtype: 'form',
+                                    labelWidth: 75,
+                                    items: [{
+                                        xtype: "gxp_filterfield",
+                                        listeners: {
+                                            'change': function(filter) {
+                                                // TODO set filter on timeline
+                                            },
+                                            scope: this
+                                        },
+                                        attributesComboConfig: {
+                                            getListParent: function() {
+                                                return this.el.up('.x-menu');
+                                            }
+                                        },
+                                        comparisonComboConfig: {
+                                            getListParent: function() {
+                                                return this.el.up('.x-menu');
+                                            }
+                                        },
+                                        fieldLabel: this.filterLabel,
+                                        attributes: schema
+                                    }]
+                                }],
+                                height: 30
                             }]
                         }]
                     }),
