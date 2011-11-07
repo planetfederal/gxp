@@ -136,6 +136,23 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
 
         gxp.form.FilterField.superclass.initComponent.call(this);
     },
+
+    /**
+     * Method: validateValue
+     * Performs validation checks on the filter field.
+     *
+     * Returns:
+     * {Boolean} True if value is valid. 
+     */
+    validateValue: function(value, preventMark) {
+        if (this.filter.type === OpenLayers.Filter.Comparison.BETWEEN) {
+            return (this.filter.property !== null && this.filter.upperBoundary !== null &&
+                this.filter.lowerBoundary !== null);
+        } else {
+            return (this.filter.property !== null &&
+                this.filter.value !== null && this.filter.type !== null);
+        }
+    },
     
     /**
      * Method: createDefaultFilter
