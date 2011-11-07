@@ -428,6 +428,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         if (!this.timeline) {
             this.setRange(this.playbackTool.playbackToolbar.control.range);
             this.setCenterDate(this.playbackTool.playbackToolbar.control.currentTime);
+            delete this._silent;
         }
     },
 
