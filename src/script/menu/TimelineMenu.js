@@ -84,13 +84,20 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
                     checked: (this.timelinePanel.layerLookup[key] && this.timelinePanel.layerLookup[key].visible) || true,
                     menu: new Ext.menu.Menu({
                         plain: true,
+                        style: {
+                            overflow: 'visible'
+                        },
                         showSeparator: false,
                         items: [{
                             xtype: 'form',
                             width: this.subMenuSize[0],
                             height: this.subMenuSize[1], 
                             items: [{
-                                xtype: 'combo', 
+                                xtype: 'combo',
+                                forceSelection: true,
+                                getListParent: function() {
+                                    return this.el.up('.x-menu');
+                                },
                                 store: schema, 
                                 mode: 'local',
                                 triggerAction: 'all',
@@ -106,6 +113,11 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
                                 fieldLabel: this.attributeLabel
                             }, {
                                 xtype: "gxp_filterfield",
+                                attributesComboConfig: {
+                                    getListParent: function() {
+                                        return this.el.up('.x-menu');
+                                    }
+                                },
                                 fieldLabel: this.filterLabel,
                                 attributes: schema
                             }]

@@ -587,6 +587,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  :arg options: `Object` First arg to OpenLayers.Strategy.BBOX::update.
      */
     updateTimelineEvents: function(options) {
+        if (!this.rendered) {
+            return;
+        }
         var dispatchQueue = [];
         var layer, key;
         for (key in this.layerLookup) {
