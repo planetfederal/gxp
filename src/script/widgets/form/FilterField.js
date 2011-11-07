@@ -102,7 +102,7 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
                 select: function(combo, record) {
                     this.items.get(1).enable();
                     this.filter.property = record.get("name");
-                    this.fireEvent("change", this.filter);
+                    this.fireEvent("change", this.filter, this);
                 },
                 // workaround for select event not being fired when tab is hit
                 // after field was autocompleted with forceSelection
@@ -130,6 +130,7 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
              *
              * Listener arguments:
              * filter - {OpenLayers.Filter} This filter.
+             * this - {gxp.form.FilterField} (TODO change sequence of event parameters)
              */
             "change"
         ); 
@@ -183,7 +184,7 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
                         this.items.get(3).enable();
                         this.items.get(4).enable();
                         this.setFilterType(record.get("value"));
-                        this.fireEvent("change", this.filter);
+                        this.fireEvent("change", this.filter, this);
                     },
                     scope: this
                 }
@@ -200,7 +201,7 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
                 listeners: {
                     "change": function(field, value) {
                         this.filter.value = value;
-                        this.fireEvent("change", this.filter);
+                        this.fireEvent("change", this.filter, this);
                     },
                     scope: this
                 }
@@ -217,7 +218,7 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
                 listeners: {
                     "change": function(field, value) {
                         this.filter.lowerBoundary = value;
-                        this.fireEvent("change", this.filter);
+                        this.fireEvent("change", this.filter, this);
                     },
                     "render": function(c) {
                         Ext.QuickTips.register({
@@ -242,7 +243,7 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
                 listeners: {
                     "change": function(field, value) {
                         this.filter.upperBoundary = value;
-                        this.fireEvent("change", this.filter);
+                        this.fireEvent("change", this.filter, this);
                     },
                     "render": function(c) {
                         Ext.QuickTips.register({
