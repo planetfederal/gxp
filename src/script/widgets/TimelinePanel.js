@@ -274,7 +274,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
     createTimeline: function(range) {
         if (!this.rendered) {
-            this.range = range;
             return;
         }
         var eventSource = new Timeline.DefaultEventSource(0);
@@ -427,9 +426,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     onLayout: function() {
         gxp.TimelinePanel.superclass.onLayout.call(this, arguments);
         if (!this.timeline) {
-            this.setRange(this.range);
-            delete this.range;
-            this.updateTimelineEvents();
+            this.setRange(this.playbackTool.playbackToolbar.control.range);
+            this.setCenterDate(this.playbackTool.playbackToolbar.control.currentTime);
         }
     },
 
