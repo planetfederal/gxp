@@ -48,6 +48,14 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
      *     the filter property combo.
      */
     attributes: null,
+
+    /** api:config[comparisonComboConfig]
+     *  ``Object`` Config object for comparison combobox.
+     */
+
+    /** api:config[attributesComboConfig]
+     *  ``Object`` Config object for attributes combobox.
+     */
     
     /**
      * Property: attributesComboConfig
@@ -147,7 +155,7 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
     createFilterItems: function() {
         var isBetween = this.filter.type === OpenLayers.Filter.Comparison.BETWEEN;
         return [
-            this.attributesComboConfig, {
+            this.attributesComboConfig, Ext.applyIf({
                 xtype: "gxp_comparisoncombo",
                 disabled: this.filter.property == null,
                 allowBlank: this.allowBlank,
@@ -162,7 +170,7 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
                     },
                     scope: this
                 }
-            }, {
+            }, this.comparisonComboConfig), {
                 xtype: "textfield",
                 disabled: this.filter.type == null,
                 hidden: isBetween,
