@@ -201,6 +201,28 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         this.timeline.paint();
     },
 
+    applyFilter: function(record, filter, checked) {
+        // implemented client-side for now, TODO determine if server-side makes more sense, i.e.
+        // passing on the filter in the GetFeature request and doing a reload.
+        var key = this.getKey(record);
+        var layer = this.layerLookup[key].layer;
+        var filterMatcher = function(evt) {
+            var fid = evt.getProperty("fid");
+            if (evt.getProperty("key") === key) {
+                var feature = layer.getFeatureByFid(fid);
+                if (checked === false) {
+                    return true;
+                } else {
+                    return filter.evaluate(feature);
+                }
+            } else {
+                return true;
+            }
+        };
+        this.timeline.getBand(0).getEventPainter().setFilterMatcher(filterMatcher);
+        this.timeline.paint();
+    },
+
     setTitleAttribute: function(record, titleAttr) {
         var key = this.getKey(record);
         this.layerLookup[key].titleAttr = titleAttr;

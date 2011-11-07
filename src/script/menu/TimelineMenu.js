@@ -127,6 +127,7 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
                             }, {
                                 xtype: 'container',
                                 layout: 'hbox',
+                                id: 'gxp_timemenufilter',
                                 layoutConfig: {
                                     align: 'stretch',
                                     pack: 'start'
@@ -140,10 +141,13 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
                                     layout: 'fit',
                                     items: [{
                                         xtype: 'checkbox',
-                                        id: 'gxp_timelinemenu_cb',
+                                        ref: "../applyFilter",
                                         listeners: {
                                             'check': function(cb, checked) {
-                                                // TODO set filter on timeline
+                                                var field = Ext.getCmp('gxp_timemenufilter').filter;
+                                                if (field.isValid()) {
+                                                    this.timelinePanel.applyFilter(record, field.filter, checked);
+                                                }
                                             },
                                             scope: this
                                         }
@@ -154,9 +158,12 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
                                     labelWidth: 75,
                                     items: [{
                                         xtype: "gxp_filterfield",
+                                        ref: "../filter",
                                         listeners: {
-                                            'change': function(filter) {
-                                                // TODO set filter on timeline
+                                            'change': function(filter, field) {
+                                                if (field.isValid()) {
+                                                    this.timelinePanel.applyFilter(record, filter, Ext.getCmp('gxp_timemenufilter').applyFilter.getValue());
+                                                }
                                             },
                                             scope: this
                                         },
