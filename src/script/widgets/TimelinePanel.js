@@ -205,11 +205,15 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         var key = this.getKey(record);
         this.layerLookup[key].titleAttr = titleAttr;
         var iterator = this.eventSource.getAllEventIterator();
+        var eventIds = [];
         while (iterator.hasNext()) {
             var evt = iterator.next();
             if (evt.getProperty('key') === key) {
-                this.eventSource.remove(evt.getID());
+                eventIds.push(evt.getID());
             }
+        }
+        for (var i=0, len=eventIds.length; i<len; ++i) {
+            this.eventSource.remove(eventIds[i]);
         }
         this.onFeaturesAdded({features: this.layerLookup[key].layer.features}, key);
     },
