@@ -97,7 +97,7 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
                                 value: this.timelinePanel.layerLookup[key] ? this.timelinePanel.layerLookup[key].titleAttr : null,
                                 listeners: {
                                     "select": function(combo) {
-                                        this.timelinePanel.setTimeAttribute(record, combo.getValue());
+                                        this.timelinePanel.setTitleAttribute(record, combo.getValue());
                                     },
                                     scope: this
                                 },

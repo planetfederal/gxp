@@ -201,7 +201,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         this.timeline.paint();
     },
 
-    setTimeAttribute: function(record, titleAttr) {
+    setTitleAttribute: function(record, titleAttr) {
         var key = this.getKey(record);
         this.layerLookup[key].titleAttr = titleAttr;
         var iterator = this.eventSource.getAllEventIterator();
