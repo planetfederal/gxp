@@ -617,14 +617,18 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         for (key in this.layerLookup) {
             layer = this.layerLookup[key].layer;
             var protocol = this.layerLookup[key].hitCount;
-            // TODO: make OpenLayers BBOX Strategy's createFilter function api 
-            // and give it an optional bounds param so that we can just use 
-            // createFilter here instead
+
+            // a real solution would be something like:
+            // http://trac.osgeo.org/openlayers/ticket/3569
+            var bounds = layer.strategies[0].bounds;
+            layer.strategies[0].calculateBounds();
             var filter = new OpenLayers.Filter.Spatial({
                 type: OpenLayers.Filter.Spatial.BBOX,
-                value: this.viewer.mapPanel.map.getExtent(),
+                value: layer.strategies[0].bounds,
                 projection: layer.projection
             });
+            layer.strategies[0].bounds = bounds;
+            
             if (layer.filter) {
                 filter = new OpenLayers.Filter.Logical({
                     type: OpenLayers.Filter.Logical.AND,
