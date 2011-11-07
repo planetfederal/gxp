@@ -654,6 +654,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }
         gxp.util.dispatch(dispatchQueue, function(storage) {
             if (storage.numberOfFeatures <= this.maxFeatures) {
+                layer.strategies[0].activate();
                 // Loading will be triggered for all layers or no layers.  If loading
                 // is triggered, we want to remove existing events before adding any
                 // new ones.  With this flag set, events will be cleared before features
@@ -664,12 +665,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 this.timelineContainer.el.unmask(true);
                 for (key in this.layerLookup) {
                     layer = this.layerLookup[key].layer;
-                    // TODO ideally we do not want to force, this is expensive (investigate)
-                    // but otherwise situations occur where data is missing in the timeline
-                    layer.strategies[0].update(Ext.apply(options, {force: true}));
+                    layer.strategies[0].update(options);
                 }
             } else {
                 // clear the timeline and show instruction text
+                layer.strategies[0].deactivate();
                 this.timelineContainer.el.mask(this.instructionText, '');
                 this.eventSource.clear();
             }
