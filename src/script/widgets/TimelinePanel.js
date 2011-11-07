@@ -198,6 +198,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             }
         };
         this.timeline.getBand(0).getEventPainter().setFilterMatcher(filterMatcher);
+        this.timeline.getBand(1).getEventPainter().setFilterMatcher(filterMatcher);
         this.timeline.paint();
     },
 
@@ -220,6 +221,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             }
         };
         this.timeline.getBand(0).getEventPainter().setFilterMatcher(filterMatcher);
+        this.timeline.getBand(1).getEventPainter().setFilterMatcher(filterMatcher);
         this.timeline.paint();
     },
 
@@ -662,7 +664,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 this.timelineContainer.el.unmask(true);
                 for (key in this.layerLookup) {
                     layer = this.layerLookup[key].layer;
-                    layer.strategies[0].update(options);
+                    // TODO ideally we do not want to force, this is expensive (investigate)
+                    // but otherwise situations occur where data is missing in the timeline
+                    layer.strategies[0].update(Ext.apply(options, {force: true}));
                 }
             } else {
                 // clear the timeline and show instruction text
