@@ -95,6 +95,8 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
         this.layers = mapPanel.layers;
 
         this.projection = new OpenLayers.Projection("EPSG:4326");
+
+        this.addEvents("earthready");
         
         // Unfortunately, the Google Earth plugin does not like to be hidden.
         // No matter whether you hide it through CSS visibility, CSS offsets,
@@ -161,6 +163,8 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
         
         this.layers.on("add", this.updateLayers, this);
         
+        this.fireEvent("earthready", this.earth);
+
         // Set up events. Notice global google namespace.
         // google.earth.addEventListener(this.earth.getView(), 
             // "viewchangeend", 
