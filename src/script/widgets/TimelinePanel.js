@@ -282,7 +282,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  :arg currentTime: ``Date``
      */
     onTimeChange: function(toolbar, currentTime) {
+        this._silent = true;
         this.setCenterDate(currentTime);
+        delete this._silent;
     },
 
     /** private: method[onRangeModify]
