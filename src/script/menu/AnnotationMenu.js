@@ -28,6 +28,11 @@ gxp.menu.AnnotationMenu = Ext.extend(Ext.menu.Menu, {
     lineText: "Line",
     polygonText: "Polygon",
 
+    /** api: config[plugin]
+     *  ``gxp.plugins.Annotation`` The plugin that instantiated this menu.
+     */
+    plugin: null,
+
     /** private: method[initComponent]
      *  Private method called to initialize the component.
      */
@@ -43,23 +48,49 @@ gxp.menu.AnnotationMenu = Ext.extend(Ext.menu.Menu, {
             menu: new Ext.menu.Menu({items: [{
                 xtype: "menuitem",
                 text: this.eventText,
-                iconCls: "gxp-icon-event"
+                iconCls: "gxp-icon-event",
+                type: gxp.menu.AnnotationMenu.EVENT,
+                handler: this.addNote,
+                scope: this
             }, {
                 xtype: "menuitem",
                 text: this.pointText,
-                iconCls: "gxp-icon-point"
+                iconCls: "gxp-icon-point",
+                type: gxp.menu.AnnotationMenu.POINT,
+                handler: this.addNote,
+                scope: this
             }, {
                 xtype: "menuitem",
                 text: this.lineText,
-                iconCls: "gxp-icon-line"
+                iconCls: "gxp-icon-line",
+                type: gxp.menu.AnnotationMenu.LINE,
+                handler: this.addNote,
+                scope: this
             }, {
                 xtype: "menuitem",
                 text: this.polygonText,
-                iconCls: "gxp-icon-polygon"
+                iconCls: "gxp-icon-polygon",
+                type: gxp.menu.AnnotationMenu.POLYGON,
+                handler: this.addNote,
+                scope: this
             }]})
         }]);
+    },
+
+    /** private: method[addNote]
+     */
+    addNote: function(menuItem) {
+        this.plugin.createLayer();
     }
     
 });
+
+/**
+ * Annotation Types
+ */
+gxp.menu.AnnotationMenu.EVENT = 0;
+gxp.menu.AnnotationMenu.POINT = 1;
+gxp.menu.AnnotationMenu.LINE = 2;
+gxp.menu.AnnotationMenu.POLYGON = 3;
 
 Ext.reg('gxp_annotationmenu', gxp.menu.AnnotationMenu);

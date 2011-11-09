@@ -37,15 +37,45 @@ gxp.plugins.Annotation = Ext.extend(gxp.plugins.Tool, {
      */
     menuText: "Notes",
 
+    /** private: property[layer]
+     *  ``String`` featureType to use for saving the annotations.
+     */
+    layer: null,
+
+    /** api: config[createLayerUrl]
+     *  ``String`` Endpoint to use for layer creation.
+     */
+    createLayerUrl: "/data/create_layer",
+
+    /** api: config[params]
+     *  ``Object`` Parameters to send to the layer creation endpoint.
+     */
+    params: null,
+
     /** api: method[addActions]
      */
     addActions: function() {
         var actions = gxp.plugins.Annotation.superclass.addActions.apply(this, [{
             text: this.menuText,
             iconCls: "gxp-icon-note",
-            menu: new gxp.menu.AnnotationMenu()
+            menu: new gxp.menu.AnnotationMenu({plugin: this})
         }]);
         return actions;
+    },
+
+    /** api: method[createLayer]
+     *  Creates a layer using the layer creation endpoint.
+     */
+    createLayer: function() {
+        if (this.layer === null) {
+            Ext.Ajax.request({
+                method: "POST",
+                url: this.createLayerUrl,
+                params: this.params,
+                success: function() { /* TODO once endpoint works */ },
+                scope: this
+            });
+        }
     }
         
 });
