@@ -452,9 +452,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     onLayout: function() {
         gxp.TimelinePanel.superclass.onLayout.call(this, arguments);
         if (!this.timeline) {
-            this.setRange(this.playbackTool.playbackToolbar.control.range);
-            this.setCenterDate(this.playbackTool.playbackToolbar.control.currentTime);
-            delete this._silent;
+            if (this.playbackTool.playbackToolbar) {
+                this.setRange(this.playbackTool.playbackToolbar.control.range);
+                this.setCenterDate(this.playbackTool.playbackToolbar.control.currentTime);
+                delete this._silent;
+            }
         }
     },
 
