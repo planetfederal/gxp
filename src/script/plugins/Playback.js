@@ -130,6 +130,28 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
      */
     setTime: function(time){
         return this.playbackToolbar.setTime(time);
+    },
+    /** api: method[getState]
+     *  :returns {Object} - initial config plus any user configured settings
+     *  
+     *  Tool specific implementation of the getState function
+     */
+    getState: function(){
+        var config = gxp.plugins.Playback.superclass.getState.call(this);
+        var toolbar = this.playbackToolbar;
+        var control = toolbar.control;
+        config.outputConfig = {
+            dynamicRange: toolbar.dyanamicRange,
+            playbackMode: toolbar.playbackMode,
+        };
+        config.outputConfig.controlConfig = {
+            range: (control.fixedRange) ? control.range : undefined,
+            step: control.step,
+            units: control.units,
+            loop: control.units,
+            snapToIntervals: control.snapToIntervals
+        }
+        return config;
     }
 });
 

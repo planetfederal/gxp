@@ -90,6 +90,15 @@ gxp.plugins.Timeline = Ext.extend(gxp.plugins.Tool, {
             viewer: this.target,
             playbackTool: this.target.tools[this.playbackTool]
         }, config));
+    },
+
+    /** api: method[getTimelinePanel]
+     *  :returns: ``gxp.TimelinePanel``
+     *
+     *  Get the timeline panel associated with this timeline plugin.
+     */
+    getTimelinePanel: function() {
+        return this.output[0];
     }
 
 });

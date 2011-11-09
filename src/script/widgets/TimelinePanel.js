@@ -7,7 +7,6 @@
  */
 
 /**
- * @requires menu/TimelineMenu.js
  * @requires widgets/FeatureEditPopup.js
  */
 
@@ -45,8 +44,34 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  ``Object``
      *  Timeline event source.
      */
-    
-    /** private: property[layerLookup]
+
+    /** api: config[loadingMessage]
+     *  ``String`` Message to show when the timeline is loading (i18n)
+     */
+    loadingMessage: "Loading Timeline data...",
+
+    /** api: config[instructionText]
+     *  ``String`` Message to show when there is too many data for the timeline (i18n)
+     */   
+    instructionText: "There are too many events to show in the timeline, please zoom in or move the vertical slider down",
+
+    /** private: property[layerCount]
+     * ``Integer`` The number of vector layers currently loading.
+     */
+    layerCount: 0,
+
+    /**
+     * private: property[busyMask]
+     * ``Ext.LoadMask`` The Ext load mask to show when busy.
+     */
+    busyMask: null,
+
+    /** api: property[schemaCache]
+     *  ``Object`` An object that contains the attribute stores.
+     */
+    schemaCache: {},
+
+    /** api: property[layerLookup]
      *  ``Object``
      *  Mapping of store/layer names (e.g. "local/foo") to objects storing data
      *  related to layers.  The values of each member are objects with the 
@@ -55,6 +80,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *   * layer - {OpenLayers.Layer.Vector}
      *   * titleAttr - {String}
      *   * timeAttr - {String}
+     *   * visible - {Boolean}
      *  
      */
     
@@ -72,9 +98,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     /**
      * api: config[maxFeatures]
      * ``Integer``
-     * The maximum number of features on a per layer basis. Defaults to 250.
+     * The maximum number of features in total for the timeline.
      */
-    maxFeatures: 250,
+    maxFeatures: 500,
 
     /**
      * api: config[bufferFraction]
@@ -85,13 +111,20 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
 
     layout: "border",
 
-    /** i18n */
-    layersText: "Layers",
-    notesText: "Notes",
-    
     /** private: method[initComponent]
      */
     initComponent: function() {
+
+        // http://code.google.com/p/simile-widgets/issues/detail?id=3
+        Timeline.DefaultEventSource.prototype.remove = function(id) {
+            this._events.remove(id);
+        };
+
+        SimileAjax.EventIndex.prototype.remove = function(id) {
+            var evt = this._idToEvent[id];
+            this._events.remove(evt);
+            delete this._idToEvent[id];
+        };
 
         Timeline.OriginalEventPainter.prototype._showBubble = 
             this.handleEventClick.createDelegate(this);
@@ -100,30 +133,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             region: "center"
         });
 
-        var me = this;
-        this.tbar = [{
-            text: this.layersText,
-            iconCls: "gxp-icon-layer-switcher",
-            menu: new gxp.menu.TimelineMenu({
-                layers: this.viewer.mapPanel.layers,
-                property: 'timevisible',
-                onCheckChange: function(item, checked, record) {
-                    record.set('timevisible', checked);
-                    var filterMatcher = function(evt) {
-                        var key = evt.getProperty('key');
-                        if (key === me.getKey(record)) {
-                            return checked;
-                        }
-                    };
-                    me.timeline.getBand(0).getEventPainter().setFilterMatcher(filterMatcher);
-                    me.timeline.paint();
-                }
-            })
-        }, {
-            text: this.notesText,
-            iconCls: "gxp-icon-note"
-        }];
-        
         this.items = [{
             region: "west",
             xtype: "container",
@@ -142,9 +151,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                         range = this.calculateNewRange(range, value);
                         for (var key in this.layerLookup) {
                             var layer = this.layerLookup[key].layer;
-                            layer.filter = this.createTimeFilter(range, key, 0);
+                            this.setFilter(key, this.createTimeFilter(range, key, 0));
                         }
-                        this.updateTimelineEvents({maxFeatures: this.maxFeatures, force: true});
+                        this.updateTimelineEvents({force: true});
                     },
                     scope: this
                 }
@@ -177,6 +186,62 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         
     },
 
+    setLayerVisibility: function(item, checked, record) {
+        var keyToMatch = this.getKey(record);
+        Ext.apply(this.layerLookup[keyToMatch], {
+            visible: checked
+        });
+        var filterMatcher = function(evt) {
+            var key = evt.getProperty('key');
+            if (key === keyToMatch) {
+                return checked;
+            }
+        };
+        this.timeline.getBand(0).getEventPainter().setFilterMatcher(filterMatcher);
+        this.timeline.getBand(1).getEventPainter().setFilterMatcher(filterMatcher);
+        this.timeline.paint();
+    },
+
+    applyFilter: function(record, filter, checked) {
+        // implemented client-side for now, TODO determine if server-side makes more sense, i.e.
+        // passing on the filter in the GetFeature request and doing a reload.
+        var key = this.getKey(record);
+        var layer = this.layerLookup[key].layer;
+        var filterMatcher = function(evt) {
+            var fid = evt.getProperty("fid");
+            if (evt.getProperty("key") === key) {
+                var feature = layer.getFeatureByFid(fid);
+                if (checked === false) {
+                    return true;
+                } else {
+                    return filter.evaluate(feature);
+                }
+            } else {
+                return true;
+            }
+        };
+        this.timeline.getBand(0).getEventPainter().setFilterMatcher(filterMatcher);
+        this.timeline.getBand(1).getEventPainter().setFilterMatcher(filterMatcher);
+        this.timeline.paint();
+    },
+
+    setTitleAttribute: function(record, titleAttr) {
+        var key = this.getKey(record);
+        this.layerLookup[key].titleAttr = titleAttr;
+        var iterator = this.eventSource.getAllEventIterator();
+        var eventIds = [];
+        while (iterator.hasNext()) {
+            var evt = iterator.next();
+            if (evt.getProperty('key') === key) {
+                eventIds.push(evt.getID());
+            }
+        }
+        for (var i=0, len=eventIds.length; i<len; ++i) {
+            this.eventSource.remove(eventIds[i]);
+        }
+        this.onFeaturesAdded({features: this.layerLookup[key].layer.features}, key);
+    },
+
     handleEventClick: function(x, y, evt) {
         var fid = evt.getProperty("fid");
         var key = evt.getProperty("key");
@@ -184,7 +249,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         var feature = layer.getFeatureByFid(fid);
         var centroid = feature.geometry.getCentroid();
         var map = this.viewer.mapPanel.map;
+        this._silentMapMove = true;
         map.setCenter(new OpenLayers.LonLat(centroid.x, centroid.y));
+        delete this._silentMapMove;
         if (this.popup) {
             this.popup.destroy();
             this.popup = null;
@@ -215,7 +282,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  :arg currentTime: ``Date``
      */
     onTimeChange: function(toolbar, currentTime) {
+        this._silent = true;
         this.setCenterDate(currentTime);
+        delete this._silent;
     },
 
     /** private: method[onRangeModify]
@@ -224,23 +293,34 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
     onRangeModify: function(toolbar, range) {
         this.setRange(range);
+        delete this._silent;
     },
 
-    /** private: method[onLayout]
-     *  Private method called after the panel has been rendered.
+    /** private: method[createTimeline]
      */
-    onLayout: function() {
-        gxp.TimelinePanel.superclass.onLayout.apply(this, arguments);
-
+    createTimeline: function(range) {
+        if (!this.rendered) {
+            return;
+        }
         var eventSource = new Timeline.DefaultEventSource(0);
 
         var theme = Timeline.ClassicTheme.create();
 
-        var d = Timeline.DateTime.parseGregorianDateTime("1978");
+        var span = range[1] - range[0];
+        var years  = ((((span/1000)/60)/60)/24)/365;
+        var intervalUnits = [];
+        if (years >= 50) {
+            intervalUnits.push(Timeline.DateTime.DECADE);
+            intervalUnits.push(Timeline.DateTime.CENTURY);
+        } else {
+            intervalUnits.push(Timeline.DateTime.YEAR);
+            intervalUnits.push(Timeline.DateTime.DECADE);
+        }
+        var d = new Date(range[0].getTime() + span/2);
         var bandInfos = [
             Timeline.createBandInfo({
                 width: "80%", 
-                intervalUnit: Timeline.DateTime.DECADE, 
+                intervalUnit: intervalUnits[0], 
                 intervalPixels: 200,
                 eventSource: eventSource,
                 date: d,
@@ -249,7 +329,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             }),
             Timeline.createBandInfo({
                 width: "20%", 
-                intervalUnit: Timeline.DateTime.CENTURY, 
+                intervalUnit: intervalUnits[1], 
                 intervalPixels: 200,
                 eventSource: eventSource,
                 date: d,
@@ -266,6 +346,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             Timeline.HORIZONTAL
         );
         // since the bands are linked we need to listen to one band only
+        this._silent = true;
         this.timeline.getBand(0).addOnScrollListener(
             this.setPlaybackCenter.createDelegate(this)
         );
@@ -275,9 +356,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
 
     setPlaybackCenter: function(band) {
         var time = band.getCenterVisibleDate();
-        this.playbackTool && this.playbackTool.setTime(time);
-        // TODO, remove this once we get the timechange event in
-        this.setCenterDate(time);
+        this._silent !== true && this.playbackTool && this.playbackTool.setTime(time);
     },
     
     /** private: method[bindViewer]
@@ -316,6 +395,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }
         delete this.viewer;
         delete this.layerLookup;
+        delete this.schemaCache;
     },
 
     /** private: method[getKey]
@@ -336,7 +416,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 var result = Ext.decode(response.responseText);
                 if (result && result.attribute) {
                     this.layerLookup[key] = {
-                        timeAttr: result.attribute
+                        timeAttr: result.attribute,
+                        visible: true
                     };
                     this.addVectorLayer(record, protocol, schema);
                 }
@@ -360,7 +441,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                             // TODO: add logging to viewer
                             throw new Error("Failed to get protocol for record: " + record.get("name"));
                         }
-                        record.set('timevisible', true);
+                        this.schemaCache[this.getKey(record)] = schema;
                         this.getTimeAttribute(record, protocol, schema);
                     }, this);
                 }
@@ -368,36 +449,55 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }
     },
 
+    onLayout: function() {
+        gxp.TimelinePanel.superclass.onLayout.call(this, arguments);
+        if (!this.timeline) {
+            if (this.playbackTool.playbackToolbar) {
+                this.setRange(this.playbackTool.playbackToolbar.control.range);
+                this.setCenterDate(this.playbackTool.playbackToolbar.control.currentTime);
+                delete this._silent;
+            }
+        }
+    },
+
     setRange: function(range) {
-        var firstBand = this.timeline.getBand(0);
-        firstBand.setMinVisibleDate(range[0]);
-        firstBand.setMaxVisibleDate(range[1]);
-        var secondBand = this.timeline.getBand(1);
-        secondBand.getEtherPainter().setHighlight(range[0], range[1]);
+        if (!this.timeline) {
+            this.createTimeline(range);
+        }
+        // if we were not rendered, the above will not have created the timeline
+        if (this.timeline) {
+            var firstBand = this.timeline.getBand(0);
+            firstBand.setMinVisibleDate(range[0]);
+            firstBand.setMaxVisibleDate(range[1]);
+            var secondBand = this.timeline.getBand(1);
+            secondBand.getEtherPainter().setHighlight(range[0], range[1]);
+        }
     },
 
     setCenterDate: function(time) {
-        this.timeline.getBand(0).setCenterVisibleDate(time);
-        if (this.rangeInfo && this.rangeInfo.current) {
-            var currentRange = this.rangeInfo.current;
-            var originalRange = this.rangeInfo.original;
-            var originalSpan = originalRange[1] - originalRange[0];
-            var originalCenter = new Date(originalRange[0].getTime() + originalSpan/2);
-            var fractionRange = this.bufferFraction * originalSpan;
-            var lowerBound = new Date(originalCenter.getTime() - fractionRange);
-            var upperBound = new Date(originalCenter.getTime() + fractionRange);
-            // update once the time gets out of the buffered center
-            if (time < lowerBound || time > upperBound) {
-                var span = currentRange[1] - currentRange[0];
-                var start = new Date(time.getTime() - span/2);
-                var end = new Date(time.getTime() + span/2);
-                for (var key in this.layerLookup) {
-                    var layer = this.layerLookup[key].layer; 
-                    layer.filter = this.createTimeFilter([start, end], key, 0);
+        if (this.timeline) {
+            this.timeline.getBand(0).setCenterVisibleDate(time);
+            if (this.rangeInfo && this.rangeInfo.current) {
+                var currentRange = this.rangeInfo.current;
+                var originalRange = this.rangeInfo.original;
+                var originalSpan = originalRange[1] - originalRange[0];
+                var originalCenter = new Date(originalRange[0].getTime() + originalSpan/2);
+                var fractionRange = this.bufferFraction * originalSpan;
+                var lowerBound = new Date(originalCenter.getTime() - fractionRange);
+                var upperBound = new Date(originalCenter.getTime() + fractionRange);
+                // update once the time gets out of the buffered center
+                if (time < lowerBound || time > upperBound) {
+                    var span = currentRange[1] - currentRange[0];
+                    var start = new Date(time.getTime() - span/2);
+                    var end = new Date(time.getTime() + span/2);
+                    for (var key in this.layerLookup) {
+                        var layer = this.layerLookup[key].layer; 
+                        this.setFilter(key, this.createTimeFilter([start, end], key, 0));
+                    }
+                    // TODO: instead of a full update, only get the data we are missing and
+                    // remove events from the timeline that are out of the new range
+                    this.updateTimelineEvents({force: true});                
                 }
-                // TODO: instead of a full update, only get the data we are missing and
-                // remove events from the timeline that are out of the new range
-                this.updateTimelineEvents({force: true, maxFeatures: this.maxFeatures});                
             }
         }
     },
@@ -424,6 +524,38 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             upperBoundary: OpenLayers.Date.toISOString(end)
         });
     },
+
+    onLoadStart: function() {
+        this.layerCount++;
+        if (!this.busyMask) {
+            this.busyMask = new Ext.LoadMask(this.bwrap, {msg: this.loadingMessage});
+        }
+        this.busyMask.show();
+    },
+
+    onLoadEnd: function() {
+        this.layerCount--;
+        if(this.layerCount === 0) {
+            this.busyMask.hide();
+        }
+    },
+
+    /** private: method[createHitCountProtocol]
+     */
+    createHitCountProtocol: function(protocolOptions) {
+        return new OpenLayers.Protocol.WFS(Ext.apply({
+            version: "1.1.0",
+            readOptions: {output: "object"},
+            resultType: "hits"
+        }, protocolOptions));
+    },
+
+    /** private: method[setFilter]
+     */
+    setFilter: function(key, filter) {
+        var layer = this.layerLookup[key].layer;
+        layer.filter = filter;
+    },
     
     /** private: method[addVectorLayer]
      */
@@ -449,6 +581,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             visibility: false
         });
         layer.events.on({
+            loadstart: this.onLoadStart,
+            loadend: this.onLoadEnd,
             featuresadded: this.onFeaturesAdded.createDelegate(this, [key], 1),
             featuresremoved: this.onFeaturesRemoved,
             scope: this
@@ -464,7 +598,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         });
         Ext.apply(this.layerLookup[key], {
             layer: layer,
-            titleAttr: titleAttr
+            titleAttr: titleAttr,
+            hitCount: this.createHitCountProtocol(protocol.options)
         });
         this.viewer.mapPanel.map.addLayer(layer);
     },
@@ -473,25 +608,76 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  Registered as a listener for map moveend.
      */
     onMapMoveEnd: function() {
-        this.updateTimelineEvents({maxFeatures: this.maxFeatures});
+        this._silentMapMove !== true && this.updateTimelineEvents();
     },
     
     /** private: method[updateTimelineEvents]
      *  :arg options: `Object` First arg to OpenLayers.Strategy.BBOX::update.
      */
     updateTimelineEvents: function(options) {
-        // Loading will be triggered for all layers or no layers.  If loading
-        // is triggered, we want to remove existing events before adding any
-        // new ones.  With this flag set, events will be cleared before features
-        // are added to the first layer.  After clearing events, this flag will
-        // be reset so events are not cleared as features are added to 
-        // subsequent layers.
-        this.clearOnLoad = true;
-        var layer;
-        for (var key in this.layerLookup) {
-            layer = this.layerLookup[key].layer;
-            layer.strategies[0].update(options);
+        if (!this.rendered) {
+            return;
         }
+        var dispatchQueue = [];
+        var layer, key;
+        for (key in this.layerLookup) {
+            layer = this.layerLookup[key].layer;
+            var protocol = this.layerLookup[key].hitCount;
+
+            // a real solution would be something like:
+            // http://trac.osgeo.org/openlayers/ticket/3569
+            var bounds = layer.strategies[0].bounds;
+            layer.strategies[0].calculateBounds();
+            var filter = new OpenLayers.Filter.Spatial({
+                type: OpenLayers.Filter.Spatial.BBOX,
+                value: layer.strategies[0].bounds,
+                projection: layer.projection
+            });
+            layer.strategies[0].bounds = bounds;
+            
+            if (layer.filter) {
+                filter = new OpenLayers.Filter.Logical({
+                    type: OpenLayers.Filter.Logical.AND,
+                    filters: [layer.filter, filter]
+                });
+            }
+            // end of TODO
+            protocol.filter = protocol.options.filter = filter;
+            var func = function(done, storage) {
+                this.read({
+                    callback: function(response) {
+                        if (storage.numberOfFeatures === undefined) {
+                            storage.numberOfFeatures = 0;
+                        }
+                        storage.numberOfFeatures += response.numberOfFeatures;
+                        done();
+                    }
+                });
+            };
+            dispatchQueue.push(func.createDelegate(protocol));
+        }
+        gxp.util.dispatch(dispatchQueue, function(storage) {
+            if (storage.numberOfFeatures <= this.maxFeatures) {
+                layer.strategies[0].activate();
+                // Loading will be triggered for all layers or no layers.  If loading
+                // is triggered, we want to remove existing events before adding any
+                // new ones.  With this flag set, events will be cleared before features
+                // are added to the first layer.  After clearing events, this flag will
+                // be reset so events are not cleared as features are added to 
+                // subsequent layers.
+                this.clearOnLoad = true;
+                this.timelineContainer.el.unmask(true);
+                for (key in this.layerLookup) {
+                    layer = this.layerLookup[key].layer;
+                    layer.strategies[0].update(options);
+                }
+            } else {
+                // clear the timeline and show instruction text
+                layer.strategies[0].deactivate();
+                this.timelineContainer.el.mask(this.instructionText, '');
+                this.eventSource.clear();
+            }
+        }, this);
     },
 
     onFeaturesRemoved: function(event) {
@@ -500,7 +686,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             event.features[i].destroy();
         }
     },
-    
+
     onFeaturesAdded: function(event, key) {
         if (this.clearOnLoad) {
             this.eventSource.clear();
@@ -527,8 +713,39 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             events: events
         };
         this.eventSource.loadJSON(feed, "http://mapstory.org/");
+    },
+
+    /** private: method[onResize]
+     *  Private method called after the panel has been resized.
+     */
+    onResize: function() {
+        gxp.TimelinePanel.superclass.onResize.apply(this, arguments);
+        this.timeline && this.timeline.layout();
+    },
+
+    beforeDestroy : function(){
+        gxp.TimelinePanel.superclass.beforeDestroy.call(this);
+        for (var key in this.layerLookup) {
+            var layer = this.layerLookup[key].layer;
+            layer.events.un({
+                loadstart: this.onLoadStart,
+                loadend: this.onLoadEnd,
+                featuresremoved: this.onFeaturesRemoved,
+                scope: this
+            });
+            layer.destroy();
+        }
+        this.unbindViewer();
+        if (this.rendered){
+            Ext.destroy(this.busyMask);
+        }
+        if (this.timeline) {
+            this.timeline.dispose();
+            this.timeline = null;
+        }
+        this.busyMask = null;
     }
-    
+
 });
 
 /** api: xtype = gxp_timelinepanel */
