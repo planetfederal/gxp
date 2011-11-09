@@ -637,6 +637,28 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             }
         }, this);
         
+        //standardize portal configuration to portalConfig
+        //initial config included both portal config and items
+        if(state.portalConfig.items && state.portalConfig.items.length && state.portalItems){
+            //merge arrays of portalItems and portalConfig.items
+            for(var items=state.portalItems,i=0,len=items.length){
+                var item = items[i];
+                if(state.portalConfig.items.indexOf(item)==-1){
+                    state.portalConfig.items.push(item);
+                }
+            }
+        }
+        else if(state.portalItems && state.portalItems.length){
+            !state.portalConfig && (state.portalConfig={});
+            state.portalConfig.items = state.portalItems;
+        }
+        
+        //get tool states, for most tools this will be the same as its initial config
+        state.tools = [];
+        for(var i=0,len=this.tools.length;i<len;i++){
+            state.tools.push(this.tools[i].getState());
+        }
+        
         return state;
     },
     
