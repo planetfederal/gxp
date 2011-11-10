@@ -9,6 +9,7 @@
 /**
  * @requires plugins/Tool.js
  * @requires widgets/PlaybackToolbar.js
+ * @requires widgets/PlaybackOptionsPanel.js
  */
 
 /** api: (define)
