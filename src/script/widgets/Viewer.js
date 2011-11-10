@@ -641,7 +641,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         //initial config included both portal config and items
         if(state.portalConfig.items && state.portalConfig.items.length && state.portalItems){
             //merge arrays of portalItems and portalConfig.items
-            for(var items=state.portalItems,i=0,len=items.length){
+            for(var items=state.portalItems,i=0,len=items.length;i<len;i++){
                 var item = items[i];
                 if(state.portalConfig.items.indexOf(item)==-1){
                     state.portalConfig.items.push(item);

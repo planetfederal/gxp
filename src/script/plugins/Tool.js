@@ -382,7 +382,7 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
                     cmp.remove();
                 }
             }
-        },
+        }
         this.output = [];
     },
     
