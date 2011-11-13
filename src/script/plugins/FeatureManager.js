@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -639,6 +639,8 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      *  Gets the appropriate projection to use for feature requests.
      */
     getProjection: function(record) {
+        // TODO: This method is suspect.  Determine what it should be doing
+        // and create tests to ensure it is doing the right thing.
         var projection = this.target.mapPanel.map.getProjectionObject();
         var layerProj = record.getLayer().projection;
         if (layerProj && layerProj.equals(projection)) {

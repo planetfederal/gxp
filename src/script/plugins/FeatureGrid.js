@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -144,7 +144,9 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
         var map = this.target.mapPanel.map, smCfg;
         // a minimal SelectFeature control - used just to provide select and
         // unselect, won't be added to the map unless selectOnMap is true
-        this.selectControl = new OpenLayers.Control.SelectFeature(featureManager.featureLayer);
+        this.selectControl = new OpenLayers.Control.SelectFeature(
+            featureManager.featureLayer, this.initialConfig.controlOptions
+        );
         if (this.selectOnMap) {
              if (featureManager.paging) {
                 this.selectControl.events.on({
@@ -278,7 +280,7 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
         
         if (this.alwaysDisplayOnMap || this.selectOnMap) {
             featureManager.showLayer(this.id, this.displayMode);
-        }
+        }        
        
         featureManager.paging && featureManager.on({
             "beforesetpage": function() {
@@ -297,19 +299,25 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
             scope: this
         });
                 
-        featureManager.on("layerchange", function(mgr, rec, schema) {
+        function onLayerChange() {
+            var schema = featureManager.schema,
+                ignoreFields = ["feature", "state", "fid"];
             //TODO use schema instead of store to configure the fields
-            var ignoreFields = ["feature", "state", "fid"];
             schema && schema.each(function(r) {
                 r.get("type").indexOf("gml:") == 0 && ignoreFields.push(r.get("name"));
             });
             featureGrid.ignoreFields = ignoreFields;
             featureGrid.setStore(featureManager.featureStore, schema);
-        }, this);
+        }
+
+        if (featureManager.featureStore) {
+            onLayerChange.call(this);
+        }
+        featureManager.on("layerchange", onLayerChange, this);
         
         return featureGrid;
     }
-            
+                
 });
 
 Ext.preg(gxp.plugins.FeatureGrid.prototype.ptype, gxp.plugins.FeatureGrid);

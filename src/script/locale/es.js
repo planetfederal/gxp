@@ -304,7 +304,9 @@ GeoExt.Lang.add("es", {
         transparentText: "Transparente",
         cacheText: "Caché",
         cacheFieldText: "Usar la versión en caché",
-        stylesText: "Estilos"
+        stylesText: "Estilos",
+        infoFormatText: "Info format",
+        infoFormatEmptyText: "Select a format"
     },
 
     "gxp.EmbedMapDialog.prototype": {

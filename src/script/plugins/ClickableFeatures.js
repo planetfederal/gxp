@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -57,13 +57,19 @@ gxp.plugins.ClickableFeatures = Ext.extend(gxp.plugins.Tool, {
      *  will be created when ``noFeatureClick`` is called for the first time.
      */
     
+    /** api: config[controlOptions]
+     *  ``Object`` Options for the ``OpenLayers.Control.SelectFeature`` used
+     *  with this tool.
+     */
+
     /** private: method[noFeatureClick]
      *  :arg evt: ``Object``
      */
     noFeatureClick: function(evt) {
         if (!this.selectControl) {
             this.selectControl = new OpenLayers.Control.SelectFeature(
-                this.target.tools[this.featureManager].featureLayer
+                this.target.tools[this.featureManager].featureLayer,
+                this.initialConfig.controlOptions
             );
         }
         var evtLL = this.target.mapPanel.map.getLonLatFromPixel(evt.xy);
@@ -90,8 +96,8 @@ gxp.plugins.ClickableFeatures = Ext.extend(gxp.plugins.Tool, {
             BBOX: map.getExtent().toBBOX(),
             WIDTH: size.w,
             HEIGHT: size.h,
-            X: evt.xy.x,
-            Y: evt.xy.y,
+            X: parseInt(evt.xy.x),
+            Y: parseInt(evt.xy.y),
             QUERY_LAYERS: layer.params.LAYERS,
             INFO_FORMAT: "application/vnd.ogc.gml",
             EXCEPTIONS: "application/vnd.ogc.se_xml",

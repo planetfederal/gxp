@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -102,6 +102,8 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
     displayText: "Display",
     opacityText: "Opacity",
     formatText: "Format",
+    infoFormatText: "Info format",
+    infoFormatEmptyText: "Select a format",
     transparentText: "Transparent",
     cacheText: "Cache",
     cacheFieldText: "Use cached version",
@@ -344,6 +346,25 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                     },
                     scope: this
                 }
+            }, {
+                xtype: "combo",
+                fieldLabel: this.infoFormatText,
+                emptyText: this.infoFormatEmptyText,
+                store: record.get("infoFormats"),
+                value: record.get("infoFormat"),
+                hidden: (record.get("infoFormats") === undefined),
+                mode: 'local',
+                triggerAction: "all",
+                editable: false,
+                anchor: "99%",
+                listeners: {
+                    select: function(combo) {
+                        var infoFormat = combo.getValue();
+                        record.set("infoFormat", infoFormat);
+                        this.fireEvent("change");
+                    }
+                },
+                scope: this
             }, {
                 xtype: "checkbox",
                 id: 'transparent',

@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -48,11 +48,21 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
     /** private: property[mapPanel]
      *  ``GeoExt.MapPanel``
      */
+
+    /** api: config[proxy]
+     * ``String`` An optional proxy url which can be used to bypass the same
+     * origin policy. This will be set as ``OpenLayers.ProxyHost``.
+     */
     
     /** api: config[mapItems]
      *  ``Array(Ext.Component)``
      *  Any items to be added to the map panel. A typical item to put on a map
      *  would be a ``GeoExt.ZoomSlider``.
+     */
+
+    /** api: config[mapPlugins]
+     *  ``Array(Ext.util.Observable)``
+     *  Any plugins to be added to the map panel, e.g. ``gxp.plugins.LoadingIndicator``.
      */
      
     /** api: config[portalConfig]
@@ -250,7 +260,13 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         var allow = this.fireEvent("beforelayerselectionchange", record);
         if (allow !== false) {
             changed = true;
+            if (this.selectedLayer) {
+                this.selectedLayer.set("selected", false);
+            }
             this.selectedLayer = record;
+            if (this.selectedLayer) {
+                this.selectedLayer.set("selected", true);
+            }
             this.fireEvent("layerselectionchange", record);
         }
         return changed;
@@ -371,7 +387,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                 if (prop in config) {
                     mapConfig[prop] = config[prop];
                     delete config[prop];
-                };
+                }
             }
         }
 
@@ -394,6 +410,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             forceInitialExtent: true,
             layers: null,
             items: this.mapItems,
+            plugins: this.mapPlugins,
             tbar: config.tbar || {hidden: true}
         }, config));
         
@@ -619,6 +636,28 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                 }
             }
         }, this);
+        
+        //standardize portal configuration to portalConfig
+        //initial config included both portal config and items
+        if(state.portalConfig.items && state.portalConfig.items.length && state.portalItems){
+            //merge arrays of portalItems and portalConfig.items
+            for(var items=state.portalItems,i=0,len=items.length;i<len;i++){
+                var item = items[i];
+                if(state.portalConfig.items.indexOf(item)==-1){
+                    state.portalConfig.items.push(item);
+                }
+            }
+        }
+        else if(state.portalItems && state.portalItems.length){
+            !state.portalConfig && (state.portalConfig={});
+            state.portalConfig.items = state.portalItems;
+        }
+        
+        //get tool states, for most tools this will be the same as its initial config
+        state.tools = [];
+        for(var i=0,len=this.tools.length;i<len;i++){
+            state.tools.push(this.tools[i].getState());
+        }
         
         return state;
     },

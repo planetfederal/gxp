@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -144,24 +144,50 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
      */
     schema: null,
     
+
+    /** private: method[constructor]
+     */
+    constructor: function(config) {
+        this.addEvents(
+            /** api: event[layereditable]
+             *  Fired when a layer is selected or unselected in the target 
+             *  viewer.  Listeners can use this method to determine when a 
+             *  layer is ready for editing.
+             *
+             *  Listener arguments:
+             *
+             *  * tool   - :class:`gxp.plugins.FeatureManager` This tool
+             *  * record - ``GeoExt.data.LayerRecord`` The selected layer record.
+             *    Will be ``null`` if no layer record is selected.
+             *  * editable - ``Boolean`` The layer is ready to be edited.
+             */
+            "layereditable",
+
+            /** api: event[featureeditable]
+             *  Fired when a feature is selected or unselected for editing.  
+             *  Listeners can use this method to determine when a feature is 
+             *  ready for editing.  Beware that this event is fired multiple 
+             *  times when a feature is unselected.
+             *
+             *  Listener arguments:
+             *
+             *  * tool   - :class:`gxp.plugins.FeatureManager` This tool
+             *  * feature - ``OpenLayers.Feature.Vector`` The feature.
+             *  * editable - ``Boolean`` The feature is ready to be edited.
+             */
+            "featureeditable"
+
+        );
+        gxp.plugins.FeatureEditor.superclass.constructor.apply(this, arguments);        
+    },
+
     /** api: method[addActions]
      */
     addActions: function() {
         var popup;
-        var featureManager = this.target.tools[this.featureManager];
+        var featureManager = this.getFeatureManager();
         var featureLayer = featureManager.featureLayer;
         
-        // optionally set up snapping
-        var snapId = this.snappingAgent;
-        if (snapId) {
-            var snappingAgent = this.target.tools[snapId];
-            if (snappingAgent) {
-                snappingAgent.addSnappingControl(featureLayer);
-            } else {
-                throw new Error("Unable to locate snapping agent: " + snapId);
-            }
-        }
-
         var intercepting = false;
         // intercept calls to methods that change the feature store - allows us
         // to persist unsaved changes before calling the original function
@@ -203,6 +229,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
             intercepting = false;
         }
         featureManager.on({
+            // TODO: determine where these events should be unregistered
             "beforequery": intercept.createDelegate(this, "loadFeatures", 1),
             "beforelayerchange": intercept.createDelegate(this, "setLayer", 1),
             "beforesetpage": intercept.createDelegate(this, "setPage", 1),
@@ -287,11 +314,15 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
         
         featureLayer.events.on({
             "beforefeatureremoved": function(evt) {
-                if (evt.feature === this.popup.feature) {
+                if (this.popup && evt.feature === this.popup.feature) {
                     this.selectControl.unselect(evt.feature);
                 }
             },
             "featureunselected": function(evt) {
+                var feature = evt.feature;
+                if (feature) {
+                    this.fireEvent("featureeditable", this, feature, false);
+                }
                 if (popup && !popup.hidden) {
                     popup.close();
                 }
@@ -311,14 +342,17 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
             },
             "featureselected": function(evt) {
                 var feature = evt.feature;
+                if (feature) {
+                    this.fireEvent("featureeditable", this, feature, true);
+                }
                 var featureStore = featureManager.featureStore;
                 if(this.selectControl.active && feature.geometry !== null) {
                     // deactivate select control so no other features can be
                     // selected until the popup is closed
                     if (this.readOnly === false) {
                         this.selectControl.deactivate();
-                        // deactivate will hide the layer, to show it again
-                        featureManager.showLayer(this.id);
+                        // deactivate will hide the layer, so show it again
+                        featureManager.showLayer(this.id, this.showSelectedOnly && "selected");
                     }
                     popup = this.addOutput({
                         xtype: "gxp_featureeditpopup",
@@ -471,7 +505,38 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
 
         featureManager.on("layerchange", this.onLayerChange, this);
         
+        var snappingAgent = this.getSnappingAgent();
+        if (snappingAgent) {
+            snappingAgent.registerEditor(this);
+        }
+        
         return actions;
+    },
+
+    /** private: method[getFeatureManager]
+     *  :returns: :class:`gxp.plugins.FeatureManager`
+     */
+    getFeatureManager: function() {
+        var manager = this.target.tools[this.featureManager];
+        if (!manager) {
+            throw new Error("Unable to access feature manager by id: " + this.featureManager);
+        }
+        return manager;
+    },
+
+    /** private: getSnappingAgent
+     *  :returns: :class:`gxp.plugins.SnappingAgent`
+     */
+    getSnappingAgent: function() {
+        var agent;
+        var snapId = this.snappingAgent;
+        if (snapId) {
+            agent = this.target.tools[snapId];
+            if (!agent) {
+                throw new Error("Unable to locate snapping agent with id: " + snapId);
+            }
+        }
+        return agent;
     },
     
     /** private: method[onLayerChange]
@@ -486,6 +551,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
         this.actions[1].setDisabled(disable);
         if (disable) {
             // not a wfs capable layer or not authorized
+            this.fireEvent("layereditable", this, layer, false);
             return;
         }
 
@@ -516,6 +582,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
         } else {
             button.disable();
         }
+        this.fireEvent("layereditable", this, layer, true);
     },
     
     /** private: method[select]
