@@ -538,6 +538,13 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                     })
                 );
             }
+            var checkChange = function(item, checked, Handler) {
+                if (checked === true) {
+                    this.button.setIconClass(item.iconCls);
+                    this.setHandler(Handler, false);
+                }
+                this.button.toggle(checked);
+            };
             menuItems.push(
                 new Ext.menu.CheckItem({
                     groupClass: null,
@@ -545,14 +552,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                     group: toggleGroup,
                     iconCls: 'gxp-icon-point',
                     listeners: {
-                        checkchange: function(item, checked) {
-                            if (checked === true) {
-                                this.button.setIconClass(item.iconCls);
-                                this.setHandler(OpenLayers.Handler.Point, false);
-                            }
-                            this.button.toggle(checked);
-                        },
-                        scope: this
+                        checkchange: checkChange.createDelegate(this, [OpenLayers.Handler.Point], 2)
                     }
                 }),
                 new Ext.menu.CheckItem({
@@ -561,14 +561,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                     group: toggleGroup,
                     iconCls: 'gxp-icon-line',
                     listeners: {
-                        checkchange: function(item, checked) {
-                            if (checked === true) {
-                                this.button.setIconClass(item.iconCls);
-                                this.setHandler(OpenLayers.Handler.Path, false);
-                            }
-                            this.button.toggle(checked);
-                        },
-                        scope: this
+                        checkchange: checkChange.createDelegate(this, [OpenLayers.Handler.Path], 2)
                     }
                 }),
                 new Ext.menu.CheckItem({
@@ -577,14 +570,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                     group: toggleGroup,
                     iconCls: 'gxp-icon-polygon',
                     listeners: {
-                        checkchange: function(item, checked) {
-                            if (checked === true) {
-                                this.button.setIconClass(item.iconCls);
-                                this.setHandler(OpenLayers.Handler.Polygon, false);
-                            }
-                            this.button.toggle(checked);
-                        },
-                        scope: this
+                        checkchange: checkChange.createDelegate(this, [OpenLayers.Handler.Polygon], 2)
                     }
                 })
             );
