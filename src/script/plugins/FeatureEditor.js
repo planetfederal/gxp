@@ -508,6 +508,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                 new GeoExt.Action(Ext.apply(commonOptions, {
                     menu: new Ext.menu.Menu({items: [
                         new Ext.menu.CheckItem({
+                            groupClass: null,
                             text: this.pointText,
                             group: toggleGroup,
                             iconCls: 'gxp-icon-point',
@@ -523,6 +524,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                             }
                         }),
                         new Ext.menu.CheckItem({
+                            groupClass: null,
                             text: this.lineText,
                             group: toggleGroup,
                             iconCls: 'gxp-icon-line',
@@ -538,6 +540,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                             }
                         }),
                         new Ext.menu.CheckItem({
+                            groupClass: null,
                             text: this.polygonText,
                             group: toggleGroup,
                             iconCls: 'gxp-icon-polygon',
