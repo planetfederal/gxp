@@ -1,5 +1,5 @@
 ﻿
-GeoExt.Lang.add("en", {
+GeoExt.Lang.add("el", {
 
     "gxp.menu.LayerMenu.prototype": {
         layerText: "Επιφάνεια"
