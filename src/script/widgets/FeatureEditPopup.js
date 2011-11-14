@@ -456,7 +456,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             this.saveButton.show();
             this.cancelButton.show();
             
-            this.geometry = this.feature.geometry.clone();
+            this.geometry = this.feature.geometry && this.feature.geometry.clone();
             this.attributes = Ext.apply({}, this.feature.attributes);
 
             this.modifyControl = new OpenLayers.Control.ModifyFeature(
@@ -465,7 +465,9 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             );
             this.feature.layer.map.addControl(this.modifyControl);
             this.modifyControl.activate();
-            this.modifyControl.selectFeature(this.feature);
+            if (this.feature.geometry) {
+                this.modifyControl.selectFeature(this.feature);
+            }
         }
     },
     

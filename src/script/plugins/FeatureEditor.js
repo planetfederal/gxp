@@ -45,6 +45,13 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
      */
     supportAbstractGeometry: false,
 
+    /** api: config[supportNoGeometry]
+     *  Should we support the ability to create features with no geometry?
+     *  This only works when combined with supportAbstractGeometry: true.
+     *  Default is false.
+     */
+    supportNoGeometry: false,
+
     /** api: config[iconClsEdit]
      *  ``String``
      *  iconCls to use for the edit button.
@@ -57,6 +64,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
     pointText: "Point",
     lineText: "Line",
     polygonText: "Polygon",
+    noGeometryText: "Event",
 
     /** api: config[createFeatureActionTip]
      *  ``String``
@@ -356,7 +364,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                     this.fireEvent("featureeditable", this, feature, true);
                 }
                 var featureStore = featureManager.featureStore;
-                if(this.selectControl.active && feature.geometry !== null) {
+                if(this._forcePopupForNoGeometry === true || (this.selectControl.active && feature.geometry !== null)) {
                     // deactivate select control so no other features can be
                     // selected until the popup is closed
                     if (this.readOnly === false) {
@@ -504,58 +512,86 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
             map: this.target.mapPanel.map
         };
         if (this.supportAbstractGeometry === true) {
+            var menuItems = [];
+            if (this.supportNoGeometry === true) {
+                menuItems.push(
+                    new Ext.menu.CheckItem({
+                        text: this.noGeometryText,
+                        iconCls: "gxp-icon-event",
+                        groupClass: null,
+                        group: toggleGroup,
+                        listeners: {
+                            checkchange: function(item, checked) {
+                                if (checked === true) {
+                                    this.button.setIconClass(item.iconCls);
+                                    var feature = new OpenLayers.Feature.Vector(null);
+                                    feature.state = OpenLayers.State.INSERT;
+                                    featureLayer.addFeatures([feature]);
+                                    this._forcePopupForNoGeometry = true;
+                                    featureLayer.events.triggerEvent("featureselected", {feature: feature});
+                                    delete this._forcePopupForNoGeometry;
+                                }
+                                this.button.toggle(false);
+                            },
+                            scope: this
+                        }
+                    })
+                );
+            }
+            menuItems.push(
+                new Ext.menu.CheckItem({
+                    groupClass: null,
+                    text: this.pointText,
+                    group: toggleGroup,
+                    iconCls: 'gxp-icon-point',
+                    listeners: {
+                        checkchange: function(item, checked) {
+                            if (checked === true) {
+                                this.button.setIconClass(item.iconCls);
+                                this.setHandler(OpenLayers.Handler.Point, false);
+                            }
+                            this.button.toggle(checked);
+                        },
+                        scope: this
+                    }
+                }),
+                new Ext.menu.CheckItem({
+                    groupClass: null,
+                    text: this.lineText,
+                    group: toggleGroup,
+                    iconCls: 'gxp-icon-line',
+                    listeners: {
+                        checkchange: function(item, checked) {
+                            if (checked === true) {
+                                this.button.setIconClass(item.iconCls);
+                                this.setHandler(OpenLayers.Handler.Path, false);
+                            }
+                            this.button.toggle(checked);
+                        },
+                        scope: this
+                    }
+                }),
+                new Ext.menu.CheckItem({
+                    groupClass: null,
+                    text: this.polygonText,
+                    group: toggleGroup,
+                    iconCls: 'gxp-icon-polygon',
+                    listeners: {
+                        checkchange: function(item, checked) {
+                            if (checked === true) {
+                                this.button.setIconClass(item.iconCls);
+                                this.setHandler(OpenLayers.Handler.Polygon, false);
+                            }
+                            this.button.toggle(checked);
+                        },
+                        scope: this
+                    }
+                })
+            );
+
             this.button = new Ext.SplitButton(
                 new GeoExt.Action(Ext.apply(commonOptions, {
-                    menu: new Ext.menu.Menu({items: [
-                        new Ext.menu.CheckItem({
-                            groupClass: null,
-                            text: this.pointText,
-                            group: toggleGroup,
-                            iconCls: 'gxp-icon-point',
-                            listeners: {
-                                checkchange: function(item, checked) {
-                                    if (checked === true) {
-                                        this.button.setIconClass(item.iconCls);
-                                        this.setHandler(OpenLayers.Handler.Point, false);
-                                    }
-                                    this.button.toggle(checked);
-                                },
-                                scope: this
-                            }
-                        }),
-                        new Ext.menu.CheckItem({
-                            groupClass: null,
-                            text: this.lineText,
-                            group: toggleGroup,
-                            iconCls: 'gxp-icon-line',
-                            listeners: {
-                                checkchange: function(item, checked) {
-                                    if (checked === true) {
-                                        this.button.setIconClass(item.iconCls);
-                                        this.setHandler(OpenLayers.Handler.Path, false);
-                                    }
-                                    this.button.toggle(checked);
-                                },
-                                scope: this
-                            }
-                        }),
-                        new Ext.menu.CheckItem({
-                            groupClass: null,
-                            text: this.polygonText,
-                            group: toggleGroup,
-                            iconCls: 'gxp-icon-polygon',
-                            listeners: {
-                                checkchange: function(item, checked) {
-                                    if (checked === true) {
-                                        this.button.setIconClass(item.iconCls);
-                                        this.setHandler(OpenLayers.Handler.Polygon, false);
-                                    }
-                                    this.button.toggle(checked);
-                                },
-                                scope: this
-                            }
-                        })
-                    ]})
+                    menu: new Ext.menu.Menu({items: menuItems})
                 }))
             );
             actions.push(this.button);
