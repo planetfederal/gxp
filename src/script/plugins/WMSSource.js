@@ -186,7 +186,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
     layerConfigComplete: function(config) {
         // for now, we assume that the layer config is incomplete, unless
         // forceLazy is set to true
-        return this.forceLazy === true;
+        return config.forceLazy === true || this.forceLazy === true;
     },
 
     /** api: method[createStore]
@@ -559,6 +559,49 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             delayedCallback(this.describeLayerStore.getAt(index));
         }
     },
+
+    /** private: method[fetchSchema]
+     *  :arg url: ``String`` The url fo the WFS endpoint
+     *  :arg typeName: ``String`` The typeName to use
+     *  :arg callback: ``Function`` Callback function. Will be called with
+     *      a ``GeoExt.data.AttributeStore`` containing the schema as first
+     *      argument, or false if the WMS does not support DescribeLayer or the
+     *      layer is not associated with a WFS feature type.
+     *  :arg scope: ``Object`` Optional scope for the callback.
+     *
+     *  Helper function to fetch the schema for a layer of this source.
+     */
+    fetchSchema: function(url, typeName, callback, scope) {
+        var schema = this.schemaCache[typeName];
+        if (schema) {
+            if (schema.getCount() == 0) {
+                schema.on("load", function() {
+                    callback.call(scope, schema);
+                }, this, {single: true});
+            } else {
+                callback.call(scope, schema);
+            }
+        } else {
+            schema = new GeoExt.data.AttributeStore({
+                url: url,
+                baseParams: {
+                    SERVICE: "WFS",
+                    //TODO should get version from WFS GetCapabilities
+                    VERSION: "1.1.0",
+                    REQUEST: "DescribeFeatureType",
+                    TYPENAME: typeName
+                },
+                autoLoad: true,
+                listeners: {
+                    "load": function() {
+                        callback.call(scope, schema);
+                    },
+                    scope: this
+                }
+            });
+            this.schemaCache[typeName] = schema;
+        }
+    },
     
     /** api: method[getSchema]
      *  :arg rec: ``GeoExt.data.LayerRecord`` the WMS layer to issue a WFS
@@ -576,42 +619,22 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         if (!this.schemaCache) {
             this.schemaCache = {};
         }
-        this.describeLayer(rec, function(r) {
-            if (r && r.get("owsType") == "WFS") {
-                var typeName = r.get("typeName");
-                var schema = this.schemaCache[typeName];
-                if (schema) {
-                    if (schema.getCount() == 0) {
-                        schema.on("load", function() {
-                            callback.call(scope, schema);
-                        }, this, {single: true});
-                    } else {
-                        callback.call(scope, schema);
-                    }
+        if (rec.get('forceLazy') === true) {
+            // when lazy, we have the following assumptions:
+            // 1. URL of the WFS is the same as the URL of the WMS
+            // 2. typeName is the same as the WMS Layer name
+            this.fetchSchema(this.url, rec.get('name'), callback, scope);
+        } else {
+            this.describeLayer(rec, function(r) {
+                if (r && r.get("owsType") == "WFS") {
+                    var typeName = r.get("typeName");
+                    var url = r.get("owsURL");
+                    this.fetchSchema(url, typeName, callback, scope);
                 } else {
-                    schema = new GeoExt.data.AttributeStore({
-                        url: r.get("owsURL"),
-                        baseParams: {
-                            SERVICE: "WFS",
-                            //TODO should get version from WFS GetCapabilities
-                            VERSION: "1.1.0",
-                            REQUEST: "DescribeFeatureType",
-                            TYPENAME: typeName
-                        },
-                        autoLoad: true,
-                        listeners: {
-                            "load": function() {
-                                callback.call(scope, schema);
-                            },
-                            scope: this
-                        }
-                    });
-                    this.schemaCache[typeName] = schema;
+                    callback.call(scope, false);
                 }
-            } else {
-                callback.call(scope, false);
-            }
-        }, this);
+            }, this);
+        }
     },
     
     /** api: method[getWFSProtocol]

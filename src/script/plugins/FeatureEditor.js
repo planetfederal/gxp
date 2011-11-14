@@ -38,6 +38,20 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
      */
     iconClsAdd: "gxp-icon-addfeature",
 
+    /** api: config[supportAbstractGeometry]
+     *  Should we support layers that advertize an abstract geometry type?
+     *  In this case, we will provide menu options for digitizing point, line
+     *  or polygon features. Default is false.
+     */
+    supportAbstractGeometry: false,
+
+    /** api: config[supportNoGeometry]
+     *  Should we support the ability to create features with no geometry?
+     *  This only works when combined with supportAbstractGeometry: true.
+     *  Default is false.
+     */
+    supportNoGeometry: false,
+
     /** api: config[iconClsEdit]
      *  ``String``
      *  iconCls to use for the edit button.
@@ -47,6 +61,10 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
     /** i18n **/
     exceptionTitle: "Save Failed",
     exceptionText: "Trouble saving features",
+    pointText: "Point",
+    lineText: "Line",
+    polygonText: "Polygon",
+    noGeometryText: "Event",
 
     /** api: config[createFeatureActionTip]
      *  ``String``
@@ -346,7 +364,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                     this.fireEvent("featureeditable", this, feature, true);
                 }
                 var featureStore = featureManager.featureStore;
-                if(this.selectControl.active && feature.geometry !== null) {
+                if(this._forcePopupForNoGeometry === true || (this.selectControl.active && feature.geometry !== null)) {
                     // deactivate select control so no other features can be
                     // selected until the popup is closed
                     if (this.readOnly === false) {
@@ -478,7 +496,9 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
         });
 
         var toggleGroup = this.toggleGroup || Ext.id();
-        var actions = gxp.plugins.FeatureEditor.superclass.addActions.call(this, [new GeoExt.Action({
+
+        var actions = [];
+        var commonOptions = {
             tooltip: this.createFeatureActionTip,
             text: this.createFeatureActionText,
             iconCls: this.iconClsAdd,
@@ -490,7 +510,81 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
             control: this.drawControl,
             deactivateOnDisable: true,
             map: this.target.mapPanel.map
-        }), new GeoExt.Action({
+        };
+        if (this.supportAbstractGeometry === true) {
+            var menuItems = [];
+            if (this.supportNoGeometry === true) {
+                menuItems.push(
+                    new Ext.menu.CheckItem({
+                        text: this.noGeometryText,
+                        iconCls: "gxp-icon-event",
+                        groupClass: null,
+                        group: toggleGroup,
+                        listeners: {
+                            checkchange: function(item, checked) {
+                                if (checked === true) {
+                                    this.button.setIconClass(item.iconCls);
+                                    var feature = new OpenLayers.Feature.Vector(null);
+                                    feature.state = OpenLayers.State.INSERT;
+                                    featureLayer.addFeatures([feature]);
+                                    this._forcePopupForNoGeometry = true;
+                                    featureLayer.events.triggerEvent("featureselected", {feature: feature});
+                                    delete this._forcePopupForNoGeometry;
+                                }
+                                this.button.toggle(false);
+                            },
+                            scope: this
+                        }
+                    })
+                );
+            }
+            var checkChange = function(item, checked, Handler) {
+                if (checked === true) {
+                    this.button.setIconClass(item.iconCls);
+                    this.setHandler(Handler, false);
+                }
+                this.button.toggle(checked);
+            };
+            menuItems.push(
+                new Ext.menu.CheckItem({
+                    groupClass: null,
+                    text: this.pointText,
+                    group: toggleGroup,
+                    iconCls: 'gxp-icon-point',
+                    listeners: {
+                        checkchange: checkChange.createDelegate(this, [OpenLayers.Handler.Point], 2)
+                    }
+                }),
+                new Ext.menu.CheckItem({
+                    groupClass: null,
+                    text: this.lineText,
+                    group: toggleGroup,
+                    iconCls: 'gxp-icon-line',
+                    listeners: {
+                        checkchange: checkChange.createDelegate(this, [OpenLayers.Handler.Path], 2)
+                    }
+                }),
+                new Ext.menu.CheckItem({
+                    groupClass: null,
+                    text: this.polygonText,
+                    group: toggleGroup,
+                    iconCls: 'gxp-icon-polygon',
+                    listeners: {
+                        checkchange: checkChange.createDelegate(this, [OpenLayers.Handler.Polygon], 2)
+                    }
+                })
+            );
+
+            this.button = new Ext.SplitButton(
+                new GeoExt.Action(Ext.apply(commonOptions, {
+                    menu: new Ext.menu.Menu({items: menuItems})
+                }))
+            );
+            actions.push(this.button);
+        } else {
+            actions.push(new GeoExt.Action(commonOptions));
+        }
+        actions.push(new GeoExt.Action({
             tooltip: this.editFeatureActionTip,
             text: this.editFeatureActionText,
             iconCls: this.iconClsEdit,
@@ -501,15 +595,17 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
             control: this.selectControl,
             deactivateOnDisable: true,
             map: this.target.mapPanel.map
-        })]);
+        }));
+
+        actions = gxp.plugins.FeatureEditor.superclass.addActions.call(this, actions);
 
         featureManager.on("layerchange", this.onLayerChange, this);
-        
+
         var snappingAgent = this.getSnappingAgent();
         if (snappingAgent) {
             snappingAgent.registerEditor(this);
         }
-        
+
         return actions;
     },
 
@@ -537,6 +633,22 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
             }
         }
         return agent;
+    },
+
+    setHandler: function(Handler, multi) {
+        var control = this.drawControl;
+        var active = control.active;
+        if(active) {
+            control.deactivate();
+        }
+        control.handler.destroy(); 
+        control.handler = new Handler(
+            control, control.callbacks,
+            Ext.apply(control.handlerOptions, {multi: multi})
+        );
+        if(active) {
+            control.activate();
+        } 
     },
     
     /** private: method[onLayerChange]
@@ -567,17 +679,10 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
         var simpleType = mgr.geometryType.replace("Multi", "");
         var Handler = handlers[simpleType];
         if (Handler) {
-            var active = control.active;
-            if(active) {
-                control.deactivate();
-            }
-            control.handler = new Handler(
-                control, control.callbacks,
-                Ext.apply(control.handlerOptions, {multi: (simpleType != mgr.geometryType)})
-            );
-            if(active) {
-                control.activate();
-            }
+            var multi = (simpleType != mgr.geometryType);
+            this.setHandler(Handler, multi);
+            button.enable();
+        } else if (this.supportAbstractGeometry === true && mgr.geometryType === 'Geometry') {
             button.enable();
         } else {
             button.disable();
