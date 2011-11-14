@@ -657,7 +657,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
             var multi = (simpleType != mgr.geometryType);
             this.setHandler(Handler, multi);
             button.enable();
-        } else if (mgr.geometryType === 'Geometry') {
+        } else if (this.supportAbstractGeometry === true && mgr.geometryType === 'Geometry') {
             button.enable();
         } else {
             button.disable();
