@@ -38,6 +38,13 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
      */
     iconClsAdd: "gxp-icon-addfeature",
 
+    /** api: config[supportAbstractGeometry]
+     *  Should we support layers that advertize an abstract geometry type?
+     *  In this case, we will provide menu options for digitizing point, line
+     *  or polygon features. Default is false.
+     */
+    supportAbstractGeometry: false,
+
     /** api: config[iconClsEdit]
      *  ``String``
      *  iconCls to use for the edit button.
@@ -47,6 +54,9 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
     /** i18n **/
     exceptionTitle: "Save Failed",
     exceptionText: "Trouble saving features",
+    pointText: "Point",
+    lineText: "Line",
+    polygonText: "Polygon",
 
     /** api: config[createFeatureActionTip]
      *  ``String``
@@ -478,7 +488,9 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
         });
 
         var toggleGroup = this.toggleGroup || Ext.id();
-        var actions = gxp.plugins.FeatureEditor.superclass.addActions.call(this, [new GeoExt.Action({
+
+        var actions = [];
+        var commonOptions = {
             tooltip: this.createFeatureActionTip,
             text: this.createFeatureActionText,
             iconCls: this.iconClsAdd,
@@ -490,7 +502,64 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
             control: this.drawControl,
             deactivateOnDisable: true,
             map: this.target.mapPanel.map
-        }), new GeoExt.Action({
+        };
+        if (this.supportAbstractGeometry === true) {
+            this.button = new Ext.SplitButton(
+                new GeoExt.Action(Ext.apply(commonOptions, {
+                    menu: new Ext.menu.Menu({items: [
+                        new Ext.menu.CheckItem({
+                            text: this.pointText,
+                            group: toggleGroup,
+                            iconCls: 'gxp-icon-point',
+                            listeners: {
+                                checkchange: function(item, checked) {
+                                    if (checked === true) {
+                                        this.button.setIconClass(item.iconCls);
+                                        this.setHandler(OpenLayers.Handler.Point, false);
+                                    }
+                                    this.button.toggle(checked);
+                                },
+                                scope: this
+                            }
+                        }),
+                        new Ext.menu.CheckItem({
+                            text: this.lineText,
+                            group: toggleGroup,
+                            iconCls: 'gxp-icon-line',
+                            listeners: {
+                                checkchange: function(item, checked) {
+                                    if (checked === true) {
+                                        this.button.setIconClass(item.iconCls);
+                                        this.setHandler(OpenLayers.Handler.Path, false);
+                                    }
+                                    this.button.toggle(checked);
+                                },
+                                scope: this
+                            }
+                        }),
+                        new Ext.menu.CheckItem({
+                            text: this.polygonText,
+                            group: toggleGroup,
+                            iconCls: 'gxp-icon-polygon',
+                            listeners: {
+                                checkchange: function(item, checked) {
+                                    if (checked === true) {
+                                        this.button.setIconClass(item.iconCls);
+                                        this.setHandler(OpenLayers.Handler.Polygon, false);
+                                    }
+                                    this.button.toggle(checked);
+                                },
+                                scope: this
+                            }
+                        })
+                    ]})
+                }))
+            );
+            actions.push(this.button);
+        } else {
+            actions.push(new GeoExt.Action(commonOptions));
+        }
+        actions.push(new GeoExt.Action({
             tooltip: this.editFeatureActionTip,
             text: this.editFeatureActionText,
             iconCls: this.iconClsEdit,
@@ -501,15 +570,17 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
             control: this.selectControl,
             deactivateOnDisable: true,
             map: this.target.mapPanel.map
-        })]);
+        }));
+
+        actions = gxp.plugins.FeatureEditor.superclass.addActions.call(this, actions);
 
         featureManager.on("layerchange", this.onLayerChange, this);
-        
+
         var snappingAgent = this.getSnappingAgent();
         if (snappingAgent) {
             snappingAgent.registerEditor(this);
         }
-        
+
         return actions;
     },
 
@@ -537,6 +608,22 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
             }
         }
         return agent;
+    },
+
+    setHandler: function(Handler, multi) {
+        var control = this.drawControl;
+        var active = control.active;
+        if(active) {
+            control.deactivate();
+        }
+        control.handler.destroy(); 
+        control.handler = new Handler(
+            control, control.callbacks,
+            Ext.apply(control.handlerOptions, {multi: multi})
+        );
+        if(active) {
+            control.activate();
+        } 
     },
     
     /** private: method[onLayerChange]
@@ -567,17 +654,10 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
         var simpleType = mgr.geometryType.replace("Multi", "");
         var Handler = handlers[simpleType];
         if (Handler) {
-            var active = control.active;
-            if(active) {
-                control.deactivate();
-            }
-            control.handler = new Handler(
-                control, control.callbacks,
-                Ext.apply(control.handlerOptions, {multi: (simpleType != mgr.geometryType)})
-            );
-            if(active) {
-                control.activate();
-            }
+            var multi = (simpleType != mgr.geometryType);
+            this.setHandler(Handler, multi);
+            button.enable();
+        } else if (mgr.geometryType === 'Geometry') {
             button.enable();
         } else {
             button.disable();
