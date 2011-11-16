@@ -408,7 +408,8 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                 this.target.on("beforelayerselectionchange", this.setLayer, this);
             }
             if (this.layer) {
-                this.target.createLayerRecord(this.layer, this.setLayer, this);
+                var config = Ext.apply({}, this.layer);
+                this.target.createLayerRecord(config, this.setLayer, this);
             }
             this.on("layerchange", this.setSchema, this);
             return true;
