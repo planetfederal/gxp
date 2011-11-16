@@ -84,12 +84,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  
      */
     
-    /** private: property[clearOnLoad]
-     *  ``Boolean``
-     *  Indicates that timeline events should be cleared before new features are
-     *  added.
-     */
-
     /** private: property[rangeInfo]
      *  ``Object`` An object with 2 properties: current and original.
      *  Current contains the original range with a fraction on both sides.
@@ -233,17 +227,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     setTitleAttribute: function(record, titleAttr) {
         var key = this.getKey(record);
         this.layerLookup[key].titleAttr = titleAttr;
-        var iterator = this.eventSource.getAllEventIterator();
-        var eventIds = [];
-        while (iterator.hasNext()) {
-            var evt = iterator.next();
-            if (evt.getProperty('key') === key) {
-                eventIds.push(evt.getID());
-            }
-        }
-        for (var i=0, len=eventIds.length; i<len; ++i) {
-            this.eventSource.remove(eventIds[i]);
-        }
+        this.clearEventsForKey(key);
         this.onFeaturesAdded({features: this.layerLookup[key].layer.features}, key);
     },
 
@@ -693,17 +677,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }
         gxp.util.dispatch(dispatchQueue, function(storage) {
             if (storage.numberOfFeatures <= this.maxFeatures) {
-                // Loading will be triggered for all layers or no layers.  If loading
-                // is triggered, we want to remove existing events before adding any
-                // new ones.  With this flag set, events will be cleared before features
-                // are added to the first layer.  After clearing events, this flag will
-                // be reset so events are not cleared as features are added to 
-                // subsequent layers.
-                this.clearOnLoad = true;
                 this.timelineContainer.el.unmask(true);
                 for (key in this.layerLookup) {
                     layer = this.layerLookup[key].layer;
                     if (layer && layer.strategies !== null) {
+                        this.clearEventsForKey(key);
                         layer.strategies[0].activate();
                         layer.strategies[0].update(options);
                     }
@@ -720,6 +698,20 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 this.eventSource.clear();
             }
         }, this);
+    },
+
+    clearEventsForKey: function(key) {
+        var iterator = this.eventSource.getAllEventIterator();
+        var eventIds = [];
+        while (iterator.hasNext()) {
+            var evt = iterator.next();
+            if (evt.getProperty('key') === key) {
+                eventIds.push(evt.getID());
+            }
+        }
+        for (var i=0, len=eventIds.length; i<len; ++i) {
+            this.eventSource.remove(eventIds[i]);
+        }
     },
 
     onFeaturesRemoved: function(event) {
@@ -753,10 +745,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     },
 
     onFeaturesAdded: function(event, key) {
-        if (this.clearOnLoad) {
-            this.eventSource.clear();
-            this.clearOnLoad = false;
-        }
         var features = event.features;
         this.addFeatures(key, features);
     },
