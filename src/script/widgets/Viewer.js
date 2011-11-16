@@ -657,10 +657,9 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         
         //get tool states, for most tools this will be the same as its initial config
         state.tools = [];
-        for(var i=0,len=this.tools.length;i<len;i++){
-            state.tools.push(this.tools[i].getState());
-        }
-        
+        Ext.iterate(this.tools,function(key,val,obj){
+            state.tools.push(val.getState());
+        })
         return state;
     },
     
