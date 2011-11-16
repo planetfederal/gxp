@@ -143,7 +143,7 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
         var control = toolbar.control;
         config.outputConfig = {
             dynamicRange: toolbar.dyanamicRange,
-            playbackMode: toolbar.playbackMode,
+            playbackMode: toolbar.playbackMode
         };
         config.outputConfig.controlConfig = {
             range: (control.fixedRange) ? control.range : undefined,
