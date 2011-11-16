@@ -177,6 +177,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             this.bindViewer(this.initialConfig.viewer);
         }
 
+        if (this.initialConfig.featureManager) {
+            delete this.featureManager;
+            this.bindFeatureManager(this.initialConfig.featureManager);
+        }
+
         if (this.initialConfig.playbackTool) {
             delete this.playbackTool;
             this.bindPlaybackTool(this.initialConfig.playbackTool);
@@ -246,28 +251,56 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         var fid = evt.getProperty("fid");
         var key = evt.getProperty("key");
         var layer = this.layerLookup[key].layer;
-        var feature = layer.getFeatureByFid(fid);
-        var centroid = feature.geometry.getCentroid();
-        var map = this.viewer.mapPanel.map;
-        this._silentMapMove = true;
-        map.setCenter(new OpenLayers.LonLat(centroid.x, centroid.y));
-        delete this._silentMapMove;
-        if (this.popup) {
-            this.popup.destroy();
-            this.popup = null;
+        var feature = layer && layer.getFeatureByFid(fid);
+        if (feature) {
+            var centroid = feature.geometry.getCentroid();
+            var map = this.viewer.mapPanel.map;
+            this._silentMapMove = true;
+            map.setCenter(new OpenLayers.LonLat(centroid.x, centroid.y));
+            delete this._silentMapMove;
+            if (this.popup) {
+                this.popup.destroy();
+                this.popup = null;
+            }
+            this.popup = new gxp.FeatureEditPopup({
+                feature: feature,
+                propertyGridNameText: "Attributes",
+                title: evt.getProperty("title"),
+                panIn: false,
+                width: 200,
+                height: 250,
+                collapsible: true,
+                readOnly: true,
+                hideMode: 'offsets'
+            });
+            this.popup.show();
         }
-        this.popup = new gxp.FeatureEditPopup({
-            feature: feature,
-            propertyGridNameText: "Attributes",
-            title: evt.getProperty("title"),
-            panIn: false,
-            width: 200,
-            height: 250,
-            collapsible: true,
-            readOnly: true,
-            hideMode: 'offsets'
-        });
-        this.popup.show();
+    },
+
+    bindFeatureManager: function(featureManager) {
+        this.featureManager = featureManager;
+        this.featureManager.on("layerchange", this.onLayerChange, this);
+    },
+
+    onLayerChange: function(tool, record, schema) {
+        var key = this.getKey(record);
+        // TODO remove hard-coded attributes
+        this.layerLookup[key] = {
+            layer: null,
+            titleAttr: 'title',
+            timeAttr: 'timestamp',
+            visible: true
+        };
+        this.featureManager.featureStore.on("write", this.onSave.createDelegate(this, [key], 3), this);
+    },
+
+    onSave: function(store, action, data, key) {
+        var features = [];
+        for (var i=0, ii=data.length; i<ii; i++) {
+            var feature = data[i].feature;
+            features.push(feature);
+        }
+        this.addFeatures(key, features);
     },
 
     bindPlaybackTool: function(playbackTool) {
@@ -622,39 +655,41 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         var layer, key;
         for (key in this.layerLookup) {
             layer = this.layerLookup[key].layer;
-            var protocol = this.layerLookup[key].hitCount;
+            if (layer && layer.strategies !== null) {
+                var protocol = this.layerLookup[key].hitCount;
 
-            // a real solution would be something like:
-            // http://trac.osgeo.org/openlayers/ticket/3569
-            var bounds = layer.strategies[0].bounds;
-            layer.strategies[0].calculateBounds();
-            var filter = new OpenLayers.Filter.Spatial({
-                type: OpenLayers.Filter.Spatial.BBOX,
-                value: layer.strategies[0].bounds,
-                projection: layer.projection
-            });
-            layer.strategies[0].bounds = bounds;
+                // a real solution would be something like:
+                // http://trac.osgeo.org/openlayers/ticket/3569
+                var bounds = layer.strategies[0].bounds;
+                layer.strategies[0].calculateBounds();
+                var filter = new OpenLayers.Filter.Spatial({
+                    type: OpenLayers.Filter.Spatial.BBOX,
+                    value: layer.strategies[0].bounds,
+                    projection: layer.projection
+                });
+                layer.strategies[0].bounds = bounds;
             
-            if (layer.filter) {
-                filter = new OpenLayers.Filter.Logical({
-                    type: OpenLayers.Filter.Logical.AND,
-                    filters: [layer.filter, filter]
-                });
-            }
-            // end of TODO
-            protocol.filter = protocol.options.filter = filter;
-            var func = function(done, storage) {
-                this.read({
-                    callback: function(response) {
-                        if (storage.numberOfFeatures === undefined) {
-                            storage.numberOfFeatures = 0;
+                if (layer.filter) {
+                    filter = new OpenLayers.Filter.Logical({
+                        type: OpenLayers.Filter.Logical.AND,
+                        filters: [layer.filter, filter]
+                    });
+                }
+                // end of TODO
+                protocol.filter = protocol.options.filter = filter;
+                var func = function(done, storage) {
+                    this.read({
+                        callback: function(response) {
+                            if (storage.numberOfFeatures === undefined) {
+                                storage.numberOfFeatures = 0;
+                            }
+                            storage.numberOfFeatures += response.numberOfFeatures;
+                            done();
                         }
-                        storage.numberOfFeatures += response.numberOfFeatures;
-                        done();
-                    }
-                });
-            };
-            dispatchQueue.push(func.createDelegate(protocol));
+                    });
+                };
+                dispatchQueue.push(func.createDelegate(protocol));
+            }
         }
         gxp.util.dispatch(dispatchQueue, function(storage) {
             if (storage.numberOfFeatures <= this.maxFeatures) {
@@ -669,7 +704,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 this.timelineContainer.el.unmask(true);
                 for (key in this.layerLookup) {
                     layer = this.layerLookup[key].layer;
-                    layer.strategies[0].update(options);
+                    if (layer && layer.strategies !== null) {
+                        layer.strategies[0].update(options);
+                    }
                 }
             } else {
                 // clear the timeline and show instruction text
@@ -687,18 +724,13 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }
     },
 
-    onFeaturesAdded: function(event, key) {
-        if (this.clearOnLoad) {
-            this.eventSource.clear();
-            this.clearOnLoad = false;
-        }
-        var features = event.features;
+    addFeatures: function(key, features) {
+        var titleAttr = this.layerLookup[key].titleAttr;
+        var timeAttr = this.layerLookup[key].timeAttr;
         var num = features.length;
         var events = new Array(num);
         var attributes, str;
-        var titleAttr = this.layerLookup[key].titleAttr;
-        var timeAttr = this.layerLookup[key].timeAttr;
-        for (var i=0; i<num; ++i) {
+        for (var i=0; i<num; ++i) { 
             attributes = features[i].attributes;
             events[i] = {
                 start: OpenLayers.Date.parse(attributes[timeAttr]),
@@ -706,13 +738,22 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 durationEvent: false,
                 key: key,
                 fid: features[i].fid
-            };
-        }
+            };      
+        }       
         var feed = {
             dateTimeFormat: "javascriptnative", //"iso8601",
             events: events
         };
         this.eventSource.loadJSON(feed, "http://mapstory.org/");
+    },
+
+    onFeaturesAdded: function(event, key) {
+        if (this.clearOnLoad) {
+            this.eventSource.clear();
+            this.clearOnLoad = false;
+        }
+        var features = event.features;
+        this.addFeatures(key, features);
     },
 
     /** private: method[onResize]
