@@ -82,7 +82,8 @@
         "plugins/LoadingIndicator.js",
         "plugins/Playback.js",
         "locale/es.js",
-        "locale/ca.js"
+        "locale/ca.js",
+        "locale/el.js"
     );
     
     var scripts = document.getElementsByTagName("script");
