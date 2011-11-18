@@ -29,6 +29,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
     viewer: null,
     initialTime:null,
     timeFormat:"l, F d, Y g:i:s A",
+    toolbarCls:'x-toolbar gx-overlay-playback', //must use toolbarCls since it is used instead of baseCls in toolbars
     slider:true,
     dynamicRange:false,
     //api config
@@ -80,7 +81,6 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
             this.control = this.buildTimeManager();
         }
         Ext.applyIf(this,{
-            cls:'gx-overlay-playback',
             defaults:{xtype:'button',flex:1,scale:'small'},
             items:this.buildPlaybackItems(),
             border:false,
@@ -117,6 +117,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         this.on({
                 'afterlayout': function(tb, layout){
                     //add the element level handlers for fade-in / fade-out
+/*
                     var el = this.getEl();
                     var actionEl = el.child('.x-toolbar-left>table');
                     if (actionEl) {
@@ -141,7 +142,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                                 el.setOpacity(1, false);
                             }
                         });
-                    }
+                    }*/
                 }
             });
     },
@@ -383,9 +384,19 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         this.timeDisplay.el.alignTo(this.slider.getEl(), this.timeDisplay.defaultAlign, [0, 5]);
     },
     buildTimeManager:function(){
-        this.controlOptions || (this.controlOptions={});
+        this.controlConfig || (this.controlConfig={});
+        //test for bad range times
+        if(this.controlConfig.range && this.controlConfig.range.length){
+            for (var i = 0; i < this.controlConfig.range.length; i++) {
+                var dateString = this.controlConfig.range[i];
+                if (dateString.indexOf('T') > -1 && dateString.indexOf('Z') == -1) {
+                    dateString = dateString.substring(0, dateString.indexOf('T'));
+                }
+                this.controlConfig.range[i] = dateString;
+            }
+        }
         if(this.playbackMode=='ranged' || this.playbackMode=='decay'){
-            Ext.apply(this.controlOptions,{
+            Ext.apply(this.controlConfig,{
                 agentOptions:{
                     'WMS':{rangeMode:'range',rangeInterval:this.rangedPlayInterval},
                     'Vector':{rangeMode:'range',rangeInterval:this.rangedPlayInterval}
@@ -393,14 +404,14 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
             });
         }
         else if(this.playbackMode=='cumulative'){
-            Ext.apply(this.controlOptions,{
+            Ext.apply(this.controlConfig,{
                 agentOptions:{
                     'WMS':{rangeMode:'cumulative'},
                     'Vector':{rangeMode:'cumulative'}
                 }
             });
         }
-        var ctl = this.control = new OpenLayers.Control.TimeManager(this.controlOptions);
+        var ctl = this.control = new OpenLayers.Control.TimeManager(this.controlConfig);
         this.mapPanel.map.addControl(ctl);
         if (ctl.layers) {
             this.fireEvent('rangemodified', this, ctl.range);
