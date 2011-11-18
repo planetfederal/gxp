@@ -67,8 +67,7 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
      */
     addOutput: function(config){
         delete this._ready;
-        config = config || {};
-        var toolbar = gxp.plugins.Playback.superclass.addOutput.call(this, Ext.apply(config,{
+        config = Ext.applyIf(config || this.outputConfig || {}, {
             xtype: 'gxp_playbacktoolbar',
             mapPanel:this.target.mapPanel,
             playbackMode:this.playbackMode,
@@ -92,7 +91,8 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
                     }
                 }
             })
-        }));
+        });
+        var toolbar = gxp.plugins.Playback.superclass.addOutput.call(this,config); 
         this.relayEvents(toolbar,['timechange','rangemodified'])
         this.playbackToolbar = toolbar;
         //firing the 'rangemodified' event to indicate that the toolbar has been created with temporal layers
@@ -141,17 +141,20 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
         var config = gxp.plugins.Playback.superclass.getState.call(this);
         var toolbar = this.playbackToolbar;
         var control = toolbar.control;
-        config.outputConfig = {
+        config.outputConfig = Ext.apply(toolbar.initialConfig,{
             dynamicRange: toolbar.dyanamicRange,
             playbackMode: toolbar.playbackMode
-        };
+        });
         config.outputConfig.controlConfig = {
             range: (control.fixedRange) ? control.range : undefined,
             step: control.step,
-            units: control.units,
-            loop: control.units,
+            units: (control.units) ? control.units : undefined,
+            loop: control.loop,
             snapToIntervals: control.snapToIntervals
-        }
+        };
+        //get rid of 2 instantiated objects that will cause problems
+        delete config.outputConfig.mapPanel;
+        delete config.outputConfig.optionsWindow;
         return config;
     }
 });
