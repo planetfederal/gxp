@@ -272,9 +272,11 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
                 }
                 if (ct) {
                     if (ct instanceof Ext.menu.Menu) {
-                        action = Ext.apply(new Ext.menu.Item(action),
-                            {text: action.initialConfig.menuText}
-                        );
+                        action = Ext.apply(new Ext.menu.CheckItem(action), {
+                            text: action.initialConfig.menuText,
+                            group: action.initialConfig.toggleGroup,
+                            groupClass: null
+                        });
                     } else if (!(ct instanceof Ext.Toolbar)) {
                         // only Ext.menu.Menu and Ext.Toolbar containers
                         // support the Action interface. So if our container is
