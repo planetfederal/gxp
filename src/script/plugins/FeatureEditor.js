@@ -531,6 +531,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                                     featureLayer.events.triggerEvent("featureselected", {feature: feature});
                                     delete this._forcePopupForNoGeometry;
                                 }
+                                this.actions[0].items[0].setChecked(false);
                             },
                             scope: this
                         }
