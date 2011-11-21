@@ -318,6 +318,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  :arg range: ``Array(Date)``
      */
     onRangeModify: function(toolbar, range) {
+        this._silent = true;
         this.setRange(range);
         delete this._silent;
     },
