@@ -180,13 +180,15 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     },
 
     onChangeComplete: function(slider, value) {
-        var range = this.playbackTool.playbackToolbar.control.range;
-        range = this.calculateNewRange(range, value);
-        for (var key in this.layerLookup) {
-            var layer = this.layerLookup[key].layer;
-            layer && this.setFilter(key, this.createTimeFilter(range, key, 0));
+        if (this.playbackTool) {
+            var range = this.playbackTool.playbackToolbar.control.range;
+            range = this.calculateNewRange(range, value);
+            for (var key in this.layerLookup) {
+                var layer = this.layerLookup[key].layer;
+                layer && this.setFilter(key, this.createTimeFilter(range, key, 0));
+            }
+            this.updateTimelineEvents({force: true});
         }
-        this.updateTimelineEvents({force: true});
     },
 
     setLayerVisibility: function(item, checked, record) {
@@ -473,7 +475,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     onLayout: function() {
         gxp.TimelinePanel.superclass.onLayout.call(this, arguments);
         if (!this.timeline) {
-            if (this.playbackTool.playbackToolbar) {
+            if (this.playbackTool && this.playbackTool.playbackToolbar) {
                 this.setRange(this.playbackTool.playbackToolbar.control.range);
                 this.setCenterDate(this.playbackTool.playbackToolbar.control.currentTime);
                 delete this._silent;
