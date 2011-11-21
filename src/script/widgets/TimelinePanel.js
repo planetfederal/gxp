@@ -281,7 +281,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             timeAttr: 'timestamp',
             visible: true
         };
-        this.featureManager.featureStore.on("write", this.onSave.createDelegate(this, [key], 3), this);
+        if (this.featureManager.featureStore) {
+            this.featureManager.featureStore.on("write", this.onSave.createDelegate(this, [key], 3), this);
+        }
     },
 
     onSave: function(store, action, data, key) {
