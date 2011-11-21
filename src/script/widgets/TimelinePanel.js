@@ -18,7 +18,7 @@
 Ext.namespace("gxp");
 
 // http://code.google.com/p/simile-widgets/issues/detail?id=3
-Timeline && SimileAjax && (function() {
+window.Timeline && window.SimileAjax && (function() {
     Timeline.DefaultEventSource.prototype.remove = function(id) {
         this._events.remove(id);
     };
