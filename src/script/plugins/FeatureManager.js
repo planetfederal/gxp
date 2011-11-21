@@ -458,7 +458,9 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
         var change = this.fireEvent("beforelayerchange", this, layerRecord);
         if (change !== false) {
             if (layerRecord) {
-                this.featureLayer.projection = this.getProjection(layerRecord);
+                // do not use getProjection here since we never want to use the 
+                // map's projection on the feature layer
+                this.featureLayer.projection = layerRecord.getLayer().projection;
             }
             if (layerRecord !== this.layerRecord) {
                 this.clearFeatureStore();
@@ -638,16 +640,16 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      *  :returns: ``OpenLayers.Projection``
      *
      *  Gets the appropriate projection to use for feature requests.
+     *  Use layer projection if it equals the map projection, and use the 
+     *  map projection otherwise.
      */
     getProjection: function(record) {
-        // TODO: This method is suspect.  Determine what it should be doing
-        // and create tests to ensure it is doing the right thing.
         var projection = this.target.mapPanel.map.getProjectionObject();
         var layerProj = record.getLayer().projection;
         if (layerProj && layerProj.equals(projection)) {
             projection = layerProj;
         }
-        return layerProj;
+        return projection;
     },
     
     /** private: method[setFeatureStore]
