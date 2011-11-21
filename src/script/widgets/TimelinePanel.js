@@ -17,6 +17,18 @@
  */
 Ext.namespace("gxp");
 
+// http://code.google.com/p/simile-widgets/issues/detail?id=3
+(function() {
+    Timeline.DefaultEventSource.prototype.remove = function(id) {
+        this._events.remove(id);
+    };
+    SimileAjax.EventIndex.prototype.remove = function(id) {
+        var evt = this._idToEvent[id];
+        this._events.remove(evt);
+        delete this._idToEvent[id];
+    };
+})();
+
 /** api: constructor
  *  .. class:: TimelinePanel(config)
  *   
@@ -109,23 +121,14 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
     initComponent: function() {
 
-        // http://code.google.com/p/simile-widgets/issues/detail?id=3
-        Timeline.DefaultEventSource.prototype.remove = function(id) {
-            this._events.remove(id);
-        };
-
-        SimileAjax.EventIndex.prototype.remove = function(id) {
-            var evt = this._idToEvent[id];
-            this._events.remove(evt);
-            delete this._idToEvent[id];
-        };
-
         Timeline.OriginalEventPainter.prototype._showBubble = 
             this.handleEventClick.createDelegate(this);
 
         this.timelineContainer = new Ext.Container({
             region: "center"
         });
+
+        this.eventSource = new Timeline.DefaultEventSource(0);
 
         this.items = [{
             region: "west",
@@ -139,16 +142,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 vertical: true,
                 value: 25,
                 listeners: {
-                    "changecomplete": function(slider, value) {
-                        // TODO consider whether or not it makes sense to use OpenLayers.Strategy.Filter
-                        var range = this.playbackTool.playbackToolbar.control.range;
-                        range = this.calculateNewRange(range, value);
-                        for (var key in this.layerLookup) {
-                            var layer = this.layerLookup[key].layer;
-                            layer && this.setFilter(key, this.createTimeFilter(range, key, 0));
-                        }
-                        this.updateTimelineEvents({force: true});
-                    },
+                    "changecomplete": this.onChangeComplete,
                     scope: this
                 }
             }]
@@ -183,6 +177,16 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
 
         gxp.TimelinePanel.superclass.initComponent.call(this);
         
+    },
+
+    onChangeComplete: function(slider, value) {
+        var range = this.playbackTool.playbackToolbar.control.range;
+        range = this.calculateNewRange(range, value);
+        for (var key in this.layerLookup) {
+            var layer = this.layerLookup[key].layer;
+            layer && this.setFilter(key, this.createTimeFilter(range, key, 0));
+        }
+        this.updateTimelineEvents({force: true});
     },
 
     setLayerVisibility: function(item, checked, record) {
@@ -322,8 +326,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         if (!this.rendered) {
             return;
         }
-        var eventSource = new Timeline.DefaultEventSource(0);
-
         var theme = Timeline.ClassicTheme.create();
 
         var span = range[1] - range[0];
@@ -342,7 +344,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 width: "80%", 
                 intervalUnit: intervalUnits[0], 
                 intervalPixels: 200,
-                eventSource: eventSource,
+                eventSource: this.eventSource,
                 date: d,
                 theme: theme,
                 layout: "original"
@@ -351,7 +353,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 width: "20%", 
                 intervalUnit: intervalUnits[1], 
                 intervalPixels: 200,
-                eventSource: eventSource,
+                eventSource: this.eventSource,
                 date: d,
                 theme: theme,
                 layout: "overview"
@@ -370,7 +372,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         this.timeline.getBand(0).addOnScrollListener(
             this.setPlaybackCenter.createDelegate(this)
         );
-        this.eventSource = eventSource;
         
     },
 
