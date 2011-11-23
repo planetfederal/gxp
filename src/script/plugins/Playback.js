@@ -140,21 +140,25 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
     getState: function(){
         var config = gxp.plugins.Playback.superclass.getState.call(this);
         var toolbar = this.playbackToolbar;
-        var control = toolbar.control;
-        config.outputConfig = Ext.apply(toolbar.initialConfig,{
-            dynamicRange: toolbar.dyanamicRange,
-            playbackMode: toolbar.playbackMode
-        });
-        config.outputConfig.controlConfig = {
-            range: (control.fixedRange) ? control.range : undefined,
-            step: control.step,
-            units: (control.units) ? control.units : undefined,
-            loop: control.loop,
-            snapToIntervals: control.snapToIntervals
-        };
-        //get rid of 2 instantiated objects that will cause problems
-        delete config.outputConfig.mapPanel;
-        delete config.outputConfig.optionsWindow;
+        if (toolbar) {
+            var control = toolbar.control;
+            config.outputConfig = Ext.apply(toolbar.initialConfig, {
+                dynamicRange: toolbar.dyanamicRange,
+                playbackMode: toolbar.playbackMode
+            });
+            if (control) {
+                config.outputConfig.controlConfig = {
+                    range: (control.fixedRange) ? control.range : undefined,
+                    step: control.step,
+                    units: (control.units) ? control.units : undefined,
+                    loop: control.loop,
+                    snapToIntervals: control.snapToIntervals
+                };
+            }
+            //get rid of 2 instantiated objects that will cause problems
+            delete config.outputConfig.mapPanel;
+            delete config.outputConfig.optionsWindow;
+        }
         return config;
     }
 });
