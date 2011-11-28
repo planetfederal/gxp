@@ -231,7 +231,13 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
              *  * layer - ``Object`` object with name and source of the layer
              *    that was edited
              */
-            "featureedit"
+            "featureedit",
+
+            /** api: event[loginchanged]
+             *  Fired when a user logs in or out. By using the isAuthorized
+             *  function tools can distinguish a login from a logout action.
+             */
+            "loginchanged"
         );
         
         Ext.apply(this, {
@@ -659,7 +665,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         state.tools = [];
         Ext.iterate(this.tools,function(key,val,obj){
             state.tools.push(val.getState());
-        })
+        });
         return state;
     },
     

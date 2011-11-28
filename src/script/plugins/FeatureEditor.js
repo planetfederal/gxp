@@ -199,6 +199,21 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
         gxp.plugins.FeatureEditor.superclass.constructor.apply(this, arguments);        
     },
 
+    /** private: method[init]
+     *  :arg target: ``Object`` The object initializing this plugin.
+     */
+    init: function(target) {
+        gxp.plugins.FeatureEditor.superclass.init.apply(this, arguments);
+        this.target.on("loginchanged", this.enableOrDisable, this);
+    },
+
+    /** private: method[destroy]
+     */
+    destroy: function() {
+        this.target.un("loginchanged", this.enableOrDisable, this);
+        gxp.plugins.FeatureEditor.superclass.destroy.apply(this, arguments);
+    },
+
     /** api: method[addActions]
      */
     addActions: function() {
@@ -649,6 +664,16 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
             control.activate();
         } 
     },
+
+    /**
+     * private: method[enableOrDisable]
+     */
+    enableOrDisable: function() {
+        var disable = !this.schema || !this.target.isAuthorized();
+        this.actions[0].setDisabled(disable);
+        this.actions[1].setDisabled(disable);
+        return disable;
+    },
     
     /** private: method[onLayerChange]
      *  :arg mgr: :class:`gxp.plugins.FeatureManager`
@@ -657,9 +682,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
      */
     onLayerChange: function(mgr, layer, schema) {
         this.schema = schema;
-        var disable = !schema || !this.target.isAuthorized();
-        this.actions[0].setDisabled(disable);
-        this.actions[1].setDisabled(disable);
+        var disable = this.enableOrDisable();
         if (disable) {
             // not a wfs capable layer or not authorized
             this.fireEvent("layereditable", this, layer, false);
