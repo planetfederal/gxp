@@ -71,7 +71,7 @@ gxp.plugins.WMSCSource = Ext.extend(gxp.plugins.WMSSource, {
             TILED: true
         };
         if (!config.format) {
-            config.format = new OpenLayers.Format.WMSCapabilities({
+            this.format = new OpenLayers.Format.WMSCapabilities({
                 keepData: true,
                 profile: "WMSC"
             });
