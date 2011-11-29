@@ -85,13 +85,13 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
      */
     init: function(target) {
         gxp.plugins.Styler.superclass.init.apply(this, arguments);
-        this.target.on("loginchanged", this.enableOrDisable, this);
+        this.target.on("authorizationchange", this.enableOrDisable, this);
     },
 
     /** private: method[destroy]
      */
     destroy: function() {
-        this.target.un("loginchanged", this.enableOrDisable, this);
+        this.target.un("authorizationchange", this.enableOrDisable, this);
         gxp.plugins.Styler.superclass.destroy.apply(this, arguments);
     },
 

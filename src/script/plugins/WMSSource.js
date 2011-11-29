@@ -161,13 +161,13 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      */
     init: function(target) {
         gxp.plugins.WMSSource.superclass.init.apply(this, arguments);
-        this.target.on("loginchanged", this.onLoginChanged, this);
+        this.target.on("authorizationchange", this.onAuthorizationChange, this);
     },
 
-    /** private: method[onLoginChanged]
-     *  Reload the store when the login status changes.
+    /** private: method[onAuthorizationChange]
+     *  Reload the store when the authorization changes.
      */
-    onLoginChanged: function() {
+    onAuthorizationChange: function() {
         if (this.store) {
             this.store.reload();
         }
@@ -176,7 +176,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
     /** private: method[destroy]
      */
     destroy: function() {
-        this.target.un("loginchanged", this.onLoginChanged, this);
+        this.target.un("authorizationchange", this.onAuthorizationChange, this);
         gxp.plugins.WMSSource.superclass.destroy.apply(this, arguments);
     },
 

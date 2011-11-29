@@ -233,11 +233,11 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
              */
             "featureedit",
 
-            /** api: event[loginchanged]
-             *  Fired when a user logs in or out. By using the isAuthorized
-             *  function tools can distinguish a login from a logout action.
+            /** api: event[authorizationchange]
+             *  Fired when the authorizedRoles are changed, e.g. when a user 
+             *  logs in or out.
              */
-            "loginchanged"
+            "authorizationchange"
         );
         
         Ext.apply(this, {
@@ -692,6 +692,16 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
          */
         return !this.authorizedRoles || 
             (this.authorizedRoles.indexOf(role || "ROLE_ADMINISTRATOR") !== -1);
+    },
+
+    /** api: method[setAuthorizedRoles]
+     *  :arg authorizedRoles: ``Array``
+     *
+     *  Change the authorized roles.
+     */
+    setAuthorizedRoles: function(authorizedRoles) {
+        this.authorizedRoles = authorizedRoles;
+        this.fireEvent("authorizationchange");
     },
     
     /** api: method[isAuthenticated]
