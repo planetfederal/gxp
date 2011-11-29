@@ -130,11 +130,12 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
     defaultToolType: "gxp_tool",
 
     /** api: config[tools]
-     *  ``Array(`` :class:`gxp.plugins.Tool` ``)``
-     *  Any tools to be added to the viewer. Tools are plugins that will be
-     *  plugged into this viewer's ``portal``. The ``tools`` array is usually
-     *  populated with configuration objects for plugins (using a ptype),
-     *  rather than instances. A default ptype can be configured with this
+     *  ``Object``
+     *  Any tools to be added to the viewer, keyed by tool id. Tools
+     *  are plugins that will be plugged into this viewer's
+     *  ``portal``. The ``tools`` array is usually populated with
+     *  configuration objects for plugins (using a ptype), rather than
+     *  instances. A default ptype can be configured with this
      *  viewer's ``defaultToolType`` option.
      */
     
