@@ -546,7 +546,11 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                                     featureLayer.events.triggerEvent("featureselected", {feature: feature});
                                     delete this._forcePopupForNoGeometry;
                                 }
-                                this.actions[0].items[0].setChecked(false);
+                                if (this.actions[0].items[0] instanceof Ext.menu.CheckItem) {
+                                    this.actions[0].items[0].setChecked(false);
+                                } else {
+                                    this.actions[0].items[0].toggle(false);
+                                }
                             },
                             scope: this
                         }
@@ -557,7 +561,11 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                 if (checked === true) {
                     this.setHandler(Handler, false);
                 }
-                this.actions[0].items[0].setChecked(checked);
+                if (this.actions[0].items[0] instanceof Ext.menu.CheckItem) {
+                    this.actions[0].items[0].setChecked(checked);
+                } else {
+                    this.actions[0].items[0].toggle(checked);
+                }
             };
             menuItems.push(
                 new Ext.menu.CheckItem({
