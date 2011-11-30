@@ -209,7 +209,7 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
                 break;
             }
         }
-        return valid || this.invalidFileExtensionText + this.validFileExtensions.join(", ");
+        return valid || this.invalidFileExtensionText + '<br/>' + this.validFileExtensions.join(", ");
     },
 
     /** private: method[createWorkspacesCombo]
