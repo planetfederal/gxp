@@ -231,7 +231,13 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
              *  * layer - ``Object`` object with name and source of the layer
              *    that was edited
              */
-            "featureedit"
+            "featureedit",
+
+            /** api: event[authorizationchange]
+             *  Fired when the authorizedRoles are changed, e.g. when a user 
+             *  logs in or out.
+             */
+            "authorizationchange"
         );
         
         Ext.apply(this, {
@@ -638,27 +644,28 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         }, this);
         
         //standardize portal configuration to portalConfig
-        //initial config included both portal config and items
-        if(state.portalConfig.items && state.portalConfig.items.length && state.portalItems){
-            //merge arrays of portalItems and portalConfig.items
-            for(var items=state.portalItems,i=0,len=items.length;i<len;i++){
-                var item = items[i];
-                if(state.portalConfig.items.indexOf(item)==-1){
-                    state.portalConfig.items.push(item);
+        if (state.portalItems) {
+            //initial config included both portal config and items
+            if (state.portalConfig && state.portalConfig.items && state.portalConfig.items.length) {
+                //merge arrays of portalItems and portalConfig.items
+                for (var items = state.portalItems, i = 0, len = items.length; i < len; i++) {
+                    var item = items[i];
+                    if (state.portalConfig.items.indexOf(item) == -1) {
+                        state.portalConfig.items.push(item);
+                    }
                 }
             }
-        }
-        else if(state.portalItems && state.portalItems.length){
-            !state.portalConfig && (state.portalConfig={});
-            state.portalConfig.items = state.portalItems;
+            else if (state.portalItems && state.portalItems.length) {
+                !state.portalConfig && (state.portalConfig = {});
+                state.portalConfig.items = state.portalItems;
+            }
         }
         
         //get tool states, for most tools this will be the same as its initial config
         state.tools = [];
-        for(var i=0,len=this.tools.length;i<len;i++){
-            state.tools.push(this.tools[i].getState());
-        }
-        
+        Ext.iterate(this.tools,function(key,val,obj){
+            state.tools.push(val.getState());
+        });
         return state;
     },
     
@@ -685,6 +692,16 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
          */
         return !this.authorizedRoles || 
             (this.authorizedRoles.indexOf(role || "ROLE_ADMINISTRATOR") !== -1);
+    },
+
+    /** api: method[setAuthorizedRoles]
+     *  :arg authorizedRoles: ``Array``
+     *
+     *  Change the authorized roles.
+     */
+    setAuthorizedRoles: function(authorizedRoles) {
+        this.authorizedRoles = authorizedRoles;
+        this.fireEvent("authorizationchange");
     },
     
     /** api: method[isAuthenticated]

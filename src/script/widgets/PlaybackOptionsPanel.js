@@ -192,6 +192,9 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
     },
     setStartTime: function(cmp, date){
         this.timeManager.setStart(date);
+        if(this.timeManager.currentTime<date){
+            this.timeManager.currentTime = date;
+        }
         this.timeManager.fixedRange=true;
     },
     setEndTime:function(cmp,date){

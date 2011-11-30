@@ -79,6 +79,30 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
             closeAction: "close"
         });
     },
+
+    /** private: method[init]
+     *  :arg target: ``Object`` The object initializing this plugin.
+     */
+    init: function(target) {
+        gxp.plugins.Styler.superclass.init.apply(this, arguments);
+        this.target.on("authorizationchange", this.enableOrDisable, this);
+    },
+
+    /** private: method[destroy]
+     */
+    destroy: function() {
+        this.target.un("authorizationchange", this.enableOrDisable, this);
+        gxp.plugins.Styler.superclass.destroy.apply(this, arguments);
+    },
+
+    /** private: method[enableOrDisable]
+     *  Enable or disable the button when the login status changes.
+     */
+    enableOrDisable: function() {
+        if (this.target && this.target.selectedLayer !== null) {
+            this.handleLayerChange(this.target.selectedLayer);
+        }
+    },
     
     /** api: method[addActions]
      */

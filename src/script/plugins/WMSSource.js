@@ -37,7 +37,7 @@
         }
         // here is the new part
         this.raw = data;
-    };
+    }
     Ext.intercept(GeoExt.data.WMSCapabilitiesReader.prototype, "readRecords", keepRaw);
     GeoExt.data.AttributeReader &&
         Ext.intercept(GeoExt.data.AttributeReader.prototype, "readRecords", keepRaw);
@@ -154,6 +154,30 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         if (!this.format) {
             this.format = new OpenLayers.Format.WMSCapabilities({keepData: true});
         }
+    },
+
+    /** api: method[init]
+     *  :arg target: ``Object`` The object initializing this plugin.
+     */
+    init: function(target) {
+        gxp.plugins.WMSSource.superclass.init.apply(this, arguments);
+        this.target.on("authorizationchange", this.onAuthorizationChange, this);
+    },
+
+    /** private: method[onAuthorizationChange]
+     *  Reload the store when the authorization changes.
+     */
+    onAuthorizationChange: function() {
+        if (this.store) {
+            this.store.reload();
+        }
+    },
+
+    /** private: method[destroy]
+     */
+    destroy: function() {
+        this.target.un("authorizationchange", this.onAuthorizationChange, this);
+        gxp.plugins.WMSSource.superclass.destroy.apply(this, arguments);
     },
 
     /** private: method[isLazy]

@@ -102,6 +102,7 @@ gxp.plugins.GoogleEarth = Ext.extend(gxp.plugins.Tool, {
     apiKeyPrompt: "Please enter the Google API key for ",
     menuText: "3D Viewer",
     tooltip: "Switch to 3D Viewer",
+    tooltipMap: "Switch back to normal map view",
 
     /** private: method[constructor]
      */
@@ -166,6 +167,7 @@ gxp.plugins.GoogleEarth = Ext.extend(gxp.plugins.Tool, {
                             layout.setActiveItem(1);
                             // enable action press any buttons associated with the action
                             this.actions[0].enable();
+                            this.actions[0].items[0].setTooltip(this.tooltipMap);
                             this.actions[0].each(function(cmp) {
                                 if (cmp.toggle) {
                                     cmp.toggle(true, true);
@@ -179,6 +181,7 @@ gxp.plugins.GoogleEarth = Ext.extend(gxp.plugins.Tool, {
             } else {
                 // hide the panel
                 layout.setActiveItem(0);
+                this.actions[0].items[0].setTooltip(this.tooltip);
             }
         }
     },

@@ -98,6 +98,12 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
             buttonCfg: {
                 iconCls: "gxp-icon-filebrowse"
             },
+            listeners: {
+                "fileselected": function(cmp, value) {
+                    // remove the path from the filename - avoids C:/fakepath etc.
+                    cmp.setValue(value.split(/[/\\]/).pop());
+                }
+            },
             validator: this.fileNameValidator.createDelegate(this)
         }, {
             xtype: "fieldset",

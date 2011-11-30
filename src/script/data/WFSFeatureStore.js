@@ -7,7 +7,7 @@
  */
 
 /**
- * @include data/WFSProtocolProxy.js
+ * @requires data/WFSProtocolProxy.js
  */
 
 /** api: (define)
