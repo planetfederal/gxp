@@ -204,11 +204,11 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         for (var id in this.target.layerSources) {
             source = this.target.layerSources[id];
             if (source.store) {
-                data.push([id, source.title || id]);                
+                data.push([id, source.title || id, source.url]);                
             }
         }
         var sources = new Ext.data.ArrayStore({
-            fields: ["id", "title"],
+            fields: ["id", "title", "url"],
             data: data
         });
 
@@ -272,6 +272,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             store: sources,
             valueField: "id",
             displayField: "title",
+            tpl: '<tpl for="."><div ext:qtip="{url}" class="x-combo-list-item">{title}</div></tpl>',
             triggerAction: "all",
             editable: false,
             allowBlank: false,
