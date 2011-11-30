@@ -380,3 +380,68 @@ div.olMap div.gx-overlay-playback {
     background-image:url('img/silk/stop.png')!important;
     background-position:0 0 !important;
 }
+.thumb-mapbox {
+    width: 128px;
+    height: 128px;
+    margin: 5px 5px 5px 5px;
+}
+.thumb-mapbox-natural-earth-1 {
+    background-image:url('img/thumbs/mapbox/natural-earth-1.jpg');
+}
+.thumb-mapbox-blue-marble-topo-bathy-jan {
+    background-image:url('img/thumbs/mapbox/blue-marble-topo-bathy-jan.jpg');
+}
+.thumb-mapbox-blue-marble-topo-bathy-jul-bw {
+    background-image:url('img/thumbs/mapbox/blue-marble-topo-bathy-jul-bw.jpg');
+}
+.thumb-mapbox-blue-marble-topo-bathy-jul {
+    background-image:url('img/thumbs/mapbox/blue-marble-topo-bathy-jul.jpg');
+}
+.thumb-mapbox-blue-marble-topo-jan {
+    background-image:url('img/thumbs/mapbox/blue-marble-topo-jan.jpg');
+}
+.thumb-mapbox-blue-marble-topo-jul-bw {
+    background-image:url('img/thumbs/mapbox/blue-marble-topo-jul-bw.jpg');
+}
+.thumb-mapbox-blue-marble-topo-jul {
+    background-image:url('img/thumbs/mapbox/blue-marble-topo-jul.jpg');
+}
+.thumb-mapbox-control-room {
+    background-image:url('img/thumbs/mapbox/control-room.png');
+}
+.thumb-mapbox-geography-class {
+    background-image:url('img/thumbs/mapbox/geography-class.jpg');
+}
+.thumb-mapbox-natural-earth-2 {
+    background-image:url('img/thumbs/mapbox/natural-earth-2.jpg');
+}
+.thumb-mapbox-natural-earth-hypso-bathy {
+    background-image:url('img/thumbs/mapbox/natural-earth-hypso-bathy.jpg');
+}
+.thumb-mapbox-natural-earth-hypso {
+    background-image:url('img/thumbs/mapbox/natural-earth-hypso.jpg');
+}
+.thumb-mapbox-world-bank-borders-ar {
+    background-image:url('img/thumbs/mapbox/world-bank-borders-ar.png');
+}
+.thumb-mapbox-world-bank-borders-en {
+    background-image:url('img/thumbs/mapbox/world-bank-borders-en.png');
+}
+.thumb-mapbox-world-bank-borders-es {
+    background-image:url('img/thumbs/mapbox/world-bank-borders-es.png');
+}
+.thumb-mapbox-world-bank-borders-fr {
+    background-image:url('img/thumbs/mapbox/world-bank-borders-fr.png');
+}
+.thumb-mapbox-world-bank-borders-zh {
+    background-image:url('img/thumbs/mapbox/world-bank-borders-zh.png');
+}
+.thumb-mapbox-world-dark {
+    background-image:url('img/thumbs/mapbox/world-dark.png');
+}
+.thumb-mapbox-world-light {
+    background-image:url('img/thumbs/mapbox/world-light.png');
+}
+.thumb-mapbox-world-print {
+    background-image:url('img/thumbs/mapbox/world-print.png');
+}
