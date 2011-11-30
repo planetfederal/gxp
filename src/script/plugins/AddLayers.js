@@ -401,7 +401,9 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     capGridPanel.getSelectionModel().clearSelections();
                 },
                 show: function(win) {
-                    this.setSelectedSource(this.target.layerSources[data[idx][0]]);
+                    if (this.selectedSource === null) {
+                        this.setSelectedSource(this.target.layerSources[data[idx][0]]);
+                    }
                 },
                 scope: this
             }
