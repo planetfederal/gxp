@@ -404,6 +404,8 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 show: function(win) {
                     if (this.selectedSource === null) {
                         this.setSelectedSource(this.target.layerSources[data[idx][0]]);
+                    } else {
+                        this.setSelectedSource(this.selectedSource);
                     }
                 },
                 scope: this
