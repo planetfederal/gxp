@@ -168,7 +168,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      *  Reload the store when the authorization changes.
      */
     onAuthorizationChange: function() {
-        if (this.store) {
+        if (this.store && this.store.url.charAt(0) === "/") {
             this.store.reload();
         }
     },
