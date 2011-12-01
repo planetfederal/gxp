@@ -41,7 +41,7 @@ gxp.plugins.Navigation = Ext.extend(gxp.plugins.Tool, {
      *  ``String``
      *  Text for navigation action tooltip (i18n).
      */
-    tooltip: "Pan Map",     
+    tooltip: "Pan Map",
 
     /** private: method[constructor]
      */
@@ -54,25 +54,14 @@ gxp.plugins.Navigation = Ext.extend(gxp.plugins.Tool, {
     addActions: function() {
         this.controlOptions = this.controlOptions || {};
         Ext.applyIf(this.controlOptions, {zoomWheelEnabled: false});
-        var map = this.target.mapPanel.map,
-            controls = map.getControlsByClass("OpenLayers.Control.Navigation"),
-            control;
-        if (controls.length > 0) {
-            // capture existing Navigation control
-            control = controls[0];
-            control.deactivate();
-            map.removeControl(control);
-            OpenLayers.Util.extend(control, this.controlOptions);
-        } else {
-            control = new OpenLayers.Control.Navigation(this.controlOptions);
-        }
         var actions = [new GeoExt.Action({
             tooltip: this.tooltip,
             menuText: this.menuText,
             iconCls: "gxp-icon-pan",
             enableToggle: true,
+            pressed: true,
             allowDepress: false,
-            control: control,
+            control: new OpenLayers.Control.Navigation(this.controlOptions),
             map: this.target.mapPanel.map,
             toggleGroup: this.toggleGroup})];
         return gxp.plugins.Navigation.superclass.addActions.apply(this, [actions]);
