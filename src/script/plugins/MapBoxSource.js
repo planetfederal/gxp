@@ -149,7 +149,7 @@ gxp.plugins.MapBoxSource = Ext.extend(gxp.plugins.LayerSource, {
                     type: "png",
                     tileOrigin: new OpenLayers.LonLat(-128 * 156543.0339, -128 * 156543.0339),
                     layername: config.name,
-                    abstract: '<div class="thumb-mapbox thumb-mapbox-'+config.name+'"></div>',
+                    "abstract": '<div class="thumb-mapbox thumb-mapbox-'+config.name+'"></div>',
                     numZoomLevels: config.numZoomLevels
                 }, options)
             );
