@@ -165,7 +165,7 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                 }
             }]);
 
-            var printButton = this.actions[0].items[0];
+            var printButton = actions[0].items[0];
 
             var printWindow;
 
