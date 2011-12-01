@@ -173,26 +173,6 @@ gxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                         measureToolTip.show();
                     }
                 },
-                measure: function(event) {
-                    cleanup();
-                    measureToolTip = this.addOutput({
-                        xtype: 'tooltip',
-                        target: Ext.getBody(),
-                        html: makeString(event),
-                        title: title,
-                        autoHide: false,
-                        closable: true,
-                        draggable: false,
-                        mouseOffset: [0, 0],
-                        showDelay: 1,
-                        listeners: {
-                            hide: function() {
-                                measureControl.cancel();
-                                cleanup();
-                            }
-                        }
-                    });
-                },
                 deactivate: cleanup,
                 scope: this
             }
