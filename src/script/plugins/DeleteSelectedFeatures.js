@@ -121,7 +121,7 @@ gxp.plugins.DeleteSelectedFeatures = Ext.extend(gxp.plugins.Tool, {
                         } // TODO: remove after http://trac.geoext.org/ticket/141
                         store.remove(store.getRecordFromFeature(feature));
                         delete store._removing; // TODO: remove after http://trac.geoext.org/ticket/141
-                    };
+                    }
                     store.save();
                 }
             },

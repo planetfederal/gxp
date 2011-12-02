@@ -112,7 +112,7 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
                     }).createDelegate(this)
                 );
             }
-        };
+        }
         this.on("show", render, this);
         
         this.on("hide", function() {

@@ -180,7 +180,7 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
                 handler: this.cancelChanges,
                 scope: this
             }]
-        })
+        });
         Ext.apply(this,config);
         gxp.PlaybackOptionsPanel.superclass.initComponent.call(this);
     },
@@ -265,11 +265,11 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
     cancelChanges: function(btn){
         this.form.getForm().items.each(function(field){
             field.setValue(field.originalValue);
-        })
+        });
         
         this.saveValues();
     }
-})
+});
 
 /** api: xtype = gxp_playbackoptions */
 Ext.reg('gxp_playbackoptions', gxp.PlaybackOptionsPanel);

@@ -93,7 +93,7 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
             })
         });
         var toolbar = gxp.plugins.Playback.superclass.addOutput.call(this,config); 
-        this.relayEvents(toolbar,['timechange','rangemodified'])
+        this.relayEvents(toolbar,['timechange','rangemodified']);
         this.playbackToolbar = toolbar;
         //firing the 'rangemodified' event to indicate that the toolbar has been created with temporal layers
         if(toolbar.control.layers){

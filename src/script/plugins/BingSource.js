@@ -174,7 +174,7 @@ gxp.plugins.BingSource = Ext.extend(gxp.plugins.LayerSource, {
 
             record.data.layer = layer;
             record.commit();
-        };
+        }
         return record;
     }
 
