@@ -10,6 +10,15 @@
     <script type="text/javascript">
     
         var mapPanel;
+	var createInstanceCount = 0;
+	var google = {
+	    earth: {
+		createInstance: function() {
+		    ++createInstanceCount;
+		}
+	    }
+	};
+	var googleEarthPanel;
         
         function createGoogleEarthPanel() {
             mapPanel = new GeoExt.MapPanel();
@@ -30,6 +39,36 @@
             instance.destroy();
             destroy();
         }
+
+	function test_GoogleEarthPanelCreateInstanceCount(t) {
+
+	    t.plan(3);
+
+	    createInstanceCount = 0;
+            mapPanel = new GeoExt.MapPanel();
+	    googleEarthPanel = new gxp.GoogleEarthPanel({
+		hidden: true,
+		mapPanel: mapPanel,
+		renderTo: document.body
+	    });
+	    t.ok(createInstanceCount == 0, "google.earth.createInstance not called");
+	    googleEarthPanel.show();
+	    t.ok(createInstanceCount == 1, "google.earth.createInstance called exactly once");
+	    googleEarthPanel.destroy();
+	    mapPanel.destroy();
+
+	    createInstanceCount = 0;
+            mapPanel = new GeoExt.MapPanel();
+	    googleEarthPanel = new gxp.GoogleEarthPanel({
+		hidden: false,
+		mapPanel: mapPanel,
+		renderTo: document.body
+	    });
+	    t.ok(createInstanceCount == 1, "google.earth.createInstance called exactly once");
+	    googleEarthPanel.destroy();
+	    mapPanel.destroy();
+
+	}
 
     </script>
   </head>
