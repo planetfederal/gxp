@@ -72,7 +72,7 @@ gxp.plugins.RemoveLayer = Ext.extend(gxp.plugins.Tool, {
             removeLayerAction.setDisabled(
                 !selectedLayer || store.getCount() <= 1
             );
-        }
+        };
         this.target.mapPanel.layers.on({
             "add": enforceOne,
             "remove": enforceOne

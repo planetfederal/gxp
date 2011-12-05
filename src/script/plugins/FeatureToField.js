@@ -74,7 +74,7 @@ gxp.plugins.FeatureToField = Ext.extend(gxp.plugins.Tool, {
                             this.target.field.setValue(format.write(feature));
                         }
                     }
-                };
+                }
             }, this);
         });
         

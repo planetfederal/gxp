@@ -186,10 +186,10 @@ gxp.plugins.GoogleEarth = Ext.extend(gxp.plugins.Tool, {
         }
     },
 
-    /** private: method[getAPIKey]
-     *  :arg callback: ``Function`` To be called with API key.
+    /** api: method[hasValidAPIKey]
+     *  :returns: ``String`` if it has a valid key and undefined if not.
      */
-    getAPIKey: function(callback) {
+    hasValidAPIKey: function() {
         var key = this.initialConfig.apiKey;
         var keys = this.initialConfig.apiKeys;
         if (!key && keys) {
@@ -209,6 +209,14 @@ gxp.plugins.GoogleEarth = Ext.extend(gxp.plugins.Tool, {
                 }
             }
         }
+        return key;
+    },
+
+    /** private: method[getAPIKey]
+     *  :arg callback: ``Function`` To be called with API key.
+     */
+    getAPIKey: function(callback) {
+        var key = this.hasValidAPIKey();
         if (key) {
             // return then call callback
             window.setTimeout(

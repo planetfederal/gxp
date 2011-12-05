@@ -308,7 +308,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                     }
                 }]
             }];
-        };
+        }
         this.items[0].autoHeight = true;
 
         this.addEvents(

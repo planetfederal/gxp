@@ -170,7 +170,6 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
     /** api: method[addActions]
      */
     addActions: function() {
-        var selectedLayer;
         var actions = gxp.plugins.AddLayers.superclass.addActions.apply(this, [{
             tooltip : this.addActionTip,
             text: this.addActionText,
@@ -204,11 +203,11 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         for (var id in this.target.layerSources) {
             source = this.target.layerSources[id];
             if (source.store) {
-                data.push([id, source.title || id]);                
+                data.push([id, source.title || id, source.url]);                
             }
         }
         var sources = new Ext.data.ArrayStore({
-            fields: ["id", "title"],
+            fields: ["id", "title", "url"],
             data: data
         });
 
@@ -272,6 +271,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             store: sources,
             valueField: "id",
             displayField: "title",
+            tpl: '<tpl for="."><div ext:qtip="{url}" class="x-combo-list-item">{title}</div></tpl>',
             triggerAction: "all",
             editable: false,
             allowBlank: false,
@@ -401,7 +401,11 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     capGridPanel.getSelectionModel().clearSelections();
                 },
                 show: function(win) {
-                    this.setSelectedSource(this.target.layerSources[data[idx][0]]);
+                    if (this.selectedSource === null) {
+                        this.setSelectedSource(this.target.layerSources[data[idx][0]]);
+                    } else {
+                        this.setSelectedSource(this.selectedSource);
+                    }
                 },
                 scope: this
             }

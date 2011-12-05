@@ -282,7 +282,7 @@ gxp.plugins.SnappingAgent = Ext.extend(gxp.plugins.Tool, {
                         target.filter = new OpenLayers.Filter.Logical({
                             type: OpenLayers.Filter.Logical.AND,
                             filters: [originalFilter, filter]
-                        })
+                        });
                     } else {
                         target.filter = filter;
                     }
