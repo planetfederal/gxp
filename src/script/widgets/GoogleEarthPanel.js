@@ -96,7 +96,7 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
 
         this.projection = new OpenLayers.Projection("EPSG:4326");
 
-        this.addEvents("earthready");
+        this.addEvents("pluginready");
         
         this.on("render", this.onRenderEvent, this);
         this.on("show", this.onShowEvent, this);
@@ -146,7 +146,7 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
         
         this.layers.on("add", this.updateLayers, this);
         
-        this.fireEvent("earthready", this.earth);
+        this.fireEvent("pluginready", this.earth);
 
         // Set up events. Notice global google namespace.
         // google.earth.addEventListener(this.earth.getView(), 
