@@ -79,7 +79,12 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
              *  will receive two arguments: this plugin and the failure code
              *  (see the Google Earth API docs for details on the failure codes).
              */
-            "pluginfailure"
+            "pluginfailure",
+            /** api: event[pluginready]
+             *  Fires when the instance is ready.  Listeners will receive one
+             *  argument: the GEPlugin instance.
+             */
+            "pluginready"
         );
 
         gxp.GoogleEarthPanel.superclass.initComponent.call(this);
@@ -96,8 +101,6 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
 
         this.projection = new OpenLayers.Projection("EPSG:4326");
 
-        this.addEvents("pluginready");
-        
         this.on("render", this.onRenderEvent, this);
         this.on("show", this.onShowEvent, this);
         
