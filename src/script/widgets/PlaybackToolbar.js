@@ -190,9 +190,12 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
      */
     setPlaybackMode: function(mode){
         this.playbackMode = mode;
-        this.reconfigureSlider(this.buildSliderValues());
-        if (this.playbackMode == 'ranged' || this.playbackMode == 'decay') {
-            this.control.incrementTime(this.control.rangeInterval, this.control.units);
+        var sliderInfo = this.buildSliderValues();
+        this.reconfigureSlider(sliderInfo);
+        if (this.playbackMode != 'track') {
+            this.control.incrementTime(this.control.rangeInterval, 
+                this.control.units || OpenLayers.TimeUnit[this.smartIntervalFormat(sliderInfo.interval).units.toUpperCase()]);
+            this.slider.setValue(0,this.control.currentTime.getTime());
         }
         this.setThumbStyles(this.slider);
     },    
@@ -248,8 +251,15 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                             this.restartPlayback=true;
                         }
                     },
-                    'beforechange':function(slider){
-                        return !!(this.control.units || this.control.snapToIntervals);
+                    'beforechange':function(slider,newVal,oldVal,thumb){
+                        var allow = true;
+                        if(!(this.control.units || this.control.snapToIntervals)){
+                            allow = false;
+                        }
+                        else if(this.playbackMode=='cumulative' && slider.indexMap[thumb.index]=='tail'){
+                            allow = false;
+                        }
+                        return allow;
                     },
                     'afterrender': function(slider){
                         var panel = this;
@@ -350,10 +360,9 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
             'settings': {
                 iconCls: 'gxp-icon-settings',
                 ref:'btnSettings',
-                toggleHandler: this.toggleOptionsWindow,
                 scope: this,
-                enableToggle:true,
-                allowDepress:true,
+                handler:this.toggleOptionsWindow,
+                enableToggle:false,
                 tooltip: this.settingsTooltip,
                 menuText: this.settingsLabel,
                 text: (this.labelButtons) ? this.settingsLabel : false
@@ -466,9 +475,9 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         var rangeAdj = (min-max)*.1;
         values.push(min=min-rangeAdj,max=max+rangeAdj);
         indexMap[1]='minTime';
-        indexMap[2]='maxTime';
+        indexMap[2]='maxTime'
       }
-      if(this.playbackMode=='ranged'||this.playbackMode=='decay'){
+      if(this.playbackMode && this.playbackMode!='track'){
         values.push(min);
         indexMap[indexMap.length]='tail';
       }
@@ -484,7 +493,11 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
             indexMap: sliderInfo.map
         });
         for (var i = 0; i < sliderInfo.values.length; i++) {
-            slider.setValue(i, sliderInfo.values[i]);
+            if (slider.thumbs[i]) {
+                slider.setValue(i, sliderInfo.values[i]);
+            }else{
+                slider.addThumb(sliderInfo.values[i]);
+            }
         }
         //set format of slider based on the interval steps
         if(!sliderInfo.interval && this.control.intervals && this.control.intervals.length>2){
@@ -493,7 +506,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         this.setTimeFormat(this.guessTimeFormat(sliderInfo.interval));
     },
     setThumbStyles: function(slider){
-        tailIndex = slider.indexMap.indexOf('tail');
+        var tailIndex = slider.indexMap.indexOf('tail');
         if (slider.indexMap[1] == 'min') {
             slider.thumbs[1].el.addClass('x-slider-min-thumb');
             slider.thumbs[2].el.addClass('x-slider-max-thumb');
@@ -583,7 +596,9 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                         adj *= 1000;
                         break;
                 }
-                this.control.rangeInterval = (slider.thumbs[0].value - value) / adj;
+                for (var i = 0, len = this.control.timeAgents.length; i < len; i++) {
+                    this.control.timeAgents[i].rangeInterval = (slider.thumbs[0].value - value) / adj;
+                }
         }
         if (this.restartPlayback) {
             this.restartPlayback=false;

@@ -220,15 +220,29 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
                 this.playbackToolbar.setPlaybackMode('cumulative');
                 break;
             case 'range':
-                this.playbackToolbar.setPlaybackMode('ranged');
-                if (!this.timeManager.rangeInterval) {
-                    this.timeManager.rangeInterval = 1;
+                this.disableListMode(true);
+                for (var i = 0, len = this.timeManager.timeAgents.length; i < len; i++) {
+                    var agent = this.timeManager.timeAgents[i];
+                    if (!agent.rangeInterval) {
+                        agent.rangeInterval = 1;
+                    }
                 }
+                this.playbackToolbar.setPlaybackMode('ranged');
                 break;
             default:
                 this.playbackToolbar.setPlaybackMode('track');
                 break;
         }
+        if(mode != 'range'){
+            this.disableListMode(false);
+        }
+    },
+    disableListMode:function(state){
+        var disable = state!==false;
+        if (disable) {
+            this.listOnlyCheck.setValue(!disable);
+        }
+        this.listOnlyCheck.setDisabled(disable);
     },
     setLoopMode:function(cmp,checked){
         this.timeManager.loop=checked;
