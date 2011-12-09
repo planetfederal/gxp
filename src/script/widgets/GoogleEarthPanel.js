@@ -159,6 +159,12 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
         this.layers.on("update", this.updateLayers, this);
         
         this.layers.on("add", this.updateLayers, this);
+
+        this.on("destroy", function() {
+            this.layers.un("remove", this.updateLayers, this);
+            this.layers.un("update", this.updateLayers, this);
+            this.layers.un("add", this.updateLayers, this);
+        }, this);
         
         // Set up events. Notice global google namespace.
         // google.earth.addEventListener(this.earth.getView(), 
