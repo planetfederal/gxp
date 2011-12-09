@@ -337,16 +337,18 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         var record = new this.store.recordType(config);
         record.setLayer(new OpenLayers.Layer.WMS(
             config.title || config.name,
-            this.url,
+            this.url, 
             {layers: config.name}
         ));
         if (!config.srs) {
             // assume the map projection if none was configured
-            record.set("srs", this.target.map.projection);
+            var srs = {};
+            srs[this.target.map.projection] = true;
+            record.set("srs", srs);
         }
         if (!config.bbox) {
             var bbox = {};
-            bbox[record.get("srs")] = {
+            bbox[this.target.map.projection] = {
                 bbox: this.target.map.maxExtent
             };
             record.set("bbox", bbox);
