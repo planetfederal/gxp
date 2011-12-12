@@ -30,7 +30,14 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
      * work.
      */
     HORIZONTAL_FIELD_OF_VIEW: (30 * Math.PI) / 180,
-    
+
+    /** api: config[flyToSpeed]
+     *  Specifies the speed at which the camera moves (0 to 5.0). Set to
+     *  null to immediately appear at selected destination, or zero to
+     *  use the Google Earth default.
+     */
+    flyToSpeed: null,
+
     /** private: property[map]
      *  ``OpenLayers.Map``
      *  The OpenLayers map associated with this panel.  Defaults
@@ -132,8 +139,12 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
     onEarthReady: function(object){
         this.earth = object;
         
-        // We don't want to fly. Just go to the right spot immediately.
-        this.earth.getOptions().setFlyToSpeed(this.earth.SPEED_TELEPORT);
+        if (this.flyToSpeed == null) {
+            // We don't want to fly. Just go to the right spot immediately.
+            this.earth.getOptions().setFlyToSpeed(this.earth.SPEED_TELEPORT);
+        } else if (this.flyToSpeed > 0) {
+            this.earth.getOptions().setFlyToSpeed(this.flyToSpeed);
+        }
         
         // Set the extent of the earth to be that shown in OpenLayers.
         this.resetCamera();
