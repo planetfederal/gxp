@@ -509,12 +509,14 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 //TODO don't force 1.1.1, fall back instead
                 version = "1.1.1";
             }
+            var params = {
+                SERVICE: "WMS",
+                VERSION: version,
+                REQUEST: "DescribeLayer"
+            };
             this.describeLayerStore = new GeoExt.data.WMSDescribeLayerStore({
-                url: req.href,
-                baseParams: {
-                    VERSION: version,
-                    REQUEST: "DescribeLayer"
-                }
+                url: this.trimUrl(req.href, params),
+                baseParams: params
             });
         }
     },
