@@ -34,6 +34,22 @@ gxp.plugins.ClickableFeatures = Ext.extend(gxp.plugins.Tool, {
      */
     featureManager: null,
     
+    /** api: config[autoLoadFeature]
+     *  ``Boolean`` Should this tool load a feature on click? If set to true,
+     *  and if there is no loaded feature at the click position, this tool will
+     *  call loadFeatures on the ``featureManager``, with a ``FeatureId``
+     *  filter created from the id of a feature returned from a WMS
+     *  GetFeatureInfo request at the click position. This feature will then be
+     *  selected immediately. Default is false.
+     */
+    autoLoadFeature: false,
+    
+    /** private: property[autoLoadedFeature]
+     *  ``OpenLayers.Feature`` the auto-loaded feature when
+     *  :attr:`autoLoadFeature` is true.
+     */
+    autoLoadedFeature: null,
+    
     /** api: config[tolerance]
      *  ``Number`` 
      *  Optional pixel tolerance to use when selecting features.  By default,
@@ -62,6 +78,21 @@ gxp.plugins.ClickableFeatures = Ext.extend(gxp.plugins.Tool, {
      *  with this tool.
      */
 
+    /** private: method[constructor]
+     */
+    constructor: function(config) {
+        // deal with deprecated autoLoadFeatures config option
+        //TODO remove this before we cut a release
+        if ("autoLoadFeatures" in config) {
+            config.autoLoadFeature = config.autoLoadFeatures;
+            delete config.autoLoadFeatures;
+            window.setTimeout(function() {
+                throw("Deprecated config option 'autoLoadFeatures' for ptype: '" + config.ptype + "'. Use 'autoLoadFeature' instead.");
+            }, 0);
+        }
+        gxp.plugins.ClickableFeatures.superclass.constructor.apply(this, [config]);
+    },
+    
     /** private: method[noFeatureClick]
      *  :arg evt: ``Object``
      */
@@ -158,7 +189,7 @@ gxp.plugins.ClickableFeatures = Ext.extend(gxp.plugins.Tool, {
                                 var feature = featureManager.featureLayer.getFeatureByFid(fid);
                                 if (feature) {
                                     this.select(feature);
-                                } else if (this.autoLoadFeatures === true) {
+                                } else if (this.autoLoadFeature === true) {
                                     autoLoad();
                                 }
                             }, this);

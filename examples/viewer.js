@@ -76,7 +76,7 @@ Ext.onReady(function() {
         }, {
             ptype: "gxp_featureeditor",
             featureManager: "featuremanager",
-            autoLoadFeatures: true, // no need to "check out" features
+            autoLoadFeature: true, // no need to "check out" features
             outputConfig: {panIn: false},
             toggleGroup: "layertools"
         }, {

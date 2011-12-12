@@ -111,16 +111,6 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
      */
     modifyOnly: false,
     
-    /** api: config[autoLoadFeatures]
-     *  ``Boolean`` Should this tool load features on click? If set to true,
-     *  and if there is no loaded feature at the click position, this tool will
-     *  call loadFeatures on the ``featureManager``, with a ``FeatureId``
-     *  filter created from the id of a feature returned from a WMS
-     *  GetFeatureInfo request at the click position. This feature will then be
-     *  selected immediately. Default is false.
-     */
-    autoLoadFeatures: false,
-    
     /** api: config[showSelectedOnly]
      *  ``Boolean`` If set to true, only selected features will be displayed
      *  on the layer. If set to false, all features (on the current page) will
@@ -150,12 +140,6 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
      *  :class:`gxp.FeatureEditPopup` FeatureEditPopup for this tool
      */
     popup: null,
-    
-    /** private: property[autoLoadedFeature]
-     *  ``OpenLayers.Feature`` the auto-loaded feature when autoLoadFeatures is
-     *  true.
-     */
-    autoLoadedFeature: null,
     
     /** private: property[schema]
      *  ``GeoExt.data.AttributeStore``
@@ -276,7 +260,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
             {
                 eventListeners: {
                     featureadded: function(evt) {
-                        if (this.autoLoadFeatures === true) {
+                        if (this.autoLoadFeature === true) {
                             this.autoLoadedFeature = evt.feature;
                         }
                     },
@@ -309,7 +293,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
             },
             eventListeners: {
                 "activate": function() {
-                    if (this.autoLoadFeatures === true || featureManager.paging) {
+                    if (this.autoLoadFeature === true || featureManager.paging) {
                         this.target.mapPanel.map.events.register(
                             "click", this, this.noFeatureClick
                         );
@@ -322,7 +306,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                     );
                 },
                 "deactivate": function() {
-                    if (this.autoLoadFeatures === true || featureManager.paging) {
+                    if (this.autoLoadFeature === true || featureManager.paging) {
                         this.target.mapPanel.map.events.unregister(
                             "click", this, this.noFeatureClick
                         );
