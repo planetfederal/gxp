@@ -272,18 +272,32 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         this.featureManager.on("layerchange", this.onLayerChange, this);
     },
 
+    guessTitleAttribute: function(schema) {
+        var titleAttr = null;
+        schema.each(function(record) {
+            if (record.get("type") === "xsd:string") {
+                titleAttr = record.get("name");
+                return false;
+            }           
+        });
+        return titleAttr;
+    },
+
     onLayerChange: function(tool, record, schema) {
         var key = this.getKey(record);
-        // TODO remove hard-coded attributes
-        this.layerLookup[key] = {
-            layer: null,
-            titleAttr: 'title',
-            timeAttr: 'timestamp',
-            visible: true
+        var titleAttr = this.guessTitleAttribute(schema);
+        var callback = function(attribute, key, record, protocol, schema) {
+            this.layerLookup[key] = {
+                timeAttr: attribute,
+                titleAttr: titleAttr,
+                layer: null,
+                visible: true
+            };
+            if (this.featureManager.featureStore) {
+                this.featureManager.featureStore.on("write", this.onSave.createDelegate(this, [key], 3), this);
+            }
         };
-        if (this.featureManager.featureStore) {
-            this.featureManager.featureStore.on("write", this.onSave.createDelegate(this, [key], 3), this);
-        }
+        this.getTimeAttribute(record, null, schema, callback);
     },
 
     onSave: function(store, action, data, key) {
@@ -432,7 +446,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
 
     /** private: method[getTimeAttribute]
      */
-    getTimeAttribute: function(record, protocol, schema) {
+    getTimeAttribute: function(record, protocol, schema, callback) {
         var key = this.getKey(record);
         Ext.Ajax.request({
             method: "GET",
@@ -440,12 +454,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             params: {layer: record.get('name')},
             success: function(response) {
                 var result = Ext.decode(response.responseText);
-                if (result && result.attribute) {
-                    this.layerLookup[key] = {
-                        timeAttr: result.attribute,
-                        visible: true
-                    };
-                    this.addVectorLayer(record, protocol, schema);
+                if (result) {
+                    callback.call(this, result.attribute, key, record, protocol, schema);
                 }
             },
             scope: this
@@ -468,7 +478,16 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                             throw new Error("Failed to get protocol for record: " + record.get("name"));
                         }
                         this.schemaCache[this.getKey(record)] = schema;
-                        this.getTimeAttribute(record, protocol, schema);
+                        var callback = function(attribute, key, record, protocol, schema) {
+                            if (attribute) {
+                                this.layerLookup[key] = {
+                                    timeAttr: attribute,
+                                    visible: true
+                                };
+                                this.addVectorLayer(record, protocol, schema);
+                            }
+                        };
+                        this.getTimeAttribute(record, protocol, schema, callback);
                     }, this);
                 }
             }
@@ -614,14 +633,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             scope: this
         });
 
-        // find the first string field for display
-        var titleAttr = null;
-        schema.each(function(record) {
-            if (record.get("type") === "xsd:string") {
-                titleAttr = record.get("name");
-                return false;
-            }
-        });
+        var titleAttr = this.guessTitleAttribute(schema);
         Ext.apply(this.layerLookup[key], {
             layer: layer,
             titleAttr: titleAttr,
