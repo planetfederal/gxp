@@ -290,7 +290,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             this.layerLookup[key] = {
                 timeAttr: attribute,
                 titleAttr: titleAttr,
-                layer: null,
+                icon: Timeline.urlPrefix + "/images/note.png",
+                layer: this.featureManager.featureLayer,
                 visible: true
             };
             if (this.featureManager.featureStore) {
@@ -755,6 +756,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 title: attributes[titleAttr],
                 durationEvent: false,
                 key: key,
+                icon: this.layerLookup[key].icon,
                 fid: features[i].fid
             };      
         }       
