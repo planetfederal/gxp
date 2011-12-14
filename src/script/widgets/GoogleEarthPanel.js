@@ -182,7 +182,8 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
      */
 
     onRenderEvent: function() {
-        if (!this.hidden) {
+        var isCard = this.ownerCt && this.ownerCt.layout instanceof Ext.layout.CardLayout;
+        if (!this.hidden && !isCard) {
             this.onShowEvent();
         }
     },
