@@ -65,7 +65,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     /** api: config[instructionText]
      *  ``String`` Message to show when there is too many data for the timeline (i18n)
      */   
-    instructionText: "There are too many events to show in the timeline, please zoom in or move the vertical slider down",
+    instructionText: "There are too many events ({count}) to show in the timeline.<br/>Please zoom in or move the vertical slider down (maximum is {max})",
 
     /** private: property[layerCount]
      * ``Integer`` The number of vector layers currently loading.
@@ -716,7 +716,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                         layer.strategies[0].deactivate();
                     }
                 }
-                this.timelineContainer.el.mask(this.instructionText, '');
+                var tpl = new Ext.Template(this.instructionText);
+                var msg = tpl.applyTemplate({count: storage.numberOfFeatures, max: this.maxFeatures});
+                this.timelineContainer.el.mask(msg, '');
                 this.eventSource.clear();
             }
         }, this);
