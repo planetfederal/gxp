@@ -243,27 +243,32 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         var layer = this.layerLookup[key].layer;
         var feature = layer && layer.getFeatureByFid(fid);
         if (feature) {
-            var centroid = feature.geometry.getCentroid();
-            var map = this.viewer.mapPanel.map;
-            this._silentMapMove = true;
-            map.setCenter(new OpenLayers.LonLat(centroid.x, centroid.y));
-            delete this._silentMapMove;
             if (this.popup) {
                 this.popup.destroy();
                 this.popup = null;
             }
-            this.popup = new gxp.FeatureEditPopup({
-                feature: feature,
-                propertyGridNameText: "Attributes",
-                title: evt.getProperty("title"),
-                panIn: false,
-                width: 200,
-                height: 250,
-                collapsible: true,
-                readOnly: true,
-                hideMode: 'offsets'
-            });
-            this.popup.show();
+            // if annotations, show feature editor
+            if (!layer.protocol) {
+                layer.events.triggerEvent("featureselected", {feature: feature});
+            } else {
+                var centroid = feature.geometry.getCentroid();
+                var map = this.viewer.mapPanel.map;
+                this._silentMapMove = true;
+                map.setCenter(new OpenLayers.LonLat(centroid.x, centroid.y));
+                delete this._silentMapMove;
+                this.popup = new gxp.FeatureEditPopup({
+                    feature: feature,
+                    propertyGridNameText: "Attributes",
+                    title: evt.getProperty("title"),
+                    panIn: false,
+                    width: 200,
+                    height: 250,
+                    collapsible: true,
+                    readOnly: true,
+                    hideMode: 'offsets'
+                });
+                this.popup.show();
+            }
         }
     },
 
