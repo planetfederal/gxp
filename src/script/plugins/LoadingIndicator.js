@@ -66,14 +66,18 @@ gxp.plugins.LoadingIndicator = Ext.extend(gxp.plugins.Tool, {
                             );
                         }
                         this.busyMask.show();
-                        layer.events.unregister("loadstart", this, arguments.callee);
+                        if (this.onlyShowOnFirstLoad === true) {
+                            layer.events.unregister("loadstart", this, arguments.callee);
+                        }
                     },
                     "loadend": function() {
                         this.layerCount--;
                         if(this.layerCount === 0) {
                             this.busyMask.hide();
                         }
-                        layer.events.unregister("loadend", this, arguments.callee);
+                        if (this.onlyShowOnFirstLoad === true) {
+                            layer.events.unregister("loadend", this, arguments.callee);
+                        }
                     },
                     scope: this
                 });
