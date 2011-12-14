@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -32,12 +32,28 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
      *  displayed in the grid.
      */
     ignoreFields: null,
+
+    /** api: config[includeFields]
+     * ``Array`` of field names from the store's records that should be 
+     * displayed in the grid. All other fields will be ignored.
+     */
+    includeFields: null,
+
+    /** api: config[fieldVisibility]
+     * ``Object`` Property name/visibility name pairs. Optional. If specified,
+     * only columns with a value of true will be initially shown.
+     */
     
     /** api: config[propertyNames]
      *  ``Object`` Property name/display name pairs. If specified, the display
      *  name will be shown as column header instead of the property name.
      */
     
+     /** api: config[customRenderers]
+      *  ``Object`` Property name/renderer pairs. If specified for a field name,
+      *  the custom renderer will be used instead of the type specific one.
+      */
+
     /** api: config[layer]
      *  ``OpenLayers.Layer.Vector``
      *  The vector layer that will be synchronized with the layer store.
@@ -108,8 +124,8 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
      *  Clean up anything created here before calling super onDestroy.
      */
     onDestroy: function() {
-        if(this.initialConfig && this.initialConfig.map
-           && !this.initialConfig.layer) {
+        if(this.initialConfig && this.initialConfig.map &&
+           !this.initialConfig.layer) {
             // we created the layer, let's destroy it
             this.layer.destroy();
             delete this.layer;
@@ -140,8 +156,7 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
         } else {
             this.reconfigure(
                 new Ext.data.Store(),
-                new Ext.grid.ColumnModel({columns: []})
-            );
+                new Ext.grid.ColumnModel({columns: []}));
         }
     },
 
@@ -164,7 +179,9 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
                 return date ? date.format(format) : value;
             };
         }
-        var columns = [], name, type, xtype, format, renderer;
+        var columns = [],
+            customRenderers = this.customRenderers || {},
+            name, type, xtype, format, renderer;
         (this.schema || store.fields).each(function(f) {
             if (this.schema) {
                 name = f.get("name");
@@ -173,6 +190,7 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
                 switch (type) {
                     case "date":
                         format = this.dateFormat;
+                        break;
                     case "datetime":
                         format = format ? format : this.dateFormat + " " + this.timeFormat;
                         xtype = undefined;
@@ -186,19 +204,24 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
                         break;
                     default:
                         xtype = "numbercolumn";
+                        break;
                 }
             } else {
                 name = f.name;
             }
-            if (this.ignoreFields.indexOf(name) === -1) {
+            if (this.ignoreFields.indexOf(name) === -1 &&
+               (this.includeFields === null || this.includeFields.indexOf(name) >= 0)) {
                 columns.push({
                     dataIndex: name,
+                    hidden: this.fieldVisibility ?
+                        (!this.fieldVisibility[name]) : false,
                     header: this.propertyNames ?
                         (this.propertyNames[name] || name) : name,
                     sortable: true,
                     xtype: xtype,
                     format: format,
-                    renderer: xtype ? undefined : renderer
+                    renderer: customRenderers[name] ||
+                        (xtype ? undefined : renderer)
                 });
             }
         }, this);

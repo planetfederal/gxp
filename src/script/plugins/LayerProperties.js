@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -109,6 +109,16 @@ gxp.plugins.LayerProperties = Ext.extend(gxp.plugins.Tool, {
             defaults: {
                 style: "padding: 10px",
                 autoHeight: this.outputConfig.autoHeight
+            },
+            listeners: {
+                added: function(cmp) {
+                    if (!this.outputTarget) {
+                        cmp.on("afterrender", function() {
+                            cmp.ownerCt.ownerCt.center();
+                        }, this, {single: true});
+                    }
+                },
+                scope: this
             }
         }, config));
     }

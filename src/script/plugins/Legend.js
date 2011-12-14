@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -71,11 +71,21 @@ gxp.plugins.Legend = Ext.extend(gxp.plugins.Tool, {
             iconCls: "gxp-icon-legend",
             tooltip: this.tooltip,
             handler: function() {
+                this.removeOutput();
                 this.addOutput();
             },
             scope: this
         }];
         return gxp.plugins.Legend.superclass.addActions.apply(this, [actions]);
+    },
+
+    /** api: method[getLegendPanel]
+     *  :returns: ``GeoExt.LegendPanel``
+     *
+     *  Get the legend panel associated with this legend plugin.
+     */
+    getLegendPanel: function() {
+        return this.output[0];
     },
 
     /** private: method[addOutput]
@@ -86,6 +96,7 @@ gxp.plugins.Legend = Ext.extend(gxp.plugins.Tool, {
             xtype: 'gx_legendpanel',
             ascending: false,
             border: false,
+            hideMode: "offsets",
             layerStore: this.target.mapPanel.layers,
             defaults: {cls: 'gxp-legend-item'}
         }, config));

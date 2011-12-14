@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -10,7 +10,7 @@ OpenLayers.ProxyHost = "/proxy/?url=";
 
 var panel, map;
 Ext.onReady(function() {
-    
+    Ext.QuickTips.init();    
     var map = new OpenLayers.Map("map");
     var wms = new OpenLayers.Layer.WMS(
         "Global Imagery",

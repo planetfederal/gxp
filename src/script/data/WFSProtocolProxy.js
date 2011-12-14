@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -51,6 +51,11 @@ gxp.data.WFSProtocolProxy = Ext.extend(GeoExt.data.ProtocolProxy, {
              *  limit set by default.
              */
 
+            /** api: config[multi]
+             *  ``Boolean`` If set to true, geometries will be casted to Multi
+             *  geometries before writing. No casting will be done for reading.
+             */
+
         });
         
         // create the protocol if none provided
@@ -64,7 +69,8 @@ gxp.data.WFSProtocolProxy = Ext.extend(GeoExt.data.ProtocolProxy, {
                 geometryName: config.geometryName,
                 schema: config.schema,
                 filter: config.filter,
-                maxFeatures: config.maxFeatures
+                maxFeatures: config.maxFeatures,
+                multi: config.multi
             }, config.protocol));
         }
 
@@ -101,9 +107,16 @@ gxp.data.WFSProtocolProxy = Ext.extend(GeoExt.data.ProtocolProxy, {
                 records = [records];
             }
             // get features from records
-            var features = new Array(records.length);
+            var features = new Array(records.length), feature;
             Ext.each(records, function(r, i) {
                 features[i] = r.getFeature();
+                feature = features[i];
+                feature.modified = Ext.apply(feature.modified || {}, {
+                    attributes: Ext.apply(
+                        (feature.modified && feature.modified.attributes) || {},
+                        r.modified
+                    )
+                });
             }, this);
 
             
@@ -114,12 +127,16 @@ gxp.data.WFSProtocolProxy = Ext.extend(GeoExt.data.ProtocolProxy, {
                 scope: scope
             };
 
-            this.protocol.commit(features, {
+            var options = {
                 callback: function(response) {
                     this.onProtocolCommit(response, o);
                 },
                 scope: this
-            });
+            };
+
+            Ext.applyIf(options, params);
+
+            this.protocol.commit(features, options);
         }
         
     },
@@ -146,6 +163,8 @@ gxp.data.WFSProtocolProxy = Ext.extend(GeoExt.data.ProtocolProxy, {
                     } else if(state == OpenLayers.State.INSERT) {
                         feature.fid = insertIds[j];
                         ++j;
+                    } else if (feature.modified) {
+                        feature.modified = {};
                     }
                     feature.state = null;
                 }
@@ -212,7 +231,7 @@ gxp.data.WFSProtocolProxy = Ext.extend(GeoExt.data.ProtocolProxy, {
             var request = response.priv;
             if (request.status >= 200 && request.status < 300) {
                 // service exception with 200
-                this.fireEvent("exception", this, "remote", o.action, o, response.error, o.records)
+                this.fireEvent("exception", this, "remote", o.action, o, response.error, o.records);
             } else {
                 // non 200 status
                 this.fireEvent("exception", this, "response", o.action, o, request);

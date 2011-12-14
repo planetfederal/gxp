@@ -1,13 +1,13 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
 
 /**
- * @include data/WFSProtocolProxy.js
+ * @requires data/WFSProtocolProxy.js
  */
 
 /** api: (define)
@@ -30,6 +30,11 @@ gxp.data.WFSFeatureStore = Ext.extend(GeoExt.data.FeatureStore, {
      *  Optional filter to set on the WFSProtocolProxy.
      */
     
+    /** api: config[multi]
+     *  ``Boolean`` If set to true, geometries will be casted to Multi
+     *  geometries before writing. No casting will be done for reading.
+     */
+
     /** api: method[setOgcFilter]
      *  :arg ogcFilter: ``OpenLayers.Filter`` Update the filter used by the
      *      protocol proxy.  You must manually call load or reload to trigger
@@ -50,7 +55,8 @@ gxp.data.WFSFeatureStore = Ext.extend(GeoExt.data.FeatureStore, {
                 geometryName: config.geometryName,
                 schema: config.schema,
                 filter: config.ogcFilter,
-                maxFeatures: config.maxFeatures
+                maxFeatures: config.maxFeatures,
+                multi: config.multi
             }, config.proxy));
         }
         if(!config.writer) {

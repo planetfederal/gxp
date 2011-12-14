@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -95,7 +95,7 @@ gxp.EmbedMapDialog = Ext.extend(Ext.Container, {
     /** api: method[getIframeHTML]
      *  :returns: ``String`` the HTML needed to create the iframe
      *
-     *  Get the HTML needed to created the iframe.
+     *  Get the HTML needed to create the iframe.
      */
     getIframeHTML: function() {
         return this.snippetArea.getValue();
@@ -107,9 +107,10 @@ gxp.EmbedMapDialog = Ext.extend(Ext.Container, {
         this.snippetArea.setValue(
             '<iframe style="border: none;" height="' + this.heightField.getValue() +
             '" width="' + this.widthField.getValue() +'" src="' + 
-            gxp.util.getAbsoluteUrl(this.url) + '"></iframe>'
-        );
-        this.snippetArea.focus(true, 100);
+            gxp.util.getAbsoluteUrl(this.url) + '"></iframe>');
+        if (this.snippetArea.isVisible() === true) {
+            this.snippetArea.focus(true, 100);
+        }
     },
     
     /** private: method[getConfig]
@@ -207,5 +208,5 @@ gxp.EmbedMapDialog = Ext.extend(Ext.Container, {
     }
 });
 
-/** api: xtype = gx_embedmapdialog */
+/** api: xtype = gxp_embedmapdialog */
 Ext.reg('gxp_embedmapdialog', gxp.EmbedMapDialog);

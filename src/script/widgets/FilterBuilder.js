@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -26,7 +26,7 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
 
     /** api: config[builderTypeNames]
      *  ``Array``
-     *  A list of labels for that correspond to builder type constants.
+     *  A list of labels that correspond to builder type constants.
      *  These will be the option names available in the builder type combo.
      *  Default is ``["any", "all", "none", "not all"]``.
      */
@@ -54,7 +54,7 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
 
     /** api: config[postComboText]
      *  ``String``
-     *  String to display before filter type combo.  Default is
+     *  String to display after filter type combo.  Default is
      *  ``"of the following:"``.
      */
     postComboText: "of the following:",
@@ -244,6 +244,7 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
             filter = this.wrapFilter(this.createDefaultFilter());
         } else {
             filter = this.cleanFilter(filter);
+            var child, i, len;
             switch(filter.type) {
                 case OpenLayers.Filter.Logical.AND:
                 case OpenLayers.Filter.Logical.OR:
@@ -251,8 +252,7 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
                         // give the filter children if it has none
                         filter.filters = [this.createDefaultFilter()];
                     } else {
-                        var child;
-                        for(var i=0, len=filter.filters.length; i<len; ++i) {
+                        for(i=0, len=filter.filters.length; i<len; ++i) {
                             child = filter.filters[i];
                             if(child instanceof OpenLayers.Filter.Logical) {
                                 filter.filters[i] = this.customizeFilter(child);
@@ -275,12 +275,12 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
                         ];
                     } else {
                         // NOT filters should have one child only
-                        var child = filter.filters[0];
+                        child = filter.filters[0];
                         if(child instanceof OpenLayers.Filter.Logical) {
                             if(child.type !== OpenLayers.Filter.Logical.NOT) {
                                 // check children of AND and OR
                                 var grandchild;
-                                for(var i=0, len=child.filters.length; i<len; ++i) {
+                                for(i=0, len=child.filters.length; i<len; ++i) {
                                     grandchild = child.filters[i];
                                     if(grandchild instanceof OpenLayers.Filter.Logical) {
                                         child.filters[i] = this.customizeFilter(grandchild);
@@ -314,6 +314,7 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
                 default:
                     // non-logical filters get wrapped
                     filter = this.wrapFilter(filter);
+                    break;
             }
         }
         return filter;

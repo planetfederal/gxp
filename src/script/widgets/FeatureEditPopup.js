@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -17,7 +17,7 @@
  *
  *      Create a new popup which displays the attributes of a feature and
  *      makes the feature editable,
- *      using an ``OpenLayers.Control.MofidyFeature``.
+ *      using an ``OpenLayers.Control.ModifyFeature``.
  */
 Ext.namespace("gxp");
 gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
@@ -40,7 +40,8 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
     layout: "fit",
     
     /** api: config[feature]
-     *  ``OpenLayers.Feature.Vector`` The feature to edit and display.
+     *  ``OpenLayers.Feature.Vector``|``GeoExt.data.FeatureRecord`` The feature
+     *  to edit and display.
      */
     
     /** api: config[vertexRenderIntent]
@@ -197,6 +198,9 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             this.timeFormat = Ext.form.TimeField.prototype.format;
         }
         var feature = this.feature;
+        if (feature instanceof GeoExt.data.FeatureRecord) {
+            feature = this.feature = feature.getFeature();
+        }
         if (!this.location) {
             this.location = feature;
         }
@@ -452,7 +456,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             this.saveButton.show();
             this.cancelButton.show();
             
-            this.geometry = this.feature.geometry.clone();
+            this.geometry = this.feature.geometry && this.feature.geometry.clone();
             this.attributes = Ext.apply({}, this.feature.attributes);
 
             this.modifyControl = new OpenLayers.Control.ModifyFeature(
@@ -461,7 +465,9 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             );
             this.feature.layer.map.addControl(this.modifyControl);
             this.modifyControl.activate();
-            this.modifyControl.selectFeature(this.feature);
+            if (this.feature.geometry) {
+                this.modifyControl.selectFeature(this.feature);
+            }
         }
     },
     

@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -126,7 +126,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
         for (var group in this.groups) {
             groupConfig = typeof this.groups[group] == "string" ?
                 {title: this.groups[group]} : this.groups[group];
-            treeRoot.appendChild(new GeoExt.tree.LayerContainer({
+            treeRoot.appendChild(new GeoExt.tree.LayerContainer(Ext.apply({
                 text: groupConfig.title,
                 iconCls: "gxp-folder",
                 expanded: true,
@@ -150,6 +150,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
                                 return r.getLayer() === layer;
                             }));
                             if (record) {
+                                attr.qtip = record.get('name');
                                 if (!record.get("queryable")) {
                                     attr.iconCls = "gxp-tree-rasterlayer-icon";
                                 }
@@ -170,7 +171,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
                         node.expand();
                     }
                 }
-            }));
+            }, groupConfig)));
         }
         
         config = Ext.apply({
@@ -184,15 +185,16 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
                     beforeselect: function(selModel, node) {
                         var changed = true;
                         var layer = node && node.layer;
+                        var record;
                         if (layer) {
                             var store = node.layerStore;
-                            var record = store.getAt(store.findBy(function(r) {
+                            record = store.getAt(store.findBy(function(r) {
                                 return r.getLayer() === layer;
                             }));
-                            this.selectionChanging = true;
-                            changed = this.target.selectLayer(record);
-                            this.selectionChanging = false;
                         }
+                        this.selectionChanging = true;
+                        changed = this.target.selectLayer(record);
+                        this.selectionChanging = false;
                         return changed;
                     },
                     scope: this

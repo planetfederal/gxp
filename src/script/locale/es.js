@@ -72,6 +72,10 @@ GeoExt.Lang.add("es", {
         tooltip: "Leyenda"
     },
 
+    "gxp.plugins.LoadingIndicator.prototype": {
+        loadingMapMessage: "Loading Map..."
+    },
+
     "gxp.plugins.MapBoxSource.prototype": {
         title: "MapBox Layers",
         blueMarbleTopoBathyJanTitle: "Blue Marble Topography & Bathymetry (January)",
@@ -300,7 +304,9 @@ GeoExt.Lang.add("es", {
         transparentText: "Transparente",
         cacheText: "Caché",
         cacheFieldText: "Usar la versión en caché",
-        stylesText: "Estilos"
+        stylesText: "Estilos",
+        infoFormatText: "Info format",
+        infoFormatEmptyText: "Select a format"
     },
 
     "gxp.EmbedMapDialog.prototype": {

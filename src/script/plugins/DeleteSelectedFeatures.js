@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -121,7 +121,7 @@ gxp.plugins.DeleteSelectedFeatures = Ext.extend(gxp.plugins.Tool, {
                         } // TODO: remove after http://trac.geoext.org/ticket/141
                         store.remove(store.getRecordFromFeature(feature));
                         delete store._removing; // TODO: remove after http://trac.geoext.org/ticket/141
-                    };
+                    }
                     store.save();
                 }
             },

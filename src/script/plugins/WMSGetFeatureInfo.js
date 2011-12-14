@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -54,17 +54,40 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
      */
     popupTitle: "Feature Info",
     
+    /** api: config[format]
+     *  ``String`` Either "html" or "grid". If set to "grid", GML will be
+     *  requested from the server and displayed in an Ext.PropertyGrid.
+     *  Otherwise, the html output from the server will be displayed as-is.
+     *  Default is "html".
+     */
+    format: "html",
+    
     /** api: config[vendorParams]
      *  ``Object``
      *  Optional object with properties to be serialized as vendor specific
      *  parameters in the requests (e.g. {buffer: 10}).
      */
     
-    /** api: config[paramsFromLayer]
+    /** api: config[layerParams]
      *  ``Array`` List of param names that should be taken from the layer and
      *  added to the GetFeatureInfo request (e.g. ["CQL_FILTER"]).
      */
      
+    /** api: config[itemConfig]
+     *  ``Object`` A configuration object overriding options for the items that
+     *  get added to the popup for each server response or feature. By default,
+     *  each item will be configured with the following object:
+     *
+     *  ..code-block:: javascript
+     *
+     *      {
+     *          xtype: "propertygrid", // only for "grid" format
+     *          title: feature.fid ? feature.fid : title, // only for "grid" format
+     *          source: feature.attributes, // only for "grid" format
+     *          html: text, // responseText from server - only for "html" format
+     *      } 
+     */
+
     /** api: method[addActions]
      */
     addActions: function() {
@@ -112,23 +135,35 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
                         vendorParams[param] = layer.params[param];
                     }
                 }
-                var control = new OpenLayers.Control.WMSGetFeatureInfo({
+                var infoFormat = x.get("infoFormat");
+                if (infoFormat === undefined) {
+                    // TODO: check if chosen format exists in infoFormats array
+                    // TODO: this will not work for WMS 1.3 (text/xml instead for GML)
+                    infoFormat = this.format == "html" ? "text/html" : "application/vnd.ogc.gml";
+                }
+                var control = new OpenLayers.Control.WMSGetFeatureInfo(Ext.applyIf({
                     url: layer.url,
                     queryVisible: true,
                     layers: [layer],
+                    infoFormat: infoFormat,
                     vendorParams: vendorParams,
                     eventListeners: {
                         getfeatureinfo: function(evt) {
-                            var match = evt.text.match(/<body[^>]*>([\s\S]*)<\/body>/);
-                            if (match && !match[1].match(/^\s*$/)) {
-                                this.displayPopup(
-                                    evt, x.get("title") || x.get("name"), match[1]
-                                );
+                            var title = x.get("title") || x.get("name");
+                            if (infoFormat == "text/html") {
+                                var match = evt.text.match(/<body[^>]*>([\s\S]*)<\/body>/);
+                                if (match && !match[1].match(/^\s*$/)) {
+                                    this.displayPopup(evt, title, match[1]);
+                                }
+                            } else if (infoFormat == "text/plain") {
+                                this.displayPopup(evt, title, '<pre>' + evt.text + '</pre>');
+                            } else {
+                                this.displayPopup(evt, title);
                             }
                         },
                         scope: this
                     }
-                });
+                }, this.controlOptions));
                 map.addControl(control);
                 info.controls.push(control);
                 if(infoButton.pressed) {
@@ -165,6 +200,13 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
                 map: this.target.mapPanel,
                 width: 250,
                 height: 300,
+                defaults: {
+                    title: title,
+                    layout: "fit",
+                    autoScroll: true,
+                    autoWidth: true,
+                    collapsible: true
+                },
                 listeners: {
                     close: (function(key) {
                         return function(panel){
@@ -179,15 +221,23 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
             popup = this.popupCache[popupKey];
         }
 
-        // extract just the body content
-        popup.add({
-            title: title,
-            layout: "fit",
-            html: text,
-            autoScroll: true,
-            autoWidth: true,
-            collapsible: true
-        });
+        var features = evt.features, config = [];
+        if (!text && features) {
+            var feature;
+            for (var i=0,ii=features.length; i<ii; ++i) {
+                feature = features[i];
+                config.push(Ext.apply({
+                    xtype: "propertygrid",
+                    title: feature.fid ? feature.fid : title,
+                    source: feature.attributes
+                }, this.itemConfig));
+            }
+        } else if (text) {
+            config.push(Ext.apply({
+                html: text
+            }, this.itemConfig));
+        }
+        popup.add(config);
         popup.doLayout();
     }
     

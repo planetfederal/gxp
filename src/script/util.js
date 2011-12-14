@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -15,6 +15,29 @@ gxp.util = {
      *  ``Object`` cache that keeps track of unique names
      */
     _uniqueNames: {},
+
+    /** api: function[getOGCExceptionText]
+     *  :arg report: ``Object`` The exception report object
+     *  :return: ``String`` A single string representing the possible stack of
+     *      exception messages.
+     *
+     *  Get a string message from an OGC exception report object.
+     */ 
+    getOGCExceptionText: function(report) {
+        var msg;
+        if (report && report.exceptions) {
+            msg = [];
+            Ext.each(report.exceptions, function(obj) {
+                Ext.each(obj.texts, function(text) {
+                    msg.push(text);
+                });
+            });
+            msg = msg.join("\n");
+        } else {
+            msg = "Unknown error (no exception report).";
+        }
+        return msg;
+    },
 
     /** api: function[dispatch]
      *  :arg functions: ``Array(Function)`` List of functions to be called.
@@ -87,7 +110,7 @@ gxp.util = {
      */
     getAbsoluteUrl: function(url) {
         var a;
-        if(Ext.isIE) {
+        if(Ext.isIE6 || Ext.isIE7 || Ext.isIE8) {
             a = document.createElement("<a href='" + url + "'/>");
             a.style.display = "none";
             document.body.appendChild(a);
@@ -103,6 +126,8 @@ gxp.util = {
     /** api: function[md5]
      *  :arg data: ``String``
      *  :returns: ``String`` md5 hash
+     *
+     *  Encrypts the specified string using MD5.
      */
     md5: (function() {
 

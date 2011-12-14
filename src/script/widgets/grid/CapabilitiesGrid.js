@@ -1,12 +1,14 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
 
-// @include widgets/NewSourceWindow.js
+/**
+ * @include widgets/NewSourceWindow.js
+ */
 
 /** api: (define)
  *  module = gxp.grid
@@ -105,6 +107,23 @@ gxp.grid.CapabilitiesGrid = Ext.extend(Ext.grid.GridPanel, {
     layerAdditionLabel: "or add a new server.",
     expanderTemplateText: "<p><b>Abstract:</b> {abstract}</p>",
 
+    /** private: method[constructor]
+     */
+    constructor: function() {
+        this.addEvents(
+            /** api: event[sourceselected]
+             *  Fired when a new source is selected.
+             *
+             *  Listener arguments:
+             *
+             *  * grid - :class:`gxp.grid.CapabilitiesGrid` This grid.
+             *  * source - :class:`gxp.plugins.LayerSource` The selected source.
+             */
+            "sourceselected"
+        );
+        gxp.grid.CapabilitiesGrid.superclass.constructor.apply(this, arguments);
+    },
+
     /** private: method[initComponent]
      *
      *  Initializes the CapabilitiesGrid. Creates and loads a WMS Capabilities 
@@ -120,6 +139,10 @@ gxp.grid.CapabilitiesGrid = Ext.extend(Ext.grid.GridPanel, {
 
             this.store.load();
         }
+
+        this.on('afterrender', function() {  
+            this.fireEvent('sourceselected', this, this.store);
+        }, this);
 
         if (!("expander" in this)){
             this.expander = new Ext.grid.RowExpander({
@@ -174,6 +197,7 @@ gxp.grid.CapabilitiesGrid = Ext.extend(Ext.grid.GridPanel, {
                 }, this)).get("identifier"),
                 listeners: {
                     select: function(combo, record, index) {
+                        this.fireEvent("sourceselected", this, record.data.store);
                         this.reconfigure(record.data.store, this.getColumnModel());
                         if (this.expander) this.expander.ows = record.get("url");
                     },
@@ -203,6 +227,7 @@ gxp.grid.CapabilitiesGrid = Ext.extend(Ext.grid.GridPanel, {
             }
 
             this.tbar.push(new Ext.Button({
+                iconCls: "gxp-icon-addserver",
                 text: this.layerAdditionLabel,
                 handler: function() {
                     this.newSourceWindow.show();
@@ -281,19 +306,21 @@ gxp.grid.CapabilitiesGrid = Ext.extend(Ext.grid.GridPanel, {
                  * TODO: The WMSCapabilitiesReader should allow for creation
                  * of layers in different SRS.
                  */
-                layer = new OpenLayers.Layer.WMS(
-                    layer.name, layer.url,
-                    {layers: layer.params["LAYERS"]},
-                    {
-                        attribution: layer.attribution,
-                        maxExtent: OpenLayers.Bounds.fromArray(
-                            record.get("llbbox")
-                        ).transform(
-                            new OpenLayers.Projection("EPSG:4326"),
-                            this.mapPanel.map.getProjectionObject()
-                        )
-                    }
-                );
+                if (layer instanceof OpenLayers.Layer.WMS) {
+                    layer = new OpenLayers.Layer.WMS(
+                        layer.name, layer.url,
+                        {layers: layer.params["LAYERS"]},
+                        {
+                            attribution: layer.attribution,
+                            maxExtent: OpenLayers.Bounds.fromArray(
+                                record.get("llbbox")
+                            ).transform(
+                                new OpenLayers.Projection("EPSG:4326"),
+                                this.mapPanel.map.getProjectionObject()
+                            )
+                        }
+                    );
+                }
             }
 
             record.data["layer"] = layer;
