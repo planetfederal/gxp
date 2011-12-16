@@ -36,6 +36,7 @@
         "widgets/grid/FeatureGrid.js",
         "widgets/GoogleEarthPanel.js",
         "widgets/GoogleStreetViewPanel.js",
+        "widgets/Histogram.js",
         "widgets/tips/SliderTip.js",
         "widgets/PlaybackToolbar.js",
         "plugins/LayerSource.js",

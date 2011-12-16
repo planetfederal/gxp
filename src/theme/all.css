@@ -314,6 +314,20 @@ div.olMap div.gx-overlay-playback {
     width:16px !important;height:16px !important;
     background-repeat: no-repeat;
 }
+
+/* gxp_histogram */
+.gxp-histogram {
+    overflow: hidden;
+    position: relative;
+    border-bottom: 1px solid #BBB;
+}
+.gxp-histogram .bar {
+    position: absolute;
+    background-color: #BBB;
+    border-right: 1px solid #BBB; /* avoid gaps between bars */
+    height: 100%; /* so we don't need to set the height programmatially */
+}
+
 .x-btn .gxp-icon-reset{
     background-image:url('img/silk/control_start_blue.png')
 }
