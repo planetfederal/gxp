@@ -78,7 +78,7 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
      *  get added to the popup for each server response or feature. By default,
      *  each item will be configured with the following object:
      *
-     *  ..code-block:: javascript
+     *  .. code-block:: javascript
      *
      *      {
      *          xtype: "propertygrid", // only for "grid" format

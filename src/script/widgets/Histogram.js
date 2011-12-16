@@ -20,7 +20,7 @@ Ext.namespace("gxp");
  *      be stretched so the highest quantity takes up 100% of the available
  *      height.
  *
- *      ..code-block:: javascript
+ *      .. code-block:: javascript
  *
  *          new gxp.Histogram({
  *              quantities: [1,2,3,4,5,4,3,2,1],
@@ -53,7 +53,7 @@ gxp.Histogram = Ext.extend(Ext.BoxComponent, {
      *      histogram.
      *
      *  Updates the quantities that were originally configured with
-     *  :prop:`quantities`.
+     *  :obj:`quantities`.
      */
     setQuantities: function(quantities) {
         this.quantities = quantities;

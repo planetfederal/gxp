@@ -226,7 +226,8 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
              *  Fired when features were edited.
              *
              *  Listener arguments:
-             *  * featureManager - ``gxp.plugins.FeatureManager`` the
+             *
+             *  * featureManager - :class:`gxp.plugins.FeatureManager` the
              *    the feature manager that was used for editing
              *  * layer - ``Object`` object with name and source of the layer
              *    that was edited
