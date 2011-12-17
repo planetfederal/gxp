@@ -369,7 +369,18 @@ gxp.plugins.GoogleEarth.loader = new (Ext.extend(Ext.util.Observable, {
         });
 
         this.loading = true;
-        document.getElementsByTagName("head")[0].appendChild(script);
+        
+        // The goodle loader accesses document.body, so we don't add the loader
+        // script before the document is ready.
+        function append() {
+            document.getElementsByTagName("head")[0].appendChild(script);
+        }
+        if (document.body) {
+            append();
+        } else {
+            Ext.onReady(append);
+        }
+        
         this.script = script;
 
     },
