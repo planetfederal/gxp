@@ -664,23 +664,34 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             if (this.rangeInfo && this.rangeInfo.current) {
                 var currentRange = this.rangeInfo.current;
                 var originalRange = this.rangeInfo.original;
-                var originalSpan = originalRange[1] - originalRange[0];
-                var originalCenter = new Date(originalRange[0].getTime() + originalSpan/2);
-                var fractionRange = this.bufferFraction * originalSpan;
-                var lowerBound = new Date(originalCenter.getTime() - fractionRange);
-                var upperBound = new Date(originalCenter.getTime() + fractionRange);
-                // update once the time gets out of the buffered center
-                if (time < lowerBound || time > upperBound) {
+                // update once the time gets out of the original range
+                if (time < originalRange[0] || time > originalRange[1]) {
                     var span = currentRange[1] - currentRange[0];
                     var start = new Date(time.getTime() - span/2);
                     var end = new Date(time.getTime() + span/2);
+                    this.rangeInfo.current = [start, end];
+                    // calculate back the original extent
+                    var startOriginal = new Date(time.getTime() - span/4);
+                    var endOriginal = new Date(time.getTime() + span/4);
+                    this.rangeInfo.original = [startOriginal, endOriginal];
+                    var rangeToClear = undefined;
+                    // we have moved ahead in time, and we have not moved so far that 
+                    // all our data is invalid
+                    if (start > currentRange[0] && start < currentRange[1]) {
+                        // only request the slice of data that we need
+                        rangeToClear = [currentRange[0], start];
+                        start = currentRange[1];
+                    }
+                    // we have moved back in time
+                    if (start < currentRange[0] && end > currentRange[0]) {
+                        rangeToClear = [end, currentRange[1]];
+                        end = currentRange[0];
+                    }
                     for (var key in this.layerLookup) {
                         var layer = this.layerLookup[key].layer;
                         layer && this.setFilter(key, this.createTimeFilter([start, end], key, 0));
                     }
-                    // TODO: instead of a full update, only get the data we are missing and
-                    // remove events from the timeline that are out of the new range
-                    this.updateTimelineEvents({force: true});                
+                    this.updateTimelineEvents({force: true}, rangeToClear);
                 }
             }
         }
@@ -713,10 +724,13 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     createTimeFilter: function(range, key, fraction) {
         var start = new Date(range[0].getTime() - fraction * (range[1] - range[0]));
         var end = new Date(range[1].getTime() + fraction * (range[1] - range[0]));
-        this.rangeInfo = {
-            original: range,
-            current: [start, end]
-        };
+        // TODO: or if fraction not equals 0?
+        if (!this.rangeInfo) {
+            this.rangeInfo = {
+                original: range,
+                current: [start, end]
+            };
+        }
         return new OpenLayers.Filter({
             type: OpenLayers.Filter.Comparison.BETWEEN,
             property: this.layerLookup[key].timeAttr,
@@ -830,11 +844,12 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     
     /** private: method[updateTimelineEvents]
      *  :arg options: `Object` First arg to OpenLayers.Strategy.BBOX::update.
+     *  :arg rangeToClear: ``Array`` Optional date range to use for clearing.
      *
      *  Load the data for the timeline. Only load the data if the total number
      *  features is below a configurable threshold.
      */
-    updateTimelineEvents: function(options) {
+    updateTimelineEvents: function(options, rangeToClear) {
         if (!this.rendered) {
             return;
         }
@@ -884,7 +899,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 for (key in this.layerLookup) {
                     layer = this.layerLookup[key].layer;
                     if (layer && layer.strategies !== null) {
-                        this.clearEventsForKey(key);
+                        if (rangeToClear !== undefined) {
+                            this.clearEventsForRange(key, rangeToClear);
+                        } else {
+                            this.clearEventsForKey(key);
+                        }
                         layer.strategies[0].activate();
                         layer.strategies[0].update(options);
                     }
@@ -916,6 +935,31 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         while (iterator.hasNext()) {
             var evt = iterator.next();
             if (evt.getProperty('key') === key) {
+                eventIds.push(evt.getID());
+            }
+        }
+        for (var i=0, len=eventIds.length; i<len; ++i) {
+            this.eventSource.remove(eventIds[i]);
+        }
+    },
+
+    /** private: method[clearEventsForRange]
+     *  :arg key: ``String`` 
+     *  :arg range: ``Array``
+     *
+     *  Clear the events from the timeline for a certain layer for dates that
+     *  are within the supplied range.
+     */
+    clearEventsForRange: function(key, range) {
+        var iterator = this.eventSource.getAllEventIterator();
+        var eventIds = [];
+        var count = 0;
+        while (iterator.hasNext()) {
+            count++;
+            var evt = iterator.next();
+            var start = evt.getProperty('start');
+            // only clear if in range
+            if (evt.getProperty('key') === key && start >= range[0] && start <= range[1]) {
                 eventIds.push(evt.getID());
             }
         }
