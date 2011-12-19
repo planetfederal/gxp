@@ -694,7 +694,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                     }
                     for (var key in this.layerLookup) {
                         var layer = this.layerLookup[key].layer;
-                        layer && this.setFilter(key, this.createTimeFilter([start, end], key, 0));
+                        layer && this.setFilter(key, this.createTimeFilter([start, end], key, 0, false));
                     }
                     this.updateTimelineEvents({force: true}, rangeToClear);
                 }
@@ -722,14 +722,15 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  :arg range: ``Array``
      *  :arg key: ``String``
      *  :arg fraction: ``Float``
+     *  :arg updateRangeInfo: ``Boolean`` Should we update this.rangeInfo?
      *  :returns: ``OpenLayers.Filter``
      *      
      *  Create an OpenLayers.Filter to use in the WFS requests.
      */
-    createTimeFilter: function(range, key, fraction) {
+    createTimeFilter: function(range, key, fraction, updateRangeInfo) {
         var start = new Date(range[0].getTime() - fraction * (range[1] - range[0]));
         var end = new Date(range[1].getTime() + fraction * (range[1] - range[0]));
-        if (fraction !== 0) {
+        if (updateRangeInfo !== false) {
             this.rangeInfo = {
                 original: range,
                 current: [start, end]
