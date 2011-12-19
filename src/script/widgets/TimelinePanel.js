@@ -937,7 +937,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     clearEventsForKey: function(key) {
         var iterator = this.eventSource.getAllEventIterator();
         var eventIds = [];
+        var count = 0;
         while (iterator.hasNext()) {
+            count++;
             var evt = iterator.next();
             if (evt.getProperty('key') === key) {
                 eventIds.push(evt.getID());
@@ -946,6 +948,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         for (var i=0, len=eventIds.length; i<len; ++i) {
             this.eventSource.remove(eventIds[i]);
         }
+        this.timeline.layout();
     },
 
     /** private: method[clearEventsForRange]
@@ -971,6 +974,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         for (var i=0, len=eventIds.length; i<len; ++i) {
             this.eventSource.remove(eventIds[i]);
         }
+        this.timeline.layout();
     },
 
     /** private: method[clearEventsForFid]
@@ -991,6 +995,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         for (var i=0, len=eventIds.length; i<len; ++i) {
             this.eventSource.remove(eventIds[i]);
         }
+        this.timeline.layout();
     },
 
     /** private: method[onFeaturesRemoved]
