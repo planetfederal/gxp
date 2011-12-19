@@ -300,6 +300,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 visible: true
             };
             if (this.featureManager.featureStore) {
+                // we cannot use the featureLayer's events here, since features
+                // will be added without attributes
                 this.featureManager.featureStore.on("write", this.onSave.createDelegate(this, [key], 3), this);
             }
         };
@@ -314,6 +316,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         for (var i=0, ii=data.length; i<ii; i++) {
             var feature = data[i].feature;
             features.push(feature);
+            this.clearEventsForFid(key, feature.fid);
         }
         this.addFeatures(key, features);
     },
@@ -738,6 +741,20 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 eventIds.push(evt.getID());
             }
         }
+        for (var i=0, len=eventIds.length; i<len; ++i) {
+            this.eventSource.remove(eventIds[i]);
+        }
+    },
+
+    clearEventsForFid: function(key, fid) {
+        var iterator = this.eventSource.getAllEventIterator();
+        var eventIds = [];
+        while (iterator.hasNext()) {
+            var evt = iterator.next();
+            if (evt.getProperty('key') === key && evt.getProperty('fid') === fid) {
+                eventIds.push(evt.getID());
+            }
+        }   
         for (var i=0, len=eventIds.length; i<len; ++i) {
             this.eventSource.remove(eventIds[i]);
         }
