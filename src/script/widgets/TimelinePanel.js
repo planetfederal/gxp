@@ -191,9 +191,14 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         if (this.playbackTool) {
             var range = this.playbackTool.playbackToolbar.control.range;
             range = this.calculateNewRange(range, value);
+            // correct for movements of the timeline in the mean time
+            var center = this.playbackTool.playbackToolbar.control.currentTime;
+            var span = range[1]-range[0];
+            var start = new Date(center.getTime() - span/2);
+            var end = new Date(center.getTime() + span/2);
             for (var key in this.layerLookup) {
                 var layer = this.layerLookup[key].layer;
-                layer && this.setFilter(key, this.createTimeFilter(range, key, 0));
+                layer && this.setFilter(key, this.createTimeFilter([start, end], key, this.bufferFraction));
             }
             this.updateTimelineEvents({force: true});
         }
@@ -724,8 +729,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     createTimeFilter: function(range, key, fraction) {
         var start = new Date(range[0].getTime() - fraction * (range[1] - range[0]));
         var end = new Date(range[1].getTime() + fraction * (range[1] - range[0]));
-        // TODO: or if fraction not equals 0?
-        if (!this.rangeInfo) {
+        if (fraction !== 0) {
             this.rangeInfo = {
                 original: range,
                 current: [start, end]
