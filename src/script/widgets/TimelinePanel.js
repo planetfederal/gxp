@@ -309,9 +309,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     },
 
     onSave: function(store, action, data, key) {
-        if (!this.rendered) {
-            return;
-        }
         var features = [];
         for (var i=0, ii=data.length; i<ii; i++) {
             var feature = data[i].feature;
