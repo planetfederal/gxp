@@ -42,6 +42,7 @@ var mapPanel = new GeoExt.MapPanel({
     height: 600,
     width: 600,
     map: {
+        theme: null,
         projection: merc,
         units: "m",
         numZoomLevels: 18,

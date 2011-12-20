@@ -29,7 +29,7 @@ Ext.onReady(function() {
 
     
     // creates the map that will contain the vector layer with features
-    map = new OpenLayers.Map("map");
+    map = new OpenLayers.Map("map", {theme: null});
     map.addLayer(new OpenLayers.Layer.WMS(
         "Global Imagery",
         "http://demo.opengeo.org/geoserver/wms",

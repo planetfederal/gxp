@@ -63,6 +63,7 @@ Ext.onReady(function() {
         items: {
             xtype: "gx_mappanel",
             region: "center",
+            map: {theme: null},
             layers: [
                 new OpenLayers.Layer.WMS( 
                     "OpenLayers WMS",
