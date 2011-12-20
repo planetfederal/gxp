@@ -31,7 +31,7 @@ gxp.slider.ClassBreakSlider = Ext.extend(Ext.slider.MultiSlider, {
     store: null,
     
     /** api: config[values]
-     *  ``Array(Number)`` Will be ignored. Configure :prop:`store` instead.
+     *  ``Array(Number)`` Will be ignored. Configure :attr:`store` instead.
      */
     
     /** api: config[constrainThumbs]
