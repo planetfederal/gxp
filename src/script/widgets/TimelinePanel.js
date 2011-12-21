@@ -175,8 +175,16 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             this.bindPlaybackTool(this.initialConfig.playbackTool);
         }
 
-        gxp.TimelinePanel.superclass.initComponent.call(this);
-        
+        if (this.ownerCt) {
+            this.ownerCt.on("beforecollapse", function() {
+                this._silentMapMove = true;
+            }, this);
+            this.ownerCt.on("beforeexpand", function() {
+                delete this._silentMapMove;
+            }, this);
+        }
+
+        gxp.TimelinePanel.superclass.initComponent.call(this); 
     },
 
     /**
@@ -943,11 +951,19 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 for (key in this.layerLookup) {
                     layer = this.layerLookup[key].layer;
                     if (layer && layer.strategies !== null) {
-                        if (rangeToClear !== undefined) {
-                            this.clearEventsForRange(key, rangeToClear);
-                        } else {
+                        if (storage.numberOfFeatures === 0) {
                             this.clearEventsForKey(key);
                         }
+                        layer.events.on({
+                            "loadstart": function() {
+                                if (rangeToClear !== undefined) {
+                                    this.clearEventsForRange(key, rangeToClear);
+                                } else {
+                                    this.clearEventsForKey(key);
+                                }
+                            },
+                            scope: this
+                        });
                         layer.strategies[0].activate();
                         layer.strategies[0].update(options);
                     }
