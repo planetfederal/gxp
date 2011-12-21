@@ -952,19 +952,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 for (key in this.layerLookup) {
                     layer = this.layerLookup[key].layer;
                     if (layer && layer.strategies !== null) {
-                        if (storage.numberOfFeatures === 0) {
+                        if (rangeToClear !== undefined) {
+                            this.clearEventsForRange(key, rangeToClear);
+                        } else {
                             this.clearEventsForKey(key);
                         }
-                        layer.events.on({
-                            "loadstart": function() {
-                                if (rangeToClear !== undefined) {
-                                    this.clearEventsForRange(key, rangeToClear);
-                                } else {
-                                    this.clearEventsForKey(key);
-                                }
-                            },
-                            scope: this
-                        });
                         layer.strategies[0].activate();
                         layer.strategies[0].update(options);
                     }
