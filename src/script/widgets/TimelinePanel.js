@@ -281,6 +281,18 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     },
 
     /**
+     * private method[destroyPopup]
+     *
+     *  Destroy an existing popup.
+     */
+    destroyPopup: function() {
+        if (this.popup) {
+            this.popup.destroy();
+            this.popup = null;
+        }
+    },
+
+    /**
      * private: method[handleEventClick]
      *  :arg x: ``Integer``
      *  :arg y: ``Integer``
@@ -295,10 +307,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         var layer = this.layerLookup[key].layer;
         var feature = layer && layer.getFeatureByFid(fid);
         if (feature) {
-            if (this.popup) {
-                this.popup.destroy();
-                this.popup = null;
-            }
+            this.destroyPopup();
             // if annotations, show feature editor
             if (!layer.protocol) {
                 layer.events.triggerEvent("featureselected", {feature: feature});
@@ -333,6 +342,16 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     bindFeatureManager: function(featureManager) {
         this.featureManager = featureManager;
         this.featureManager.on("layerchange", this.onLayerChange, this);
+    },
+
+    /**
+     * private: method[unbindFeatureManager]
+     *  
+     *  Unbind with a feature manager
+     */
+    unbindFeatureManager: function() {
+        this.featureManager.un("layerchange", this.onLayerChange, this);
+        this.featureManager = null;
     },
 
     /**
@@ -423,6 +442,17 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         this.playbackTool = playbackTool;
         this.playbackTool.on("timechange", this.onTimeChange, this);
         this.playbackTool.on("rangemodified", this.onRangeModify, this);
+    },
+
+    /**
+     * private: method[unbindPlaybackTool]
+     *
+     *  Unbind with the playback tool
+     */
+    unbindPlaybackTool: function() {
+        this.playbackTool.un("timechange", this.onTimeChange, this);
+        this.playbackTool.un("rangemodified", this.onRangeModify, this);
+        this.playbackTool = null;
     },
 
     /**
@@ -1083,10 +1113,14 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             });
             layer.destroy();
         }
+        this.destroyPopup();
         this.unbindViewer();
+        this.unbindFeatureManager();
+        this.unbindPlaybackTool();
         if (this.rendered){
             Ext.destroy(this.busyMask);
         }
+        this.eventSource = null;
         if (this.timeline) {
             this.timeline.dispose();
             this.timeline = null;
