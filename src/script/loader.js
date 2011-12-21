@@ -41,6 +41,7 @@
         "widgets/tips/SliderTip.js",
         "widgets/PlaybackToolbar.js",
         "widgets/slider/ClassBreakSlider.js",
+        "widgets/TimelinePanel.js",
         "plugins/LayerSource.js",
         "plugins/BingSource.js",
         "plugins/WMSSource.js",

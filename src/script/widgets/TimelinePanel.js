@@ -360,8 +360,10 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  Unbind with a feature manager
      */
     unbindFeatureManager: function() {
-        this.featureManager.un("layerchange", this.onLayerChange, this);
-        this.featureManager = null;
+        if (this.featureManager) {
+            this.featureManager.un("layerchange", this.onLayerChange, this);
+            this.featureManager = null;
+        }
     },
 
     /**
@@ -460,9 +462,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  Unbind with the playback tool
      */
     unbindPlaybackTool: function() {
-        this.playbackTool.un("timechange", this.onTimeChange, this);
-        this.playbackTool.un("rangemodified", this.onRangeModify, this);
-        this.playbackTool = null;
+        if (this.playbackTool) {
+            this.playbackTool.un("timechange", this.onTimeChange, this);
+            this.playbackTool.un("rangemodified", this.onRangeModify, this);
+            this.playbackTool = null;
+        }
     },
 
     /**
@@ -588,7 +592,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  Unbind this timeline from the current viewer.
      */
     unbindViewer: function() {
-        var mapPanel = this.viewer.mapPanel;
+        var mapPanel = this.viewer && this.viewer.mapPanel;
         if (mapPanel) {
             mapPanel.layers.unregister("add", this.onLayerStoreAdd, this);
             mapPanel.map.un({
