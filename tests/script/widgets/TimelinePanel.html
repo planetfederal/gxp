@@ -20,6 +20,16 @@
             
             instance.destroy();
         }
+
+        function test_createTimeline(t) {
+            t.plan(3);
+            var tp = new gxp.TimelinePanel({renderTo: document.body});
+            tp.createTimeline([new Date("October 13, 1975 11:13:00"), new Date()]);
+            t.ok(tp.timeline !== null, "Simile timeline gets created");
+            t.eq(tp.timeline.getBandCount(), 2, "Timeline has 2 bands");
+            tp.destroy();
+            t.ok(tp.timeline === null, "Timeline destroyed");
+        }
         
     </script>
   </head>
