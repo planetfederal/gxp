@@ -35,14 +35,18 @@ gxp.slider.ClassBreakSlider = Ext.extend(Ext.slider.MultiSlider, {
      */
     
     /** api: config[constrainThumbs]
-     *  ``false`` to allow thumbs to overlap one another. Defaults to ``true``.
+     *  ``false`` to allow thumbs to overlap one another. Defaults to ``true``
+     *  when the store contains rules, and ``false`` when it contains color
+     *  map entries.
      */
-    constrainThumbs: true,
     
     /** private: method[initComponent]
      */
     initComponent: function() {
         this.store = Ext.StoreMgr.lookup(this.store);
+        if (!("constrainThumbs" in this.initialConfig)) {
+            this.constrainThumbs = this.store.reader.raw instanceof OpenLayers.Style;
+        }
         this.values = this.storeToValues();
         this.on("changecomplete", this.valuesToStore);
         this.store.on("update", this.storeToValues, this);
@@ -68,7 +72,7 @@ gxp.slider.ClassBreakSlider = Ext.extend(Ext.slider.MultiSlider, {
                 } else if (filter.type === OpenLayers.Filter.Comparison.LESS_THAN) {
                     values.push(filter.value);
                 }
-            } else if (typeof filter === "number") {
+            } else {
                 values.push(filter);
             }
         }, this);
@@ -88,20 +92,20 @@ gxp.slider.ClassBreakSlider = Ext.extend(Ext.slider.MultiSlider, {
             store = this.store;
         store.un("update", this.storeToValues, this);
         store.each(function(rec) {
-            var filter = rec.get("filter").clone();
+            var filter = rec.get("filter"),
+            value = values.shift();
             if (filter instanceof OpenLayers.Filter) {
+                filter = filter.clone();
                 if (filter.type === OpenLayers.Filter.Comparison.BETWEEN) {
-                    filter.upperBoundary = values.shift();
+                    filter.upperBoundary = value;
                 } else if (filter.type === OpenLayers.Filter.Comparison.LESS_THAN) {
-                    filter.value = values.shift();
+                    filter.value = value;
                 }
-            } else if (typeof filter === "number") {
-                if (rec.get("filter") !== values[0]) {
-                    rec.set("filter", values.shift());
+                if (rec.get("filter").toString() !== filter.toString()) {
+                    rec.set("filter", filter);
                 }
-            }
-            if (rec.get("filter").toString() !== filter.toString()) {
-                rec.set("filter", filter);
+            } else if (filter != value) {
+                rec.set("filter", value);
             }
         }, this);
         store.on("update", this.storeToValues, this);

@@ -41,7 +41,7 @@ gxp.data.GroupStyleReader = Ext.extend(GeoExt.data.StyleReader, {
                 var store = this.store,
                     modified = this.get("filter");
                     BETWEEN = OpenLayers.Filter.Comparison.BETWEEN;
-                if (typeof value === "string") {
+                if (modified instanceof OpenLayers.Filter && typeof value === "string") {
                     value = OpenLayers.Format.CQL.prototype.read(value);
                 }
                 var prop, index = store.indexOf(this);
