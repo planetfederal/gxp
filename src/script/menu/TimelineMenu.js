@@ -47,8 +47,9 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
     initComponent: function() {
         gxp.menu.TimelineMenu.superclass.initComponent.apply(this, arguments);
         this.timelinePanel = this.timelineTool && this.timelineTool.getTimelinePanel();
-        this.layers.on("add", this.onLayerAdd, this);
-        this.onLayerAdd();
+        this.layers.on("add", this.onLayerAddOrRemove, this);
+        this.layers.on("remove", this.onLayerAddOrRemove, this);
+        this.onLayerAddOrRemove();
     },
 
     /** private: method[onRender]
@@ -63,16 +64,17 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
      */
     beforeDestroy: function() {
         if (this.layers && this.layers.on) {
-            this.layers.un("add", this.onLayerAdd, this);
+            this.layers.un("add", this.onLayerAddOrRemove, this);
+            this.layers.un("remove", this.onLayerAddOrRemove, this);
         }
         delete this.layers;
         gxp.menu.TimelineMenu.superclass.beforeDestroy.apply(this, arguments);
     },
     
-    /** private: method[onLayerAdd]
+    /** private: method[onLayerAddOrRemove]
      *  Listener called when records are added to the layer store.
      */
-    onLayerAdd: function() {
+    onLayerAddOrRemove: function() {
         this.removeAll();
         this.layers.each(function(record) {
             var layer = record.getLayer();

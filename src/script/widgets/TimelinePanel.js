@@ -579,6 +579,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }
         layerStore.on({
             add: this.onLayerStoreAdd,
+            remove: this.onLayerStoreRemove,
             scope: this
         });
         viewer.mapPanel.map.events.on({
@@ -595,6 +596,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         var mapPanel = this.viewer && this.viewer.mapPanel;
         if (mapPanel) {
             mapPanel.layers.unregister("add", this.onLayerStoreAdd, this);
+            mapPanel.layers.unregister("remove", this.onLayerStoreRemove, this);
             mapPanel.map.un({
                 moveend: this.onMapMoveEnd,
                 scope: this
@@ -638,6 +640,32 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             },
             scope: this
         });
+    },
+
+    /** private: method[onLayerStoreRemove]
+     *  :arg store: ``GeoExt.data.LayerStore``
+     *  :arg record: ``Ext.data.Record``
+     *  :arg index: ``Integer``
+     *
+     *  Handler for when layers get removed from the map. 
+     */
+    onLayerStoreRemove: function(store, record, index) {
+        var key = this.getKey(record);
+        if (this.layerLookup[key]) {
+            var layer = this.layerLookup[key].layer;
+            if (layer) {
+                this.clearEventsForKey(key);
+                layer.events.un({
+                    loadstart: this.onLoadStart,
+                    loadend: this.onLoadEnd,
+                    featuresremoved: this.onFeaturesRemoved,
+                    scope: this
+                });
+                delete this.schemaCache[key];
+                delete this.layerLookup[key];
+                layer.destroy();
+            }
+        }
     },
 
     /** private: method[onLayerStoreAdd]
