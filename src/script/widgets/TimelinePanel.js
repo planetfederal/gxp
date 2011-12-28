@@ -221,9 +221,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  Filter data in the timeline and repaint.
      */
     setFilterMatcher: function(filterMatcher) {
-        this.timeline.getBand(0).getEventPainter().setFilterMatcher(filterMatcher);
-        this.timeline.getBand(1).getEventPainter().setFilterMatcher(filterMatcher);
-        this.timeline.paint();
+        if (this.timeline) {
+            this.timeline.getBand(0).getEventPainter().setFilterMatcher(filterMatcher);
+            this.timeline.getBand(1).getEventPainter().setFilterMatcher(filterMatcher);
+            this.timeline.paint();
+        }
     },
 
     /**
@@ -1030,7 +1032,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         for (var i=0, len=eventIds.length; i<len; ++i) {
             this.eventSource.remove(eventIds[i]);
         }
-        this.timeline.layout();
+        this.timeline && this.timeline.layout();
     },
 
     /** private: method[clearEventsForRange]
@@ -1056,7 +1058,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         for (var i=0, len=eventIds.length; i<len; ++i) {
             this.eventSource.remove(eventIds[i]);
         }
-        this.timeline.layout();
+        this.timeline && this.timeline.layout();
     },
 
     /** private: method[clearEventsForFid]
@@ -1077,7 +1079,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         for (var i=0, len=eventIds.length; i<len; ++i) {
             this.eventSource.remove(eventIds[i]);
         }
-        this.timeline.layout();
+        this.timeline && this.timeline.layout();
     },
 
     /** private: method[onFeaturesRemoved]
