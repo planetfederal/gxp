@@ -69,6 +69,7 @@
         "plugins/FeatureToField.js",
         "plugins/QueryForm.js",
         "plugins/LayerTree.js",
+        "plugins/LayerManager.js",
         "plugins/AddLayers.js",
         "plugins/RemoveLayer.js",
         "plugins/SelectedFeatureActions.js",
