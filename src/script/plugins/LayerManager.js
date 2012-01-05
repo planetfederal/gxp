@@ -8,6 +8,7 @@
 
 /**
  * @require plugins/LayerTree.js
+ * @require GeoExt/plugins/TreeNodeComponent.js
  */
 
 /** api: (define)
