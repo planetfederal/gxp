@@ -40,14 +40,17 @@
         }
        
         function test_FeatureEditPopup(t) {
-            t.plan(4);
+            t.plan(6);
             
-            var instance = createFeatureEditPopup({fields: ["a3", "a1"]});
+            var instance = createFeatureEditPopup({fields: ["a3", "a1"], propertyNames: {"a3": "Third field"}});
             instance.show();
             
             t.ok(instance instanceof gxp.FeatureEditPopup, "Instance created successfully");
-            t.eq(instance.plugins[0].store.getAt(0).get("name"), "a3", "field order respected");
-            t.eq(instance.plugins[0].excludeFields[0], "a2", "2nd field excluded");
+            var plugin = instance.plugins[0];
+            t.ok(plugin instanceof gxp.plugins.FeatureEditorGrid, "Correct plugin type created");
+            t.eq(plugin.store.getAt(0).get("name"), "a3", "field order respected");
+            t.eq(plugin.propertyNames["a3"], "Third field", "propertyNames propagated to the property grid");
+            t.eq(plugin.excludeFields[0], "a2", "2nd field excluded");
             t.eq(Ext.query(".x-hide-nosize", instance.plugins[0].body.dom).length, 1, "1 row excluded");
             
             instance.destroy();
@@ -55,13 +58,15 @@
         }
 
         function test_FeatureEditPopupForm(t) {
-            t.plan(3);
+            t.plan(4);
             
-            var instance = createFeatureEditPopup({editorPluginConfig: {ptype: "gxp_editorform"}, fields: ["a3", "a1"]});
+            var instance = createFeatureEditPopup({editorPluginConfig: {ptype: "gxp_editorform"}, fields: ["a3", "a1"], propertyNames: {"a3": "Third field"}});
             instance.show();
-            t.ok(instance.plugins[0] instanceof gxp.plugins.FeatureEditorForm, "Correct plugin type created");
-            t.eq(instance.plugins[0].getForm().fields[0], "a3", "field order respected");
-            t.eq(instance.plugins[0].excludeFields[0], "a2", "2nd field excluded");
+            var plugin = instance.plugins[0];
+            t.ok(plugin instanceof gxp.plugins.FeatureEditorForm, "Correct plugin type created");
+            t.eq(plugin.getForm().items.get(0).name, "a3", "field order respected");
+            t.eq(plugin.getForm().items.get(0).fieldLabel, "Third field", "propertyName used for a3 field");
+            t.eq(plugin.excludeFields[0], "a2", "2nd field excluded");
             
             instance.destroy();
             destroy();
