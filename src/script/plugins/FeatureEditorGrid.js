@@ -70,7 +70,6 @@ gxp.plugins.FeatureEditorGrid = Ext.extend(Ext.grid.PropertyGrid, {
     /** private: method[initComponent]
      */
     initComponent : function() {
-        this.source = this.feature.attributes;
         if (!this.dateFormat) {
             this.dateFormat = Ext.form.DateField.prototype.format;
         }
@@ -167,6 +166,7 @@ gxp.plugins.FeatureEditorGrid = Ext.extend(Ext.grid.PropertyGrid, {
             }, this);
             feature.attributes = attributes;
         }
+        this.source = this.feature.attributes;
         this.customEditors = customEditors;
         this.customRenderers = customRenderers;
         var ucExcludeFields = this.excludeFields ?

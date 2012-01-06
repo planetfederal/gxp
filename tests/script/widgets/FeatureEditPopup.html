@@ -46,9 +46,9 @@
             instance.show();
             
             t.ok(instance instanceof gxp.FeatureEditPopup, "Instance created successfully");
-            t.eq(instance.grid.store.getAt(0).get("name"), "a3", "field order respected");
-            t.eq(instance.excludeFields[0], "a2", "2nd field excluded");
-            t.eq(Ext.query(".x-hide-nosize", instance.grid.body.dom).length, 1, "1 row excluded");
+            t.eq(instance.plugins[0].store.getAt(0).get("name"), "a3", "field order respected");
+            t.eq(instance.plugins[0].excludeFields[0], "a2", "2nd field excluded");
+            t.eq(Ext.query(".x-hide-nosize", instance.plugins[0].body.dom).length, 1, "1 row excluded");
             
             instance.destroy();
             destroy();
