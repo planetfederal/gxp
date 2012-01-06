@@ -234,7 +234,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                         this.control.events.register('tick', this.control, function(evt){
                             var tailIndex = slider.indexMap?slider.indexMap.indexOf('tail'):-1;
                             var offset = (tailIndex>-1) ? evt.currentTime.getTime() - slider.thumbs[0].value : 0;
-                            slider.setValue(0, evt.currentTime.getTime() + offset);
+                            slider.setValue(0, evt.currentTime.getTime());
                             if (tailIndex > -1) {
                                 slider.setValue(tailIndex, slider.thumbs[tailIndex].value + offset);
                             }
