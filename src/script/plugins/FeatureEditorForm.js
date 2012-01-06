@@ -106,6 +106,7 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
                     return;
                 }
                 var fieldCfg = GeoExt.form.recordToField(r);
+                fieldCfg.fieldLabel = this.propertyNames ? (this.propertyNames[name] || name) : fieldCfg.fieldLabel;
                 fieldCfg.value = this.feature.attributes[name];
                 if (fieldCfg.value && fieldCfg.xtype == "datefield") {
                     var dateFormat = "Y-m-d";
@@ -118,7 +119,7 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
             for (var name in this.feature.attributes) {
                 var fieldCfg = {
                     xtype: "textfield",
-                    fieldLabel: name,
+                    fieldLabel: this.propertyNames ? (this.propertyNames[name] || name) : name,
                     name: name,
                     value: this.feature.attributes[name]
                 };

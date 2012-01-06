@@ -79,6 +79,7 @@ gxp.plugins.FeatureEditorGrid = Ext.extend(Ext.grid.PropertyGrid, {
         }
         var customEditors = {};
         var customRenderers = {};
+        var feature = this.feature;
         if(this.schema) {
             var attributes = {};
             if (this.fields) {
