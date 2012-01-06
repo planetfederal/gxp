@@ -88,14 +88,15 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
         }
 
         // all remaining fields
-        var excludeFields = [];
-        for (var i=0, ii=this.excludeFields.length; i<ii; ++i) {
+        var excludeFields = [], i, ii;
+        for (i=0, ii=this.excludeFields.length; i<ii; ++i) {
             excludeFields[i] = this.excludeFields[i].toLowerCase();
         }
 
         var ucFields = this.fields ?
             this.fields.join(",").toUpperCase().split(",") : [];
 
+        var fields = {};
         if (this.schema) {
             this.schema.each(function(r) {
                 var name = r.get("name");
@@ -121,9 +122,11 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
                     fieldCfg.format = dateFormat;
                     fieldCfg.value = Date.parseDate(fieldCfg.value.replace(/Z$/, ""), dateFormat);
                 }
-                this.add(fieldCfg);
+                fields[lower] = fieldCfg;
             }, this);
+            this.add(this.reorderFields(fields));
         } else {
+            fields = {};
             for (var name in this.feature.attributes) {
                 var lower = name.toLowerCase();
                 if (this.fields) {
@@ -138,10 +141,31 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
                         name: name,
                         value: this.feature.attributes[name]
                     };
-                    this.add(fieldCfg);
+                    fields[lower] = fieldCfg;
                 }
             }
+            this.add(this.reorderFields(fields));
         }
+    },
+
+    /** private: method[reorderFields]
+     *
+     *  :arg fields: ``Object``
+     *  Reorder the fields, if this.fields was defined the order needs to be
+     *  taken from this.fields.
+     */
+    reorderFields: function(fields) {
+        var orderedFields = [];
+        if (this.fields) {
+            for (var i=0,ii=this.fields.length; i<ii; ++i) {
+                orderedFields.push(fields[this.fields[i].toLowerCase()]);
+            }
+        } else {
+            for (var key in fields) {
+                orderedFields.push(fields[key]);
+            }
+        }
+        return orderedFields;
     },
 
     /** private: method[init]
