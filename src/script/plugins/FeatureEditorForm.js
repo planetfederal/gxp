@@ -93,10 +93,18 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
             excludeFields[i] = this.excludeFields[i].toLowerCase();
         }
 
+        var ucFields = this.fields ?
+            this.fields.join(",").toUpperCase().split(",") : [];
+
         if (this.schema) {
             this.schema.each(function(r) {
                 var name = r.get("name");
                 var lower = name.toLowerCase();
+                if (this.fields) {
+                    if (ucFields.indexOf(name.toUpperCase()) == -1) {
+                        excludeFields.push(lower);
+                    }
+                }
                 if (excludeFields.indexOf(lower) != -1) {
                     return;
                 }
@@ -117,13 +125,21 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
             }, this);
         } else {
             for (var name in this.feature.attributes) {
-                var fieldCfg = {
-                    xtype: "textfield",
-                    fieldLabel: this.propertyNames ? (this.propertyNames[name] || name) : name,
-                    name: name,
-                    value: this.feature.attributes[name]
-                };
-                this.add(fieldCfg);
+                var lower = name.toLowerCase();
+                if (this.fields) {
+                    if (ucFields.indexOf(name.toUpperCase()) == -1) {
+                        excludeFields.push(lower);
+                    }
+                }
+                if (excludeFields.indexOf(lower) === -1) {
+                    var fieldCfg = {
+                        xtype: "textfield",
+                        fieldLabel: this.propertyNames ? (this.propertyNames[name] || name) : name,
+                        name: name,
+                        value: this.feature.attributes[name]
+                    };
+                    this.add(fieldCfg);
+                }
             }
         }
     },
