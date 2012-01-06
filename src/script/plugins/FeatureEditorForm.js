@@ -92,6 +92,7 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
         for (i=0, ii=this.excludeFields.length; i<ii; ++i) {
             excludeFields[i] = this.excludeFields[i].toLowerCase();
         }
+        this.excludeFields = excludeFields;
 
         var ucFields = this.fields ?
             this.fields.join(",").toUpperCase().split(",") : [];
@@ -103,10 +104,10 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
                 var lower = name.toLowerCase();
                 if (this.fields) {
                     if (ucFields.indexOf(name.toUpperCase()) == -1) {
-                        excludeFields.push(lower);
+                        this.excludeFields.push(lower);
                     }
                 }
-                if (excludeFields.indexOf(lower) != -1) {
+                if (this.excludeFields.indexOf(lower) != -1) {
                     return;
                 }
                 var type = r.get("type");
@@ -131,10 +132,10 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
                 var lower = name.toLowerCase();
                 if (this.fields) {
                     if (ucFields.indexOf(name.toUpperCase()) == -1) {
-                        excludeFields.push(lower);
+                        this.excludeFields.push(lower);
                     }
                 }
-                if (excludeFields.indexOf(lower) === -1) {
+                if (this.excludeFields.indexOf(lower) === -1) {
                     var fieldCfg = {
                         xtype: "textfield",
                         fieldLabel: this.propertyNames ? (this.propertyNames[name] || name) : name,
