@@ -21,20 +21,50 @@ Ext.namespace("gxp.plugins");
  */
 gxp.plugins.FeatureEditorGrid = Ext.extend(Ext.grid.PropertyGrid, {
 
+    /** api: ptype = gxp_editorgrid */
     ptype: "gxp_editorgrid",
 
+    /** api: config[feature]
+     *  ``OpenLayers.Feature.Vector`` The feature being edited/displayed.
+     */
     feature: null,
 
+    /** api: config[schema]
+     *  ``GeoExt.data.AttributeStore`` Optional. If provided, available
+     *  feature attributes will be determined from the schema instead of using
+     *  the attributes that the feature has currently set.
+     */
     schema: null,
 
+    /** api: config[fields]
+     *  ``Array``
+     *  List of field config names corresponding to feature attributes.  If
+     *  not provided, fields will be derived from attributes. If provided,
+     *  the field order from this list will be used, and fields missing in the
+     *  list will be excluded.
+     */
     fields: null,
 
+    /** api: config[excludeFields]
+     *  ``Array`` Optional list of field names (case sensitive) that are to be
+     *  excluded from the editor plugin.
+     */
     excludeFields: null,
 
+    /** api: config[propertyNames]
+     *  ``Object`` Property name/display name pairs. If specified, the display
+     *  name will be shown in the name column instead of the property name.
+     */
     propertyNames: null,
 
+    /** api: config[readOnly]
+     *  ``Boolean`` Set to true to disable editing. Default is false.
+     */
     readOnly: null,
 
+    /** private: property[border]
+     *  ``Boolean`` Do not show a border.
+     */
     border: false,
 
     /** private: method[initComponent]
@@ -124,6 +154,8 @@ gxp.plugins.FeatureEditorGrid = Ext.extend(Ext.grid.PropertyGrid, {
                                 }
                             };
                             break;
+                        default:
+                            break;
                     }
                 }
                 customEditors[name] = new Ext.grid.GridEditor({
@@ -171,19 +203,34 @@ gxp.plugins.FeatureEditorGrid = Ext.extend(Ext.grid.PropertyGrid, {
         this.propStore.isEditableValue = function() {return true;};
     },
 
-    init: function(cmp) {
-        this.featureEditor = cmp;
+    /** private: method[init]
+     *
+     *  :arg target: ``gxp.FeatureEditPopup`` The feature edit popup 
+     *  initializing this plugin.
+     */
+    init: function(target) {
+        this.featureEditor = target;
         this.featureEditor.on("canceledit", this.onCancelEdit, this);
         this.featureEditor.add(this);
         this.featureEditor.doLayout();
     },
 
+    /** private: method[destroy]
+     *  Clean up.
+     */
     destroy: function() {
         this.featureEditor.un("canceledit", this.onCancelEdit, this);
         this.featureEditor = null;
         gxp.plugins.FeatureEditorGrid.superclass.destroy.call(this);
     },
 
+    /** private: method[onCancelEdit]
+     *  :arg panel: ``gxp.FeatureEditPopup``
+     *  :arg feature: ``OpenLayers.Feature.Vector``
+     *
+     *  When editing is cancelled, set the source of this property grid
+     *  back to the supplied feature.
+     */
     onCancelEdit: function(panel, feature) {
         if (feature) {
             this.setSource(feature.attributes);

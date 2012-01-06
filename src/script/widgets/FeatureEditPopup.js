@@ -113,13 +113,15 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
      */
     editing: false,
 
-    /** api: editorPluginType
-     *  ``String`` The ptype of the plugin to use as the editor, this can be
-     *  one of "gxp_editorgrid" (default) or "gxp_editorform" for form-based
-     *  editing.
+    /** api: editorPluginConfig
+     *  ``Object`` The config for the plugin to use as the editor, its ptype
+     *  property can be one of "gxp_editorgrid" (default) or "gxp_editorform" 
+     *  for form-based editing.
      */
-    editorPluginType: "gxp_editorgrid",
-    
+    editorPluginConfig: {
+        ptype: "gxp_editorgrid"
+    },
+
     /** private: property[modifyControl]
      *  ``OpenLayers.Control.ModifyFeature`` If in editing mode, we will have
      *  this control for editing the geometry.
@@ -263,15 +265,14 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             scope: this
         });
         
-        this.plugins = [{
-            ptype: this.editorPluginType, 
+        this.plugins = [Ext.apply({
             feature: feature,
             schema: this.schema,
             fields: this.fields,
             excludeFields: this.excludeFields,
             propertyNames: this.propertyNames,
             readOnly: this.readOnly
-        }];
+        }, this.editorPluginConfig)];
 
         this.bbar = new Ext.Toolbar({
             hidden: this.readOnly,
