@@ -14,7 +14,7 @@ Ext.onReady(function() {
     vectorLayer.addFeatures(
         new OpenLayers.Feature.Vector(
             new OpenLayers.Geometry.Point(-45, 5), {
-                "foo": "bar"}
+                "foo": "bar", "altitude": 500}
         )
     );
 
@@ -22,11 +22,11 @@ Ext.onReady(function() {
     var selectCtrl = new OpenLayers.Control.SelectFeature(vectorLayer, {clickout: false});
 
     // define "createPopup" function
-    var bogusMarkup = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit.";
     function createPopup(feature) {
         popup = new gxp.FeatureEditPopup({
+            editorPluginConfig: {ptype: "gxp_editorform", labelWidth: 50, defaults: {width: 50}, bodyStyle: "padding: 5px 5px 0"},
             feature: feature,
-            width:150,
+            width: 150,
             height: 150,
             collapsible: true,
             listeners: {
