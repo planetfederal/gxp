@@ -180,6 +180,16 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
              */
             "stopedit",
 
+            /** api: events[beforefeaturemodified]
+             *  Fires before the feature associated with this popup has been
+             *  modified (i.e. when the user clicks "Save" on the popup).
+             *
+             *  Listener arguments:
+             *  * panel - :class:`gxp.FeatureEditPopup` This popup.
+             *  * feature - ``OpenLayers.Feature`` The modified feature.
+             */
+            "beforefeaturemodified",
+
             /** api: events[featuremodified]
              *  Fires when the feature associated with this popup has been
              *  modified (i.e. when the user clicks "Save" on the popup) or
@@ -376,6 +386,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             var feature = this.feature;
             if (feature.state === this.getDirtyState()) {
                 if (save === true) {
+                    this.fireEvent("beforefeaturemodified", this, feature);
                     //TODO When http://trac.osgeo.org/openlayers/ticket/3131
                     // is resolved, remove the if clause below
                     if (this.schema) {

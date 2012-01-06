@@ -119,6 +119,7 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
                 var fieldCfg = {
                     xtype: "textfield",
                     fieldLabel: name,
+                    name: name,
                     value: this.feature.attributes[name]
                 };
                 this.add(fieldCfg);
@@ -133,6 +134,7 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
      */
     init: function(target) {
         this.featureEditor = target;
+        this.featureEditor.on("beforefeaturemodified", this.onBeforeFeatureModified, this);
         this.featureEditor.on("startedit", this.onStartEdit, this);
         this.featureEditor.on("stopedit", this.onStopEdit, this);
         this.featureEditor.on("canceledit", this.onCancelEdit, this);
@@ -144,6 +146,7 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
      *  Clean up.
      */
     destroy: function() {
+        this.featureEditor.un("beforefeaturemodified", this.onBeforeFeatureModified, this);
         this.featureEditor.un("startedit", this.onStartEdit, this);
         this.featureEditor.un("stopedit", this.onStopEdit, this);
         this.featureEditor.un("canceledit", this.onCancelEdit, this);
@@ -178,8 +181,26 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
      */
     onCancelEdit: function(panel, feature) {
         if (feature) {
-            this.getForm().reset();
+            var form = this.getForm();
+            for (var key in feature.attributes) {
+                var field = form.findField(key);
+                field && field.setValue(feature.attributes[key]);
+            }
         }
+    },
+
+    /** private: method[onBeforeFeatureModified]
+     *  :arg panel: ``gxp.FeatureEditPopup``
+     *  :arg feature: ``OpenLayers.Feature.Vector``
+     *
+     *  Apply the changes to the feature.
+     */
+    onBeforeFeatureModified: function(panel, feature) {
+        // apply modified attributes to feature
+        this.getForm().items.each(function(field) {
+            var value = field.getValue(); // this may be an empty string
+            feature.attributes[field.getName()] = value || field.value;
+        });
     }
 
 });
