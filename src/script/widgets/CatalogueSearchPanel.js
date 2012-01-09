@@ -21,6 +21,16 @@ Ext.namespace("gxp");
 gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
 
     initComponent: function() {
+        var store = new Ext.data.Store({
+            proxy: new GeoExt.data.ProtocolProxy({
+                protocol: new OpenLayers.Protocol.CSW({
+                    url: "http://demo.geonode.org/geonetwork/srv/en/csw"
+                })
+            }),
+            reader: new GeoExt.data.CSWRecordsReader({
+               fields: ['title', 'subject']
+            })
+        });
         this.items = [{
             xtype: "textfield",
             ref: "search",
@@ -46,24 +56,25 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                             "value": "full" 
                         } 
                     } 
-                }; 
-                store.load({params: data});
+                };
+                // use baseParams so paging takes them into account
+                store.baseParams = data;
+                store.load();
             },
             scope: this
         }, {
             xtype: "grid",
             ref: "grid",
-            loadMask: true,
-            store: new Ext.data.Store({
-                proxy: new GeoExt.data.ProtocolProxy({ 
-                    protocol: new OpenLayers.Protocol.CSW({ 
-                        url: "http://demo.geonode.org/geonetwork/srv/en/csw"
-                    })
-                }),
-                reader: new GeoExt.data.CSWRecordsReader({
-                   fields: ['title', 'subject']
-                })
+            bbar: new Ext.PagingToolbar({
+                paramNames: {
+                    start: 'startPosition', 
+                    limit: 'maxRecords'
+                },
+                store: store,
+                pageSize: 100 
             }),
+            loadMask: true,
+            store: store,
             columns: [{
                 xtype: "actioncolumn",
                 width: 30,
