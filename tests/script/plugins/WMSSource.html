@@ -28,7 +28,11 @@
                 map: {
                     projection: "EPSG:4326",
                     center: [0, 0],
-                    zoom: 1
+                    zoom: 1,
+                    layers: [{
+                        source: "local",
+                        name: "usa:states"
+                    }]
                 }
             });
         }
