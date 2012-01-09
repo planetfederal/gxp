@@ -23,18 +23,45 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
     initComponent: function() {
         this.items = [{
             xtype: "textfield",
+            ref: "search",
             name: "search"
         }, {
             xtype: "button",
-            text: "Search"
+            text: "Search",
+            handler: function() {
+                var store = this.grid.store;
+                var searchValue = this.search.getValue();
+                var data = { 
+                    "resultType": "results", 
+                    "maxRecords": 100, 
+                    "Query": {
+                        "Constraint": {
+                            version: "1.1.0",
+                            CqlText: {
+                                value: "AnyText LIKE '*"+searchValue+"*'"
+                            }
+                        },
+                        "typeNames": "gmd:MD_Metadata",
+                        "ElementSetName": { 
+                            "value": "full" 
+                        } 
+                    } 
+                }; 
+                store.load({params: data});
+            },
+            scope: this
         }, {
             xtype: "grid",
+            ref: "grid",
             store: new Ext.data.Store({
+                proxy: new GeoExt.data.ProtocolProxy({ 
+                    protocol: new OpenLayers.Protocol.CSW({ 
+                        url: "http://demo.geonode.org/geonetwork/srv/en/csw"
+                    })
+                }),
                 reader: new GeoExt.data.CSWRecordsReader({
                    fields: ['title', 'subject']
-                }),
-                url: "data/cswrecords.xml",
-                autoLoad: true
+                })
             }),
             columns: [
                 {id: 'title', xtype: "templatecolumn", tpl: new Ext.XTemplate('<tpl for="title">{value}<br/></tpl>'), header: "Title", dataIndex: "title", sortable: true},
