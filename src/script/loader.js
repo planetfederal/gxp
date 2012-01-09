@@ -42,6 +42,7 @@
         "widgets/PlaybackToolbar.js",
         "widgets/slider/ClassBreakSlider.js",
         "widgets/TimelinePanel.js",
+        "widgets/CatalogueSearchPanel.js",
         "plugins/LayerSource.js",
         "plugins/BingSource.js",
         "plugins/WMSSource.js",
@@ -88,6 +89,7 @@
         "plugins/Print.js",
         "plugins/LoadingIndicator.js",
         "plugins/Playback.js",
+        "plugins/CatalogueSearch.js",
         "locale/es.js",
         "locale/ca.js"
     );

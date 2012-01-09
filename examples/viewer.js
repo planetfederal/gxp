@@ -49,6 +49,9 @@ Ext.onReady(function() {
             ptype: "gxp_addlayers",
             actionTarget: "tree.tbar"
         }, {
+            ptype: "gxp_cataloguesearch",
+            actionTarget: "tree.tbar"
+        }, {
             ptype: "gxp_removelayer",
             actionTarget: ["tree.tbar", "tree.contextMenu"]
         }, {
