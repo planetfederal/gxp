@@ -62,6 +62,16 @@ gxp.plugins.WMSCSource = Ext.extend(gxp.plugins.WMSSource, {
      */
     version: "1.1.1",
 
+    /** api: config[requiredProperties]
+     *  ``Array(String)`` List of config properties that are required for each
+     *  layer from this source to allow lazy loading. Default is
+     *  ``["title", "bbox"]``. When the source loads layers from a WMS-C that
+     *  does not use subsets of the default Web Mercator grid, not provide
+     *  tiles for all default Web Mercator resolutions, and not use a tileSize
+     *  of 256x256 pixels, ``tileOrigin``, ``resolutions`` and ``tileSize``
+     *  should be included in this list.
+     */
+
     /** private: method[constructor]
      */
     constructor: function(config) {
@@ -94,11 +104,11 @@ gxp.plugins.WMSCSource = Ext.extend(gxp.plugins.WMSSource, {
         if (this.store.reader.raw) {
             caps = this.store.reader.raw.capability;
         }
-        var tileSets = (caps && caps.vendorSpecific && caps.vendorSpecific) ? 
+        var tileSets = (caps && caps.vendorSpecific) ? 
             caps.vendorSpecific.tileSets : null;
         var layer = record.get("layer");
         if (tileSets !== null) {
-            var mapProjection = this.getMapProjection();
+            var mapProjection = this.getProjection(record) || this.getMapProjection();
             // look for tileset with same name and equivalent projection
             for (var i=0, len=tileSets.length; i<len; i++) {
                 var tileSet = tileSets[i];
@@ -116,18 +126,31 @@ gxp.plugins.WMSCSource = Ext.extend(gxp.plugins.WMSSource, {
                             tileSize: new OpenLayers.Size(tileSet.width, tileSet.height),
                             tileOrigin: new OpenLayers.LonLat(bbox[0], bbox[1])
                         });
-                        // unless explicitly configured otherwise, use cached version
-                        layer.params.TILED = (config.cached !== false) && true;
                         break;
                     }
                 }
             }
-        } else if (this.forceLazy === true && config.cached === true) {
-            // if lazy loading is forced, and the cached version is explicitly
-            // requested, set TILED to true and assume that the tiling scheme
-            // for the layer works with the map bounds and resolutions.
-            layer.params.TILED = true;
+        } else {
+            // lazy loading
+            var tileSize = record.get("tileSize"),
+                tileOrigin = record.get("tileOrigin");
+            layer.addOptions({
+                resolutions: record.get("resolutions"),
+                tileSize: tileSize ? new OpenLayers.Size(tileSize[0], tileSize[1]) : undefined,
+                tileOrigin: tileOrigin ? OpenLayers.LonLat.fromArray(tileOrigin) : undefined
+            });
+            if (!tileOrigin) {
+                // If tileOrigin was not set, our best bet is to use the map's
+                // maxExtent, because GWC's tiling scheme always aligns to the
+                // default Web Mercator grid. We don't do this with addOptions
+                // because we persist the config from layer.options in
+                // getConfigForRecord, and we don't want to persist a guessed
+                // configuration.
+                layer.tileOrigin = OpenLayers.LonLat.fromArray(this.target.map.maxExtent);
+            }
         }
+        // unless explicitly configured otherwise, use cached version
+        layer.params.TILED = (config.cached !== false) && true;
         return record;
     },
 
@@ -138,12 +161,19 @@ gxp.plugins.WMSCSource = Ext.extend(gxp.plugins.WMSSource, {
      *  Create a config object that can be used to recreate the given record.
      */
     getConfigForRecord: function(record) {
-        var config = gxp.plugins.WMSCSource.superclass.getConfigForRecord.apply(this, arguments);
-        // the "tiled" property is already used to indicate singleTile
-        // the "cached" property will indicate whether to send the TILED param
-        return Ext.apply(config, {
-            cached: !!record.getLayer().params.TILED
-        });
+        var layer = record.getLayer(),
+            tileSize = layer.tileSize,
+            tileOrigin = layer.options.tileOrigin;
+        return Ext.applyIf(
+            gxp.plugins.WMSCSource.superclass.getConfigForRecord.apply(this, arguments), {
+                // the "tiled" property is already used to indicate singleTile
+                // the "cached" property will indicate whether to send the TILED param
+                cached: !!layer.params.TILED,
+                tileSize: [tileSize.w, tileSize.h],
+                tileOrigin: tileOrigin ? [tileOrigin.lon, tileOrigin.lat] : undefined,
+                resolutions: layer.options.resolutions
+            }
+        );
     }
     
 });
