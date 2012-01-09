@@ -53,6 +53,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
         }, {
             xtype: "grid",
             ref: "grid",
+            loadMask: true,
             store: new Ext.data.Store({
                 proxy: new GeoExt.data.ProtocolProxy({ 
                     protocol: new OpenLayers.Protocol.CSW({ 
@@ -63,12 +64,34 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                    fields: ['title', 'subject']
                 })
             }),
-            columns: [
-                {id: 'title', xtype: "templatecolumn", tpl: new Ext.XTemplate('<tpl for="title">{value}<br/></tpl>'), header: "Title", dataIndex: "title", sortable: true},
-                {header: "Subject", xtype: "templatecolumn", tpl: new Ext.XTemplate('<tpl for="subject">{value}<br/></tpl>'), dataIndex: "subject", sortable: true, width: 300}
+            columns: [{
+                xtype: "actioncolumn",
+                width: 30,
+                items: [{
+                    iconCls: "gxp-icon-addlayers",
+                    tooltip: 'Add layer to map',
+                    handler: function(grid, rowIndex, colIndex) {
+                        var rec = this.grid.store.getAt(rowIndex);
+                    },
+                    scope: this
+                }]}, {
+                    id: 'title', 
+                    xtype: "templatecolumn", 
+                    tpl: new Ext.XTemplate('<tpl for="title">{value}<br/></tpl>'), 
+                    header: "Title", 
+                    dataIndex: "title", 
+                    sortable: true
+                }, {
+                    header: "Subject", 
+                    xtype: "templatecolumn", 
+                    tpl: new Ext.XTemplate('<tpl for="subject">{value}<br/></tpl>'), 
+                    dataIndex: "subject", 
+                    sortable: true, 
+                    width:200
+                }
             ],
             autoExpandColumn: 'title',
-            width: 300,
+            width: 400,
             height: 300
         }];
         gxp.CatalogueSearchPanel.superclass.initComponent.apply(this, arguments);
