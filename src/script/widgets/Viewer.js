@@ -418,7 +418,13 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             layers: null,
             items: this.mapItems,
             plugins: this.mapPlugins,
-            tbar: config.tbar || {hidden: true}
+            tbar: config.tbar || new Ext.Toolbar({
+                hidden: true,
+                listeners: {
+                    show: function() { this.mapPanel.map.updateSize(); },
+                    scope: this
+                }
+            })
         }, config));
         
         this.mapPanel.layers.on({
@@ -627,7 +633,8 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             layers: []
         });
         
-        // include all layer config (and add new sources)
+        // include all layer config
+        var sources = {};
         this.mapPanel.layers.each(function(record){
             var layer = record.getLayer();
             if (layer.displayInLayerSwitcher) {
@@ -638,11 +645,13 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                 }
                 // add layer
                 state.map.layers.push(source.getConfigForRecord(record));
-                if (!state.sources[id]) {
-                    state.sources[id] = Ext.apply({}, source.initialConfig);
+                if (!sources[id]) {
+                    sources[id] = source.getState();
                 }
             }
         }, this);
+        // update sources, adding new ones
+        Ext.apply(this.sources, sources);
         
         //standardize portal configuration to portalConfig
         if (state.portalItems) {
