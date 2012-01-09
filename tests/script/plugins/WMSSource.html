@@ -28,7 +28,11 @@
                 map: {
                     projection: "EPSG:4326",
                     center: [0, 0],
-                    zoom: 1
+                    zoom: 1,
+                    layers: [{
+                        source: "local",
+                        name: "usa:states"
+                    }]
                 }
             });
         }
@@ -47,7 +51,7 @@
         }
 
         function test_createLayerRecord(t) {
-            t.plan(1);
+            t.plan(4);
 
             var viewer = createViewer();
             
@@ -56,6 +60,30 @@
                 
                 var record = source.createLayerRecord({name: "medford:zoning"});
                 t.eq(record.get("title"), "Medford, OR - Zoning", "record title");
+
+                var layer = record.getLayer();
+                t.eq(layer.singleTile, false, "single tile");
+                t.ok(layer.dimensions, "dimensions");
+                t.ok(!layer.dimensions.time, "no time dimension");
+
+                viewer.destroy();
+            });
+        }
+
+        function test_createLayerRecord_with_time(t) {
+            t.plan(3);
+
+            var viewer = createViewer();
+            
+            t.delay_call(1, function() {
+                var source = viewer.layerSources.local;
+                
+                var record = source.createLayerRecord({name: "medford:parks"});
+                t.eq(record.get("title"), "Medford, OR - Parks", "record title");
+
+                var layer = record.getLayer();
+                t.eq(layer.singleTile, true, "single tile");                
+                t.ok(layer.dimensions && layer.dimensions.time, "time dimensions set");
 
                 viewer.destroy();
             });

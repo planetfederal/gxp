@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -29,7 +29,7 @@ Ext.onReady(function() {
 
     
     // creates the map that will contain the vector layer with features
-    map = new OpenLayers.Map("map");
+    map = new OpenLayers.Map("map", {theme: null});
     map.addLayer(new OpenLayers.Layer.WMS(
         "Global Imagery",
         "http://demo.opengeo.org/geoserver/wms",

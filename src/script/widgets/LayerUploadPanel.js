@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -97,6 +97,12 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
             buttonText: "",
             buttonCfg: {
                 iconCls: "gxp-icon-filebrowse"
+            },
+            listeners: {
+                "fileselected": function(cmp, value) {
+                    // remove the path from the filename - avoids C:/fakepath etc.
+                    cmp.setValue(value.split(/[/\\]/).pop());
+                }
             },
             validator: this.fileNameValidator.createDelegate(this)
         }, {
@@ -203,7 +209,7 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
                 break;
             }
         }
-        return valid || this.invalidFileExtensionText + this.validFileExtensions.join(", ");
+        return valid || this.invalidFileExtensionText + '<br/>' + this.validFileExtensions.join(", ");
     },
 
     /** private: method[createWorkspacesCombo]

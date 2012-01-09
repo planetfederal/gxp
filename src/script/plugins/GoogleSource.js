@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -137,25 +137,28 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
         // TODO: We may also be able to determine the MAX_ZOOM_LEVEL for each
         // layer type. If not, consider setting them on the OpenLayers level.
         var mapTypes = {
-            "ROADMAP": {"abstract": this.roadmapAbstract},
+            "ROADMAP": {"abstract": this.roadmapAbstract, MAX_ZOOM_LEVEL: 20},
             "SATELLITE": {"abstract": this.satelliteAbstract},
             "HYBRID": {"abstract": this.hybridAbstract},
-            "TERRAIN": {"abstract": this.terrainAbstract}
+            "TERRAIN": {"abstract": this.terrainAbstract, MAX_ZOOM_LEVEL: 15}
         };
         
         var layers = [];
         var name, mapType;
         for (name in mapTypes) {
             mapType = google.maps.MapTypeId[name];
-            layers.push(new OpenLayers.Layer.GoogleNG({
+            layers.push(new OpenLayers.Layer.Google(
                 // TODO: get MapType object name
                 // http://code.google.com/p/gmaps-api-issues/issues/detail?id=2562
-                name: "Google " + mapType.replace(/\w/, function(c) {return c.toUpperCase();}),
-                type: mapType,
-                typeName: name,
-                restrictedExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
-                projection: this.projection
-            }));
+                "Google " + mapType.replace(/\w/, function(c) {return c.toUpperCase();}), {
+                    type: mapType,
+                    typeName: name,
+                    MAX_ZOOM_LEVEL: mapTypes[name].MAX_ZOOM_LEVEL,
+                    maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
+                    restrictedExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
+                    projection: this.projection
+                }
+            ));
         }
         this.store = new GeoExt.data.LayerStore({
             layers: layers,
@@ -333,7 +336,17 @@ gxp.plugins.GoogleSource.loader = new (Ext.extend(Ext.util.Observable, {
         });
 
         this.loading = true;
-        document.getElementsByTagName("head")[0].appendChild(script);
+
+        // The google loader accesses document.body, so we don't add the loader
+        // script before the document is ready.
+        function append() {
+            document.getElementsByTagName("head")[0].appendChild(script);
+        }
+        if (document.body) {
+            append();
+        } else {
+            Ext.onReady(append);
+        }
 
     }
 

@@ -16,8 +16,8 @@ Ext.onReady(function() {
                 ptype: "gxp_featureeditor",
                 featureManager: "featuremanager",
                 readOnly: true,
-                autoLoadFeatures: true,
-                actionTarget: null,
+                autoLoadFeature: true,
+                actionTarget: false,
                 defaultAction: 1,
                 outputConfig: {panIn: false, height: 220}
             }, {

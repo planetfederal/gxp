@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -138,6 +138,14 @@ gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
             fixed: record.get("fixed"),
             selected: record.get("selected")
         };
-    }
+    },
     
+    /** api: method[getState]
+     *  :return {Object}
+     *  Gets the configured source state. Overwrite in subclasses to return
+     *  anything other than a copy of the initialConfig property.
+     */
+    getState: function(){
+        return Ext.apply({}, this.initialConfig);
+    }
 });

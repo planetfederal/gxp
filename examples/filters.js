@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -11,7 +11,7 @@ var filter = new OpenLayers.Filter.Logical({
     filters: [
         new OpenLayers.Filter.Comparison({
             type: OpenLayers.Filter.Comparison.EQUAL_TO,
-            property: "population",
+            property: 'population',
             value: 1000
         }),
         new OpenLayers.Filter.Comparison({
@@ -49,7 +49,7 @@ function showFE(panel) {
 }
 
 Ext.onReady(function() {
-
+    Ext.QuickTips.init();
     var panel1 = new Ext.Panel({
         title: "Filter Builder (no groups)",
         renderTo: "panel1",

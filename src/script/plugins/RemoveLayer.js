@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -72,7 +72,7 @@ gxp.plugins.RemoveLayer = Ext.extend(gxp.plugins.Tool, {
             removeLayerAction.setDisabled(
                 !selectedLayer || store.getCount() <= 1
             );
-        }
+        };
         this.target.mapPanel.layers.on({
             "add": enforceOne,
             "remove": enforceOne

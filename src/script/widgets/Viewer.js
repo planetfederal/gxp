@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -58,6 +58,11 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
      *  ``Array(Ext.Component)``
      *  Any items to be added to the map panel. A typical item to put on a map
      *  would be a ``GeoExt.ZoomSlider``.
+     */
+
+    /** api: config[mapPlugins]
+     *  ``Array(Ext.util.Observable)``
+     *  Any plugins to be added to the map panel, e.g. ``gxp.plugins.LoadingIndicator``.
      */
      
     /** api: config[portalConfig]
@@ -221,12 +226,19 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
              *  Fired when features were edited.
              *
              *  Listener arguments:
-             *  * featureManager - ``gxp.plugins.FeatureManager`` the
+             *
+             *  * featureManager - :class:`gxp.plugins.FeatureManager` the
              *    the feature manager that was used for editing
              *  * layer - ``Object`` object with name and source of the layer
              *    that was edited
              */
-            "featureedit"
+            "featureedit",
+
+            /** api: event[authorizationchange]
+             *  Fired when the authorizedRoles are changed, e.g. when a user 
+             *  logs in or out.
+             */
+            "authorizationchange"
         );
         
         Ext.apply(this, {
@@ -255,7 +267,13 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         var allow = this.fireEvent("beforelayerselectionchange", record);
         if (allow !== false) {
             changed = true;
+            if (this.selectedLayer) {
+                this.selectedLayer.set("selected", false);
+            }
             this.selectedLayer = record;
+            if (this.selectedLayer) {
+                this.selectedLayer.set("selected", true);
+            }
             this.fireEvent("layerselectionchange", record);
         }
         return changed;
@@ -399,7 +417,14 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             forceInitialExtent: true,
             layers: null,
             items: this.mapItems,
-            tbar: config.tbar || {hidden: true}
+            plugins: this.mapPlugins,
+            tbar: config.tbar || new Ext.Toolbar({
+                hidden: true,
+                listeners: {
+                    show: function() { this.mapPanel.map.updateSize(); },
+                    scope: this
+                }
+            })
         }, config));
         
         this.mapPanel.layers.on({
@@ -608,7 +633,8 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             layers: []
         });
         
-        // include all layer config (and add new sources)
+        // include all layer config
+        var sources = {};
         this.mapPanel.layers.each(function(record){
             var layer = record.getLayer();
             if (layer.displayInLayerSwitcher) {
@@ -619,12 +645,37 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                 }
                 // add layer
                 state.map.layers.push(source.getConfigForRecord(record));
-                if (!state.sources[id]) {
-                    state.sources[id] = Ext.apply({}, source.initialConfig);
+                if (!sources[id]) {
+                    sources[id] = source.getState();
                 }
             }
         }, this);
+        // update sources, adding new ones
+        Ext.apply(this.sources, sources);
         
+        //standardize portal configuration to portalConfig
+        if (state.portalItems) {
+            //initial config included both portal config and items
+            if (state.portalConfig && state.portalConfig.items && state.portalConfig.items.length) {
+                //merge arrays of portalItems and portalConfig.items
+                for (var items = state.portalItems, i = 0, len = items.length; i < len; i++) {
+                    var item = items[i];
+                    if (state.portalConfig.items.indexOf(item) == -1) {
+                        state.portalConfig.items.push(item);
+                    }
+                }
+            }
+            else if (state.portalItems && state.portalItems.length) {
+                !state.portalConfig && (state.portalConfig = {});
+                state.portalConfig.items = state.portalItems;
+            }
+        }
+        
+        //get tool states, for most tools this will be the same as its initial config
+        state.tools = [];
+        Ext.iterate(this.tools,function(key,val,obj){
+            state.tools.push(val.getState());
+        });
         return state;
     },
     
@@ -651,6 +702,16 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
          */
         return !this.authorizedRoles || 
             (this.authorizedRoles.indexOf(role || "ROLE_ADMINISTRATOR") !== -1);
+    },
+
+    /** api: method[setAuthorizedRoles]
+     *  :arg authorizedRoles: ``Array``
+     *
+     *  Change the authorized roles.
+     */
+    setAuthorizedRoles: function(authorizedRoles) {
+        this.authorizedRoles = authorizedRoles;
+        this.fireEvent("authorizationchange");
     },
     
     /** api: method[isAuthenticated]

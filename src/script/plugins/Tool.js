@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -272,9 +272,11 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
                 }
                 if (ct) {
                     if (ct instanceof Ext.menu.Menu) {
-                        action = Ext.apply(new Ext.menu.Item(action),
-                            {text: action.initialConfig.menuText}
-                        );
+                        action = Ext.apply(new Ext.menu.CheckItem(action), {
+                            text: action.initialConfig.menuText,
+                            group: action.initialConfig.toggleGroup,
+                            groupClass: null
+                        });
                     } else if (!(ct instanceof Ext.Toolbar)) {
                         // only Ext.menu.Menu and Ext.Toolbar containers
                         // support the Action interface. So if our container is
@@ -345,7 +347,9 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
                 autoHeight: !outputConfig.height,
                 layout: outputConfig.height ? "fit" : undefined,
                 items: [{
-                    defaults: {autoHeight: !outputConfig.height}
+                    defaults: Ext.applyIf({
+                        autoHeight: !outputConfig.height && !(outputConfig.defaults && outputConfig.defaults.height)
+                    }, outputConfig.defaults)
                 }]
             }, outputConfig)).show().items.get(0);
         }
@@ -382,8 +386,16 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
             }
         }
         this.output = [];
-    }
+    },
     
+    /** api: method[getState]
+     *  :return {Object}
+     *  Gets the configured tool state. Overwrite in subclasses to return
+     *  anything other than a copy of the initialConfig property.
+     */
+    getState: function(){
+        return Ext.apply({}, this.initialConfig);
+    }
 });
 
 Ext.preg(gxp.plugins.Tool.prototype.ptype, gxp.plugins.Tool);

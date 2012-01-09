@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -215,7 +215,6 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
         if (style) {
             var parts = style.split(/\s+/);
             var ratio = parts[0] / parts[1];
-            var array;
             if (!isNaN(ratio)) {
                 array = ratio >= 1 ? "4 4" : "2 4";
             }

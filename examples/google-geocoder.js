@@ -1,5 +1,6 @@
 var map = new OpenLayers.Map({
     div: "map",
+    theme: null,
     layers: [new OpenLayers.Layer.OSM()],
     center: new OpenLayers.LonLat(-8237542, 4970279),
     zoom: 12

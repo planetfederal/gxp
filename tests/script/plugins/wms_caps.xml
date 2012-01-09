@@ -450,6 +450,7 @@ GEOGCS["WGS 84",
   AUTHORITY["EPSG","4326"]]-->
         <LatLonBoundingBox minx="-122.91" miny="42.289" maxx="-122.758" maxy="42.404"/>
         <BoundingBox SRS="EPSG:4326" minx="-122.91" miny="42.289" maxx="-122.758" maxy="42.404"/>
+        <Dimension units="ISO8601" name="time"/><Extent default="2001-12-01" name="time">2001-01-01/2001-12-01/P1M</Extent>
         <Style>
           <Name>medford_parks</Name>
           <Title>Medford, OR - Parks</Title>

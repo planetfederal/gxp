@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -26,7 +26,8 @@ Ext.namespace("gxp.plugins");
  *
  *    Plugin for adding a GoogleGeocoderComboBox to a viewer.  The underlying
  *    GoogleGeocoderComboBox can be configured by setting this tool's 
- *    ``outputConfig`` property.
+ *    ``outputConfig`` property. The gxp.form.GoogleGeocoderComboBox requires 
+ *    the gxp.plugins.GoogleSource or the Google Maps V3 API to be loaded.
  */
 gxp.plugins.GoogleGeocoder = Ext.extend(gxp.plugins.Tool, {
     

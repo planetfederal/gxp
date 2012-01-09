@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -42,6 +42,7 @@ var mapPanel = new GeoExt.MapPanel({
     height: 600,
     width: 600,
     map: {
+        theme: null,
         projection: merc,
         units: "m",
         numZoomLevels: 18,

@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -78,6 +78,30 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
         Ext.applyIf(this.outputConfig, {
             closeAction: "close"
         });
+    },
+
+    /** private: method[init]
+     *  :arg target: ``Object`` The object initializing this plugin.
+     */
+    init: function(target) {
+        gxp.plugins.Styler.superclass.init.apply(this, arguments);
+        this.target.on("authorizationchange", this.enableOrDisable, this);
+    },
+
+    /** private: method[destroy]
+     */
+    destroy: function() {
+        this.target.un("authorizationchange", this.enableOrDisable, this);
+        gxp.plugins.Styler.superclass.destroy.apply(this, arguments);
+    },
+
+    /** private: method[enableOrDisable]
+     *  Enable or disable the button when the login status changes.
+     */
+    enableOrDisable: function() {
+        if (this.target && this.target.selectedLayer !== null) {
+            this.handleLayerChange(this.target.selectedLayer);
+        }
     },
     
     /** api: method[addActions]

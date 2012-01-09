@@ -15,7 +15,7 @@
 /* Pan- and Zoom- Panel Styles*/
 
 .olControlPanPanel div {
-    background-image:url(../../../../externals/ext/resources/images/gray/panel/tool-sprites.gif);
+    background-image:url(http://extjs.cachefly.net/ext-3.4.0/resources/images/gray/panel/tool-sprites.gif);
     height:15px;
     width:15px;
     /* workaround for button height in IE */
@@ -47,7 +47,7 @@
 }
 
 .olControlZoomPanel div {
-    background-image:url(../../../../externals/ext/resources/images/gray/panel/tool-sprites.gif);
+    background-image:url(http://extjs.cachefly.net/ext-3.4.0/resources/images/gray/panel/tool-sprites.gif);
     height:15px;
     width:15px;
     /* workaround for button height in IE */
@@ -109,6 +109,31 @@
 .gxp-export-section {
     padding: 10px 10px 5px 10px;
     margin-bottom: 0;
+}
+
+/* gxp_timeline */
+.x-btn .gxp-icon-layer-switcher {
+    background-image: url(img/silk/layers.png);
+}
+
+/* gxp_annotation */
+.x-btn .gxp-icon-note {
+    background-image: url(img/silk/note.png);
+}
+.x-menu-item .gxp-icon-addnote, .x-btn .gxp-icon-addnote {
+    background-image: url(img/silk/note_add.png);
+}
+.x-menu-item .gxp-icon-event, .x-btn .gxp-icon-event {
+    background-image: url(img/silk/calendar.png);
+}
+.x-menu-item .gxp-icon-point, .x-btn .gxp-icon-point {
+    background-image: url(img/silk/bullet_yellow.png);
+}
+.x-menu-item .gxp-icon-line, .x-btn .gxp-icon-line {
+    background-image: url(img/geosilk/line_yellow.png);
+}
+.x-menu-item .gxp-icon-polygon, .x-btn .gxp-icon-polygon {
+    background-image: url(img/geosilk/shape_square_yellow.png);
 }
 
 /* gxp_googleearth */
@@ -182,7 +207,7 @@
 
 /* gxp_zoomtoextent */
 .x-btn .gxp-icon-zoomtoextent, .x-tree-node .gxp-icon-zoomtoextent { 
-    background-image: url(img/silk/arrow_out.png);
+    background-image: url(img/silk/arrow_inout.png);
 }
 
 /* gxp_navigationhistory */
@@ -220,11 +245,11 @@
 }
 
 .x-tree-node img.gxp-folder, .x-tree-node-collapsed img.gxp-folder{
-    background: url(../../../../externals/ext/resources/images/default/tree/folder.gif);
+    background: url(http://extjs.cachefly.net/ext-3.4.0/resources/images/default/tree/folder.gif);
 }
 
 .x-tree-node-expanded img.gxp-folder {
-    background: url(../../../../externals/ext/resources/images/default/tree/folder-open.gif);
+    background: url(http://extjs.cachefly.net/ext-3.4.0/resources/images/default/tree/folder-open.gif);
 }
 
 /* gxp_layeruploadpanel */
@@ -273,4 +298,210 @@ div.map-overlay div.overlay-element {
     bottom: 0px;
     left: 0px;
     margin-top: 0px;
+}
+/* gxp_playback */
+div.olMap div.gx-overlay-playback {
+    position: absolute;
+    z-index: 1000;
+    top: 22px;
+    left: 65px;
+}
+.gx-overlay-playback.x-toolbar {
+    background: none;
+    border: none;
+}
+.gx-overlay-playback .x-btn{
+    width:16px !important;height:16px !important;
+    background-repeat: no-repeat;
+}
+
+/* gxp_histogram */
+.gxp-histogram {
+    overflow: hidden;
+    position: relative;
+    border-bottom: 1px solid #BBB;
+}
+.gxp-histogram .bar {
+    position: absolute;
+    background-color: #BBB;
+    border-right: 1px solid #BBB; /* avoid gaps between bars */
+    height: 100%; /* so we don't need to set the height programmatially */
+}
+
+/* gxp_layermanager */
+.gxp-layermanager-tree .x-tree-node-icon {
+    display: none;
+}
+.gxp-layermanager-tree .x-tree-node-anchor {
+    font-weight: bold;
+}
+.gxp-layermanager-tree input + .x-tree-node-anchor {
+    font-weight: normal;
+}
+.gxp-layermanager-tree input[checked] + .x-tree-node-anchor {
+    font-weight: bold;
+}
+.gxp-layermanager-tree .legend img {
+    padding-left: 48px;
+}
+.gxp-layermanager-tree .legendnode {
+    line-height: 0;
+}
+.gxp-layermanager-tree .legendnode:hover {
+    background-color: inherit;
+}
+.gxp-layermanager-tree .legendnode .x-tree-node-indent {
+    display: none;
+}
+.gxp-layermanager-tree .legendnode .x-tree-ec-icon {
+    display: none;
+}
+.gxp-layermanager-tree .legend label {
+    display: none;
+}
+.gxp-layermanager-tree .gx-legend-noimage {
+    display: none;
+}
+.gxp-layermanager-crumbs button {
+    color: #15428B;
+}
+.gxp-layermanager-crumbs td:last-of-type button {
+    font-weight: bold;
+}
+.gxp-layermanager-crumbs .xtb-spacer {
+    width: 12px;
+    height: 16px;
+}
+
+
+.x-btn .gxp-icon-reset{
+    background-image:url('img/silk/control_start_blue.png')
+}
+.x-btn .gxp-icon-settings{
+    background-image:url('img/silk/control_equalizer_blue.png')
+}
+.x-btn .gxp-icon-next{
+    background-image:url('img/silk/next.png')
+}
+.x-btn .gxp-icon-last{
+    background-image:url('img/silk/control_end_blue.png')
+}
+.x-btn .gxp-icon-play{
+    background-image:url('img/silk/control_play_blue.png')
+}
+.x-btn .gxp-icon-pause{
+    background-image:url('img/silk/control_pause_blue.png')
+}
+.x-btn .gxp-icon-stop{
+    background-image:url('img/silk/control_stop_blue.png')
+}
+.x-btn .gxp-icon-loop{
+    background-image:url('img/silk/control_repeat_blue.png')
+}
+.x-btn .gxp-icon-ffwd{
+    background-image:url('img/silk/control_fastforward_blue.png')
+}
+.x-btn-over .gxp-icon-reset{
+    background-image:url('img/silk/control_start.png')
+}
+.x-btn-over .gxp-icon-settings{
+    background-image:url('img/silk/control_equalizer.png')
+}
+.x-btn-over .gxp-icon-next{
+    background-image:url('img/silk/next_blue.png')
+}
+.x-btn-over .gxp-icon-last{
+    background-image:url('img/silk/control_end.png')
+}
+.x-btn-over .gxp-icon-play{
+    background-image:url('img/silk/control_play.png')
+}
+.x-btn-over .gxp-icon-pause{
+    background-image:url('img/silk/control_pause.png')
+}
+.x-btn-over .gxp-icon-stop{
+    background-image:url('img/silk/control_stop.png')
+}
+.x-btn-over .gxp-icon-loop{
+    background-image:url('img/silk/control_repeat.png')
+}
+.x-btn-over .gxp-icon-ffwd,.x-item-disabled .gxp-icon-ffwd{
+    background-image:url('img/silk/control_fastforward.png')
+}
+.x-slider-min-thumb{
+    background-image:url('img/silk/resultset_next.png')!important;
+    background-position:0 0 !important;
+}
+.x-slider-max-thumb{
+    background-image:url('img/silk/resultset_previous.png')!important;
+    background-position:0 0 !important;
+}
+.x-slider-tail-thumb{
+    background-image:url('img/silk/stop.png')!important;
+    background-position:0 0 !important;
+}
+.thumb-mapbox {
+    width: 128px;
+    height: 128px;
+    margin: 5px 5px 5px 5px;
+}
+.thumb-mapbox-natural-earth-1 {
+    background-image:url('img/thumbs/mapbox/natural-earth-1.jpg');
+}
+.thumb-mapbox-blue-marble-topo-bathy-jan {
+    background-image:url('img/thumbs/mapbox/blue-marble-topo-bathy-jan.jpg');
+}
+.thumb-mapbox-blue-marble-topo-bathy-jul-bw {
+    background-image:url('img/thumbs/mapbox/blue-marble-topo-bathy-jul-bw.jpg');
+}
+.thumb-mapbox-blue-marble-topo-bathy-jul {
+    background-image:url('img/thumbs/mapbox/blue-marble-topo-bathy-jul.jpg');
+}
+.thumb-mapbox-blue-marble-topo-jan {
+    background-image:url('img/thumbs/mapbox/blue-marble-topo-jan.jpg');
+}
+.thumb-mapbox-blue-marble-topo-jul-bw {
+    background-image:url('img/thumbs/mapbox/blue-marble-topo-jul-bw.jpg');
+}
+.thumb-mapbox-blue-marble-topo-jul {
+    background-image:url('img/thumbs/mapbox/blue-marble-topo-jul.jpg');
+}
+.thumb-mapbox-control-room {
+    background-image:url('img/thumbs/mapbox/control-room.png');
+}
+.thumb-mapbox-geography-class {
+    background-image:url('img/thumbs/mapbox/geography-class.jpg');
+}
+.thumb-mapbox-natural-earth-2 {
+    background-image:url('img/thumbs/mapbox/natural-earth-2.jpg');
+}
+.thumb-mapbox-natural-earth-hypso-bathy {
+    background-image:url('img/thumbs/mapbox/natural-earth-hypso-bathy.jpg');
+}
+.thumb-mapbox-natural-earth-hypso {
+    background-image:url('img/thumbs/mapbox/natural-earth-hypso.jpg');
+}
+.thumb-mapbox-world-bank-borders-ar {
+    background-image:url('img/thumbs/mapbox/world-bank-borders-ar.png');
+}
+.thumb-mapbox-world-bank-borders-en {
+    background-image:url('img/thumbs/mapbox/world-bank-borders-en.png');
+}
+.thumb-mapbox-world-bank-borders-es {
+    background-image:url('img/thumbs/mapbox/world-bank-borders-es.png');
+}
+.thumb-mapbox-world-bank-borders-fr {
+    background-image:url('img/thumbs/mapbox/world-bank-borders-fr.png');
+}
+.thumb-mapbox-world-bank-borders-zh {
+    background-image:url('img/thumbs/mapbox/world-bank-borders-zh.png');
+}
+.thumb-mapbox-world-dark {
+    background-image:url('img/thumbs/mapbox/world-dark.png');
+}
+.thumb-mapbox-world-light {
+    background-image:url('img/thumbs/mapbox/world-light.png');
+}
+.thumb-mapbox-world-print {
+    background-image:url('img/thumbs/mapbox/world-print.png');
 }
