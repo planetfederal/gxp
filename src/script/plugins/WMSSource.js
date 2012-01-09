@@ -163,7 +163,8 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             config.requiredProperties = [];
             delete config.forceLazy;
             window.setTimeout(function() {
-                throw("Deprecated config option 'forceLazy: true' for ptype: '" + gxp.plugins.WMSSource.prototype.ptype + "'. Use 'requiredProperties: []' instead.");
+                throw("Deprecated config option 'forceLazy: true' for layer source '" +
+                    config.id + "'. Use 'requiredProperties: []' instead.");
             }, 0);
         }
         gxp.plugins.WMSSource.superclass.constructor.apply(this, arguments);
