@@ -20,6 +20,8 @@ Ext.namespace("gxp");
  */
 gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
 
+    border: false,
+
     performQuery: function() {
         var store = this.grid.store;
         var searchValue = this.search.getValue();
@@ -56,16 +58,25 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
             })
         });
         this.items = [{
-            xtype: "textfield",
-            ref: "search",
-            name: "search"
-        }, {
-            xtype: "button",
-            text: "Search",
-            handler: this.performQuery,
-            scope: this
+            xtype: 'container',
+            border: false,
+            height: 30,
+            style: "margin-left: 5px; margin-top: 5px",
+            items: [{
+                xtype: "textfield",
+                emptyText: "Search",
+                ref: "../search",
+                name: "search"
+            }, {
+                xtype: "button",
+                text: "Search",
+                style: "position: absolute; right: 5px; top: 5px;",
+                handler: this.performQuery,
+                scope: this
+            }]
         }, {
             xtype: "grid",
+            border: false,
             ref: "grid",
             bbar: new Ext.PagingToolbar({
                 paramNames: {
