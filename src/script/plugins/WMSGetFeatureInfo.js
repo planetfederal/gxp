@@ -231,8 +231,8 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
             }
         } else if (text) {
             config.push(Ext.apply({
-                title: title
-                html: text,
+                title: title,
+                html: text
             }, this.itemConfig));
         }
         popup.add(config);
