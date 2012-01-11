@@ -20,6 +20,30 @@ Ext.namespace("gxp");
  */
 gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
 
+    performQuery: function() {
+        var store = this.grid.store;
+        var searchValue = this.search.getValue();
+        var data = {
+            "resultType": "results",
+            "maxRecords": 100,
+            "Query": {
+                "Constraint": {
+                    version: "1.1.0",
+                    CqlText: {
+                        value: "AnyText LIKE '*"+searchValue+"*'"
+                    }
+                },
+                "typeNames": "gmd:MD_Metadata",
+                "ElementSetName": {
+                    "value": "full"
+                }
+            }
+        };
+        // use baseParams so paging takes them into account
+        store.baseParams = data;
+        store.load();
+    },
+
     initComponent: function() {
         var store = new Ext.data.Store({
             proxy: new GeoExt.data.ProtocolProxy({
@@ -38,29 +62,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
         }, {
             xtype: "button",
             text: "Search",
-            handler: function() {
-                var store = this.grid.store;
-                var searchValue = this.search.getValue();
-                var data = { 
-                    "resultType": "results", 
-                    "maxRecords": 100, 
-                    "Query": {
-                        "Constraint": {
-                            version: "1.1.0",
-                            CqlText: {
-                                value: "AnyText LIKE '*"+searchValue+"*'"
-                            }
-                        },
-                        "typeNames": "gmd:MD_Metadata",
-                        "ElementSetName": { 
-                            "value": "full" 
-                        } 
-                    } 
-                };
-                // use baseParams so paging takes them into account
-                store.baseParams = data;
-                store.load();
-            },
+            handler: this.performQuery,
             scope: this
         }, {
             xtype: "grid",
