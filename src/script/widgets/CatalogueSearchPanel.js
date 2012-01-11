@@ -28,7 +28,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                 })
             }),
             reader: new GeoExt.data.CSWRecordsReader({
-               fields: ['title', 'subject']
+               fields: ['title', 'subject', 'URI', 'bounds', 'projection']
             })
         });
         this.items = [{
@@ -83,6 +83,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                     tooltip: 'Add layer to map',
                     handler: function(grid, rowIndex, colIndex) {
                         var rec = this.grid.store.getAt(rowIndex);
+                        this.addLayer(rec);
                     },
                     scope: this
                 }]}, {
@@ -106,6 +107,31 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
             height: 300
         }];
         gxp.CatalogueSearchPanel.superclass.initComponent.apply(this, arguments);
+    },
+
+    addLayer: function(record) {
+        var uri = record.get("URI");
+        var bounds = record.get("bounds");
+        var wms, layer;
+        for (var key in uri) {
+            var url = uri[key].value;
+            if (url && url.toLowerCase().indexOf('service=wms') > 0) {
+                var obj = OpenLayers.Util.createUrlObject(url);
+                wms = obj.protocol + "//" + obj.host + ":" + obj.port + obj.pathname;
+                // TODO remove this hack
+                wms = wms.replace("geoserver-geonode-dev", "geoserver");
+                // end TODO
+                layer = obj.args.layers;
+                break;
+            }
+        }
+        // TODO: is this always WGS84 in DC?
+        this.plugin.addWMSLayer(wms, {
+            name: layer,
+            title: record.get('title')[0].value,
+            bbox: bounds.toArray(),
+            srs: "EPSG:4326"
+        });
     }
 
 });

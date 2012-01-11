@@ -47,8 +47,22 @@ gxp.plugins.CatalogueSearch = Ext.extend(gxp.plugins.Tool, {
         return actions;
     },
 
+    addWMSLayer: function(url, layerConfig) {
+        // TODO: is it okay to use addLayerSource? Not marked as api
+        // TODO: should addLayerSource prevent duplicates?
+        var source = this.target.addLayerSource({
+            config: {
+                url: url, 
+                ptype: "gxp_wmssource", 
+                version: "1.1.1"
+            }
+        });
+        var record = source.createLayerRecord(layerConfig);
+        this.target.mapPanel.layers.add(record);
+    },
+
     addOutput: function() {
-        return gxp.plugins.CatalogueSearch.superclass.addOutput.apply(this, [{xtype: 'gxp_cataloguesearchpanel'}]);
+        return gxp.plugins.CatalogueSearch.superclass.addOutput.apply(this, [{plugin: this, xtype: 'gxp_cataloguesearchpanel'}]);
     }
 
 });
