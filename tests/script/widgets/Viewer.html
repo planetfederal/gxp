@@ -20,6 +20,20 @@
             
             t.eq(instance.mapPanel.isDestroyed, true, "MapPanel destroyed");
         }
+        
+        function test_initMapPanel(t) {
+            t.plan(1);
+
+            var context = {
+                initialConfig: {
+                    map: {
+                        center: [1, 2]
+                    }
+                }
+            };
+            gxp.Viewer.prototype.initMapPanel.call(context);
+            t.eq(context.mapPanel.initialConfig.center.toString(), "lon=1,lat=2", "center configured correctly");
+        }
 
     </script>
   </head>
