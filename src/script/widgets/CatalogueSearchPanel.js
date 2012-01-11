@@ -74,8 +74,14 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                 pageSize: 100 
             }),
             loadMask: true,
+            hideHeaders: true,
             store: store,
             columns: [{
+                id: 'title', 
+                xtype: "templatecolumn", 
+                tpl: new Ext.XTemplate('<b><tpl for="title">{value}</tpl></b><br/><tpl for="subject">{value}<tpl if="xindex < xcount"><br/></tpl></tpl>'), 
+                sortable: true
+            }, {
                 xtype: "actioncolumn",
                 width: 30,
                 items: [{
@@ -86,22 +92,8 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                         this.addLayer(rec);
                     },
                     scope: this
-                }]}, {
-                    id: 'title', 
-                    xtype: "templatecolumn", 
-                    tpl: new Ext.XTemplate('<tpl for="title">{value}<br/></tpl>'), 
-                    header: "Title", 
-                    dataIndex: "title", 
-                    sortable: true
-                }, {
-                    header: "Subject", 
-                    xtype: "templatecolumn", 
-                    tpl: new Ext.XTemplate('<tpl for="subject">{value}<br/></tpl>'), 
-                    dataIndex: "subject", 
-                    sortable: true, 
-                    width:200
-                }
-            ],
+                }]
+            }],
             autoExpandColumn: 'title',
             width: 400,
             height: 300
