@@ -83,6 +83,9 @@ Ext.namespace("gxp.plugins");
  *        group: "background"
  *    }
  *
+ *  For initial programmatic layer configurations, to leverage lazy loading of
+ *  the Capabilities document, it is recommended to configure layers with the
+ *  fields listed in :obj:`requiredProperties`.
  */
 gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
     
@@ -140,16 +143,30 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      *  requests.  By default, no version is set.
      */
     
-    /** api: config[forceLazy]
-     *  ``Array`` If set to true, no GetCapabilities request will be sent and
-     *  missing srs and bbox properties will be replaced with the map
-     *  projection and maxExtent. Not all plugins will work with layers from
-     *  a source configured with ``forceLazy`` set to true.
+    /** api: config[requiredProperties]
+     *  ``Array(String)`` List of config properties that are required for each
+     *  layer from this source to allow lazy loading. Default is
+     *  ``["title", "bbox"]``. When the source loads layers from a WMS that
+     *  does not provide layers in all projections, ``srs`` should be included
+     *  in this list. Fallback values are available for ``title`` (the WMS
+     *  layer name), ``bbox`` (the map's ``maxExtent``), and ``srs`` (the map's
+     *  ``projection``).
      */
-
+    requiredProperties: ["title", "bbox"],
+    
     /** private: method[constructor]
      */
     constructor: function(config) {
+        // deal with deprecated forceLazy config option
+        //TODO remove this before we cut a release
+        if (config && config.forceLazy === true) {
+            config.requiredProperties = [];
+            delete config.forceLazy;
+            window.setTimeout(function() {
+                throw("Deprecated config option 'forceLazy: true' for layer source '" +
+                    config.id + "'. Use 'requiredProperties: []' instead.");
+            }, 0);
+        }
         gxp.plugins.WMSSource.superclass.constructor.apply(this, arguments);
         if (!this.format) {
             this.format = new OpenLayers.Format.WMSCapabilities({keepData: true});
@@ -189,8 +206,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      *  construct layer records, the source can be lazy.
      */
     isLazy: function() {
-        // TODO: complete the lazy implementation
-        var lazy = false;
+        var lazy = true;
         var mapConfig = this.target.initialConfig.map;
         if (mapConfig && mapConfig.layers) {
             var layerConfig;
@@ -207,10 +223,22 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         return lazy;
     },
     
+    /** private: method[layerConfigComplete]
+     *  :returns: ``Boolean``
+     *
+     *  A layer configuration is considered complete if it has a title and a
+     *  bbox.
+     */
     layerConfigComplete: function(config) {
-        // for now, we assume that the layer config is incomplete, unless
-        // forceLazy is set to true
-        return config.forceLazy === true || this.forceLazy === true;
+        var lazy = true;
+        var props = this.requiredProperties;
+        for (var i=props.length-1; i>=0; --i) {
+            lazy = !!config[props[i]];
+            if (lazy === false) {
+                break;
+            }
+        } 
+        return lazy;
     },
 
     /** api: method[createStore]
@@ -334,25 +362,27 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      *  Create a minimal layer record
      */
     createLazyLayerRecord: function(config) {
+        config = Ext.apply({}, config);
+        
+        var srs = config.srs || this.target.map.projection;
+        config.srs = {};
+        config.srs[srs] = true;
+        
+        var bbox = config.bbox || this.target.map.maxExtent;
+        config.bbox = {};
+        config.bbox[srs] = {bbox: bbox};
+        
         var record = new this.store.recordType(config);
         record.setLayer(new OpenLayers.Layer.WMS(
             config.title || config.name,
-            this.url, 
-            {layers: config.name}
+            this.url, {
+                layers: config.name,
+                transparent: "transparent" in config ? config.transparent : true,
+                format: config.format
+            }, {
+                projection: srs
+            }
         ));
-        if (!config.srs) {
-            // assume the map projection if none was configured
-            var srs = {};
-            srs[this.target.map.projection] = true;
-            record.set("srs", srs);
-        }
-        if (!config.bbox) {
-            var bbox = {};
-            bbox[this.target.map.projection] = {
-                bbox: this.target.map.maxExtent
-            };
-            record.set("bbox", bbox);
-        }
         return record;
     },
      
@@ -385,18 +415,22 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             // us in dealing with the different EPSG codes for web mercator.
             var layerProjection = this.getProjection(original);
 
-            var projCode = projection.getCode();
-            var nativeExtent = original.get("bbox")[projCode];
-            var swapAxis = layer.params.VERSION >= "1.3" && !!layer.yx[projCode];
-            var maxExtent = 
-                (nativeExtent && OpenLayers.Bounds.fromArray(nativeExtent.bbox, swapAxis)) || 
-                OpenLayers.Bounds.fromArray(original.get("llbbox")).transform(new OpenLayers.Projection("EPSG:4326"), projection);
-            
-            // make sure maxExtent is valid (transform does not succeed for all llbbox)
-            if (!(1 / maxExtent.getHeight() > 0) || !(1 / maxExtent.getWidth() > 0)) {
-                // maxExtent has infinite or non-numeric width or height
-                // in this case, the map maxExtent must be specified in the config
-                maxExtent = undefined;
+            var projCode = (layerProjection || projection).getCode(),
+                swapAxis = layer.params.VERSION >= "1.3" && !!layer.yx[projCode],
+                bbox = original.get("bbox"), maxExtent;
+            if (bbox && bbox[projCode]){
+                maxExtent = bbox[projCode].bbox;
+            } else {
+                var llbbox = original.get("llbbox");
+                if (llbbox) {
+                    var extent = OpenLayers.Bounds.fromArray(llbbox).transform(new OpenLayers.Projection("EPSG:4326"), projection);
+                    // make sure maxExtent is valid (transform does not succeed for all llbbox)
+                    if ((1 / extent.getHeight() > 0) && (1 / extent.getWidth() > 0)) {
+                        // maxExtent has infinite or non-numeric width or height
+                        // in this case, the map maxExtent must be specified in the config
+                        maxExtent = extent;
+                    }
+                }
             }
             
             // use all params from original
@@ -503,9 +537,22 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      *  created from this source.
      */
     initDescribeLayerStore: function() {
-        var req = this.store.reader.raw.capability.request.describelayer;
+        var raw = this.store.reader.raw;
+        if (!raw) {
+            // When lazy, we assume that the server supports a DescribeLayer
+            // request at the layer's url.
+            raw = {
+                capability: {
+                    request: {
+                        describelayer: {href: this.url}
+                    }
+                },
+                version: this.version || "1.1.1"
+            };
+        }
+        var req = raw.capability.request.describelayer;
         if (req) {
-            var version = this.store.reader.raw.version;
+            var version = raw.version;
             if (parseFloat(version) > 1.1) {
                 //TODO don't force 1.1.1, fall back instead
                 version = "1.1.1";
@@ -648,22 +695,21 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         if (!this.schemaCache) {
             this.schemaCache = {};
         }
-        if (rec.get('forceLazy') === true) {
-            // when lazy, we have the following assumptions:
-            // 1. URL of the WFS is the same as the URL of the WMS
-            // 2. typeName is the same as the WMS Layer name
-            this.fetchSchema(this.url, rec.get('name'), callback, scope);
-        } else {
-            this.describeLayer(rec, function(r) {
-                if (r && r.get("owsType") == "WFS") {
-                    var typeName = r.get("typeName");
-                    var url = r.get("owsURL");
-                    this.fetchSchema(url, typeName, callback, scope);
-                } else {
-                    callback.call(scope, false);
-                }
-            }, this);
-        }
+        this.describeLayer(rec, function(r) {
+            if (r && r.get("owsType") == "WFS") {
+                var typeName = r.get("typeName");
+                var url = r.get("owsURL");
+                this.fetchSchema(url, typeName, callback, scope);
+            } else if (!r) {
+                // When DescribeLayer is not supported, we make the following
+                // assumptions:
+                // 1. URL of the WFS is the same as the URL of the WMS
+                // 2. typeName is the same as the WMS Layer name
+                this.fetchSchema(this.url, rec.get('name'), callback, scope);
+            } else {
+                callback.call(scope, false);
+            }
+        }, this);
     },
     
     /** api: method[getWFSProtocol]
@@ -706,14 +752,25 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      *  Create a config object that can be used to recreate the given record.
      */
     getConfigForRecord: function(record) {
-        var config = gxp.plugins.WMSSource.superclass.getConfigForRecord.apply(this, arguments);
-        var layer = record.getLayer();
-        var params = layer.params;
+        var config = gxp.plugins.WMSSource.superclass.getConfigForRecord.apply(this, arguments),
+            layer = record.getLayer(),
+            params = layer.params,
+            bbox;
+        if (layer.maxExtent) {
+            bbox = layer.maxExtent.toArray();
+        }
         return Ext.apply(config, {
             format: params.FORMAT,
             styles: params.STYLES,
-            transparent: params.TRANSPARENT
+            transparent: params.TRANSPARENT,
+            bbox: bbox,
+            srs: layer.projection.getCode()
         });
+    },
+    
+    getState: function() {
+        var state = gxp.plugins.WMSSource.superclass.getState.apply(this, arguments);
+        return Ext.applyIf(state, {title: this.title});
     }
     
 });
