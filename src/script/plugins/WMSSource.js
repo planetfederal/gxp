@@ -406,7 +406,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      *  the source is not :obj:`lazy`` or that the ``config`` is complete (i.e.
      *  configured with all fields listed in :obj:`requiredProperties` before
      *  using this method. Otherwise, it is recommended to use the asynchronous
-     *  :meth:``gxp.Viewer.createLayerRecord`` method on the target viewer
+     *  :meth:`gxp.Viewer.createLayerRecord` method on the target viewer
      *  instead, which will load the source's store to complete the
      *  configuration if necessary.
      */
