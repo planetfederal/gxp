@@ -17,6 +17,38 @@
             t.ok(instance instanceof gxp.plugins.WMSCSource, "Instance created successfully");
         }
 
+        function test_createLazyLayerRecord(t) {
+            t.plan(2);
+            
+            var viewer = new gxp.Viewer({
+                sources: {
+                    local: {
+                        ptype: "gxp_wmscsource",
+                        url: "wms_caps.xml"
+                    }
+                },
+                map: {
+                    projection: "EPSG:4326",
+                    center: [0, 0],
+                    maxExtent: [-180, -90, 180, 90],
+                    zoom: 1,
+                    layers: [{
+                        source: "local",
+                        name: "usa:states",
+                        title: "States, USA - Population",
+                        bbox: [-124.731, 24.956, -66.97, 49.372]
+                    }]
+                }
+            });
+            
+            t.delay_call(1, function() {
+                t.eq(viewer.layerSources.local.lazy, true, "source lazy after creating record from configuration with all required properties");
+                var rec = viewer.mapPanel.layers.getAt(0);
+                var layer = rec.getLayer();
+                t.eq(layer.tileOrigin.toString(), "lon=-180,lat=-90", "missing titleOrigin replaced with lower left corner of the map's maxExtent for layer config");
+            });
+        }
+
     </script>
   </head>
   <body>
