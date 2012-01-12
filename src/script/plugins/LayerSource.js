@@ -147,11 +147,12 @@ gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
     },
     
     /** api: method[getState]
-     *  :return {Object}
-     *  Gets the configured source state. Overwrite in subclasses to return
-     *  anything other than a copy of the initialConfig property.
+     *  :returns: ``Object``
+     *  Gets the configured source state.
      */
-    getState: function(){
+    getState: function() {
+        //  Overwrite in subclasses to return anything other than a copy
+        // of the initialConfig property.
         return Ext.apply({}, this.initialConfig);
     }
 });
