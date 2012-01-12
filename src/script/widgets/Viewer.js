@@ -583,14 +583,15 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
      *  Check through createLayerRecord requests to see if any can be satisfied.
      */
     checkLayerRecordQueue: function() {
-        var request, source, record, called;
+        var request, source, s, record, called;
         var remaining = [];
         for (var i=0, ii=this.createLayerRecordQueue.length; i<ii; ++i) {
             called = false;
             request = this.createLayerRecordQueue[i];
-            source = request.config.source;
-            if (source in this.layerSources) {
-                record = this.layerSources[source].createLayerRecord(request.config);
+            s = request.config.source;
+            if (s in this.layerSources) {
+                source = this.layerSources[s];
+                record = source.createLayerRecord(request.config);
                 if (record) {
                     // we call this in the next cycle to guarantee that
                     // createLayerRecord returns before callback is called
@@ -600,6 +601,11 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                         }, 0);
                     })(request, record);
                     called = true;
+                } else if (source.lazy) {
+                    source.store.load({
+                        callback: this.checkLayerRecordQueue,
+                        scope: this
+                    });
                 }
             }
             if (!called) {

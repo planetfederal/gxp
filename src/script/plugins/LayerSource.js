@@ -33,6 +33,12 @@ gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
      *  ``Object``
      *  The object that this plugin is plugged into.
      */
+    
+    /** api: property[lazy]
+     *  ``Boolean``. true when the source is ready, but its store hasn't
+     *  been loaded yet (i.e. lazy source). Read-only.
+     */
+    lazy: false,
      
     /** api: property[title]
      *  ``String``

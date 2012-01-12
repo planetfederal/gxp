@@ -145,12 +145,17 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
     
     /** api: config[requiredProperties]
      *  ``Array(String)`` List of config properties that are required for each
-     *  layer from this source to allow lazy loading. Default is
-     *  ``["title", "bbox"]``. When the source loads layers from a WMS that
-     *  does not provide layers in all projections, ``srs`` should be included
-     *  in this list. Fallback values are available for ``title`` (the WMS
-     *  layer name), ``bbox`` (the map's ``maxExtent``), and ``srs`` (the map's
-     *  ``projection``).
+     *  layer from this source to allow lazy loading, in addition to ``name``.
+     *  Default is ``["title", "bbox"]``. When the source loads layers from a
+     *  WMS that does not provide layers in all projections, ``srs`` should be
+     *  included in this list. Fallback values are available for ``title`` (the
+     *  WMS layer name), ``bbox`` (the map's ``maxExtent``), and ``srs`` (the
+     *  map's ``projection``).
+     */
+    
+    /** api: property[requiredProperties]
+     *  ``Array(String)`` List of config properties that are required for a
+     *  complete layer configuration, in addition to ``name``.
      */
     requiredProperties: ["title", "bbox"],
     
@@ -283,6 +288,11 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                         if (!this.ready) {
                             this.ready = true;
                             this.fireEvent("ready", this);
+                        } else {
+                            this.lazy = false;
+                            //TODO Here we could update all records from this
+                            // source on the map that were added when the
+                            // source was lazy.
                         }
                     }
                     // clean up data stored on format after parsing is complete
@@ -325,6 +335,8 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         if (lazy) {
             // lazy sources are "immediately" ready - in the next turn
             window.setTimeout((function() {
+                this.ready = true;
+                this.lazy = true;
                 this.fireEvent("ready", this);
             }).createDelegate(this), 0);
         }
@@ -388,9 +400,15 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      
     /** api: method[createLayerRecord]
      *  :arg config:  ``Object``  The application config for this layer.
-     *  :returns: ``GeoExt.data.LayerRecord``
+     *  :returns: ``GeoExt.data.LayerRecord`` or null when the source is lazy.
      *
-     *  Create a layer record given the config.
+     *  Create a layer record given the config. Applications should check that
+     *  the source is not :obj:`lazy`` or that the ``config`` is complete (i.e.
+     *  configured with all fields listed in :obj:`requiredProperties` before
+     *  using this method. Otherwise, it is recommended to use the asynchronous
+     *  :meth:``gxp.Viewer.createLayerRecord`` method on the target viewer
+     *  instead, which will load the source's store to complete the
+     *  configuration if necessary.
      */
     createLayerRecord: function(config) {
         var record, original;
@@ -538,7 +556,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      */
     initDescribeLayerStore: function() {
         var raw = this.store.reader.raw;
-        if (!raw) {
+        if (this.lazy && !raw) {
             // When lazy, we assume that the server supports a DescribeLayer
             // request at the layer's url.
             raw = {
@@ -768,6 +786,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         });
     },
     
+    /** private: method[getState] */
     getState: function() {
         var state = gxp.plugins.WMSSource.superclass.getState.apply(this, arguments);
         return Ext.applyIf(state, {title: this.title});

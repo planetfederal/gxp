@@ -89,12 +89,7 @@ gxp.plugins.WMSCSource = Ext.extend(gxp.plugins.WMSSource, {
         gxp.plugins.WMSCSource.superclass.constructor.apply(this, arguments); 
     },
     
-    /** api: method[createLayerRecord]
-     *  :arg config:  ``Object``  The application config for this layer.
-     *  :returns: ``GeoExt.data.LayerRecord``
-     *
-     *  Create a layer record given the config.
-     */
+    /** private: method[createLayerRecord] */
     createLayerRecord: function(config) {
         var record = gxp.plugins.WMSCSource.superclass.createLayerRecord.apply(this, arguments);
         if (!record) {
@@ -130,7 +125,7 @@ gxp.plugins.WMSCSource = Ext.extend(gxp.plugins.WMSSource, {
                     }
                 }
             }
-        } else {
+        } else if (this.lazy) {
             // lazy loading
             var tileSize = record.get("tileSize"),
                 tileOrigin = record.get("tileOrigin");
