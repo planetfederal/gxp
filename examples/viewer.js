@@ -50,6 +50,7 @@ Ext.onReady(function() {
             actionTarget: "tree.tbar"
         }, {
             ptype: "gxp_cataloguesearch",
+            source: "catalog",
             actionTarget: "tree.tbar"
         }, {
             ptype: "gxp_removelayer",
@@ -113,6 +114,9 @@ Ext.onReady(function() {
             },
             google: {
                 ptype: "gxp_googlesource"
+            },
+            catalog: {
+                ptype: "gxp_cataloguesource"
             }
         },
         

@@ -355,7 +355,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         );
     },
     
-    /** private: method[createLazyLayerRecord]
+    /** api: method[createLazyLayerRecord]
      *  :arg config: ``Object`` The application config for this layer.
      *  :returns: ``GeoExt.data.LayerRecord``
      *
@@ -372,10 +372,15 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         config.bbox = {};
         config.bbox[srs] = {bbox: bbox};
         
-        var record = new this.store.recordType(config);
+        var record;
+        if (this.store) {
+            record = new this.store.recordType(config);
+        } else {
+            record = new GeoExt.data.LayerRecord(config);
+        }
         record.setLayer(new OpenLayers.Layer.WMS(
             config.title || config.name,
-            this.url, {
+            config.url || this.url, {
                 layers: config.name,
                 transparent: "transparent" in config ? config.transparent : true,
                 format: config.format

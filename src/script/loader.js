@@ -45,6 +45,7 @@
         "widgets/CatalogueSearchPanel.js",
         "plugins/LayerSource.js",
         "plugins/BingSource.js",
+        "plugins/CatalogueSource.js",
         "plugins/WMSSource.js",
         "plugins/WMSCSource.js",
         "plugins/OSMSource.js",

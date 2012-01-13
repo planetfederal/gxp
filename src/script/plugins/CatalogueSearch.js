@@ -31,6 +31,8 @@ gxp.plugins.CatalogueSearch = Ext.extend(gxp.plugins.Tool, {
     /** api: ptype = gxp_cataloguesearch */
     ptype: "gxp_cataloguesearch",
 
+    source: null,
+
     /** api: method[addActions]
      */
     addActions: function() {
@@ -47,16 +49,8 @@ gxp.plugins.CatalogueSearch = Ext.extend(gxp.plugins.Tool, {
         return actions;
     },
 
-    addWMSLayer: function(url, layerConfig) {
-        // TODO: is it okay to use addLayerSource? Not marked as api
-        // TODO: should addLayerSource prevent duplicates?
-        var source = this.target.addLayerSource({
-            config: {
-                url: url, 
-                ptype: "gxp_wmssource", 
-                version: "1.1.1"
-            }
-        });
+    addWMSLayer: function(layerConfig) {
+        var source = this.target.layerSources[this.source];
         var record = source.createLayerRecord(layerConfig);
         this.target.mapPanel.layers.add(record);
     },

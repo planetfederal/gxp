@@ -139,7 +139,8 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
             }
         }
         // TODO: is this always WGS84 in DC?
-        this.plugin.addWMSLayer(wms, {
+        this.plugin.addWMSLayer({
+            url: wms,
             name: layer,
             title: record.get('title')[0],
             bbox: bounds.toArray(),
