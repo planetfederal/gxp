@@ -22,6 +22,14 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
 
     border: false,
 
+    url: "http://demo.geonode.org/geonetwork/srv/en/csw",
+/*    url: "http://www.nationaalgeoregister.nl/geonetwork/srv/en/csw",
+*/
+    /* i18n */
+    searchFieldEmptyText: "Search",
+    searchButtonText: "Search",
+    addTooltip: "Add to map",
+
     performQuery: function() {
         var store = this.grid.store;
         var searchValue = this.search.getValue();
@@ -50,7 +58,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
         var store = new Ext.data.Store({
             proxy: new GeoExt.data.ProtocolProxy({
                 protocol: new OpenLayers.Protocol.CSW({
-                    url: "http://demo.geonode.org/geonetwork/srv/en/csw"
+                    url: this.url
                 })
             }),
             reader: new GeoExt.data.CSWRecordsReader({
@@ -64,12 +72,12 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
             style: "margin-left: 5px; margin-top: 5px",
             items: [{
                 xtype: "textfield",
-                emptyText: "Search",
+                emptyText: this.searchFieldEmptyText,
                 ref: "../search",
                 name: "search"
             }, {
                 xtype: "button",
-                text: "Search",
+                text: this.searchButtonText,
                 style: "position: absolute; right: 5px; top: 5px;",
                 handler: this.performQuery,
                 scope: this
@@ -92,14 +100,14 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
             columns: [{
                 id: 'title', 
                 xtype: "templatecolumn", 
-                tpl: new Ext.XTemplate('<b><tpl for="title">{value}</tpl></b><br/><tpl for="subject">{value}<tpl if="xindex < xcount"><br/></tpl></tpl>'), 
+                tpl: new Ext.XTemplate('<b>{title}</b><br/>{subject}'), 
                 sortable: true
             }, {
                 xtype: "actioncolumn",
                 width: 30,
                 items: [{
                     iconCls: "gxp-icon-addlayers",
-                    tooltip: 'Add layer to map',
+                    tooltip: this.addTooltip,
                     handler: function(grid, rowIndex, colIndex) {
                         var rec = this.grid.store.getAt(rowIndex);
                         this.addLayer(rec);
@@ -118,8 +126,8 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
         var uri = record.get("URI");
         var bounds = record.get("bounds");
         var wms, layer;
-        for (var key in uri) {
-            var url = uri[key].value;
+        for (var i=0, ii=uri.length; i<ii; ++i) {
+            var url = uri[i];
             if (url && url.toLowerCase().indexOf('service=wms') > 0) {
                 var obj = OpenLayers.Util.createUrlObject(url);
                 wms = obj.protocol + "//" + obj.host + ":" + obj.port + obj.pathname;
@@ -133,7 +141,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
         // TODO: is this always WGS84 in DC?
         this.plugin.addWMSLayer(wms, {
             name: layer,
-            title: record.get('title')[0].value,
+            title: record.get('title')[0],
             bbox: bounds.toArray(),
             srs: "EPSG:4326"
         });
