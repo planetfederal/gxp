@@ -374,7 +374,10 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      *  Create a minimal layer record
      */
     createLazyLayerRecord: function(config) {
-        config = Ext.apply({}, config);
+        config = Ext.apply({
+            styles: [],
+            queryable: true
+        }, config);
         
         var srs = config.srs || this.target.map.projection;
         config.srs = {};
