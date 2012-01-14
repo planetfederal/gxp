@@ -162,12 +162,12 @@ gxp.plugins.WMSCSource = Ext.extend(gxp.plugins.WMSSource, {
             layer = record.getLayer();
         if (config.capability) {
             var capability = this.store.reader.raw.capability;
-            var tileSets = capability.vendorSpecific && [capability.vendorSpecific.tileSets];
+            var tileSets = capability.vendorSpecific && capability.vendorSpecific.tileSets;
             if (tileSets) {
                 for (var i=tileSets.length-1; i>=0; --i) {
                     tileSetsCap = tileSets[i];
                     if (tileSetsCap.layers === name && tileSetsCap.srs[layer.projection]) {
-                        config.capability.tileSets = tileSetsCap;
+                        config.capability.tileSets = [tileSetsCap];
                         break;
                     }
                 }
