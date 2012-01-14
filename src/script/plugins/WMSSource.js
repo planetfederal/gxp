@@ -149,8 +149,8 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      *  Default is ``["title", "bbox"]``. When the source loads layers from a
      *  WMS that does not provide layers in all projections, ``srs`` should be
      *  included in this list. Fallback values are available for ``title`` (the
-     *  WMS layer name), ``bbox`` (the map's ``maxExtent``), and ``srs`` (the
-     *  map's ``projection``).
+     *  WMS layer name), ``bbox`` (the map's ``maxExtent`` as array), and
+     *  ``srs`` (the map's ``projection``, e.g. "EPSG:4326").
      */
     
     /** api: property[requiredProperties]
@@ -236,13 +236,15 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      */
     layerConfigComplete: function(config) {
         var lazy = true;
-        var props = this.requiredProperties;
-        for (var i=props.length-1; i>=0; --i) {
-            lazy = !!config[props[i]];
-            if (lazy === false) {
-                break;
-            }
-        } 
+        if (!Ext.isObject(config.capability)) {
+            var props = this.requiredProperties;
+            for (var i=props.length-1; i>=0; --i) {
+                lazy = !!config[props[i]];
+                if (lazy === false) {
+                    break;
+                }
+            } 
+        }
         return lazy;
     },
 
@@ -374,10 +376,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      *  Create a minimal layer record
      */
     createLazyLayerRecord: function(config) {
-        config = Ext.apply({
-            styles: [],
-            queryable: true
-        }, config);
+        config = Ext.apply({}, config);
         
         var srs = config.srs || this.target.map.projection;
         config.srs = {};
@@ -418,6 +417,11 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         var index = this.store.findExact("name", config.name);
         if (index > -1) {
             original = this.store.getAt(index);
+        } else if (Ext.isObject(config.capability)) {
+            original = this.store.reader.readRecords({capability: {
+                request: {getmap: {href: this.url}},
+                layers: [config.capability]}
+            }).records[0];
         } else if (this.layerConfigComplete(config)) {
             original = this.createLazyLayerRecord(config);
         }
@@ -559,7 +563,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      */
     initDescribeLayerStore: function() {
         var raw = this.store.reader.raw;
-        if (this.lazy && !raw) {
+        if (this.lazy) {
             // When lazy, we assume that the server supports a DescribeLayer
             // request at the layer's url.
             raw = {
@@ -775,17 +779,32 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
     getConfigForRecord: function(record) {
         var config = gxp.plugins.WMSSource.superclass.getConfigForRecord.apply(this, arguments),
             layer = record.getLayer(),
-            params = layer.params,
-            bbox;
-        if (layer.maxExtent) {
-            bbox = layer.maxExtent.toArray();
+            params = layer.params;
+        var name = config.name,
+            raw = this.store.reader.raw;
+        if (raw) {
+            var capLayers = raw.capability.layers;
+            for (var i=capLayers.length-1; i>=0; --i) {
+                if (capLayers[i].name === name) {
+                    config.capability = Ext.apply({}, capLayers[i]);
+                    var srs = {};
+                    srs[layer.projection.getCode()] = true;
+                    // only store the map srs, because this list can be huge
+                    config.capability.srs = srs;
+                    break;
+                }
+            }
+        }
+        if (!config.capability) {
+            if (layer.maxExtent) {
+                config.bbox = layer.maxExtent.toArray();
+            }
+            config.srs = layer.projection.getCode();
         }
         return Ext.apply(config, {
             format: params.FORMAT,
             styles: params.STYLES,
-            transparent: params.TRANSPARENT,
-            bbox: bbox,
-            srs: layer.projection.getCode()
+            transparent: params.TRANSPARENT
         });
     },
     
