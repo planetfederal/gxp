@@ -242,24 +242,29 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
             }] : [])),
             listeners: {
                 "added": function(cmp, ownerCt) {
-                    var onClear = (function() {
+                    function onClear() {
                         this.displayTotalResults();
                         this.selectOnMap && this.selectControl.deactivate();
                         this.autoCollapse && typeof ownerCt.collapse == "function" &&
                             ownerCt.collapse();
-                    }).bind(this);
-                    var onPopulate = (function() {
+                    }
+                    function onPopulate() {
                         this.displayTotalResults();
                         this.selectOnMap && this.selectControl.activate();
                         this.autoExpand && typeof ownerCt.expand == "function" &&
                             ownerCt.expand();
-                    }).bind(this);
+                    }
                     featureManager.on({
                         "query": function(tool, store) {
-                            store && store.getCount() ? onPopulate() : onClear();
+                            if (store && store.getCount()) {
+                                onPopulate.call(this);
+                            } else {
+                                onClear.call(this);
+                            }
                         },
                         "layerchange": onClear,
-                        "clearfeatures": onClear
+                        "clearfeatures": onClear,
+                        scope: this
                     });
                 },
                 contextmenu: function(event) {
