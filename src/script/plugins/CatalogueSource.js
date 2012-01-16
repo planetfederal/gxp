@@ -7,7 +7,6 @@
  */
 
 /**
- * @requires plugins/LayerSource.js
  * @requires plugins/WMSSource.js
  */
 
@@ -17,7 +16,7 @@
  */
 
 /** api: (extends)
- *  plugins/LayerSource.js
+ *  plugins/WMSSource.js
  */
 Ext.namespace("gxp.plugins");
 
@@ -29,7 +28,7 @@ Ext.namespace("gxp.plugins");
  *    that this source can create WMS layers for any url. This is particularly
  *    useful when working against a Catalogue Service, such as a OGC:CS-W.
  */
-gxp.plugins.CatalogueSource = Ext.extend(gxp.plugins.LayerSource, {
+gxp.plugins.CatalogueSource = Ext.extend(gxp.plugins.WMSSource, {
 
     /** api: ptype = gxp_cataloguesource */
     ptype: "gxp_cataloguesource",
@@ -58,20 +57,9 @@ gxp.plugins.CatalogueSource = Ext.extend(gxp.plugins.LayerSource, {
     /** private: method[destroy]
      */
     destroy: function() {
-        this.store.destroy();
+        this.store && this.store.destroy();
         this.store = null;
         gxp.plugins.CatalogueSource.superclass.destroy.apply(this, arguments);
-    },
-
-
-    /** api: method[createLayerRecord]
-     *  :arg config:  ``Object``  The application config for this layer.
-     *  :returns: ``GeoExt.data.LayerRecord``
-     *
-     *  Create a layer record given the config.
-     */
-    createLayerRecord: function(config) {
-        return gxp.plugins.WMSSource.prototype.createLazyLayerRecord(config);
     }
 
 });

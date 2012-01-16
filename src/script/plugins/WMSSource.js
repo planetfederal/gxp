@@ -387,7 +387,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         config.bbox[srs] = {bbox: bbox};
         
         var record;
-        if (this.store) {
+        if (this.store && this.store instanceof GeoExt.data.WMSCapabilitiesStore) {
             record = new this.store.recordType(config);
         } else {
             record = new GeoExt.data.LayerRecord(config);
