@@ -38,6 +38,11 @@ gxp.plugins.CatalogueSource = Ext.extend(gxp.plugins.WMSSource, {
      */
     url: null,
 
+    /** private: property[lazy]
+     *  ``Boolean`` This source always operates lazy so without GetCapabilities
+     */
+    lazy: true,
+
     /** api: method[createStore]
      */
     createStore: function() {
@@ -52,6 +57,35 @@ gxp.plugins.CatalogueSource = Ext.extend(gxp.plugins.WMSSource, {
             })
         });
         this.fireEvent("ready", this);
+    },
+
+    /** api: method[describeLayer]
+     *  :arg rec: ``GeoExt.data.LayerRecord`` the layer to issue a WMS
+     *      DescribeLayer request for
+     *  :arg callback: ``Function`` Callback function. Will be called with
+     *      an ``Ext.data.Record`` from a ``GeoExt.data.DescribeLayerStore``
+     *      as first argument, or false if the WMS does not support
+     *      DescribeLayer.
+     *  :arg scope: ``Object`` Optional scope for the callback.
+     *
+     *  Get a DescribeLayer response from this source's WMS.
+     */
+    describeLayer: function(rec, callback, scope) {
+        // it makes no sense to keep a describeLayerStore since
+        // everything is lazy and layers can come from different WMSs.
+        var recordType = Ext.data.Record.create(
+            [
+                {name: "owsType", type: "string"},
+                {name: "owsURL", type: "string"},
+                {name: "typeName", type: "string"}
+            ]
+        );
+        var record = new recordType({
+            owsType: "WFS",
+            owsURL: rec.get('url'),
+            typeName: rec.get('name')
+        });
+        callback.call(scope, record);
     },
 
     /** private: method[destroy]
