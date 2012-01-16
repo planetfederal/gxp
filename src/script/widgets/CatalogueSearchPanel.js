@@ -111,30 +111,47 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
         gxp.CatalogueSearchPanel.superclass.initComponent.apply(this, arguments);
     },
 
-    addLayer: function(record) {
-        var uri = record.get("URI");
-        var bounds = record.get("bounds");
-        var wms, layer;
-        for (var i=0, ii=uri.length; i<ii; ++i) {
-            var url = uri[i];
-            if (url && url.toLowerCase().indexOf('service=wms') > 0) {
-                var obj = OpenLayers.Util.createUrlObject(url);
-                wms = obj.protocol + "//" + obj.host + ":" + obj.port + obj.pathname;
+    findWMS: function(links) {
+        var url = null, name = null;
+        for (var i=0, ii=links.length; i<ii; ++i) {
+            var link = links[i];
+            if (link && link.toLowerCase().indexOf('service=wms') > 0) {
+                var obj = OpenLayers.Util.createUrlObject(link);
+                url = obj.protocol + "//" + obj.host + ":" + obj.port + obj.pathname;
                 // TODO remove this hack
-                wms = wms.replace("geoserver-geonode-dev", "geoserver");
+                url = url.replace("geoserver-geonode-dev", "geoserver");
                 // end TODO
-                layer = obj.args.layers;
+                name = obj.args.layers;
                 break;
             }
         }
-        // TODO: is this always WGS84 in DC?
-        this.plugin.addWMSLayer({
-            url: wms,
-            name: layer,
-            title: record.get('title')[0],
-            bbox: bounds.toArray(),
-            srs: "EPSG:4326"
-        });
+        if (url !== null && name !== null) {
+            return {
+                url: url,
+                name: name
+            };
+        } else {
+            return false;
+        }
+    },
+
+    addLayer: function(record) {
+        var uri = record.get("URI");
+        var bounds = record.get("bounds");
+        var wmsInfo = this.findWMS(uri);
+        if (wmsInfo === false) {
+            // fallback to dct:references
+            var references = record.get("references");
+            wmsInfo = this.findWMS(references);
+        }
+        if (wmsInfo !== false) {
+            // TODO: is this always WGS84 in DC?
+            this.plugin.addWMSLayer(Ext.apply({
+                title: record.get('title')[0],
+                bbox: bounds.toArray(),
+                srs: "EPSG:4326"
+            }, wmsInfo));
+        }
     }
 
 });
