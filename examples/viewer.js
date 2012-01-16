@@ -116,7 +116,8 @@ Ext.onReady(function() {
                 ptype: "gxp_googlesource"
             },
             catalog: {
-                ptype: "gxp_cataloguesource"
+                ptype: "gxp_cataloguesource",
+                url: "http://demo.geonode.org/geonetwork/srv/en/csw"
             }
         },
         

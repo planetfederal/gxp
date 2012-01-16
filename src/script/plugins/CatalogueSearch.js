@@ -56,7 +56,11 @@ gxp.plugins.CatalogueSearch = Ext.extend(gxp.plugins.Tool, {
     },
 
     addOutput: function() {
-        return gxp.plugins.CatalogueSearch.superclass.addOutput.apply(this, [{plugin: this, xtype: 'gxp_cataloguesearchpanel'}]);
+        return gxp.plugins.CatalogueSearch.superclass.addOutput.apply(this, [{
+            plugin: this,
+            source: this.target.layerSources[this.source], 
+            xtype: 'gxp_cataloguesearchpanel'
+        }]);
     }
 
 });

@@ -34,6 +34,36 @@ gxp.plugins.CatalogueSource = Ext.extend(gxp.plugins.LayerSource, {
     /** api: ptype = gxp_cataloguesource */
     ptype: "gxp_cataloguesource",
 
+    /** api: config[url]
+     *  ``String`` CS-W service URL for this source
+     */
+    url: null,
+
+    /** api: method[createStore]
+     */
+    createStore: function() {
+        this.store = new Ext.data.Store({
+            proxy: new GeoExt.data.ProtocolProxy({
+                protocol: new OpenLayers.Protocol.CSW({
+                    url: this.url
+                })
+            }),
+            reader: new GeoExt.data.CSWRecordsReader({
+               fields: ['title', 'subject', 'URI', 'bounds', 'projection']
+            })
+        });
+        this.fireEvent("ready", this);
+    },
+
+    /** private: method[destroy]
+     */
+    destroy: function() {
+        this.store.destroy();
+        this.store = null;
+        gxp.plugins.CatalogueSource.superclass.destroy.apply(this, arguments);
+    },
+
+
     /** api: method[createLayerRecord]
      *  :arg config:  ``Object``  The application config for this layer.
      *  :returns: ``GeoExt.data.LayerRecord``

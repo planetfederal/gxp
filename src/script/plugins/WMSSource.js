@@ -369,7 +369,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         );
     },
     
-    /** api: method[createLazyLayerRecord]
+    /** private: method[createLazyLayerRecord]
      *  :arg config: ``Object`` The application config for this layer.
      *  :returns: ``GeoExt.data.LayerRecord``
      *

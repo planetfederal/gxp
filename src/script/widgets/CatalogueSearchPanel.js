@@ -22,9 +22,8 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
 
     border: false,
 
-    url: "http://demo.geonode.org/geonetwork/srv/en/csw",
-/*    url: "http://www.nationaalgeoregister.nl/geonetwork/srv/en/csw",
-*/
+    source: null,
+
     /* i18n */
     searchFieldEmptyText: "Search",
     searchButtonText: "Search",
@@ -55,16 +54,6 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
     },
 
     initComponent: function() {
-        var store = new Ext.data.Store({
-            proxy: new GeoExt.data.ProtocolProxy({
-                protocol: new OpenLayers.Protocol.CSW({
-                    url: this.url
-                })
-            }),
-            reader: new GeoExt.data.CSWRecordsReader({
-               fields: ['title', 'subject', 'URI', 'bounds', 'projection']
-            })
-        });
         this.items = [{
             xtype: 'container',
             border: false,
@@ -91,12 +80,12 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                     start: 'startPosition', 
                     limit: 'maxRecords'
                 },
-                store: store,
+                store: this.source.store,
                 pageSize: 100 
             }),
             loadMask: true,
             hideHeaders: true,
-            store: store,
+            store: this.source.store,
             columns: [{
                 id: 'title', 
                 xtype: "templatecolumn", 
