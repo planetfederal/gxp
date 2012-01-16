@@ -33,6 +33,12 @@ gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
      *  ``Object``
      *  The object that this plugin is plugged into.
      */
+    
+    /** api: property[lazy]
+     *  ``Boolean``. true when the source is ready, but its store hasn't
+     *  been loaded yet (i.e. lazy source). Read-only.
+     */
+    lazy: false,
      
     /** api: property[title]
      *  ``String``
@@ -141,11 +147,12 @@ gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
     },
     
     /** api: method[getState]
-     *  :return {Object}
-     *  Gets the configured source state. Overwrite in subclasses to return
-     *  anything other than a copy of the initialConfig property.
+     *  :returns: ``Object``
+     *  Gets the configured source state.
      */
-    getState: function(){
+    getState: function() {
+        //  Overwrite in subclasses to return anything other than a copy
+        // of the initialConfig property.
         return Ext.apply({}, this.initialConfig);
     }
 });

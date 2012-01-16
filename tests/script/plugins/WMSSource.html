@@ -105,6 +105,46 @@
                 viewer.destroy();
             });
         }
+        
+        function test_createLazyLayerRecord(t) {
+            t.plan(7);
+            
+            var viewer = new gxp.Viewer({
+                sources: {
+                    local: {
+                        ptype: "gxp_wmssource",
+                        url: "wms_caps.xml",
+                        requiredProperties: ["foo"]
+                    }
+                },
+                map: {
+                    projection: "EPSG:4326",
+                    center: [0, 0],
+                    maxExtent: [-180, -90, 180, 90],
+                    zoom: 1,
+                    layers: [{
+                        source: "local",
+                        name: "usa:states",
+                        foo: "custom required property"
+                    }]
+                }
+            });
+            
+            var rec, source;
+            t.delay_call(1, function() {
+                source = viewer.layerSources.local;
+                t.eq(source.isLazy(), true, "Source with complete initial layer configurations is lazy.");
+                t.eq(source.store.getCount(), 0, "No capabilities loaded for lazy source.");
+                
+                rec = source.createLayerRecord({name: "medford:parks"});
+                t.ok(!rec, "Record with incomplete config cannot be created from lazy source.");
+                rec = source.createLayerRecord({name: "medford:parks", foo: "bogus"});
+                t.ok(rec, "Record with complete config can be created from lazy source.");
+                t.eq(rec.get("title"), "medford:parks", "missing title property populated with WMS layer name");
+                t.eq(rec.get("bbox")["EPSG:4326"].bbox, viewer.initialConfig.map.maxExtent, "missing bbox property pulled from map configuration.");
+                t.eq(rec.get("srs"), {"EPSG:4326": true}, "missing srs property pulled from map configuration");
+            });
+        }
 
         function test_trimUrl(t) {
             
@@ -155,6 +195,18 @@
                 c = cases[i];
                 t.eq(trimUrl(c.url, c.params), c.exp, c.msg);
             }
+        }
+        
+        function test_getState(t) {
+            t.plan(1);
+            var initialConfig = {url: "wms_caps.xml"};
+            var source = new gxp.plugins.WMSSource(initialConfig);
+            source.init({initialConfig: {map: {}}, on: Ext.emptyFn});
+            source.store.load();
+            t.delay_call(1, function() {
+                var state = source.getState();
+                t.eq(state, Ext.apply({title: source.title}, initialConfig), "getState returns configuration with title from GetCapabilities");
+            });
         }
 
     </script>

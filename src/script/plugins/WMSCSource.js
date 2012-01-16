@@ -89,12 +89,7 @@ gxp.plugins.WMSCSource = Ext.extend(gxp.plugins.WMSSource, {
         gxp.plugins.WMSCSource.superclass.constructor.apply(this, arguments); 
     },
     
-    /** api: method[createLayerRecord]
-     *  :arg config:  ``Object``  The application config for this layer.
-     *  :returns: ``GeoExt.data.LayerRecord``
-     *
-     *  Create a layer record given the config.
-     */
+    /** private: method[createLayerRecord] */
     createLayerRecord: function(config) {
         var record = gxp.plugins.WMSCSource.superclass.createLayerRecord.apply(this, arguments);
         if (!record) {
@@ -105,9 +100,9 @@ gxp.plugins.WMSCSource = Ext.extend(gxp.plugins.WMSSource, {
             caps = this.store.reader.raw.capability;
         }
         var tileSets = (caps && caps.vendorSpecific) ? 
-            caps.vendorSpecific.tileSets : null;
+            caps.vendorSpecific.tileSets : (config.capability && config.capability.tileSets);
         var layer = record.get("layer");
-        if (tileSets !== null) {
+        if (tileSets) {
             var mapProjection = this.getProjection(record) || this.getMapProjection();
             // look for tileset with same name and equivalent projection
             for (var i=0, len=tileSets.length; i<len; i++) {
@@ -130,12 +125,12 @@ gxp.plugins.WMSCSource = Ext.extend(gxp.plugins.WMSSource, {
                     }
                 }
             }
-        } else {
+        } else if (this.lazy) {
             // lazy loading
-            var tileSize = record.get("tileSize"),
-                tileOrigin = record.get("tileOrigin");
+            var tileSize = config.tileSize,
+                tileOrigin = config.tileOrigin;
             layer.addOptions({
-                resolutions: record.get("resolutions"),
+                resolutions: config.resolutions,
                 tileSize: tileSize ? new OpenLayers.Size(tileSize[0], tileSize[1]) : undefined,
                 tileOrigin: tileOrigin ? OpenLayers.LonLat.fromArray(tileOrigin) : undefined
             });
@@ -161,19 +156,34 @@ gxp.plugins.WMSCSource = Ext.extend(gxp.plugins.WMSSource, {
      *  Create a config object that can be used to recreate the given record.
      */
     getConfigForRecord: function(record) {
-        var layer = record.getLayer(),
-            tileSize = layer.tileSize,
-            tileOrigin = layer.options.tileOrigin;
-        return Ext.applyIf(
-            gxp.plugins.WMSCSource.superclass.getConfigForRecord.apply(this, arguments), {
-                // the "tiled" property is already used to indicate singleTile
-                // the "cached" property will indicate whether to send the TILED param
-                cached: !!layer.params.TILED,
-                tileSize: [tileSize.w, tileSize.h],
-                tileOrigin: tileOrigin ? [tileOrigin.lon, tileOrigin.lat] : undefined,
-                resolutions: layer.options.resolutions
+        var config = gxp.plugins.WMSCSource.superclass.getConfigForRecord.apply(this, arguments),
+            name = config.name,
+            tileSetsCap,
+            layer = record.getLayer();
+        if (config.capability) {
+            var capability = this.store.reader.raw.capability;
+            var tileSets = capability.vendorSpecific && capability.vendorSpecific.tileSets;
+            if (tileSets) {
+                for (var i=tileSets.length-1; i>=0; --i) {
+                    tileSetsCap = tileSets[i];
+                    if (tileSetsCap.layers === name && tileSetsCap.srs[layer.projection]) {
+                        config.capability.tileSets = [tileSetsCap];
+                        break;
+                    }
+                }
             }
-        );
+        }
+        if (!config.capability.tileSets) {
+            var tileSize = layer.options.tileSize;
+            config.tileSize = [tileSize.w, tileSize.h];
+            config.tileOrigin = layer.options.tileOrigin;
+            config.resolutions = layer.options.resolutions;
+        }
+        return Ext.applyIf(config, {
+            // the "tiled" property is already used to indicate singleTile
+            // the "cached" property will indicate whether to send the TILED param
+            cached: !!layer.params.TILED
+        });
     }
     
 });

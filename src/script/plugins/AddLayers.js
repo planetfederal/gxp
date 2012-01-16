@@ -259,8 +259,9 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             }, this);
         }
         
-        var store = this.target.layerSources[data[idx][0]].store;
-        if (store.getCount() === 0) {
+        var source = this.target.layerSources[data[idx][0]],
+            store = source.store;
+        if (source.lazy) {
             // assume a lazy source
             store.load({callback: updateName});
         }
@@ -301,8 +302,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     // TODO: remove the following when this Ext issue is addressed
                     // http://www.extjs.com/forum/showthread.php?100345-GridPanel-reconfigure-should-refocus-view-to-correct-scroller-height&p=471843
                     capGridPanel.getView().focusRow(0);
-                    if (source.store.getCount() === 0) {
-                        // assume a lazy source
+                    if (source.lazy) {
                         source.store.load({callback: updateName});
                     }
                     this.setSelectedSource(source);

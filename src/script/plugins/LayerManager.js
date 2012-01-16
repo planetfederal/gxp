@@ -103,8 +103,11 @@ gxp.plugins.LayerManager = Ext.extend(gxp.plugins.LayerTree, {
                 ),
                 component: {
                     xtype: "gx_wmslegend",
+                    // TODO these baseParams were only tested with GeoServer,
+                    // so maybe they should be configurable.
                     baseParams: {
-                        LEGEND_OPTIONS: "fontAntiAliasing:true;fontSize:11;fontName:Arial"
+                        format: "image/png",
+                        legend_options: "fontAntiAliasing:true;fontSize:11;fontName:Arial"
                     },
                     layerRecord: this.target.mapPanel.layers.getByLayer(attr.layer),
                     showTitle: false,
