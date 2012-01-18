@@ -335,12 +335,28 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             }
         });
         if (lazy) {
-            // lazy sources are "immediately" ready - in the next turn
-            window.setTimeout((function() {
-                this.ready = true;
-                this.lazy = true;
-                this.fireEvent("ready", this);
-            }).createDelegate(this), 0);
+            this.lazy = true;
+            // ping server of lazy source with an incomplete request, to see if
+            // it is available
+            Ext.Ajax.request({
+                method: "GET",
+                url: this.url,
+                params: {SERVICE: "WMS"},
+                callback: function(options, success, response) {
+                    var status = response.status;
+                    // responseText should not be empty (OGCException)
+                    if (status >= 200 && status < 403 && response.responseText) {
+                        this.ready = true;
+                        this.fireEvent("ready", this);
+                    } else {
+                        this.fireEvent("failure", this,
+                            "Layer source not available.",
+                            "Unable to contact WMS service."
+                        );
+                    }
+                },
+                scope: this
+            });
         }
     },
     
