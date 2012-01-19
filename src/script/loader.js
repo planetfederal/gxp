@@ -42,6 +42,7 @@
         "widgets/PlaybackToolbar.js",
         "widgets/slider/ClassBreakSlider.js",
         "widgets/TimelinePanel.js",
+        "widgets/form/CSWFilterField.js",
         "widgets/CatalogueSearchPanel.js",
         "plugins/LayerSource.js",
         "plugins/BingSource.js",

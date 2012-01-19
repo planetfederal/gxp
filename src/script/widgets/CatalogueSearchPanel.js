@@ -6,6 +6,10 @@
  * of the license.
  */
 
+/**
+ * @requires widgets/form/CSWFilterField.js
+ */
+
 /** api: (define)
  *  module = gxp
  *  class = CatalogueSearchPanel
@@ -119,44 +123,11 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                 hideLabels: false,
                 title: "Advanced",
                 items: [{
-                    xtype: 'compositefield',
-                    hidden: true,
+                    xtype: 'cswfilterfield',
                     name: 'extent',
-                    items: [{
-                        xtype: "combo",
-                        name: "extent",
-                        fieldLabel: "Spatial extent",
-                        store: new Ext.data.ArrayStore({
-                            fields: ['id', 'value'],
-                            data: [['map_extent', 'Current map extent']]
-                        }),
-                        displayField: 'value',
-                        valueField: 'id',
-                        mode: 'local',
-                        listeners: {
-                            'select': function(cmb, record) {
-                                var filter = {};
-                                filter[cmb.name] = record.get('id');
-                                this.addFilter(filter);
-                                return false;
-                            },
-                            scope: this
-                        },
-                        emptyText: 'Select filter',
-                        triggerAction: 'all'
-                    }, {
-                        xtype: 'button',
-                        iconCls: 'gxp-icon-removelayers',
-                        handler: function(btn) {
-                            btn.ownerCt.items.each(function(item) {
-                                if (item.getXType() === 'combo') {
-                                    this.removeFilter(item.name);
-                                    return false;
-                                }
-                            }, this);
-                        },
-                        scope: this 
-                    }]
+                    comboFieldLabel: "Spatial extent",
+                    comboStoreData: [['map_extent', 'Filter by spatial extent of the map']],
+                    target: this
                 }, {
                     xtype: 'compositefield',
                     items: [{
