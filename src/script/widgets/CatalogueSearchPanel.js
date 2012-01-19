@@ -34,8 +34,6 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
     addTooltip: "Add to map",
 
     performQuery: function() {
-        // TODO
-        // "AnyText LIKE '*"+searchValue+"*'"
         var store = this.grid.store;
         var searchValue = this.search.getValue();
         var filter = new OpenLayers.Filter.Comparison({
@@ -43,16 +41,13 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
             property: 'AnyText',
             value: '*' + searchValue + '*'
         });
-        var cql = this.filtersToCQL(filter);
         var data = {
             "resultType": "results",
             "maxRecords": 100,
             "Query": {
                 "Constraint": {
                     version: "1.1.0",
-                    CqlText: {
-                        value: cql
-                    }
+                    Filter: this.getFullFilter(filter)
                 },
                 "typeNames": "gmd:MD_Metadata",
                 "ElementSetName": {
@@ -65,7 +60,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
         store.load();
     },
 
-    filtersToCQL: function(filter) {
+    getFullFilter: function(filter) {
         var filters = [];
         filters.push(filter);
         for (var key in this.filters) {
@@ -80,12 +75,10 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                 }));
             }
         }
-        return new OpenLayers.Format.CQL().write(
-            new OpenLayers.Filter.Logical({
-                type: OpenLayers.Filter.Logical.AND,
-                filters: filters
-            })
-        );
+        return new OpenLayers.Filter.Logical({
+            type: OpenLayers.Filter.Logical.AND,
+            filters: filters
+        });
     },
 
     addFilter: function(filter) {
