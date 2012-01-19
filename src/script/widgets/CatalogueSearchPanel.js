@@ -36,25 +36,33 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
     performQuery: function() {
         var store = this.grid.store;
         var searchValue = this.search.getValue();
-        var filter = new OpenLayers.Filter.Comparison({
-            type: OpenLayers.Filter.Comparison.LIKE,
-            property: 'AnyText',
-            value: '*' + searchValue + '*'
-        });
+        var filter = null;
+        if (searchValue !== "") {
+            filter = new OpenLayers.Filter.Comparison({
+                type: OpenLayers.Filter.Comparison.LIKE,
+                property: 'csw:AnyText',
+                value: '*' + searchValue + '*'
+            });
+        }
         var data = {
             "resultType": "results",
             "maxRecords": 100,
             "Query": {
-                "Constraint": {
-                    version: "1.1.0",
-                    Filter: this.getFullFilter(filter)
-                },
                 "typeNames": "gmd:MD_Metadata",
                 "ElementSetName": {
                     "value": "full"
                 }
             }
         };
+        var fullFilter = this.getFullFilter(filter);
+        if (fullFilter !== undefined) {
+            Ext.apply(data.Query, {
+                "Constraint": {
+                    version: "1.1.0",
+                    Filter: fullFilter
+                }
+            });
+        }
         // use baseParams so paging takes them into account
         store.baseParams = data;
         store.load();
@@ -62,7 +70,9 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
 
     getFullFilter: function(filter) {
         var filters = [];
-        filters.push(filter);
+        if (filter !== null) {
+            filters.push(filter);
+        }
         for (var key in this.filters) {
             if (key === 'extent' && this.filters[key] === 'map_extent') {
                 filters.push(new OpenLayers.Filter.Spatial({
@@ -75,10 +85,14 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                 }));
             }
         }
-        return new OpenLayers.Filter.Logical({
-            type: OpenLayers.Filter.Logical.AND,
-            filters: filters
-        });
+        if (filters.length <= 1) {
+            return filters[0];
+        } else {
+            return new OpenLayers.Filter.Logical({
+                type: OpenLayers.Filter.Logical.AND,
+                filters: filters
+            });
+        }
     },
 
     addFilter: function(filter) {
