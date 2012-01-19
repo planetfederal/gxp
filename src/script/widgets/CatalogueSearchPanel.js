@@ -30,8 +30,16 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
     addTooltip: "Add to map",
 
     performQuery: function() {
+        // TODO
+        // "AnyText LIKE '*"+searchValue+"*'"
         var store = this.grid.store;
         var searchValue = this.search.getValue();
+        var filter = new OpenLayers.Filter.Comparison({
+            type: OpenLayers.Filter.Comparison.LIKE,
+            property: 'AnyText',
+            value: '*' + searchValue + '*'
+        });
+        var cql = this.filtersToCQL(filter);
         var data = {
             "resultType": "results",
             "maxRecords": 100,
@@ -39,7 +47,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                 "Constraint": {
                     version: "1.1.0",
                     CqlText: {
-                        value: "AnyText LIKE '*"+searchValue+"*'"
+                        value: cql
                     }
                 },
                 "typeNames": "gmd:MD_Metadata",
@@ -53,11 +61,45 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
         store.load();
     },
 
+    filtersToCQL: function(filter) {
+        var filters = [];
+        filters.push(filter);
+        for (var key in this.filters) {
+            if (key === 'extent' && this.filters[key] === 'map_extent') {
+                filters.push(new OpenLayers.Filter.Spatial({
+                    type: OpenLayers.Filter.Spatial.BBOX,
+                    property: 'BoundingBox',
+                    value: this.plugin.target.mapPanel.map.getExtent().transform(
+                        this.plugin.target.mapPanel.map.getProjectionObject(), 
+                        new OpenLayers.Projection("EPSG:4326")
+                    )
+                }));
+            }
+        }
+        return new OpenLayers.Format.CQL().write(
+            new OpenLayers.Filter.Logical({
+                type: OpenLayers.Filter.Logical.AND,
+                filters: filters
+            })
+        );
+    },
+
+    addFilter: function(filter) {
+        Ext.apply(this.filters, filter);
+    },
+
+    removeFilter: function(key) {
+        delete this.filters[key];
+    },
+
     initComponent: function() {
+        this.filters = {};
         this.items = [{
-            xtype: 'container',
+            xtype: 'form',
             border: false,
-            height: 30,
+            ref: 'form',
+            hideLabels: true,
+            autoHeight: true,
             style: "margin-left: 5px; margin-top: 5px",
             items: [{
                 xtype: "textfield",
@@ -70,6 +112,82 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                 style: "position: absolute; right: 5px; top: 5px;",
                 handler: this.performQuery,
                 scope: this
+            }, {
+                xtype: "fieldset",
+                collapsible: true,
+                collapsed: true,
+                hideLabels: false,
+                title: "Advanced",
+                items: [{
+                    xtype: 'compositefield',
+                    hidden: true,
+                    name: 'extent',
+                    items: [{
+                        xtype: "combo",
+                        name: "extent",
+                        fieldLabel: "Spatial extent",
+                        store: new Ext.data.ArrayStore({
+                            fields: ['id', 'value'],
+                            data: [['map_extent', 'Current map extent']]
+                        }),
+                        displayField: 'value',
+                        valueField: 'id',
+                        mode: 'local',
+                        listeners: {
+                            'select': function(cmb, record) {
+                                var filter = {};
+                                filter[cmb.name] = record.get('id');
+                                this.addFilter(filter);
+                                return false;
+                            },
+                            scope: this
+                        },
+                        emptyText: 'Select filter',
+                        triggerAction: 'all'
+                    }, {
+                        xtype: 'button',
+                        iconCls: 'gxp-icon-removelayers',
+                        handler: function(btn) {
+                            btn.ownerCt.items.each(function(item) {
+                                if (item.getXType() === 'combo') {
+                                    this.removeFilter(item.name);
+                                    return false;
+                                }
+                            }, this);
+                        },
+                        scope: this 
+                    }]
+                }, {
+                    xtype: 'compositefield',
+                    items: [{
+                        xtype: "combo",
+                        fieldLabel: "Filter search by",
+                        store: new Ext.data.ArrayStore({
+                            fields: ['id', 'value'],
+                            data: [['extent', 'spatial extent']]
+                        }),
+                        displayField: 'value',
+                        valueField: 'id',
+                        mode: 'local',
+                        triggerAction: 'all'
+                    }, {
+                        xtype: 'button',
+                        iconCls: 'gxp-icon-addlayers',
+                        handler: function(btn) {
+                            btn.ownerCt.items.each(function(item) {
+                                if (item.getXType() === "combo") {
+                                    var id = item.getValue();
+                                    this.form.getForm().findField(id).show();
+                                }
+                            }, this);
+                        },
+                        scope: this
+                    }, {
+                        xtype: 'button',
+                        hidden: true,
+                        iconCls: 'gxp-icon-removelayers'
+                    }]
+                }]
             }]
         }, {
             xtype: "grid",
