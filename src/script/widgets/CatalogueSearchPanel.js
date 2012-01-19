@@ -73,19 +73,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
         if (filter !== undefined) {
             filters.push(filter);
         }
-        for (var key in this.filters) {
-            if (key === 'extent' && this.filters[key] === 'map_extent') {
-                filters.push(new OpenLayers.Filter.Spatial({
-                    type: OpenLayers.Filter.Spatial.BBOX,
-                    property: 'BoundingBox',
-                    /* TODO revisit axis order */
-                    value: this.plugin.target.mapPanel.map.getExtent().transform(
-                        this.plugin.target.mapPanel.map.getProjectionObject(), 
-                        new OpenLayers.Projection("EPSG:4326")
-                    )
-                }));
-            }
-        }
+        filters = filters.concat(this.filters);
         if (filters.length <= 1) {
             return filters[0];
         } else {
@@ -97,15 +85,15 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
     },
 
     addFilter: function(filter) {
-        Ext.apply(this.filters, filter);
+        this.filters.push(filter);
     },
 
-    removeFilter: function(key) {
-        delete this.filters[key];
+    removeFilter: function(filter) {
+        this.filters.remove(filter);
     },
 
     initComponent: function() {
-        this.filters = {};
+        this.filters = [];
         this.items = [{
             xtype: 'form',
             border: false,
@@ -132,7 +120,16 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                 title: "Advanced",
                 items: [{
                     xtype: 'cswfilterfield',
+                    name: 'datatype',
+                    property: 'apiso:Type',
+                    comboFieldLabel: "Data type",
+                    comboStoreData: [['dataset', 'Dataset'], ['datasetcollection', 'Dataset collection'], ['application', 'Application'], ['service', 'Service']],
+                    target: this
+                }, {
+                    xtype: 'cswfilterfield',
                     name: 'extent',
+                    property: 'BoundingBox',
+                    map: this.plugin.target.mapPanel.map,
                     comboFieldLabel: "Spatial extent",
                     comboStoreData: [['map_extent', 'Filter by spatial extent of the map']],
                     target: this
@@ -143,7 +140,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                         fieldLabel: "Filter search by",
                         store: new Ext.data.ArrayStore({
                             fields: ['id', 'value'],
-                            data: [['extent', 'spatial extent']]
+                            data: [['datatype', 'data type'], ['extent', 'spatial extent']]
                         }),
                         displayField: 'value',
                         valueField: 'id',
@@ -156,7 +153,11 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                             btn.ownerCt.items.each(function(item) {
                                 if (item.getXType() === "combo") {
                                     var id = item.getValue();
+                                    if (this.previousId) {
+                                        this.form.getForm().findField(this.previousId).hide();
+                                    }
                                     this.form.getForm().findField(id).show();
+                                    this.previousId = id;
                                 }
                             }, this);
                         },
