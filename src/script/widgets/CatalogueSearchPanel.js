@@ -123,7 +123,12 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                     name: 'datatype',
                     property: 'apiso:Type',
                     comboFieldLabel: "Data type",
-                    comboStoreData: [['dataset', 'Dataset'], ['datasetcollection', 'Dataset collection'], ['application', 'Application'], ['service', 'Service']],
+                    comboStoreData: [
+                        ['dataset', 'Dataset'],
+                        ['datasetcollection', 'Dataset collection'],
+                        ['application', 'Application'],
+                        ['service', 'Service']
+                    ],
                     target: this
                 }, {
                     xtype: 'cswfilterfield',
@@ -131,7 +136,36 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                     property: 'BoundingBox',
                     map: this.plugin.target.mapPanel.map,
                     comboFieldLabel: "Spatial extent",
-                    comboStoreData: [['map_extent', 'Filter by spatial extent of the map']],
+                    comboStoreData: [
+                        ['map', 'spatial extent of the map']
+                    ],
+                    target: this
+                }, {
+                    xtype: 'cswfilterfield',
+                    name: 'category',
+                    property: 'apiso:TopicCategory',
+                    comboFieldLabel: "Category",
+                    comboStoreData: [
+                        ['farming', 'Farming'],
+                        ['biota', 'Biota'],
+                        ['boundaries', 'Boundaries'],
+                        ['climatologyMeteorologyAtmosphere', 'Climatology/Meteorology/Atmosphere'],
+                        ['economy', 'Economy'],
+                        ['elevation', 'Elevation'],
+                        ['environment', 'Environment'],
+                        ['geoscientificinformation', 'Geoscientific Information'],
+                        ['health', 'Health'],
+                        ['imageryBaseMapsEarthCover', 'Imagery/Base Maps/Earth Cover'],
+                        ['intelligenceMilitary', 'Intelligence/Military'],
+                        ['inlandWaters', 'Inland Waters'],
+                        ['location', 'Location'],
+                        ['oceans', 'Oceans'],
+                        ['planningCadastre', 'Planning Cadastre'],
+                        ['society', 'Society'],
+                        ['structure', 'Structure'],
+                        ['transportation', 'Transportation'],
+                        ['utilitiesCommunications', 'Utilities/Communications']
+                    ],
                     target: this
                 }, {
                     xtype: 'compositefield',
@@ -140,7 +174,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                         fieldLabel: "Filter search by",
                         store: new Ext.data.ArrayStore({
                             fields: ['id', 'value'],
-                            data: [['datatype', 'data type'], ['extent', 'spatial extent']]
+                            data: [['datatype', 'data type'], ['extent', 'spatial extent'], ['category', 'category']]
                         }),
                         displayField: 'value',
                         valueField: 'id',

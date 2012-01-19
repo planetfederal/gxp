@@ -49,8 +49,7 @@ gxp.form.CSWFilterField = Ext.extend(Ext.form.CompositeField, {
     comboFieldLabel: null,
 
     /** api:config[comboStoreData]
-     *  ``Array`` The data for the combo store, should contain 2 values 
-     *  per entry: id and value.
+     *  ``Array`` The data for the combo store.
      */
     comboStoreData: null,
 
