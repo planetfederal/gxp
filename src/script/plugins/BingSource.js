@@ -100,19 +100,22 @@ gxp.plugins.BingSource = Ext.extend(gxp.plugins.LayerSource, {
                 key: this.apiKey,
                 name: this.roadTitle,
                 type: "Road",
-                buffer: 1
+                buffer: 1,
+                transitionEffect: "resize"
             }),
             new OpenLayers.Layer.Bing({
                 key: this.apiKey,
                 name: this.aerialTitle,
                 type: "Aerial",
-                buffer: 1
+                buffer: 1,
+                transitionEffect: "resize"
             }),
             new OpenLayers.Layer.Bing({
                 key: this.apiKey,
                 name: this.labeledAerialTitle,
                 type: "AerialWithLabels",
-                buffer: 1
+                buffer: 1,
+                transitionEffect: "resize"
             })
         ];
         

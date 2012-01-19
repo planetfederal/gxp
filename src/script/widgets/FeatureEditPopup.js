@@ -6,6 +6,10 @@
  * of the license.
  */
 
+/*
+ * @requires plugins/FeatureEditorGrid.js
+ */
+
 /** api: (define)
  *  module = gxp
  *  class = FeatureEditPopup
