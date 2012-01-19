@@ -36,7 +36,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
     performQuery: function() {
         var store = this.grid.store;
         var searchValue = this.search.getValue();
-        var filter = null;
+        var filter = undefined;
         if (searchValue !== "") {
             filter = new OpenLayers.Filter.Comparison({
                 type: OpenLayers.Filter.Comparison.LIKE,
