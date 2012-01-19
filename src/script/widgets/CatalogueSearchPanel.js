@@ -70,7 +70,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
 
     getFullFilter: function(filter) {
         var filters = [];
-        if (filter !== null) {
+        if (filter !== undefined) {
             filters.push(filter);
         }
         for (var key in this.filters) {
@@ -78,6 +78,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                 filters.push(new OpenLayers.Filter.Spatial({
                     type: OpenLayers.Filter.Spatial.BBOX,
                     property: 'BoundingBox',
+                    /* TODO revisit axis order */
                     value: this.plugin.target.mapPanel.map.getExtent().transform(
                         this.plugin.target.mapPanel.map.getProjectionObject(), 
                         new OpenLayers.Projection("EPSG:4326")
