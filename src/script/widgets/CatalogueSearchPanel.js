@@ -49,7 +49,6 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
     extentLabel: "Spatial extent",
     categoryLabel: "Category",
     datasourceLabel: "Data source",
-    emptyText: 'Select filter',
     filterLabel: "Filter search by",
     /* end i18n */
 
@@ -140,6 +139,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                     target: this
                 }, {
                     xtype: "combo",
+                    ref: "../../sourceCombo",
                     fieldLabel: this.datasourceLabel,
                     store: new Ext.data.ArrayStore({
                         fields: ['id', 'value'],
@@ -154,9 +154,11 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                         'select': function(cmb, record) {
                             this.setSource(cmb.getValue());
                         },
+                        'render': function() { 
+                            this.sourceCombo.setValue(this.selectedSource);
+                        },
                         scope: this
                     },
-                    emptyText: this.emptyText,
                     triggerAction: 'all'
                 }, {
                     xtype: 'compositefield',
@@ -178,11 +180,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                             btn.ownerCt.items.each(function(item) {
                                 if (item.getXType() === "combo") {
                                     var id = item.getValue();
-                                    if (this.previousId) {
-                                        this.form.getForm().findField(this.previousId).hide();
-                                    }
                                     this.form.getForm().findField(id).show();
-                                    this.previousId = id;
                                 }
                             }, this);
                         },

@@ -117,6 +117,7 @@ gxp.form.CSWFilterField = Ext.extend(Ext.form.CompositeField, {
             tooltip: this.clearTooltip,
             handler: function(btn) {
                 this.target.removeFilter(this.filter);
+                this.hide();
             },
             scope: this
         }];
