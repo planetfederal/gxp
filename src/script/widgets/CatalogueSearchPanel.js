@@ -24,92 +24,41 @@ Ext.namespace("gxp");
  */
 gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
 
+    /** private: property[border]
+     *  ``Boolean``
+     */
     border: false,
 
+    /** api: config[selectedSource]
+     *  ``String`` The key of the catalogue source to use on startup.
+     */
     selectedSource: null,
 
+    /** api: config[sources]
+     *  ``Object`` The set of catalogue sources for which the user will be
+     *  able to query on.
+     */
     sources: null,
 
     /* i18n */
     searchFieldEmptyText: "Search",
     searchButtonText: "Search",
     addTooltip: "Add to map",
+    advancedTitle: "Advanced",
+    datatypeLabel: "Data type",
+    extentLabel: "Spatial extent",
+    categoryLabel: "Category",
+    datasourceLabel: "Data source",
+    emptyText: 'Select filter',
+    filterLabel: "Filter search by",
+    /* end i18n */
 
-    setSource: function(key) {
-        var store = this.sources[key].store;
-        this.grid.reconfigure(store, this.grid.getColumnModel());
-    },
-
-    /**
-     * Method: destroy
+    /** private: method[initComponent]
+     *  Initializes the catalogue search panel.
      */
-    destroy: function() {
-        this.sources = null;
-        gxp.CatalogueSearchPanel.superclass.destroy.call(this);
-    },
-
-    performQuery: function() {
-        var store = this.grid.store;
-        var searchValue = this.search.getValue();
-        var filter = undefined;
-        if (searchValue !== "") {
-            filter = new OpenLayers.Filter.Comparison({
-                type: OpenLayers.Filter.Comparison.LIKE,
-                property: 'csw:AnyText',
-                value: '*' + searchValue + '*'
-            });
-        }
-        var data = {
-            "resultType": "results",
-            "maxRecords": 100,
-            "Query": {
-                "typeNames": "gmd:MD_Metadata",
-                "ElementSetName": {
-                    "value": "full"
-                }
-            }
-        };
-        var fullFilter = this.getFullFilter(filter);
-        if (fullFilter !== undefined) {
-            Ext.apply(data.Query, {
-                "Constraint": {
-                    version: "1.1.0",
-                    Filter: fullFilter
-                }
-            });
-        }
-        // use baseParams so paging takes them into account
-        store.baseParams = data;
-        store.load();
-    },
-
-    getFullFilter: function(filter) {
-        var filters = [];
-        if (filter !== undefined) {
-            filters.push(filter);
-        }
-        filters = filters.concat(this.filters);
-        if (filters.length <= 1) {
-            return filters[0];
-        } else {
-            return new OpenLayers.Filter.Logical({
-                type: OpenLayers.Filter.Logical.AND,
-                filters: filters
-            });
-        }
-    },
-
-    addFilter: function(filter) {
-        this.filters.push(filter);
-    },
-
-    removeFilter: function(filter) {
-        this.filters.remove(filter);
-    },
-
     initComponent: function() {
         this.filters = [];
-        sourceComboData = [];
+        var sourceComboData = [];
         for (var key in this.sources) {
             sourceComboData.push([key, this.sources[key].title]);
         }
@@ -139,12 +88,12 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                 collapsible: true,
                 collapsed: true,
                 hideLabels: false,
-                title: "Advanced",
+                title: this.advancedTitle,
                 items: [{
-                    xtype: 'cswfilterfield',
+                    xtype: 'gxp_cswfilterfield',
                     name: 'datatype',
                     property: 'apiso:Type',
-                    comboFieldLabel: "Data type",
+                    comboFieldLabel: this.datatypeLabel,
                     comboStoreData: [
                         ['dataset', 'Dataset'],
                         ['datasetcollection', 'Dataset collection'],
@@ -153,20 +102,20 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                     ],
                     target: this
                 }, {
-                    xtype: 'cswfilterfield',
+                    xtype: 'gxp_cswfilterfield',
                     name: 'extent',
                     property: 'BoundingBox',
                     map: this.plugin.target.mapPanel.map,
-                    comboFieldLabel: "Spatial extent",
+                    comboFieldLabel: this.extentLabel,
                     comboStoreData: [
                         ['map', 'spatial extent of the map']
                     ],
                     target: this
                 }, {
-                    xtype: 'cswfilterfield',
+                    xtype: 'gxp_cswfilterfield',
                     name: 'category',
                     property: 'apiso:TopicCategory',
-                    comboFieldLabel: "Category",
+                    comboFieldLabel: this.categoryLabel,
                     comboStoreData: [
                         ['farming', 'Farming'],
                         ['biota', 'Biota'],
@@ -191,7 +140,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                     target: this
                 }, {
                     xtype: "combo",
-                    fieldLabel: 'Data source',
+                    fieldLabel: this.datasourceLabel,
                     store: new Ext.data.ArrayStore({
                         fields: ['id', 'value'],
                         data: sourceComboData
@@ -207,13 +156,13 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                         },
                         scope: this
                     },
-                    emptyText: 'Select filter',
+                    emptyText: this.emptyText,
                     triggerAction: 'all'
                 }, {
                     xtype: 'compositefield',
                     items: [{
                         xtype: "combo",
-                        fieldLabel: "Filter search by",
+                        fieldLabel: this.filterLabel,
                         store: new Ext.data.ArrayStore({
                             fields: ['id', 'value'],
                             data: [['datatype', 'data type'], ['extent', 'spatial extent'], ['category', 'category'], ['csw', 'data source']]
@@ -238,10 +187,6 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                             }, this);
                         },
                         scope: this
-                    }, {
-                        xtype: 'button',
-                        hidden: true,
-                        iconCls: 'gxp-icon-removelayers'
                     }]
                 }]
             }]
@@ -285,6 +230,112 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
         gxp.CatalogueSearchPanel.superclass.initComponent.apply(this, arguments);
     },
 
+    /** private: method[destroy]
+     *  Clean up.
+     */
+    destroy: function() {
+        this.sources = null;
+        gxp.CatalogueSearchPanel.superclass.destroy.call(this);
+    },
+
+    /** private: method[setSource]
+     *  :arg key: ``String`` The key of the source to search on.
+     *
+     *  Change the CS-W this panel will search on.
+     */
+    setSource: function(key) {
+        this.selectedSource = key;
+        var store = this.sources[key].store;
+        this.grid.reconfigure(store, this.grid.getColumnModel());
+    },
+
+    /** private: method[performQuery]
+     *  Query the CS-W and show the results.
+     */
+    performQuery: function() {
+        var store = this.grid.store;
+        var searchValue = this.search.getValue();
+        var filter = undefined;
+        if (searchValue !== "") {
+            filter = new OpenLayers.Filter.Comparison({
+                type: OpenLayers.Filter.Comparison.LIKE,
+                property: 'csw:AnyText',
+                value: '*' + searchValue + '*'
+            });
+        }
+        var data = {
+            "resultType": "results",
+            "maxRecords": 100,
+            "Query": {
+                "typeNames": "gmd:MD_Metadata",
+                "ElementSetName": {
+                    "value": "full"
+                }
+            }
+        };
+        var fullFilter = this.getFullFilter(filter);
+        if (fullFilter !== undefined) {
+            Ext.apply(data.Query, {
+                "Constraint": {
+                    version: "1.1.0",
+                    Filter: fullFilter
+                }
+            });
+        }
+        // use baseParams so paging takes them into account
+        store.baseParams = data;
+        store.load();
+    },
+
+    /** private: method[getFullFilter]
+     *  :arg filter: ``OpenLayers.Filter`` The filter to add to the other existing 
+     *  filters. This is normally the free text search filter.
+     *  :returns: ``OpenLayers.Filter`` The combined filter.
+     *
+     *  Get the filter to use in the CS-W query.
+     */
+    getFullFilter: function(filter) {
+        var filters = [];
+        if (filter !== undefined) {
+            filters.push(filter);
+        }
+        filters = filters.concat(this.filters);
+        if (filters.length <= 1) {
+            return filters[0];
+        } else {
+            return new OpenLayers.Filter.Logical({
+                type: OpenLayers.Filter.Logical.AND,
+                filters: filters
+            });
+        }
+    },
+
+    /** private: method[addFilter]
+     *  :arg filter: ``OpenLayers.Filter`` The filter to add.
+     *
+     *  Add the filter to the list of filters to use in the CS-W query.
+     */
+    addFilter: function(filter) {
+        this.filters.push(filter);
+    },
+
+    /** private: method[removeFilter]
+     *  :arg filter: ``OpenLayers.Filter`` The filter to remove.
+     *
+     *  Remove the filter from the list of filters to use in the CS-W query.
+     */
+    removeFilter: function(filter) {
+        this.filters.remove(filter);
+    },
+
+    /** private: method[findWMS]
+     *  :arg links: ``Array`` The links to search for a GetMap URL.
+     *  :returns: ``Object`` A config object with the url and the layer name.
+     *
+     *  Look up the WMS url in a set of hyperlinks.
+     *  TODO: find a more solid way to do this, without using GetCapabilities
+     *  preferably.
+     */
     findWMS: function(links) {
         var url = null, name = null;
         for (var i=0, ii=links.length; i<ii; ++i) {
@@ -292,9 +343,6 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
             if (link && link.toLowerCase().indexOf('service=wms') > 0) {
                 var obj = OpenLayers.Util.createUrlObject(link);
                 url = obj.protocol + "//" + obj.host + ":" + obj.port + obj.pathname;
-                // TODO remove this hack
-                url = url.replace("geoserver-geonode-dev", "geoserver");
-                // end TODO
                 name = obj.args.layers;
                 break;
             }
@@ -309,6 +357,11 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
         }
     },
 
+    /** private: method[addLayer]
+     *  :arg record: ``GeoExt.data.LayerRecord`` The layer record to add.
+     *      
+     *  Add a WMS layer coming from a catalogue search.
+     */
     addLayer: function(record) {
         var uri = record.get("URI");
         var bounds = record.get("bounds");
@@ -320,7 +373,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
         }
         if (wmsInfo !== false) {
             // TODO: is this always WGS84 in DC?
-            this.plugin.addWMSLayer(Ext.apply({
+            this.plugin.addWMSLayer(this.selectedSource, Ext.apply({
                 title: record.get('title')[0],
                 bbox: bounds.toArray(),
                 srs: "EPSG:4326"

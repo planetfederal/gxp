@@ -38,12 +38,18 @@ gxp.plugins.CatalogueSource = Ext.extend(gxp.plugins.WMSSource, {
      */
     url: null,
 
+    /** api: config[title]
+     *  ``String`` Optional title for this source.
+     */
+    title: null,
+
     /** private: property[lazy]
      *  ``Boolean`` This source always operates lazy so without GetCapabilities
      */
     lazy: true,
 
     /** api: method[createStore]
+     *  Create the store that will be used for the CS-W searches.
      */
     createStore: function() {
         this.store = new Ext.data.Store({

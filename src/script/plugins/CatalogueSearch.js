@@ -31,6 +31,9 @@ gxp.plugins.CatalogueSearch = Ext.extend(gxp.plugins.Tool, {
     /** api: ptype = gxp_cataloguesearch */
     ptype: "gxp_cataloguesearch",
 
+    /** api: config[selectedSource]
+     *  ``String`` The catalogue source that will be searched upon initially.
+     */
     selectedSource: null,
 
     /** api: method[addActions]
@@ -49,8 +52,8 @@ gxp.plugins.CatalogueSearch = Ext.extend(gxp.plugins.Tool, {
         return actions;
     },
 
-    addWMSLayer: function(layerConfig) {
-        var source = this.target.layerSources[this.selectedSource];
+    addWMSLayer: function(sourceKey, layerConfig) {
+        var source = this.target.layerSources[sourceKey];
         var record = source.createLayerRecord(layerConfig);
         this.target.mapPanel.layers.add(record);
     },

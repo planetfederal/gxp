@@ -24,6 +24,8 @@ gxp.form.CSWFilterField = Ext.extend(Ext.form.CompositeField, {
 
     /** i18n */
     clearTooltip: "Clear the filter for this category",
+    emptyText: 'Select filter',    
+    /* end i18n */
 
     /** api: config[property]
      *  ``String`` Optional, the PropertyName to use in the Filter
@@ -81,8 +83,8 @@ gxp.form.CSWFilterField = Ext.extend(Ext.form.CompositeField, {
         } 
     },
 
-    /**
-     * Method: initComponent
+    /** private: method[initComponent]
+     *  Initializes the CSW filter field.
      */
     initComponent: function() {
         this.items = [{
@@ -107,7 +109,7 @@ gxp.form.CSWFilterField = Ext.extend(Ext.form.CompositeField, {
                 },
                 scope: this
             },
-            emptyText: 'Select filter',
+            emptyText: this.emptyText,
             triggerAction: 'all'
         }, {
             xtype: 'button',
@@ -122,9 +124,9 @@ gxp.form.CSWFilterField = Ext.extend(Ext.form.CompositeField, {
         gxp.form.CSWFilterField.superclass.initComponent.apply(this, arguments);
     },
 
-    /**
-     * Method: destroy
-     */  
+    /** private: method[destroy]
+     *  Clean up.
+     */
     destroy: function() {
         this.filter = null;
         this.target = null;
@@ -134,4 +136,5 @@ gxp.form.CSWFilterField = Ext.extend(Ext.form.CompositeField, {
 
 });
 
-Ext.reg('cswfilterfield', gxp.form.CSWFilterField);
+/** api: xtype = gxp_cswfilterfield */
+Ext.reg('gxp_cswfilterfield', gxp.form.CSWFilterField);
