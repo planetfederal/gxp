@@ -166,7 +166,12 @@
 .x-btn .gxp-icon-editfeature, .x-menu-item .gxp-icon-editfeature {
     background-image: url(img/silk/map_edit.png);
 }
-
+/* gxp_cataloguesearch */
+.x-action-col, .gxp-icon-addlayers {
+    background-image: url(img/silk/add.png);
+    width: 16px;
+    height: 16px;
+}
 /* gxp_addlayers */
 .x-btn .gxp-icon-addlayers, .x-menu-item .gxp-icon-addlayers, .x-tree-node .gxp-icon-addlayers {
     background-image: url(img/silk/add.png);

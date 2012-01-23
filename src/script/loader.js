@@ -42,6 +42,8 @@
         "widgets/PlaybackToolbar.js",
         "widgets/slider/ClassBreakSlider.js",
         "widgets/TimelinePanel.js",
+        "widgets/form/CSWFilterField.js",
+        "widgets/CatalogueSearchPanel.js",
         "plugins/LayerSource.js",
         "plugins/BingSource.js",
         "plugins/WMSSource.js",
@@ -51,6 +53,7 @@
         "plugins/OLSource.js",
         "plugins/MapBoxSource.js",
         "plugins/MapQuestSource.js",
+        "plugins/CatalogueSource.js",
         "plugins/StyleWriter.js",
         "plugins/GeoServerStyleWriter.js",
         "plugins/Tool.js",
@@ -88,6 +91,7 @@
         "plugins/Print.js",
         "plugins/LoadingIndicator.js",
         "plugins/Playback.js",
+        "plugins/CatalogueSearch.js",
         "locale/es.js",
         "locale/ca.js"
     );
