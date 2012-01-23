@@ -28,7 +28,7 @@ Ext.onReady(function() {
             }, {
                 // container for the queryform
                 id: "west",
-                xtype: "container",
+                xtype: "panel",
                 layout: "fit",
                 region: "west",
                 width: 200
@@ -39,9 +39,9 @@ Ext.onReady(function() {
         // configuration of all tool plugins for this application
         tools: [{
             ptype: "gxp_layermanager",
-            treeConfig: {
+            outputConfig: {
                 id: "tree",
-                tbar: []
+                tbar: []  // we will add buttons to "tree.bbar" later
             },
             outputTarget: "west"
         }, {
@@ -101,7 +101,7 @@ Ext.onReady(function() {
         }],
         
         // layer sources
-        defaultSourceType: "gxp_wmssource",
+        defaultSourceType: "gxp_wmscsource",
         sources: {
             local: {
                 url: "/geoserver/wms",
@@ -129,7 +129,10 @@ Ext.onReady(function() {
             }, {
                 source: "local",
                 name: "usa:states",
-                selected: true
+                title: "States, USA - Population",
+                selected: true,
+                bbox: [-13884991.404203, 2870341.1822503, -7455066.2973878, 6338219.3590349],
+                tileSize: [256, 256]
             }],
             items: [{
                 xtype: "gx_zoomslider",

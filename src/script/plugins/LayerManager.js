@@ -24,8 +24,8 @@ Ext.namespace("gxp.plugins");
 /** api: constructor
  *  .. class:: LayerManager(config)
  *
- *    Plugin for adding a tree of layers to a :class:`gxp.Viewer`. Also
- *    provides a context menu on layer nodes.
+ *    Plugin for adding a tree of layers with their legend to a
+ *    :class:`gxp.Viewer`. Also provides a context menu on layer nodes.
  */   
 gxp.plugins.LayerManager = Ext.extend(gxp.plugins.LayerTree, {
     
@@ -56,38 +56,22 @@ gxp.plugins.LayerManager = Ext.extend(gxp.plugins.LayerTree, {
      *      }
      */
     
-    /** private: method[addOutput]
-     *  :arg config: ``Object``
-     *  :returns: ``Ext.Component``
-     */
-    addOutput: function(config) {
-        return gxp.plugins.LayerManager.superclass.addOutput.apply(this, arguments);
-    },
-    
+    /** private: method[createOutputConfig] */
     createOutputConfig: function() {
         var tree = gxp.plugins.LayerManager.superclass.createOutputConfig.apply(this, arguments);
-        tree.plugins = [{
-            ptype: "gx_treenodecomponent"
-        }];
         Ext.applyIf(tree, Ext.apply({
             cls: "gxp-layermanager-tree",
             lines: false,
-            useArrows: true
+            useArrows: true,
+            plugins: [{
+                ptype: "gx_treenodecomponent"
+            }]
         }, this.treeConfig));
         
-        return {
-            tbar: {
-                xtype: "toolbar",
-                cls: "gxp-layermanager-crumbs",
-                items: [{
-                    xtype: "button",
-                    text: "Layers"
-                }]
-            },
-            items: [tree]
-        };        
+        return tree;        
     },
     
+    /** private: method[configureLayerNode] */
     configureLayerNode: function(loader, attr) {
         gxp.plugins.LayerManager.superclass.configureLayerNode.apply(this, arguments);
         // add a WMS legend to each node created
@@ -123,22 +107,8 @@ gxp.plugins.LayerManager = Ext.extend(gxp.plugins.LayerTree, {
                 }
             }];
         }
-    },
-    
-    /** private: method[addCrumb]
-     *  :arg cmp: ``Ext.Component`` A component to render
-     */
-    addCrumb: function(cmp) {
-        var tbar = this.output[0].getTopToolbar();
-        tbar.add({
-            xtype: "tbspacer", cls: "x-toolbar-more-icon"
-        }, {
-            xtype: "button", text: cmp.title
-        });
-        tbar.doLayout();
-        //TODO add/render the component
     }
-        
+    
 });
 
 Ext.preg(gxp.plugins.LayerManager.prototype.ptype, gxp.plugins.LayerManager);
