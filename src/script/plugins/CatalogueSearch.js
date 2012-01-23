@@ -31,7 +31,7 @@ gxp.plugins.CatalogueSearch = Ext.extend(gxp.plugins.Tool, {
     /** api: ptype = gxp_cataloguesearch */
     ptype: "gxp_cataloguesearch",
 
-    source: null,
+    selectedSource: null,
 
     /** api: method[addActions]
      */
@@ -50,15 +50,25 @@ gxp.plugins.CatalogueSearch = Ext.extend(gxp.plugins.Tool, {
     },
 
     addWMSLayer: function(layerConfig) {
-        var source = this.target.layerSources[this.source];
+        var source = this.target.layerSources[this.selectedSource];
         var record = source.createLayerRecord(layerConfig);
         this.target.mapPanel.layers.add(record);
     },
 
     addOutput: function() {
+        var sources = {};
+        for (var key in this.target.layerSources) {
+            var source = this.target.layerSources[key];
+            if (source instanceof gxp.plugins.CatalogueSource) {
+                var obj = {};
+                obj[key] = source;
+                Ext.apply(sources, obj);
+            }
+        }
         return gxp.plugins.CatalogueSearch.superclass.addOutput.apply(this, [{
             plugin: this,
-            source: this.target.layerSources[this.source], 
+            sources: sources,
+            selectedSource: this.selectedSource,
             xtype: 'gxp_cataloguesearchpanel'
         }]);
     }

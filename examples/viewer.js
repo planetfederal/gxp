@@ -50,7 +50,7 @@ Ext.onReady(function() {
             actionTarget: "tree.tbar"
         }, {
             ptype: "gxp_cataloguesearch",
-            source: "catalog",
+            selectedSource: "geonode",
             actionTarget: "tree.tbar"
         }, {
             ptype: "gxp_removelayer",
@@ -115,9 +115,15 @@ Ext.onReady(function() {
             google: {
                 ptype: "gxp_googlesource"
             },
-            catalog: {
+            geonode: {
                 ptype: "gxp_cataloguesource",
-                url: "http://demo.geonode.org/geonetwork/srv/en/csw"
+                url: "http://demo.geonode.org/geonetwork/srv/en/csw",
+                title: "Geonode"
+            },
+            pycsw: {
+                ptype: "gxp_cataloguesource",
+                url: "http://catalog.dev.geonode.org/pycsw/trunk/csw.py?",
+                title: "pycsw prototype"
             }
         },
         

@@ -22,6 +22,9 @@ Ext.namespace("gxp.form");
  */
 gxp.form.CSWFilterField = Ext.extend(Ext.form.CompositeField, {
 
+    /** i18n */
+    clearTooltip: "Clear the filter for this category",
+
     /** api: config[property]
      *  ``String`` Optional, the PropertyName to use in the Filter
      */
@@ -109,6 +112,7 @@ gxp.form.CSWFilterField = Ext.extend(Ext.form.CompositeField, {
         }, {
             xtype: 'button',
             iconCls: 'gxp-icon-removelayers',
+            tooltip: this.clearTooltip,
             handler: function(btn) {
                 this.target.removeFilter(this.filter);
             },

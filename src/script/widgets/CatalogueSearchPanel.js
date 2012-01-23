@@ -26,12 +26,27 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
 
     border: false,
 
-    source: null,
+    selectedSource: null,
+
+    sources: null,
 
     /* i18n */
     searchFieldEmptyText: "Search",
     searchButtonText: "Search",
     addTooltip: "Add to map",
+
+    setSource: function(key) {
+        var store = this.sources[key].store;
+        this.grid.reconfigure(store, this.grid.getColumnModel());
+    },
+
+    /**
+     * Method: destroy
+     */
+    destroy: function() {
+        this.sources = null;
+        gxp.CatalogueSearchPanel.superclass.destroy.call(this);
+    },
 
     performQuery: function() {
         var store = this.grid.store;
@@ -94,24 +109,31 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
 
     initComponent: function() {
         this.filters = [];
+        sourceComboData = [];
+        for (var key in this.sources) {
+            sourceComboData.push([key, this.sources[key].title]);
+        }
         this.items = [{
             xtype: 'form',
             border: false,
             ref: 'form',
             hideLabels: true,
             autoHeight: true,
-            style: "margin-left: 5px; margin-top: 5px",
+            style: "margin-left: 5px; margin-right: 5px; margin-bottom: 5px; margin-top: 5px",
             items: [{
-                xtype: "textfield",
-                emptyText: this.searchFieldEmptyText,
-                ref: "../search",
-                name: "search"
-            }, {
-                xtype: "button",
-                text: this.searchButtonText,
-                style: "position: absolute; right: 5px; top: 5px;",
-                handler: this.performQuery,
-                scope: this
+                xtype: "compositefield",
+                items: [{
+                    xtype: "textfield",
+                    emptyText: this.searchFieldEmptyText,
+                    ref: "../../search",
+                    name: "search",
+                    width: 300
+                }, {
+                    xtype: "button",
+                    text: this.searchButtonText,
+                    handler: this.performQuery,
+                    scope: this
+                }]
             }, {
                 xtype: "fieldset",
                 collapsible: true,
@@ -168,13 +190,33 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                     ],
                     target: this
                 }, {
+                    xtype: "combo",
+                    fieldLabel: 'Data source',
+                    store: new Ext.data.ArrayStore({
+                        fields: ['id', 'value'],
+                        data: sourceComboData
+                    }),
+                    displayField: 'value',
+                    valueField: 'id',
+                    id: 'csw',
+                    mode: 'local',
+                    hidden: true,
+                    listeners: {
+                        'select': function(cmb, record) {
+                            this.setSource(cmb.getValue());
+                        },
+                        scope: this
+                    },
+                    emptyText: 'Select filter',
+                    triggerAction: 'all'
+                }, {
                     xtype: 'compositefield',
                     items: [{
                         xtype: "combo",
                         fieldLabel: "Filter search by",
                         store: new Ext.data.ArrayStore({
                             fields: ['id', 'value'],
-                            data: [['datatype', 'data type'], ['extent', 'spatial extent'], ['category', 'category']]
+                            data: [['datatype', 'data type'], ['extent', 'spatial extent'], ['category', 'category'], ['csw', 'data source']]
                         }),
                         displayField: 'value',
                         valueField: 'id',
@@ -212,12 +254,12 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                     start: 'startPosition', 
                     limit: 'maxRecords'
                 },
-                store: this.source.store,
+                store: this.sources[this.selectedSource].store,
                 pageSize: 100 
             }),
             loadMask: true,
             hideHeaders: true,
-            store: this.source.store,
+            store: this.sources[this.selectedSource].store,
             columns: [{
                 id: 'title', 
                 xtype: "templatecolumn", 
