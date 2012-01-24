@@ -62,6 +62,16 @@ gxp.plugins.WMSCSource = Ext.extend(gxp.plugins.WMSSource, {
      */
     version: "1.1.1",
 
+    /** api: config[requiredProperties]
+     *  ``Array(String)`` List of config properties that are required for each
+     *  layer from this source to allow lazy loading. Default is
+     *  ``["title", "bbox"]``. When the source loads layers from a WMS-C that
+     *  does not use subsets of the default Web Mercator grid, not provide
+     *  tiles for all default Web Mercator resolutions, and not use a tileSize
+     *  of 256x256 pixels, ``tileOrigin``, ``resolutions`` and ``tileSize``
+     *  should be included in this list.
+     */
+
     /** private: method[constructor]
      */
     constructor: function(config) {
@@ -79,12 +89,7 @@ gxp.plugins.WMSCSource = Ext.extend(gxp.plugins.WMSSource, {
         gxp.plugins.WMSCSource.superclass.constructor.apply(this, arguments); 
     },
     
-    /** api: method[createLayerRecord]
-     *  :arg config:  ``Object``  The application config for this layer.
-     *  :returns: ``GeoExt.data.LayerRecord``
-     *
-     *  Create a layer record given the config.
-     */
+    /** private: method[createLayerRecord] */
     createLayerRecord: function(config) {
         var record = gxp.plugins.WMSCSource.superclass.createLayerRecord.apply(this, arguments);
         if (!record) {
@@ -94,11 +99,11 @@ gxp.plugins.WMSCSource = Ext.extend(gxp.plugins.WMSSource, {
         if (this.store.reader.raw) {
             caps = this.store.reader.raw.capability;
         }
-        var tileSets = (caps && caps.vendorSpecific && caps.vendorSpecific) ? 
-            caps.vendorSpecific.tileSets : null;
+        var tileSets = (caps && caps.vendorSpecific) ? 
+            caps.vendorSpecific.tileSets : (config.capability && config.capability.tileSets);
         var layer = record.get("layer");
-        if (tileSets !== null) {
-            var mapProjection = this.getMapProjection();
+        if (tileSets) {
+            var mapProjection = this.getProjection(record) || this.getMapProjection();
             // look for tileset with same name and equivalent projection
             for (var i=0, len=tileSets.length; i<len; i++) {
                 var tileSet = tileSets[i];
@@ -116,18 +121,31 @@ gxp.plugins.WMSCSource = Ext.extend(gxp.plugins.WMSSource, {
                             tileSize: new OpenLayers.Size(tileSet.width, tileSet.height),
                             tileOrigin: new OpenLayers.LonLat(bbox[0], bbox[1])
                         });
-                        // unless explicitly configured otherwise, use cached version
-                        layer.params.TILED = (config.cached !== false) && true;
                         break;
                     }
                 }
             }
-        } else if (this.forceLazy === true && config.cached === true) {
-            // if lazy loading is forced, and the cached version is explicitly
-            // requested, set TILED to true and assume that the tiling scheme
-            // for the layer works with the map bounds and resolutions.
-            layer.params.TILED = true;
+        } else if (this.lazy) {
+            // lazy loading
+            var tileSize = config.tileSize,
+                tileOrigin = config.tileOrigin;
+            layer.addOptions({
+                resolutions: config.resolutions,
+                tileSize: tileSize ? new OpenLayers.Size(tileSize[0], tileSize[1]) : undefined,
+                tileOrigin: tileOrigin ? OpenLayers.LonLat.fromArray(tileOrigin) : undefined
+            });
+            if (!tileOrigin) {
+                // If tileOrigin was not set, our best bet is to use the map's
+                // maxExtent, because GWC's tiling scheme always aligns to the
+                // default Web Mercator grid. We don't do this with addOptions
+                // because we persist the config from layer.options in
+                // getConfigForRecord, and we don't want to persist a guessed
+                // configuration.
+                layer.tileOrigin = OpenLayers.LonLat.fromArray(this.target.map.maxExtent);
+            }
         }
+        // unless explicitly configured otherwise, use cached version
+        layer.params.TILED = (config.cached !== false) && true;
         return record;
     },
 
@@ -138,11 +156,33 @@ gxp.plugins.WMSCSource = Ext.extend(gxp.plugins.WMSSource, {
      *  Create a config object that can be used to recreate the given record.
      */
     getConfigForRecord: function(record) {
-        var config = gxp.plugins.WMSCSource.superclass.getConfigForRecord.apply(this, arguments);
-        // the "tiled" property is already used to indicate singleTile
-        // the "cached" property will indicate whether to send the TILED param
-        return Ext.apply(config, {
-            cached: !!record.getLayer().params.TILED
+        var config = gxp.plugins.WMSCSource.superclass.getConfigForRecord.apply(this, arguments),
+            name = config.name,
+            tileSetsCap,
+            layer = record.getLayer();
+        if (config.capability) {
+            var capability = this.store.reader.raw.capability;
+            var tileSets = capability.vendorSpecific && capability.vendorSpecific.tileSets;
+            if (tileSets) {
+                for (var i=tileSets.length-1; i>=0; --i) {
+                    tileSetsCap = tileSets[i];
+                    if (tileSetsCap.layers === name && tileSetsCap.srs[layer.projection]) {
+                        config.capability.tileSets = [tileSetsCap];
+                        break;
+                    }
+                }
+            }
+        }
+        if (!config.capability.tileSets) {
+            var tileSize = layer.options.tileSize;
+            config.tileSize = [tileSize.w, tileSize.h];
+            config.tileOrigin = layer.options.tileOrigin;
+            config.resolutions = layer.options.resolutions;
+        }
+        return Ext.applyIf(config, {
+            // the "tiled" property is already used to indicate singleTile
+            // the "cached" property will indicate whether to send the TILED param
+            cached: !!layer.params.TILED
         });
     }
     

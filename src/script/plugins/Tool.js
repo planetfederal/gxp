@@ -390,11 +390,11 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
     
     /** api: method[getState]
      *  :return {Object}
-     *  Gets to configured tool state. Overwrite in subclasses to return anything other
-     *  than the initialConfig property.
+     *  Gets the configured tool state. Overwrite in subclasses to return
+     *  anything other than a copy of the initialConfig property.
      */
     getState: function(){
-        return this.initialConfig;
+        return Ext.apply({}, this.initialConfig);
     }
 });
 

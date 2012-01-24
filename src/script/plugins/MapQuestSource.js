@@ -103,7 +103,8 @@ gxp.plugins.MapQuestSource = Ext.extend(gxp.plugins.LayerSource, {
             maxResolution: 156543.03390625,
             numZoomLevels: 19,
             units: "m",
-            buffer: 1
+            buffer: 1,
+            transitionEffect: "resize"
         };
         
         var layers = [

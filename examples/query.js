@@ -11,7 +11,7 @@ OpenLayers.ProxyHost = "/proxy/?url=";
 var panel, map;
 Ext.onReady(function() {
     Ext.QuickTips.init();    
-    var map = new OpenLayers.Map("map");
+    var map = new OpenLayers.Map("map", {theme: null});
     var wms = new OpenLayers.Layer.WMS(
         "Global Imagery",
         "/geoserver/wms",

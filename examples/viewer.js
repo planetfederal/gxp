@@ -120,6 +120,7 @@ Ext.onReady(function() {
             projection: "EPSG:900913",
             units: "m",
             maxResolution: 156543.0339,
+            maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
             center: [-10764594.758211, 4523072.3184791],
             zoom: 3,
             layers: [{
@@ -129,6 +130,8 @@ Ext.onReady(function() {
             }, {
                 source: "local",
                 name: "usa:states",
+                title: "States, USA - Population",
+                bbox: [-13884991.404203, 2870341.1822503, -7455066.2973878, 6338219.3590349],
                 selected: true
             }],
             items: [{

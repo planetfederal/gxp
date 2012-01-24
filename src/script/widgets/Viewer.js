@@ -226,7 +226,8 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
              *  Fired when features were edited.
              *
              *  Listener arguments:
-             *  * featureManager - ``gxp.plugins.FeatureManager`` the
+             *
+             *  * featureManager - :class:`gxp.plugins.FeatureManager` the
              *    the feature manager that was used for editing
              *  * layer - ``Object`` object with name and source of the layer
              *    that was edited
@@ -417,7 +418,13 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             layers: null,
             items: this.mapItems,
             plugins: this.mapPlugins,
-            tbar: config.tbar || {hidden: true}
+            tbar: config.tbar || new Ext.Toolbar({
+                hidden: true,
+                listeners: {
+                    show: function() { this.mapPanel.map.updateSize(); },
+                    scope: this
+                }
+            })
         }, config));
         
         this.mapPanel.layers.on({
@@ -576,14 +583,15 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
      *  Check through createLayerRecord requests to see if any can be satisfied.
      */
     checkLayerRecordQueue: function() {
-        var request, source, record, called;
+        var request, source, s, record, called;
         var remaining = [];
         for (var i=0, ii=this.createLayerRecordQueue.length; i<ii; ++i) {
             called = false;
             request = this.createLayerRecordQueue[i];
-            source = request.config.source;
-            if (source in this.layerSources) {
-                record = this.layerSources[source].createLayerRecord(request.config);
+            s = request.config.source;
+            if (s in this.layerSources) {
+                source = this.layerSources[s];
+                record = source.createLayerRecord(request.config);
                 if (record) {
                     // we call this in the next cycle to guarantee that
                     // createLayerRecord returns before callback is called
@@ -593,6 +601,11 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                         }, 0);
                     })(request, record);
                     called = true;
+                } else if (source.lazy) {
+                    source.store.load({
+                        callback: this.checkLayerRecordQueue,
+                        scope: this
+                    });
                 }
             }
             if (!called) {
@@ -626,7 +639,8 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             layers: []
         });
         
-        // include all layer config (and add new sources)
+        // include all layer config
+        var sources = {};
         this.mapPanel.layers.each(function(record){
             var layer = record.getLayer();
             if (layer.displayInLayerSwitcher) {
@@ -637,11 +651,13 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                 }
                 // add layer
                 state.map.layers.push(source.getConfigForRecord(record));
-                if (!state.sources[id]) {
-                    state.sources[id] = Ext.apply({}, source.initialConfig);
+                if (!sources[id]) {
+                    sources[id] = source.getState();
                 }
             }
         }, this);
+        // update sources, adding new ones
+        Ext.apply(this.sources, sources);
         
         //standardize portal configuration to portalConfig
         if (state.portalItems) {

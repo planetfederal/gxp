@@ -180,6 +180,15 @@
 
             ct.destroy();
         }
+        
+        function test_getState(t) {
+            t.plan(2);
+            var initialConfig = {foo: "bar"};
+            var tool = new gxp.plugins.Tool(initialConfig);
+            var state = tool.getState();
+            t.eq(state, initialConfig, "getState returns the same config as initialConfig,");
+            t.ok(state !== initialConfig, "but is a clone initialConfig");            
+        }
 
     </script>
   </head>

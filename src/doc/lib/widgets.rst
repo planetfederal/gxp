@@ -45,3 +45,4 @@ A collection of slider related classes
     :glob:
     
     widgets/tips/*
+    widgets/slider/*

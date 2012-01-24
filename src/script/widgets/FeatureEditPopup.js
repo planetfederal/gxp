@@ -6,6 +6,10 @@
  * of the license.
  */
 
+/*
+ * @requires plugins/FeatureEditorGrid.js
+ */
+
 /** api: (define)
  *  module = gxp
  *  class = FeatureEditPopup
@@ -71,7 +75,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
 
     /** api: config[excludeFields]
      *  ``Array`` Optional list of field names (case sensitive) that are to be
-     *  excluded from the property grid.
+     *  excluded from the editor plugin.
      */
     
     /** private: property[excludeFields]
@@ -112,12 +116,16 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
      *  ``Boolean`` If we are in editing mode, this will be true.
      */
     editing: false,
-    
-    /** private: property[grid]
-     *  ``Ext.grid.PropertyGrid``
+
+    /** api: editorPluginConfig
+     *  ``Object`` The config for the plugin to use as the editor, its ptype
+     *  property can be one of "gxp_editorgrid" (default) or "gxp_editorform" 
+     *  for form-based editing.
      */
-    grid: null,
-    
+    editorPluginConfig: {
+        ptype: "gxp_editorgrid"
+    },
+
     /** private: property[modifyControl]
      *  ``OpenLayers.Control.ModifyFeature`` If in editing mode, we will have
      *  this control for editing the geometry.
@@ -159,6 +167,33 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
      */
     initComponent: function() {
         this.addEvents(
+
+            /** api: events[startedit]
+             *  Fires when editing starts.
+             *
+             *  Listener arguments:
+             *  * panel - :class:`gxp.FeatureEditPopup` This popup.
+             */
+            "startedit",
+
+            /** api: events[stopedit]
+             *  Fires when editing stops.
+             *
+             *  Listener arguments:
+             *  * panel - :class:`gxp.FeatureEditPopup` This popup.
+             */
+            "stopedit",
+
+            /** api: events[beforefeaturemodified]
+             *  Fires before the feature associated with this popup has been
+             *  modified (i.e. when the user clicks "Save" on the popup).
+             *
+             *  Listener arguments:
+             *  * panel - :class:`gxp.FeatureEditPopup` This popup.
+             *  * feature - ``OpenLayers.Feature`` The modified feature.
+             */
+            "beforefeaturemodified",
+
             /** api: events[featuremodified]
              *  Fires when the feature associated with this popup has been
              *  modified (i.e. when the user clicks "Save" on the popup) or
@@ -191,12 +226,6 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             "cancelclose"
         );
         
-        if (!this.dateFormat) {
-            this.dateFormat = Ext.form.DateField.prototype.format;
-        }
-        if (!this.timeFormat) {
-            this.timeFormat = Ext.form.TimeField.prototype.format;
-        }
         var feature = this.feature;
         if (feature instanceof GeoExt.data.FeatureRecord) {
             feature = this.feature = feature.getFeature();
@@ -206,94 +235,6 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
         }
         
         this.anchored = !this.editing;
-        
-        var customEditors = {};
-        var customRenderers = {};
-        if(this.schema) {
-            var attributes = {};
-            if (this.fields) {
-                if (!this.excludeFields) {
-                    this.excludeFields = [];
-                }
-                // determine the order of attributes
-                for (var i=0,ii=this.fields.length; i<ii; ++i) {
-                    attributes[this.fields[i]] = null;
-                }
-            }
-            var ucFields = this.fields ?
-                this.fields.join(",").toUpperCase().split(",") : [];
-            this.schema.each(function(r) {
-                var type = r.get("type");
-                if (type.match(/^[^:]*:?((Multi)?(Point|Line|Polygon|Curve|Surface|Geometry))/)) {
-                    // exclude gml geometries
-                    return;
-                }
-                var name = r.get("name");
-                if (this.fields) {
-                    if (ucFields.indexOf(name.toUpperCase()) == -1) {
-                        this.excludeFields.push(name);
-                    }
-                }
-                var value = feature.attributes[name];
-                var fieldCfg = GeoExt.form.recordToField(r);
-                var listeners;
-                if (typeof value == "string") {
-                    var format;
-                    switch(type.split(":").pop()) {
-                        case "date":
-                            format = this.dateFormat;
-                            fieldCfg.editable = false;
-                            break;
-                        case "dateTime":
-                            if (!format) {
-                                format = this.dateFormat + " " + this.timeFormat;
-                                // make dateTime fields editable because the
-                                // date picker does not allow to edit time
-                                fieldCfg.editable = true;
-                            }
-                            fieldCfg.format = format;
-                            //TODO When http://trac.osgeo.org/openlayers/ticket/3131
-                            // is resolved, remove the listeners assignment below
-                            listeners = {
-                                "startedit": function(el, value) {
-                                    if (!(value instanceof Date)) {
-                                        var date = Date.parseDate(value.replace(/Z$/, ""), "c");
-                                        if (date) {
-                                            this.setValue(date);
-                                        }
-                                    }
-                                }
-                            };
-                            customRenderers[name] = (function() {
-                                return function(value) {
-                                    //TODO When http://trac.osgeo.org/openlayers/ticket/3131
-                                    // is resolved, change the 5 lines below to
-                                    // return value.format(format);
-                                    var date = value;
-                                    if (typeof value == "string") {
-                                        date = Date.parseDate(value.replace(/Z$/, ""), "c");
-                                    }
-                                    return date ? date.format(format) : value;
-                                };
-                            })();
-                            break;
-                        case "boolean":
-                            listeners = {
-                                "startedit": function(el, value) {
-                                    this.setValue(Boolean(value));
-                                }
-                            };
-                            break;
-                    }
-                }
-                customEditors[name] = new Ext.grid.GridEditor({
-                    field: Ext.create(fieldCfg),
-                    listeners: listeners
-                });
-                attributes[name] = value;
-            }, this);
-            feature.attributes = attributes;
-        }
         
         if(!this.title && feature.fid) {
             this.title = feature.fid;
@@ -338,52 +279,14 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             scope: this
         });
         
-        var ucExcludeFields = this.excludeFields ?
-            this.excludeFields.join(",").toUpperCase().split(",") : [];
-        this.grid = new Ext.grid.PropertyGrid({
-            border: false,
-            source: feature.attributes,
-            customEditors: customEditors,
-            customRenderers: customRenderers,
+        this.plugins = [Ext.apply({
+            feature: feature,
+            schema: this.schema,
+            fields: this.fields,
+            excludeFields: this.excludeFields,
             propertyNames: this.propertyNames,
-            viewConfig: {
-                forceFit: true,
-                getRowClass: function(record) {
-                    if (ucExcludeFields.indexOf(record.get("name").toUpperCase()) !== -1) {
-                        return "x-hide-nosize";
-                    }
-                }
-            },
-            listeners: {
-                "beforeedit": function() {
-                    return this.editing;
-                },
-                "propertychange": function() {
-                    this.setFeatureState(this.getDirtyState());
-                },
-                scope: this
-            },
-            initComponent: function() {
-                //TODO This is a workaround for maintaining the order of the
-                // feature attributes. Decide if this should be handled in
-                // another way.
-                var origSort = Ext.data.Store.prototype.sort;
-                Ext.data.Store.prototype.sort = function() {};
-                Ext.grid.PropertyGrid.prototype.initComponent.apply(this, arguments);
-                Ext.data.Store.prototype.sort = origSort;
-            }
-        });
-        
-        /**
-         * TODO: This is a workaround for getting attributes with undefined
-         * values to show up in the property grid.  Decide if this should be 
-         * handled in another way.
-         */
-        this.grid.propStore.isEditableValue = function() {return true;};
-
-        this.items = [
-            this.grid
-        ];
+            readOnly: this.readOnly
+        }, this.editorPluginConfig)];
 
         this.bbar = new Ext.Toolbar({
             hidden: this.readOnly,
@@ -448,6 +351,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
      */
     startEditing: function() {
         if(!this.editing) {
+            this.fireEvent("startedit", this);
             this.editing = true;
             this.anc && this.unanchorPopup();
 
@@ -477,6 +381,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
      */
     stopEditing: function(save) {
         if(this.editing) {
+            this.fireEvent("stopedit", this);
             //TODO remove the line below when
             // http://trac.openlayers.org/ticket/2210 is fixed.
             this.modifyControl.deactivate();
@@ -485,6 +390,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             var feature = this.feature;
             if (feature.state === this.getDirtyState()) {
                 if (save === true) {
+                    this.fireEvent("beforefeaturemodified", this, feature);
                     //TODO When http://trac.osgeo.org/openlayers/ticket/3131
                     // is resolved, remove the if clause below
                     if (this.schema) {
@@ -512,7 +418,6 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                     feature.geometry = this.geometry;
                     feature.attributes = this.attributes;
                     this.setFeatureState(null);
-                    this.grid.setSource(feature.attributes);
                     layer.drawFeature(feature);
                     this.fireEvent("canceledit", this, feature);
                 }

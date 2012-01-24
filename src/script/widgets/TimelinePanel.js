@@ -19,6 +19,8 @@ Ext.namespace("gxp");
 
 // http://code.google.com/p/simile-widgets/issues/detail?id=3
 window.Timeline && window.SimileAjax && (function() {
+    SimileAjax.History.enabled = false;
+
     Timeline.DefaultEventSource.prototype.remove = function(id) {
         this._events.remove(id);
     };
@@ -35,6 +37,12 @@ window.Timeline && window.SimileAjax && (function() {
  *      A panel for displaying a Similie Timeline.
  */
 gxp.TimelinePanel = Ext.extend(Ext.Panel, {
+
+    /** api: config[timeInfoEndpoint]
+     *  ``String``
+     *  url to use to get time info about a certain layer.
+     */
+    timeInfoEndpoint: "/maps/time_info.json?",
     
     /** api: config[viewer]
      *  ``gxp.Viewer``
@@ -121,6 +129,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
     initComponent: function() {
 
+        // handler for clicking on an event in the timeline
         Timeline.OriginalEventPainter.prototype._showBubble = 
             this.handleEventClick.createDelegate(this);
 
@@ -149,48 +158,84 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }, this.timelineContainer
         ];
 
-        this.addEvents(
-            /**
-             * Event: change
-             * Fires when time changes.
-             *
-             * Listener arguments:
-             * panel - {<gxp.TimesliderPanel} This panel.
-             */
-            "change"
-        );
-        
+        // we are binding with viewer to get updates on new layers        
         if (this.initialConfig.viewer) {
             delete this.viewer;
             this.bindViewer(this.initialConfig.viewer);
         }
 
+        // we are binding with a feature manager to get notes/annotations
         if (this.initialConfig.featureManager) {
             delete this.featureManager;
             this.bindFeatureManager(this.initialConfig.featureManager);
         }
 
+        // we are binding with the playback tool to get updates on ranges
+        // and current times
         if (this.initialConfig.playbackTool) {
             delete this.playbackTool;
             this.bindPlaybackTool(this.initialConfig.playbackTool);
         }
 
-        gxp.TimelinePanel.superclass.initComponent.call(this);
-        
+        if (this.ownerCt) {
+            this.ownerCt.on("beforecollapse", function() {
+                this._silentMapMove = true;
+            }, this);
+            this.ownerCt.on("beforeexpand", function() {
+                delete this._silentMapMove;
+            }, this);
+        }
+
+        gxp.TimelinePanel.superclass.initComponent.call(this); 
     },
 
+    /**
+     * private: method[onChangeComplete]
+     *  :arg slider: ``Ext.Slider``
+     *  :arg value: ``Float``
+     *
+     *  Event listener for when the vertical slider is moved. This will
+     *  influence the date range which will be used in the WFS protocol.
+     */
     onChangeComplete: function(slider, value) {
         if (this.playbackTool) {
             var range = this.playbackTool.playbackToolbar.control.range;
             range = this.calculateNewRange(range, value);
+            // correct for movements of the timeline in the mean time
+            var center = this.playbackTool.playbackToolbar.control.currentTime;
+            var span = range[1]-range[0];
+            var start = new Date(center.getTime() - span/2);
+            var end = new Date(center.getTime() + span/2);
             for (var key in this.layerLookup) {
                 var layer = this.layerLookup[key].layer;
-                layer && this.setFilter(key, this.createTimeFilter(range, key, 0));
+                layer && this.setFilter(key, this.createTimeFilter([start, end], key, this.bufferFraction));
             }
             this.updateTimelineEvents({force: true});
         }
     },
 
+    /**
+     * private: method[setFilterMatcher]
+     *  :arg filterMatcher: ``Function``
+     *
+     *  Filter data in the timeline and repaint.
+     */
+    setFilterMatcher: function(filterMatcher) {
+        if (this.timeline) {
+            this.timeline.getBand(0).getEventPainter().setFilterMatcher(filterMatcher);
+            this.timeline.getBand(1).getEventPainter().setFilterMatcher(filterMatcher);
+            this.timeline.paint();
+        }
+    },
+
+    /**
+     * api: method[setLayerVisibility]
+     *  :arg item: ``Ext.Menu.CheckItem``
+     *  :arg checked: ``Boolean``
+     *  :arg record: ``GeoExt.data.LayerRecord``
+     *
+     *  Change the visibility for a layer which is shown in the timeline.
+     */
     setLayerVisibility: function(item, checked, record) {
         var keyToMatch = this.getKey(record);
         Ext.apply(this.layerLookup[keyToMatch], {
@@ -202,14 +247,18 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 return checked;
             }
         };
-        this.timeline.getBand(0).getEventPainter().setFilterMatcher(filterMatcher);
-        this.timeline.getBand(1).getEventPainter().setFilterMatcher(filterMatcher);
-        this.timeline.paint();
+        this.setFilterMatcher(filterMatcher);
     },
 
+    /**
+     * api: method[applyFilter]
+     *  :arg record: ``GeoExt.data.LayerRecord``
+     *  :arg filter: ``OpenLayers.Filter``
+     *  :arg checked: ``Boolean``
+     *
+     *  Filter a layer which is shown in the timeline.
+     */
     applyFilter: function(record, filter, checked) {
-        // implemented client-side for now, TODO determine if server-side makes more sense, i.e.
-        // passing on the filter in the GetFeature request and doing a reload.
         var key = this.getKey(record);
         var layer = this.layerLookup[key].layer;
         var filterMatcher = function(evt) {
@@ -225,11 +274,17 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 return true;
             }
         };
-        this.timeline.getBand(0).getEventPainter().setFilterMatcher(filterMatcher);
-        this.timeline.getBand(1).getEventPainter().setFilterMatcher(filterMatcher);
-        this.timeline.paint();
+        this.setFilterMatcher(filterMatcher);
     },
 
+    /**
+     * api: method[setTitleAttribute]
+     *  :arg record: ``GeoExt.data.LayerRecord``
+     *  :arg titleAttr: ``String``
+     *
+     *  Change the attribute to show in the timeline for a certain layer.
+     *  Currently this means removing all features and re-adding them.
+     */
     setTitleAttribute: function(record, titleAttr) {
         var key = this.getKey(record);
         this.layerLookup[key].titleAttr = titleAttr;
@@ -237,16 +292,34 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         this.onFeaturesAdded({features: this.layerLookup[key].layer.features}, key);
     },
 
+    /**
+     * private method[destroyPopup]
+     *
+     *  Destroy an existing popup.
+     */
+    destroyPopup: function() {
+        if (this.popup) {
+            this.popup.destroy();
+            this.popup = null;
+        }
+    },
+
+    /**
+     * private: method[handleEventClick]
+     *  :arg x: ``Integer``
+     *  :arg y: ``Integer``
+     *  :arg evt: ``Object``
+     *  
+     *  Handler for when an event in the timeline gets clicked. Show a popup
+     *  for a feature and the feature editor for a note/annotation.
+     */
     handleEventClick: function(x, y, evt) {
         var fid = evt.getProperty("fid");
         var key = evt.getProperty("key");
         var layer = this.layerLookup[key].layer;
         var feature = layer && layer.getFeatureByFid(fid);
         if (feature) {
-            if (this.popup) {
-                this.popup.destroy();
-                this.popup = null;
-            }
+            this.destroyPopup();
             // if annotations, show feature editor
             if (!layer.protocol) {
                 layer.events.triggerEvent("featureselected", {feature: feature});
@@ -272,11 +345,37 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }
     },
 
+    /**
+     * private: method[bindFeatureManager]
+     *  :arg featureManager: ``gxp.plugins.FeatureManager``
+     *  
+     *  Bind with a feature manager to have notes show up in the timeline.
+     */
     bindFeatureManager: function(featureManager) {
         this.featureManager = featureManager;
         this.featureManager.on("layerchange", this.onLayerChange, this);
     },
 
+    /**
+     * private: method[unbindFeatureManager]
+     *  
+     *  Unbind with a feature manager
+     */
+    unbindFeatureManager: function() {
+        if (this.featureManager) {
+            this.featureManager.un("layerchange", this.onLayerChange, this);
+            this.featureManager = null;
+        }
+    },
+
+    /**
+     * private: method[guessTitleAttribute]
+     *  :arg schema: ``GeoExt.data.AttributeStore``
+     *  :returns: ``String``
+     *
+     *  Find the first string attribute and use that to show events in the
+     *  timeline.
+     */
     guessTitleAttribute: function(schema) {
         var titleAttr = null;
         schema.each(function(record) {
@@ -288,36 +387,71 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         return titleAttr;
     },
 
+    /**
+     * private: method[onLayerChange]
+     *  :arg tool: ``gxp.plugins.FeatureManager``
+     *  :arg record: ``GeoExt.data.LayerRecord``
+     *  :arg schema: ``GeoExt.data.AttributeStore``
+     *
+     *  Listener for when the layer record associated with the feature manager
+     *  changes. When this is fired, we can hook up the notes to the timeline.
+     */
     onLayerChange: function(tool, record, schema) {
         var key = this.getKey(record);
         var titleAttr = this.guessTitleAttribute(schema);
         var callback = function(attribute, key, record, protocol, schema) {
+            var layer = this.featureManager.featureLayer;
             this.layerLookup[key] = {
                 timeAttr: attribute,
                 titleAttr: titleAttr,
                 icon: Timeline.urlPrefix + "/images/note.png",
-                layer: this.featureManager.featureLayer,
+                layer: layer,
                 visible: true
             };
             if (this.featureManager.featureStore) {
+                // we cannot use the featureLayer's events here, since features
+                // will be added without attributes
                 this.featureManager.featureStore.on("write", this.onSave.createDelegate(this, [key], 3), this);
+            }
+            if (layer) {
+                layer.events.on({
+                    "visibilitychanged": function(evt) {
+                        this.setLayerVisibility(null, evt.object.getVisibility(), record);
+                    },
+                    scope: this
+                });
             }
         };
         this.getTimeAttribute(record, null, schema, callback);
     },
 
+    /**
+     * private: method[onSave]
+     *  :arg store: ``gxp.data.WFSFeatureStore``
+     *  :arg action: ``String``
+     *  :arg data: ``Array``
+     *  :arg key: ``String``
+     *
+     *  When annotation features are saved to the store, we can add them to
+     *  the timeline.
+     */
     onSave: function(store, action, data, key) {
-        if (!this.rendered) {
-            return;
-        }
         var features = [];
         for (var i=0, ii=data.length; i<ii; i++) {
             var feature = data[i].feature;
             features.push(feature);
+            this.clearEventsForFid(key, feature.fid);
         }
         this.addFeatures(key, features);
     },
 
+    /**
+     * private: method[bindPlaybackTool]
+     *  :arg playbackTool: ``gxp.plugins.Playback``
+     *
+     *  Bind with the playback tool so we get updates on when we have to move
+     *  the timeline and when we have to change the range.
+     */
     bindPlaybackTool: function(playbackTool) {
         this.playbackTool = playbackTool;
         this.playbackTool.on("timechange", this.onTimeChange, this);
@@ -325,9 +459,24 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     },
 
     /**
+     * private: method[unbindPlaybackTool]
+     *
+     *  Unbind with the playback tool
+     */
+    unbindPlaybackTool: function() {
+        if (this.playbackTool) {
+            this.playbackTool.un("timechange", this.onTimeChange, this);
+            this.playbackTool.un("rangemodified", this.onRangeModify, this);
+            this.playbackTool = null;
+        }
+    },
+
+    /**
      * private: method[onTimeChange]
      *  :arg toolbar: ``gxp.plugin.PlaybackToolbar``
      *  :arg currentTime: ``Date``
+     *
+     *  Listener for when the playback tool fires timechange.
      */
     onTimeChange: function(toolbar, currentTime) {
         this._silent = true;
@@ -338,6 +487,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     /** private: method[onRangeModify]
      *  :arg toolbar: ``gxp.plugin.PlaybackToolbar``
      *  :arg range: ``Array(Date)``
+     *
+     *  Listener for when the playback tool fires rangemodified
      */
     onRangeModify: function(toolbar, range) {
         this._silent = true;
@@ -346,6 +497,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     },
 
     /** private: method[createTimeline]
+     *  :arg range:  ``Array``
+     *
+     *  Create the Simile timeline object.
      */
     createTimeline: function(range) {
         if (!this.rendered) {
@@ -400,12 +554,20 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         
     },
 
+    /** private: method[setPlaybackCenter]
+     *  :arg band:  ``Object``
+     *
+     *  When the timeline is moved, update the playback tool.
+     */
     setPlaybackCenter: function(band) {
         var time = band.getCenterVisibleDate();
         this._silent !== true && this.playbackTool && this.playbackTool.setTime(time);
     },
     
     /** private: method[bindViewer]
+     *  :arg viewer: ``gxp.Viewer``
+     *
+     *  Bind the timeline with the viewer, so we get updates on layer changes.
      */
     bindViewer: function(viewer) {
         if (this.viewer) {
@@ -419,21 +581,24 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }
         layerStore.on({
             add: this.onLayerStoreAdd,
+            remove: this.onLayerStoreRemove,
             scope: this
         });
         viewer.mapPanel.map.events.on({
             moveend: this.onMapMoveEnd,
             scope: this
         });
-
     },
     
     /** private: method[unbindViewer]
+     *
+     *  Unbind this timeline from the current viewer.
      */
     unbindViewer: function() {
-        var mapPanel = this.viewer.mapPanel;
+        var mapPanel = this.viewer && this.viewer.mapPanel;
         if (mapPanel) {
             mapPanel.layers.unregister("add", this.onLayerStoreAdd, this);
+            mapPanel.layers.unregister("remove", this.onLayerStoreRemove, this);
             mapPanel.map.un({
                 moveend: this.onMapMoveEnd,
                 scope: this
@@ -445,18 +610,29 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     },
 
     /** private: method[getKey]
+     *  :arg record: ``GeoExt.data.LayerRecord``
+     *  :returns:  ``String``
+     *
+     *  Get a unique key for the layer record.
      */
     getKey: function(record) {
         return record.get("source") + "/" + record.get("name");
     },
 
     /** private: method[getTimeAttribute]
+     *  :arg record: ``GeoExt.data.LayerRecord``
+     *  :arg protocol: ``OpenLayers.Protocol``
+     *  :arg schema: ``GeoExt.data.AttributeStore``
+     *  :arg callback: ``Function``
+     *
+     *  Get the time attribute through the time info endpoint.
+     *  Currently this is a MapStory specific protocol.
      */
     getTimeAttribute: function(record, protocol, schema, callback) {
         var key = this.getKey(record);
         Ext.Ajax.request({
             method: "GET",
-            url: "/maps/time_info.json?",
+            url: this.timeInfoEndpoint,
             params: {layer: record.get('name')},
             success: function(response) {
                 var result = Ext.decode(response.responseText);
@@ -468,7 +644,38 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         });
     },
 
+    /** private: method[onLayerStoreRemove]
+     *  :arg store: ``GeoExt.data.LayerStore``
+     *  :arg record: ``Ext.data.Record``
+     *  :arg index: ``Integer``
+     *
+     *  Handler for when layers get removed from the map. 
+     */
+    onLayerStoreRemove: function(store, record, index) {
+        var key = this.getKey(record);
+        if (this.layerLookup[key]) {
+            var layer = this.layerLookup[key].layer;
+            if (layer) {
+                this.clearEventsForKey(key);
+                layer.events.un({
+                    loadstart: this.onLoadStart,
+                    loadend: this.onLoadEnd,
+                    featuresremoved: this.onFeaturesRemoved,
+                    scope: this
+                });
+                delete this.schemaCache[key];
+                delete this.layerLookup[key];
+                layer.destroy();
+            }
+        }
+    },
+
     /** private: method[onLayerStoreAdd]
+     *  :arg store: ``GeoExt.data.LayerStore``
+     *  :arg records: ``Array``
+     *
+     *  Handler for when new layers get added to the map. Make sure they also
+     *  show up in the timeline.
      */
     onLayerStoreAdd: function(store, records) {
         var record;
@@ -500,6 +707,10 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }
     },
 
+    /** private: method[onLayout]
+     *
+     *  Fired by Ext, create the timeline.
+     */
     onLayout: function() {
         gxp.TimelinePanel.superclass.onLayout.call(this, arguments);
         if (!this.timeline) {
@@ -511,6 +722,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }
     },
 
+    /** private: method[setRange]
+     *  :arg range: ``Array``
+     *
+     *  Set the range for the bands of this timeline.
+     */
     setRange: function(range) {
         if (!this.timeline) {
             this.createTimeline(range);
@@ -525,34 +741,58 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }
     },
 
+    /** private: method[setCenterDate]
+     *  :arg time: ``Date``
+     *      
+     *  Set the center datetime on the bands of this timeline.
+     */
     setCenterDate: function(time) {
         if (this.timeline) {
             this.timeline.getBand(0).setCenterVisibleDate(time);
             if (this.rangeInfo && this.rangeInfo.current) {
                 var currentRange = this.rangeInfo.current;
                 var originalRange = this.rangeInfo.original;
-                var originalSpan = originalRange[1] - originalRange[0];
-                var originalCenter = new Date(originalRange[0].getTime() + originalSpan/2);
-                var fractionRange = this.bufferFraction * originalSpan;
-                var lowerBound = new Date(originalCenter.getTime() - fractionRange);
-                var upperBound = new Date(originalCenter.getTime() + fractionRange);
-                // update once the time gets out of the buffered center
-                if (time < lowerBound || time > upperBound) {
+                // update once the time gets out of the original range
+                if (time < originalRange[0] || time > originalRange[1]) {
                     var span = currentRange[1] - currentRange[0];
                     var start = new Date(time.getTime() - span/2);
                     var end = new Date(time.getTime() + span/2);
+                    this.rangeInfo.current = [start, end];
+                    // calculate back the original extent
+                    var startOriginal = new Date(time.getTime() - span/4);
+                    var endOriginal = new Date(time.getTime() + span/4);
+                    this.rangeInfo.original = [startOriginal, endOriginal];
+                    var rangeToClear = undefined;
+                    // we have moved ahead in time, and we have not moved so far that 
+                    // all our data is invalid
+                    if (start > currentRange[0] && start < currentRange[1]) {
+                        // only request the slice of data that we need
+                        rangeToClear = [currentRange[0], start];
+                        start = currentRange[1];
+                    }
+                    // we have moved back in time
+                    if (start < currentRange[0] && end > currentRange[0]) {
+                        rangeToClear = [end, currentRange[1]];
+                        end = currentRange[0];
+                    }
                     for (var key in this.layerLookup) {
                         var layer = this.layerLookup[key].layer;
-                        layer && this.setFilter(key, this.createTimeFilter([start, end], key, 0));
+                        layer && this.setFilter(key, this.createTimeFilter([start, end], key, 0, false));
                     }
-                    // TODO: instead of a full update, only get the data we are missing and
-                    // remove events from the timeline that are out of the new range
-                    this.updateTimelineEvents({force: true});                
+                    this.updateTimelineEvents({force: true}, rangeToClear);
                 }
             }
         }
     },
 
+    /** private: method[calculateNewRange]
+     *  :arg range: ``Array``
+     *  :arg percentage: ``Float``
+     *  :returns: ``Array``
+     *      
+     *  Extend the range with a certain percentage. This only changes the end
+     *  of the range.
+     */
     calculateNewRange: function(range, percentage) {
         if (percentage === undefined) {
             percentage = this.rangeSlider.getValue();
@@ -561,13 +801,24 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         return [range[0], end];
     },
 
-    createTimeFilter: function(range, key, fraction) {
+    /** private: method[createTimeFilter]
+     *  :arg range: ``Array``
+     *  :arg key: ``String``
+     *  :arg fraction: ``Float``
+     *  :arg updateRangeInfo: ``Boolean`` Should we update this.rangeInfo?
+     *  :returns: ``OpenLayers.Filter``
+     *      
+     *  Create an OpenLayers.Filter to use in the WFS requests.
+     */
+    createTimeFilter: function(range, key, fraction, updateRangeInfo) {
         var start = new Date(range[0].getTime() - fraction * (range[1] - range[0]));
         var end = new Date(range[1].getTime() + fraction * (range[1] - range[0]));
-        this.rangeInfo = {
-            original: range,
-            current: [start, end]
-        };
+        if (updateRangeInfo !== false) {
+            this.rangeInfo = {
+                original: range,
+                current: [start, end]
+            };
+        }
         return new OpenLayers.Filter({
             type: OpenLayers.Filter.Comparison.BETWEEN,
             property: this.layerLookup[key].timeAttr,
@@ -576,6 +827,10 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         });
     },
 
+    /** private: method[onLoadStart]
+     *
+     *  When a WFS layer loads for the timeline, show a busy mask.
+     */ 
     onLoadStart: function() {
         this.layerCount++;
         if (!this.busyMask) {
@@ -584,6 +839,10 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         this.busyMask.show();
     },
 
+    /** private: method[onLoadEnd]
+     *
+     *  When all WFS layers are ready, hide the busy mask.
+     */
     onLoadEnd: function() {
         this.layerCount--;
         if(this.layerCount === 0) {
@@ -592,6 +851,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     },
 
     /** private: method[createHitCountProtocol]
+     *  :arg protocolOptions: ``Object``
+     *  :returns: ``OpenLayers.Protocol.WFS``
+     *
+     *  Create a hitCount protocol based on the main WFS protocol. This will
+     *  be used to see if we will get too many features to show in the timeline.
      */
     createHitCountProtocol: function(protocolOptions) {
         return new OpenLayers.Protocol.WFS(Ext.apply({
@@ -602,6 +866,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     },
 
     /** private: method[setFilter]
+     *  :arg key: ``String``
+     *  :arg filter: ``OpenLayers.Filter``
+     *
+     *  Set the filter on the layer as a property. This will be used by the
+     *  protocol when retrieving data.
      */
     setFilter: function(key, filter) {
         var layer = this.layerLookup[key].layer;
@@ -609,6 +878,12 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     },
     
     /** private: method[addVectorLayer]
+     *  :arg record: ``GeoExt.data.LayerRecord``
+     *  :arg protocol: ``OpenLayers.Protocol``
+     *  :arg schema: ``GeoExt.data.AttributeStore``
+     *
+     *  Create an internal vector layer which will retrieve the events for
+     *  the timeline, using WFS and a BBOX strategy.
      */
     addVectorLayer: function(record, protocol, schema) {
         var key = this.getKey(record);
@@ -623,7 +898,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }
         var layer = new OpenLayers.Layer.Vector(key, {
             strategies: [new OpenLayers.Strategy.BBOX({
-                ratio: 1.5,
+                ratio: 1.1,
+                resFactor: 1,
                 autoActivate: false
             })],
             filter: filter,
@@ -657,8 +933,12 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     
     /** private: method[updateTimelineEvents]
      *  :arg options: `Object` First arg to OpenLayers.Strategy.BBOX::update.
+     *  :arg rangeToClear: ``Array`` Optional date range to use for clearing.
+     *
+     *  Load the data for the timeline. Only load the data if the total number
+     *  features is below a configurable threshold.
      */
-    updateTimelineEvents: function(options) {
+    updateTimelineEvents: function(options, rangeToClear) {
         if (!this.rendered) {
             return;
         }
@@ -708,7 +988,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 for (key in this.layerLookup) {
                     layer = this.layerLookup[key].layer;
                     if (layer && layer.strategies !== null) {
-                        this.clearEventsForKey(key);
+                        if (rangeToClear !== undefined) {
+                            this.clearEventsForRange(key, rangeToClear);
+                        } else {
+                            this.clearEventsForKey(key);
+                        }
                         layer.strategies[0].activate();
                         layer.strategies[0].update(options);
                     }
@@ -729,10 +1013,17 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }, this);
     },
 
+    /** private: method[clearEventsForKey]
+     *  :arg key: ``String`` 
+     *
+     *  Clear the events from the timeline for a certain layer.
+     */
     clearEventsForKey: function(key) {
         var iterator = this.eventSource.getAllEventIterator();
         var eventIds = [];
+        var count = 0;
         while (iterator.hasNext()) {
+            count++;
             var evt = iterator.next();
             if (evt.getProperty('key') === key) {
                 eventIds.push(evt.getID());
@@ -741,8 +1032,61 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         for (var i=0, len=eventIds.length; i<len; ++i) {
             this.eventSource.remove(eventIds[i]);
         }
+        this.timeline && this.timeline.layout();
     },
 
+    /** private: method[clearEventsForRange]
+     *  :arg key: ``String`` 
+     *  :arg range: ``Array``
+     *
+     *  Clear the events from the timeline for a certain layer for dates that
+     *  are within the supplied range.
+     */
+    clearEventsForRange: function(key, range) {
+        var iterator = this.eventSource.getAllEventIterator();
+        var eventIds = [];
+        var count = 0;
+        while (iterator.hasNext()) {
+            count++;
+            var evt = iterator.next();
+            var start = evt.getProperty('start');
+            // only clear if in range
+            if (evt.getProperty('key') === key && start >= range[0] && start <= range[1]) {
+                eventIds.push(evt.getID());
+            }
+        }
+        for (var i=0, len=eventIds.length; i<len; ++i) {
+            this.eventSource.remove(eventIds[i]);
+        }
+        this.timeline && this.timeline.layout();
+    },
+
+    /** private: method[clearEventsForFid]
+     *  :arg key: ``String``
+     *  :arg fid:  ``String``
+     *
+     *  Clear the events from the timeline for a certain feature.
+     */
+    clearEventsForFid: function(key, fid) {
+        var iterator = this.eventSource.getAllEventIterator();
+        var eventIds = [];
+        while (iterator.hasNext()) {
+            var evt = iterator.next();
+            if (evt.getProperty('key') === key && evt.getProperty('fid') === fid) {
+                eventIds.push(evt.getID());
+            }
+        }   
+        for (var i=0, len=eventIds.length; i<len; ++i) {
+            this.eventSource.remove(eventIds[i]);
+        }
+        this.timeline && this.timeline.layout();
+    },
+
+    /** private: method[onFeaturesRemoved]
+     *  :arg event: ``Object`` 
+     *
+     *  Memory management for when features get removed.
+     */
     onFeaturesRemoved: function(event) {
         // clean up
         for (var i=0, len=event.features.length; i<len; i++) {
@@ -750,6 +1094,12 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }
     },
 
+    /** private: method[addFeatures]
+     *  :arg key: ``String``
+     *  :arg features: ``Array``
+     *
+     *  Add some features to the timeline.
+     */    
     addFeatures: function(key, features) {
         var titleAttr = this.layerLookup[key].titleAttr;
         var timeAttr = this.layerLookup[key].timeAttr;
@@ -774,6 +1124,12 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         this.eventSource.loadJSON(feed, "http://mapstory.org/");
     },
 
+    /** private: method[onFeaturesAdded]
+     *  :arg event: ``Object``
+     *  :arg key: ``String``
+     *
+     *  When features get added to the vector layer, add them to the timeline.
+     */
     onFeaturesAdded: function(event, key) {
         var features = event.features;
         this.addFeatures(key, features);
@@ -787,6 +1143,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         this.timeline && this.timeline.layout();
     },
 
+    /** private: method[beforeDestroy]
+     *  Cleanup.
+     */
     beforeDestroy : function(){
         gxp.TimelinePanel.superclass.beforeDestroy.call(this);
         for (var key in this.layerLookup) {
@@ -799,10 +1158,14 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             });
             layer.destroy();
         }
+        this.destroyPopup();
         this.unbindViewer();
+        this.unbindFeatureManager();
+        this.unbindPlaybackTool();
         if (this.rendered){
             Ext.destroy(this.busyMask);
         }
+        this.eventSource = null;
         if (this.timeline) {
             this.timeline.dispose();
             this.timeline = null;

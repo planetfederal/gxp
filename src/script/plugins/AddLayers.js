@@ -199,9 +199,9 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      * Constructs a window with a capabilities grid.
      */
     initCapGrid: function() {
-        var source, data = [];        
-        for (var id in this.target.layerSources) {
-            source = this.target.layerSources[id];
+        var source, data = [], target = this.target;        
+        for (var id in target.layerSources) {
+            source = target.layerSources[id];
             if (source.store) {
                 data.push([id, source.title || id, source.url]);                
             }
@@ -213,7 +213,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
 
         var expander = this.createExpander();
         
-        var addLayers = function() {
+        function addLayers() {
             var key = sourceComboBox.getValue();
             var layerStore = this.target.mapPanel.layers;
             var source = this.target.layerSources[key];
@@ -232,7 +232,23 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     }
                 }
             }
-        };
+        }
+        
+        function updateName() {
+            var store = sourceComboBox.store,
+                valueField = sourceComboBox.valueField,
+                index = store.findExact(valueField, sourceComboBox.getValue()),
+                rec = store.getAt(index),
+                source = target.layerSources[rec.get("id")];
+            if (source) {
+                if (source.title !== rec.get("title")) {
+                    rec.set("title", source.title);
+                    sourceComboBox.setValue(rec.get(valueField));
+                }
+            } else {
+                store.remove(rec);
+            }
+        }        
 
         var idx = 0;
         if (this.startSourceId !== null) {
@@ -243,10 +259,11 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             }, this);
         }
         
-        var store = this.target.layerSources[data[idx][0]].store;
-        if (store.getCount() === 0) {
+        var source = this.target.layerSources[data[idx][0]],
+            store = source.store;
+        if (source.lazy) {
             // assume a lazy source
-            store.load();
+            store.load({callback: updateName});
         }
 
         var capGridPanel = new Ext.grid.GridPanel({
@@ -285,9 +302,8 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     // TODO: remove the following when this Ext issue is addressed
                     // http://www.extjs.com/forum/showthread.php?100345-GridPanel-reconfigure-should-refocus-view-to-correct-scroller-height&p=471843
                     capGridPanel.getView().focusRow(0);
-                    if (source.store.getCount() === 0) {
-                        // assume a lazy source
-                        source.store.load();
+                    if (source.lazy) {
+                        source.store.load({callback: updateName});
                     }
                     this.setSelectedSource(source);
                 },

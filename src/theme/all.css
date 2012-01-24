@@ -166,7 +166,12 @@
 .x-btn .gxp-icon-editfeature, .x-menu-item .gxp-icon-editfeature {
     background-image: url(img/silk/map_edit.png);
 }
-
+/* gxp_cataloguesearch */
+.x-action-col, .gxp-icon-addlayers {
+    background-image: url(img/silk/add.png);
+    width: 16px;
+    height: 16px;
+}
 /* gxp_addlayers */
 .x-btn .gxp-icon-addlayers, .x-menu-item .gxp-icon-addlayers, .x-tree-node .gxp-icon-addlayers {
     background-image: url(img/silk/add.png);
@@ -314,6 +319,66 @@ div.olMap div.gx-overlay-playback {
     width:16px !important;height:16px !important;
     background-repeat: no-repeat;
 }
+
+/* gxp_histogram */
+.gxp-histogram {
+    overflow: hidden;
+    position: relative;
+    border-bottom: 1px solid #BBB;
+}
+.gxp-histogram .bar {
+    position: absolute;
+    background-color: #BBB;
+    border-right: 1px solid #BBB; /* avoid gaps between bars */
+    height: 100%; /* so we don't need to set the height programmatially */
+}
+
+/* gxp_layermanager */
+.gxp-layermanager-tree .x-tree-node-icon {
+    display: none;
+}
+.gxp-layermanager-tree .x-tree-node-anchor {
+    font-weight: bold;
+}
+.gxp-layermanager-tree input + .x-tree-node-anchor {
+    font-weight: normal;
+}
+.gxp-layermanager-tree input[checked] + .x-tree-node-anchor {
+    font-weight: bold;
+}
+.gxp-layermanager-tree .legend img {
+    padding-left: 48px;
+}
+.gxp-layermanager-tree .legendnode {
+    line-height: 0;
+}
+.gxp-layermanager-tree .legendnode:hover {
+    background-color: inherit;
+}
+.gxp-layermanager-tree .legendnode .x-tree-node-indent {
+    display: none;
+}
+.gxp-layermanager-tree .legendnode .x-tree-ec-icon {
+    display: none;
+}
+.gxp-layermanager-tree .legend label {
+    display: none;
+}
+.gxp-layermanager-tree .gx-legend-noimage {
+    display: none;
+}
+.gxp-layermanager-crumbs button {
+    color: #15428B;
+}
+.gxp-layermanager-crumbs td:last-of-type button {
+    font-weight: bold;
+}
+.gxp-layermanager-crumbs .xtb-spacer {
+    width: 12px;
+    height: 16px;
+}
+
+
 .x-btn .gxp-icon-reset{
     background-image:url('img/silk/control_start_blue.png')
 }

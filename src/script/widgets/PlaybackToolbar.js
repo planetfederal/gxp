@@ -111,40 +111,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
              */
             "rangemodified"            
         );
-        gxp.PlaybackToolbar.superclass.initComponent.call(this);
-        
-        //add the opacity effects
-        this.on({
-                'afterlayout': function(tb, layout){
-                    //add the element level handlers for fade-in / fade-out
-/*
-                    var el = this.getEl();
-                    var actionEl = el.child('.x-toolbar-left>table');
-                    if (actionEl) {
-                        var width = actionEl.getWidth() * 1.25, height = actionEl.getHeight() * 1.25;
-                        actionEl = actionEl.wrap();
-                        actionEl.setSize(Math.round(width), Math.round(height), false);
-                        actionEl.on({
-                            'mouseenter': function(evt, domEl){
-                                if (el.getStyle('opacity') < 1) {
-                                    if (el.anim().isAnimated) {
-                                        el.anim().stop();
-                                    }
-                                    el.setOpacity(1, false);
-                                }
-                            },
-                            'mouseleave': function(evt, domEl){
-                                el.setOpacity(0.25, {
-                                    duration: 1
-                                });
-                            },
-                            'mousemove': function(evt, domEl){
-                                el.setOpacity(1, false);
-                            }
-                        });
-                    }*/
-                }
-            });
+        gxp.PlaybackToolbar.superclass.initComponent.call(this);        
     },
     /** private: method[destroy]
      *  Destory the component.
@@ -267,7 +234,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                         this.control.events.register('tick', this.control, function(evt){
                             var tailIndex = slider.indexMap?slider.indexMap.indexOf('tail'):-1;
                             var offset = (tailIndex>-1) ? evt.currentTime.getTime() - slider.thumbs[0].value : 0;
-                            slider.setValue(0, evt.currentTime.getTime() + offset);
+                            slider.setValue(0, evt.currentTime.getTime());
                             if (tailIndex > -1) {
                                 slider.setValue(tailIndex, slider.thumbs[tailIndex].value + offset);
                             }
@@ -467,7 +434,9 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
       max=this.control.range[1].getTime(),
       then=new Date(min),interval;
       if(this.control.units){
-          interval=then['setUTC' + this.control.units](then['getUTC' + this.control.units]() + this.control.step) - min;
+          var step = parseFloat(then['getUTC' + this.control.units]()) + parseFloat(this.control.step);
+          var stepTime = then['setUTC' + this.control.units](step);
+          interval=stepTime - min;
       }else{
           interval = false;
       }

@@ -16,6 +16,38 @@
             
             t.ok(instance instanceof gxp.plugins.AddLayers, "Instance created successfully");
         }
+        
+        function test_initCapGrid(t) {
+            t.plan(3);
+            var addLayers = new gxp.plugins.AddLayers({
+                createExpander: function() {return {id: "foo", init: Ext.emptyFn};}
+            });
+            var source = new gxp.plugins.WMSSource({
+                url: "wms_caps.xml"
+            });
+            addLayers.init({
+                proxy: "foo",
+                tools: {},
+                layerSources: {
+                    "local": source
+                },
+                on: Ext.emptyFn
+            });
+            source.init({initialConfig: {map: {}}, on: Ext.emptyFn});
+            // when source has fired "ready"
+            t.delay_call(1, function() {
+                t.eq(source.store.getCount(), 0, "store not yet populated");
+                addLayers.addOutput({});
+                addLayers.showCapabilitiesGrid();
+                t.ok(addLayers.capGrid, "capabilities grid created");
+            });
+            // when source has finished loading
+            t.delay_call(2, function() {
+                // check if updateName has updated the source title in the
+                // sources combo box
+                t.eq(addLayers.capGrid.getTopToolbar().get(1).getRawValue(), source.title, "Title set to title from source");
+            });
+        }
 
     </script>
   </head>

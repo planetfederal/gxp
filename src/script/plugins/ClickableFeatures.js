@@ -83,7 +83,7 @@ gxp.plugins.ClickableFeatures = Ext.extend(gxp.plugins.Tool, {
     constructor: function(config) {
         // deal with deprecated autoLoadFeatures config option
         //TODO remove this before we cut a release
-        if ("autoLoadFeatures" in config) {
+        if (config && "autoLoadFeatures" in config) {
             config.autoLoadFeature = config.autoLoadFeatures;
             delete config.autoLoadFeatures;
             window.setTimeout(function() {
