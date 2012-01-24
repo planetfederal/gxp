@@ -367,16 +367,6 @@ div.olMap div.gx-overlay-playback {
 .gxp-layermanager-tree .gx-legend-noimage {
     display: none;
 }
-.gxp-layermanager-crumbs button {
-    color: #15428B;
-}
-.gxp-layermanager-crumbs td:last-of-type button {
-    font-weight: bold;
-}
-.gxp-layermanager-crumbs .xtb-spacer {
-    width: 12px;
-    height: 16px;
-}
 
 
 .x-btn .gxp-icon-reset{
