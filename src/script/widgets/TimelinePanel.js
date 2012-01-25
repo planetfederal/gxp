@@ -7,6 +7,7 @@
  */
 
 /**
+ * @requires widgets/tips/RangeSliderTip.js
  * @requires widgets/FeatureEditPopup.js
  */
 
@@ -153,7 +154,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 listeners: {
                     "changecomplete": this.onChangeComplete,
                     scope: this
-                }
+                },
+                plugins: [new gxp.slider.RangeSliderTip()]
             }]
         }, this.timelineContainer
         ];
@@ -819,6 +821,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 current: [start, end]
             };
         }
+        this.rangeSlider.startDate = start.dateFormat('Y-m-d');
+        this.rangeSlider.endDate = end.dateFormat('Y-m-d');
         return new OpenLayers.Filter({
             type: OpenLayers.Filter.Comparison.BETWEEN,
             property: this.layerLookup[key].timeAttr,
