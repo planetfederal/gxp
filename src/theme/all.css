@@ -434,9 +434,10 @@ div.olMap div.gx-overlay-playback {
     background-image:url('img/silk/resultset_previous.png')!important;
     background-position:0 0 !important;
 }
-.x-slider-tail-thumb{
+.x-slider-horz .x-slider-tail-thumb{
     background-image:url('img/silk/stop.png')!important;
     background-position:0 0 !important;
+    left:-14px;
 }
 .thumb-mapbox {
     width: 128px;
