@@ -115,6 +115,9 @@
 .x-btn .gxp-icon-layer-switcher {
     background-image: url(img/silk/layers.png);
 }
+.timeline-highlight-point-decorator {
+    background-color: #F46817;
+}
 
 /* gxp_annotation */
 .x-btn .gxp-icon-note {

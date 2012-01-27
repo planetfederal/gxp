@@ -550,6 +550,13 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         bandInfos[1].syncWith = 0;
         bandInfos[1].highlight = true;
 
+       bandInfos[0].decorators = [
+            new Timeline.PointHighlightDecorator({
+                date: d,
+                theme: theme
+            })
+        ];
+
         this.timeline = Timeline.create(
             this.timelineContainer.el.dom, 
             bandInfos, 
@@ -838,6 +845,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
     setCenterDate: function(time) {
         if (this.timeline) {
+            this.timeline.getBand(0)._decorators[0]._date = time;
+            this.timeline.getBand(0)._decorators[0].paint();
             this.timeline.getBand(0).setCenterVisibleDate(time);
             if (this.rangeInfo && this.rangeInfo.current) {
                 var currentRange = this.rangeInfo.current;
