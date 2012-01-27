@@ -8,6 +8,7 @@
 
 /**
  * @requires widgets/PlaybackToolbar.js
+ * @requires widgets/form/PlaybackModeComboBox.js
  */
 
 /** api: (define)
@@ -138,17 +139,11 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
                     },{
                         //TODO: provide user information about these modes (Change to radio group?)
                         fieldLabel:this.rangedPlayChoiceText,
-                        xtype:'combo',
+                        xtype:'gxp_playbackmodecombo',
+                        timeAgents: this.timeManager && this.timeManager.timeAgents,
                         anchor:'-5',
-                        mode:'local',
-                        editable:false,
-                        forceSelection:true,
-                        autoSelect:false,
-                        triggerAction:'all',
-                        //TODO: i18n these playback modes
-                        store:[[false,'Normal'],['cumulative','Cumulative'],['range','Ranged']],
                         listeners:{
-                            'select':this.setPlaybackMode,
+                            'modechange':this.setPlaybackMode,
                             scope:this
                         },
                         ref:'../../playbackModeField'
@@ -212,21 +207,13 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
     setStep:function(cmp,newVal,oldVal){
         this.timeManager.step = newVal;
     },
-    setPlaybackMode:function(cmp,record,index){
-        var mode = record.get('field1');
-        OpenLayers.TimeAgent.prototype.rangeMode = mode;
+    setPlaybackMode:function(cmp,mode,agents){
         switch(mode){
             case 'cumulative':
                 this.playbackToolbar.setPlaybackMode('cumulative');
                 break;
             case 'range':
                 this.disableListMode(true);
-                for (var i = 0, len = this.timeManager.timeAgents.length; i < len; i++) {
-                    var agent = this.timeManager.timeAgents[i];
-                    if (!agent.rangeInterval) {
-                        agent.rangeInterval = 1;
-                    }
-                }
                 this.playbackToolbar.setPlaybackMode('ranged');
                 break;
             default:
@@ -262,9 +249,13 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
             this.stepUnitsField.originalValue = this.timeManager.units;
             this.listOnlyCheck.setValue(this.timeManager.snapToIntervals);
             this.listOnlyCheck.originalValue = this.timeManager.snapToIntervals;
-            //TODO: uhh, may want to seriously re-think this. Probably want to use the playback widget's setting
-            this.playbackModeField.setValue(OpenLayers.TimeAgent.prototype.rangeMode);
-            this.playbackModeField.originalValue = OpenLayers.TimeAgent.prototype.rangeMode;
+            var playbackMode = this.playbackToolbar.playbackMode;
+            if(playbackMode == 'track' || !playbackMode) { playbackMode = false; }
+            if(!this.playbackModeField.timeAgents || !this.playbackModeField.timeAgents.length){
+                this.playbackModeField.timeAgents = this.timeManager.timeAgents;
+            }
+            this.playbackModeField.setValue(playbackMode);
+            this.playbackModeField.originalValue = playbackMode;
             this.loopModeCheck.setValue(this.timeManager.loop);
             this.loopModeCheck.originalValue=this.timeManager.loop;
             this.reverseModeCheck.setValue(this.timeManager.step<0);
