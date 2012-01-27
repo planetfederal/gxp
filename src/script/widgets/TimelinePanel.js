@@ -550,17 +550,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         bandInfos[1].syncWith = 0;
         bandInfos[1].highlight = true;
 
-        for (var i = 0; i < bandInfos.length; i++) {
-            bandInfos[i].decorators = [
-                new Timeline.PointHighlightDecorator({
-                    date: d,
-                    opacity: 50,
-                    theme: theme,
-                    color: "#FF0000"
-                })
-            ];
-        }
-
         this.timeline = Timeline.create(
             this.timelineContainer.el.dom, 
             bandInfos, 
