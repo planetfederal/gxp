@@ -8,6 +8,7 @@
         "data/WFSFeatureStore.js",
         "data/WFSProtocolProxy.js",
         "menu/LayerMenu.js",
+        "widgets/CrumbPanel.js",
         "widgets/EmbedMapDialog.js",
         "widgets/FeatureEditPopup.js",
         "widgets/FilterBuilder.js",

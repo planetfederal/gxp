@@ -371,6 +371,44 @@ div.olMap div.gx-overlay-playback {
     display: none;
 }
 
+/* gxp_crumbpanel */
+.gxp-crumbpanel ul.x-tab-strip, .gxp-crumbpanel ul.x-tab-strip li {
+    position: relative;
+}
+.gxp-crumbpanel .x-tab-left {
+    padding-right: 19px;
+}
+.gxp-crumbpanel .gxp-crumb-separator {
+    background-repeat: no-repeat;
+    display: block;
+	width: 12px;
+    height: 11px;
+    position: absolute;
+    top: 6px;
+    right: 3px;
+    z-index: 2;
+    background-image: url('img/expand.gif');
+}
+.gxp-crumbpanel .x-tab-right {
+    padding-left: 0px;
+    background-image: none;
+}
+.gxp-crumbpanel .x-tab-left, .gxp-crumbpanel .x-tab-strip-inner {
+    background-image: none;
+}
+.gxp-crumbpanel .x-tab-strip-text {
+    margin: 0 2px 0 2px;
+}
+.gxp-crumbpanel .x-tab-strip-active .gxp-crumb-separator {
+    display: none;
+}
+.gxp-crumbpanel ul.x-tab-strip-top {
+    padding-bottom: 1px;
+    border-bottom: 0;
+}
+.gxp-crumbpanel .x-tab-panel-header {
+    padding-bottom: 0;
+}
 
 .x-btn .gxp-icon-reset{
     background-image:url('img/silk/control_start_blue.png')
