@@ -307,7 +307,6 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                 allowDepress: true,
                 toggleHandler: this.toggleLoopMode,
                 scope: this,
-                tooltip: this.loopTooltip,
                 menuText: this.loopLabel,
                 text: (this.labelButtons) ? this.loopLabel : false
             },
@@ -320,7 +319,6 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                 toggleHandler: this.toggleDoubleSpeed,
                 scope: this,
                 disabled:true,
-                tooltip: this.fastforwardTooltip,
                 menuText: this.fastforwardLabel,
                 text: (this.labelButtons) ? this.fastforwardLabel : false
             },
@@ -339,7 +337,9 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         var actions =[];
         for(var i=0,len=actConfigs.length;i<len;i++){
             var cfg = actConfigs[i];
-            if(typeof cfg == 'string')cfg = actionDefaults[cfg];
+            if(typeof cfg == 'string'){
+                cfg = actionDefaults[cfg];
+            }
             else if(!(Ext.isObject(cfg) || cfg instanceof Ext.Component || cfg instanceof Ext.Action)){
                 console.error("playbackActions configurations must be a string, valid action, component, or config");
                 cfg=null;
@@ -441,10 +441,10 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
           interval = false;
       }
       if(this.dynamicRange){
-        var rangeAdj = (min-max)*.1;
+        var rangeAdj = (min-max)*0.1;
         values.push(min=min-rangeAdj,max=max+rangeAdj);
         indexMap[1]='minTime';
-        indexMap[2]='maxTime'
+        indexMap[2]='maxTime';
       }
       if(this.playbackMode && this.playbackMode!='track'){
         values.push(min);
@@ -496,12 +496,16 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         btn.el.removeClass('x-btn-pressed');
         btn.setTooltip(pressed?this.pauseTooltip:this.playTooltip);
         btn.refOwner.btnFastforward[pressed?'enable':'disable']();
-        if(this.labelButtons && btn.text)btn.setText(pressed?this.pauseLabel:this.playLabel);
+        if(this.labelButtons && btn.text){
+            btn.setText(pressed?this.pauseLabel:this.playLabel);
+        }
     },
     toggleLoopMode:function(btn,pressed){
         this.control.loop=pressed;
         btn.setTooltip(pressed?this.normalTooltip:this.loopTooltip);
-        if(this.labelButtons && btn.text)btn.setText(pressed?this.normalLabel:this.loopLabel);
+        if(this.labelButtons && btn.text){
+            btn.setText(pressed?this.normalLabel:this.loopLabel);
+        }
     },
     toggleDoubleSpeed:function(btn,pressed){
         this.control.frameRate = this.control.frameRate*(pressed)?2:0.5;
@@ -514,10 +518,10 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                 this.optionsWindow.optionsPanel.timeManager = this.control;
                 this.optionsWindow.optionsPanel.playbackToolbar = this;
             }
-            this.optionsWindow.show()
+            this.optionsWindow.show();
         }
         else if(!pressed && !this.optionsWindow.hidden){
-            this.optionsWindow.hide()
+            this.optionsWindow.hide();
         }
     },
     updateTimeDisplay: function(){

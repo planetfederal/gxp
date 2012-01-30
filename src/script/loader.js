@@ -41,6 +41,7 @@
         "widgets/tips/SliderTip.js",
         "widgets/PlaybackToolbar.js",
         "widgets/slider/ClassBreakSlider.js",
+        "widgets/tips/RangeSliderTip.js",
         "widgets/TimelinePanel.js",
         "widgets/form/CSWFilterField.js",
         "widgets/CatalogueSearchPanel.js",
@@ -91,7 +92,6 @@
         "plugins/Print.js",
         "plugins/LoadingIndicator.js",
         "plugins/Playback.js",
-        "plugins/CatalogueSearch.js",
         "locale/es.js",
         "locale/ca.js"
     );

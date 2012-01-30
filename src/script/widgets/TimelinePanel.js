@@ -7,6 +7,7 @@
  */
 
 /**
+ * @requires widgets/tips/RangeSliderTip.js
  * @requires widgets/FeatureEditPopup.js
  */
 
@@ -91,6 +92,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
     schemaCache: {},
 
+    /** private: property[sldCache]
+     *  ``Object`` An object that contains the parsed SLD documents.
+     */
+    sldCache: {},
+
     /** api: property[layerLookup]
      *  ``Object``
      *  Mapping of store/layer names (e.g. "local/foo") to objects storing data
@@ -101,6 +107,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *   * titleAttr - {String}
      *   * timeAttr - {String}
      *   * visible - {Boolean}
+     *   * timeFilter - {OpenLayers.Filter}
+     *   * sldFilter - {OpenLayers.Filter}
      *  
      */
     
@@ -150,10 +158,13 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 ref: "../rangeSlider",
                 vertical: true,
                 value: 25,
+                minValue: 1,
+                maxValue: 100,
                 listeners: {
                     "changecomplete": this.onChangeComplete,
                     scope: this
-                }
+                },
+                plugins: [new gxp.slider.RangeSliderTip()]
             }]
         }, this.timelineContainer
         ];
@@ -208,7 +219,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             var end = new Date(center.getTime() + span/2);
             for (var key in this.layerLookup) {
                 var layer = this.layerLookup[key].layer;
-                layer && this.setFilter(key, this.createTimeFilter([start, end], key, this.bufferFraction));
+                layer && this.setTimeFilter(key, this.createTimeFilter([start, end], key, this.bufferFraction));
             }
             this.updateTimelineEvents({force: true});
         }
@@ -506,7 +517,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             return;
         }
         var theme = Timeline.ClassicTheme.create();
-
         var span = range[1] - range[0];
         var years  = ((((span/1000)/60)/60)/24)/365;
         var intervalUnits = [];
@@ -526,7 +536,25 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 eventSource: this.eventSource,
                 date: d,
                 theme: theme,
-                layout: "original"
+                layout: "original",
+                zoomIndex: 7,
+                zoomSteps: [
+                    {pixelsPerInterval: 25,  unit: intervalUnits[0]},
+                    {pixelsPerInterval: 50,  unit: intervalUnits[0]},
+                    {pixelsPerInterval: 75,  unit: intervalUnits[0]},
+                    {pixelsPerInterval: 100,  unit: intervalUnits[0]},
+                    {pixelsPerInterval: 125,  unit: intervalUnits[0]},
+                    {pixelsPerInterval: 150,  unit: intervalUnits[0]},
+                    {pixelsPerInterval: 175,  unit: intervalUnits[0]},
+                    {pixelsPerInterval: 200,  unit: intervalUnits[0]},
+                    {pixelsPerInterval: 225,  unit: intervalUnits[0]},
+                    {pixelsPerInterval: 250,  unit: intervalUnits[0]},
+                    {pixelsPerInterval: 275,  unit: intervalUnits[0]},
+                    {pixelsPerInterval: 300,  unit: intervalUnits[0]},
+                    {pixelsPerInterval: 325,  unit: intervalUnits[0]},
+                    {pixelsPerInterval: 350,  unit: intervalUnits[0]},
+                    {pixelsPerInterval: 375,  unit: intervalUnits[0]}
+                ]
             }),
             Timeline.createBandInfo({
                 width: "20%", 
@@ -540,6 +568,13 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         ];
         bandInfos[1].syncWith = 0;
         bandInfos[1].highlight = true;
+
+       bandInfos[0].decorators = [
+            new Timeline.PointHighlightDecorator({
+                date: d,
+                theme: theme
+            })
+        ];
 
         this.timeline = Timeline.create(
             this.timelineContainer.el.dom, 
@@ -670,6 +705,83 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }
     },
 
+    /** private: method[parseSLD]
+     *  :arg response: ``Object``
+     *  :arg key: ``String``
+     *
+     *  Parse the SLD using an OpenLayers parser and store it in the cache.
+     */
+    parseSLD: function(response, key) {
+        var parser = new OpenLayers.Format.SLD();
+        this.sldCache[key] = parser.read(response.responseXML || response.responseText);
+    },
+
+    /** private: method[getFilterFromSLD]
+     *  :arg key: ``String``
+     *  :returns: ``OpenLayers.Filter``
+     *
+     *  Extract the Filter from the SLD.
+     */
+    getFilterFromSLD: function(key) {
+        var sld = this.sldCache[key];
+        var filters = [];
+        var elseFilter = false;
+        for (var lyr in sld.namedLayers) {
+            for (var i=0, ii=sld.namedLayers[lyr].userStyles.length; i<ii; ++i) {
+                var style = sld.namedLayers[lyr].userStyles[i];
+                if (style.isDefault === true) {
+                    for (var j=0, jj=style.rules.length; j<jj; ++j) {
+                        var rule = style.rules[j];
+                        if (rule.elseFilter === true) {
+                            elseFilter = true;
+                            break;
+                        } else if (rule.filter) {
+                            filters.push(rule.filter);
+                        }
+                    }
+                        
+                }
+            }
+        }
+        if (elseFilter === true) {
+            return false;
+        }
+        else if (filters.length === 1) {
+            return filters[0];
+        }
+        else if (filters.length > 0) {
+            return new OpenLayers.Filter.Logical({
+                type: OpenLayers.Filter.Logical.OR,
+                filters: filters
+            });
+        } else {
+            return false;
+        }
+    },
+
+    /** private: method[getSLD]
+     *  :arg record: ``GeoExt.data.LayerRecord``
+     *
+     *  Retrieve the SLD through a GetStyles request.
+     */
+    getSLD: function(record) {
+        var key = this.getKey(record);
+        var layer = record.getLayer();
+        Ext.Ajax.request({
+            url: layer.url,
+            params: {
+                "SERVICE": "WMS",
+                "VERSION": "1.1.1",
+                "REQUEST": "GetStyles",
+                "LAYERS": [layer.params["LAYERS"]].join(",")
+            },
+            method: "GET",
+            disableCaching: false,
+            success: this.parseSLD.createDelegate(this, [key], 1),
+            scope: this
+        });
+    },
+
     /** private: method[onLayerStoreAdd]
      *  :arg store: ``GeoExt.data.LayerStore``
      *  :arg records: ``Array``
@@ -690,7 +802,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                             // TODO: add logging to viewer
                             throw new Error("Failed to get protocol for record: " + record.get("name"));
                         }
-                        this.schemaCache[this.getKey(record)] = schema;
+                        var key = this.getKey(record);
+                        if (!this.sldCache[key]) {
+                            this.getSLD(record);
+                        }
+                        this.schemaCache[key] = schema;
                         var callback = function(attribute, key, record, protocol, schema) {
                             if (attribute) {
                                 this.layerLookup[key] = {
@@ -722,6 +838,33 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }
     },
 
+    findBestZoomLevel: function(range) {
+        if (this.timeline) {
+            var diff = range[1]-range[0];
+            var band = this.timeline.getBand(0);
+            var length = band.getViewLength();
+            var level = diff/band.getEther()._interval;
+            var pixels = length/level;
+            var delta;
+            var prevDelta = Number.POSITIVE_INFINITY;
+            var idx;
+            for (var i=0, ii=band._zoomSteps.length; i<ii; ++i) {
+                delta = Math.abs(band._zoomSteps[i].pixelsPerInterval-pixels);
+                if (delta < prevDelta) {
+                    idx = i;
+                }
+                prevDelta = delta;
+            }
+            if (idx !== band._zoomIndex) {
+                var zoomIn = idx < band._zoomIndex;
+                while (idx != band._zoomIndex) {
+                    band.zoom(zoomIn);
+                }
+                band.paint();
+            }
+        }
+    },
+
     /** private: method[setRange]
      *  :arg range: ``Array``
      *
@@ -748,6 +891,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
     setCenterDate: function(time) {
         if (this.timeline) {
+            this.timeline.getBand(0)._decorators[0]._date = time;
+            this.timeline.getBand(0)._decorators[0].paint();
             this.timeline.getBand(0).setCenterVisibleDate(time);
             if (this.rangeInfo && this.rangeInfo.current) {
                 var currentRange = this.rangeInfo.current;
@@ -777,7 +922,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                     }
                     for (var key in this.layerLookup) {
                         var layer = this.layerLookup[key].layer;
-                        layer && this.setFilter(key, this.createTimeFilter([start, end], key, 0, false));
+                        layer && this.setTimeFilter(key, this.createTimeFilter([start, end], key, 0, false));
                     }
                     this.updateTimelineEvents({force: true}, rangeToClear);
                 }
@@ -790,15 +935,19 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  :arg percentage: ``Float``
      *  :returns: ``Array``
      *      
-     *  Extend the range with a certain percentage. This only changes the end
+     *  Extend the range with a certain percentage. This changes both sides
      *  of the range.
      */
     calculateNewRange: function(range, percentage) {
         if (percentage === undefined) {
             percentage = this.rangeSlider.getValue();
         }
-        var end = new Date(range[0].getTime() + ((percentage/100) * (range[1] - range[0])));
-        return [range[0], end];
+        var span = range[1] - range[0];
+        var center = new Date((range[0].getTime() + range[1].getTime())/2);
+        var newSpan = (percentage/100)*span;
+        var start = new Date(center.getTime() - newSpan/2);
+        var end = new Date(center.getTime() + newSpan/2);
+        return [start, end];
     },
 
     /** private: method[createTimeFilter]
@@ -819,6 +968,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 current: [start, end]
             };
         }
+        this.rangeSlider.startDate = start.dateFormat('Y-m-d');
+        this.rangeSlider.endDate = end.dateFormat('Y-m-d');
+        //this.findBestZoomLevel([start, end]);
         return new OpenLayers.Filter({
             type: OpenLayers.Filter.Comparison.BETWEEN,
             property: this.layerLookup[key].timeAttr,
@@ -865,16 +1017,46 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }, protocolOptions));
     },
 
-    /** private: method[setFilter]
+    /** private: method[assembleFullFilter]
+     *  :arg key: ``String``
+     *  :returns: ``OpenLayers.Filter``
+     *
+     *  Combine the time filter and filter extracted from the SLD into one
+     *  full filter.
+     */
+    assembleFullFilter: function(key) {
+        var lookup = this.layerLookup[key];
+        var filters = [];
+        if (lookup.sldFilter !== false) {
+            filters.push(lookup.sldFilter);
+        }
+        if (lookup.timeFilter) {
+            filters.push(lookup.timeFilter);
+        }
+        var filter = null;
+        if (filters.length === 1) {
+            filter = filters[0];
+        } else if (filters.length > 1) {
+            filter = new OpenLayers.Filter.Logical({
+                type: OpenLayers.Filter.Logical.AND,
+                filters: filters
+            });
+        }
+        return filter;
+    },
+
+    /** private: method[setTimeFilter]
      *  :arg key: ``String``
      *  :arg filter: ``OpenLayers.Filter``
      *
-     *  Set the filter on the layer as a property. This will be used by the
+     *  Set the time filter on the layer as a property. This will be used by the
      *  protocol when retrieving data.
      */
-    setFilter: function(key, filter) {
-        var layer = this.layerLookup[key].layer;
-        layer.filter = filter;
+    setTimeFilter: function(key, filter) {
+        this.layerLookup[key].timeFilter = filter;
+        if (this.layerLookup[key].layer) {
+            this.layerLookup[key].layer.filter = this.assembleFullFilter(key);
+        }
     },
     
     /** private: method[addVectorLayer]
@@ -887,15 +1069,16 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
     addVectorLayer: function(record, protocol, schema) {
         var key = this.getKey(record);
-        var filter = null;
+        this.layerLookup[key].sldFilter = this.getFilterFromSLD(key);
         if (this.playbackTool) {
             // TODO consider putting an api method getRange on playback tool
             var range = this.playbackTool.playbackToolbar.control.range;
             range = this.calculateNewRange(range);
             this.setCenterDate(this.playbackTool.playbackToolbar.control.currentTime);
             // create a PropertyIsBetween filter
-            filter = this.createTimeFilter(range, key, this.bufferFraction);
+            this.setTimeFilter(key, this.createTimeFilter(range, key, this.bufferFraction));
         }
+        var filter = this.assembleFullFilter(key);
         var layer = new OpenLayers.Layer.Vector(key, {
             strategies: [new OpenLayers.Strategy.BBOX({
                 ratio: 1.1,

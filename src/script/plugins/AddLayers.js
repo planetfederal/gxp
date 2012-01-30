@@ -38,6 +38,12 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      */
     addActionMenuText: "Add layers",
 
+    /** api: config[findActionMenuText]
+     *  ``String``
+     *  Text for find menu item (i18n).
+     */
+    findActionMenuText: "Find layers",
+
     /** api: config[addActionTip]
      *  ``String``
      *  Text for add action tooltip (i18n).
@@ -109,6 +115,13 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      */
     doneText: "Done",
 
+    /** api: config[search]
+     *  ``Object | Boolean``
+     *  If provided, a :class:`gxp.CatalogueSearchPanel` will be added as a
+     *  menu option. This panel will be constructed using the provided config.
+     *  By default, no search functionality is provided.
+     */
+
     /** api: config[upload]
      *  ``Object | Boolean``
      *  If provided, a :class:`gxp.LayerUploadPanel` will be made accessible
@@ -170,18 +183,71 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
     /** api: method[addActions]
      */
     addActions: function() {
-        var actions = gxp.plugins.AddLayers.superclass.addActions.apply(this, [{
+        var commonOptions = {
             tooltip : this.addActionTip,
             text: this.addActionText,
             menuText: this.addActionMenuText,
             disabled: true,
-            iconCls: "gxp-icon-addlayers",
-            handler : this.showCapabilitiesGrid,
-            scope: this
-        }]);
+            iconCls: "gxp-icon-addlayers"
+        };
+        var options;
+        if (this.initialConfig.search) {
+            options = Ext.apply(commonOptions, {
+                menu: new Ext.menu.Menu({
+                    items: [
+                        new Ext.menu.Item({
+                            iconCls: 'gxp-icon-addlayers', 
+                            text: this.addActionMenuText, 
+                            handler: this.showCapabilitiesGrid, 
+                            scope: this
+                        }),
+                        new Ext.menu.Item({
+                            iconCls: 'gxp-icon-addlayers', 
+                            text: this.findActionMenuText,
+                            handler: this.showCatalogueSearch,
+                            scope: this
+                        })
+                    ]
+                })
+            });
+        } else {
+            options = Ext.apply(commonOptions, {
+                handler : this.showCapabilitiesGrid,
+                scope: this
+            });
+        }
+        var actions = gxp.plugins.AddLayers.superclass.addActions.apply(this, [options]);
         
         this.target.on("ready", function() {actions[0].enable();});
         return actions;
+    },
+
+    showCatalogueSearch: function() {
+        var selectedSource = this.initialConfig.search.selectedSource;
+        var sources = {};
+        for (var key in this.target.layerSources) {
+            var source = this.target.layerSources[key];
+            if (source instanceof gxp.plugins.CatalogueSource) {
+                var obj = {};
+                obj[key] = source;
+                Ext.apply(sources, obj);
+            }
+        }
+        return gxp.plugins.AddLayers.superclass.addOutput.apply(this, [{
+            plugin: this,
+            sources: sources,
+            selectedSource: selectedSource,
+            xtype: 'gxp_cataloguesearchpanel',
+            map: this.target.mapPanel.map,
+            listeners: {
+                'addlayer': function(cmp, sourceKey, layerConfig) {
+                    var source = this.target.layerSources[sourceKey];
+                    var record = source.createLayerRecord(layerConfig);
+                    this.target.mapPanel.layers.add(record);
+                },
+                scope: this
+            }
+        }]);
     },
         
     /** api: method[showCapabilitiesGrid]
@@ -202,7 +268,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         var source, data = [], target = this.target;        
         for (var id in target.layerSources) {
             source = target.layerSources[id];
-            if (source.store) {
+            if (source.store && source.ptype !== "gxp_cataloguesource") {
                 data.push([id, source.title || id, source.url]);                
             }
         }
@@ -258,7 +324,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 }
             }, this);
         }
-        
+
         var source = this.target.layerSources[data[idx][0]],
             store = source.store;
         if (source.lazy) {

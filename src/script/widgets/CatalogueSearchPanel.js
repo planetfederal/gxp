@@ -29,6 +29,11 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
      */
     border: false,
 
+    /** api: config[map]
+     *  ``OpenLayers.Map``
+     */
+    map: null,
+
     /** api: config[selectedSource]
      *  ``String`` The key of the catalogue source to use on startup.
      */
@@ -43,23 +48,44 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
     /* i18n */
     searchFieldEmptyText: "Search",
     searchButtonText: "Search",
-    addTooltip: "Add to map",
+    addTooltip: "Create filter",
+    addMapTooltip: "Add to map",
     advancedTitle: "Advanced",
     datatypeLabel: "Data type",
     extentLabel: "Spatial extent",
     categoryLabel: "Category",
     datasourceLabel: "Data source",
     filterLabel: "Filter search by",
+    removeSourceTooltip: "Switch back to original source",
     /* end i18n */
 
     /** private: method[initComponent]
      *  Initializes the catalogue search panel.
      */
     initComponent: function() {
+        this.addEvents(
+            /** api: event[addlayer]
+             *  Fires when a layer needs to be added to the map.
+             *
+             *  Listener arguments:
+             *
+             *  * :class:`gxp.CatalogueSearchPanel` this component
+             *  * ``String`` the key of the catalogue source to use
+             *  * ``Object`` config object for the WMS layer to create.
+             */
+            "addlayer"
+        );
         this.filters = [];
         var sourceComboData = [];
         for (var key in this.sources) {
             sourceComboData.push([key, this.sources[key].title]);
+        }
+        if (sourceComboData.length === 1) {
+            this.selectedSource = sourceComboData[0][0];
+        }
+        var filterOptions = [['datatype', 'data type'], ['extent', 'spatial extent'], ['category', 'category']];
+        if (sourceComboData.length > 1) {
+            filterOptions.push(['csw', 'data source']);
         }
         this.items = [{
             xtype: 'form',
@@ -104,7 +130,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                     xtype: 'gxp_cswfilterfield',
                     name: 'extent',
                     property: 'BoundingBox',
-                    map: this.plugin.target.mapPanel.map,
+                    map: this.map,
                     comboFieldLabel: this.extentLabel,
                     comboStoreData: [
                         ['map', 'spatial extent of the map']
@@ -138,28 +164,42 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                     ],
                     target: this
                 }, {
-                    xtype: "combo",
-                    ref: "../../sourceCombo",
-                    fieldLabel: this.datasourceLabel,
-                    store: new Ext.data.ArrayStore({
-                        fields: ['id', 'value'],
-                        data: sourceComboData
-                    }),
-                    displayField: 'value',
-                    valueField: 'id',
-                    id: 'csw',
-                    mode: 'local',
+                    xtype: "compositefield",
+                    id: "csw",
+                    ref: "../../cswCompositeField",
                     hidden: true,
-                    listeners: {
-                        'select': function(cmb, record) {
-                            this.setSource(cmb.getValue());
+                    items: [{
+                        xtype: "combo",
+                        ref: "../../../sourceCombo",
+                        fieldLabel: this.datasourceLabel,
+                        store: new Ext.data.ArrayStore({
+                            fields: ['id', 'value'],
+                            data: sourceComboData
+                        }),
+                        displayField: 'value',
+                        valueField: 'id',
+                        mode: 'local',
+                        listeners: {
+                            'select': function(cmb, record) {
+                                this.setSource(cmb.getValue());
+                            },
+                            'render': function() { 
+                                this.sourceCombo.setValue(this.selectedSource);
+                            },
+                            scope: this
                         },
-                        'render': function() { 
-                            this.sourceCombo.setValue(this.selectedSource);
+                        triggerAction: 'all'
+                    }, {
+                        xtype: 'button',
+                        iconCls: 'gxp-icon-removelayers',
+                        tooltip: this.removeSourceTooltip,
+                        handler: function(btn) {
+                            this.setSource(this.initialConfig.selectedSource);
+                            this.sourceCombo.setValue(this.initialConfig.selectedSource);
+                            this.cswCompositeField.hide();
                         },
                         scope: this
-                    },
-                    triggerAction: 'all'
+                    }]
                 }, {
                     xtype: 'compositefield',
                     items: [{
@@ -167,7 +207,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                         fieldLabel: this.filterLabel,
                         store: new Ext.data.ArrayStore({
                             fields: ['id', 'value'],
-                            data: [['datatype', 'data type'], ['extent', 'spatial extent'], ['category', 'category'], ['csw', 'data source']]
+                            data: filterOptions
                         }),
                         displayField: 'value',
                         valueField: 'id',
@@ -176,6 +216,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                     }, {
                         xtype: 'button',
                         iconCls: 'gxp-icon-addlayers',
+                        tooltip: this.addTooltip,
                         handler: function(btn) {
                             btn.ownerCt.items.each(function(item) {
                                 if (item.getXType() === "combo") {
@@ -206,14 +247,14 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
             columns: [{
                 id: 'title', 
                 xtype: "templatecolumn", 
-                tpl: new Ext.XTemplate('<b>{title}</b><br/>{subject}'), 
+                tpl: new Ext.XTemplate('<b>{title}</b><br/>{abstract}'), 
                 sortable: true
             }, {
                 xtype: "actioncolumn",
                 width: 30,
                 items: [{
                     iconCls: "gxp-icon-addlayers",
-                    tooltip: this.addTooltip,
+                    tooltip: this.addMapTooltip,
                     handler: function(grid, rowIndex, colIndex) {
                         var rec = this.grid.store.getAt(rowIndex);
                         this.addLayer(rec);
@@ -233,6 +274,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
      */
     destroy: function() {
         this.sources = null;
+        this.map = null;
         gxp.CatalogueSearchPanel.superclass.destroy.call(this);
     },
 
@@ -245,6 +287,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
         this.selectedSource = key;
         var store = this.sources[key].store;
         this.grid.reconfigure(store, this.grid.getColumnModel());
+        this.grid.getBottomToolbar().bindStore(store);
     },
 
     /** private: method[performQuery]
@@ -370,8 +413,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
             wmsInfo = this.findWMS(references);
         }
         if (wmsInfo !== false) {
-            // TODO: is this always WGS84 in DC?
-            this.plugin.addWMSLayer(this.selectedSource, Ext.apply({
+            this.fireEvent("addlayer", this, this.selectedSource, Ext.apply({
                 title: record.get('title')[0],
                 bbox: bounds.toArray(),
                 srs: "EPSG:4326"

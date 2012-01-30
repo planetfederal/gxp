@@ -115,6 +115,9 @@
 .x-btn .gxp-icon-layer-switcher {
     background-image: url(img/silk/layers.png);
 }
+.timeline-highlight-point-decorator {
+    background-color: #F46817;
+}
 
 /* gxp_annotation */
 .x-btn .gxp-icon-note {
@@ -367,16 +370,6 @@ div.olMap div.gx-overlay-playback {
 .gxp-layermanager-tree .gx-legend-noimage {
     display: none;
 }
-.gxp-layermanager-crumbs button {
-    color: #15428B;
-}
-.gxp-layermanager-crumbs td:last-of-type button {
-    font-weight: bold;
-}
-.gxp-layermanager-crumbs .xtb-spacer {
-    width: 12px;
-    height: 16px;
-}
 
 
 .x-btn .gxp-icon-reset{
@@ -441,9 +434,10 @@ div.olMap div.gx-overlay-playback {
     background-image:url('img/silk/resultset_previous.png')!important;
     background-position:0 0 !important;
 }
-.x-slider-tail-thumb{
+.x-slider-horz .x-slider-tail-thumb{
     background-image:url('img/silk/stop.png')!important;
     background-position:0 0 !important;
+    left:-14px;
 }
 .thumb-mapbox {
     width: 128px;
