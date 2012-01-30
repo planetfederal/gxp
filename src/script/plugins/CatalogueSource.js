@@ -59,7 +59,7 @@ gxp.plugins.CatalogueSource = Ext.extend(gxp.plugins.WMSSource, {
                 })
             }),
             reader: new GeoExt.data.CSWRecordsReader({
-               fields: ['title', 'subject', 'URI', 'bounds', 'projection', 'references']
+               fields: ['title', 'abstract', 'URI', 'bounds', 'projection', 'references']
             })
         });
         this.fireEvent("ready", this);

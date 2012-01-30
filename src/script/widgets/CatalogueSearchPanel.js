@@ -206,7 +206,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
             columns: [{
                 id: 'title', 
                 xtype: "templatecolumn", 
-                tpl: new Ext.XTemplate('<b>{title}</b><br/>{subject}'), 
+                tpl: new Ext.XTemplate('<b>{title}</b><br/>{abstract}'), 
                 sortable: true
             }, {
                 xtype: "actioncolumn",
@@ -245,6 +245,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
         this.selectedSource = key;
         var store = this.sources[key].store;
         this.grid.reconfigure(store, this.grid.getColumnModel());
+        this.grid.getBottomToolbar().bindStore(store);
     },
 
     /** private: method[performQuery]
