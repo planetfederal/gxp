@@ -61,6 +61,10 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
         for (var key in this.sources) {
             sourceComboData.push([key, this.sources[key].title]);
         }
+        var filterOptions = [['datatype', 'data type'], ['extent', 'spatial extent'], ['category', 'category']];
+        if (sourceComboData.length > 1) {
+            filterOptions.push(['csw', 'data source']);
+        }
         this.items = [{
             xtype: 'form',
             border: false,
@@ -167,7 +171,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                         fieldLabel: this.filterLabel,
                         store: new Ext.data.ArrayStore({
                             fields: ['id', 'value'],
-                            data: [['datatype', 'data type'], ['extent', 'spatial extent'], ['category', 'category'], ['csw', 'data source']]
+                            data: filterOptions
                         }),
                         displayField: 'value',
                         valueField: 'id',
