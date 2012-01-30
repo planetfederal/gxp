@@ -68,7 +68,7 @@ gxp.form.CSWFilterField = Ext.extend(Ext.form.CompositeField, {
             return new OpenLayers.Filter.Spatial({
                 type: OpenLayers.Filter.Spatial.BBOX,
                 property: this.property,
-                /* TODO revisit axis order */
+                projection: "EPSG:4326",
                 value: this.map.getExtent().transform(
                     this.map.getProjectionObject(),
                     new OpenLayers.Projection("EPSG:4326")
