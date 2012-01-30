@@ -43,13 +43,15 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
     /* i18n */
     searchFieldEmptyText: "Search",
     searchButtonText: "Search",
-    addTooltip: "Add to map",
+    addTooltip: "Create filter",
+    addMapTooltip: "Add to map",
     advancedTitle: "Advanced",
     datatypeLabel: "Data type",
     extentLabel: "Spatial extent",
     categoryLabel: "Category",
     datasourceLabel: "Data source",
     filterLabel: "Filter search by",
+    removeSourceTooltip: "Switch back to original source",
     /* end i18n */
 
     /** private: method[initComponent]
@@ -142,28 +144,42 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                     ],
                     target: this
                 }, {
-                    xtype: "combo",
-                    ref: "../../sourceCombo",
-                    fieldLabel: this.datasourceLabel,
-                    store: new Ext.data.ArrayStore({
-                        fields: ['id', 'value'],
-                        data: sourceComboData
-                    }),
-                    displayField: 'value',
-                    valueField: 'id',
-                    id: 'csw',
-                    mode: 'local',
+                    xtype: "compositefield",
+                    id: "csw",
+                    ref: "../../cswCompositeField",
                     hidden: true,
-                    listeners: {
-                        'select': function(cmb, record) {
-                            this.setSource(cmb.getValue());
+                    items: [{
+                        xtype: "combo",
+                        ref: "../../../sourceCombo",
+                        fieldLabel: this.datasourceLabel,
+                        store: new Ext.data.ArrayStore({
+                            fields: ['id', 'value'],
+                            data: sourceComboData
+                        }),
+                        displayField: 'value',
+                        valueField: 'id',
+                        mode: 'local',
+                        listeners: {
+                            'select': function(cmb, record) {
+                                this.setSource(cmb.getValue());
+                            },
+                            'render': function() { 
+                                this.sourceCombo.setValue(this.selectedSource);
+                            },
+                            scope: this
                         },
-                        'render': function() { 
-                            this.sourceCombo.setValue(this.selectedSource);
+                        triggerAction: 'all'
+                    }, {
+                        xtype: 'button',
+                        iconCls: 'gxp-icon-removelayers',
+                        tooltip: this.removeSourceTooltip,
+                        handler: function(btn) {
+                            this.setSource(this.initialConfig.selectedSource);
+                            this.sourceCombo.setValue(this.initialConfig.selectedSource);
+                            this.cswCompositeField.hide();
                         },
                         scope: this
-                    },
-                    triggerAction: 'all'
+                    }]
                 }, {
                     xtype: 'compositefield',
                     items: [{
@@ -180,6 +196,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                     }, {
                         xtype: 'button',
                         iconCls: 'gxp-icon-addlayers',
+                        tooltip: this.addTooltip,
                         handler: function(btn) {
                             btn.ownerCt.items.each(function(item) {
                                 if (item.getXType() === "combo") {
@@ -217,7 +234,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                 width: 30,
                 items: [{
                     iconCls: "gxp-icon-addlayers",
-                    tooltip: this.addTooltip,
+                    tooltip: this.addMapTooltip,
                     handler: function(grid, rowIndex, colIndex) {
                         var rec = this.grid.store.getAt(rowIndex);
                         this.addLayer(rec);
