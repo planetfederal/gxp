@@ -935,7 +935,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  :arg percentage: ``Float``
      *  :returns: ``Array``
      *      
-     *  Extend the range with a certain percentage. This only changes the end
+     *  Extend the range with a certain percentage. This changes both sides
      *  of the range.
      */
     calculateNewRange: function(range, percentage) {
