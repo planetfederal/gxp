@@ -202,7 +202,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         var source, data = [], target = this.target;        
         for (var id in target.layerSources) {
             source = target.layerSources[id];
-            if (source.store) {
+            if (source.store && source.ptype !== "gxp_cataloguesource") {
                 data.push([id, source.title || id, source.url]);                
             }
         }
@@ -258,7 +258,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 }
             }, this);
         }
-        
+
         var source = this.target.layerSources[data[idx][0]],
             store = source.store;
         if (source.lazy) {
