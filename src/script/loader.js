@@ -92,7 +92,6 @@
         "plugins/Print.js",
         "plugins/LoadingIndicator.js",
         "plugins/Playback.js",
-        "plugins/CatalogueSearch.js",
         "locale/es.js",
         "locale/ca.js"
     );

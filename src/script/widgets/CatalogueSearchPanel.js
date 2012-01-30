@@ -29,6 +29,11 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
      */
     border: false,
 
+    /** api: config[map]
+     *  ``OpenLayers.Map``
+     */
+    map: null,
+
     /** api: config[selectedSource]
      *  ``String`` The key of the catalogue source to use on startup.
      */
@@ -58,6 +63,18 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
      *  Initializes the catalogue search panel.
      */
     initComponent: function() {
+        this.addEvents(
+            /** api: event[addlayer]
+             *  Fires when a layer needs to be added to the map.
+             *
+             *  Listener arguments:
+             *
+             *  * :class:`gxp.CatalogueSearchPanel` this component
+             *  * ``String`` the key of the catalogue source to use
+             *  * ``Object`` config object for the WMS layer to create.
+             */
+            "addlayer"
+        );
         this.filters = [];
         var sourceComboData = [];
         for (var key in this.sources) {
@@ -110,7 +127,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                     xtype: 'gxp_cswfilterfield',
                     name: 'extent',
                     property: 'BoundingBox',
-                    map: this.plugin.target.mapPanel.map,
+                    map: this.map,
                     comboFieldLabel: this.extentLabel,
                     comboStoreData: [
                         ['map', 'spatial extent of the map']
@@ -254,6 +271,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
      */
     destroy: function() {
         this.sources = null;
+        this.map = null;
         gxp.CatalogueSearchPanel.superclass.destroy.call(this);
     },
 
@@ -392,8 +410,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
             wmsInfo = this.findWMS(references);
         }
         if (wmsInfo !== false) {
-            // TODO: is this always WGS84 in DC?
-            this.plugin.addWMSLayer(this.selectedSource, Ext.apply({
+            this.fireEvent("addlayer", this, this.selectedSource, Ext.apply({
                 title: record.get('title')[0],
                 bbox: bounds.toArray(),
                 srs: "EPSG:4326"

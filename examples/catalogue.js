@@ -47,11 +47,8 @@ Ext.onReady(function() {
             outputTarget: "west"
         }, {
             ptype: "gxp_addlayers",
-            actionTarget: "tree.tbar"
-        }, {
-            ptype: "gxp_cataloguesearch",
-            selectedSource: "geonode",
-            actionTarget: "tree.tbar"
+            actionTarget: "tree.tbar",
+            search: {selectedSource: "geonode"}
         }, {
             ptype: "gxp_removelayer",
             actionTarget: ["tree.tbar", "tree.contextMenu"]
