@@ -942,8 +942,12 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         if (percentage === undefined) {
             percentage = this.rangeSlider.getValue();
         }
-        var end = new Date(range[0].getTime() + ((percentage/100) * (range[1] - range[0])));
-        return [range[0], end];
+        var span = range[1] - range[0];
+        var center = new Date((range[0].getTime() + range[1].getTime())/2);
+        var newSpan = (percentage/100)*span;
+        var start = new Date(center.getTime() - newSpan/2);
+        var end = new Date(center.getTime() + newSpan/2);
+        return [start, end];
     },
 
     /** private: method[createTimeFilter]
