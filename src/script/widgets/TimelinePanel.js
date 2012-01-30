@@ -158,6 +158,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 ref: "../rangeSlider",
                 vertical: true,
                 value: 25,
+                minValue: 1,
+                maxValue: 100,
                 listeners: {
                     "changecomplete": this.onChangeComplete,
                     scope: this
@@ -515,7 +517,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             return;
         }
         var theme = Timeline.ClassicTheme.create();
-
         var span = range[1] - range[0];
         var years  = ((((span/1000)/60)/60)/24)/365;
         var intervalUnits = [];
@@ -535,7 +536,25 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 eventSource: this.eventSource,
                 date: d,
                 theme: theme,
-                layout: "original"
+                layout: "original",
+                zoomIndex: 7,
+                zoomSteps: [
+                    {pixelsPerInterval: 25,  unit: intervalUnits[0]},
+                    {pixelsPerInterval: 50,  unit: intervalUnits[0]},
+                    {pixelsPerInterval: 75,  unit: intervalUnits[0]},
+                    {pixelsPerInterval: 100,  unit: intervalUnits[0]},
+                    {pixelsPerInterval: 125,  unit: intervalUnits[0]},
+                    {pixelsPerInterval: 150,  unit: intervalUnits[0]},
+                    {pixelsPerInterval: 175,  unit: intervalUnits[0]},
+                    {pixelsPerInterval: 200,  unit: intervalUnits[0]},
+                    {pixelsPerInterval: 225,  unit: intervalUnits[0]},
+                    {pixelsPerInterval: 250,  unit: intervalUnits[0]},
+                    {pixelsPerInterval: 275,  unit: intervalUnits[0]},
+                    {pixelsPerInterval: 300,  unit: intervalUnits[0]},
+                    {pixelsPerInterval: 325,  unit: intervalUnits[0]},
+                    {pixelsPerInterval: 350,  unit: intervalUnits[0]},
+                    {pixelsPerInterval: 375,  unit: intervalUnits[0]}
+                ]
             }),
             Timeline.createBandInfo({
                 width: "20%", 
@@ -819,6 +838,33 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }
     },
 
+    findBestZoomLevel: function(range) {
+        if (this.timeline) {
+            var diff = range[1]-range[0];
+            var band = this.timeline.getBand(0);
+            var length = band.getViewLength();
+            var level = diff/band.getEther()._interval;
+            var pixels = length/level;
+            var delta;
+            var prevDelta = Number.POSITIVE_INFINITY;
+            var idx;
+            for (var i=0, ii=band._zoomSteps.length; i<ii; ++i) {
+                delta = Math.abs(band._zoomSteps[i].pixelsPerInterval-pixels);
+                if (delta < prevDelta) {
+                    idx = i;
+                }
+                prevDelta = delta;
+            }
+            if (idx !== band._zoomIndex) {
+                var zoomIn = idx < band._zoomIndex;
+                while (idx != band._zoomIndex) {
+                    band.zoom(zoomIn);
+                }
+                band.paint();
+            }
+        }
+    },
+
     /** private: method[setRange]
      *  :arg range: ``Array``
      *
@@ -920,6 +966,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }
         this.rangeSlider.startDate = start.dateFormat('Y-m-d');
         this.rangeSlider.endDate = end.dateFormat('Y-m-d');
+        //this.findBestZoomLevel([start, end]);
         return new OpenLayers.Filter({
             type: OpenLayers.Filter.Comparison.BETWEEN,
             property: this.layerLookup[key].timeAttr,
