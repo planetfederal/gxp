@@ -359,37 +359,82 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         this.timeDisplay.show();
         this.timeDisplay.el.alignTo(this.slider.getEl(), this.timeDisplay.defaultAlign, [0, 5]);
     },
-    buildTimeManager:function(){
-        this.controlConfig || (this.controlConfig={});
+    buildTimeManager:function() {
+        this.controlConfig || (this.controlConfig = {});
         //test for bad range times
-        if(this.controlConfig.range && this.controlConfig.range.length){
-            for (var i = 0; i < this.controlConfig.range.length; i++) {
+        if(this.controlConfig.range && this.controlConfig.range.length) {
+            for(var i = 0; i < this.controlConfig.range.length; i++) {
                 var dateString = this.controlConfig.range[i];
-                if (dateString.indexOf('T') > -1 && dateString.indexOf('Z') == -1) {
+                if(dateString.indexOf('T') > -1 && dateString.indexOf('Z') == -1) {
                     dateString = dateString.substring(0, dateString.indexOf('T'));
                 }
                 this.controlConfig.range[i] = dateString;
             }
         }
-        if(this.playbackMode=='ranged' || this.playbackMode=='decay'){
-            Ext.apply(this.controlConfig,{
-                agentOptions:{
-                    'WMS':{rangeMode:'range',rangeInterval:this.rangedPlayInterval},
-                    'Vector':{rangeMode:'range',rangeInterval:this.rangedPlayInterval}
-                }
-            });
+        // Test for and deal with pre-configured timeAgents & layers
+        if(this.controlConfig.timeAgents) {
+            for(var i = 0; i < this.controlConfig.timeAgents.length; i++) {
+                var config = this.controlConfig.timeAgents[i];
+                var agentClass = config.type;
+                var layers = [];
+                //put real layers, not references here
+                Ext.each(config.layers, function(lyrJson) {
+                    //source & name identify different layers, but title, styles, & opacity
+                    //are required to distinguish the same layer added multiple times with a different
+                    //style or presentation
+                    var ndx = app.mapPanel.layers.findBy(function(rec) {
+                        return rec.json && 
+                        rec.json.source == lyrJson.source &&
+                        rec.json.title == lyrJson.title &&
+                        rec.json.name == lyrJson.name &&
+                        rec.json.styles == lyrJson.styles &&
+                        rec.json.opacity == lyrJson.opacity;
+                    });
+
+                    if(ndx > -1) {
+                        layers.push(app.mapPanel.layers.getAt(ndx).getLayer());
+                    }
+                });
+
+
+                config.layers = layers;
+                delete config.type;
+                //TODO handle subclasses of TimeAgent subclasses
+                var agent = agentClass ? new OpenLayers.TimeAgent[agentClass](config) : new OpenLayers.TimeAgent(config);
+                this.controlConfig.timeAgents[i] = agent;
+            }
         }
-        else if(this.playbackMode=='cumulative'){
-            Ext.apply(this.controlConfig,{
-                agentOptions:{
-                    'WMS':{rangeMode:'cumulative'},
-                    'Vector':{rangeMode:'cumulative'}
-                }
-            });
+        else {
+            if(this.playbackMode == 'ranged' || this.playbackMode == 'decay') {
+                Ext.apply(this.controlConfig, {
+                    agentOptions : {
+                        'WMS' : {
+                            rangeMode : 'range',
+                            rangeInterval : this.rangedPlayInterval
+                        },
+                        'Vector' : {
+                            rangeMode : 'range',
+                            rangeInterval : this.rangedPlayInterval
+                        }
+                    }
+                });
+            }
+            else if(this.playbackMode == 'cumulative') {
+                Ext.apply(this.controlConfig, {
+                    agentOptions : {
+                        'WMS' : {
+                            rangeMode : 'cumulative'
+                        },
+                        'Vector' : {
+                            rangeMode : 'cumulative'
+                        }
+                    }
+                });
+            }
         }
         var ctl = this.control = new OpenLayers.Control.TimeManager(this.controlConfig);
         this.mapPanel.map.addControl(ctl);
-        if (ctl.layers) {
+        if(ctl.layers) {
             this.fireEvent('rangemodified', this, ctl.range);
         }
         return ctl;
