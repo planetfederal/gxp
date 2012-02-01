@@ -418,6 +418,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 projection: srs
             }
         ));
+        record.json = config;
         return record;
     },
      
@@ -545,7 +546,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             record = new Record(data, layer.id);
 
         }
-        
+        record.json = config; 
         return record;
     },
     
