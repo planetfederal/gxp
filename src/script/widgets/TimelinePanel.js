@@ -249,6 +249,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
     setLayerVisibility: function(item, checked, record) {
         var keyToMatch = this.getKey(record);
+        this.clearEventsForKey(keyToMatch);
         Ext.apply(this.layerLookup[keyToMatch], {
             visible: checked
         });
@@ -811,7 +812,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                             if (attribute) {
                                 this.layerLookup[key] = {
                                     timeAttr: attribute,
-                                    visible: true
+                                    visible: false
                                 };
                                 this.addVectorLayer(record, protocol, schema);
                             }
@@ -1145,7 +1146,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         var layer, key;
         for (key in this.layerLookup) {
             layer = this.layerLookup[key].layer;
-            if (layer && layer.strategies !== null) {
+            if (this.layerLookup[key].visible && layer && layer.strategies !== null) {
                 var protocol = this.layerLookup[key].hitCount;
 
                 // a real solution would be something like:
