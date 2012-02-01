@@ -885,6 +885,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }
     },
 
+    updateRangeSlider: function(range) {
+        this.rangeSlider.startDate = range[0].dateFormat('Y-m-d');
+        this.rangeSlider.endDate = range[1].dateFormat('Y-m-d');
+    },
+
     /** private: method[setCenterDate]
      *  :arg time: ``Date``
      *      
@@ -903,6 +908,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                     var span = currentRange[1] - currentRange[0];
                     var start = new Date(time.getTime() - span/2);
                     var end = new Date(time.getTime() + span/2);
+                    // don't go beyond the original range
+                    start = new Date(Math.max(this.originalRange[0], start));
+                    end = new Date(Math.min(this.originalRange[1], end));
                     this.rangeInfo.current = [start, end];
                     // calculate back the original extent
                     var startOriginal = new Date(time.getTime() - span/4);
@@ -940,15 +948,17 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  of the range.
      */
     calculateNewRange: function(range, percentage) {
-        if (percentage === undefined) {
-            percentage = this.rangeSlider.getValue();
+        if (this.playbackTool) {
+            if (percentage === undefined) {
+                percentage = this.rangeSlider.getValue();
+            }
+            var span = range[1] - range[0];
+            var center = this.playbackTool.playbackToolbar.control.currentTime;
+            var newSpan = (percentage/100)*span;
+            var start = new Date(center.getTime() - newSpan/2);
+            var end = new Date(center.getTime() + newSpan/2);
+            return [start, end];
         }
-        var span = range[1] - range[0];
-        var center = new Date((range[0].getTime() + range[1].getTime())/2);
-        var newSpan = (percentage/100)*span;
-        var start = new Date(center.getTime() - newSpan/2);
-        var end = new Date(center.getTime() + newSpan/2);
-        return [start, end];
     },
 
     /** private: method[createTimeFilter]
@@ -972,8 +982,10 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 current: [start, end]
             };
         }
-        this.rangeSlider.startDate = start.dateFormat('Y-m-d');
-        this.rangeSlider.endDate = end.dateFormat('Y-m-d');
+        // do not use start and end, since this might only be a portion of the range
+        // when the timeline moves, it does this intelligently as to only fetch the
+        // necessary new slice of data, which is represented by start and end.
+        this.updateRangeSlider(this.rangeInfo.current);
         //this.findBestZoomLevel([start, end]);
         return new OpenLayers.Filter({
             type: OpenLayers.Filter.Comparison.BETWEEN,
