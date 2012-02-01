@@ -83,7 +83,7 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
                 var schema = this.timelinePanel.schemaCache[key];
                 var item = new Ext.menu.CheckItem({
                     text: record.get("title"),
-                    checked: (this.timelinePanel.layerLookup[key] && this.timelinePanel.layerLookup[key].visible) || true,
+                    checked: (this.timelinePanel.layerLookup[key] && this.timelinePanel.layerLookup[key].visible) || false,
                     menu: new Ext.menu.Menu({
                         plain: true,
                         style: {
