@@ -260,6 +260,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             }
         };
         this.setFilterMatcher(filterMatcher);
+        this.updateTimelineEvents();
     },
 
     /**
