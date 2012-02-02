@@ -237,7 +237,6 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             }
         }
         return gxp.plugins.AddLayers.superclass.addOutput.apply(this, [{
-            plugin: this,
             sources: sources,
             selectedSource: selectedSource,
             xtype: 'gxp_cataloguesearchpanel',
