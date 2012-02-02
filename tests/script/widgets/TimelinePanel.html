@@ -30,7 +30,25 @@
             tp.destroy();
             t.ok(tp.timeline === null, "Timeline destroyed");
         }
-        
+
+        function test_calculateNewRange(t) {
+            t.plan(3);
+            var tp = new gxp.TimelinePanel({renderTo: document.body});
+            tp.playbackTool = {
+                playbackToolbar: {
+                    control: {
+                        currentTime: new Date("January 1, 1946")
+                    }
+                }
+            };
+            var range = tp.calculateNewRange([new Date("January 1, 1946"), new Date("November 9, 2008")], 25);
+            // Feb 22, 1938
+            t.eq(range[0].getTime(), -1005332400000, "Range begin correctly calculated");
+            // Nov 9, 1953
+            t.eq(range[1].getTime(), -509439600000, "Range end correctly calculated");
+            var center = new Date((range[0].getTime() + range[1].getTime())/2);
+            t.eq(center.getTime(), tp.playbackTool.playbackToolbar.control.currentTime.getTime(), "New range is centered on currentTime");
+        }
     </script>
   </head>
   <body>
