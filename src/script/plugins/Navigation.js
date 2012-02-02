@@ -8,6 +8,7 @@
 
 /**
  * @requires plugins/Tool.js
+ * @requires OpenLayers/Kinetic.js
  */
 
 /** api: (define)
@@ -53,7 +54,7 @@ gxp.plugins.Navigation = Ext.extend(gxp.plugins.Tool, {
      */
     addActions: function() {
         this.controlOptions = this.controlOptions || {};
-        Ext.applyIf(this.controlOptions, {zoomWheelEnabled: false});
+        Ext.applyIf(this.controlOptions, {dragPanOptions: {enableKinetic: true}});
         var actions = [new GeoExt.Action({
             tooltip: this.tooltip,
             menuText: this.menuText,
