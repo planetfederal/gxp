@@ -8,6 +8,8 @@
 
 /**
  * @requires plugins/Tool.js
+ * @requires OpenLayers/Control/WMSGetFeatureInfo.js
+ * @requires OpenLayers/Format/WMSGetFeatureInfo.js
  */
 
 /** api: (define)

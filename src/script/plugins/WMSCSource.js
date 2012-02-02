@@ -8,6 +8,7 @@
 
 /**
  * @requires plugins/WMSSource.js
+ * @requires OpenLayers/Format/WMSCapabilities/v1_1_1_WMSC.js
  */
 
 /** api: (define)

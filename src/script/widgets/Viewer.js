@@ -6,6 +6,16 @@
  * of the license.
  */
 
+/**
+ * @requires OpenLayers/Control/Attribution.js
+ * @requires OpenLayers/Control/ZoomPanel.js
+ * @requires OpenLayers/Control/Navigation.js
+ * @requires OpenLayers/Control/PanPanel.js
+ * @requires GeoExt/widgets/MapPanel.js
+ * @requires GeoExt/widgets/ZoomSlider.js
+ * @requires GeoExt/widgets/tips/ZoomSliderTip.js
+ */
+
 /** api: (define)
  *  module = gxp
  *  class = Viewer
