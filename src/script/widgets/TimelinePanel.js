@@ -1351,13 +1351,15 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         gxp.TimelinePanel.superclass.beforeDestroy.call(this);
         for (var key in this.layerLookup) {
             var layer = this.layerLookup[key].layer;
-            layer.events.un({
-                loadstart: this.onLoadStart,
-                loadend: this.onLoadEnd,
-                featuresremoved: this.onFeaturesRemoved,
-                scope: this
-            });
-            layer.destroy();
+            if (layer) {
+                layer.events.un({
+                    loadstart: this.onLoadStart,
+                    loadend: this.onLoadEnd,
+                    featuresremoved: this.onFeaturesRemoved,
+                    scope: this
+                });
+                layer.destroy();
+            }
         }
         this.destroyPopup();
         this.unbindViewer();
