@@ -236,12 +236,19 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
                 }
                 parts = actionTarget.split(".");
                 ref = parts[0];
+                if (ref) {
+                    if (ref == "map") {
+                        ct = this.target.mapPanel;
+                    } else {
+                        ct = Ext.getCmp(ref) || this.target.portal[ref];
+                        if (!ct) {
+                            throw new Error("Can't find component with id: " + ref);
+                        }
+                    }
+                } else {
+                    ct = this.target.portal;
+                }
                 item = parts.length > 1 && parts[1];
-                ct = ref ?
-                    ref == "map" ?
-                        this.target.mapPanel :
-                        (Ext.getCmp(ref) || this.target.portal[ref]) :
-                    this.target.portal;
                 if (item) {
                     meth = {
                         "tbar": "getTopToolbar",
