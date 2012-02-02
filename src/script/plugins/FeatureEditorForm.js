@@ -159,7 +159,10 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
         var orderedFields = [];
         if (this.fields) {
             for (var i=0,ii=this.fields.length; i<ii; ++i) {
-                orderedFields.push(fields[this.fields[i].toLowerCase()]);
+                // a field could have been configured that does not exist
+                if (fields[this.fields[i].toLowerCase()]) {
+                    orderedFields.push(fields[this.fields[i].toLowerCase()]);
+                }
             }
         } else {
             for (var key in fields) {
