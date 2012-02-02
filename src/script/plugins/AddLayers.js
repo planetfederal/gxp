@@ -222,6 +222,9 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         return actions;
     },
 
+    /** api: method[showCatalogueSearch]
+     * Shows the window with a search panel.
+     */
     showCatalogueSearch: function() {
         var selectedSource = this.initialConfig.search.selectedSource;
         var sources = {};
