@@ -236,7 +236,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 Ext.apply(sources, obj);
             }
         }
-        return gxp.plugins.AddLayers.superclass.addOutput.apply(this, [{
+        var output = gxp.plugins.AddLayers.superclass.addOutput.apply(this, [{
             sources: sources,
             selectedSource: selectedSource,
             xtype: 'gxp_cataloguesearchpanel',
@@ -250,6 +250,9 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 scope: this
             }
         }]);
+        var popup = output.findParentByType('window');
+        popup && popup.center();
+        return output;
     },
         
     /** api: method[showCapabilitiesGrid]
