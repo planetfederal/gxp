@@ -106,6 +106,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *   * layer - {OpenLayers.Layer.Vector}
      *   * titleAttr - {String}
      *   * timeAttr - {String}
+     *   * startTimeAttr - {String}
+     *   * endTimeAttr - {String}
      *   * visible - {Boolean}
      *   * timeFilter - {OpenLayers.Filter}
      *   * sldFilter - {OpenLayers.Filter}
@@ -412,30 +414,28 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     onLayerChange: function(tool, record, schema) {
         var key = this.getKey(record);
         var titleAttr = this.guessTitleAttribute(schema);
-        var callback = function(attribute, key, record, protocol, schema) {
-            var layer = this.featureManager.featureLayer;
-            this.layerLookup[key] = {
-                timeAttr: attribute,
-                titleAttr: titleAttr,
-                icon: Timeline.urlPrefix + "/images/note.png",
-                layer: layer,
-                visible: true
-            };
-            if (this.featureManager.featureStore) {
-                // we cannot use the featureLayer's events here, since features
-                // will be added without attributes
-                this.featureManager.featureStore.on("write", this.onSave.createDelegate(this, [key], 3), this);
-            }
-            if (layer) {
-                layer.events.on({
-                    "visibilitychanged": function(evt) {
-                        this.setLayerVisibility(null, evt.object.getVisibility(), record);
-                    },
-                    scope: this
-                });
-            }
+        var layer = this.featureManager.featureLayer;
+        this.layerLookup[key] = {
+            startTimeAttr: 'start_time',
+            endTimeAttr: 'end_time',
+            titleAttr: titleAttr,
+            icon: Timeline.urlPrefix + "/images/note.png",
+            layer: layer,
+            visible: true
         };
-        this.getTimeAttribute(record, null, schema, callback);
+        if (this.featureManager.featureStore) {
+            // we cannot use the featureLayer's events here, since features
+            // will be added without attributes
+            this.featureManager.featureStore.on("write", this.onSave.createDelegate(this, [key], 3), this);
+        }
+        if (layer) {
+            layer.events.on({
+                "visibilitychanged": function(evt) {
+                    this.setLayerVisibility(null, evt.object.getVisibility(), record);
+                },
+                scope: this
+            });
+        }
     },
 
     /**
