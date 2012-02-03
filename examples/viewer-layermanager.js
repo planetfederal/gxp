@@ -54,9 +54,14 @@ Ext.onReady(function() {
         }, {
             ptype: "gxp_addlayers",
             actionTarget: "tree.tbar",
-            outputTarget: "west"
+            outputTarget: "west",
+            upload: true
         }, {
             ptype: "gxp_removelayer",
+            actionTarget: ["tree.tbar", "tree.contextMenu"]
+        }, {
+            ptype: "gxp_layerproperties",
+            outputTarget: "west",
             actionTarget: ["tree.tbar", "tree.contextMenu"]
         }, {
             ptype: "gxp_zoomtoextent",

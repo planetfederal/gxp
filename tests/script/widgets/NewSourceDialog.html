@@ -9,12 +9,12 @@
 
     <script type="text/javascript">
        
-        function test_NewSourceWindow(t) {
+        function test_NewSourceDialog(t) {
             t.plan(1);
             
-            var instance = new gxp.NewSourceWindow();
+            var instance = new gxp.NewSourceDialog();
             
-            t.ok(instance instanceof gxp.NewSourceWindow, "Instance created successfully");
+            t.ok(instance instanceof gxp.NewSourceDialog, "Instance created successfully");
             
             instance.destroy();
         }
@@ -52,7 +52,7 @@
             var num = cases.length;
             t.plan(num);
             
-            var regex = gxp.NewSourceWindow.prototype.urlRegExp;
+            var regex = gxp.NewSourceDialog.prototype.urlRegExp;
             
             var c;
             for (var i=0; i<num; ++i) {
@@ -75,16 +75,16 @@
             var num = cases.length;
             t.plan(num * 2);
 
-            var win = new gxp.NewSourceWindow();
+            var dlg = new gxp.NewSourceDialog();
             var c, got, exp, msg;
             for (var i=0; i<num; ++i) {
                 c = cases[i];
                 // set previous error (if any)
-                win.error = c.previousError;
-                got = win.urlValidator(c.url);
+                dlg.error = c.previousError;
+                got = dlg.urlValidator(c.url);
                 if (!c.previousError) {
                     // no previous error, expect true or invalid url text
-                    exp = c.valid || win.invalidURLText;
+                    exp = c.valid || dlg.invalidURLText;
                 } else {
                     // previous error, expect the previous error message
                     exp = c.previousError;
@@ -93,10 +93,10 @@
                 // confirm that validator returned what we expect
                 t.eq(got, exp, msg);
                 // assert that the win.error property is set to null after validation
-                t.eq(win.error, null, "error set to null: " + msg);
+                t.eq(dlg.error, null, "error set to null: " + msg);
             }
             
-            win.destroy();
+            dlg.destroy();
             
         }
 

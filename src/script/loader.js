@@ -16,6 +16,7 @@
         "widgets/StylePropertiesDialog.js",
         "widgets/WMSLayerPanel.js",
         "widgets/WMSStylesDialog.js",
+        "widgets/NewSourceDialog.js",
         "widgets/NewSourceWindow.js",
         "widgets/FillSymbolizer.js",
         "widgets/StrokeSymbolizer.js",

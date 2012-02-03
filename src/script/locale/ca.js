@@ -364,7 +364,7 @@ GeoExt.Lang.add("ca", {
         dataStoreEmptyText: "Magatzem de dades per defecte"
     },
     
-    "gxp.NewSourceWindow.prototype": {
+    "gxp.NewSourceDialog.prototype": {
         title: "Afegeix Servidor...",
         cancelText: "Cancel·la",
         addServerText: "Afegeix Servidor",
