@@ -9,6 +9,7 @@
 /**
  * @requires widgets/tips/RangeSliderTip.js
  * @requires widgets/FeatureEditPopup.js
+ * @requires OpenLayers/Format/SLD/v1_0_0.js
  */
 
 /** api: (define)

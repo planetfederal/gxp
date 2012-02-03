@@ -12,9 +12,12 @@
  * @requires OpenLayers/Format/WMSCapabilities/v1_1_0.js
  * @requires OpenLayers/Format/WMSCapabilities/v1_1_1.js
  * @requires OpenLayers/Format/WMSCapabilities/v1_3_0.js
+ * @requires OpenLayers/Protocol/WFS/v1_1_0.js
  * @requires GeoExt/data/WMSCapabilitiesReader.js
  * @requires GeoExt/data/WMSCapabilitiesStore.js
  * @requires GeoExt/data/WMSDescribeLayerStore.js
+ * @requires GeoExt/data/AttributeReader.js
+ * @requires GeoExt/data/AttributeStore.js
  */
 
 /**

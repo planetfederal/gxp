@@ -9,6 +9,7 @@
 /**
  * @requires widgets/PlaybackToolbar.js
  * @requires widgets/form/PlaybackModeComboBox.js
+ * @requires OpenLayers/Control/TimeManager.js
  */
 
 /** api: (define)

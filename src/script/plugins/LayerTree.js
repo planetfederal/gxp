@@ -8,6 +8,10 @@
 
 /**
  * @requires plugins/Tool.js
+ * @requires GeoExt/widgets/tree/LayerNode.js
+ * @requires GeoExt/widgets/tree/TreeNodeUIEventMixin.js
+ * @requires GeoExt/widgets/tree/LayerContainer.js
+ * @requires GeoExt/widgets/tree/LayerLoader.js
  */
 
 /** api: (define)

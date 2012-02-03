@@ -8,6 +8,7 @@
 
 /**
  * @requires OpenLayers/Control/ScaleLine.js
+ * @requires GeoExt/data/ScaleStore.js
  */
 
 /** api: (define)

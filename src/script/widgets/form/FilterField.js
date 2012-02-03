@@ -8,6 +8,7 @@
 
 /**
  * @include widgets/form/ComparisonComboBox.js
+ * @requires GeoExt/data/AttributeStore.js
  */
 
 /** api: (define)

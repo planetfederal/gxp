@@ -8,6 +8,7 @@
 
 /**
  * @requires plugins/Tool.js
+ * @requires GeoExt/data/PrintProvider.js
  */
 
 /** api: (define)

@@ -8,6 +8,7 @@
 
 /*
  * @requires plugins/FeatureEditorGrid.js
+ * @requires GeoExt/widgets/Popup.js
  */
 
 /** api: (define)

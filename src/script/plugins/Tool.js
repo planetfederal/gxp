@@ -6,6 +6,10 @@
  * of the license.
  */
 
+/**
+ * @requires GeoExt/widgets/Action.js
+ */
+
 /** api: (define)
  *  module = gxp.plugins
  *  class = Tool
