@@ -9,6 +9,12 @@
 /**
  * @requires plugins/Tool.js
  * @requires data/WFSFeatureStore.js
+ * @requires OpenLayers/StyleMap.js
+ * @requires OpenLayers/Rule.js
+ * @requires OpenLayers/Layer/Vector.js
+ * @requires OpenLayers/Renderer/SVG.js
+ * @requires OpenLayers/Renderer/VML.js
+ * @requires OpenLayers/Renderer/Canvas.js
  */
 
 /** api: (define)

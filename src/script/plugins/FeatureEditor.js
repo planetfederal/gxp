@@ -9,6 +9,11 @@
 /**
  * @requires plugins/ClickableFeatures.js
  * @requires widgets/FeatureEditPopup.js
+ * @requires OpenLayers/Control/DrawFeature.js
+ * @requires OpenLayers/Handler/Point.js
+ * @requires OpenLayers/Handler/Path.js
+ * @requires OpenLayers/Handler/Polygon.js
+ * @requires OpenLayers/Control/SelectFeature.js
  */
 
 /** api: (define)

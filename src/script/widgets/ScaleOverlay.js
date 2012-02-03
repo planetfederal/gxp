@@ -6,6 +6,10 @@
  * of the license.
  */
 
+/**
+ * @requires OpenLayers/Control/ScaleLine.js
+ */
+
 /** api: (define)
  *  module = gxp
  *  class = ScaleOverlay

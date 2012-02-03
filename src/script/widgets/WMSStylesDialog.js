@@ -9,6 +9,7 @@
 /**
  * @include widgets/RulePanel.js
  * @include widgets/StylePropertiesDialog.js
+ * @requires OpenLayers/Renderer.js
  */
 
 /** api: (define)
