@@ -36,6 +36,14 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
      */
     schema: null,
 
+    /** api: config[fieldConfig]
+     *  ``Object``
+     *  An object with as keys the field names, which will provide the ability
+     *  to override the xtype that GeoExt.form created by default based on the
+     *  schema.
+     */
+    fieldConfig: null,
+
     /** api: config[fields]
      *  ``Array``
      *  List of field config names corresponding to feature attributes.  If
@@ -118,6 +126,9 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
                 var fieldCfg = GeoExt.form.recordToField(r);
                 fieldCfg.fieldLabel = this.propertyNames ? (this.propertyNames[name] || fieldCfg.fieldLabel) : fieldCfg.fieldLabel;
                 fieldCfg.value = this.feature.attributes[name];
+                if (this.fieldConfig && this.fieldConfig[name]) {
+                    fieldCfg = Ext.apply(fieldCfg, this.fieldConfig[name]);
+                }
                 if (fieldCfg.value && fieldCfg.xtype == "datefield") {
                     var dateFormat = "Y-m-d";
                     fieldCfg.format = dateFormat;
