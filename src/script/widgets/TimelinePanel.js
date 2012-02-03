@@ -10,6 +10,17 @@
  * @requires widgets/tips/RangeSliderTip.js
  * @requires widgets/FeatureEditPopup.js
  * @requires OpenLayers/Format/SLD/v1_0_0.js
+ * @requires OpenLayers/Renderer/SVG.js
+ * @requires OpenLayers/Renderer/VML.js
+ * @requires OpenLayers/Renderer/Canvas.js
+ * @requires OpenLayers/Layer/Vector.js
+ * @requires OpenLayers/Strategy/BBOX.js
+ * @requires OpenLayers/Filter/Logical.js
+ * @requires OpenLayers/Filter/Comparison.js
+ * @requires OpenLayers/Protocol/WFS/v1_1_0.js
+ * @requires OpenLayers/BaseTypes/Date.js
+ * @requires OpenLayers/BaseTypes/LonLat.js
+ * @requires OpenLayers/Filter/Spatial.js
  */
 
 /** api: (define)
