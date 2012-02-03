@@ -9,6 +9,7 @@
 /*
  * @requires plugins/FeatureEditorGrid.js
  * @requires GeoExt/widgets/Popup.js
+ * @requires OpenLayers/Control/ModifyFeature.js
  */
 
 /** api: (define)

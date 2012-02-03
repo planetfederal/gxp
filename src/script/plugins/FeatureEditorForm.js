@@ -6,6 +6,10 @@
  * of the license.
  */
 
+/**
+ * @requires GeoExt/widgets/form.js
+ */
+
 /** api: (define)
  *  module = gxp.plugins
  *  class = FeatureEditorForm
