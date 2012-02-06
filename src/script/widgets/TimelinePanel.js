@@ -56,6 +56,16 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  url to use to get time info about a certain layer.
      */
     timeInfoEndpoint: "/maps/time_info.json?",
+
+    /** api: config[annotationConfig]
+     *  ``Object`` Configuration object for the integration of annotations
+     *  with the timeline.
+     */
+    annotationConfig: {
+        startTimeAttr: 'start_time',
+        endTimeAttr: 'end_time',
+        filterAttr: 'in_timeline'
+    },
     
     /** api: config[viewer]
      *  ``gxp.Viewer``
@@ -120,6 +130,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *   * timeAttr - {String}
      *   * startTimeAttr - {String}
      *   * endTimeAttr - {String}
+     *   * filterAttr - {String}
      *   * visible - {Boolean}
      *   * timeFilter - {OpenLayers.Filter}
      *   * sldFilter - {OpenLayers.Filter}
@@ -427,14 +438,12 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         var key = this.getKey(record);
         var titleAttr = this.guessTitleAttribute(schema);
         var layer = this.featureManager.featureLayer;
-        this.layerLookup[key] = {
-            startTimeAttr: 'start_time',
-            endTimeAttr: 'end_time',
+        this.layerLookup[key] = Ext.apply({
             titleAttr: titleAttr,
             icon: Timeline.urlPrefix + "/images/note.png",
             layer: layer,
             visible: true
-        };
+        }, this.annotationConfig);
         if (this.featureManager.featureStore) {
             // we cannot use the featureLayer's events here, since features
             // will be added without attributes
@@ -1321,40 +1330,46 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             isDuration = true;
         }
         var num = features.length;
-        var events = new Array(num);
+        var events = [];
         var attributes, str;
         for (var i=0; i<num; ++i) { 
             attributes = features[i].attributes;
             if (isDuration === false) {
-                events[i] = {
+                events.push({
                     start: OpenLayers.Date.parse(attributes[timeAttr]),
                     title: attributes[titleAttr],
                     durationEvent: false,
                     key: key,
                     icon: this.layerLookup[key].icon,
                     fid: features[i].fid
-                };
-            } else {
+                });
+            } else if (attributes[this.layerLookup[key].filterAttr] === true) {
                 var start = attributes[this.layerLookup[key].startTimeAttr];
                 var end = attributes[this.layerLookup[key].endTimeAttr];
-                if (Ext.isNumber(start)) {
-                    start = new Date(start*1000);
-                } else {
-                    start = OpenLayers.Date.parse(start);
+                // end is optional
+                var durationEvent = (start !== undefined && end !== undefined);
+                if (start !== undefined) {
+                    if (Ext.isNumber(start)) {
+                        start = new Date(start*1000);
+                    } else {
+                        start = OpenLayers.Date.parse(start);
+                    }
                 }
-                if (Ext.isNumber(end)) {
-                    end = new Date(end*1000);
-                } else {
-                    end = OpenLayers.Date.parse(end);
+                if (end !== undefined) {
+                    if (Ext.isNumber(end)) {
+                        end = new Date(end*1000);
+                    } else {
+                        end = OpenLayers.Date.parse(end);
+                    }
                 }
-                events[i] = {
+                events.push({
                     start: start,
                     end: end,
                     title: attributes[titleAttr],
-                    durationEvent: true,
+                    durationEvent: durationEvent,
                     key: key,
                     fid: features[i].fid
-                };
+                });
             }
         }       
         var feed = {
