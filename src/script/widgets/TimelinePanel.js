@@ -1314,21 +1314,48 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  Add some features to the timeline.
      */    
     addFeatures: function(key, features) {
+        var isDuration = false;
         var titleAttr = this.layerLookup[key].titleAttr;
         var timeAttr = this.layerLookup[key].timeAttr;
+        if (!timeAttr) {
+            isDuration = true;
+        }
         var num = features.length;
         var events = new Array(num);
         var attributes, str;
         for (var i=0; i<num; ++i) { 
             attributes = features[i].attributes;
-            events[i] = {
-                start: OpenLayers.Date.parse(attributes[timeAttr]),
-                title: attributes[titleAttr],
-                durationEvent: false,
-                key: key,
-                icon: this.layerLookup[key].icon,
-                fid: features[i].fid
-            };      
+            if (isDuration === false) {
+                events[i] = {
+                    start: OpenLayers.Date.parse(attributes[timeAttr]),
+                    title: attributes[titleAttr],
+                    durationEvent: false,
+                    key: key,
+                    icon: this.layerLookup[key].icon,
+                    fid: features[i].fid
+                };
+            } else {
+                var start = attributes[this.layerLookup[key].startTimeAttr];
+                var end = attributes[this.layerLookup[key].endTimeAttr];
+                if (Ext.isNumber(start)) {
+                    start = new Date(start*1000);
+                } else {
+                    start = OpenLayers.Date.parse(start);
+                }
+                if (Ext.isNumber(end)) {
+                    end = new Date(end*1000);
+                } else {
+                    end = OpenLayers.Date.parse(end);
+                }
+                events[i] = {
+                    start: start,
+                    end: end,
+                    title: attributes[titleAttr],
+                    durationEvent: true,
+                    key: key,
+                    fid: features[i].fid
+                };
+            }
         }       
         var feed = {
             dateTimeFormat: "javascriptnative", //"iso8601",

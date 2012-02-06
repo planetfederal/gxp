@@ -34,7 +34,49 @@ gxp.form.ExtendedDateField = Ext.extend(Ext.form.DateField, {
     },
 
     setValue: function(v) {
-        return Ext.form.DateField.superclass.setValue.call(this, this.formatDate(new Date(v*1000)));
+        var d = v;
+        if (Ext.isNumber(v)) {
+            d = new Date(v*1000);
+        } 
+        return Ext.form.DateField.superclass.setValue.call(this, this.formatDate(d));
+    },
+
+    onTriggerClick : function(){
+        if(this.disabled){
+            return;
+        }
+        if(this.menu == null){
+            this.menu = new Ext.menu.DateMenu({
+                hideOnClick: false,
+                focusOnSelect: false
+            });
+        }
+        this.onFocus();
+        Ext.apply(this.menu.picker,  {
+            minDate : this.minValue,
+            maxDate : this.maxValue,
+            disabledDatesRE : this.disabledDatesRE,
+            disabledDatesText : this.disabledDatesText,
+            disabledDays : this.disabledDays,
+            disabledDaysText : this.disabledDaysText,
+            format : this.format,
+            showToday : this.showToday,
+            startDay: this.startDay,
+            minText : String.format(this.minText, this.formatDate(this.minValue)),
+            maxText : String.format(this.maxText, this.formatDate(this.maxValue))
+        });
+        // changed code
+        var d;
+        var v = this.getValue();
+        if (v === "") {
+            d = new Date();
+        } else {
+            d = new Date(v*1000);
+        }
+        this.menu.picker.setValue(d);
+        // end of change
+        this.menu.show(this.el, "tl-bl?");
+        this.menuEvents('on');
     }
 
 });
