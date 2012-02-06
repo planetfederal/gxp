@@ -133,6 +133,9 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
                 if (this.fieldConfig && this.fieldConfig[name]) {
                     fieldCfg = Ext.apply(fieldCfg, this.fieldConfig[name]);
                 }
+                if (fieldCfg.value && fieldCfg.xtype == "gxp_datefield") {
+                    fieldCfg.value = new Date(fieldCfg.value*1000);
+                }
                 if (fieldCfg.value && fieldCfg.xtype == "datefield") {
                     var dateFormat = "Y-m-d";
                     fieldCfg.format = dateFormat;
