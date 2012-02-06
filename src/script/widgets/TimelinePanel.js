@@ -444,6 +444,13 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             layer: layer,
             visible: true
         }, this.annotationConfig);
+        this.featureManager.on("query", function(tool, store) {
+            var features = [];
+            store.each(function(record) {
+                features.push(record.getFeature());
+            });
+            this.addFeatures(key, features);
+        }, this, {single: true});
         if (this.featureManager.featureStore) {
             // we cannot use the featureLayer's events here, since features
             // will be added without attributes
@@ -1343,9 +1350,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                     icon: this.layerLookup[key].icon,
                     fid: features[i].fid
                 });
-            } else if (attributes[this.layerLookup[key].filterAttr] === true) {
-                var start = attributes[this.layerLookup[key].startTimeAttr];
-                var end = attributes[this.layerLookup[key].endTimeAttr];
+            } else if (attributes[this.layerLookup[key].filterAttr].toString() === "true") {
+                var start = parseFloat(attributes[this.layerLookup[key].startTimeAttr]);
+                var end = parseFloat(attributes[this.layerLookup[key].endTimeAttr]);
                 // end is optional
                 var durationEvent = (start !== undefined && end !== undefined);
                 if (start !== undefined) {

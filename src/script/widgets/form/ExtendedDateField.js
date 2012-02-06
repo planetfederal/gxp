@@ -36,7 +36,7 @@ gxp.form.ExtendedDateField = Ext.extend(Ext.form.DateField, {
     setValue: function(v) {
         var d = v;
         if (Ext.isNumber(parseFloat(v))) {
-            d = new Date(v*1000);
+            d = new Date(parseFloat(v)*1000);
         } 
         return Ext.form.DateField.superclass.setValue.call(this, this.formatDate(d));
     },
