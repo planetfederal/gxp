@@ -2,6 +2,7 @@
 
     var jsfiles = new Array(
         "util.js",
+        "util/MGRS.js",
         "data/AutoCompleteProxy.js",
         "data/AutoCompleteReader.js",
         "data/GroupStyleReader.js",
