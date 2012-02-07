@@ -1015,24 +1015,21 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                     var startOriginal = new Date(time.getTime() - span/4);
                     var endOriginal = new Date(time.getTime() + span/4);
                     this.rangeInfo.original = [startOriginal, endOriginal];
-                    var rangeToClear = undefined;
                     // we have moved ahead in time, and we have not moved so far that 
                     // all our data is invalid
                     if (start > currentRange[0] && start < currentRange[1]) {
                         // only request the slice of data that we need
-                        rangeToClear = [currentRange[0], start];
                         start = currentRange[1];
                     }
                     // we have moved back in time
                     if (start < currentRange[0] && end > currentRange[0]) {
-                        rangeToClear = [end, currentRange[1]];
                         end = currentRange[0];
                     }
                     for (var key in this.layerLookup) {
                         var layer = this.layerLookup[key].layer;
                         layer && this.setTimeFilter(key, this.createTimeFilter([start, end], key, 0, false));
                     }
-                    this.updateTimelineEvents({force: true}, rangeToClear);
+                    this.updateTimelineEvents({force: true}, true);
                 }
             }
             this.showAnnotations(time);
@@ -1207,8 +1204,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             visibility: false
         });
         layer.events.on({
-            loadstart: this.onLoadStart,
-            loadend: this.onLoadEnd,
+            /*loadstart: this.onLoadStart,
+            loadend: this.onLoadEnd,*/
             featuresadded: this.onFeaturesAdded.createDelegate(this, [key], 1),
             featuresremoved: this.onFeaturesRemoved,
             scope: this
@@ -1232,12 +1229,13 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     
     /** private: method[updateTimelineEvents]
      *  :arg options: `Object` First arg to OpenLayers.Strategy.BBOX::update.
-     *  :arg rangeToClear: ``Array`` Optional date range to use for clearing.
+     *  :arg clearWhenInvisible: ``Boolean`` If true, only clear if events are
+     *  outside of the visible band.
      *
      *  Load the data for the timeline. Only load the data if the total number
      *  features is below a configurable threshold.
      */
-    updateTimelineEvents: function(options, rangeToClear) {
+    updateTimelineEvents: function(options, clearWhenInvisible) {
         if (!this.rendered) {
             return;
         }
@@ -1287,8 +1285,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 for (key in this.layerLookup) {
                     layer = this.layerLookup[key].layer;
                     if (layer && layer.strategies !== null) {
-                        if (rangeToClear !== undefined) {
-                            this.clearEventsForRange(key, rangeToClear);
+                        if (clearWhenInvisible === true) {
+                            this.clearInvisibleEvents(key);
                         } else {
                             this.clearEventsForKey(key);
                         }
@@ -1320,9 +1318,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     clearEventsForKey: function(key) {
         var iterator = this.eventSource.getAllEventIterator();
         var eventIds = [];
-        var count = 0;
         while (iterator.hasNext()) {
-            count++;
             var evt = iterator.next();
             if (evt.getProperty('key') === key) {
                 eventIds.push(evt.getID());
@@ -1332,6 +1328,34 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             this.eventSource.remove(eventIds[i]);
         }
         this.timeline && this.timeline.layout();
+    },
+
+    /** private: method[clearInvisibleEvents]
+     *  :arg key: ``String`` 
+     *
+     *  Clear the events from the timeline for a certain layer but only clear
+     *  the events that are outside of the visible range.
+     */
+    clearInvisibleEvents: function(key) {
+        if (this.timeline) {
+            var band = this.timeline.getBand(0);
+            var min = band.getMinVisibleDate();
+            var max = band.getMaxVisibleDate();
+            var iterator = this.eventSource.getAllEventIterator();
+            var eventIds = [];
+            while (iterator.hasNext()) {
+                var evt = iterator.next();
+                var start = evt.getProperty('start');
+                var visible = start >= min && start <= max;
+                if (evt.getProperty('key') === key && !visible) {
+                    eventIds.push(evt.getID());
+                }
+            }
+            for (var i=0, len=eventIds.length; i<len; ++i) {
+                this.eventSource.remove(eventIds[i]);
+            }
+            this.timeline.layout();
+        }
     },
 
     /** private: method[clearEventsForRange]
@@ -1344,9 +1368,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     clearEventsForRange: function(key, range) {
         var iterator = this.eventSource.getAllEventIterator();
         var eventIds = [];
-        var count = 0;
         while (iterator.hasNext()) {
-            count++;
             var evt = iterator.next();
             var start = evt.getProperty('start');
             // only clear if in range
