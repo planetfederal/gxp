@@ -37,11 +37,11 @@ gxp.plugins.Timeline = Ext.extend(gxp.plugins.Tool, {
      */
     playbackTool: null,
 
-    /** api: config[featureManager]
+    /** api: config[featureEditor]
      *  ``String``
-     *  Id of the feature manager tool to which the timeline has to bind.
+     *  Id of the feature editor tool to which the timeline has to bind.
      */
-    featureManager: null,
+    featureEditor: null,
     
     /** api: config[menuText]
      *  ``String``
@@ -94,7 +94,7 @@ gxp.plugins.Timeline = Ext.extend(gxp.plugins.Tool, {
         return gxp.plugins.Timeline.superclass.addOutput.call(this, Ext.apply({
             xtype: "gxp_timelinepanel",
             viewer: this.target,
-            featureManager: this.target.tools[this.featureManager],
+            featureEditor: this.target.tools[this.featureEditor],
             playbackTool: this.target.tools[this.playbackTool]
         }, config));
     },

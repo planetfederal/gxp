@@ -51,6 +51,14 @@ window.Timeline && window.SimileAjax && (function() {
  */
 gxp.TimelinePanel = Ext.extend(Ext.Panel, {
 
+    /** api: config[featureEditor]
+     *  ``gxp.plugins.FeatureEditor``
+     */
+
+    /** private: property[featureManager]
+     *  ``gxp.plugins.FeatureManager``
+     */
+
     /** api: config[timeInfoEndpoint]
      *  ``String``
      *  url to use to get time info about a certain layer.
@@ -201,10 +209,10 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             this.bindViewer(this.initialConfig.viewer);
         }
 
-        // we are binding with a feature manager to get notes/annotations
-        if (this.initialConfig.featureManager) {
-            delete this.featureManager;
-            this.bindFeatureManager(this.initialConfig.featureManager);
+        // we are binding with a feature editor to get notes/annotations
+        if (this.initialConfig.featureEditor) {
+            delete this.featureEditor;
+            this.bindFeatureEditor(this.initialConfig.featureEditor);
         }
 
         // we are binding with the playback tool to get updates on ranges
@@ -362,7 +370,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             this.destroyPopup();
             // if annotations, show feature editor
             if (!layer.protocol) {
-                layer.events.triggerEvent("featureselected", {feature: feature});
+                if (this.featureEditor) { 
+                    this.featureEditor._forcePopupForNoGeometry = true;
+                    layer.events.triggerEvent("featureselected", {feature: feature});
+                    delete this.featureEditor._forcePopupForNoGeometry;
+                }
             } else {
                 var centroid = feature.geometry.getCentroid();
                 var map = this.viewer.mapPanel.map;
@@ -386,26 +398,28 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     },
 
     /**
-     * private: method[bindFeatureManager]
-     *  :arg featureManager: ``gxp.plugins.FeatureManager``
+     * private: method[bindFeatureEditor]
+     *  :arg featureEditor: ``gxp.plugins.FeatureEditor``
      *  
-     *  Bind with a feature manager to have notes show up in the timeline.
+     *  Bind with a feature editor to have notes show up in the timeline.
      */
-    bindFeatureManager: function(featureManager) {
-        this.featureManager = featureManager;
+    bindFeatureEditor: function(featureEditor) {
+        this.featureEditor = featureEditor;
+        this.featureManager = featureEditor.getFeatureManager();
         this.featureManager.on("layerchange", this.onLayerChange, this);
     },
 
     /**
-     * private: method[unbindFeatureManager]
+     * private: method[unbindFeatureEditor]
      *  
-     *  Unbind with a feature manager
+     *  Unbind with a feature editor and its associated feature manager.
      */
-    unbindFeatureManager: function() {
+    unbindFeatureEditor: function() {
         if (this.featureManager) {
             this.featureManager.un("layerchange", this.onLayerChange, this);
             this.featureManager = null;
         }
+        this.featureEditor = null;
     },
 
     /**
@@ -1389,6 +1403,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         var isDuration = false;
         var titleAttr = this.layerLookup[key].titleAttr;
         var timeAttr = this.layerLookup[key].timeAttr;
+        var filterAttr = this.layerLookup[key].filterAttr;
         if (!timeAttr) {
             isDuration = true;
         }
@@ -1406,7 +1421,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                     icon: this.layerLookup[key].icon,
                     fid: features[i].fid
                 });
-            } else if (attributes[this.layerLookup[key].filterAttr].toString() === "true") {
+            } else if (attributes[filterAttr] && attributes[filterAttr].toString() === "true") {
                 var start = attributes[this.layerLookup[key].startTimeAttr];
                 var end = attributes[this.layerLookup[key].endTimeAttr];
                 // end is optional
@@ -1484,7 +1499,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         this.annotationsLayer = null;
         this.destroyPopup();
         this.unbindViewer();
-        this.unbindFeatureManager();
+        this.unbindFeatureEditor();
         this.unbindPlaybackTool();
         if (this.rendered){
             Ext.destroy(this.busyMask);
