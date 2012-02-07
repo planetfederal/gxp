@@ -156,6 +156,9 @@ United States complies, relating to the export or re-export of
 any commodities, software, or technical data.
 */
 
+/**
+ * @require util.js
+ */
 Ext.namespace("gxp.util");
 
 /**
