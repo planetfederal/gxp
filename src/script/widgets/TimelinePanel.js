@@ -269,12 +269,13 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  :arg item: ``Ext.Menu.CheckItem``
      *  :arg checked: ``Boolean``
      *  :arg record: ``GeoExt.data.LayerRecord``
+     *  :arg clear: ``Boolean``
      *
      *  Change the visibility for a layer which is shown in the timeline.
      */
-    setLayerVisibility: function(item, checked, record) {
+    setLayerVisibility: function(item, checked, record, clear) {
         var keyToMatch = this.getKey(record);
-        this.clearEventsForKey(keyToMatch);
+        (clear !== false) && this.clearEventsForKey(keyToMatch);
         Ext.apply(this.layerLookup[keyToMatch], {
             visible: checked
         });
@@ -459,7 +460,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         if (layer) {
             layer.events.on({
                 "visibilitychanged": function(evt) {
-                    this.setLayerVisibility(null, evt.object.getVisibility(), record);
+                    this.setLayerVisibility(null, evt.object.getVisibility(), record, false);
                 },
                 scope: this
             });
@@ -1351,11 +1352,12 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                     fid: features[i].fid
                 });
             } else if (attributes[this.layerLookup[key].filterAttr].toString() === "true") {
-                var start = parseFloat(attributes[this.layerLookup[key].startTimeAttr]);
-                var end = parseFloat(attributes[this.layerLookup[key].endTimeAttr]);
+                var start = attributes[this.layerLookup[key].startTimeAttr];
+                var end = attributes[this.layerLookup[key].endTimeAttr];
                 // end is optional
                 var durationEvent = (start !== undefined && end !== undefined);
                 if (start !== undefined) {
+                    start = parseFloat(start);
                     if (Ext.isNumber(start)) {
                         start = new Date(start*1000);
                     } else {
@@ -1363,6 +1365,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                     }
                 }
                 if (end !== undefined) {
+                    end = parseFloat(end);
                     if (Ext.isNumber(end)) {
                         end = new Date(end*1000);
                     } else {
@@ -1372,6 +1375,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 events.push({
                     start: start,
                     end: end,
+                    icon: this.layerLookup[key].icon,
                     title: attributes[titleAttr],
                     durationEvent: durationEvent,
                     key: key,
