@@ -982,7 +982,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                     labelOutlineWidth: 3
                 }})
             });
-            this.viewer.mapPanel.map.addLayer(this.annotationsLayer);
+            this.viewer && this.viewer.mapPanel.map.addLayer(this.annotationsLayer);
         }
         var compare = time.getTime()/1000;
         if (this.featureManager && this.featureManager.featureStore) {
