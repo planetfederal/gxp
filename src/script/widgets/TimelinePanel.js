@@ -64,7 +64,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     annotationConfig: {
         startTimeAttr: 'start_time',
         endTimeAttr: 'end_time',
-        filterAttr: 'in_timeline'
+        filterAttr: 'in_timeline',
+        mapFilterAttr: 'in_map'
     },
     
     /** api: config[viewer]
@@ -916,9 +917,61 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }
     },
 
+    /** private: method[updateRangeSlider]
+     *  :arg range: ``Array``
+     *
+     *  Update the slider tip for the range slider.
+     */
     updateRangeSlider: function(range) {
         this.rangeSlider.startDate = range[0].dateFormat('Y-m-d');
         this.rangeSlider.endDate = range[1].dateFormat('Y-m-d');
+    },
+
+    /** private: method[showAnnotations]
+     *  :arg time: ``Date``
+     *
+     *  Show annotations in the map.
+     */
+    showAnnotations: function(time) {
+        if (!this.annotationsLayer) {
+            this.annotationsLayer = new OpenLayers.Layer.Vector(null, {
+                styleMap: new OpenLayers.StyleMap({'default':{
+                    label: "${title}",
+                    fontColor: "black",
+                    fontSize: "12px",
+                    fontFamily: "Courier New, monospace",
+                    fontWeight: "bold",
+                    labelOutlineColor: "white",
+                    labelAlign: "middle",
+                    labelOutlineWidth: 3
+                }})
+            });
+            this.viewer.mapPanel.map.addLayer(this.annotationsLayer);
+        }
+        var compare = time.getTime()/1000;
+        if (this.featureManager && this.featureManager.featureStore) {
+            this.featureManager.featureStore.each(function(record) {
+                if (record.get(this.annotationConfig.mapFilterAttr).toString() === "true") {
+                    var startTime = parseFloat(record.get("start_time"));
+                    var endTime = record.get("end_time");
+                    var ranged = (endTime !== "");
+                    if (ranged === true) {
+                        if (compare <= parseFloat(endTime) && compare >= startTime) {
+                            this.annotationsLayer.drawFeature(record.getFeature());
+                        } else {
+                            this.annotationsLayer.eraseFeatures([record.getFeature()]);
+                        }
+                    } else {
+                        // we need to take a margin for the feature to have a chance to show up
+                        if (startTime >= 0.99*compare && startTime <= 1.01*compare) {
+                            this.annotationsLayer.drawFeature(record.getFeature());
+                        } else {
+                            this.annotationsLayer.eraseFeatures([record.getFeature()]);
+                        }
+                    }
+                }
+            }, this);
+        }
     },
 
     /** private: method[setCenterDate]
@@ -967,6 +1020,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                     this.updateTimelineEvents({force: true}, rangeToClear);
                 }
             }
+            this.showAnnotations(time);
         }
     },
 
@@ -1426,6 +1480,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 layer.destroy();
             }
         }
+        this.annotationsLayer = null;
         this.destroyPopup();
         this.unbindViewer();
         this.unbindFeatureManager();
