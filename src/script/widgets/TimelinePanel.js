@@ -195,6 +195,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 minValue: 1,
                 maxValue: 100,
                 listeners: {
+                    "change": this.onChange,
                     "changecomplete": this.onChangeComplete,
                     scope: this
                 },
@@ -232,6 +233,26 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }
 
         gxp.TimelinePanel.superclass.initComponent.call(this); 
+    },
+
+    /**
+     * private: method[onChange]
+     *  :arg slider: ``Ext.Slider``
+     *  :arg value: ``Float``
+     *
+     *  Event listener for when the vertical slider is moved. Update the
+     *  range slider's tooltip.
+     */
+    onChange: function(slider, value, thumb) {
+        // TODO this logic needs to be more centralized, it's now in several places
+        var range = this.playbackTool.playbackToolbar.control.range;
+        range = this.calculateNewRange(range, value);
+        var start = new Date(range[0].getTime() - this.bufferFraction * (range[1] - range[0]));
+        var end = new Date(range[1].getTime() + this.bufferFraction * (range[1] - range[0]));
+        // don't go beyond the original range
+        start = new Date(Math.max(this.originalRange[0], start));
+        end = new Date(Math.min(this.originalRange[1], end));
+        this.updateRangeSlider([start, end]);
     },
 
     /**
