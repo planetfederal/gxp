@@ -205,7 +205,8 @@ gxp.util.MGRS = (function() {
 	 *
 	 * @param {number} lat WGS84 latitude.
 	 * @param {number} lon WGS84 longitude.
-	 * @param {int} accuracy accuracy in meters (1, 10, 100, 1000 or 10000).
+	 * @param {int} accuracy accuracy in digits (5 for 1 m, 4 for 10 m, 3 for
+	 *      100 m, 4 for 1000 m or 5 for 10000 m).
 	 * @return {string} the MGRS string for the given location and accuracy.
 	 */
 	function forward(lat, lon, accuracy) {
@@ -254,11 +255,11 @@ gxp.util.MGRS = (function() {
      * @private
      * @param {object} ll Object literal with lat and lon properties
      *     representing the coordinate to be converted. If an optional
-     *     accuracy (in meters) is passed, it will be passed on to the output
-     *     object.
+     *     accuracy (in digits, 1-5) is passed, it will be passed on to the
+     *     output object.
      * @return {object} Object literal containing the UTM value with easting,
      *     northing, zoneNumber and zoneLetter properties, and an optional
-     *     accuracy property in meters. Returns null if the conversion failed.
+     *     accuracy property in digits. Returns null if the conversion failed.
      */
     function LLtoUTM(ll) {
         var Lat = ll.lat;
@@ -515,7 +516,7 @@ gxp.util.MGRS = (function() {
 	 *
 	 * @private
 	 * @param {object} utm An object literal with easting, northing,
-	 *     zoneLetter, zoneNumber and accuracy (in meters) properties.
+	 *     zoneLetter, zoneNumber and accuracy (in digits) properties.
 	 * @return {string} MGRS string for the given UTM location.
 	 */
 	function encode(utm) {
