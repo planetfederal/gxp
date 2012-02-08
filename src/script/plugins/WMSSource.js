@@ -7,6 +7,7 @@
  */
 
 /**
+ * @requires util.js
  * @requires plugins/LayerSource.js
  * @requires OpenLayers/Layer/WMS.js
  * @requires OpenLayers/Format/WMSCapabilities/v1_1_0.js

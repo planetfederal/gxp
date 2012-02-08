@@ -7,9 +7,10 @@
  */
 
 /**
- * @include widgets/RulePanel.js
- * @include widgets/StylePropertiesDialog.js
- * @requires OpenLayers/Renderer.js
+ * @require util.js
+ * @require widgets/RulePanel.js
+ * @require widgets/StylePropertiesDialog.js
+ * @require OpenLayers/Renderer.js
  */
 
 /** api: (define)

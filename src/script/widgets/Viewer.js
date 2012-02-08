@@ -7,6 +7,7 @@
  */
 
 /**
+ * @requires util.js
  * @requires OpenLayers/Control/Attribution.js
  * @requires OpenLayers/Control/ZoomPanel.js
  * @requires OpenLayers/Control/Navigation.js

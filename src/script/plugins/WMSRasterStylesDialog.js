@@ -6,6 +6,10 @@
  * of the license.
  */
 
+/**
+ * @requires util.js
+ */
+
 /** api: (define)
  *  module = gxp.plugins
  *  class = WMSRasterStylesDialog
