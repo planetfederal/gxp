@@ -34,10 +34,10 @@ var panel = new GeoExt.MapPanel({
         key: [Ext.EventObject.ENTER],
         handler: function() {
             if (Ext.EventObject.getTarget() === panel.mgrsField.getEl().dom) {
-                var bbox = gxp.util.MGRS.inverse(panel.mgrsField.getValue());
-                panel.map.zoomToExtent(
-                    new OpenLayers.Bounds(bbox.left, bbox.bottom, bbox.right, bbox.top).transform("EPSG:4326", "EPSG:3857")
+                var bbox = OpenLayers.Bounds.fromArray(
+                    gxp.util.MGRS.inverse(panel.mgrsField.getValue())
                 );
+                panel.map.zoomToExtent(bbox.transform("EPSG:4326", "EPSG:3857"));
             }
         }
     }]

@@ -220,10 +220,11 @@ gxp.util.MGRS = (function() {
 	 * @param {string} mgrs MGRS string.
 	 * @return {array} An array with left (longitude), bottom (latitude), right
 	 *     (longitude) and top (latitude) values in WGS84, representing the
-	 *     bounding box of the provided MGRS string.
+	 *     bounding box for the provided MGRS reference.
 	 */
 	function inverse(mgrs) {
-	    return UTMtoLL(decode(mgrs.toUpperCase()));
+	    var bbox = UTMtoLL(decode(mgrs.toUpperCase()));
+	    return [bbox.left, bbox.bottom, bbox.right, bbox.top];
 	}
 
     /**
