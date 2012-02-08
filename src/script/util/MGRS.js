@@ -203,24 +203,24 @@ gxp.util.MGRS = (function() {
 	/**
 	 * Conversion of lat/lon to MGRS.
 	 *
-	 * @param {number} lat WGS84 latitude.
-	 * @param {number} lon WGS84 longitude.
-	 * @param {int} accuracy accuracy in digits (5 for 1 m, 4 for 10 m, 3 for
-	 *      100 m, 4 for 1000 m or 5 for 10000 m).
+	 * @param {object} ll Object literal with lat and lon properties on a
+	 *     WGS84 ellipsoid.
+	 * @param {int} accuracy Accuracy in digits (5 for 1 m, 4 for 10 m, 3 for
+	 *      100 m, 4 for 1000 m or 5 for 10000 m). Optional, default is 5.
 	 * @return {string} the MGRS string for the given location and accuracy.
 	 */
-	function forward(lat, lon, accuracy) {
+	function forward(ll, accuracy) {
 	    accuracy = accuracy || 5; // default accuracy 1m
-		return encode(LLtoUTM({lat: lat, lon: lon, accuracy: accuracy}));
+		return encode(LLtoUTM({lat: ll.lat, lon: ll.lon}), accuracy);
 	}
 	
 	/**
 	 * Conversion of MGRS to lat/lon.
 	 *
 	 * @param {string} mgrs MGRS string.
-	 * @return {object} An object literal with top, right, bottom and left.
-	 *     values in WGS84, representing the bounding box of the provided
-	 *     MGRS string.
+	 * @return {array} An array with left (longitude), bottom (latitude), right
+	 *     (longitude) and top (latitude) values in WGS84, representing the
+	 *     bounding box of the provided MGRS string.
 	 */
 	function inverse(mgrs) {
 	    return UTMtoLL(decode(mgrs.toUpperCase()));
@@ -254,9 +254,7 @@ gxp.util.MGRS = (function() {
      *
      * @private
      * @param {object} ll Object literal with lat and lon properties
-     *     representing the coordinate to be converted. If an optional
-     *     accuracy (in digits, 1-5) is passed, it will be passed on to the
-     *     output object.
+     *     representing the WGS84 coordinate to be converted.
      * @return {object} Object literal containing the UTM value with easting,
      *     northing, zoneNumber and zoneLetter properties, and an optional
      *     accuracy property in digits. Returns null if the conversion failed.
@@ -345,8 +343,7 @@ gxp.util.MGRS = (function() {
             northing: Math.round(UTMNorthing),
             easting: Math.round(UTMEasting),
             zoneNumber: ZoneNumber,
-            zoneLetter: getLetterDesignator(Lat),
-            accuracy: ll.accuracy
+            zoneLetter: getLetterDesignator(Lat)
         };
     }
     
@@ -516,17 +513,18 @@ gxp.util.MGRS = (function() {
 	 *
 	 * @private
 	 * @param {object} utm An object literal with easting, northing,
-	 *     zoneLetter, zoneNumber and accuracy (in digits) properties.
+	 *     zoneLetter, zoneNumber
+	 * @param {number} accuracy Accuracy in digits (1-5).
 	 * @return {string} MGRS string for the given UTM location.
 	 */
-	function encode(utm) {
+	function encode(utm, accuracy) {
 		var seasting = "" + utm.easting,
 		    snorthing = "" + utm.northing;
-
+		
 		return utm.zoneNumber + utm.zoneLetter +
             get100kID(utm.easting, utm.northing, utm.zoneNumber) +
-			seasting.substr(seasting.length - utm.accuracy, utm.accuracy) +
-			snorthing.substr(snorthing.length - utm.accuracy, utm.accuracy);
+			seasting.substr(seasting.length - 5, accuracy) +
+			snorthing.substr(snorthing.length - 5, accuracy);
 	}
 	
 	/**

@@ -11,7 +11,7 @@ var panel = new GeoExt.MapPanel({
             new OpenLayers.Control.Attribution(),
             new OpenLayers.Control.MousePosition({
                 formatOutput: function(lonlat) {
-                    return gxp.util.MGRS.forward(lonlat.lat, lonlat.lon);
+                    return gxp.util.MGRS.forward(lonlat, panel.accuracyField.getValue());
                 }
             })
         ],
@@ -22,6 +22,13 @@ var panel = new GeoExt.MapPanel({
         xtype: "textfield",
         emptyText: "Enter MGRS reference",
         ref: "../mgrsField"
+    }, '->', "MGRS accuracy:", {
+        xtype: "combo",
+        ref: "../accuracyField",
+        triggerAction: "all",
+        store: [[1, "10000 m"], [2, "1000 m"], [3, "100 m"], [4, "10 m"], [5, "1 m"]],
+        width: 70,
+        value: 1
     }],
     keys: [{
         key: [Ext.EventObject.ENTER],
