@@ -1247,6 +1247,27 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
     onMapMoveEnd: function() {
         this._silentMapMove !== true && this.updateTimelineEvents();
+        this.filterAnnotationsByBBOX();
+    },
+
+    /** private: method[filterAnnotationsByBBOX]
+     *  Makee sure only annotations show up that are in the map.
+     */
+    filterAnnotationsByBBOX: function() {
+        if (this.featureManager && this.featureManager.featureStore) {
+            var fids = [];
+            this.featureManager.featureStore.each(function(record) {
+                var feature = record.getFeature();
+                var bounds = feature.geometry.getBounds();
+                if (!bounds.intersectsBounds(this.viewer.mapPanel.map.getExtent())) {
+                    fids.push(feature.fid);
+                }
+            }, this);
+            var filterMatcher = function(evt) {
+                return (fids.indexOf(evt.getProperty('fid')) === -1);
+            };
+            this.setFilterMatcher(filterMatcher);
+        }
     },
     
     /** private: method[updateTimelineEvents]
