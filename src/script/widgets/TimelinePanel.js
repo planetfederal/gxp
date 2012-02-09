@@ -1010,6 +1010,36 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         this.rangeSlider.endDate = range[1].dateFormat('Y-m-d');
     },
 
+    /** private: method[displayTooltip]
+     *  :arg record: ``GeoExt.data.FeatureRecord``
+     *
+     *  Create and show the tooltip for a record.
+     */
+    displayTooltip: function(record) {
+        if (!this.tooltips) {
+            this.tooltips = {};
+        }
+        var fid = record.getFeature().fid;
+        if (!this.tooltips[fid]) {
+            this.tooltips[fid] = new Ext.ToolTip({
+                html: record.get("title")
+            });
+        }
+        this.tooltips[fid].showBy(this.viewer.mapPanel.body, record.get("appearance"));
+    },
+
+    /** private: method[hideTooltip]
+     *  :arg record: ``GeoExt.data.FeatureRecord``
+     *
+     *  Hide the tooltip associated with the record.
+     */
+    hideTooltip: function(record) {
+        var fid = record.getFeature().fid;
+        if (this.tooltips && this.tooltips[fid]) {
+            this.tooltips[fid].hide();
+        }
+    },
+
     /** private: method[showAnnotations]
      *  :arg time: ``Date``
      *
@@ -1039,18 +1069,35 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                     var startTime = parseFloat(record.get("start_time"));
                     var endTime = record.get("end_time");
                     var ranged = (endTime !== "");
+                    var hasGeometry = (record.getFeature().geometry !== null);
                     if (ranged === true) {
                         if (compare <= parseFloat(endTime) && compare >= startTime) {
-                            this.annotationsLayer.drawFeature(record.getFeature());
+                            if (hasGeometry === true) {
+                                this.annotationsLayer.drawFeature(record.getFeature());
+                            } else {
+                                this.displayTooltip(record);
+                            }
                         } else {
-                            this.annotationsLayer.eraseFeatures([record.getFeature()]);
+                            if (hasGeometry === true) {
+                                this.annotationsLayer.eraseFeatures([record.getFeature()]);
+                            } else {
+                                this.hideTooltip(record);
+                            }
                         }
                     } else {
                         // we need to take a margin for the feature to have a chance to show up
                         if (startTime >= 0.99*compare && startTime <= 1.01*compare) {
-                            this.annotationsLayer.drawFeature(record.getFeature());
+                            if (hasGeometry === true) {
+                                this.annotationsLayer.drawFeature(record.getFeature());
+                            } else {
+                                this.displayTooltip(record);
+                            }
                         } else {
-                            this.annotationsLayer.eraseFeatures([record.getFeature()]);
+                            if (hasGeometry === true) {
+                                this.annotationsLayer.eraseFeatures([record.getFeature()]);
+                            } else {
+                                this.hideTooltip(record);
+                            }
                         }
                     }
                 }
@@ -1306,9 +1353,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             var fids = [];
             this.featureManager.featureStore.each(function(record) {
                 var feature = record.getFeature();
-                var bounds = feature.geometry.getBounds();
-                if (!bounds.intersectsBounds(this.viewer.mapPanel.map.getExtent())) {
-                    fids.push(feature.fid);
+                if (feature.geometry !== null) {
+                    var bounds = feature.geometry.getBounds();
+                    if (!bounds.intersectsBounds(this.viewer.mapPanel.map.getExtent())) {
+                        fids.push(feature.fid);
+                    }
                 }
             }, this);
             var filterMatcher = function(evt) {
