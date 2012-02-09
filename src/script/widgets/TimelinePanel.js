@@ -43,6 +43,16 @@ window.Timeline && window.SimileAjax && (function() {
         this._events.remove(evt);
         delete this._idToEvent[id];
     };
+    Timeline._Band.prototype.zoom = function(zoomIn, x, y, target) {
+        if (!this._zoomSteps) {
+            // zoom disabled
+            return;
+        }
+        var center = this.getCenterVisibleDate();
+        var netIntervalChange = this._ether.zoom(zoomIn);
+        this._etherPainter.zoom(netIntervalChange);
+        this.setCenterVisibleDate(center);
+    };
 })();
 
 /** api: constructor
@@ -185,13 +195,28 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         this.items = [{
             region: "west",
             xtype: "container",
-            layout: "fit",
+            layout: "vbox",
             margins: "10 5",
             width: 20,
             items: [{
+                xtype: "panel",
+                cls: "x-tool x-tool-plus",
+                listeners: {
+                    afterrender: function(c){ 
+                        c.getEl().on('click', function() {
+                            this._silent = true;
+                            this.timeline.getBand(0).zoom(false);
+                            this.timeline.paint();
+                            delete this._silent;
+                        }, this);
+                    },
+                    scope: this
+                }
+           }, {
                 xtype: "slider",
                 ref: "../rangeSlider",
                 vertical: true,
+                flex: 1,
                 value: 25,
                 minValue: 1,
                 maxValue: 100,
@@ -201,6 +226,20 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                     scope: this
                 },
                 plugins: [new gxp.slider.RangeSliderTip()]
+            }, {
+                xtype: "panel",
+                cls: "x-tool x-tool-minus",
+                listeners: {
+                    afterrender: function(c){ 
+                        c.getEl().on('click', function() {
+                            this._silent = true;
+                            this.timeline.getBand(0).zoom(true);
+                            this.timeline.paint();
+                            delete this._silent;
+                        }, this);
+                    },
+                    scope: this
+                }
             }]
         }, this.timelineContainer
         ];
@@ -906,11 +945,17 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }
     },
 
+    /** private: method[findBestZoomLevel]
+     *  :arg range: ``Array``
+     *
+     *  Find the best zoom level to display the range and perform the zoom.
+     */
     findBestZoomLevel: function(range) {
         if (this.timeline) {
+            this._silent = true;
             var diff = range[1]-range[0];
             var band = this.timeline.getBand(0);
-            var length = band.getViewLength();
+            var length = band.getViewLength()/2;
             var level = diff/band.getEther()._interval;
             var pixels = length/level;
             var delta;
@@ -928,8 +973,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 while (idx != band._zoomIndex) {
                     band.zoom(zoomIn);
                 }
-                band.paint();
             }
+            this.timeline.paint();
+            delete this._silent;
         }
     },
 
@@ -1105,7 +1151,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         // when the timeline moves, it does this intelligently as to only fetch the
         // necessary new slice of data, which is represented by start and end.
         this.updateRangeSlider(this.rangeInfo.current);
-        //this.findBestZoomLevel([start, end]);
+        this.findBestZoomLevel([start, end]);
         return new OpenLayers.Filter({
             type: OpenLayers.Filter.Comparison.BETWEEN,
             property: this.layerLookup[key].timeAttr,
