@@ -825,18 +825,19 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
 
     /** private: method[getFilterFromSLD]
      *  :arg key: ``String``
+     *  :arg styleName: ``String``
      *  :returns: ``OpenLayers.Filter``
      *
      *  Extract the Filter from the SLD.
      */
-    getFilterFromSLD: function(key) {
+    getFilterFromSLD: function(key, styleName) {
         var sld = this.sldCache[key];
         var filters = [];
         var elseFilter = false;
         for (var lyr in sld.namedLayers) {
             for (var i=0, ii=sld.namedLayers[lyr].userStyles.length; i<ii; ++i) {
                 var style = sld.namedLayers[lyr].userStyles[i];
-                if (style.isDefault === true) {
+                if ((styleName === "" && style.isDefault === true) || (style.name === styleName)) {
                     for (var j=0, jj=style.rules.length; j<jj; ++j) {
                         var rule = style.rules[j];
                         if (rule.elseFilter === true) {
@@ -1250,7 +1251,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
     addVectorLayer: function(record, protocol, schema) {
         var key = this.getKey(record);
-        this.layerLookup[key].sldFilter = this.getFilterFromSLD(key);
+        var style = record.getLayer().params.STYLES;
+        this.layerLookup[key].sldFilter = this.getFilterFromSLD(key, style);
         if (this.playbackTool) {
             // TODO consider putting an api method getRange on playback tool
             var range = this.playbackTool.playbackToolbar.control.range;
