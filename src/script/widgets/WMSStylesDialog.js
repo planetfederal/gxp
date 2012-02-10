@@ -11,6 +11,8 @@
  * @require widgets/RulePanel.js
  * @require widgets/StylePropertiesDialog.js
  * @require OpenLayers/Renderer.js
+ * @require GeoExt/data/AttributeStore.js
+ * @require GeoExt/widgets/WMSLegend.js
  */
 
 /** api: (define)
