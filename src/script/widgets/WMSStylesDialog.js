@@ -15,6 +15,7 @@
  * @require OpenLayers/Format/SLD/v1_0_0.js
  * @require GeoExt/data/AttributeStore.js
  * @require GeoExt/widgets/WMSLegend.js
+ * @require GeoExt/widgets/VectorLegend.js
  */
 
 /** api: (define)
