@@ -200,14 +200,13 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             width: 20,
             items: [{
                 xtype: "panel",
-                cls: "x-tool x-tool-plus",
+                margins: "3 1",
+                cls: "x-tool x-tool-minus",
                 listeners: {
                     afterrender: function(c){ 
                         c.getEl().on('click', function() {
-                            this._silent = true;
-                            this.timeline.getBand(0).zoom(false);
-                            this.timeline.paint();
-                            delete this._silent;
+                            var value = this.rangeSlider.getValue();
+                            this.rangeSlider.setValue(0, value+10, true, true);
                         }, this);
                     },
                     scope: this
@@ -228,14 +227,13 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 plugins: [new gxp.slider.RangeSliderTip()]
             }, {
                 xtype: "panel",
-                cls: "x-tool x-tool-minus",
+                margins: "3 1",
+                cls: "x-tool x-tool-plus",
                 listeners: {
                     afterrender: function(c){ 
                         c.getEl().on('click', function() {
-                            this._silent = true;
-                            this.timeline.getBand(0).zoom(true);
-                            this.timeline.paint();
-                            delete this._silent;
+                            var value = this.rangeSlider.getValue();
+                            this.rangeSlider.setValue(0, value-10, true, true);
                         }, this);
                     },
                     scope: this
