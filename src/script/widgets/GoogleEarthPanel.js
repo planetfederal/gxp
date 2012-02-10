@@ -160,12 +160,6 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
         
         this.layers.on("add", this.updateLayers, this);
 
-        this.on("beforedestroy", function() {
-            this.layers.un("remove", this.updateLayers, this);
-            this.layers.un("update", this.updateLayers, this);
-            this.layers.un("add", this.updateLayers, this);
-        }, this);
-        
         this.fireEvent("pluginready", this.earth);
 
         // Set up events. Notice global google namespace.
@@ -209,6 +203,15 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
                 }).createDelegate(this)
             );
         }
+    },
+
+    /**
+     */
+    beforeDestroy: function() {
+        this.layers.un("remove", this.updateLayers, this);
+        this.layers.un("update", this.updateLayers, this);
+        this.layers.un("add", this.updateLayers, this);
+        gxp.GoogleEarthPanel.superclass.beforeDestroy.call(this);
     },
 
     /** private: method[updateLayers]
