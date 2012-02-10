@@ -104,7 +104,8 @@ gxp.plugins.MapQuestSource = Ext.extend(gxp.plugins.LayerSource, {
             numZoomLevels: 19,
             units: "m",
             buffer: 1,
-            transitionEffect: "resize"
+            transitionEffect: "resize",
+            tileOptions: {crossOriginKeyword: null}
         };
         
         var layers = [
