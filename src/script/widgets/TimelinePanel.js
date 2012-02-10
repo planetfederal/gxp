@@ -35,6 +35,8 @@ Ext.namespace("gxp");
 window.Timeline && window.SimileAjax && (function() {
     SimileAjax.History.enabled = false;
 
+    Timeline._Band.prototype._onDblClick = Ext.emptyFn;
+
     Timeline.DefaultEventSource.prototype.remove = function(id) {
         this._events.remove(id);
     };
