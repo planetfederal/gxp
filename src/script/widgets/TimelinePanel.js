@@ -1620,7 +1620,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             dateTimeFormat: "javascriptnative", //"iso8601",
             events: events
         };
-        this.eventSource.loadJSON(feed, "http://mapstory.org/");
+        // do not use a real URL here, since this will mess up relative URLs
+        this.eventSource.loadJSON(feed, "mapstory.org");
     },
 
     /** private: method[onFeaturesAdded]
