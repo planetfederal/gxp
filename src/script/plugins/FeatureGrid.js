@@ -8,7 +8,8 @@
 
 /**
  * @requires plugins/ClickableFeatures.js
- * @include widgets/grid/FeatureGrid.js
+ * @requires widgets/grid/FeatureGrid.js
+ * @requires GeoExt/widgets/grid/FeatureSelectionModel.js
  */
 
 /** api: (define)
