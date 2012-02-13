@@ -1065,7 +1065,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         var compare = time.getTime()/1000;
         if (this.featureManager && this.featureManager.featureStore) {
             this.featureManager.featureStore.each(function(record) {
-                if (record.get(this.annotationConfig.mapFilterAttr).toString() === "true") {
+                var mapFilterAttr = this.annotationConfig.mapFilterAttr;
+                if (record.get(mapFilterAttr) && record.get(mapFilterAttr).toString() === "true") {
                     var startTime = parseFloat(record.get("start_time"));
                     var endTime = record.get("end_time");
                     var ranged = (endTime !== "");
