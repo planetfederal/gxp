@@ -831,6 +831,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
     getFilterFromSLD: function(key, styleName) {
         var sld = this.sldCache[key];
+        if (sld === undefined) {
+            return false;
+        }
         var filters = [];
         var elseFilter = false;
         for (var lyr in sld.namedLayers) {
