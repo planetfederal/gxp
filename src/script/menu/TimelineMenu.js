@@ -143,9 +143,10 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
                                     layout: 'fit',
                                     items: [{
                                         xtype: 'checkbox',
+                                        checked: (this.timelinePanel.layerLookup[key].clientSideFilter !== undefined),
                                         ref: "../applyFilter",
                                         listeners: {
-                                            'check': function(cb, checked) {
+                                            'check': function(cb, checked) { 
                                                 var field = Ext.getCmp('gxp_timemenufilter').filter;
                                                 if (field.isValid()) {
                                                     this.timelinePanel.applyFilter(record, field.filter, checked);
@@ -161,6 +162,7 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
                                     items: [{
                                         xtype: "gxp_filterfield",
                                         ref: "../filter",
+                                        filter: this.timelinePanel.layerLookup[key].clientSideFilter,
                                         listeners: {
                                             'change': function(filter, field) {
                                                 if (field.isValid()) {

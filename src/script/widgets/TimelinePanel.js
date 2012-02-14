@@ -156,6 +156,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *   * visible - {Boolean}
      *   * timeFilter - {OpenLayers.Filter}
      *   * sldFilter - {OpenLayers.Filter}
+     *   * clientSideFilter - {OpenLayers.Filter}
      *  
      */
     
@@ -370,6 +371,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     applyFilter: function(record, filter, checked) {
         var key = this.getKey(record);
         var layer = this.layerLookup[key].layer;
+        if (checked) {
+            this.layerLookup[key].clientSideFilter = filter;
+        } else {
+            delete this.layerLookup[key].clientSideFilter;
+        }
         var filterMatcher = function(evt) {
             var fid = evt.getProperty("fid");
             if (evt.getProperty("key") === key) {
@@ -930,6 +936,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                         };
                         if (this.layerLookup && this.layerLookup[key] && this.layerLookup[key].timeAttr) {
                             this.addVectorLayer(record, protocol, schema);
+                            if (this.layerLookup[key].clientSideFilter) {
+                                this.applyFilter(record, this.layerLookup[key].clientSideFilter, true);
+                            }
                         } else {
                             this.getTimeAttribute(record, protocol, schema, callback);
                         }
@@ -1700,7 +1709,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             result.layerLookup[key] = {
                 titleAttr: info.titleAttr,
                 timeAttr: info.timeAttr,
-                visible: info.visible
+                visible: info.visible,
+                clientSideFilter: info.clientSideFilter
             };
         }
         return result;
