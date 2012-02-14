@@ -1067,7 +1067,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         if (this.featureManager && this.featureManager.featureStore) {
             this.featureManager.featureStore.each(function(record) {
                 var mapFilterAttr = this.annotationConfig.mapFilterAttr;
-                if (record.get(mapFilterAttr) && record.get(mapFilterAttr).toString() === "true") {
+                if (record.get(mapFilterAttr) && Boolean(record.get(mapFilterAttr))) {
                     var startTime = parseFloat(record.get("start_time"));
                     var endTime = record.get("end_time");
                     var ranged = (endTime !== "");
@@ -1585,7 +1585,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                     icon: this.layerLookup[key].icon,
                     fid: features[i].fid
                 });
-            } else if (attributes[filterAttr] && attributes[filterAttr].toString() === "true") {
+            } else if (attributes[filterAttr] && Boolean(attributes[filterAttr])) {
                 var start = attributes[this.layerLookup[key].startTimeAttr];
                 var end = attributes[this.layerLookup[key].endTimeAttr];
                 // end is optional
