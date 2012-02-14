@@ -555,9 +555,9 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
 
             var Record = GeoExt.data.LayerRecord.create(fields);
             record = new Record(data, layer.id);
+            record.json = config;
 
         }
-        record.json = config; 
         return record;
     },
     
