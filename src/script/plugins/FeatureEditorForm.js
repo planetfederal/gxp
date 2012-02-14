@@ -76,10 +76,24 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
      */
     readOnly: null,
 
+    /** private: property[monitorValid]
+     *  ``Boolean`` We need the clientvalidation event so this should always
+     *  be true.
+     */
+    monitorValid: true,
+
     /** private: method[initComponent]
      */
     initComponent : function() {
         this.defaults = Ext.apply(this.defaults || {}, {disabled: true});
+        this.listeners = {
+            clientvalidation: function(panel, valid) {
+                if (valid) {
+                    this.featureEditor.setFeatureState(this.featureEditor.getDirtyState());
+                }
+            },
+            scope: this
+        };
 
         gxp.plugins.FeatureEditorForm.superclass.initComponent.call(this);
 
@@ -262,7 +276,6 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
      *  Apply the changes to the feature.
      */
     onBeforeFeatureModified: function(panel, feature) {
-        this.featureEditor.setFeatureState(this.featureEditor.getDirtyState());
         // apply modified attributes to feature
         this.getForm().items.each(function(field) {
             var value = field.getValue(); // this may be an empty string
