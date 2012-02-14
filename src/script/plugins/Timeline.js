@@ -115,7 +115,7 @@ gxp.plugins.Timeline = Ext.extend(gxp.plugins.Tool, {
      */
     getState: function() {
         var config = gxp.plugins.Timeline.superclass.getState.call(this);
-        Ext.apply(config.outputConfig || {}, this.getTimelinePanel().getState());
+        config.outputConfig = Ext.apply(config.outputConfig || {}, this.getTimelinePanel().getState());
         return config;
     }
 });

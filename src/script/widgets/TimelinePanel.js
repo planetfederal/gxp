@@ -921,14 +921,18 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                         this.schemaCache[key] = schema;
                         var callback = function(attribute, key, record, protocol, schema) {
                             if (attribute) {
-                                Ext.applyIf(this.layerLookup[key], {
+                                this.layerLookup[key] = Ext.applyIf(this.layerLookup[key] || {}, {
                                     timeAttr: attribute,
                                     visible: false
                                 });
                                 this.addVectorLayer(record, protocol, schema);
                             }
                         };
-                        this.getTimeAttribute(record, protocol, schema, callback);
+                        if (this.layerLookup && this.layerLookup[key] && this.layerLookup[key].timeAttr) {
+                            this.addVectorLayer(record, protocol, schema);
+                        } else {
+                            this.getTimeAttribute(record, protocol, schema, callback);
+                        }
                     }, this);
                 }
             }
@@ -1695,6 +1699,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             var info = this.layerLookup[key];
             result.layerLookup[key] = {
                 titleAttr: info.titleAttr,
+                timeAttr: info.timeAttr,
                 visible: info.visible
             };
         }
