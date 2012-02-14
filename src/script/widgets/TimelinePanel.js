@@ -715,7 +715,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             this.unbindViewer();
         }
         this.viewer = viewer;
-        this.layerLookup = {};
+        if (!this.layerLookup) {
+            this.layerLookup = {};
+        }
         var layerStore = viewer.mapPanel.layers;
         if (layerStore.getCount() > 0) {
             this.onLayerStoreAdd(layerStore, layerStore.getRange());
@@ -919,10 +921,10 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                         this.schemaCache[key] = schema;
                         var callback = function(attribute, key, record, protocol, schema) {
                             if (attribute) {
-                                this.layerLookup[key] = {
+                                Ext.applyIf(this.layerLookup[key], {
                                     timeAttr: attribute,
                                     visible: false
-                                };
+                                });
                                 this.addVectorLayer(record, protocol, schema);
                             }
                         };
@@ -1334,7 +1336,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         });
 
         var titleAttr = this.guessTitleAttribute(schema);
-        Ext.apply(this.layerLookup[key], {
+        Ext.applyIf(this.layerLookup[key], {
             layer: layer,
             titleAttr: titleAttr,
             hitCount: this.createHitCountProtocol(protocol.options)
@@ -1678,6 +1680,25 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             this.timeline = null;
         }
         this.busyMask = null;
+    },
+
+    /** api: method[getState]
+     *  :returns {Object} - user configured settings
+     *  
+     *  Widget specific implementation of the getState function
+     */
+    getState: function() {
+        var result = {
+            layerLookup: {}
+        };
+        for (var key in this.layerLookup) {
+            var info = this.layerLookup[key];
+            result.layerLookup[key] = {
+                titleAttr: info.titleAttr,
+                visible: info.visible
+            };
+        }
+        return result;
     }
 
 });
