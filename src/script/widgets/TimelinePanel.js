@@ -620,7 +620,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  Create the Simile timeline object.
      */
     createTimeline: function(range) {
-        if (!this.rendered) {
+        if (!this.rendered || (this.timelineContainer.el.getSize().width === 0 && this.timelineContainer.el.getSize().height === 0)) {
             return;
         }
         var theme = Timeline.ClassicTheme.create();
@@ -682,7 +682,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 theme: theme
             })
         ];
-
         this.timeline = Timeline.create(
             this.timelineContainer.el.dom, 
             bandInfos, 
@@ -957,26 +956,28 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             var diff = range[1]-range[0];
             var band = this.timeline.getBand(0);
             var length = band.getViewLength()/2;
-            var level = diff/band.getEther()._interval;
-            var pixels = length/level;
-            var delta;
-            var prevDelta = Number.POSITIVE_INFINITY;
-            var idx;
-            for (var i=0, ii=band._zoomSteps.length; i<ii; ++i) {
-                delta = Math.abs(band._zoomSteps[i].pixelsPerInterval-pixels);
-                if (delta < prevDelta) {
-                    idx = i;
+            if (length > 0) {
+                var level = diff/band.getEther()._interval;
+                var pixels = length/level;
+                var delta;
+                var prevDelta = Number.POSITIVE_INFINITY;
+                var idx;
+                for (var i=0, ii=band._zoomSteps.length; i<ii; ++i) {
+                    delta = Math.abs(band._zoomSteps[i].pixelsPerInterval-pixels);
+                    if (delta < prevDelta) {
+                        idx = i;
+                    }
+                    prevDelta = delta;
                 }
-                prevDelta = delta;
-            }
-            if (idx !== band._zoomIndex) {
-                var zoomIn = idx < band._zoomIndex;
-                while (idx != band._zoomIndex) {
-                    band.zoom(zoomIn);
+                if (idx !== band._zoomIndex) {
+                    var zoomIn = idx < band._zoomIndex;
+                    while (idx != band._zoomIndex) {
+                        band.zoom(zoomIn);
+                    }
                 }
+                this.timeline.paint();
+                delete this._silent;
             }
-            this.timeline.paint();
-            delete this._silent;
         }
     },
 
