@@ -143,7 +143,7 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
                                     layout: 'fit',
                                     items: [{
                                         xtype: 'checkbox',
-                                        checked: (this.timelinePanel.layerLookup[key].clientSideFilter !== undefined),
+                                        checked: (this.timelinePanel.layerLookup[key] && this.timelinePanel.layerLookup[key].clientSideFilter !== undefined),
                                         ref: "../applyFilter",
                                         listeners: {
                                             'check': function(cb, checked) { 
@@ -162,7 +162,7 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
                                     items: [{
                                         xtype: "gxp_filterfield",
                                         ref: "../filter",
-                                        filter: this.timelinePanel.layerLookup[key].clientSideFilter,
+                                        filter: this.timelinePanel.layerLookup[key] ? this.timelinePanel.layerLookup[key].clientSideFilter: null,
                                         listeners: {
                                             'change': function(filter, field) {
                                                 if (field.isValid()) {
