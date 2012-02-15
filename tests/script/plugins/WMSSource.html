@@ -17,12 +17,15 @@
             t.ok(instance instanceof gxp.plugins.WMSSource, "Instance created successfully");
         }
         
-        function createViewer() {
+        function createViewer(caps) {
+            if (!caps) {
+                caps = "wms_caps.xml";
+            }
             return new gxp.Viewer({
                 sources: {
                     local: {
                         ptype: "gxp_wmssource",
-                        url: "wms_caps.xml"
+                        url: caps
                     }
                 },
                 map: {
@@ -51,9 +54,9 @@
         }
 
         function test_createLayerRecord(t) {
-            t.plan(4);
+            t.plan(5);
 
-            var viewer = createViewer();
+            var viewer = createViewer("wms_caps_v13.xml");
             
             t.delay_call(1, function() {
                 var source = viewer.layerSources.local;
@@ -62,6 +65,7 @@
                 t.eq(record.get("title"), "Medford, OR - Zoning", "record title");
 
                 var layer = record.getLayer();
+                t.eq(layer.maxExtent.toString(), "-122.911,42.291,-122.787,42.398", "maxExtent correct for reverse axis order in WMS 1.3");
                 t.eq(layer.singleTile, false, "single tile");
                 t.ok(layer.dimensions, "dimensions");
                 t.ok(!layer.dimensions.time, "no time dimension");

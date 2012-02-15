@@ -474,10 +474,13 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             var layerProjection = this.getProjection(original);
 
             var projCode = (layerProjection || projection).getCode(),
-                swapAxis = layer.params.VERSION >= "1.3" && !!layer.yx[projCode],
                 bbox = original.get("bbox"), maxExtent;
             if (bbox && bbox[projCode]){
-                maxExtent = bbox[projCode].bbox;
+                //TODO remove line below when https://github.com/openlayers/openlayers/pull/219 is in
+                layer.map = {getProjectionObject: function() {return layerProjection;}};
+                maxExtent = OpenLayers.Bounds.fromArray(bbox[projCode].bbox, layer.reverseAxisOrder());
+                //TODO remove line below when https://github.com/openlayers/openlayers/pull/219 is in
+                layer.map = null;
             } else {
                 var llbbox = original.get("llbbox");
                 if (llbbox) {
