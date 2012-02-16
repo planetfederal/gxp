@@ -379,7 +379,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                 var layers = [];
                 //put real layers, not references here
                 Ext.each(config.layers, function(lyrJson) {
-                    //source & name identify different layers, but title, styles, & opacity
+                    //source & name identify different layers, but title & styles
                     //are required to distinguish the same layer added multiple times with a different
                     //style or presentation
                     var ndx = app.mapPanel.layers.findBy(function(rec) {
@@ -387,8 +387,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                         rec.json.source == lyrJson.source &&
                         rec.json.title == lyrJson.title &&
                         rec.json.name == lyrJson.name &&
-                        rec.json.styles == lyrJson.styles &&
-                        rec.json.opacity == lyrJson.opacity;
+                        rec.json.styles == lyrJson.styles;
                     });
 
                     if(ndx > -1) {
