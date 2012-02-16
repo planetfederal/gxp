@@ -156,7 +156,7 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
                                 },
                                 items: [{
                                     width: 25,
-                                    xtype: 'container',
+                                    xtype: 'form',
                                     layout: 'fit',
                                     items: [{
                                         xtype: 'checkbox',
