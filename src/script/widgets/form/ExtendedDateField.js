@@ -24,6 +24,7 @@ gxp.form.ExtendedDateTimeField = Ext.extend(Ext.form.CompositeField, {
             ref: "date"
         }, {
             xtype: 'timefield',
+            width: 80,
             ref: "time"
         }];
         gxp.form.ExtendedDateTimeField.superclass.initComponent.apply(this, arguments);
