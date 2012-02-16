@@ -76,24 +76,10 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
      */
     readOnly: null,
 
-    /** private: property[monitorValid]
-     *  ``Boolean`` We need the clientvalidation event so this should always
-     *  be true.
-     */
-    monitorValid: true,
-
     /** private: method[initComponent]
      */
     initComponent : function() {
         this.defaults = Ext.apply(this.defaults || {}, {disabled: true});
-        this.listeners = {
-            clientvalidation: function(panel, valid) {
-                if (valid && this.getForm().isDirty()) {
-                    this.featureEditor.setFeatureState(this.featureEditor.getDirtyState());
-                }
-            },
-            scope: this
-        };
 
         gxp.plugins.FeatureEditorForm.superclass.initComponent.call(this);
 
@@ -160,6 +146,7 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
                 }
                 fields[lower] = fieldCfg;
             }, this);
+            this.addOnBlurListeners(fields);
             this.add(this.reorderFields(fields));
         } else {
             fields = {};
@@ -180,8 +167,36 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
                     fields[lower] = fieldCfg;
                 }
             }
+            this.addOnBlurListeners(fields);
             this.add(this.reorderFields(fields));
         }
+    },
+
+    /** private: method[addOnBlurListeners]
+     *  :arg fields: ``Object``
+     *
+     *  Register a listener for the blur event to update the feature's attributes.
+     */
+    addOnBlurListeners: function(fields) {
+        for (var key in fields) {
+            var field = fields[key];
+            field['listeners'] = {
+                'blur': this.onBlur,
+                scope: this
+            };
+        }
+    },
+
+    /** private: method[onBlur]
+     *  :arg field: ``Ext.form.Field``
+     *
+     *  Apply the changes to the feature.
+     */
+    onBlur: function(field) {
+        var feature = this.feature;
+        var value = field.getValue(); // this may be an empty string
+        feature.attributes[field.getName()] = value || field.value;
+        this.featureEditor.setFeatureState(this.featureEditor.getDirtyState());
     },
 
     /** private: method[reorderFields]
@@ -214,7 +229,6 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
      */
     init: function(target) {
         this.featureEditor = target;
-        this.featureEditor.on("beforefeaturemodified", this.onBeforeFeatureModified, this);
         this.featureEditor.on("startedit", this.onStartEdit, this);
         this.featureEditor.on("stopedit", this.onStopEdit, this);
         this.featureEditor.on("canceledit", this.onCancelEdit, this);
@@ -226,7 +240,9 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
      *  Clean up.
      */
     destroy: function() {
-        this.featureEditor.un("beforefeaturemodified", this.onBeforeFeatureModified, this);
+        this.getForm().items.each(function(field) {
+            field.un("blur", this.onBlur, this);
+        }, this);
         this.featureEditor.un("startedit", this.onStartEdit, this);
         this.featureEditor.un("stopedit", this.onStopEdit, this);
         this.featureEditor.un("canceledit", this.onCancelEdit, this);
@@ -267,20 +283,6 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
                 field && field.setValue(feature.attributes[key]);
             }
         }
-    },
-
-    /** private: method[onBeforeFeatureModified]
-     *  :arg panel: ``gxp.FeatureEditPopup``
-     *  :arg feature: ``OpenLayers.Feature.Vector``
-     *
-     *  Apply the changes to the feature.
-     */
-    onBeforeFeatureModified: function(panel, feature) {
-        // apply modified attributes to feature
-        this.getForm().items.each(function(field) {
-            var value = field.getValue(); // this may be an empty string
-            feature.attributes[field.getName()] = value || field.value;
-        });
     }
 
 });
