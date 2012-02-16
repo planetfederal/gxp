@@ -29,6 +29,7 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
     /** i18n */
     filterLabel: "Filter",
     attributeLabel: "Label",
+    showNotesText: "Show notes",
 
     /** api: config[layers]
      *  ``GeoExt.data.LayerStore``
@@ -70,12 +71,28 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
         delete this.layers;
         gxp.menu.TimelineMenu.superclass.beforeDestroy.apply(this, arguments);
     },
+
+
     
     /** private: method[onLayerAddOrRemove]
      *  Listener called when records are added to the layer store.
      */
     onLayerAddOrRemove: function() {
         this.removeAll();
+        if (this.timelinePanel.annotationsRecord) {
+            var record = this.timelinePanel.annotationsRecord;
+            var key = this.timelinePanel.getKey(record);
+            this.add(new Ext.menu.CheckItem({
+                text: this.showNotesText,
+                checked: (this.timelinePanel.layerLookup[key] && this.timelinePanel.layerLookup[key].visible) || true,
+                listeners: {
+                    checkchange: function(item, checked) {
+                        this.timelinePanel.setLayerVisibility(item, checked, record, false);
+                    },
+                    scope: this
+                }
+            }));
+        }
         this.layers.each(function(record) {
             var layer = record.getLayer();
             if(layer.displayInLayerSwitcher && layer.dimensions && layer.dimensions.time) {

@@ -539,14 +539,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             // will be added without attributes
             this.featureManager.featureStore.on("write", this.onSave.createDelegate(this, [key], 3), this);
         }
-        if (layer) {
-            layer.events.on({
-                "visibilitychanged": function(evt) {
-                    this.setLayerVisibility(null, evt.object.getVisibility(), record, false);
-                },
-                scope: this
-            });
-        }
+        this.annotationsRecord = record;
     },
 
     /**
@@ -1681,6 +1674,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 layer.destroy();
             }
         }
+        this.annotationsRecord = null;
         this.annotationsLayer = null;
         this.destroyPopup();
         this.unbindViewer();
