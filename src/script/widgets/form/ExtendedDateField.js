@@ -16,6 +16,45 @@ Ext.namespace("gxp.form");
 Date.defaults.d = 1;
 Date.defaults.m = 1;
 
+gxp.form.ExtendedDateTimeField = Ext.extend(Ext.form.CompositeField, {
+
+    initComponent: function() {
+        this.items = [{
+            xtype: 'gxp_datefield',
+            ref: "date"
+        }, {
+            xtype: 'timefield',
+            ref: "time"
+        }];
+        gxp.form.ExtendedDateTimeField.superclass.initComponent.apply(this, arguments);
+    },
+
+    getValue : function() {
+        var dateValue = this.date.getValue();
+        var timeValue = this.time.getValue();
+        if (timeValue !== "") {
+            var dateTimeCurrent = this.time.parseDate(this.time.getValue());
+            var dateTimeOriginal = new Date(this.time.initDate);
+            var diff = (dateTimeCurrent.getTime()/1000) - (dateTimeOriginal.getTime()/1000);
+            return dateValue + diff;
+        } else {
+            return dateValue;
+        }
+    },
+
+    setValue: function(v) {
+        this.date.setValue(v);
+        var value = new Date(parseFloat(v)*1000);
+        if (value) {
+            this.time.setValue(value.getHours() + ":" + value.getMinutes () + " " + (value.getHours() > 12 ? "PM" : "AM"));
+        }
+    }
+
+});
+
+/** api: xtype = gxp_datetimefield */
+Ext.reg('gxp_datetimefield', gxp.form.ExtendedDateTimeField);
+
 /** api: constructor
  *  .. class:: ExtendedDateField(config)
  *   
