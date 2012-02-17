@@ -1087,7 +1087,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 if (record.get(mapFilterAttr) && Boolean(record.get(mapFilterAttr))) {
                     var startTime = parseFloat(record.get(this.annotationConfig.timeAttr));
                     var endTime = record.get(this.annotationConfig.endTimeAttr);
-                    var ranged = (endTime !== "");
+                    var ranged = (endTime !== "" && endTime != null);
                     var hasGeometry = (record.getFeature().geometry !== null);
                     if (ranged === true) {
                         if (compare <= parseFloat(endTime) && compare >= startTime) {
@@ -1628,8 +1628,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             } else if (attributes[filterAttr] && Boolean(attributes[filterAttr])) {
                 var start = attributes[timeAttr];
                 var end = attributes[endTimeAttr];
-                var startIsEmpty = (start === undefined || start === "");
-                var endIsEmpty = (end === undefined || end === "");
+                var startIsEmpty = (start == null || start === "");
+                var endIsEmpty = (end == null || end === "");
                 // end is optional
                 var durationEvent = !startIsEmpty && !endIsEmpty; 
                 if (!startIsEmpty) {

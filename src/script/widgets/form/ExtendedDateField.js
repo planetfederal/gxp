@@ -75,7 +75,7 @@ gxp.form.ExtendedDateField = Ext.extend(Ext.form.DateField, {
     getValue : function() {
         var value = Ext.form.DateField.superclass.getValue.call(this);
         var date = this.parseDate(value);
-        return (date) ? date.getTime()/1000 : "";
+        return (date) ? date.getTime()/1000 : null;
     },
 
     setValue: function(v) {
