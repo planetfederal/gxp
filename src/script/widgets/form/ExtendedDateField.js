@@ -113,7 +113,7 @@ gxp.form.ExtendedDateField = Ext.extend(Ext.form.DateField, {
         // changed code
         var d;
         var v = this.getValue();
-        if (v === "") {
+        if (v === null) {
             d = new Date();
         } else {
             d = new Date(v*1000);
