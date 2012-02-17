@@ -86,7 +86,7 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
         this.listeners = {
             clientvalidation: function(panel, valid) {
                 if (valid && this.getForm().isDirty()) {
-                    Ext.apply(this.feature.attributes, this.getForm().getFieldValues(true));
+                    Ext.apply(this.feature.attributes, this.getForm().getFieldValues());
                     this.featureEditor.setFeatureState(this.featureEditor.getDirtyState());
                 }
             },
