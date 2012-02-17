@@ -1034,7 +1034,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         var fid = record.getFeature().fid;
         if (!this.tooltips[fid]) {
             this.tooltips[fid] = new Ext.ToolTip({
-                html: record.get("title")
+                html: record.get("title"),
+                dismissDelay: 0
             });
         }
         this.tooltips[fid].showBy(this.viewer.mapPanel.body, record.get("appearance"));
