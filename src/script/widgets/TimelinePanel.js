@@ -482,6 +482,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
     unbindFeatureEditor: function() {
         if (this.featureManager) {
+            if (this.featureManager.featureStore) {
+                this.featureManager.featureStore.un("write", this.onSave, this);
+            }
             this.featureManager.un("layerchange", this.onLayerChange, this);
             this.featureManager = null;
         }
@@ -536,7 +539,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         if (this.featureManager.featureStore) {
             // we cannot use the featureLayer's events here, since features
             // will be added without attributes
-            this.featureManager.featureStore.on("write", this.onSave.createDelegate(this, [key], 3), this);
+            this.featureManager.featureStore.on("write", this.onSave, this);
         }
         this.annotationsRecord = record;
     },
@@ -546,19 +549,21 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  :arg store: ``gxp.data.WFSFeatureStore``
      *  :arg action: ``String``
      *  :arg data: ``Array``
-     *  :arg key: ``String``
      *
      *  When annotation features are saved to the store, we can add them to
      *  the timeline.
      */
-    onSave: function(store, action, data, key) {
+    onSave: function(store, action, data) {
+        var key = this.getKey(this.annotationsRecord);
         var features = [];
         for (var i=0, ii=data.length; i<ii; i++) {
             var feature = data[i].feature;
             features.push(feature);
             this.clearEventsForFid(key, feature.fid);
         }
-        this.addFeatures(key, features);
+        if (action === Ext.data.Api.actions.create) {
+            this.addFeatures(key, features);
+        }
     },
 
     /**
