@@ -561,7 +561,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             features.push(feature);
             this.clearEventsForFid(key, feature.fid);
         }
-        if (action === Ext.data.Api.actions.create) {
+        if (action !== Ext.data.Api.actions.destroy) {
             this.addFeatures(key, features);
         }
     },
