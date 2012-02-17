@@ -1104,8 +1104,10 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                             }
                         }
                     } else {
+                        var diff = Math.abs(Math.abs(startTime)-Math.abs(compare));
+                        var percentage = diff/Math.abs(startTime)*100;
                         // we need to take a margin for the feature to have a chance to show up
-                        if (startTime >= 0.99*compare && startTime <= 1.01*compare) {
+                        if (percentage <= 2.5) {
                             if (hasGeometry === true) {
                                 this.annotationsLayer.drawFeature(record.getFeature());
                             } else {
