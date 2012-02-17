@@ -918,7 +918,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                         }
                         this.schemaCache[key] = schema;
                         var callback = function(result, key, record, protocol, schema) {
-                            if (attribute) {
+                            if (result.attribute) {
                                 this.layerLookup[key] = Ext.applyIf(this.layerLookup[key] || {}, {
                                     timeAttr: result.attribute,
                                     endTimeAttr: result.endAttribute,
