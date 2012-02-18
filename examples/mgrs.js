@@ -11,7 +11,7 @@ var panel = new GeoExt.MapPanel({
             new OpenLayers.Control.Attribution(),
             new OpenLayers.Control.MousePosition({
                 formatOutput: function(lonlat) {
-                    return gxp.util.MGRS.forward(lonlat, panel.accuracyField.getValue());
+                    return MGRS.forward(lonlat, panel.accuracyField.getValue());
                 }
             })
         ],
@@ -35,7 +35,7 @@ var panel = new GeoExt.MapPanel({
         handler: function() {
             if (Ext.EventObject.getTarget() === panel.mgrsField.getEl().dom) {
                 var bbox = OpenLayers.Bounds.fromArray(
-                    gxp.util.MGRS.inverse(panel.mgrsField.getValue())
+                    MGRS.inverse(panel.mgrsField.getValue())
                 );
                 panel.map.zoomToExtent(bbox.transform("EPSG:4326", "EPSG:3857"));
             }

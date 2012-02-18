@@ -168,7 +168,7 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
                         };
                         for(var j = 0; j < agents[i].layers.length; j++) {
                             var layerRec = app.mapPanel.layers.getByLayer(agents[i].layers[j]);
-                            agentConfig.layers.push(layerRec.jsonData);
+                            agentConfig.layers.push(layerRec.json);
                         }
                         agentConfigs.push(agentConfig);
                     }

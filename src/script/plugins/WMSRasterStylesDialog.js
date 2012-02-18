@@ -15,9 +15,6 @@
  *  class = WMSRasterStylesDialog
  */
 
-/** api: (extends)
- *  plugins/Tool.js
- */
 Ext.namespace("gxp.plugins");
 
 /** api: constructor

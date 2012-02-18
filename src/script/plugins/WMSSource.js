@@ -460,7 +460,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         }
         if (original) {
 
-            var layer = original.getLayer();
+            var layer = original.getLayer().clone();
 
             /**
              * TODO: The WMSCapabilitiesReader should allow for creation
@@ -474,14 +474,14 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             var layerProjection = this.getProjection(original);
 
             var projCode = (layerProjection || projection).getCode(),
-                swapAxis = layer.params.VERSION >= "1.3" && !!layer.yx[projCode],
                 bbox = original.get("bbox"), maxExtent;
             if (bbox && bbox[projCode]){
-                maxExtent = bbox[projCode].bbox;
+                layer.addOptions({projection: layerProjection});
+                maxExtent = OpenLayers.Bounds.fromArray(bbox[projCode].bbox, layer.reverseAxisOrder());
             } else {
                 var llbbox = original.get("llbbox");
                 if (llbbox) {
-                    var extent = OpenLayers.Bounds.fromArray(llbbox).transform(new OpenLayers.Projection("EPSG:4326"), projection);
+                    var extent = OpenLayers.Bounds.fromArray(llbbox).transform("EPSG:4326", projection);
                     // make sure maxExtent is valid (transform does not succeed for all llbbox)
                     if ((1 / extent.getHeight() > 0) && (1 / extent.getWidth() > 0)) {
                         // maxExtent has infinite or non-numeric width or height
@@ -491,12 +491,12 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 }
             }
             
-            // use all params from original
-            var params = Ext.applyIf({
+            // update params from config
+            layer.mergeNewParams({
                 STYLES: config.styles,
                 FORMAT: config.format,
                 TRANSPARENT: config.transparent
-            }, layer.params);
+            });
             
             var singleTile = false;
             if ("tiled" in config) {
@@ -508,23 +508,19 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 }
             }
 
-            layer = new OpenLayers.Layer.WMS(
-                config.title || layer.name, 
-                layer.url, 
-                params, {
-                    attribution: layer.attribution,
-                    maxExtent: maxExtent,
-                    restrictedExtent: maxExtent,
-                    singleTile: singleTile,
-                    ratio: config.ratio || 1,
-                    visibility: ("visibility" in config) ? config.visibility : true,
-                    opacity: ("opacity" in config) ? config.opacity : 1,
-                    buffer: ("buffer" in config) ? config.buffer : 1,
-                    projection: layerProjection,
-                    dimensions: original.data.dimensions,
-                    transitionEffect: singleTile ? 'resize' : null
-                }
-            );
+            layer.setName(config.title || layer.name);
+            layer.addOptions({
+                attribution: layer.attribution,
+                maxExtent: maxExtent,
+                restrictedExtent: maxExtent,
+                singleTile: singleTile,
+                ratio: config.ratio || 1,
+                visibility: ("visibility" in config) ? config.visibility : true,
+                opacity: ("opacity" in config) ? config.opacity : 1,
+                buffer: ("buffer" in config) ? config.buffer : 1,
+                dimensions: original.data.dimensions,
+                transitionEffect: singleTile ? 'resize' : null
+            });
             
             // data for the new record
             var data = Ext.applyIf({
@@ -555,9 +551,9 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
 
             var Record = GeoExt.data.LayerRecord.create(fields);
             record = new Record(data, layer.id);
+            record.json = config;
 
         }
-        record.json = config; 
         return record;
     },
     

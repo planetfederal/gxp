@@ -305,22 +305,6 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             }
         }
         
-        function updateName() {
-            var store = sourceComboBox.store,
-                valueField = sourceComboBox.valueField,
-                index = store.findExact(valueField, sourceComboBox.getValue()),
-                rec = store.getAt(index),
-                source = target.layerSources[rec.get("id")];
-            if (source) {
-                if (source.title !== rec.get("title")) {
-                    rec.set("title", source.title);
-                    sourceComboBox.setValue(rec.get(valueField));
-                }
-            } else {
-                store.remove(rec);
-            }
-        }        
-
         var idx = 0;
         if (this.startSourceId !== null) {
             sources.each(function(record) {
@@ -330,15 +314,10 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             }, this);
         }
 
-        var source = this.target.layerSources[data[idx][0]],
-            store = source.store;
-        if (source.lazy) {
-            // assume a lazy source
-            store.load({callback: updateName});
-        }
+        source = this.target.layerSources[data[idx][0]];
 
         var capGridPanel = new Ext.grid.GridPanel({
-            store: store,
+            store: source.store,
             autoScroll: true,
             flex: 1,
             autoExpandColumn: "title",
@@ -356,6 +335,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         });
         
         var sourceComboBox = new Ext.form.ComboBox({
+            ref: "../sourceComboBox",
             store: sources,
             valueField: "id",
             displayField: "title",
@@ -373,9 +353,6 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     // TODO: remove the following when this Ext issue is addressed
                     // http://www.extjs.com/forum/showthread.php?100345-GridPanel-reconfigure-should-refocus-view-to-correct-scroller-height&p=471843
                     capGridPanel.getView().focusRow(0);
-                    if (source.lazy) {
-                        source.store.load({callback: updateName});
-                    }
                     this.setSelectedSource(source);
                 },
                 scope: this
@@ -501,11 +478,30 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
     },
     
     /** private: method[setSelectedSource]
-     *  :arg: :class:`gxp.plugins.LayerSource`
+     *  :arg source: :class:`gxp.plugins.LayerSource`
      */
-    setSelectedSource: function(source) {
+    setSelectedSource: function(source, callback) {
         this.selectedSource = source;
+        var store = source.store;
         this.fireEvent("sourceselected", this, source);
+        if (source.lazy) {
+            source.store.load({callback: (function() {
+                var sourceComboBox = this.capGrid.sourceComboBox,
+                    store = sourceComboBox.store,
+                    valueField = sourceComboBox.valueField,
+                    index = store.findExact(valueField, sourceComboBox.getValue()),
+                    rec = store.getAt(index),
+                    source = this.target.layerSources[rec.get("id")];
+                if (source) {
+                    if (source.title !== rec.get("title")) {
+                        rec.set("title", source.title);
+                        sourceComboBox.setValue(rec.get(valueField));
+                    }
+                } else {
+                    store.remove(rec);
+                }
+            }).createDelegate(this)});
+        }
     },
     
     /** api: method[createUploadButton]

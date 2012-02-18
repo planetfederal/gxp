@@ -16,6 +16,46 @@ Ext.namespace("gxp.form");
 Date.defaults.d = 1;
 Date.defaults.m = 1;
 
+gxp.form.ExtendedDateTimeField = Ext.extend(Ext.form.CompositeField, {
+
+    initComponent: function() {
+        this.items = [{
+            xtype: 'gxp_datefield',
+            ref: "date"
+        }, {
+            xtype: 'timefield',
+            width: 80,
+            ref: "time"
+        }];
+        gxp.form.ExtendedDateTimeField.superclass.initComponent.apply(this, arguments);
+    },
+
+    getValue : function() {
+        var dateValue = this.date.getValue();
+        var timeValue = this.time.getValue();
+        if (timeValue !== "") {
+            var dateTimeCurrent = this.time.parseDate(this.time.getValue());
+            var dateTimeOriginal = new Date(this.time.initDate);
+            var diff = (dateTimeCurrent.getTime()/1000) - (dateTimeOriginal.getTime()/1000);
+            return dateValue + diff;
+        } else {
+            return dateValue;
+        }
+    },
+
+    setValue: function(v) {
+        this.date.setValue(v);
+        var value = new Date(parseFloat(v)*1000);
+        if (value) {
+            this.time.setValue(value.getHours() + ":" + value.getMinutes () + " " + (value.getHours() > 12 ? "PM" : "AM"));
+        }
+    }
+
+});
+
+/** api: xtype = gxp_datetimefield */
+Ext.reg('gxp_datetimefield', gxp.form.ExtendedDateTimeField);
+
 /** api: constructor
  *  .. class:: ExtendedDateField(config)
  *   
@@ -35,7 +75,7 @@ gxp.form.ExtendedDateField = Ext.extend(Ext.form.DateField, {
     getValue : function() {
         var value = Ext.form.DateField.superclass.getValue.call(this);
         var date = this.parseDate(value);
-        return (date) ? date.getTime()/1000 : "";
+        return (date) ? date.getTime()/1000 : null;
     },
 
     setValue: function(v) {
@@ -73,7 +113,7 @@ gxp.form.ExtendedDateField = Ext.extend(Ext.form.DateField, {
         // changed code
         var d;
         var v = this.getValue();
-        if (v === "") {
+        if (v === null) {
             d = new Date();
         } else {
             d = new Date(v*1000);

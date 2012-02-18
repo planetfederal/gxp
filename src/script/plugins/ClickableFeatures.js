@@ -8,6 +8,10 @@
 
 /**
  * @requires plugins/Tool.js
+ * @requires OpenLayers/Protocol/HTTP.js
+ * @requires OpenLayers/Control/SelectFeature.js
+ * @requires OpenLayers/Format/WMSGetFeatureInfo.js
+ * @requires OpenLayers/Filter/FeatureId.js
  */
 
 /** api: (define)

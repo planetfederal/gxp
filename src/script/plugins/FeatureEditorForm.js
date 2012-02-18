@@ -76,19 +76,17 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
      */
     readOnly: null,
 
-    /** private: property[monitorValid]
-     *  ``Boolean`` We need the clientvalidation event so this should always
-     *  be true.
-     */
     monitorValid: true,
 
     /** private: method[initComponent]
      */
     initComponent : function() {
         this.defaults = Ext.apply(this.defaults || {}, {disabled: true});
+
         this.listeners = {
             clientvalidation: function(panel, valid) {
-                if (valid) {
+                if (valid && this.getForm().isDirty()) {
+                    Ext.apply(this.feature.attributes, this.getForm().getFieldValues());
                     this.featureEditor.setFeatureState(this.featureEditor.getDirtyState());
                 }
             },
@@ -136,7 +134,7 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
                     Ext.apply(fieldCfg, this.fieldConfig[name]);
                 }
                 if (fieldCfg.value && fieldCfg.xtype == "checkbox") {
-                    fieldCfg.checked = (fieldCfg.value === true);
+                    fieldCfg.checked = Boolean(fieldCfg.value);
                 }
                 if (fieldCfg.value && fieldCfg.xtype == "gxp_datefield") {
                     fieldCfg.value = new Date(fieldCfg.value*1000);
@@ -214,7 +212,6 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
      */
     init: function(target) {
         this.featureEditor = target;
-        this.featureEditor.on("beforefeaturemodified", this.onBeforeFeatureModified, this);
         this.featureEditor.on("startedit", this.onStartEdit, this);
         this.featureEditor.on("stopedit", this.onStopEdit, this);
         this.featureEditor.on("canceledit", this.onCancelEdit, this);
@@ -226,7 +223,6 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
      *  Clean up.
      */
     destroy: function() {
-        this.featureEditor.un("beforefeaturemodified", this.onBeforeFeatureModified, this);
         this.featureEditor.un("startedit", this.onStartEdit, this);
         this.featureEditor.un("stopedit", this.onStopEdit, this);
         this.featureEditor.un("canceledit", this.onCancelEdit, this);
@@ -267,20 +263,6 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
                 field && field.setValue(feature.attributes[key]);
             }
         }
-    },
-
-    /** private: method[onBeforeFeatureModified]
-     *  :arg panel: ``gxp.FeatureEditPopup``
-     *  :arg feature: ``OpenLayers.Feature.Vector``
-     *
-     *  Apply the changes to the feature.
-     */
-    onBeforeFeatureModified: function(panel, feature) {
-        // apply modified attributes to feature
-        this.getForm().items.each(function(field) {
-            var value = field.getValue(); // this may be an empty string
-            feature.attributes[field.getName()] = value || field.value;
-        });
     }
 
 });
