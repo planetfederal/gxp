@@ -22,6 +22,7 @@
  * @requires OpenLayers/BaseTypes/Date.js
  * @requires OpenLayers/BaseTypes/LonLat.js
  * @requires OpenLayers/Filter/Spatial.js
+ * @requires OpenLayers/Format/CQL.js
  */
 
 /** api: (define)
@@ -937,7 +938,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                             sldCallback = function() {
                                 this.addVectorLayer(record, protocol, schema);
                                 if (this.layerLookup[key].clientSideFilter) {
-                                    this.applyFilter(record, this.layerLookup[key].clientSideFilter, true);
+                                    this.applyFilter(record, new OpenLayers.Format.CQL().read(this.layerLookup[key].clientSideFilter), true);
                                 }
                             };
                         } else {
@@ -1749,7 +1750,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 timeAttr: info.timeAttr,
                 endTimeAttr: info.endTimeAttr,
                 visible: info.visible,
-                clientSideFilter: info.clientSideFilter
+                clientSideFilter: info.clientSideFilter ? new OpenLayers.Format.CQL().write(info.clientSideFilter) : null
             };
         }
         return result;
