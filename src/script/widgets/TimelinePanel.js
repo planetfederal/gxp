@@ -935,10 +935,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                         var sldCallback;
                         if (this.layerLookup && this.layerLookup[key] && this.layerLookup[key].timeAttr) {
                             sldCallback = function() {
-                                this.addVectorLayer(record, protocol, schema);
                                 if (this.layerLookup[key].clientSideFilter) {
-                                    this.applyFilter(record, this.layerLookup[key].clientSideFilter, true);
+                                    // transform back into an OpenLayers Filter object
+                                    this.layerLookup[key].clientSideFilter = new OpenLayers.Filter(this.layerLookup[key].clientSideFilter);
                                 }
+                                this.addVectorLayer(record, protocol, schema);
                             };
                         } else {
                             sldCallback = function() {
@@ -1312,6 +1313,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }
         if (lookup.timeFilter) {
             filters.push(lookup.timeFilter);
+        }
+        if (lookup.clientSideFilter) {
+            filters.push(lookup.clientSideFilter);
         }
         var filter = null;
         if (filters.length === 1) {
