@@ -819,12 +819,14 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     /** private: method[parseSLD]
      *  :arg response: ``Object``
      *  :arg key: ``String``
+     *  :arg callback: ``Function``
      *
      *  Parse the SLD using an OpenLayers parser and store it in the cache.
      */
-    parseSLD: function(response, key) {
+    parseSLD: function(response, key, callback) {
         var parser = new OpenLayers.Format.SLD();
         this.sldCache[key] = parser.read(response.responseXML || response.responseText);
+        callback && callback.call(this);
     },
 
     /** private: method[getFilterFromSLD]
@@ -876,10 +878,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
 
     /** private: method[getSLD]
      *  :arg record: ``GeoExt.data.LayerRecord``
+     *  :arg callback: ``Function``
      *
      *  Retrieve the SLD through a GetStyles request.
      */
-    getSLD: function(record) {
+    getSLD: function(record, callback) {
         var key = this.getKey(record);
         var layer = record.getLayer();
         Ext.Ajax.request({
@@ -892,7 +895,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             },
             method: "GET",
             disableCaching: false,
-            success: this.parseSLD.createDelegate(this, [key], 1),
+            success: this.parseSLD.createDelegate(this, [key, callback], 1),
             scope: this
         });
     },
@@ -918,9 +921,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                             throw new Error("Failed to get protocol for record: " + record.get("name"));
                         }
                         var key = this.getKey(record);
-                        if (!this.sldCache[key]) {
-                            this.getSLD(record);
-                        }
                         this.schemaCache[key] = schema;
                         var callback = function(result, key, record, protocol, schema) {
                             if (result.attribute) {
@@ -932,13 +932,23 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                                 this.addVectorLayer(record, protocol, schema);
                             }
                         };
+                        var sldCallback;
                         if (this.layerLookup && this.layerLookup[key] && this.layerLookup[key].timeAttr) {
-                            this.addVectorLayer(record, protocol, schema);
-                            if (this.layerLookup[key].clientSideFilter) {
-                                this.applyFilter(record, this.layerLookup[key].clientSideFilter, true);
-                            }
+                            sldCallback = function() {
+                                this.addVectorLayer(record, protocol, schema);
+                                if (this.layerLookup[key].clientSideFilter) {
+                                    this.applyFilter(record, this.layerLookup[key].clientSideFilter, true);
+                                }
+                            };
                         } else {
-                            this.getTimeAttribute(record, protocol, schema, callback);
+                            sldCallback = function() {
+                                this.getTimeAttribute(record, protocol, schema, callback);
+                            };
+                        }
+                        if (!this.sldCache[key]) {
+                            this.getSLD(record, sldCallback);
+                        } else {
+                            sldCallback.call(this);
                         }
                     }, this);
                 }
