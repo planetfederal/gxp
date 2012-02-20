@@ -540,6 +540,14 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         ctl.setTime(new Date(ctl.range[(ctl.step < 0) ? 0 : 1].getTime()));
     },
     toggleAnimation:function(btn,pressed){
+        if(!btn.bound && pressed){
+            this.control.events.on({
+                'stop':function(evt){
+                    btn.toggle(false);
+                }
+            });
+            btn.bound=true;
+        }
         this.control[pressed?'play':'stop']();
         btn.btnEl.toggleClass('gxp-icon-play').toggleClass('gxp-icon-pause');
         btn.el.removeClass('x-btn-pressed');
@@ -577,11 +585,16 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         this.sliderTip.onSlide(this.slider,null,this.slider.thumbs[0]);
         this.sliderTip.el.alignTo(this.slider.el, 'b-t?', this.offsets);
     },
-    onSliderChangeComplete: function(slider, value, thumb){
+    onSliderChangeComplete: function(slider, value, thumb, silent){
         var slideTime = new Date(value);
         //test if this is the main time slider
         switch (slider.indexMap[thumb.index]) {
             case 'primary':
+                //if we have a tail slider, then the range interval should be updated first
+                var tailIndex = slider.indexMap.indexOf('tail'); 
+                if (tailIndex>-1){
+                    this.onSliderChangeComplete(slider,slider.thumbs[tailIndex].value,slider.thumbs[tailIndex],true);
+                }
                 if (!this.control.snapToIntervals && this.control.units) {
                     this.control.setTime(slideTime);
                 }
@@ -619,7 +632,12 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                         break;
                 }
                 for (var i = 0, len = this.control.timeAgents.length; i < len; i++) {
-                    this.control.timeAgents[i].rangeInterval = (slider.thumbs[0].value - value) / adj;
+                    if(this.control.timeAgents[i].rangeMode == 'range'){
+                        this.control.timeAgents[i].rangeInterval = (slider.thumbs[0].value - value) / adj;    
+                    }
+                }
+                if(!silent){
+                    this.control.setTime(new Date(slider.thumbs[0].value));
                 }
         }
         if (this.restartPlayback) {
