@@ -346,7 +346,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                 if (feature) {
                     this.fireEvent("featureeditable", this, feature, false);
                 }
-                if (popup && !popup.hidden) {
+                if (feature && feature.geometry && popup && !popup.hidden) {
                     popup.close();
                 }
             },
