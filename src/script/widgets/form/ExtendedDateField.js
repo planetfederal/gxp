@@ -21,6 +21,7 @@ gxp.form.ExtendedDateTimeField = Ext.extend(Ext.form.CompositeField, {
     initComponent: function() {
         this.items = [{
             xtype: 'gxp_datefield',
+            allowBlank: (this.initialConfig.allowBlank !== false),
             ref: "date"
         }, {
             xtype: 'timefield',
