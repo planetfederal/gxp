@@ -390,20 +390,10 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         } else {
             delete this.layerLookup[key].clientSideFilter;
         }
-        var filterMatcher = function(evt) {
-            var fid = evt.getProperty("fid");
-            if (evt.getProperty("key") === key) {
-                var feature = layer.getFeatureByFid(fid);
-                if (checked === false) {
-                    return true;
-                } else {
-                    return filter.evaluate(feature);
-                }
-            } else {
-                return true;
-            }
-        };
-        this.setFilterMatcher(filterMatcher);
+        if (this.layerLookup[key].layer) {
+            this.layerLookup[key].layer.filter = this.assembleFullFilter(key);
+        }
+        this.updateTimelineEvents({force: true});
     },
 
     /**
