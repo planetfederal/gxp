@@ -1197,12 +1197,15 @@ OpenLayers.Format && OpenLayers.Format.SLD && OpenLayers.Format.SLD.v1 && (funct
 
     // read GeoTools custom Priority element in TextSymbolizer
     OpenLayers.Format.SLD.v1.prototype.readers.sld["Priority"] = function(node, obj) {
-        obj.priority = this.readOgcExpression(node);
+        var value = this.readers.ogc._expression.call(this, node);
+        if (value) {
+            obj.priority = value;
+        }
     };
     OpenLayers.Format.SLD.v1.prototype.writers.sld["Priority"] = function(priority) {
-        var node = this.createElementNSPlus("sld:Priority");
-        this.writeNode("ogc:Literal", priority, node);
-        return node;
+        return this.writers.sld._OGCExpression.call(
+            this, "sld:Priority", priority
+        );
     };
 
     // extend OL SLD parser to accommodate GeoTools extensions to SLD
