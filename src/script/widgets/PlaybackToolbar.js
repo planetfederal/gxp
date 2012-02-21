@@ -392,7 +392,8 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                         rec.json.source == lyrJson.source &&
                         rec.json.title == lyrJson.title &&
                         rec.json.name == lyrJson.name &&
-                        rec.json.styles == lyrJson.styles;
+                        (rec.json.styles == lyrJson.styles ||
+                            !!rec.json.styles == false && !!lyrJson.styles == false);
                     });
 
                     if(ndx > -1) {
