@@ -26,7 +26,7 @@
 
 // TODO: remove when https://github.com/openlayers/openlayers/pull/235 gets in
 OpenLayers.Strategy.BBOX.prototype.triggerRead = function(options) {
-    if (this.response && options.noAbort !== true) {
+    if (this.response && !(options && options.noAbort === true)) {
         this.layer.protocol.abort(this.response);
         this.layer.events.triggerEvent("loadend");
     }
