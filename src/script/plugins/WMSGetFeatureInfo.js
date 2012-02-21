@@ -230,6 +230,11 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
                 feature = features[i];
                 config.push(Ext.apply({
                     xtype: "propertygrid",
+                    listeners: {
+                        'beforeedit': function (e) { 
+                            return false; 
+                        } 
+                    },
                     title: feature.fid ? feature.fid : title,
                     source: feature.attributes
                 }, this.itemConfig));
