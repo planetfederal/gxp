@@ -24,6 +24,21 @@
  * @requires OpenLayers/Filter/Spatial.js
  */
 
+// TODO: remove when https://github.com/openlayers/openlayers/pull/235 gets in
+OpenLayers.Strategy.BBOX.prototype.triggerRead = function(options) {
+    if (this.response && options.noAbort !== true) {
+        this.layer.protocol.abort(this.response);
+        this.layer.events.triggerEvent("loadend");
+    }
+    this.layer.events.triggerEvent("loadstart");
+    this.response = this.layer.protocol.read(
+        OpenLayers.Util.applyDefaults({
+            filter: this.createFilter(),
+            callback: this.merge,
+            scope: this
+    }, options));
+};
+
 /** api: (define)
  *  module = gxp
  *  class = TimelinePanel
@@ -1177,7 +1192,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                         var layer = this.layerLookup[key].layer;
                         layer && this.setTimeFilter(key, this.createTimeFilter([start, end], key, 0, false));
                     }
-                    this.updateTimelineEvents({force: true}, true);
+                    // do not abort previous requests, since this will lead to blanks in the timeline
+                    this.updateTimelineEvents({force: true, noAbort: true}, true);
                 }
             }
             this.showAnnotations(time);
