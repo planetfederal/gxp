@@ -353,6 +353,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             var key = evt.getProperty('key');
             if (key === keyToMatch) {
                 return checked;
+            } else {
+                return true;
             }
         };
         this.setFilterMatcher(filterMatcher);
