@@ -131,6 +131,7 @@ Ext.onReady(function() {
                 source: "local",
                 name: "usa:states",
                 title: "States, USA - Population",
+                queryable: true,
                 bbox: [-13884991.404203, 2870341.1822503, -7455066.2973878, 6338219.3590349],
                 selected: true
             }],
