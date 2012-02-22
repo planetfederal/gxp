@@ -72,6 +72,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
     labelValuesText: "Label values",
     haloText: "Halo",
     sizeText: "Size",
+    priorityText: "Priority",
     
     initComponent: function() {
         
@@ -82,10 +83,14 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
 
         this.haloCache = {};
 
+        this.attributes.load();
+
         var defAttributesComboConfig = {
             xtype: "combo",
             fieldLabel: this.labelValuesText,
             store: this.attributes,
+            mode: 'local',
+            lastQuery: '',
             editable: false,
             triggerAction: "all",
             allowBlank: false,
@@ -256,6 +261,25 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                 },
                 scope: this
             }
+        }, {
+            xtype: "fieldset",
+            title: this.priorityText,
+            checkboxToggle: true,
+            collapsed: true,
+            autoHeight: true,
+            labelWidth: 50,
+            items: [Ext.applyIf({
+                fieldLabel: this.priorityText,
+                value: this.symbolizer.priority && this.symbolizer.priority.replace(/^\${(.*)}$/, "$1"),
+                allowBlank: true,
+                listeners: {
+                    select: function(combo, record) {
+                        this.symbolizer.priority = "${" + record.get("name") + "}";
+                        this.fireEvent("change", this.symbolizer);
+                    },
+                    scope: this
+                }
+            }, this.attributesComboConfig)]
         }];
 
         this.addEvents(
