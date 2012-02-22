@@ -364,14 +364,21 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
                 }]
             }, outputConfig)).show().items.get(0);
         }
-        var component = container.add(config);            
-        if (component instanceof Ext.Window) {
-            component.show();
+        if (container) {
+            var component = container.add(config);            
+            if (component instanceof Ext.Window) {
+                component.show();
+            } else {
+                container.doLayout();
+            }
+            this.output.push(component);
+            return component;
         } else {
-            container.doLayout();
+            var ptype = this.ptype;
+            window.setTimeout(function() {
+                throw("Failed to create output for plugin with ptype: " + ptype);
+            }, 0);
         }
-        this.output.push(component);
-        return component;
     },
     
     /** api: method[removeOutput]
