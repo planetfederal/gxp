@@ -1,4 +1,4 @@
-var format = new OpenLayers.Format.SLD.v1_0_0();
+var format = new OpenLayers.Format.SLD.v1_0_0_GeoServer();
 var sldWin;
 function showSLD(panel) {
     var symbolizer = panel.symbolizer;
