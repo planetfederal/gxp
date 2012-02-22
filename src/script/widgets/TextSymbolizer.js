@@ -176,7 +176,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
         }, {
             xtype: "gxp_fillsymbolizer",
             symbolizer: this.symbolizer,
-            defaultColor: OpenLayers.Renderer.defaultSymbolizer.fontColor,
+            property: "fontColor",
             checkboxToggle: false,
             autoHeight: true,
             width: 213,

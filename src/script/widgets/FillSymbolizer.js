@@ -31,6 +31,13 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
      *  you do not want your symbolizer modified.
      */
     symbolizer: null,
+
+    /** api: config[property]
+     *  ``String`` The property that should be set on the symbolizer to
+     *  represent the fill color. Defaults to fillColor. But can also be
+     *  set to fontColor for labels.
+     */
+    property: "fillColor",
     
     /** api: config[colorManager]
      *  ``Function``
@@ -86,16 +93,16 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
                 xtype: "gxp_colorfield",
                 fieldLabel: this.colorText,
                 name: "color",
-                emptyText: OpenLayers.Renderer.defaultSymbolizer.fillColor,
-                value: this.symbolizer.fillColor,
+                emptyText: OpenLayers.Renderer.defaultSymbolizer[this.property],
+                value: this.symbolizer[this.property],
                 defaultBackground: this.defaultColor ||
-                    OpenLayers.Renderer.defaultSymbolizer.fillColor,
+                    OpenLayers.Renderer.defaultSymbolizer[this.property],
                 plugins: colorFieldPlugins,
                 listeners: {
                     valid: function(field) {
                         var newValue = field.getValue();
-                        var modified = this.symbolizer.fillColor != newValue; 
-                        this.symbolizer.fillColor = newValue;
+                        var modified = this.symbolizer[this.property] != newValue; 
+                        this.symbolizer[this.property] = newValue;
                         modified && this.fireEvent("change", this.symbolizer);
                     },
                     scope: this
