@@ -8,6 +8,7 @@
 
 /**
  * @include widgets/FillSymbolizer.js
+ * @include widgets/PointSymbolizer.js
  * @include widgets/form/FontComboBox.js
  */
 
@@ -80,6 +81,8 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
     repeatText: "Repeat",
     forceLeftToRightText: "Force left to right",
     graphicResizeText: "Graphic resize",
+    graphicTitle: "Graphic",
+    fontColorTitle: "Font color and opacity",
     
     initComponent: function() {
         
@@ -182,8 +185,10 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
             }]
         }, {
             xtype: "gxp_fillsymbolizer",
+            fillText: this.fontColorTitle,
             symbolizer: this.symbolizer,
-            property: "fontColor",
+            colorProperty: "fontColor",
+            opacityProperty: "fontOpacity",
             checkboxToggle: false,
             autoHeight: true,
             width: 213,
@@ -195,6 +200,17 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                 },
                 scope: this
             }
+        }, {
+            xtype: "fieldset",
+            title: this.graphicTitle,
+            checkboxToggle: true,
+            collapsed: true,
+            items: [{
+                xtype: "gxp_pointsymbolizer",
+                symbolizer: this.symbolizer,
+                border: false,
+                labelWidth: 70
+            }]
         }, {
             xtype: "fieldset",
             title: this.haloText,
