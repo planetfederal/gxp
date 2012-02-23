@@ -73,6 +73,13 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
     haloText: "Halo",
     sizeText: "Size",
     priorityText: "Priority",
+    labelOptionsText: "Label options",
+    autoWrapText: "Auto wrap",
+    followLineText: "Follow line",
+    maxDisplacementText: "Maximum displacement",
+    repeatText: "Repeat",
+    forceLeftToRightText: "Force left to right",
+    graphicResizeText: "Graphic resize",
     
     initComponent: function() {
         
@@ -280,6 +287,48 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                     scope: this
                 }
             }, this.attributesComboConfig)]
+        }, {
+            xtype: "fieldset",
+            title: this.labelOptionsText,
+            checkboxToggle: true,
+            collapsed: true,
+            autoHeight: true,
+            labelWidth: 80,
+            defaults: {
+                width: 100
+            },
+            items: [
+                this.createVendorSpecificField({
+                    name: 'autoWrap', 
+                    fieldLabel: this.autoWrapText
+                }),
+                this.createVendorSpecificField({
+                    name: 'followLine', 
+                    xtype: 'checkbox', 
+                    fieldLabel: this.followLineText
+                }),
+                this.createVendorSpecificField({
+                    name: 'maxDisplacement',
+                    fieldLabel: this.maxDisplacementText
+                }),
+                this.createVendorSpecificField({
+                    name: 'repeat',
+                    fieldLabel: this.repeatText
+                }),
+                this.createVendorSpecificField({
+                    name: 'forceLeftToRight',
+                    xtype: "checkbox",
+                    fieldLabel: this.forceLeftToRightText
+                }),
+                this.createVendorSpecificField({
+                    name: "graphic-resize",
+                    xtype: "combo",
+                    store: ["stretch", "proportional"],
+                    mode: 'local',
+                    triggerAction: 'all',
+                    fieldLabel: this.graphicResizeText
+                })
+            ]
         }];
 
         this.addEvents(
@@ -296,8 +345,35 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
  
         gxp.TextSymbolizer.superclass.initComponent.call(this);
         
+    },
+
+    /**
+     * private: method[createVendorSpecificField]
+     *  :arg config: ``Object`` config object for the field to create
+     *
+     *  Create a form field that will generate a VendorSpecific tag.
+     */
+    createVendorSpecificField: function(config) {
+        var listener = function(field, value) {
+            if (!this.symbolizer.vendorOptions) {
+                this.symbolizer.vendorOptions = [];
+            }
+            this.symbolizer.vendorOptions.push({
+                name: config.name,
+                value: value
+            });
+            this.fireEvent("change", this.symbolizer);
+        };
+        return Ext.applyIf(config, {
+            xtype: "numberfield",
+            allowNegative: false,
+            listeners: {
+                change: listener,
+                check: listener,
+                scope: this
+            }
+        });
     }
-    
     
 });
 
