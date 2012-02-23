@@ -6,6 +6,11 @@
  * of the license.
  */
 
+/**
+ * @requires OpenLayers/Control/TimeManager.js
+ * @requires OpenLayers/TimeAgent.js
+ */
+
 /** api: (define)
  *  module = gxp
  *  class = PlaybackToolbar
