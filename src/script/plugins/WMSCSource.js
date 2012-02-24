@@ -174,9 +174,11 @@ gxp.plugins.WMSCSource = Ext.extend(gxp.plugins.WMSSource, {
                 }
             }
         }
-        if (!config.capability.tileSets) {
+        if (!(config.capability && config.capability.tileSets)) {
             var tileSize = layer.options.tileSize;
-            config.tileSize = [tileSize.w, tileSize.h];
+            if (tileSize) {
+                config.tileSize = [tileSize.w, tileSize.h];
+            }
             config.tileOrigin = layer.options.tileOrigin;
             config.resolutions = layer.options.resolutions;
         }
