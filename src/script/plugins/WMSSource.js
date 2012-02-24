@@ -806,7 +806,10 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      *  Create a config object that can be used to recreate the given record.
      */
     getConfigForRecord: function(record) {
-        var config = gxp.plugins.WMSSource.superclass.getConfigForRecord.apply(this, arguments),
+        var config = Ext.applyIf(
+                gxp.plugins.WMSSource.superclass.getConfigForRecord.apply(this, arguments),
+                record.json
+            ),
             layer = record.getLayer(),
             params = layer.params;
         var name = config.name,
