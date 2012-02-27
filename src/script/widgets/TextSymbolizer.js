@@ -81,6 +81,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
     repeatText: "Repeat",
     forceLeftToRightText: "Force left to right",
     graphicResizeText: "Graphic resize",
+    graphicMarginText: "Graphic margin",
     graphicTitle: "Graphic",
     fontColorTitle: "Font color and opacity",
     
@@ -205,12 +206,26 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
             title: this.graphicTitle,
             checkboxToggle: true,
             collapsed: true,
+            labelWidth: 70,
             items: [{
                 xtype: "gxp_pointsymbolizer",
                 symbolizer: this.symbolizer,
                 border: false,
                 labelWidth: 70
-            }]
+            }, this.createVendorSpecificField({
+                name: "graphic-resize",
+                xtype: "combo",
+                store: ["stretch", "proportional"],
+                mode: 'local',
+                width: 100,
+                triggerAction: 'all',
+                fieldLabel: this.graphicResizeText
+            }), this.createVendorSpecificField({
+                name: "graphic-margin",
+                width: 100,
+                fieldLabel: this.graphicMarginText,
+                xtype: "textfield"
+            })]
         }, {
             xtype: "fieldset",
             title: this.haloText,
@@ -335,14 +350,6 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                     name: 'forceLeftToRight',
                     xtype: "checkbox",
                     fieldLabel: this.forceLeftToRightText
-                }),
-                this.createVendorSpecificField({
-                    name: "graphic-resize",
-                    xtype: "combo",
-                    store: ["stretch", "proportional"],
-                    mode: 'local',
-                    triggerAction: 'all',
-                    fieldLabel: this.graphicResizeText
                 })
             ]
         }];
