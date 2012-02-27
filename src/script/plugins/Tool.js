@@ -6,6 +6,10 @@
  * of the license.
  */
 
+/**
+ * @requires GeoExt/widgets/Action.js
+ */
+
 /** api: (define)
  *  module = gxp.plugins
  *  class = Tool
@@ -236,12 +240,19 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
                 }
                 parts = actionTarget.split(".");
                 ref = parts[0];
+                if (ref) {
+                    if (ref == "map") {
+                        ct = this.target.mapPanel;
+                    } else {
+                        ct = Ext.getCmp(ref) || this.target.portal[ref];
+                        if (!ct) {
+                            throw new Error("Can't find component with id: " + ref);
+                        }
+                    }
+                } else {
+                    ct = this.target.portal;
+                }
                 item = parts.length > 1 && parts[1];
-                ct = ref ?
-                    ref == "map" ?
-                        this.target.mapPanel :
-                        (Ext.getCmp(ref) || this.target.portal[ref]) :
-                    this.target.portal;
                 if (item) {
                     meth = {
                         "tbar": "getTopToolbar",
@@ -353,14 +364,21 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
                 }]
             }, outputConfig)).show().items.get(0);
         }
-        var component = container.add(config);            
-        if (component instanceof Ext.Window) {
-            component.show();
+        if (container) {
+            var component = container.add(config);            
+            if (component instanceof Ext.Window) {
+                component.show();
+            } else {
+                container.doLayout();
+            }
+            this.output.push(component);
+            return component;
         } else {
-            container.doLayout();
+            var ptype = this.ptype;
+            window.setTimeout(function() {
+                throw("Failed to create output for plugin with ptype: " + ptype);
+            }, 0);
         }
-        this.output.push(component);
-        return component;
     },
     
     /** api: method[removeOutput]

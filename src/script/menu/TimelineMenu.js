@@ -29,6 +29,7 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
     /** i18n */
     filterLabel: "Filter",
     attributeLabel: "Label",
+    showNotesText: "Show notes",
 
     /** api: config[layers]
      *  ``GeoExt.data.LayerStore``
@@ -70,12 +71,28 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
         delete this.layers;
         gxp.menu.TimelineMenu.superclass.beforeDestroy.apply(this, arguments);
     },
+
+
     
     /** private: method[onLayerAddOrRemove]
      *  Listener called when records are added to the layer store.
      */
     onLayerAddOrRemove: function() {
         this.removeAll();
+        if (this.timelinePanel.annotationsRecord) {
+            var record = this.timelinePanel.annotationsRecord;
+            var key = this.timelinePanel.getKey(record);
+            this.add(new Ext.menu.CheckItem({
+                text: this.showNotesText,
+                checked: (this.timelinePanel.layerLookup[key] && this.timelinePanel.layerLookup[key].visible) || true,
+                listeners: {
+                    checkchange: function(item, checked) {
+                        this.timelinePanel.setLayerVisibility(item, checked, record, false);
+                    },
+                    scope: this
+                }
+            }));
+        }
         this.layers.each(function(record) {
             var layer = record.getLayer();
             if(layer.displayInLayerSwitcher && layer.dimensions && layer.dimensions.time) {
@@ -83,7 +100,7 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
                 var schema = this.timelinePanel.schemaCache[key];
                 var item = new Ext.menu.CheckItem({
                     text: record.get("title"),
-                    checked: (this.timelinePanel.layerLookup[key] && this.timelinePanel.layerLookup[key].visible) || true,
+                    checked: (this.timelinePanel.layerLookup[key] && this.timelinePanel.layerLookup[key].visible) || false,
                     menu: new Ext.menu.Menu({
                         plain: true,
                         style: {
@@ -139,13 +156,14 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
                                 },
                                 items: [{
                                     width: 25,
-                                    xtype: 'container',
+                                    xtype: 'form',
                                     layout: 'fit',
                                     items: [{
                                         xtype: 'checkbox',
+                                        checked: (this.timelinePanel.layerLookup[key] && this.timelinePanel.layerLookup[key].clientSideFilter !== undefined),
                                         ref: "../applyFilter",
                                         listeners: {
-                                            'check': function(cb, checked) {
+                                            'check': function(cb, checked) { 
                                                 var field = Ext.getCmp('gxp_timemenufilter').filter;
                                                 if (field.isValid()) {
                                                     this.timelinePanel.applyFilter(record, field.filter, checked);
@@ -161,6 +179,7 @@ gxp.menu.TimelineMenu = Ext.extend(Ext.menu.Menu, {
                                     items: [{
                                         xtype: "gxp_filterfield",
                                         ref: "../filter",
+                                        filter: this.timelinePanel.layerLookup[key] ? this.timelinePanel.layerLookup[key].clientSideFilter: null,
                                         listeners: {
                                             'change': function(filter, field) {
                                                 if (field.isValid()) {

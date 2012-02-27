@@ -30,7 +30,97 @@
             tp.destroy();
             t.ok(tp.timeline === null, "Timeline destroyed");
         }
-        
+
+        function test_calculateNewRange(t) {
+            t.plan(3);
+            var tp = new gxp.TimelinePanel({renderTo: document.body});
+            tp.playbackTool = {
+                playbackToolbar: {
+                    control: {
+                        currentTime: new Date("January 1, 1946")
+                    }
+                },
+                un: Ext.emptyFn
+            };
+            var range = tp.calculateNewRange([new Date("January 1, 1946"), new Date("November 9, 2008")], 25);
+            // Feb 22, 1938
+            t.eq(range[0].getTime(), -1005332400000, "Range begin correctly calculated");
+            // Nov 9, 1953
+            t.eq(range[1].getTime(), -509439600000, "Range end correctly calculated");
+            var center = new Date((range[0].getTime() + range[1].getTime())/2);
+            t.eq(center.getTime(), tp.playbackTool.playbackToolbar.control.currentTime.getTime(), "New range is centered on currentTime");
+            tp.destroy();
+        }
+
+        function test_createTimeFilter(t) {
+            t.plan(3);
+            var tp = new gxp.TimelinePanel({renderTo: document.body});
+            tp.layerLookup = {
+                'foo': {}
+            };
+            tp.playbackTool = {
+                playbackToolbar: {
+                    control: {
+                        currentTime: new Date("January 1, 1946")
+                    }
+                },
+                un: Ext.emptyFn
+            };
+            tp.originalRange = [new Date("January 1, 1946"), new Date("November 9, 2008")];
+            var range = tp.calculateNewRange(tp.originalRange, 25);
+            var filter = tp.createTimeFilter(range, 'foo', tp.bufferFraction);
+            t.eq(filter.type, "..", "PropertyIsBetween filter created");
+            t.eq(filter.lowerBoundary, "1945-12-31T23:00:00.000Z", "lowerBoundary is correct");
+            t.eq(filter.upperBoundary, "1961-09-18T11:00:00.000Z", "upperBoundary is correct");
+            tp.destroy();
+        }
+
+        function test_setCenterDate(t) {
+            t.plan(7);
+            var tp = new gxp.TimelinePanel({renderTo: document.body});
+            tp.layerLookup = {
+                'foo': {
+                    layer: {
+                        events: {
+                            un: Ext.emptyFn
+                        },
+                        destroy: Ext.emptyFn
+                    },
+                    sldFilter: false
+                }
+            };
+            tp.playbackTool = {
+                playbackToolbar: {
+                    control: {
+                        currentTime: new Date("January 1, 1946")
+                    }
+                },
+                un: Ext.emptyFn
+            };
+            tp.setRange([new Date("January 1, 1946"), new Date("November 9, 2008")]);
+            var range = tp.calculateNewRange(tp.originalRange, 25);
+            tp.createTimeFilter(range, 'foo', tp.bufferFraction);
+            tp.setCenterDate(new Date("January 1, 1960"));
+            var filter = tp.layerLookup['foo'].layer.filter;
+            // new data should be retrieved, starting at the previous upperBoundary
+            t.eq(filter.type, "..", "PropertyIsBetween filter created");
+            t.eq(filter.lowerBoundary, "1961-09-18T11:00:00.000Z", "lowerBoundary is correct");
+            t.eq(filter.upperBoundary, "1967-11-09T17:00:00.000Z", "upperBoundary is correct");
+            // now test with an sldFilter
+            tp.layerLookup['foo'].sldFilter = new OpenLayers.Filter.Comparison({
+                type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                property: 'foo',
+                value: 'bar'
+            });
+            tp.setTimeFilter('foo', filter);
+            var newFilter = tp.layerLookup['foo'].layer.filter;
+            t.ok(newFilter instanceof OpenLayers.Filter.Logical && newFilter.type === "&&", "AND filter created");
+            t.eq(newFilter.filters.length, 2, "2 subfilters");
+            t.eq(newFilter.filters[0].type, OpenLayers.Filter.Comparison.EQUAL_TO, "first one is the SLD filter");
+            t.eq(newFilter.filters[1].type, "..", "second one is the time filter");
+            tp.destroy();
+        }
+
     </script>
   </head>
   <body>

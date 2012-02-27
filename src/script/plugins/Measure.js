@@ -8,6 +8,9 @@
 
 /**
  * @requires plugins/Tool.js
+ * @requires OpenLayers/StyleMap.js
+ * @requires OpenLayers/Rule.js
+ * @requires OpenLayers/Control/Measure.js
  */
 
 /** api: (define)

@@ -6,6 +6,10 @@
  * of the license.
  */
 
+/**
+ * @requires GeoExt/widgets/form.js
+ */
+
 /** api: (define)
  *  module = gxp.plugins
  *  class = FeatureEditorGrid
@@ -76,20 +80,24 @@ gxp.plugins.FeatureEditorGrid = Ext.extend(Ext.grid.PropertyGrid, {
         if (!this.timeFormat) {
             this.timeFormat = Ext.form.TimeField.prototype.format;
         }
-        var customEditors = {};
-        var customRenderers = {};
-        var feature = this.feature;
-        if(this.schema) {
-            var attributes = {};
-            if (this.fields) {
-                if (!this.excludeFields) {
-                    this.excludeFields = [];
-                }
-                // determine the order of attributes
-                for (var i=0,ii=this.fields.length; i<ii; ++i) {
-                    attributes[this.fields[i]] = null;
-                }
+        var customEditors = {},
+            customRenderers = {},
+            feature = this.feature,
+            attributes;
+        if (this.fields) {
+            // determine the order of attributes
+            attributes = {};
+            for (var i=0,ii=this.fields.length; i<ii; ++i) {
+                attributes[this.fields[i]] = feature.attributes[this.fields[i]];
             }
+        } else {
+            attributes = feature.attributes;
+        }
+        if (!this.excludeFields) {
+            this.excludeFields = [];
+        }
+
+        if(this.schema) {
             var ucFields = this.fields ?
                 this.fields.join(",").toUpperCase().split(",") : [];
             this.schema.each(function(r) {
@@ -166,10 +174,10 @@ gxp.plugins.FeatureEditorGrid = Ext.extend(Ext.grid.PropertyGrid, {
             }, this);
             feature.attributes = attributes;
         }
-        this.source = this.feature.attributes;
+        this.source = attributes;
         this.customEditors = customEditors;
         this.customRenderers = customRenderers;
-        var ucExcludeFields = this.excludeFields ?
+        var ucExcludeFields = this.excludeFields.length ?
             this.excludeFields.join(",").toUpperCase().split(",") : [];
         this.viewConfig = {
             forceFit: true,

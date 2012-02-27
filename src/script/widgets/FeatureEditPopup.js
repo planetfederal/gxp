@@ -8,6 +8,8 @@
 
 /*
  * @requires plugins/FeatureEditorGrid.js
+ * @requires GeoExt/widgets/Popup.js
+ * @requires OpenLayers/Control/ModifyFeature.js
  */
 
 /** api: (define)
@@ -409,7 +411,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                     this.fireEvent("featuremodified", this, feature);
                 } else if(feature.state === OpenLayers.State.INSERT) {
                     this.editing = false;
-                    feature.layer.destroyFeatures([feature]);
+                    feature.layer && feature.layer.destroyFeatures([feature]);
                     this.fireEvent("canceledit", this, null);
                     this.close();
                 } else {

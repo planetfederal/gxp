@@ -6,6 +6,10 @@
  * of the license.
  */
 
+/**
+ * @requires GeoExt/widgets/form.js
+ */
+
 /** api: (define)
  *  module = gxp.plugins
  *  class = FeatureEditorForm
@@ -36,6 +40,16 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
      */
     schema: null,
 
+    /** api: config[fieldConfig]
+     *  ``Object``
+     *  An object with as keys the field names, which will provide the ability
+     *  to override the xtype that GeoExt.form created by default based on the
+     *  schema. When using a combo xtype, comboStoreData can be used to fill up
+     *  the store of the combobox. 
+     *  Example is : [['value1', 'display1'], ['value2', 'display2']]
+     */
+    fieldConfig: null,
+
     /** api: config[fields]
      *  ``Array``
      *  List of field config names corresponding to feature attributes.  If
@@ -62,19 +76,17 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
      */
     readOnly: null,
 
-    /** private: property[monitorValid]
-     *  ``Boolean`` We need the clientvalidation event so this should always
-     *  be true.
-     */
     monitorValid: true,
 
     /** private: method[initComponent]
      */
     initComponent : function() {
         this.defaults = Ext.apply(this.defaults || {}, {disabled: true});
+
         this.listeners = {
             clientvalidation: function(panel, valid) {
-                if (valid) {
+                if (valid && this.getForm().isDirty()) {
+                    Ext.apply(this.feature.attributes, this.getForm().getFieldValues());
                     this.featureEditor.setFeatureState(this.featureEditor.getDirtyState());
                 }
             },
@@ -118,10 +130,31 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
                 var fieldCfg = GeoExt.form.recordToField(r);
                 fieldCfg.fieldLabel = this.propertyNames ? (this.propertyNames[name] || fieldCfg.fieldLabel) : fieldCfg.fieldLabel;
                 fieldCfg.value = this.feature.attributes[name];
+                if (this.fieldConfig && this.fieldConfig[name]) {
+                    Ext.apply(fieldCfg, this.fieldConfig[name]);
+                }
+                if (fieldCfg.value && fieldCfg.xtype == "checkbox") {
+                    fieldCfg.checked = Boolean(fieldCfg.value);
+                }
+                if (fieldCfg.value && fieldCfg.xtype == "gxp_datefield") {
+                    fieldCfg.value = new Date(fieldCfg.value*1000);
+                }
                 if (fieldCfg.value && fieldCfg.xtype == "datefield") {
                     var dateFormat = "Y-m-d";
                     fieldCfg.format = dateFormat;
                     fieldCfg.value = Date.parseDate(fieldCfg.value.replace(/Z$/, ""), dateFormat);
+                }
+                if (fieldCfg.xtype === "combo") {
+                    Ext.applyIf(fieldCfg, {
+                        store: new Ext.data.ArrayStore({
+                            fields: ['id', 'value'],
+                            data: fieldCfg.comboStoreData
+                        }),
+                        displayField: 'value',
+                        valueField: 'id',
+                        mode: 'local',
+                        triggerAction: 'all'
+                    });
                 }
                 fields[lower] = fieldCfg;
             }, this);
@@ -159,7 +192,10 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
         var orderedFields = [];
         if (this.fields) {
             for (var i=0,ii=this.fields.length; i<ii; ++i) {
-                orderedFields.push(fields[this.fields[i].toLowerCase()]);
+                // a field could have been configured that does not exist
+                if (fields[this.fields[i].toLowerCase()]) {
+                    orderedFields.push(fields[this.fields[i].toLowerCase()]);
+                }
             }
         } else {
             for (var key in fields) {
@@ -176,7 +212,6 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
      */
     init: function(target) {
         this.featureEditor = target;
-        this.featureEditor.on("beforefeaturemodified", this.onBeforeFeatureModified, this);
         this.featureEditor.on("startedit", this.onStartEdit, this);
         this.featureEditor.on("stopedit", this.onStopEdit, this);
         this.featureEditor.on("canceledit", this.onCancelEdit, this);
@@ -188,7 +223,6 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
      *  Clean up.
      */
     destroy: function() {
-        this.featureEditor.un("beforefeaturemodified", this.onBeforeFeatureModified, this);
         this.featureEditor.un("startedit", this.onStartEdit, this);
         this.featureEditor.un("stopedit", this.onStopEdit, this);
         this.featureEditor.un("canceledit", this.onCancelEdit, this);
@@ -229,20 +263,6 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
                 field && field.setValue(feature.attributes[key]);
             }
         }
-    },
-
-    /** private: method[onBeforeFeatureModified]
-     *  :arg panel: ``gxp.FeatureEditPopup``
-     *  :arg feature: ``OpenLayers.Feature.Vector``
-     *
-     *  Apply the changes to the feature.
-     */
-    onBeforeFeatureModified: function(panel, feature) {
-        // apply modified attributes to feature
-        this.getForm().items.each(function(field) {
-            var value = field.getValue(); // this may be an empty string
-            feature.attributes[field.getName()] = value || field.value;
-        });
     }
 
 });

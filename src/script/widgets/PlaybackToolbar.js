@@ -6,6 +6,11 @@
  * of the license.
  */
 
+/**
+ * @requires OpenLayers/Control/TimeManager.js
+ * @requires OpenLayers/TimeAgent.js
+ */
+
 /** api: (define)
  *  module = gxp
  *  class = PlaybackToolbar
@@ -359,37 +364,82 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         this.timeDisplay.show();
         this.timeDisplay.el.alignTo(this.slider.getEl(), this.timeDisplay.defaultAlign, [0, 5]);
     },
-    buildTimeManager:function(){
-        this.controlConfig || (this.controlConfig={});
+    buildTimeManager:function() {
+        this.controlConfig || (this.controlConfig = {});
         //test for bad range times
-        if(this.controlConfig.range && this.controlConfig.range.length){
-            for (var i = 0; i < this.controlConfig.range.length; i++) {
+        if(this.controlConfig.range && this.controlConfig.range.length) {
+            for(var i = 0; i < this.controlConfig.range.length; i++) {
                 var dateString = this.controlConfig.range[i];
-                if (dateString.indexOf('T') > -1 && dateString.indexOf('Z') == -1) {
+                if(dateString.indexOf('T') > -1 && dateString.indexOf('Z') == -1) {
                     dateString = dateString.substring(0, dateString.indexOf('T'));
                 }
                 this.controlConfig.range[i] = dateString;
             }
         }
-        if(this.playbackMode=='ranged' || this.playbackMode=='decay'){
-            Ext.apply(this.controlConfig,{
-                agentOptions:{
-                    'WMS':{rangeMode:'range',rangeInterval:this.rangedPlayInterval},
-                    'Vector':{rangeMode:'range',rangeInterval:this.rangedPlayInterval}
-                }
-            });
+        // Test for and deal with pre-configured timeAgents & layers
+        if(this.controlConfig.timeAgents) {
+            for(var i = 0; i < this.controlConfig.timeAgents.length; i++) {
+                var config = this.controlConfig.timeAgents[i];
+                var agentClass = config.type;
+                var layers = [];
+                //put real layers, not references here
+                Ext.each(config.layers, function(lyrJson) {
+                    //source & name identify different layers, but title & styles
+                    //are required to distinguish the same layer added multiple times with a different
+                    //style or presentation
+                    var ndx = app.mapPanel.layers.findBy(function(rec) {
+                        return rec.json && 
+                        rec.json.source == lyrJson.source &&
+                        rec.json.title == lyrJson.title &&
+                        rec.json.name == lyrJson.name &&
+                        (rec.json.styles == lyrJson.styles ||
+                            !!rec.json.styles == false && !!lyrJson.styles == false);
+                    });
+
+                    if(ndx > -1) {
+                        layers.push(app.mapPanel.layers.getAt(ndx).getLayer());
+                    }
+                });
+
+
+                config.layers = layers;
+                delete config.type;
+                //TODO handle subclasses of TimeAgent subclasses
+                var agent = agentClass ? new OpenLayers.TimeAgent[agentClass](config) : new OpenLayers.TimeAgent(config);
+                this.controlConfig.timeAgents[i] = agent;
+            }
         }
-        else if(this.playbackMode=='cumulative'){
-            Ext.apply(this.controlConfig,{
-                agentOptions:{
-                    'WMS':{rangeMode:'cumulative'},
-                    'Vector':{rangeMode:'cumulative'}
-                }
-            });
+        else {
+            if(this.playbackMode == 'ranged' || this.playbackMode == 'decay') {
+                Ext.apply(this.controlConfig, {
+                    agentOptions : {
+                        'WMS' : {
+                            rangeMode : 'range',
+                            rangeInterval : this.rangedPlayInterval
+                        },
+                        'Vector' : {
+                            rangeMode : 'range',
+                            rangeInterval : this.rangedPlayInterval
+                        }
+                    }
+                });
+            }
+            else if(this.playbackMode == 'cumulative') {
+                Ext.apply(this.controlConfig, {
+                    agentOptions : {
+                        'WMS' : {
+                            rangeMode : 'cumulative'
+                        },
+                        'Vector' : {
+                            rangeMode : 'cumulative'
+                        }
+                    }
+                });
+            }
         }
         var ctl = this.control = new OpenLayers.Control.TimeManager(this.controlConfig);
         this.mapPanel.map.addControl(ctl);
-        if (ctl.layers) {
+        if(ctl.layers) {
             this.fireEvent('rangemodified', this, ctl.range);
         }
         return ctl;
@@ -491,6 +541,14 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         ctl.setTime(new Date(ctl.range[(ctl.step < 0) ? 0 : 1].getTime()));
     },
     toggleAnimation:function(btn,pressed){
+        if(!btn.bound && pressed){
+            this.control.events.on({
+                'stop':function(evt){
+                    btn.toggle(false);
+                }
+            });
+            btn.bound=true;
+        }
         this.control[pressed?'play':'stop']();
         btn.btnEl.toggleClass('gxp-icon-play').toggleClass('gxp-icon-pause');
         btn.el.removeClass('x-btn-pressed');
@@ -528,11 +586,16 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         this.sliderTip.onSlide(this.slider,null,this.slider.thumbs[0]);
         this.sliderTip.el.alignTo(this.slider.el, 'b-t?', this.offsets);
     },
-    onSliderChangeComplete: function(slider, value, thumb){
+    onSliderChangeComplete: function(slider, value, thumb, silent){
         var slideTime = new Date(value);
         //test if this is the main time slider
         switch (slider.indexMap[thumb.index]) {
             case 'primary':
+                //if we have a tail slider, then the range interval should be updated first
+                var tailIndex = slider.indexMap.indexOf('tail'); 
+                if (tailIndex>-1){
+                    this.onSliderChangeComplete(slider,slider.thumbs[tailIndex].value,slider.thumbs[tailIndex],true);
+                }
                 if (!this.control.snapToIntervals && this.control.units) {
                     this.control.setTime(slideTime);
                 }
@@ -570,7 +633,12 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                         break;
                 }
                 for (var i = 0, len = this.control.timeAgents.length; i < len; i++) {
-                    this.control.timeAgents[i].rangeInterval = (slider.thumbs[0].value - value) / adj;
+                    if(this.control.timeAgents[i].rangeMode == 'range'){
+                        this.control.timeAgents[i].rangeInterval = (slider.thumbs[0].value - value) / adj;    
+                    }
+                }
+                if(!silent){
+                    this.control.setTime(new Date(slider.thumbs[0].value));
                 }
         }
         if (this.restartPlayback) {

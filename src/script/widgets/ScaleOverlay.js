@@ -6,6 +6,11 @@
  * of the license.
  */
 
+/**
+ * @requires OpenLayers/Control/ScaleLine.js
+ * @requires GeoExt/data/ScaleStore.js
+ */
+
 /** api: (define)
  *  module = gxp
  *  class = ScaleOverlay

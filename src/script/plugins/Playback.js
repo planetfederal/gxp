@@ -132,28 +132,49 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
     setTime: function(time){
         return this.playbackToolbar.setTime(time);
     },
+
     /** api: method[getState]
      *  :returns {Object} - initial config plus any user configured settings
      *  
      *  Tool specific implementation of the getState function
-     */
-    getState: function(){
+     */    
+    getState: function() {
         var config = gxp.plugins.Playback.superclass.getState.call(this);
         var toolbar = this.playbackToolbar;
-        if (toolbar) {
+        if(toolbar) {
             var control = toolbar.control;
             config.outputConfig = Ext.apply(toolbar.initialConfig, {
-                dynamicRange: toolbar.dyanamicRange,
-                playbackMode: toolbar.playbackMode
+                dynamicRange : toolbar.dyanamicRange,
+                playbackMode : toolbar.playbackMode
             });
-            if (control) {
+            if(control) {
                 config.outputConfig.controlConfig = {
-                    range: (control.fixedRange) ? control.range : undefined,
-                    step: control.step,
-                    units: (control.units) ? control.units : undefined,
-                    loop: control.loop,
-                    snapToIntervals: control.snapToIntervals
+                    range : control.range, //(control.fixedRange) ? control.range : undefined,
+                    step : control.step,
+                    units : (control.units) ? control.units : undefined,
+                    loop : control.loop,
+                    snapToIntervals : control.snapToIntervals
                 };
+                if(control.timeAgents.length > 1) {
+                    var agents = control.timeAgents;
+                    var agentConfigs = [];
+                    for(var i = 0; i < agents.length; i++) {
+                        var agentConfig = {
+                            type : agents[i].CLASS_NAME.split("TimeAgent.")[1],
+                            rangeMode : agents[i].rangeMode,
+                            rangeInterval : agents[i].rangeInterval,
+                            intervals : agents[i].intervals,
+                            layers : []
+                        };
+                        for(var j = 0; j < agents[i].layers.length; j++) {
+                            var layerRec = app.mapPanel.layers.getByLayer(agents[i].layers[j]);
+                            var layerConfig = this.target.layerSources[layerRec.get('source')].getConfigForRecord(layerRec);
+                            agentConfig.layers.push(layerConfig);
+                        }
+                        agentConfigs.push(agentConfig);
+                    }
+                    config.outputConfig.controlConfig.timeAgents = agentConfigs;
+                }
             }
             //get rid of 2 instantiated objects that will cause problems
             delete config.outputConfig.mapPanel;

@@ -6,6 +6,18 @@
  * of the license.
  */
 
+/**
+ * @requires util.js
+ * @requires OpenLayers/Control/Attribution.js
+ * @requires OpenLayers/Control/ZoomPanel.js
+ * @requires OpenLayers/Control/Navigation.js
+ * @requires OpenLayers/Kinetic.js
+ * @requires OpenLayers/Control/PanPanel.js
+ * @requires GeoExt/widgets/MapPanel.js
+ * @requires GeoExt/widgets/ZoomSlider.js
+ * @requires GeoExt/widgets/tips/ZoomSliderTip.js
+ */
+
 /** api: (define)
  *  module = gxp
  *  class = Viewer
@@ -403,7 +415,10 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             map: Ext.applyIf({
                 theme: mapConfig.theme || null,
                 controls: mapConfig.controls || [
-                    new OpenLayers.Control.Navigation({zoomWheelOptions: {interval: 250}}),
+                    new OpenLayers.Control.Navigation({
+                        zoomWheelOptions: {interval: 250},
+                        dragPanOptions: {enableKinetic: true}
+                    }),
                     new OpenLayers.Control.PanPanel(),
                     new OpenLayers.Control.ZoomPanel(),
                     new OpenLayers.Control.Attribution()

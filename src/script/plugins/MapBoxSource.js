@@ -8,6 +8,7 @@
 
 /**
  * @requires plugins/LayerSource.js
+ * @requires OpenLayers/Layer/TMS.js
  */
 
 /** api: (define)
