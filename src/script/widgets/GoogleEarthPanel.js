@@ -195,12 +195,15 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
     onShowEvent: function() {
         if (this.rendered) {
             this.layerCache = {};
-            google.earth.createInstance(
-                this.body.dom,
-                this.onEarthReady.createDelegate(this),
-                (function(code) {
-                    this.fireEvent("pluginfailure", this, code);
-                }).createDelegate(this)
+            try {
+                google.earth.createInstance(
+                    this.body.dom,
+                    this.onEarthReady.createDelegate(this),
+                    (function(code) {
+                        this.fireEvent("pluginfailure", this, code);
+                    }).createDelegate(this)
+                );
+            } catch (err) {};
             );
         }
     },
