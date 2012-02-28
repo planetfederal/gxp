@@ -73,6 +73,7 @@ gxp.plugins.MapProperties = Ext.extend(gxp.plugins.Tool, {
         if (this.colorManager) {
             colorFieldPlugins = [new this.colorManager()];
         }
+        var baseLayer = this.target.mapPanel.map.baseLayer;
         return gxp.plugins.MapProperties.superclass.addOutput.call(this, {
             xtype: 'form',
             border: false,
@@ -83,20 +84,20 @@ gxp.plugins.MapProperties = Ext.extend(gxp.plugins.Tool, {
                 allowDecimals: false,
                 fieldLabel: this.numberOfZoomLevelsText,
                 minValue: 1,
-                value: this.target.mapPanel.map.baseLayer.numZoomLevels,
+                value: baseLayer.numZoomLevels,
                 listeners: {
                     "change": function(fld, value) {
-                        this.target.mapPanel.map.baseLayer.addOptions({numZoomLevels: value});
+                        baseLayer.addOptions({numZoomLevels: value});
                     },
                     scope: this
                 }
             }, {
                 xtype: 'checkbox',
                 fieldLabel: this.wrapDateLineText,
-                checked: this.target.mapPanel.map.baseLayer.wrapDateLine,
+                checked: baseLayer.wrapDateLine,
                 listeners: {
                     "check": function(cb, value) {
-                        this.target.mapPanel.map.baseLayer.wrapDateLine = value;
+                        baseLayer.wrapDateLine = value;
                     },
                     scope: this
                 }

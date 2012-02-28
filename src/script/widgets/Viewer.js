@@ -103,6 +103,9 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
      *  * items: not available - use ``mapItems`` instead
      *  * tbar: not available - use :class:`gxp.Tool` plugins to populate
      *    the tbar
+     *  * wrapDateLine: ``Boolean`` Should we wrap the dateline? Defaults to
+     *    true
+     *  * numZoomLevels: ``Integer`` The number of zoom levels to use.
      *  * layers: ``Array(Object)``. Each object has a ``source`` property
      *    referencing a :class:`gxp.plugins.LayerSource`. The viewer will call
      *    the ``createLayerRecord`` of this source with the object as
@@ -396,6 +399,11 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         
         var config = Ext.apply({}, this.initialConfig.map);
         var mapConfig = {};
+        var baseLayerConfig = {
+            wrapDateLine: config.wrapDateLine !== undefined ? config.wrapDateLine : true,
+            numZoomLevels: config.numZoomLevels,
+            displayInLayerSwitcher: false
+        };
         
         // split initial map configuration into map and panel config
         if (this.initialConfig.map) {
@@ -430,7 +438,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             center: config.center && new OpenLayers.LonLat(config.center[0], config.center[1]),
             resolutions: config.resolutions,
             forceInitialExtent: true,
-            layers: [new OpenLayers.Layer(null, {displayInLayerSwitcher: false})],
+            layers: [new OpenLayers.Layer(null, baseLayerConfig)],
             items: this.mapItems,
             plugins: this.mapPlugins,
             tbar: config.tbar || new Ext.Toolbar({
