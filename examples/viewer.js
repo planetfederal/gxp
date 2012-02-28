@@ -69,6 +69,11 @@ Ext.onReady(function() {
             actionTarget: "map.tbar", // this is the default, could be omitted
             toggleGroup: "layertools"
         }, {
+            ptype: "gxp_mapproperties",
+            outputConfig: {
+                title: 'Map properties'
+            }
+        }, {
             // shared FeatureManager for feature editing, grid and querying
             ptype: "gxp_featuremanager",
             id: "featuremanager",
@@ -110,6 +115,9 @@ Ext.onReady(function() {
             },
             google: {
                 ptype: "gxp_googlesource"
+            },
+            ol: {
+                ptype: "gxp_olsource"
             }
         },
         
@@ -124,6 +132,12 @@ Ext.onReady(function() {
             center: [-10764594.758211, 4523072.3184791],
             zoom: 3,
             layers: [{
+                source: "ol",
+                type: "OpenLayers.Layer",
+                args: ["Blank"],
+                visibility: false,
+                group: "background"
+            }, {
                 source: "google",
                 name: "TERRAIN",
                 group: "background"
