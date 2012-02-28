@@ -74,6 +74,7 @@ gxp.plugins.MapProperties = Ext.extend(gxp.plugins.Tool, {
             colorFieldPlugins = [new this.colorManager()];
         }
         var baseLayer = this.target.mapPanel.map.baseLayer;
+        var container = Ext.get(this.target.mapPanel.map.getViewport());
         return gxp.plugins.MapProperties.superclass.addOutput.call(this, {
             xtype: 'form',
             border: false,
@@ -104,11 +105,11 @@ gxp.plugins.MapProperties = Ext.extend(gxp.plugins.Tool, {
             }, {
                 xtype: "gxp_colorfield",
                 fieldLabel: this.colorText,
-                value: this.target.mapPanel.body.getColor('background-color'),
+                value: container.getColor('background-color'),
                 plugins: colorFieldPlugins,
                 listeners: {
                     valid: function(field) {
-                        this.target.mapPanel.body.setStyle('background-color', field.getValue());
+                        container.setStyle('background-color', field.getValue());
                     },
                     scope: this
                 }
