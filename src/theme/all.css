@@ -188,6 +188,11 @@
     background-image: url(img/geosilk/pan.png);
 }
 
+/* gxp_mapproperties */
+.x-btn .gxp-icon-mapproperties, .x-menu-item .gxp-icon-mapproperties, .x-tree-node .gxp-icon-mapproperties {
+    background-image: url(img/geosilk/map_wrench.png);
+}
+
 /* gxp_layerproperties */
 .x-btn .gxp-icon-layerproperties, .x-menu-item .gxp-icon-layerproperties, .x-tree-node .gxp-icon-layerproperties {
     background-image: url(img/silk/wrench.png);
