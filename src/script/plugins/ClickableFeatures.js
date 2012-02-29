@@ -90,9 +90,9 @@ gxp.plugins.ClickableFeatures = Ext.extend(gxp.plugins.Tool, {
         if (config && "autoLoadFeatures" in config) {
             config.autoLoadFeature = config.autoLoadFeatures;
             delete config.autoLoadFeatures;
-            window.setTimeout(function() {
-                throw("Deprecated config option 'autoLoadFeatures' for ptype: '" + config.ptype + "'. Use 'autoLoadFeature' instead.");
-            }, 0);
+            if (window.console) {
+                console.warn("Deprecated config option 'autoLoadFeatures' for ptype: '" + config.ptype + "'. Use 'autoLoadFeature' instead.");
+            }
         }
         gxp.plugins.ClickableFeatures.superclass.constructor.apply(this, [config]);
     },
