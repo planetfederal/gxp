@@ -89,6 +89,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
     displacementXText: "Displacement (X-direction)",
     displacementYText: "Displacement (Y-direction)",
     perpendicularOffsetText: "Perpendicular offset",
+    priorityHelp: "The higher the value of the specified field, the sooner the label will be drawn (which makes it win in the conflict resolution game)",
     autoWrapHelp: "Wrap labels that exceed a certain length in pixels",
     followLineHelp: "Should the label follow the geometry of the line?",
     maxDisplacementHelp: "Maximum displacement in pixels if label position is busy",
@@ -388,11 +389,13 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                 fieldLabel: this.priorityText,
                 value: this.symbolizer.priority && this.symbolizer.priority.replace(/^\${(.*)}$/, "$1"),
                 allowBlank: true,
+                name: 'priority',
                 listeners: {
                     select: function(combo, record) {
-                        this.symbolizer.priority = "${" + record.get("name") + "}";
+                        this.symbolizer[combo.name] = "${" + record.get("name") + "}";
                         this.fireEvent("change", this.symbolizer);
                     },
+                    render: this.attachHelpToField,
                     scope: this
                 }
             }, this.attributesComboConfig)]
@@ -473,18 +476,26 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
             allowNegative: false,
             value: this.symbolizer.vendorOptions && this.symbolizer.vendorOptions[config.name] || config.value,
             listeners: {
-                render: function(c) {
-                    var key = c.name.replace(/-/g, '_') + 'Help';
-                    Ext.QuickTips.register({
-                        target: c.getEl(),
-                        dismissDelay: 20000,
-                        text: this[key]
-                    });
-                },
+                render: this.attachHelpToField,
                 change: listener,
                 check: listener,
                 scope: this
             }
+        });
+    },
+
+    /**
+     * private: method[attachHelpToField]
+     *  :arg c: ``Ext.Component`` 
+     *
+     *  Attach a tooltip with extra information to the form field.
+     */
+    attachHelpToField: function(c) {
+        var key = c.name.replace(/-/g, '_') + 'Help';
+        Ext.QuickTips.register({
+            target: c.getEl(),
+            dismissDelay: 20000,
+            text: this[key]
         });
     }
     
