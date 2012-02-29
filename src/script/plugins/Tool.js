@@ -375,9 +375,9 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
             return component;
         } else {
             var ptype = this.ptype;
-            window.setTimeout(function() {
-                throw("Failed to create output for plugin with ptype: " + ptype);
-            }, 0);
+            if (window.console) {
+                console.error("Failed to create output for plugin with ptype: " + ptype);
+            }
         }
     },
     
