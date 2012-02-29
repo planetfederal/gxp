@@ -460,13 +460,18 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
             if (!this.symbolizer.vendorOptions) {
                 this.symbolizer.vendorOptions = {};
             }
-            this.symbolizer.vendorOptions[config.name] = value;
+            // empty VendorOption tags can cause null pointer exceptions in GeoServer
+            if (Ext.isEmpty(value)) {
+                delete this.symbolizer.vendorOptions[config.name];
+            } else {
+                this.symbolizer.vendorOptions[config.name] = value;
+            }
             this.fireEvent("change", this.symbolizer);
         };
         return Ext.applyIf(config, {
             xtype: "numberfield",
             allowNegative: false,
-            value: this.symbolizer.vendorOptions && this.symbolizer.vendorOptions[config.name],
+            value: this.symbolizer.vendorOptions && this.symbolizer.vendorOptions[config.name] || config.value,
             listeners: {
                 render: function(c) {
                     var key = c.name.replace(/-/g, '_') + 'Help';
