@@ -330,7 +330,8 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
             },
             items: [
                 this.createVendorSpecificField({
-                    name: 'autoWrap', 
+                    name: 'autoWrap',
+                    allowBlank: false,
                     fieldLabel: this.autoWrapText
                 }),
                 this.createVendorSpecificField({
@@ -379,12 +380,9 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
     createVendorSpecificField: function(config) {
         var listener = function(field, value) {
             if (!this.symbolizer.vendorOptions) {
-                this.symbolizer.vendorOptions = [];
+                this.symbolizer.vendorOptions = {};
             }
-            this.symbolizer.vendorOptions.push({
-                name: config.name,
-                value: value
-            });
+            this.symbolizer.vendorOptions[config.name] = value;
             this.fireEvent("change", this.symbolizer);
         };
         return Ext.applyIf(config, {
