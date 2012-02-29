@@ -24,7 +24,50 @@ function showSLD(panel) {
     sldWin.show();
 }
 
+function applySLD(symbolizer, layer) {
+    var format = new OpenLayers.Format.SLD({
+        multipleSymbolizers: true,
+        profile: 'GeoServer',
+        namedLayersAsArray: true
+    });
+    symbolizer = new OpenLayers.Symbolizer.Text(symbolizer);
+    var sldConfig = {
+        namedLayers: [{
+            name: 'usa:states',
+            userStyles: [new OpenLayers.Style2({rules: [new OpenLayers.Rule({
+                symbolizers: [symbolizer]})
+            ]})]
+        }]
+    };
+    var sld = format.write(sldConfig);
+    layer.setVisibility(true);
+    layer.mergeNewParams({SLD_BODY: sld});
+}
+
 Ext.onReady(function() {
+
+    var map = new OpenLayers.Map('map', {allOverlays: true});
+    var bottomLayer = new OpenLayers.Layer.WMS("usa states", "http://suite.opengeo.org/geoserver/wms?",
+        {
+            layers: 'usa:states',
+            format: 'image/png'
+        }, {
+            singleTile: true,
+            opacity: 0.2
+        }
+    );
+    var layer = new OpenLayers.Layer.WMS("usa states", "http://suite.opengeo.org/geoserver/wms?", 
+        {
+            layers: 'usa:states',
+            format: 'image/png',
+            transparent: 'TRUE'
+        }, {
+            singleTile: true,
+            visibility: false
+        }
+    );
+    map.addLayers([bottomLayer, layer]);
+    map.setCenter([-100, 38], 4);
 
     var panel = new gxp.TextSymbolizer({
         title: "Text Symbolizer",
@@ -36,10 +79,15 @@ Ext.onReady(function() {
             url: "data/describe_feature_type.xml",
             ignore: {name: "the_geom"}
         }),
-        bbar: ["->", {
+        tbar: ["->", {
             text: "Show SLD",
             handler: function() {
                 showSLD(panel);
+            }
+        }, {
+            text: "Apply SLD",
+            handler: function() {
+                applySLD(panel.symbolizer, layer);
             }
         }]
     });
