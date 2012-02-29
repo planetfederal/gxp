@@ -88,6 +88,7 @@
         "plugins/Measure.js",
         "plugins/Navigation.js",
         "plugins/LayerProperties.js",
+        "plugins/MapProperties.js",
         "plugins/Legend.js",
         "plugins/Print.js",
         "plugins/LoadingIndicator.js",

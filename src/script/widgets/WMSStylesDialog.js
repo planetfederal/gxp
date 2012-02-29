@@ -733,7 +733,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     createLegend: function(rules) {
         var R = OpenLayers.Symbolizer.Raster;
         if (R && rules[0] && rules[0].symbolizers[0] instanceof R) {            
-            throw("Raster symbolizers are not supported.");
+            throw new Error("Raster symbolizers are not supported.");
         } else {
             this.addVectorLegend(rules);
         }
