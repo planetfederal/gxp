@@ -256,7 +256,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                 xtype: "gxp_fillsymbolizer",
                 symbolizer: {
                     fillColor: ("haloColor" in this.symbolizer) ? this.symbolizer.haloColor : OpenLayers.Renderer.defaultSymbolizer.haloColor,
-                    fillOpacity: ("haloOpacity" in this.symbolizer) ? this.symbolizer.haloOpacity : OpenLayers.Renderer.defaultSymbolizer.haloOpacity
+                    fillOpacity: ("haloOpacity" in this.symbolizer) ? this.symbolizer.haloOpacity : OpenLayers.Renderer.defaultSymbolizer.haloOpacity*100
                 },
                 defaultColor: OpenLayers.Renderer.defaultSymbolizer.haloColor,
                 checkboxToggle: false,
