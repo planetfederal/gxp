@@ -32,17 +32,18 @@ function applySLD(symbolizer, layer) {
     });
     symbolizer = new OpenLayers.Symbolizer.Text(symbolizer);
     var polygonSymbolizer = new OpenLayers.Symbolizer.Polygon({fillOpacity: 0});
+    var pointSymbolizer = new OpenLayers.Symbolizer.Point({fill: true, fillColor: '#FF0000', pointRadius: 3, graphicName: 'circle'});
     var sldConfig = {
         namedLayers: [{
             name: 'usa:states',
             userStyles: [new OpenLayers.Style2({rules: [new OpenLayers.Rule({
-                symbolizers: [symbolizer, polygonSymbolizer]})
+                symbolizers: [symbolizer, polygonSymbolizer, pointSymbolizer]})
             ]})]
         }]
     };
     var sld = format.write(sldConfig);
     layer.setVisibility(true);
-    layer.mergeNewParams({SLD_BODY: sld});
+    layer.mergeNewParams({SLD_BODY: sld, "_olSalt": Math.random()});
 }
 
 Ext.onReady(function() {

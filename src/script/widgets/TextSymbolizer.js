@@ -84,7 +84,12 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
     graphicMarginText: "Graphic margin",
     graphicTitle: "Graphic",
     fontColorTitle: "Font color and opacity",
-    
+    positioningText: "Label positioning",
+    anchorPointText: "Anchor point",
+    displacementXText: "Displacement (X-direction)",
+    displacementYText: "Displacement (Y-direction)",
+    perpendicularOffsetText: "Perpendicular offset",
+
     initComponent: function() {
         
         if(!this.symbolizer) {
@@ -299,6 +304,72 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                 },
                 scope: this
             }
+        }, {
+            xtype: "fieldset",
+            title: this.positioningText,
+            checkboxToggle: true,
+            collapsed: true,
+            autoHeight: true,
+            labelWidth: 75,
+            items: [Ext.applyIf({
+                fieldLabel: this.anchorPointText,
+                value: this.symbolizer.labelAlign || "lb",
+                store: [
+                    ['lt', 'Left-top'], 
+                    ['ct', 'Center-top'], 
+                    ['rt', 'Right-top'],
+                    ['lm', 'Left-center'],
+                    ['cm', 'Center'],
+                    ['rm', 'Right-center'],
+                    ['lb', 'Left-bottom'],
+                    ['cb', 'Center-bottom'],
+                    ['rb', 'Right-bottom']
+                ],
+                listeners: {
+                    select: function(combo, record) {
+                        this.symbolizer.labelAlign = combo.getValue();
+                        this.fireEvent("change", this.symbolizer);
+                    },
+                    scope: this
+                }
+            }, this.attributesComboConfig), {
+                xtype: "numberfield",
+                fieldLabel: this.displacementXText,
+                value: this.symbolizer.labelXOffset,
+                listeners: {
+                    change: function(field, value) {
+                        this.symbolizer.labelXOffset = value;
+                        this.fireEvent("change", this.symbolizer);
+                    },
+                    scope: this
+                }
+            }, {
+                xtype: "numberfield",
+                fieldLabel: this.displacementYText,
+                value: this.symbolizer.labelYOffset,
+                listeners: {
+                    change: function(field, value) {
+                        this.symbolizer.labelYOffset = value;
+                        this.fireEvent("change", this.symbolizer);
+                    },
+                    scope: this
+                }
+            }, {
+                xtype: "numberfield",
+                fieldLabel: this.perpendicularOffsetText,
+                value: this.symbolizer.labelPerpendicularOffset,
+                listeners: {
+                    change: function(field, value) {
+                        if (Ext.isEmpty(value)) {
+                            delete this.symbolizer.labelPerpendicularOffset;
+                        } else {
+                            this.symbolizer.labelPerpendicularOffset = value;
+                        }
+                        this.fireEvent("change", this.symbolizer);
+                    },
+                    scope: this
+                }
+            }]
         }, {
             xtype: "fieldset",
             title: this.priorityText,
