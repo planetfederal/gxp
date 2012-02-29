@@ -89,9 +89,16 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
     displacementXText: "Displacement (X-direction)",
     displacementYText: "Displacement (Y-direction)",
     perpendicularOffsetText: "Perpendicular offset",
+    autoWrapHelp: "Wrap labels that exceed a certain length in pixels",
+    followLineHelp: "Should the label follow the geometry of the line?",
+    maxDisplacementHelp: "Maximum displacement in pixels if label position is busy",
+    repeatHelp: "Repeat labels after a certain number of pixels",
+    forceLeftToRightHelp: "Labels are usually flipped to make them readable. If the character happens to be a directional arrow then this is not desirable",
+    graphic_resizeHelp: "Specifies a mode for resizing label graphics (such as highway shields) to fit the text of the label. The default mode, ‘none’, never modifies the label graphic. In stretch mode, GeoServer will resize the graphic to exactly surround the label text, possibly modifying the image’s aspect ratio. In proportional mode, GeoServer will expand the image to be large enough to surround the text while preserving its original aspect ratio.",
+    graphic_marginHelp: "Similar to the margin shorthand property in CSS for HTML, its interpretation varies depending on how many margin values are provided: 1 = use that margin length on all sides of the label 2 = use the first for top & bottom margins and the second for left & right margins. 3 = use the first for the top margin, second for left & right margins, third for the bottom margin. 4 = use the first for the top margin, second for the right margin, third for the bottom margin, and fourth for the left margin.",
 
     initComponent: function() {
-        
+
         if(!this.symbolizer) {
             this.symbolizer = {};
         }        
@@ -220,7 +227,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
             }, this.createVendorSpecificField({
                 name: "graphic-resize",
                 xtype: "combo",
-                store: ["stretch", "proportional"],
+                store: ["none", "stretch", "proportional"],
                 mode: 'local',
                 width: 100,
                 triggerAction: 'all',
@@ -459,7 +466,16 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
         return Ext.applyIf(config, {
             xtype: "numberfield",
             allowNegative: false,
+            value: this.symbolizer.vendorOptions && this.symbolizer.vendorOptions[config.name],
             listeners: {
+                render: function(c) {
+                    var key = c.name.replace(/-/g, '_') + 'Help';
+                    Ext.QuickTips.register({
+                        target: c.getEl(),
+                        dismissDelay: 20000,
+                        text: this[key]
+                    });
+                },
                 change: listener,
                 check: listener,
                 scope: this

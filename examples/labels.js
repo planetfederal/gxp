@@ -47,7 +47,7 @@ function applySLD(symbolizer, layer) {
 }
 
 Ext.onReady(function() {
-
+    Ext.QuickTips.init();
     var map = new OpenLayers.Map('map', {allOverlays: true});
     var layer = new OpenLayers.Layer.WMS("usa states", "http://suite.opengeo.org/geoserver/wms?", 
         {
