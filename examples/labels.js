@@ -31,11 +31,12 @@ function applySLD(symbolizer, layer) {
         namedLayersAsArray: true
     });
     symbolizer = new OpenLayers.Symbolizer.Text(symbolizer);
+    var polygonSymbolizer = new OpenLayers.Symbolizer.Polygon({fillOpacity: 0});
     var sldConfig = {
         namedLayers: [{
             name: 'usa:states',
             userStyles: [new OpenLayers.Style2({rules: [new OpenLayers.Rule({
-                symbolizers: [symbolizer]})
+                symbolizers: [symbolizer, polygonSymbolizer]})
             ]})]
         }]
     };
@@ -47,15 +48,6 @@ function applySLD(symbolizer, layer) {
 Ext.onReady(function() {
 
     var map = new OpenLayers.Map('map', {allOverlays: true});
-    var bottomLayer = new OpenLayers.Layer.WMS("usa states", "http://suite.opengeo.org/geoserver/wms?",
-        {
-            layers: 'usa:states',
-            format: 'image/png'
-        }, {
-            singleTile: true,
-            opacity: 0.2
-        }
-    );
     var layer = new OpenLayers.Layer.WMS("usa states", "http://suite.opengeo.org/geoserver/wms?", 
         {
             layers: 'usa:states',
@@ -66,7 +58,7 @@ Ext.onReady(function() {
             visibility: false
         }
     );
-    map.addLayers([bottomLayer, layer]);
+    map.addLayers([layer]);
     map.setCenter([-100, 38], 4);
 
     var panel = new gxp.TextSymbolizer({
