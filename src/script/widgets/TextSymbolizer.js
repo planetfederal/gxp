@@ -102,8 +102,12 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
 
         if(!this.symbolizer) {
             this.symbolizer = {};
-        }        
+        }
         Ext.applyIf(this.symbolizer, this.defaultSymbolizer);
+
+        if (!this.symbolizer.vendorOptions) {
+            this.symbolizer.vendorOptions = {};
+        }
 
         this.haloCache = {};
 
@@ -218,7 +222,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
             xtype: "fieldset",
             title: this.graphicTitle,
             checkboxToggle: true,
-            collapsed: true,
+            collapsed: !(this.symbolizer.fillColor || this.symbolizer.fillOpacity),
             labelWidth: 70,
             items: [{
                 xtype: "gxp_pointsymbolizer",
@@ -238,7 +242,46 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                 width: 100,
                 fieldLabel: this.graphicMarginText,
                 xtype: "textfield"
-            })]
+            })],
+            listeners: {
+                collapse: function() {
+                    this.graphicCache = {
+                        externalGraphic: this.symbolizer.externalGraphic,
+                        fillColor: this.symbolizer.fillColor,
+                        fillOpacity: this.symbolizer.fillOpacity,
+                        graphicName: this.symbolizer.graphicName,
+                        pointRadius: this.symbolizer.pointRadius,
+                        rotation: this.symbolizer.rotation,
+                        strokeColor: this.symbolizer.strokeColor,
+                        strokeWidth: this.symbolizer.strokeWidth,
+                        strokeDashStyle: this.symbolizer.strokeDashStyle
+                    };
+                    delete this.symbolizer.externalGraphic;
+                    delete this.symbolizer.fillColor;
+                    delete this.symbolizer.fillOpacity;
+                    delete this.symbolizer.graphicName;
+                    delete this.symbolizer.pointRadius;
+                    delete this.symbolizer.rotation;
+                    delete this.symbolizer.strokeColor;
+                    delete this.symbolizer.strokeWidth;
+                    delete this.symbolizer.strokeDashStyle;
+                    this.fireEvent("change", this.symbolizer)
+                },
+                expand: function() {
+                    Ext.apply(this.symbolizer, this.graphicCache);
+                    /**
+                     * Start workaround for
+                     * http://projects.opengeo.org/suite/ticket/676
+                     */
+                    this.doLayout();
+                    /**
+                     * End workaround for
+                     * http://projects.opengeo.org/suite/ticket/676
+                     */
+                    this.fireEvent("change", this.symbolizer);
+                },
+                scope: this
+            }
         }, {
             xtype: "fieldset",
             title: this.haloText,
@@ -460,9 +503,6 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
      */
     createVendorSpecificField: function(config) {
         var listener = function(field, value) {
-            if (!this.symbolizer.vendorOptions) {
-                this.symbolizer.vendorOptions = {};
-            }
             // empty VendorOption tags can cause null pointer exceptions in GeoServer
             if (Ext.isEmpty(value)) {
                 delete this.symbolizer.vendorOptions[config.name];
@@ -474,7 +514,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
         return Ext.applyIf(config, {
             xtype: "numberfield",
             allowNegative: false,
-            value: this.symbolizer.vendorOptions && this.symbolizer.vendorOptions[config.name] || config.value,
+            value: this.symbolizer.vendorOptions[config.name],
             listeners: {
                 render: this.attachHelpToField,
                 change: listener,
