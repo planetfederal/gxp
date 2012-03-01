@@ -12,7 +12,7 @@
  * @require widgets/StylePropertiesDialog.js
  * @require OpenLayers/Renderer.js
  * @require OpenLayers/Style2.js
- * @require OpenLayers/Format/SLD/v1_0_0.js
+ * @require OpenLayers/Format/SLD/v1_0_0_GeoServer.js
  * @require GeoExt/data/AttributeStore.js
  * @require GeoExt/widgets/WMSLegend.js
  * @require GeoExt/widgets/VectorLegend.js
@@ -419,7 +419,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             }
         });
         return new OpenLayers.Format.SLD({
-            multipleSymbolizers: true
+            multipleSymbolizers: true,
+            profile: "GeoServer"
         }).write(sld);
     },
     
@@ -671,7 +672,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 this.stylesStore.findExact("name", initialStyle));
         }
         
-        var format = new OpenLayers.Format.SLD({multipleSymbolizers: true});
+        var format = new OpenLayers.Format.SLD({profile: "GeoServer", multipleSymbolizers: true});
         
         try {
             var sld = format.read(data);
@@ -1168,84 +1169,3 @@ OpenLayers.Renderer.defaultSymbolizer = {
 
 /** api: xtype = gxp_wmsstylesdialog */
 Ext.reg('gxp_wmsstylesdialog', gxp.WMSStylesDialog);
-
-
-
-/**
- * Extensions and customizations to OpenLayers to get support for SLD 
- * vendor specific extensions introduced by GeoTools.
- */
-
-OpenLayers.Format && OpenLayers.Format.SLD && OpenLayers.Format.SLD.v1 && (function() {
-    
-    // read/write GeoTools custom VendorOption elements
-    OpenLayers.Format.SLD.v1.prototype.readers.sld["VendorOption"] = function(node, obj) {
-        if (!obj.vendorOptions) {
-            obj.vendorOptions = [];
-        }
-        obj.vendorOptions.push({
-            name: node.getAttribute("name"),
-            value: this.getChildValue(node)
-        });    
-    };
-    OpenLayers.Format.SLD.v1.prototype.writers.sld["VendorOption"] = function(option) {
-        return this.createElementNSPlus("sld:VendorOption", {
-            attributes: {name: option.name},
-            value: option.value
-        });
-    };
-
-    // read GeoTools custom Priority element in TextSymbolizer
-    OpenLayers.Format.SLD.v1.prototype.readers.sld["Priority"] = function(node, obj) {
-        obj.priority = this.readOgcExpression(node);
-    };
-    OpenLayers.Format.SLD.v1.prototype.writers.sld["Priority"] = function(priority) {
-        var node = this.createElementNSPlus("sld:Priority");
-        this.writeNode("ogc:Literal", priority, node);
-        return node;
-    };
-
-    // extend OL SLD parser to accommodate GeoTools extensions to SLD
-    // http://svn.osgeo.org/geotools/branches/2.6.x/modules/extension/xsd/xsd-sld/src/main/resources/org/geotools/sld/bindings/StyledLayerDescriptor.xsd
-
-    var writers = OpenLayers.Format.SLD.v1.prototype.writers.sld;
-    var original;
-
-    // modify TextSymbolizer writer to include Graphic and Priority elements
-    original = writers.TextSymbolizer;
-    writers.TextSymbolizer = (function(original) {
-        return function(symbolizer) {
-            var node = original.apply(this, arguments);
-            if (symbolizer.externalGraphic || symbolizer.graphicName) {
-                this.writeNode("Graphic", symbolizer, node);
-            }
-            if ("priority" in symbolizer) {
-                this.writeNode("Priority", symbolizer.priority, node);
-            }
-            return node;
-        };
-    })(original);
-    
-
-    // modify symbolizer writers to include any VendorOption elements
-    var modify = ["PointSymbolizer", "LineSymbolizer", "PolygonSymbolizer", "TextSymbolizer"];
-    var name;
-    for (var i=0, ii=modify.length; i<ii; ++i) {
-        name = modify[i];
-        original = writers[name];
-        writers[name] = (function(original) {
-            return function(symbolizer) {
-                var node = original.apply(this, arguments);
-                var options = symbolizer.vendorOptions;
-                if (options) {
-                    for (var i=0, ii=options.length; i<ii; ++i) {
-                        this.writeNode("VendorOption", options[i], node);
-                    }
-                }
-                return node;
-            };
-        })(original);
-    }
-
-})();
-
