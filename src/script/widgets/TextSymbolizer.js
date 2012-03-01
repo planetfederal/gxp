@@ -362,6 +362,9 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
             collapsed: true,
             autoHeight: true,
             labelWidth: 75,
+            defaults: {
+                width: 100
+            },
             items: [Ext.applyIf({
                 fieldLabel: this.anchorPointText,
                 value: this.symbolizer.labelAlign || "lb",

@@ -65,7 +65,7 @@ Ext.onReady(function() {
     var panel = new gxp.TextSymbolizer({
         title: "Text Symbolizer",
         renderTo: "panel",
-        width: 235,
+        width: 250,
         border: true,
         bodyStyle: {padding: 10},
         attributes: new GeoExt.data.AttributeStore({
