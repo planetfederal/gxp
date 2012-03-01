@@ -222,6 +222,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
             xtype: "fieldset",
             title: this.graphicTitle,
             checkboxToggle: true,
+            hideMode: 'offsets',
             collapsed: !(this.symbolizer.fillColor || this.symbolizer.fillOpacity),
             labelWidth: 70,
             items: [{
