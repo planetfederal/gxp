@@ -19,8 +19,61 @@ var symbolizer = {
     }
 };
 
+Ext.ns("GeoExt.data");
+
+GeoExt.data.SymbolReader = Ext.extend(Ext.data.JsonReader, {
+
+    readRecords: function(o) {
+        var data = {metaData: this.meta};
+        data["Symbolizers"] = [];
+        for (var key in o) {
+            data["Symbolizers"].push({type: key, symbolizer: o[key]});
+        }
+        return GeoExt.data.SymbolReader.superclass.readRecords.call(this, data);
+    }
+
+});
+
+
+var store = new Ext.data.Store({
+    reader: new GeoExt.data.SymbolReader({
+        root: "Symbolizers",
+        fields: [
+            {name: "type"},
+            {name: "symbolizer"}
+        ]
+    }),
+    data: symbolizer
+});
+
+    function renderFeature(value, p, r) {
+        var id = Ext.id();
+        (function() {
+            var symbolizer = r.get("symbolizer");
+            var renderer = new GeoExt.FeatureRenderer({
+                renderTo: id,
+                width: 20,
+                height: 20,
+                symbolType: r.get("type"),
+                symbolizers: [symbolizer]
+            });
+        }).defer(25);
+        return (String.format('<div id="{0}"></div>', id));
+    }
 
 Ext.onReady(function() {
+    var grid = new Ext.grid.GridPanel({
+        store: store,
+        height: 300,
+        width: 300,
+        viewConfig: {forceFit:true},
+        columns: [
+            {id:'type', header: "Symbolizer Type", width: 60, dataIndex: 'type'},
+            {id: 'preview', header: "Preview", width: 20, renderer: renderFeature}
+        ],
+        renderTo: "grid"
+    });
+
     new gxp.FillSymbolizer({
         renderTo: "fill",
         labelAlign: "right",
