@@ -16,6 +16,11 @@ var symbolizer = {
         strokeColor: "#666666",
         strokeWidth: 2,
         strokeDashstyle: "dot"
+    },
+    Text: {
+        label: "Ab",
+        labelAlign: "cm",
+        fontColor: "#FF0000"
     }
 };
 
@@ -50,12 +55,15 @@ var store = new Ext.data.Store({
         var id = Ext.id();
         (function() {
             var symbolizer = r.get("symbolizer");
+            var type = r.get("type");
+            var constructor = OpenLayers.Symbolizer[type];
+            var s = new constructor(symbolizer);
             var renderer = new GeoExt.FeatureRenderer({
                 renderTo: id,
                 width: 20,
                 height: 20,
                 symbolType: r.get("type"),
-                symbolizers: [symbolizer]
+                symbolizers: [s]
             });
         }).defer(25);
         return (String.format('<div id="{0}"></div>', id));
