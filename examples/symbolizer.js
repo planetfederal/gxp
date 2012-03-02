@@ -32,7 +32,7 @@ GeoExt.data.SymbolReader = Ext.extend(Ext.data.JsonReader, {
         var data = {metaData: this.meta};
         data["Symbolizers"] = [];
         for (var key in o) {
-            if (key === "Polygon") {
+            if (key === "Polygon" || key === "Point") {
                 data["Symbolizers"].push({type: key, subType: "Stroke", symbolizer: o[key]});
                 data["Symbolizers"].push({type: key, subType: "Fill", symbolizer: o[key]});
             } else {
@@ -85,8 +85,8 @@ var store = new Ext.data.GroupingStore({
 Ext.onReady(function() {
     var grid = new Ext.grid.GridPanel({
         store: store,
-        height: 300,
-        width: 300,
+        height: 350,
+        width: 400,
         view: new Ext.grid.GroupingView({
             forceFit:true,
             groupTextTpl: '{group}'
