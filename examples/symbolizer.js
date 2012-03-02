@@ -32,23 +32,29 @@ GeoExt.data.SymbolReader = Ext.extend(Ext.data.JsonReader, {
         var data = {metaData: this.meta};
         data["Symbolizers"] = [];
         for (var key in o) {
-            data["Symbolizers"].push({type: key, symbolizer: o[key]});
+            if (key === "Polygon") {
+                data["Symbolizers"].push({type: key, subType: "Stroke", symbolizer: o[key]});
+                data["Symbolizers"].push({type: key, subType: "Fill", symbolizer: o[key]});
+            } else {
+                data["Symbolizers"].push({type: key, subType: key, symbolizer: o[key]});
+            }
         }
         return GeoExt.data.SymbolReader.superclass.readRecords.call(this, data);
     }
 
 });
 
-
-var store = new Ext.data.Store({
+var store = new Ext.data.GroupingStore({
     reader: new GeoExt.data.SymbolReader({
         root: "Symbolizers",
         fields: [
             {name: "type"},
+            {name: "subType"},
             {name: "symbolizer"}
         ]
     }),
-    data: symbolizer
+    data: symbolizer,
+    groupField: "type"
 });
 
     function renderFeature(value, p, r) {
@@ -56,8 +62,15 @@ var store = new Ext.data.Store({
         (function() {
             var symbolizer = r.get("symbolizer");
             var type = r.get("type");
+            var subType = r.get("subType");
             var constructor = OpenLayers.Symbolizer[type];
             var s = new constructor(symbolizer);
+            if (subType === "Stroke") {
+                s.fill = false;
+            }
+            if (subType === "Fill") {
+                s.stroke = false;
+            }
             var renderer = new GeoExt.FeatureRenderer({
                 renderTo: id,
                 width: 20,
@@ -74,9 +87,13 @@ Ext.onReady(function() {
         store: store,
         height: 300,
         width: 300,
-        viewConfig: {forceFit:true},
+        view: new Ext.grid.GroupingView({
+            forceFit:true,
+            groupTextTpl: '{group}'
+        }),
         columns: [
-            {id:'type', header: "Symbolizer Type", width: 60, dataIndex: 'type'},
+            {id: 'group', dataIndex: 'type', hidden: true},
+            {id:'type', header: "Symbolizer Type", width: 60, dataIndex: 'subType'},
             {id: 'preview', header: "Preview", width: 20, renderer: renderFeature}
         ],
         renderTo: "grid"
