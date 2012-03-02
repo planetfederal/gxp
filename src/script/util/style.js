@@ -12,6 +12,9 @@
 
 Ext.ns("gxp.util");
 
+/**
+ * Based on functions from https://github.com/tschaub/geoscript-js
+ */
 gxp.util.style = (function() {
     
     var exports = {},
