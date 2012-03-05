@@ -83,16 +83,19 @@ var store = new Ext.data.GroupingStore({
     }
 
 Ext.onReady(function() {
+    var sm = new Ext.grid.CheckboxSelectionModel({header: ''});
     var grid = new Ext.grid.GridPanel({
         store: store,
+        sm: sm,
         height: 350,
         width: 400,
         view: new Ext.grid.GroupingView({
-            forceFit:true,
-            groupTextTpl: '{group}'
+            showGroupName: false,
+            forceFit:true
         }),
         columns: [
-            {id: 'group', dataIndex: 'type', hidden: true},
+            sm,
+            {id: 'group', dataIndex: 'type', hidden: true}, 
             {id:'type', header: "Symbolizer Type", width: 60, dataIndex: 'subType'},
             {id: 'preview', header: "Preview", width: 20, renderer: renderFeature}
         ],
