@@ -33,8 +33,8 @@ GeoExt.data.SymbolReader = Ext.extend(Ext.data.JsonReader, {
         data["Symbolizers"] = [];
         for (var key in o) {
             if (key === "Polygon" || key === "Point") {
-                data["Symbolizers"].push({type: key, subType: "Stroke", symbolizer: o[key]});
-                data["Symbolizers"].push({type: key, subType: "Fill", symbolizer: o[key]});
+                data["Symbolizers"].push({type: key, checked: o[key].stroke != null ? o[key].stroke : true, subType: "Stroke", symbolizer: o[key]});
+                data["Symbolizers"].push({type: key, checked: o[key].fill != null ? o[key].fill : true, subType: "Fill", symbolizer: o[key]});
             } else {
                 data["Symbolizers"].push({type: key, subType: key, symbolizer: o[key]});
             }
@@ -49,6 +49,7 @@ var store = new Ext.data.GroupingStore({
         root: "Symbolizers",
         fields: [
             {name: "type"},
+            {name: "checked"},
             {name: "subType"},
             {name: "symbolizer"}
         ]
@@ -83,19 +84,18 @@ var store = new Ext.data.GroupingStore({
     }
 
 Ext.onReady(function() {
-    var sm = new Ext.grid.CheckboxSelectionModel({header: ''});
     var grid = new Ext.grid.GridPanel({
         store: store,
-        sm: sm,
         height: 350,
         width: 400,
         view: new Ext.grid.GroupingView({
             showGroupName: false,
-            forceFit:true
+            forceFit:true,
+            groupTextTpl: '{group}'
         }),
         columns: [
-            sm,
-            {id: 'group', dataIndex: 'type', hidden: true}, 
+            {id: 'group', dataIndex: 'type', hidden: true},
+            {id: 'checked', header: "", width: 20, dataIndex: 'checked', xtype: 'checkcolumn'},
             {id:'type', header: "Symbolizer Type", width: 60, dataIndex: 'subType'},
             {id: 'preview', header: "Preview", width: 20, renderer: renderFeature}
         ],
