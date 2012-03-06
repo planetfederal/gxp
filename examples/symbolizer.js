@@ -24,81 +24,11 @@ var symbolizer = {
     }
 };
 
-Ext.ns("GeoExt.data");
-
-GeoExt.data.SymbolReader = Ext.extend(Ext.data.JsonReader, {
-
-    readRecords: function(o) {
-        var data = {metaData: this.meta};
-        data["Symbolizers"] = [];
-        for (var key in o) {
-            if (key === "Polygon" || key === "Point") {
-                data["Symbolizers"].push({type: key, checked: o[key].stroke != null ? o[key].stroke : true, subType: "Stroke", symbolizer: o[key]});
-                data["Symbolizers"].push({type: key, checked: o[key].fill != null ? o[key].fill : true, subType: "Fill", symbolizer: o[key]});
-            } else {
-                data["Symbolizers"].push({type: key, subType: key, symbolizer: o[key]});
-            }
-        }
-        return GeoExt.data.SymbolReader.superclass.readRecords.call(this, data);
-    }
-
-});
-
-var store = new Ext.data.GroupingStore({
-    reader: new GeoExt.data.SymbolReader({
-        root: "Symbolizers",
-        fields: [
-            {name: "type"},
-            {name: "checked"},
-            {name: "subType"},
-            {name: "symbolizer"}
-        ]
-    }),
-    data: symbolizer,
-    groupField: "type"
-});
-
-    function renderFeature(value, p, r) {
-        var id = Ext.id();
-        (function() {
-            var symbolizer = r.get("symbolizer");
-            var type = r.get("type");
-            var subType = r.get("subType");
-            var constructor = OpenLayers.Symbolizer[type];
-            var s = new constructor(symbolizer);
-            if (subType === "Stroke") {
-                s.fill = false;
-            }
-            if (subType === "Fill") {
-                s.stroke = false;
-            }
-            var renderer = new GeoExt.FeatureRenderer({
-                renderTo: id,
-                width: 20,
-                height: 20,
-                symbolType: r.get("type"),
-                symbolizers: [s]
-            });
-        }).defer(25);
-        return (String.format('<div id="{0}"></div>', id));
-    }
-
 Ext.onReady(function() {
-    var grid = new Ext.grid.GridPanel({
-        store: store,
+    var grid = new gxp.grid.SymbolGrid({
+        symbolizer: symbolizer,
         height: 350,
         width: 400,
-        view: new Ext.grid.GroupingView({
-            showGroupName: false,
-            forceFit:true,
-            groupTextTpl: '{group}'
-        }),
-        columns: [
-            {id: 'group', dataIndex: 'type', hidden: true},
-            {id: 'checked', header: "", width: 20, dataIndex: 'checked', xtype: 'checkcolumn'},
-            {id:'type', header: "Symbolizer Type", width: 60, dataIndex: 'subType'},
-            {id: 'preview', header: "Preview", width: 20, renderer: renderFeature}
-        ],
         renderTo: "grid"
     });
 
