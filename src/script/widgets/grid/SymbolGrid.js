@@ -40,15 +40,7 @@ gxp.grid.SymbolGrid = Ext.extend(Ext.grid.GridPanel, {
      */
     initComponent: function(){
         this.store = new Ext.data.GroupingStore({
-            reader: new gxp.data.SymbolReader({
-                root: "Symbolizers",
-                fields: [
-                    {name: "type"},
-                    {name: "checked"},
-                    {name: "subType"},
-                    {name: "symbolizer"}
-                ]
-            }),
+            reader: new gxp.data.SymbolReader(),
             data: this.symbolizer,
             groupField: "type"
         });

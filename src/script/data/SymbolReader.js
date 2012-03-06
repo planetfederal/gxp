@@ -25,24 +25,25 @@ gxp.data.SymbolReader = Ext.extend(Ext.data.JsonReader, {
      *  Override to split up the symbolizers in sub types.
      */
     readRecords: function(o) {
-        var data = {
-            metaData: this.meta
-        };
-        data["Symbolizers"] = [];
+        var type = "Symbolizers";
+        this.raw = o;
+        Ext.applyIf(this.meta, gxp.data.SymbolReader.metaData[type]);
+        var data = {metaData: this.meta};
+        data[type] = [];
         for (var key in o) {
             if (key === "Polygon" || key === "Point") {
-                data["Symbolizers"].push({
+                data[type].push({
                     type: key, 
                     checked: o[key].stroke !== undefined ? o[key].stroke : true, 
                     subType: "Stroke", symbolizer: o[key]
                 });
-                data["Symbolizers"].push({
+                data[type].push({
                     type: key, 
                     checked: o[key].fill !== undefined ? o[key].fill : true, 
                     subType: "Fill", symbolizer: o[key]
                 });
             } else {
-                data["Symbolizers"].push({
+                data[type].push({
                     type: key, 
                     subType: key, 
                     symbolizer: o[key]
@@ -53,3 +54,18 @@ gxp.data.SymbolReader = Ext.extend(Ext.data.JsonReader, {
     }
 
 });
+
+/** private: constant[metaData]
+ *  ``Object`` MetaData configuration
+ */
+gxp.data.SymbolReader.metaData = {
+    Symbolizers: {
+        root: "Symbolizers",
+        fields: [
+            {name: "type"},
+            {name: "checked"},
+            {name: "subType"},
+            {name: "symbolizer"}
+        ]
+    }
+};
