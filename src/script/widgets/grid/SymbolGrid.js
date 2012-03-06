@@ -55,7 +55,8 @@ gxp.grid.SymbolGrid = Ext.extend(Ext.grid.GridPanel, {
         this.view = new Ext.grid.GroupingView({
             showGroupName: false,
             forceFit:true,
-            groupTextTpl: '{group}'
+            markDirty: false,
+            groupTextTpl: '{group}<span id="symbolizer-{group}"></span>'
         });
         this.columns = [{
             id: 'group', 
@@ -78,7 +79,27 @@ gxp.grid.SymbolGrid = Ext.extend(Ext.grid.GridPanel, {
             width: 20, 
             renderer: this.renderFeature
         }];
+        this.deferRowRender = false;
         gxp.grid.SymbolGrid.superclass.initComponent.call(this);
+    },
+
+    afterRender: function() {
+        gxp.grid.SymbolGrid.superclass.afterRender.call(this);
+        var ids = [];
+        this.store.each(function(record) {
+            var type = record.get("type");
+            var id = "symbolizer-"+type;
+            if (ids.indexOf(id) === -1) {
+                var renderer = new GeoExt.FeatureRenderer({
+                    renderTo: id,
+                    width: 20,
+                    height: 20,
+                    symbolType: record.get("type"),
+                    symbolizers: [record.get("symbolizer")]
+                });
+            }
+            ids.push(id);
+        }, this);
     },
 
     /** private: method[renderFeature]
