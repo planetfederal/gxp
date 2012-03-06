@@ -25,13 +25,6 @@ var symbolizer = {
 };
 
 Ext.onReady(function() {
-    var grid = new gxp.grid.SymbolGrid({
-        symbolizer: symbolizer,
-        height: 350,
-        width: 400,
-        renderTo: "grid"
-    });
-
     new gxp.FillSymbolizer({
         renderTo: "fill",
         labelAlign: "right",
