@@ -39,6 +39,7 @@ gxp.grid.SymbolGrid = Ext.extend(Ext.grid.GridPanel, {
      *  Initializes the SymbolGrid.
      */
     initComponent: function(){
+        this.enableHdMenu = false;
         this.store = new Ext.data.GroupingStore({
             reader: new gxp.data.SymbolReader(),
             data: this.symbolizers,
@@ -56,7 +57,7 @@ gxp.grid.SymbolGrid = Ext.extend(Ext.grid.GridPanel, {
             hidden: true
         }, {
             id: 'checked', 
-            header: "", 
+            header: "&nbsp;", 
             width: 20, 
             dataIndex: 'checked', 
             xtype: 'checkcolumn'
