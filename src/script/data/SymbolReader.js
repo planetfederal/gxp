@@ -30,23 +30,25 @@ gxp.data.SymbolReader = Ext.extend(Ext.data.JsonReader, {
         Ext.applyIf(this.meta, gxp.data.SymbolReader.metaData[type]);
         var data = {metaData: this.meta};
         data[type] = [];
-        for (var key in o) {
+        for (var i=0,ii=o.length;i<ii;++i) {
+            var symbolizer = o[i];
+            var key = symbolizer.CLASS_NAME.substring(symbolizer.CLASS_NAME.lastIndexOf(".")+1);
             if (key === "Polygon" || key === "Point") {
                 data[type].push({
                     type: key, 
-                    checked: o[key].stroke !== undefined ? o[key].stroke : true, 
-                    subType: "Stroke", symbolizer: o[key]
+                    checked: symbolizer.stroke !== undefined ? symbolizer.stroke : true, 
+                    subType: "Stroke", symbolizer: symbolizer
                 });
                 data[type].push({
                     type: key, 
-                    checked: o[key].fill !== undefined ? o[key].fill : true, 
-                    subType: "Fill", symbolizer: o[key]
+                    checked: symbolizer.fill !== undefined ? symbolizer.fill : true, 
+                    subType: "Fill", symbolizer: symbolizer
                 });
             } else {
                 data[type].push({
                     type: key, 
                     subType: key, 
-                    symbolizer: o[key]
+                    symbolizer: symbolizer
                 });
             }
         }

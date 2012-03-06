@@ -26,10 +26,10 @@ Ext.namespace("gxp.grid");
  */
 gxp.grid.SymbolGrid = Ext.extend(Ext.grid.GridPanel, {
 
-    /** api: config[symbolizer]
-     *  ``Object``
+    /** api: config[symbolizers]
+     *  ``Array``
      */
-    symbolizer: null,
+    symbolizers: null,
 
     /** i18n */
     typeTitle: "Symbolizer Type",
@@ -41,7 +41,7 @@ gxp.grid.SymbolGrid = Ext.extend(Ext.grid.GridPanel, {
     initComponent: function(){
         this.store = new Ext.data.GroupingStore({
             reader: new gxp.data.SymbolReader(),
-            data: this.symbolizer,
+            data: this.symbolizers,
             groupField: "type"
         });
         this.view = new Ext.grid.GroupingView({
