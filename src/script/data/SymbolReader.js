@@ -57,6 +57,7 @@ gxp.data.SymbolReader = Ext.extend(Ext.data.JsonReader, {
                 data[type].push({
                     type: key, 
                     subType: key, 
+                    checked: true,
                     symbolizer: symbolizer,
                     fullSymbolizer: symbolizer
                 });
