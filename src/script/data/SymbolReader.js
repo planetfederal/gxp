@@ -34,21 +34,31 @@ gxp.data.SymbolReader = Ext.extend(Ext.data.JsonReader, {
             var symbolizer = o[i];
             var key = symbolizer.CLASS_NAME.substring(symbolizer.CLASS_NAME.lastIndexOf(".")+1);
             if (key === "Polygon" || key === "Point") {
+                var strokeSym = symbolizer.clone();
+                strokeSym.fill = false;
                 data[type].push({
                     type: key, 
                     checked: symbolizer.stroke !== undefined ? symbolizer.stroke : true, 
-                    subType: "Stroke", symbolizer: symbolizer
+                    subType: "Stroke", 
+                    symbolizer: strokeSym,
+                    fullSymbolizer: symbolizer
+                    
                 });
+                var fillSym = symbolizer.clone();
+                fillSym.stroke = false;
                 data[type].push({
                     type: key, 
                     checked: symbolizer.fill !== undefined ? symbolizer.fill : true, 
-                    subType: "Fill", symbolizer: symbolizer
+                    subType: "Fill", 
+                    symbolizer: fillSym,
+                    fullSymbolizer: symbolizer
                 });
             } else {
                 data[type].push({
                     type: key, 
                     subType: key, 
-                    symbolizer: symbolizer
+                    symbolizer: symbolizer,
+                    fullSymbolizer: symbolizer
                 });
             }
         }
@@ -67,7 +77,8 @@ gxp.data.SymbolReader.metaData = {
             {name: "type"},
             {name: "checked"},
             {name: "subType"},
-            {name: "symbolizer"}
+            {name: "symbolizer"},
+            {name: "fullSymbolizer"}
         ]
     }
 };

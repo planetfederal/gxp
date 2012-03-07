@@ -10,6 +10,7 @@
  * @requires data/SymbolReader.js
  * @requires OpenLayers/Symbolizer.js
  * @requires GeoExt/widgets/FeatureRenderer.js
+ * @requires GeoExt/grid/SymbolizerColumn.js
  */
 
 /** api: (define)
@@ -68,10 +69,10 @@ gxp.grid.SymbolGrid = Ext.extend(Ext.grid.GridPanel, {
             width: 60, 
             dataIndex: 'subType'
         }, {
-            id: 'preview', 
+            id: 'preview',
+            xtype: "gx_symbolizercolumn",
             header: this.previewTitle,
-            width: 20, 
-            renderer: this.renderFeature
+            width: 20
         }];
         this.deferRowRender = false;
         gxp.grid.SymbolGrid.superclass.initComponent.call(this);
@@ -89,12 +90,12 @@ gxp.grid.SymbolGrid = Ext.extend(Ext.grid.GridPanel, {
                     width: 20,
                     height: 20,
                     symbolType: record.get("type"),
-                    symbolizers: [record.get("symbolizer")]
+                    symbolizers: [record.get("fullSymbolizer")]
                 });
                 this.store.on({update: function(store, r) {
                     if (r.get('type') === record.get('type')) {
                         var subType = r.get('subType');
-                        var symbolizer = record.get('symbolizer');
+                        var symbolizer = record.get('fullSymbolizer');
                         var checked = r.get('checked');
                         symbolizer[subType.toLowerCase()] = checked;
                         renderer.update({symbolizers: [symbolizer]});
@@ -103,33 +104,6 @@ gxp.grid.SymbolGrid = Ext.extend(Ext.grid.GridPanel, {
             }
             ids.push(id);
         }, this);
-    },
-
-    /** private: method[renderFeature]
-     */
-    renderFeature: function(value, p, r) {
-        var id = Ext.id();
-        (function() {
-            var symbolizer = r.get("symbolizer");
-            var type = r.get("type");
-            var subType = r.get("subType");
-            var constructor = OpenLayers.Symbolizer[type];
-            var s = new constructor(symbolizer);
-            if (subType === "Stroke") {
-                s.fill = false;
-            }
-            if (subType === "Fill") {
-                s.stroke = false;
-            }
-            var renderer = new GeoExt.FeatureRenderer({
-                renderTo: id,
-                width: 20,
-                height: 20,
-                symbolType: r.get("type"),
-                symbolizers: [s]
-            });
-        }).defer(25);
-        return (String.format('<div id="{0}"></div>', id));
     }
 
 });
