@@ -49,7 +49,7 @@ gxp.grid.SymbolGrid = Ext.extend(Ext.grid.GridPanel, {
             showGroupName: false,
             forceFit:true,
             markDirty: false,
-            groupTextTpl: '{group}<span class="gxp-symbolgrid-symbolizer" id="symbolizer-{group}"></span>'
+            groupTextTpl: '<span class="gxp-symbolgrid-feature gxp-symbolgrid-{[values.group.toLowerCase()]}"></span><span class="gxp-symbolgrid-title">{group}</span><span class="gxp-symbolgrid-symbolizer" id="symbolizer-{group}"></span>'
         });
         this.columns = [{
             id: 'group', 
