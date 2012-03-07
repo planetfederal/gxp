@@ -13,7 +13,7 @@
 }
 .gxp-symbolgrid-symbolizer {
     position: absolute;
-    right: 50px;
+    margin-left: 5px;
 }
 .gxp-symbolgrid-feature {
     width: 16px;

@@ -124,6 +124,8 @@ gxp.grid.SymbolGrid = Ext.extend(Ext.grid.GridPanel, {
         this.store.each(function(record) {
             var type = record.get("type");
             var id = "symbolizer-"+type;
+            var left = this.colModel.getColumnWidth(1) + this.colModel.getColumnWidth(2);
+            Ext.get(id).setStyle('left', left + 'px'); 
             if (!this.renderers[type]) {
                 this.renderers[type] = new GeoExt.FeatureRenderer({
                     renderTo: id,
