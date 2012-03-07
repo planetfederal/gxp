@@ -21,6 +21,19 @@ Ext.ns("gxp.data");
  */
 gxp.data.SymbolReader = Ext.extend(Ext.data.JsonReader, {
 
+    /** private: method[onMetaChange]
+     *  Override to intercept the commit method of the record prototype used
+     *  by the reader, so it triggers the ``storeToData`` method that writes
+     *  changes back to the underlying raw data.
+     */
+    onMetaChange: function() {
+        gxp.data.SymbolReader.superclass.onMetaChange.apply(this, arguments);
+        this.recordType.prototype.commit = Ext.createInterceptor(this.recordType.prototype.commit, function() {
+            var reader = this.store.reader;
+            reader.raw[reader.meta.root] = reader.meta.storeToData(this.store);
+        });
+    },
+
     /** private: method[readRecords]
      *  Override to split up the symbolizers in sub types.
      */
@@ -57,6 +70,7 @@ gxp.data.SymbolReader = Ext.extend(Ext.data.JsonReader, {
                 data[type].push({
                     type: key, 
                     subType: key, 
+                    checked: true,
                     symbolizer: symbolizer,
                     fullSymbolizer: symbolizer
                 });
@@ -79,6 +93,27 @@ gxp.data.SymbolReader.metaData = {
             {name: "subType"},
             {name: "symbolizer"},
             {name: "fullSymbolizer"}
-        ]
+        ],
+        storeToData: function(store) {
+            store.sort("type", "ASC");
+            var symbolizers = [];
+            var types = [];
+            store.each(function(record) {
+                var type = record.get("type"),
+                    subType = record.get("subType"),
+                    checked = record.get("checked"),
+                    symbolizer = record.get('fullSymbolizer'),
+                    subSymbolizer = record.get('symbolizer');
+                if (types.indexOf(type) === -1) {
+                    symbolizers.push(symbolizer);
+                }
+                if (type !== subType) {
+                    subSymbolizer[subType.toLowerCase()] = checked;
+                    symbolizer[subType.toLowerCase()] = checked;
+                }
+                types.push(record.get("type"));
+            });
+            return symbolizers;
+        }
     }
 };

@@ -81,6 +81,11 @@ gxp.grid.SymbolGrid = Ext.extend(Ext.grid.GridPanel, {
     afterRender: function() {
         gxp.grid.SymbolGrid.superclass.afterRender.call(this);
         var ids = [];
+        this.store.on({update: function(store, r, operation) {
+            if (operation === Ext.data.Record.EDIT) {
+                r.commit();
+            }
+        }});
         this.store.each(function(record) {
             var type = record.get("type");
             var id = "symbolizer-"+type;
@@ -92,15 +97,6 @@ gxp.grid.SymbolGrid = Ext.extend(Ext.grid.GridPanel, {
                     symbolType: record.get("type"),
                     symbolizers: [record.get("fullSymbolizer")]
                 });
-                this.store.on({update: function(store, r) {
-                    if (r.get('type') === record.get('type')) {
-                        var subType = r.get('subType');
-                        var symbolizer = record.get('fullSymbolizer');
-                        var checked = r.get('checked');
-                        symbolizer[subType.toLowerCase()] = checked;
-                        renderer.update({symbolizers: [symbolizer]});
-                    }
-                }, scope: this});
             }
             ids.push(id);
         }, this);
