@@ -104,6 +104,15 @@ gxp.grid.SymbolGrid = Ext.extend(Ext.grid.GridPanel, {
                     symbolType: record.get("type"),
                     symbolizers: [record.get("fullSymbolizer")]
                 });
+                this.store.on({update: function(store, r) {
+                    if (r.get('type') === record.get('type')) {
+                        var subType = r.get('subType');
+                        var symbolizer = record.get('fullSymbolizer');
+                        var checked = r.get('checked');
+                        symbolizer[subType.toLowerCase()] = checked;
+                        renderer.update({symbolizers: [symbolizer]});
+                    }
+                }, scope: this});
             }
             ids.push(id);
         }, this);
