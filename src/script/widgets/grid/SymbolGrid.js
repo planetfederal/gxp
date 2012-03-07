@@ -28,7 +28,8 @@ Ext.namespace("gxp.grid");
 gxp.grid.SymbolGrid = Ext.extend(Ext.grid.GridPanel, {
 
     /** api: config[symbolizers]
-     *  ``Array``
+     *  ``Array`` Array of OpenLayers symbolizer objects which will be
+     *  displayed by the grid.
      */
     symbolizers: null,
 
@@ -43,21 +44,13 @@ gxp.grid.SymbolGrid = Ext.extend(Ext.grid.GridPanel, {
         this.renderers = {};
         this.cls = "gxp-symbolgrid";
         this.enableHdMenu = false;
+        this.enableColumnResize = false;
         this.store = new Ext.data.GroupingStore({
             reader: new gxp.data.SymbolReader(),
             data: this.symbolizers,
             groupField: "type",
             listeners: {
-                update: function(store, r) {
-                    var symbolizer = r.get('fullSymbolizer'),
-                        subSymbolizer = r.get('symbolizer'),
-                        subType = r.get('subType'),
-                        type = r.get('type'),
-                        checked = r.get('checked');
-                    symbolizer[subType.toLowerCase()] = checked;
-                    subSymbolizer[subType.toLowerCase()] = checked;
-                    this.renderers[type].update({symbolizers: [symbolizer]});
-                },
+                update: this.onStoreUpdate,
                 scope: this
             }
         });
@@ -92,6 +85,40 @@ gxp.grid.SymbolGrid = Ext.extend(Ext.grid.GridPanel, {
         gxp.grid.SymbolGrid.superclass.initComponent.call(this);
     },
 
+    /** private: method[onStoreUpdate]
+     *  When a record in the store gets updated, update the symbolizers and
+     *  group swatch.
+     *
+     * :arg store: ``Ext.data.Store``
+     * :arg r: ``Ext.data.Record``
+     */
+    onStoreUpdate: function(store, r) {
+        var symbolizer = r.get('fullSymbolizer'),
+            subSymbolizer = r.get('symbolizer'),
+            subType = r.get('subType'),
+            type = r.get('type'),
+            checked = r.get('checked');
+        symbolizer[subType.toLowerCase()] = checked;
+        subSymbolizer[subType.toLowerCase()] = checked;
+        this.renderers[type].update({symbolizers: [symbolizer]});
+    },
+
+    /** private: method[onDestroy]
+     *  Clean up.
+     */
+    onDestroy : function(){
+        if (this.store) {
+            this.store.un("update", this.onStoreUpdate, this);
+        }
+        for (var key in this.renderers) {
+            this.renderers[key] && this.renderers[key].destroy();
+        }
+        gxp.grid.SymbolGrid.superclass.onDestroy.call(this);
+    },
+
+    /** private: method[afterRender]
+     *  Create the group swatches.
+     */
     afterRender: function() {
         gxp.grid.SymbolGrid.superclass.afterRender.call(this);
         this.store.each(function(record) {
