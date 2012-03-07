@@ -45,23 +45,10 @@ gxp.grid.SymbolGrid = Ext.extend(Ext.grid.GridPanel, {
         this.store = new Ext.data.GroupingStore({
             reader: new gxp.data.SymbolReader(),
             data: this.symbolizers,
-            groupField: "type",
-            listeners: {
-                update: function(store, r, operation) {
-                    if (operation === Ext.data.Record.EDIT) {
-                        r.commit();
-                    }
-                }
-            }
+            groupField: "type"
         });
         this.view = new Ext.grid.GroupingView({
             showGroupName: false,
-            listeners: {
-                refresh: function() {
-                    this.addGroupRenderers();
-                },
-                scope: this
-            },
             forceFit:true,
             markDirty: false,
             groupTextTpl: '<span class="gxp-symbolgrid-feature gxp-symbolgrid-{[values.group.toLowerCase()]}"></span><span class="gxp-symbolgrid-title">{group}</span><span class="gxp-symbolgrid-symbolizer" id="symbolizer-{group}"></span>'
@@ -91,8 +78,14 @@ gxp.grid.SymbolGrid = Ext.extend(Ext.grid.GridPanel, {
         gxp.grid.SymbolGrid.superclass.initComponent.call(this);
     },
 
-    addGroupRenderers: function() {
+    afterRender: function() {
+        gxp.grid.SymbolGrid.superclass.afterRender.call(this);
         var ids = [];
+        this.store.on({update: function(store, r, operation) {
+            if (operation === Ext.data.Record.EDIT) {
+                r.commit();
+            }
+        }});
         this.store.each(function(record) {
             var type = record.get("type");
             var id = "symbolizer-"+type;
@@ -116,11 +109,6 @@ gxp.grid.SymbolGrid = Ext.extend(Ext.grid.GridPanel, {
             }
             ids.push(id);
         }, this);
-    },
-
-    afterRender: function() {
-        gxp.grid.SymbolGrid.superclass.afterRender.call(this);
-        this.addGroupRenderers();
     }
 
 });
