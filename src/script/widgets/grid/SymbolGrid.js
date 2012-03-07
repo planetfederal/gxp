@@ -39,13 +39,27 @@ gxp.grid.SymbolGrid = Ext.extend(Ext.grid.GridPanel, {
     /** api: method[initComponent]
      *  Initializes the SymbolGrid.
      */
-    initComponent: function(){
+    initComponent: function() {
+        this.renderers = {};
         this.cls = "gxp-symbolgrid";
         this.enableHdMenu = false;
         this.store = new Ext.data.GroupingStore({
             reader: new gxp.data.SymbolReader(),
             data: this.symbolizers,
-            groupField: "type"
+            groupField: "type",
+            listeners: {
+                update: function(store, r) {
+                    var symbolizer = r.get('fullSymbolizer'),
+                        subSymbolizer = r.get('symbolizer'),
+                        subType = r.get('subType'),
+                        type = r.get('type'),
+                        checked = r.get('checked');
+                    symbolizer[subType.toLowerCase()] = checked;
+                    subSymbolizer[subType.toLowerCase()] = checked;
+                    this.renderers[type].update({symbolizers: [symbolizer]});
+                },
+                scope: this
+            }
         });
         this.view = new Ext.grid.GroupingView({
             showGroupName: false,
@@ -80,34 +94,18 @@ gxp.grid.SymbolGrid = Ext.extend(Ext.grid.GridPanel, {
 
     afterRender: function() {
         gxp.grid.SymbolGrid.superclass.afterRender.call(this);
-        var ids = [];
-        this.store.on({update: function(store, r, operation) {
-            if (operation === Ext.data.Record.EDIT) {
-                r.commit();
-            }
-        }});
         this.store.each(function(record) {
             var type = record.get("type");
             var id = "symbolizer-"+type;
-            if (ids.indexOf(id) === -1) {
-                var renderer = new GeoExt.FeatureRenderer({
+            if (!this.renderers[type]) {
+                this.renderers[type] = new GeoExt.FeatureRenderer({
                     renderTo: id,
                     width: 20,
                     height: 20,
                     symbolType: record.get("type"),
                     symbolizers: [record.get("fullSymbolizer")]
                 });
-                this.store.on({update: function(store, r) {
-                    if (r.get('type') === record.get('type')) {
-                        var subType = r.get('subType');
-                        var symbolizer = record.get('fullSymbolizer');
-                        var checked = r.get('checked');
-                        symbolizer[subType.toLowerCase()] = checked;
-                        renderer.update({symbolizers: [symbolizer]});
-                    }
-                }, scope: this});
             }
-            ids.push(id);
         }, this);
     }
 
