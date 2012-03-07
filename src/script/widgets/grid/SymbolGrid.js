@@ -39,6 +39,7 @@ gxp.grid.SymbolGrid = Ext.extend(Ext.grid.GridPanel, {
      *  Initializes the SymbolGrid.
      */
     initComponent: function(){
+        this.cls = "gxp-symbolgrid";
         this.enableHdMenu = false;
         this.store = new Ext.data.GroupingStore({
             reader: new gxp.data.SymbolReader(),

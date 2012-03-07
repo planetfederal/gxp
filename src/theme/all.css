@@ -1,3 +1,9 @@
+.gxp-symbolgrid .x-grid-group-hd {
+    border-bottom: none;
+}
+.gxp-symbolgrid .x-grid3-row {
+    border: none;
+}
 .x-grid-group-title {
     margin-bottom: 5px;
     position: relative;
