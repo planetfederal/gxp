@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html debug="true">
+  <head>
+    <script src="http://extjs.cachefly.net/ext-3.4.0/adapter/ext/ext-base.js"></script>
+    <script src="http://extjs.cachefly.net/ext-3.4.0/ext-all-debug.js"></script>
+    <script type="text/javascript" src="../../../externals/openlayers/lib/OpenLayers.js"></script>
+    <script type="text/javascript" src="../../../externals/geoext/lib/GeoExt.js"></script>
+    <script type="text/javascript" src="../../../src/script/loader.js"></script>
+
+    <script type="text/javascript">
+       
+        function test_SymbolReader(t) {
+            t.plan(16);
+            
+            var instance = new gxp.data.SymbolReader();
+            
+            t.ok(instance instanceof gxp.data.SymbolReader, "Instance created successfully");
+            var symbolizers = [];
+            symbolizers.push(new OpenLayers.Symbolizer.Point({
+                graphicName: "star",
+                pointRadius: 8,
+                fillColor: "yellow",
+                strokeColor: "red",
+                strokeWidth: 1
+            }));
+            symbolizers.push(new OpenLayers.Symbolizer.Line({
+                strokeColor: "#669900",
+                strokeWidth: 3
+            }));
+            symbolizers.push(new OpenLayers.Symbolizer.Polygon({
+                fillColor: "olive",
+                fillOpacity: 0.25,
+                strokeColor: "#666666",
+                strokeWidth: 2,
+                strokeDashstyle: "dot"
+            }));
+            symbolizers.push(new OpenLayers.Symbolizer.Text({
+                label: "${name}",
+                labelAlign: "cm",
+                fontColor: "#FF0000",
+                fillColor: "yellow",
+                graphicName: "square",
+                pointRadius: 10
+            }));
+            var result = instance.readRecords(symbolizers);
+            t.eq(result.records.length, 7, "7 records created");
+            t.eq(result.records[0].data.type, "Point", "Correct type");
+            t.eq(result.records[0].data.subType, "Stroke", "Correct subType created");
+            t.eq(result.records[1].data.subType, "Fill", "Correct subType created");
+            t.eq(result.records[0].data.symbolizer.fill, false, "fill set to false for the stroke part of the the point symbolizer");
+            t.eq(result.records[1].data.symbolizer.stroke, false, "stroke set to false for the fill part of the the point symbolizer");
+            t.eq(result.records[2].data.type, "Line", "Correct type");
+            t.eq(result.records[2].data.subType, "Stroke", "Correct subType");
+            t.eq(result.records[3].data.type, "Polygon", "Correct type");
+            t.eq(result.records[5].data.type, "Text", "Correct type");
+            t.eq(result.records[5].data.subType, "Label", "Correct subType");
+            t.eq(result.records[5].data.symbolizer.graphic, false, "Graphic set to false");
+            t.eq(result.records[5].data.symbolizer.label, "Ab", "Label is correct");
+            t.eq(result.records[6].data.subType, "Graphic", "Correct subType");
+            t.eq(result.records[6].data.symbolizer.label, "", "Label is emptied for graphic subType");
+        }
+
+    </script>
+  </head>
+  <body>
+  </body>
+</html>

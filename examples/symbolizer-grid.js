@@ -68,7 +68,7 @@ Ext.onReady(function() {
             handler: showSLD
         }],
         symbolizers: symbolizers,
-        height: 350,
+        height: 375,
         width: 400,
         renderTo: "grid"
     });
