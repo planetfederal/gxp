@@ -53,6 +53,14 @@ gxp.data.SymbolReader = Ext.extend(Ext.data.JsonReader, {
                     symbolizer: fillSym,
                     fullSymbolizer: symbolizer
                 });
+            } else if (key === "Line") {
+                data[type].push({
+                    type: key,
+                    subType: "Stroke",
+                    checked: true,
+                    symbolizer: symbolizer,
+                    fullSymbolizer: symbolizer
+                });
             } else {
                 data[type].push({
                     type: key, 

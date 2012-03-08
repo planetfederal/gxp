@@ -8,6 +8,7 @@
 
 /**
  * @requires data/SymbolReader.js
+ * @requires widgets/grid/CheckColumn.js
  * @requires OpenLayers/Symbolizer.js
  * @requires GeoExt/widgets/FeatureRenderer.js
  * @requires GeoExt/grid/SymbolizerColumn.js

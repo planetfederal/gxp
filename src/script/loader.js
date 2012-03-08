@@ -36,6 +36,7 @@
         "widgets/form/ViewerField.js",
         "widgets/grid/CapabilitiesGrid.js",
         "widgets/grid/FeatureGrid.js",
+        "widgets/grid/CheckColumn.js",
         "widgets/grid/SymbolGrid.js",
         "widgets/GoogleEarthPanel.js",
         "widgets/GoogleStreetViewPanel.js",
