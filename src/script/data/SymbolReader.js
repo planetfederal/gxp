@@ -32,60 +32,63 @@ gxp.data.SymbolReader = Ext.extend(Ext.data.JsonReader, {
         data[type] = [];
         for (var i=0,ii=o.length;i<ii;++i) {
             var symbolizer = o[i];
+            var fullSymbolizer = symbolizer.clone();
             var key = symbolizer.CLASS_NAME.substring(symbolizer.CLASS_NAME.lastIndexOf(".")+1);
             if (key === "Polygon" || key === "Point") {
                 var strokeSym = symbolizer.clone();
                 strokeSym.fill = false;
                 data[type].push({
                     type: key, 
-                    checked: symbolizer.stroke !== undefined ? symbolizer.stroke : true, 
+                    checked: fullSymbolizer.stroke !== undefined ? fullSymbolizer.stroke : true, 
                     subType: "Stroke", 
                     symbolizer: strokeSym,
-                    fullSymbolizer: symbolizer
+                    fullSymbolizer: fullSymbolizer,
+                    originalSymbolizer: symbolizer
                     
                 });
-                var fillSym = symbolizer.clone();
+                var fillSym = fullSymbolizer.clone();
                 fillSym.stroke = false;
                 data[type].push({
                     type: key, 
-                    checked: symbolizer.fill !== undefined ? symbolizer.fill : true, 
+                    checked: fullSymbolizer.fill !== undefined ? fullSymbolizer.fill : true, 
                     subType: "Fill", 
                     symbolizer: fillSym,
-                    fullSymbolizer: symbolizer
+                    fullSymbolizer: fullSymbolizer,
+                    originalSymbolizer: symbolizer
                 });
             } else if (key === "Line") {
                 data[type].push({
                     type: key,
                     subType: "Stroke",
                     checked: true,
-                    symbolizer: symbolizer,
-                    fullSymbolizer: symbolizer
+                    symbolizer: fullSymbolizer,
+                    fullSymbolizer: fullSymbolizer,
+                    originalSymbolizer: symbolizer
                 });
             } else if (key === "Text") {
-                // since we are gonna manipulate the label for display purposes
-                // we need to store the original value and restore it later on.
-                symbolizer.originalLabel = symbolizer.label;
-                symbolizer.label = "Ab";
-                if (symbolizer.fillColor || symbolizer.graphicName) {
-                    symbolizer.graphic = true;
+                fullSymbolizer.label = "Ab";
+                if (fullSymbolizer.fillColor || fullSymbolizer.graphicName) {
+                    fullSymbolizer.graphic = true;
                 }
-                var labelSym = symbolizer.clone();
+                var labelSym = fullSymbolizer.clone();
                 labelSym.graphic = false;
                 data[type].push({
                     type: key,
                     subType: "Label",
                     checked: true,
                     symbolizer: labelSym,
-                    fullSymbolizer: symbolizer
+                    fullSymbolizer: fullSymbolizer,
+                    originalSymbolizer: symbolizer
                 });
-                var graphicSym = symbolizer.clone();
+                var graphicSym = fullSymbolizer.clone();
                 graphicSym.label = "";
                 data[type].push({
                     type: key, 
                     subType: "Graphic", 
-                    checked: symbolizer.graphic,
+                    checked: fullSymbolizer.graphic,
                     symbolizer: graphicSym,
-                    fullSymbolizer: symbolizer
+                    fullSymbolizer: fullSymbolizer,
+                    originalSymbolizer: symbolizer
                 });
             }
         }
@@ -105,19 +108,22 @@ gxp.data.SymbolReader.metaData = {
             {name: "checked"},
             {name: "subType"},
             {name: "symbolizer"},
-            {name: "fullSymbolizer"}
+            {name: "fullSymbolizer"},
+            {name: "originalSymbolizer"}
         ],
         storeToData: function(store) {
-            store.sort("type", "ASC");
             var symbolizers = [];
             var types = [];
             store.each(function(record) {
                 var type = record.get("type"),
-                    subType = record.get("subType"),
+                    subType = record.get("subType").toLowerCase(),
                     checked = record.get("checked"),
-                    symbolizer = record.get('fullSymbolizer'),
+                    symbolizer = record.get('originalSymbolizer'),
                     subSymbolizer = record.get('symbolizer');
                 var count = store.query('type', type).length;
+                if (subType !== "label") {
+                    symbolizer[subType] = checked;
+                }
                 if (types.indexOf(type) === -1 && !(count === 1 && !checked)) {
                     symbolizers.push(symbolizer);
                 }
