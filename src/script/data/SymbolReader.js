@@ -61,12 +61,30 @@ gxp.data.SymbolReader = Ext.extend(Ext.data.JsonReader, {
                     symbolizer: symbolizer,
                     fullSymbolizer: symbolizer
                 });
-            } else {
+            } else if (key === "Text") {
+                // since we are gonna manipulate the label for display purposes
+                // we need to store the original value and restore it later on.
+                symbolizer.originalLabel = symbolizer.label;
+                symbolizer.label = "Ab";
+                if (symbolizer.fillColor || symbolizer.graphicName) {
+                    symbolizer.graphic = true;
+                }
+                var labelSym = symbolizer.clone();
+                labelSym.graphic = false;
+                data[type].push({
+                    type: key,
+                    subType: "Label",
+                    checked: true,
+                    symbolizer: labelSym,
+                    fullSymbolizer: symbolizer
+                });
+                var graphicSym = symbolizer.clone();
+                graphicSym.label = "";
                 data[type].push({
                     type: key, 
-                    subType: key, 
-                    checked: true,
-                    symbolizer: symbolizer,
+                    subType: "Graphic", 
+                    checked: symbolizer.graphic,
+                    symbolizer: graphicSym,
                     fullSymbolizer: symbolizer
                 });
             }

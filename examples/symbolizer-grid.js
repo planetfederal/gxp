@@ -18,9 +18,12 @@ symbolizers.push(new OpenLayers.Symbolizer.Polygon({
     strokeDashstyle: "dot"
 }));
 symbolizers.push(new OpenLayers.Symbolizer.Text({
-    label: "Ab",
+    label: "${name}",
     labelAlign: "cm",
-    fontColor: "#FF0000"
+    fontColor: "#FF0000",
+    fillColor: "yellow",
+    graphicName: "square",
+    pointRadius: 10
 }));
 
 Ext.onReady(function() {
