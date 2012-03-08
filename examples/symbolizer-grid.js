@@ -1,4 +1,4 @@
-var symbolizers = [];
+var sldWin, grid, symbolizers = [];
 symbolizers.push(new OpenLayers.Symbolizer.Point({
     graphicName: "star",
     pointRadius: 8,
@@ -26,8 +26,47 @@ symbolizers.push(new OpenLayers.Symbolizer.Text({
     pointRadius: 10
 }));
 
+var showSLD = function() {
+    var format = new OpenLayers.Format.SLD({
+        multipleSymbolizers: true,
+        profile: 'GeoServer',
+        namedLayersAsArray: true
+    });
+    var sldConfig = {
+        namedLayers: [{
+            name: 'foo',
+            userStyles: [new OpenLayers.Style2({rules: [new OpenLayers.Rule({
+                symbolizers: grid.store.reader.meta.storeToData(grid.store)})
+            ]})]
+        }]
+    };
+    var sld = format.write(sldConfig);
+    if(!sldWin) {
+        sldWin = new Ext.Window({
+            title: "SLD",
+            layout: "fit",
+            closeAction: "hide",
+            height: 300,
+            width: 450,
+            plain: true,
+            modal: true,
+            items: [{
+                xtype: "textarea",
+                value: sld
+            }]
+        });
+    } else {
+        sldWin.items.items[0].setValue(sld);
+    }
+    sldWin.show();
+};
+
 Ext.onReady(function() {
-    var grid = new gxp.grid.SymbolGrid({
+    grid = new gxp.grid.SymbolGrid({
+        tbar: [{
+            text: 'Show SLD',
+            handler: showSLD
+        }],
         symbolizers: symbolizers,
         height: 350,
         width: 400,

@@ -106,6 +106,24 @@ gxp.data.SymbolReader.metaData = {
             {name: "subType"},
             {name: "symbolizer"},
             {name: "fullSymbolizer"}
-        ]
+        ],
+        storeToData: function(store) {
+            store.sort("type", "ASC");
+            var symbolizers = [];
+            var types = [];
+            store.each(function(record) {
+                var type = record.get("type"),
+                    subType = record.get("subType"),
+                    checked = record.get("checked"),
+                    symbolizer = record.get('fullSymbolizer'),
+                    subSymbolizer = record.get('symbolizer');
+                var count = store.query('type', type).length;
+                if (types.indexOf(type) === -1 && !(count === 1 && !checked)) {
+                    symbolizers.push(symbolizer);
+                }
+                types.push(record.get("type"));
+            });
+            return symbolizers;
+        }
     }
 };
