@@ -104,6 +104,8 @@ gxp.grid.SymbolGrid = Ext.extend(Ext.grid.GridPanel, {
         } else {
             if (!checked) {
                 symbolizer[subType] = subSymbolizer[subType] = "";
+                var idx = store.findExact('subType', 'Graphic');
+                idx != -1 && store.getAt(idx).set("checked", false);
             } else {
                 symbolizer[subType] = subSymbolizer[subType] = "Ab";
             }
