@@ -1,9 +1,28 @@
 /**
+ * Copyright (c) 2008-2011 The Open Planning Project
+ * 
+ * Published under the GPL license.
+ * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
+ * of the license.
+ */
+
+/**
  * @requires widgets/tips/SliderTip.js
  */
 
+/** api: (define)
+ *  module = gxp.slider
+ *  class = RangeSliderTip
+ */
+
+/** api: (extends)
+ *  widgets/tips/SliderTip.js
+ */
 Ext.namespace("gxp.slider");
 
+/** api: constructor
+ *  .. class:: gxp.slider.RangeSliderTip(config)
+ */
 gxp.slider.RangeSliderTip = Ext.extend(gxp.slider.Tip, {
 
     /** api: config[template]
