@@ -120,11 +120,23 @@ gxp.data.SymbolReader.metaData = {
                     checked = record.get("checked"),
                     symbolizer = record.get('originalSymbolizer'),
                     subSymbolizer = record.get('symbolizer');
-                var count = store.query('type', type).length;
+                var query = store.query('type', type);
+                var count = query.length;
+                var childVisible = false;
+                for (var i=0,ii=query.items.length;i<ii; ++i) {
+                    var r = query.items[i];
+                    if (r.get('checked') === true) {
+                        childVisible = true;
+                        break;
+                    }
+                }
                 if (subType !== "label") {
                     symbolizer[subType] = checked;
                 }
-                if (types.indexOf(type) === -1 && !(count === 1 && !checked)) {
+                // filter out symbolizers in the following cases:
+                // 1. the symbolizer was already added
+                // 2. any symbolizer should be filtered out if all of their subTypes are unchecked
+                if (types.indexOf(type) === -1 && childVisible) {
                     symbolizers.push(symbolizer);
                 }
                 types.push(record.get("type"));

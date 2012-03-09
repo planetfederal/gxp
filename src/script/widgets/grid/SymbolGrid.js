@@ -98,13 +98,27 @@ gxp.grid.SymbolGrid = Ext.extend(Ext.grid.GridPanel, {
             subSymbolizer = r.get('symbolizer'),
             subType = r.get('subType').toLowerCase(),
             type = r.get('type'),
-            checked = r.get('checked');
+            checked = r.get('checked'),
+            idx;
         if (subType !== "label") {
-            symbolizer[subType] = subSymbolizer[subType] = checked;
+            // special handling for graphic, can only be turned on if label is on
+            if (subType === 'graphic') {
+                idx = store.findExact('subType', 'Label');
+                if (idx != -1) {
+                    var labelChecked = store.getAt(idx).get("checked");
+                    if ((labelChecked && checked) || !checked) {
+                        symbolizer[subType] = subSymbolizer[subType] = checked;
+                    } else {
+                        r.set("checked", false);
+                    } 
+                }
+            } else {
+                symbolizer[subType] = subSymbolizer[subType] = checked;
+            }
         } else {
             if (!checked) {
                 symbolizer[subType] = subSymbolizer[subType] = "";
-                var idx = store.findExact('subType', 'Graphic');
+                idx = store.findExact('subType', 'Graphic');
                 idx != -1 && store.getAt(idx).set("checked", false);
             } else {
                 symbolizer[subType] = subSymbolizer[subType] = "Ab";
