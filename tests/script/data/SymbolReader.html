@@ -8,13 +8,8 @@
     <script type="text/javascript" src="../../../src/script/loader.js"></script>
 
     <script type="text/javascript">
-       
-        function test_SymbolReader(t) {
-            t.plan(16);
-            
-            var instance = new gxp.data.SymbolReader();
-            
-            t.ok(instance instanceof gxp.data.SymbolReader, "Instance created successfully");
+
+        function createSymbolizers() {
             var symbolizers = [];
             symbolizers.push(new OpenLayers.Symbolizer.Point({
                 graphicName: "star",
@@ -42,6 +37,16 @@
                 graphicName: "square",
                 pointRadius: 10
             }));
+            return symbolizers;
+        }
+       
+        function test_SymbolReader(t) {
+            t.plan(16);
+            
+            var instance = new gxp.data.SymbolReader();
+            
+            t.ok(instance instanceof gxp.data.SymbolReader, "Instance created successfully");
+            var symbolizers = createSymbolizers();
             var result = instance.readRecords(symbolizers);
             t.eq(result.records.length, 7, "7 records created");
             t.eq(result.records[0].data.type, "Point", "Correct type");
@@ -58,6 +63,25 @@
             t.eq(result.records[5].data.symbolizer.label, "Ab", "Label is correct");
             t.eq(result.records[6].data.subType, "Graphic", "Correct subType");
             t.eq(result.records[6].data.symbolizer.label, "", "Label is emptied for graphic subType");
+        }
+
+        function test_storeToDate(t) {
+            t.plan(1);
+            var symbolizers = createSymbolizers();
+            var store = new Ext.data.GroupingStore({
+                reader: new gxp.data.SymbolReader(),
+                data: symbolizers,
+                autoLoad: true,
+                groupField: "type"
+            });
+            store.each(function(record) {
+                if (record.get('type') === "Line") {
+                    record.set('checked', false);
+                }
+            });
+            symbolizers = store.reader.meta.storeToData(store);
+            t.eq(symbolizers.length, 3, "LineSymbolizer is filtered out");
+            store.destroy();
         }
 
     </script>
