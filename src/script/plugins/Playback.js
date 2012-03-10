@@ -32,6 +32,18 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
     /** api: ptype = gxp_playback */
     ptype: "gxp_playback",
     
+    /** api: config[autoStart]
+     *  ``Boolean``
+     *  Should playback begin as soon as possible.
+     */
+    autoStart: false,
+
+    /** api: config[looped]
+     *  ``Boolean``
+     *  Should playback start in continuous loop mode.
+     */    
+    looped: false,
+    
     /** api: config[menuText]
      *  ``String``
      *  Text for Playback menu item (i18n).
@@ -71,6 +83,8 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
             xtype: 'gxp_playbacktoolbar',
             mapPanel:this.target.mapPanel,
             playbackMode:this.playbackMode,
+            looped:this.looped,
+            autoPlay:this.autoStart,
             optionsWindow: new Ext.Window({
                 title: gxp.PlaybackOptionsPanel.prototype.titleText,
                 width: 300,

@@ -44,6 +44,8 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
     labelButtons:false,
     settingsButton:true,
     rateAdjuster:false,
+    looped:false,
+    autoPlay:false,
     //api config ->timeDisplayConfig:null,
     //api property
     optionsWindow:null,
@@ -310,6 +312,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                 tooltip: this.loopTooltip,
                 enableToggle: true,
                 allowDepress: true,
+                pressed: this.looped,
                 toggleHandler: this.toggleLoopMode,
                 scope: this,
                 menuText: this.loopLabel,
@@ -320,7 +323,8 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                 ref:'btnFastforward',
                 tooltip: this.fastforwardTooltip,
                 enableToggle: true,
-                allowDepress: true,
+                //allowDepress: true,
+                toggleGroup: 'fastforward',
                 toggleHandler: this.toggleDoubleSpeed,
                 scope: this,
                 disabled:true,
@@ -442,6 +446,9 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         if(ctl.layers) {
             this.fireEvent('rangemodified', this, ctl.range);
         }
+        if(this.autoPlay){
+            ctl.play();
+        }
         return ctl;
     },
     addReconfigListener: function(){
@@ -545,15 +552,35 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
             this.control.events.on({
                 'stop':function(evt){
                     btn.toggle(false);
+                },
+                'play':function(evt){
+                    btn.toggle(true);
                 }
             });
             btn.bound=true;
         }
-        this.control[pressed?'play':'stop']();
-        btn.btnEl.toggleClass('gxp-icon-play').toggleClass('gxp-icon-pause');
+        if(pressed){
+            if(!this.control.timer){
+                //don't start playing again if it is already playing
+                this.control.play();
+            }
+            btn.btnEl.removeClass('gxp-icon-play');
+            btn.btnEl.addClass('gxp-icon-pause');
+            btn.setTooltip(this.pauseTooltip);
+            
+        
+        } else {
+            if(this.control.timer){
+                //don't stop playing again if it is already stopped
+                this.control.stop();
+            }
+            btn.btnEl.addClass('gxp-icon-play');
+            btn.btnEl.removeClass('gxp-icon-pause');
+            btn.setTooltip(this.playTooltip);
+        }
+        
         btn.el.removeClass('x-btn-pressed');
-        btn.setTooltip(pressed?this.pauseTooltip:this.playTooltip);
-        btn.refOwner.btnFastforward[pressed?'enable':'disable']();
+        btn.refOwner.btnFastforward.setDisabled(!pressed);
         if(this.labelButtons && btn.text){
             btn.setText(pressed?this.pauseLabel:this.playLabel);
         }
@@ -566,9 +593,9 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         }
     },
     toggleDoubleSpeed:function(btn,pressed){
-        this.control.frameRate = this.control.frameRate*(pressed)?2:0.5;
-        this.control.stop();this.control.play();
-        btn.setTooltip(pressed?this.normalTooltip:this.fastforwardTooltip);
+        var framerate = this.control.frameRate * ((pressed) ? 2 : 0.5);
+        this.control.setFrameRate(framerate);
+        btn.setTooltip((pressed) ? this.normalTooltip : this.fastforwardTooltip);
     },
     toggleOptionsWindow:function(btn,pressed){
         if(pressed && this.optionsWindow.hidden){
