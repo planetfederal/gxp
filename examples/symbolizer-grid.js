@@ -70,6 +70,22 @@ Ext.onReady(function() {
         useArrows: false,
         columnResize: false,
         cls: "gxp-symbolgrid",
+        listeners: {
+            'afterrender': function() {
+                this.root.cascade(function(node) {
+                    if (node.attributes.rendererId) {
+                        var ct = Ext.get(node.attributes.rendererId);
+                        if (ct) {
+                            new GeoExt.FeatureRenderer({
+                                symbolizers: [node.attributes.symbolizer],
+                                renderTo: ct
+                            });
+                        }
+                    }
+                });
+            },
+            scope: grid
+        },
         renderTo: "grid",
         columns: [{
             header: "Symbolizer Type",

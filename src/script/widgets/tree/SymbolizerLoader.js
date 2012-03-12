@@ -24,8 +24,14 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                 var key = symbolizer.CLASS_NAME.substring(symbolizer.CLASS_NAME.lastIndexOf(".")+1);
                 var child = this.createNode({type: key, expanded: true, iconCls: 'gxp-icon-symbolgrid-' + key.toLowerCase()});
                 if (key === "Polygon" || key === "Point") {
-                    child.appendChild(this.createNode({type: 'Stroke'}));
-                    child.appendChild(this.createNode({type: 'Fill'}));
+                    var id = Ext.id();
+                    var strokeSym = symbolizer.clone();
+                    strokeSym.fill = false;
+                    child.appendChild(this.createNode({type: 'Stroke', symbolizer: strokeSym, rendererId: id, preview: '<div id="'+id+'"></div>'}));
+                    id = Ext.id();
+                    var fillSym = symbolizer.clone();
+                    fillSym.stroke = false;
+                    child.appendChild(this.createNode({type: 'Fill', symbolizer: fillSym, rendererId: id, preview: '<div id="'+id+'"></div>'}));
                 }
                 node.appendChild(child);
             }
