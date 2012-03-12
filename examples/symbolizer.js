@@ -16,9 +16,13 @@ var symbolizer = {
         strokeColor: "#666666",
         strokeWidth: 2,
         strokeDashstyle: "dot"
+    },
+    Text: {
+        label: "Ab",
+        labelAlign: "cm",
+        fontColor: "#FF0000"
     }
 };
-
 
 Ext.onReady(function() {
     new gxp.FillSymbolizer({

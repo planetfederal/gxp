@@ -1,3 +1,41 @@
+.gxp-symbolgrid .x-grid3-col-checked {
+    margin-left: 15px;
+}
+.gxp-symbolgrid .x-grid-group-hd {
+    border-bottom: none;
+}
+.gxp-symbolgrid .x-grid3-row {
+    border: none;
+}
+.x-grid-group-title {
+    margin-bottom: 5px;
+    position: relative;
+}
+.gxp-symbolgrid-symbolizer {
+    position: absolute;
+    margin-left: 5px;
+}
+.gxp-symbolgrid-feature {
+    width: 16px;
+    height: 16px;
+    position: absolute;
+}
+.gxp-symbolgrid-polygon {
+    background-image: url(img/geosilk/shape_square_orange.png);
+}
+.gxp-symbolgrid-point {
+    background-image: url(img/silk/bullet_yellow.png);
+}
+.gxp-symbolgrid-line {
+    background-image: url(img/geosilk/line_orange.png);
+}
+.gxp-symbolgrid-text {
+    background-image: url(img/silk/font.png);
+}
+.gxp-symbolgrid-title {
+    margin-left: 20px;
+}
+
 .x-tree-node-leaf  .gx-tree-layer-icon {
     background-image: url(img/geosilk/vector.png);
 }
