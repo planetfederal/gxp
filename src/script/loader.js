@@ -30,6 +30,7 @@
         "widgets/ScaleLimitPanel.js",
         "widgets/TextSymbolizer.js",
         "widgets/Viewer.js",
+        "widgets/tree/SymbolizerLoader.js",
         "widgets/form/AutoCompleteComboBox.js",
         "widgets/form/ComparisonComboBox.js",
         "widgets/form/ColorField.js",
