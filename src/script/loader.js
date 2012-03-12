@@ -2,9 +2,13 @@
 
     var jsfiles = new Array(
         "util.js",
+        "util/color.js",
+        "util/style.js",
         "data/AutoCompleteProxy.js",
         "data/AutoCompleteReader.js",
         "data/GroupStyleReader.js",
+        "data/RuleGroupReader.js",
+        "data/FeatureTypeClassifier.js",
         "data/WFSFeatureStore.js",
         "data/WFSProtocolProxy.js",
         "menu/LayerMenu.js",

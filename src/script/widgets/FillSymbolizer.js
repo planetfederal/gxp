@@ -31,6 +31,20 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
      *  you do not want your symbolizer modified.
      */
     symbolizer: null,
+
+    /** api: config[colorProperty]
+     *  ``String`` The property that should be set on the symbolizer to
+     *  represent the fill color. Defaults to fillColor. But can also be
+     *  set to fontColor for labels.
+     */
+    colorProperty: "fillColor",
+
+    /** api: config[opacityProperty]
+     *  ``String`` The property that should be set on the symbolizer to
+     *  represent the fill opacity. Defaults to fillOpacity. But can also be
+     *  set to fontOpacity for labels.
+     */
+    opacityProperty: "fillOpacity",
     
     /** api: config[colorManager]
      *  ``Function``
@@ -70,6 +84,14 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
         if (this.colorManager) {
             colorFieldPlugins = [new this.colorManager()];
         }
+
+        var sliderValue = 100;
+        if (this.opacityProperty in this.symbolizer) {
+            sliderValue = this.symbolizer[this.opacityProperty];
+        }
+        else if (OpenLayers.Renderer.defaultSymbolizer[this.opacityProperty]) {
+            sliderValue = OpenLayers.Renderer.defaultSymbolizer[this.opacityProperty]*100;
+        }
         
         this.items = [{
             xtype: "fieldset",
@@ -86,16 +108,16 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
                 xtype: "gxp_colorfield",
                 fieldLabel: this.colorText,
                 name: "color",
-                emptyText: OpenLayers.Renderer.defaultSymbolizer.fillColor,
-                value: this.symbolizer.fillColor,
+                emptyText: OpenLayers.Renderer.defaultSymbolizer[this.colorProperty],
+                value: this.symbolizer[this.colorProperty],
                 defaultBackground: this.defaultColor ||
-                    OpenLayers.Renderer.defaultSymbolizer.fillColor,
+                    OpenLayers.Renderer.defaultSymbolizer[this.colorProperty],
                 plugins: colorFieldPlugins,
                 listeners: {
                     valid: function(field) {
                         var newValue = field.getValue();
-                        var modified = this.symbolizer.fillColor != newValue; 
-                        this.symbolizer.fillColor = newValue;
+                        var modified = this.symbolizer[this.colorProperty] != newValue; 
+                        this.symbolizer[this.colorProperty] = newValue;
                         modified && this.fireEvent("change", this.symbolizer);
                     },
                     scope: this
@@ -104,11 +126,11 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
                 xtype: "slider",
                 fieldLabel: this.opacityText,
                 name: "opacity",
-                values: [(("fillOpacity" in this.symbolizer) ? this.symbolizer.fillOpacity : OpenLayers.Renderer.defaultSymbolizer.fillOpacity) * 100],
+                values: [sliderValue],
                 isFormField: true,
                 listeners: {
                     changecomplete: function(slider, value) {
-                        this.symbolizer.fillOpacity = value / 100;
+                        this.symbolizer[this.opacityProperty] = value / 100;
                         this.fireEvent("change", this.symbolizer);
                     },
                     scope: this
