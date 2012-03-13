@@ -1,5 +1,22 @@
+/**
+ * Copyright (c) 2008-2012 The Open Planning Project
+ * 
+ * Published under the GPL license.
+ * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
+ * of the license.
+ */
+
+/** api: (define)
+ *  module = gxp.tree
+ *  class = TreeGridNodeUI
+ */
 Ext.ns("gxp.tree");
 
+/** api: constructor
+ *  .. class:: TreeGridNodeUI(config)
+ *
+ *      Create a new UI for tree nodes of a TreeGrid which adds the checkbox.
+ */
 gxp.tree.TreeGridNodeUI = Ext.extend(Ext.ux.tree.TreeGridNodeUI, {
 
     renderElements : function(n, a, targetNode, bulkRender){
@@ -10,7 +27,9 @@ gxp.tree.TreeGridNodeUI = Ext.extend(Ext.ux.tree.TreeGridNodeUI, {
 
         this.indentMarkup = n.parentNode ? n.parentNode.ui.getChildIndent() : '';
 
+        // start of change
         var cb = Ext.isBoolean(a.checked);
+        // end of change
         buf = [
              '<tbody class="x-tree-node">',
                 '<tr ext:tree-node-id="', n.id ,'" class="x-tree-node-el x-tree-node-leaf ', a.cls, '">',
@@ -18,7 +37,9 @@ gxp.tree.TreeGridNodeUI = Ext.extend(Ext.ux.tree.TreeGridNodeUI, {
                         '<span class="x-tree-node-indent">', this.indentMarkup, "</span>",
                         '<img src="', this.emptyIcon, '" class="x-tree-ec-icon x-tree-elbow" />',
                         '<img src="', a.icon || this.emptyIcon, '" class="x-tree-node-icon', (a.icon ? " x-tree-node-inline-icon" : ""), (a.iconCls ? " "+a.iconCls : ""), '" unselectable="on" />',
+                        // start of change
                         cb ? ('<input class="x-tree-node-cb" type="checkbox" ' + (a.checked ? 'checked="checked" />' : '/>')) : '',
+                        // end of change
                         '<a hidefocus="on" class="x-tree-node-anchor" href="', a.href ? a.href : '#', '" tabIndex="1" ',
                             a.hrefTarget ? ' target="'+a.hrefTarget+'"' : '', '>',
                         '<span unselectable="on">', (c.tpl ? c.tpl.apply(a) : a[c.dataIndex] || c.text), '</span></a>',
@@ -56,6 +77,7 @@ gxp.tree.TreeGridNodeUI = Ext.extend(Ext.ux.tree.TreeGridNodeUI, {
         this.indentNode = cs[0];
         this.ecNode = cs[1];
         this.iconNode = cs[2];
+        // start of change
         if (cb) {
             this.checkbox = cs[3];
             this.anchor = cs[4];
@@ -64,6 +86,7 @@ gxp.tree.TreeGridNodeUI = Ext.extend(Ext.ux.tree.TreeGridNodeUI, {
             this.anchor = cs[3];
             this.textNode = cs[3].firstChild;
         }
+        // end of change
     }
 
 });

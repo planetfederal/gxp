@@ -30,6 +30,7 @@ gxp.grid.SymbolizerGrid = Ext.extend(Ext.ux.tree.TreeGrid, {
      */
     symbolizers: null,
 
+    /** private overrides */
     enableHdMenu: false,
     enableSort: false,
     useArrows: false,
@@ -60,15 +61,20 @@ gxp.grid.SymbolizerGrid = Ext.extend(Ext.ux.tree.TreeGrid, {
         gxp.grid.SymbolizerGrid.superclass.initComponent.call(this);
     },
 
+    /** api: method[getSymbolizers]
+     *  :returns: ``Array`` Array of symbolizers.
+     *
+     *  Get the current state of the symbolizers array. Symbolizers who don't
+     *  have any visible children will be filtered out.
+     */
     getSymbolizers: function() {
         var symbolizers = [];
-        // Any symbolizer should be filtered out if all of their children
-        // are unchecked
         this.root.eachChild(function(n){
             var childVisible = false;
             n.eachChild(function(c) {
-                if (c.attributes.type.toLowerCase() !== "label") {
-                    n.attributes.originalSymbolizer[c.attributes.type.toLowerCase()] = c.attributes.checked;
+                var type = c.attributes.type.toLowerCase();
+                if (type !== "label") {
+                    n.attributes.originalSymbolizer[type] = c.attributes.checked;
                 }
                 if (c.attributes.checked === true) {
                     childVisible = true;
@@ -94,6 +100,13 @@ gxp.grid.SymbolizerGrid = Ext.extend(Ext.ux.tree.TreeGrid, {
         gxp.grid.SymbolizerGrid.superclass.onDestroy.call(this);
     },
 
+    /** private: method[onCheckChange]
+     *  :arg node: ``Ext.data.Node``
+     *  :arg checked: ``Boolean``
+     *
+     *  Handle the check change event. Update the symbolizers and their
+     *  swatches.
+     */
     onCheckChange: function(node, checked) {
         var a = node.attributes;
         var r = a.featureRenderer;
@@ -135,7 +148,7 @@ gxp.grid.SymbolizerGrid = Ext.extend(Ext.ux.tree.TreeGrid, {
     },
 
     /** private: method[afterRender]
-     *  Create the group swatches.
+     *  Create the swatches.
      */
     afterRender: function() {
         gxp.grid.SymbolizerGrid.superclass.afterRender.call(this);

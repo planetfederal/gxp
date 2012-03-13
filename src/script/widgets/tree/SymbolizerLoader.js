@@ -1,16 +1,37 @@
-Ext.ns("gxp.tree");
+/**
+ * Copyright (c) 2008-2012 The Open Planning Project
+ * 
+ * Published under the GPL license.
+ * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
+ * of the license.
+ */
 
 /**
  * @requires widgets/tree/TreeGridNodeUI.js
  */
+
+/** api: (define)
+ *  module = gxp.tree
+ *  class = SymbolizerLoader
+ *  base_link = `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_
+ */
+Ext.ns("gxp.tree");
 
 gxp.tree.SymbolizerLoader = function(config) {
     Ext.apply(this, config);
     gxp.tree.SymbolizerLoader.superclass.constructor.call(this);
 };
 
+/** api: constructor
+ *  .. class:: SymbolizerLoader(config)
+ *
+ *      Create a new tree loader displaying symbolizers and its subtypes.
+ */
 Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
 
+    /** api: config[symbolizers]
+     *  ``Array`` Array of symbolizers to display.
+     */
     symbolizers: null,
 
     /** private: method[load]
@@ -22,8 +43,7 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
             while (node.firstChild) {
                 node.removeChild(node.firstChild);
             }
-
-            var divTpl = new Ext.Template('<div id="{id}"></div>');
+            var divTpl = new Ext.Template('<div class="gxp-symbolgrid-swatch" id="{id}"></div>');
             for (var i=0, ii=this.symbolizers.length;i<ii;++i) {
                 var symbolizer = symbolizers[i];
                 var key = symbolizer.CLASS_NAME.substring(symbolizer.CLASS_NAME.lastIndexOf(".")+1);
@@ -106,7 +126,6 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
             if(typeof callback == "function"){
                 callback();
             }
-
             this.fireEvent("load", this, node);
         }
     },
