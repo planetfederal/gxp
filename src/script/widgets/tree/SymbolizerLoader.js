@@ -39,6 +39,7 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                     type: key, 
                     expanded: true, 
                     rendererId: id, 
+                    originalSymbolizer: symbolizer,
                     symbolizer: fullSymbolizer, 
                     iconCls: 'gxp-icon-symbolgrid-' + key.toLowerCase(),
                     preview: divTpl.applyTemplate({id: id})
@@ -70,7 +71,8 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                     id = Ext.id();
                     child.appendChild(this.createNode({
                         type: 'Stroke',
-                        iconCls: "gxp-icon-symbolgrid-blank",
+                        checked: true,
+                        iconCls: "gxp-icon-symbolgrid-none",
                         symbolizer: fullSymbolizer.clone(),
                         rendererId: id,
                         preview: divTpl.applyTemplate({id: id})

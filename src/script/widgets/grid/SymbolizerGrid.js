@@ -60,10 +60,46 @@ gxp.grid.SymbolizerGrid = Ext.extend(Ext.ux.tree.TreeGrid, {
         gxp.grid.SymbolizerGrid.superclass.initComponent.call(this);
     },
 
+    getSymbolizers: function() {
+        var symbolizers = [];
+        // Any symbolizer should be filtered out if all of their children
+        // are unchecked
+        this.root.eachChild(function(n){
+            var childVisible = false;
+            n.eachChild(function(c) {
+                if (c.attributes.type.toLowerCase() !== "label") {
+                    n.attributes.originalSymbolizer[c.attributes.type.toLowerCase()] = c.attributes.checked;
+                }
+                if (c.attributes.checked === true) {
+                    childVisible = true;
+                }
+            });
+            if (childVisible) {
+                symbolizers.push(n.attributes.originalSymbolizer);
+            }
+        });
+        return symbolizers;
+    },
+
+    /** private: method[onDestroy]
+     *  Clean up.
+     */
+    onDestroy : function(){
+        this.root.cascade(function(node) {
+            if (node.attributes.featureRenderer) {
+                node.attributes.featureRenderer.destroy();
+                node.attributes.featureRenderer = null;
+            }
+        });
+        gxp.grid.SymbolizerGrid.superclass.onDestroy.call(this);
+    },
+
     onCheckChange: function(node, checked) {
         var a = node.attributes;
         var r = a.featureRenderer;
         var type = a.type.toLowerCase();
+        var symbolizer = a.symbolizer;
+        var fullSymbolizer = node.parentNode.attributes.symbolizer;
         if (type !== "label") {
             // special handling for graphic, can only be turned on if label is on
             if (type === 'graphic') {
@@ -71,31 +107,31 @@ gxp.grid.SymbolizerGrid = Ext.extend(Ext.ux.tree.TreeGrid, {
                 if (label !== null) {
                     var labelChecked = label.attributes.checked;
                     if ((labelChecked && checked) || !checked) {
-                        node.parentNode.attributes.symbolizer[type] = a.symbolizer[type] = checked;
+                        fullSymbolizer[type] = symbolizer[type] = checked;
                     } else {
                         node.getUI().toggleCheck(false);
                     }
                 }
             } else {
-                node.parentNode.attributes.symbolizer[type] = a.symbolizer[type] = checked;
+                fullSymbolizer[type] = symbolizer[type] = checked;
             }
         } else {
             if (!checked) {
-                a.symbolizer[type] = node.parentNode.attributes.symbolizer[type] = "";
+                symbolizer[type] = fullSymbolizer[type] = "";
                 var graphic = node.parentNode.findChild('type', 'Graphic');
                 if (graphic !== null) {
                     graphic.getUI().toggleCheck(false);
                 }
             } else {
-                a.symbolizer[type] = node.parentNode.attributes.symbolizer[type] = "Ab";
+                symbolizer[type] = fullSymbolizer[type] = "Ab";
             }
         }
         if (node.parentNode.attributes.featureRenderer) {
             node.parentNode.attributes.featureRenderer.update({
-                symbolizers: [node.parentNode.attributes.symbolizer]
+                symbolizers: [fullSymbolizer]
             });
         }
-        r.update({symbolizers: [a.symbolizer]});
+        r.update({symbolizers: [symbolizer]});
     },
 
     /** private: method[afterRender]

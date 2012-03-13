@@ -36,7 +36,7 @@ var showSLD = function() {
         namedLayers: [{
             name: 'foo',
             userStyles: [new OpenLayers.Style2({rules: [new OpenLayers.Rule({
-                symbolizers: grid.store.reader.meta.storeToData(grid.store)})
+                symbolizers: grid.getSymbolizers()})
             ]})]
         }]
     };
