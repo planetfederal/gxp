@@ -63,6 +63,7 @@ var showSLD = function() {
 
 Ext.onReady(function() {
     grid = new gxp.grid.SymbolizerGrid({
+        symbolizers: symbolizers,
         height: 375,
         width: 400,
         renderTo: "grid",

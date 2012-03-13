@@ -47,7 +47,7 @@ gxp.grid.SymbolizerGrid = Ext.extend(Ext.ux.tree.TreeGrid, {
     initComponent: function() {
         this.on('checkchange', this.onCheckChange, this);
         this.loader = new gxp.tree.SymbolizerLoader({
-            symbolizers: symbolizers
+            symbolizers: this.symbolizers
         });
         this.columns = [{
             header: this.typeTitle,

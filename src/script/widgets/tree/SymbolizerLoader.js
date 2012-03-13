@@ -45,7 +45,7 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
             }
             var divTpl = new Ext.Template('<div class="gxp-symbolgrid-swatch" id="{id}"></div>');
             for (var i=0, ii=this.symbolizers.length;i<ii;++i) {
-                var symbolizer = symbolizers[i];
+                var symbolizer = this.symbolizers[i];
                 var key = symbolizer.CLASS_NAME.substring(symbolizer.CLASS_NAME.lastIndexOf(".")+1);
                 var fullSymbolizer = symbolizer.clone();
                 if (key === 'Text') {
