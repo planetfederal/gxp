@@ -52,7 +52,8 @@ gxp.plugins.LoadingIndicator = Ext.extend(gxp.plugins.Tool, {
      *  :arg target: ``Object``
      */
     init: function(target) {
-        target.map.events.register("preaddlayer", this, function(e) {
+        var map = target.mapPanel.map;
+        map.events.register("preaddlayer", this, function(e) {
             var layer = e.layer;
             if (layer instanceof OpenLayers.Layer.WMS) {
                 layer.events.on({
@@ -60,7 +61,7 @@ gxp.plugins.LoadingIndicator = Ext.extend(gxp.plugins.Tool, {
                         this.layerCount++;
                         if (!this.busyMask) {
                             this.busyMask = new Ext.LoadMask(
-                                target.map.div, {
+                                map.div, {
                                     msg: this.loadingMapMessage
                                 }
                             );
