@@ -64,9 +64,36 @@ gxp.grid.SymbolizerGrid = Ext.extend(Ext.ux.tree.TreeGrid, {
         var a = node.attributes;
         var r = a.featureRenderer;
         var type = a.type.toLowerCase();
-        node.parentNode.attributes.symbolizer[type] = a.symbolizer[type] = checked;
+        if (type !== "label") {
+            // special handling for graphic, can only be turned on if label is on
+            if (type === 'graphic') {
+                var label = node.parentNode.findChild('type', 'Label');
+                if (label !== null) {
+                    var labelChecked = label.attributes.checked;
+                    if ((labelChecked && checked) || !checked) {
+                        node.parentNode.attributes.symbolizer[type] = a.symbolizer[type] = checked;
+                    } else {
+                        node.getUI().toggleCheck(false);
+                    }
+                }
+            } else {
+                node.parentNode.attributes.symbolizer[type] = a.symbolizer[type] = checked;
+            }
+        } else {
+            if (!checked) {
+                a.symbolizer[type] = node.parentNode.attributes.symbolizer[type] = "";
+                var graphic = node.parentNode.findChild('type', 'Graphic');
+                if (graphic !== null) {
+                    graphic.getUI().toggleCheck(false);
+                }
+            } else {
+                a.symbolizer[type] = node.parentNode.attributes.symbolizer[type] = "Ab";
+            }
+        }
         if (node.parentNode.attributes.featureRenderer) {
-            node.parentNode.attributes.featureRenderer.update({symbolizers: [node.parentNode.attributes.symbolizer]});
+            node.parentNode.attributes.featureRenderer.update({
+                symbolizers: [node.parentNode.attributes.symbolizer]
+            });
         }
         r.update({symbolizers: [a.symbolizer]});
     },
