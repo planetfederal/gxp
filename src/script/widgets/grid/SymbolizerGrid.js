@@ -44,6 +44,7 @@ gxp.grid.SymbolizerGrid = Ext.extend(Ext.ux.tree.TreeGrid, {
      *  Initializes the SymbolizerGrid.
      */
     initComponent: function() {
+        this.on('checkchange', this.onCheckChange, this);
         this.loader = new gxp.tree.SymbolizerLoader({
             symbolizers: symbolizers
         });
@@ -59,6 +60,17 @@ gxp.grid.SymbolizerGrid = Ext.extend(Ext.ux.tree.TreeGrid, {
         gxp.grid.SymbolizerGrid.superclass.initComponent.call(this);
     },
 
+    onCheckChange: function(node, checked) {
+        var a = node.attributes;
+        var r = a.featureRenderer;
+        var type = a.type.toLowerCase();
+        node.parentNode.attributes.symbolizer[type] = a.symbolizer[type] = checked;
+        if (node.parentNode.attributes.featureRenderer) {
+            node.parentNode.attributes.featureRenderer.update({symbolizers: [node.parentNode.attributes.symbolizer]});
+        }
+        r.update({symbolizers: [a.symbolizer]});
+    },
+
     /** private: method[afterRender]
      *  Create the group swatches.
      */
@@ -68,7 +80,7 @@ gxp.grid.SymbolizerGrid = Ext.extend(Ext.ux.tree.TreeGrid, {
             if (node.attributes.rendererId) {
                 var ct = Ext.get(node.attributes.rendererId);
                 if (ct) {
-                    new GeoExt.FeatureRenderer({
+                    node.attributes.featureRenderer = new GeoExt.FeatureRenderer({
                         symbolizers: [node.attributes.symbolizer],
                         renderTo: ct
                     });

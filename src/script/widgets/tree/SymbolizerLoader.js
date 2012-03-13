@@ -48,10 +48,10 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                     var strokeSym = fullSymbolizer.clone();
                     strokeSym.fill = false;
                     child.appendChild(this.createNode({
-                        checked: true,
+                        checked: fullSymbolizer.stroke !== undefined ? fullSymbolizer.stroke : true,
                         iconCls: "gxp-icon-symbolgrid-none",
                         type: 'Stroke', 
-                        symbolizer: strokeSym, 
+                        symbolizer: strokeSym,
                         rendererId: id, 
                         preview: divTpl.applyTemplate({id: id})
                     }));
@@ -59,10 +59,10 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                     var fillSym = fullSymbolizer.clone();
                     fillSym.stroke = false;
                     child.appendChild(this.createNode({
-                        checked: true,
+                        checked: fullSymbolizer.fill !== undefined ? fullSymbolizer.fill : true,
                         iconCls: "gxp-icon-symbolgrid-none",
                         type: 'Fill', 
-                        symbolizer: fillSym, 
+                        symbolizer: fillSym,
                         rendererId: id, 
                         preview: divTpl.applyTemplate({id: id})
                     }));
@@ -91,7 +91,7 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                     var graphicSym = fullSymbolizer.clone();
                     graphicSym.label = "";
                     child.appendChild(this.createNode({
-                        checked: true,
+                        checked: fullSymbolizer.graphic,
                         iconCls: "gxp-icon-symbolgrid-none",
                         type: 'Graphic',
                         symbolizer: graphicSym,
