@@ -1,5 +1,9 @@
 Ext.ns("gxp.tree");
 
+/**
+ * @requires widgets/tree/TreeGridNodeUI.js
+ */
+
 gxp.tree.SymbolizerLoader = function(config) {
     Ext.apply(this, config);
     gxp.tree.SymbolizerLoader.superclass.constructor.call(this);
@@ -44,6 +48,8 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                     var strokeSym = fullSymbolizer.clone();
                     strokeSym.fill = false;
                     child.appendChild(this.createNode({
+                        checked: true,
+                        iconCls: "gxp-icon-symbolgrid-none",
                         type: 'Stroke', 
                         symbolizer: strokeSym, 
                         rendererId: id, 
@@ -53,6 +59,8 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                     var fillSym = fullSymbolizer.clone();
                     fillSym.stroke = false;
                     child.appendChild(this.createNode({
+                        checked: true,
+                        iconCls: "gxp-icon-symbolgrid-none",
                         type: 'Fill', 
                         symbolizer: fillSym, 
                         rendererId: id, 
@@ -62,6 +70,7 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                     id = Ext.id();
                     child.appendChild(this.createNode({
                         type: 'Stroke',
+                        iconCls: "gxp-icon-symbolgrid-blank",
                         symbolizer: fullSymbolizer.clone(),
                         rendererId: id,
                         preview: divTpl.applyTemplate({id: id})
@@ -71,6 +80,8 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                     var labelSym = fullSymbolizer.clone();
                     labelSym.graphic = false;
                     child.appendChild(this.createNode({
+                        checked: true,
+                        iconCls: "gxp-icon-symbolgrid-none",
                         type: 'Label',
                         symbolizer: labelSym,
                         rendererId: id,
@@ -80,6 +91,8 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                     var graphicSym = fullSymbolizer.clone();
                     graphicSym.label = "";
                     child.appendChild(this.createNode({
+                        checked: true,
+                        iconCls: "gxp-icon-symbolgrid-none",
                         type: 'Graphic',
                         symbolizer: graphicSym,
                         rendererId: id,
@@ -106,8 +119,8 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
         if(this.baseAttrs){
             Ext.apply(attr, this.baseAttrs);
         }
-        if(typeof attr.uiProvider == 'string'){
-           attr.uiProvider = this.uiProviders[attr.uiProvider] || eval(attr.uiProvider);
+        if (!attr.uiProvider) {
+            attr.uiProvider = gxp.tree.TreeGridNodeUI;
         }
         attr.nodeType = attr.nodeType || "node";
         return new Ext.tree.TreePanel.nodeTypes[attr.nodeType](attr);

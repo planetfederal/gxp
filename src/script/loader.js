@@ -30,6 +30,7 @@
         "widgets/ScaleLimitPanel.js",
         "widgets/TextSymbolizer.js",
         "widgets/Viewer.js",
+        "widgets/tree/TreeGridNodeUI.js",
         "widgets/tree/SymbolizerLoader.js",
         "widgets/grid/SymbolizerGrid.js",
         "widgets/form/AutoCompleteComboBox.js",

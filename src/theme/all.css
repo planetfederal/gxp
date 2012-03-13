@@ -1,6 +1,13 @@
 .gxp-symbolgrid .x-treegrid-col {
     border: none;
 }
+.x-tree-node .gxp-icon-symbolgrid-blank {
+    background-image: none;
+}
+.x-tree-node .gxp-icon-symbolgrid-none {
+    background-image: none;
+    display: none;
+}
 .x-tree-node .gxp-icon-symbolgrid-point {
     background-image: url(img/silk/bullet_orange.png);
 }
