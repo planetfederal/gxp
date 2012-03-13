@@ -19,19 +19,72 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                 node.removeChild(node.firstChild);
             }
 
+            var divTpl = new Ext.Template('<div id="{id}"></div>');
             for (var i=0, ii=this.symbolizers.length;i<ii;++i) {
                 var symbolizer = symbolizers[i];
                 var key = symbolizer.CLASS_NAME.substring(symbolizer.CLASS_NAME.lastIndexOf(".")+1);
-                var child = this.createNode({type: key, expanded: true, iconCls: 'gxp-icon-symbolgrid-' + key.toLowerCase()});
+                var fullSymbolizer = symbolizer.clone();
+                if (key === 'Text') {
+                    fullSymbolizer.label = "Ab";
+                    if (fullSymbolizer.fillColor || fullSymbolizer.graphicName) {
+                        fullSymbolizer.graphic = true;
+                    }
+                }
+                var id = Ext.id();
+                var child = this.createNode({
+                    type: key, 
+                    expanded: true, 
+                    rendererId: id, 
+                    symbolizer: fullSymbolizer, 
+                    iconCls: 'gxp-icon-symbolgrid-' + key.toLowerCase(),
+                    preview: divTpl.applyTemplate({id: id})
+                });
                 if (key === "Polygon" || key === "Point") {
-                    var id = Ext.id();
-                    var strokeSym = symbolizer.clone();
-                    strokeSym.fill = false;
-                    child.appendChild(this.createNode({type: 'Stroke', symbolizer: strokeSym, rendererId: id, preview: '<div id="'+id+'"></div>'}));
                     id = Ext.id();
-                    var fillSym = symbolizer.clone();
+                    var strokeSym = fullSymbolizer.clone();
+                    strokeSym.fill = false;
+                    child.appendChild(this.createNode({
+                        type: 'Stroke', 
+                        symbolizer: strokeSym, 
+                        rendererId: id, 
+                        preview: divTpl.applyTemplate({id: id})
+                    }));
+                    id = Ext.id();
+                    var fillSym = fullSymbolizer.clone();
                     fillSym.stroke = false;
-                    child.appendChild(this.createNode({type: 'Fill', symbolizer: fillSym, rendererId: id, preview: '<div id="'+id+'"></div>'}));
+                    child.appendChild(this.createNode({
+                        type: 'Fill', 
+                        symbolizer: fillSym, 
+                        rendererId: id, 
+                        preview: divTpl.applyTemplate({id: id})
+                    }));
+                } else if (key === "Line") {
+                    id = Ext.id();
+                    child.appendChild(this.createNode({
+                        type: 'Stroke',
+                        symbolizer: fullSymbolizer.clone(),
+                        rendererId: id,
+                        preview: divTpl.applyTemplate({id: id})
+                    }));
+                } else if (key === "Text") {
+                    id = Ext.id();
+                    var labelSym = fullSymbolizer.clone();
+                    labelSym.graphic = false;
+                    child.appendChild(this.createNode({
+                        type: 'Label',
+                        symbolizer: labelSym,
+                        rendererId: id,
+                        preview: divTpl.applyTemplate({id: id})
+                    }));
+                    id = Ext.id();
+                    var graphicSym = fullSymbolizer.clone();
+                    graphicSym.label = "";
+                    child.appendChild(this.createNode({
+                        type: 'Graphic',
+                        symbolizer: graphicSym,
+                        rendererId: id,
+                        preview: divTpl.applyTemplate({id: id})
+                    }));
                 }
                 node.appendChild(child);
             }

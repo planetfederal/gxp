@@ -62,45 +62,11 @@ var showSLD = function() {
 };
 
 Ext.onReady(function() {
-    grid = new Ext.ux.tree.TreeGrid({
+    grid = new gxp.grid.SymbolizerGrid({
         height: 375,
         width: 400,
-        enableHdMenu: false,
-        enableSort: false,
-        useArrows: false,
-        columnResize: false,
-        cls: "gxp-symbolgrid",
-        listeners: {
-            'afterrender': function() {
-                this.root.cascade(function(node) {
-                    if (node.attributes.rendererId) {
-                        var ct = Ext.get(node.attributes.rendererId);
-                        if (ct) {
-                            new GeoExt.FeatureRenderer({
-                                symbolizers: [node.attributes.symbolizer],
-                                renderTo: ct
-                            });
-                        }
-                    }
-                });
-            },
-            scope: grid
-        },
         renderTo: "grid",
-        columns: [{
-            header: "Symbolizer Type",
-            dataIndex: 'type',
-            width: 200
-        }, {
-            header: "Preview",
-            width: 100,
-            dataIndex: 'preview'
-        }],
-        loader: new gxp.tree.SymbolizerLoader({
-            symbolizers: symbolizers
-        }),
         tbar: [{
-
             text: 'Show SLD',
             handler: showSLD
         }]
