@@ -49,6 +49,12 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
     //api config ->timeDisplayConfig:null,
     //api property
     optionsWindow:null,
+    /** api: property[playing]
+     * ``Boolean``
+     * Boolean flag indicating the control is currently playing or not.
+     * Read-only
+     */
+    playing: false,
     // api config
     //playbackActions, default: ["settings","reset","play","fastforward","next","loop"]; also available are "pause" and "end"
     
@@ -87,6 +93,15 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         if(!this.control){
             this.control = this.buildTimeManager();
         }
+        this.control.events.on({
+            'play':function(evt){
+                this.playing = true;
+            },
+            'stop':function(evt){
+                this.playing = false;
+            },
+            scope: this
+        });
         Ext.applyIf(this,{
             defaults:{xtype:'button',flex:1,scale:'small'},
             items:this.buildPlaybackItems(),
