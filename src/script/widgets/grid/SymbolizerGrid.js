@@ -158,7 +158,9 @@ gxp.grid.SymbolizerGrid = Ext.extend(Ext.ux.tree.TreeGrid, {
                 if (ct) {
                     node.attributes.featureRenderer = new GeoExt.FeatureRenderer({
                         symbolizers: [node.attributes.symbolizer],
-                        renderTo: ct
+                        renderTo: ct, 
+                        width:21, 
+                        height: 21
                     });
                 }
             }
