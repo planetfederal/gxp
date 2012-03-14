@@ -1170,7 +1170,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                         layer && this.setTimeFilter(key, this.createTimeFilter([start, end], key, 0, false));
                     }
                     // do not abort previous requests, since this will lead to blanks in the timeline
-                    this.updateTimelineEvents({force: true, noAbort: true}, true);
+                    this.updateTimelineEvents({force: true, noAbort: false}, true);
                 }
             }
             this.showAnnotations(time);
