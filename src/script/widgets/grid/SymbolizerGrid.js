@@ -87,10 +87,10 @@ gxp.grid.SymbolizerGrid = Ext.extend(Ext.ux.tree.TreeGrid, {
         return symbolizers;
     },
 
-    /** private: method[onDestroy]
+    /** private: method[beforeDestroy]
      *  Clean up.
      */
-    onDestroy : function(){
+    beforeDestroy : function(){
         this.root.cascade(function(node) {
             if (node.attributes.featureRenderer) {
                 node.attributes.featureRenderer.destroy();
