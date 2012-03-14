@@ -697,7 +697,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
     setPlaybackCenter: function(band) {
         var time = band.getCenterVisibleDate();
-        this._silent !== true && this.playbackTool && this.playbackTool.setTime(time);
+        if (this._silent !== true && this.playbackTool && this.playbackTool.playbackToolbar.playing !== true) {
+            this.playbackTool.setTime(time);
+        }
     },
     
     /** private: method[bindViewer]
