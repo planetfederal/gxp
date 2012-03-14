@@ -78,14 +78,15 @@ gxp.tree.TreeGridNodeUI = Ext.extend(Ext.ux.tree.TreeGridNodeUI, {
         this.ecNode = cs[1];
         this.iconNode = cs[2];
         // start of change
-        if (cb) {
+        var index = 3;
+        if(cb){
             this.checkbox = cs[3];
-            this.anchor = cs[4];
-            this.textNode = cs[4].firstChild;
-	    } else {
-            this.anchor = cs[3];
-            this.textNode = cs[3].firstChild;
+            // fix for IE6
+            this.checkbox.defaultChecked = this.checkbox.checked;
+            index++;
         }
+        this.anchor = cs[index];
+        this.textNode = cs[index].firstChild;
         // end of change
     }
 
