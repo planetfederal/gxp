@@ -180,9 +180,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     /**
      * api: config[bufferFraction]
      * ``Float``
-     * The fraction to take around on both sides of a time filter. Defaults to 0.75.
+     * The fraction to take around on both sides of a time filter. Defaults to 1.
      */
-    bufferFraction: 0.75,
+    bufferFraction: 1,
 
     layout: "border",
 
