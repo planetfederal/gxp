@@ -1105,7 +1105,10 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 if (record.get(mapFilterAttr) && Boolean(record.get(mapFilterAttr))) {
                     var startTime = parseFloat(record.get(this.annotationConfig.timeAttr));
                     var endTime = record.get(this.annotationConfig.endTimeAttr);
-                    var ranged = (endTime !== "" && endTime != null);
+                    var ranged = (endTime != startTime);
+                    if (endTime == "" || endTime == null) {
+                        endTime = this.playbackTool.playbackToolbar.control.range[1].getTime();
+                    }
                     var hasGeometry = (record.getFeature().geometry !== null);
                     if (ranged === true) {
                         if (compare <= parseFloat(endTime) && compare >= startTime) {
@@ -1670,7 +1673,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 var startIsEmpty = (start == null || start === "");
                 var endIsEmpty = (end == null || end === "");
                 // end is optional
-                var durationEvent = !startIsEmpty && !endIsEmpty; 
+                var durationEvent = (start != end);
                 if (!startIsEmpty) {
                     start = parseFloat(start);
                     if (Ext.isNumber(start)) {
@@ -1689,6 +1692,12 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 }
                 if (durationEvent === false) {
                     end = undefined;
+                } else {
+                    if (end == "" || end == null) {
+                        // Simile does not deal with unlimited ranges, so let's
+                        // take the range from the playback control
+                        end = this.playbackTool.playbackToolbar.control.range[1];
+                    }
                 }
                 events.push({
                     start: start,
