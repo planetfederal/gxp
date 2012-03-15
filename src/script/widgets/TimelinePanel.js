@@ -602,7 +602,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
     onTimeChange: function(toolbar, currentTime) {
         this._silent = true;
-        this.setCenterDate(currentTime);
+        if ((currentTime < this.originalRange[1]) && (currentTime > this.originalRange[0])) {
+            this.setCenterDate(currentTime);
+        }
         delete this._silent;
     },
 
@@ -1148,8 +1150,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  Set the center datetime on the bands of this timeline.
      */
     setCenterDate: function(time) {
-        // do not go out of bounds, this may get Simile into trouble
-        if (this.timeline && (time < this.originalRange[1]) && (time > this.originalRange[0])) {
+        if (this.timeline) {
             this.timeline.getBand(0)._decorators[0]._date = time;
             this.timeline.getBand(0)._decorators[0].paint();
             this.timeline.getBand(0).setCenterVisibleDate(time);
