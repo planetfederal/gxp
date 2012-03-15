@@ -136,6 +136,12 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
     schemaCache: {},
 
+    /** api: property[propertyNamesCache]
+     *  ``Object`` An object that contains the property names to query for.
+     *  This should be all attributes except the geometry.
+     */
+    propertyNamesCache: {},
+
     /** private: property[sldCache]
      *  ``Object`` An object that contains the parsed SLD documents.
      */
@@ -434,6 +440,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                     delete this.featureEditor._forcePopupForNoGeometry;
                 }
             } else {
+                if (!feature.geometry && feature.bounds) {
+                    feature.geometry = feature.bounds.toGeometry();
+                }
                 var centroid = feature.geometry.getCentroid();
                 var map = this.viewer.mapPanel.map;
                 this._silentMapMove = true;
@@ -747,6 +756,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         delete this.viewer;
         delete this.layerLookup;
         delete this.schemaCache;
+        delete this.propertyNamesCache;
     },
 
     /** private: method[getKey]
@@ -804,6 +814,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                     scope: this
                 });
                 delete this.schemaCache[key];
+                delete this.propertyNamesCache[key];
                 delete this.layerLookup[key];
                 layer.destroy();
             }
@@ -1482,6 +1493,21 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                         } else {
                             this.clearEventsForKey(key);
                         }
+                        var schema = this.schemaCache[key];
+                        var propertyNames = this.propertyNamesCache[key];
+                        if (!propertyNames) {
+                            propertyNames = [];
+                            schema.each(function(r) {
+                                var name = r.get("name");
+                                var type = r.get("type");
+                                if (!type.match(/^[^:]*:?((Multi)?(Point|Line|Polygon|Curve|Surface|Geometry))/)) {
+                                    propertyNames.push(name);
+                                }
+                            });
+                            this.propertyNamesCache[key] = propertyNames;
+                        }
+                        options = options || {};
+                        options.propertyNames = propertyNames;
                         layer.strategies[0].activate();
                         layer.strategies[0].update(options);
                     }
