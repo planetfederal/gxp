@@ -180,9 +180,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     /**
      * api: config[bufferFraction]
      * ``Float``
-     * The fraction to take around on both sides of a time filter. Defaults to 0.5.
+     * The fraction to take around on both sides of a time filter. Defaults to 0.75.
      */
-    bufferFraction: 0.5,
+    bufferFraction: 0.75,
 
     layout: "border",
 
@@ -1148,7 +1148,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  Set the center datetime on the bands of this timeline.
      */
     setCenterDate: function(time) {
-        if (this.timeline) {
+        // do not go out of bounds, this may get Simile into trouble
+        if (this.timeline && (time < this.originalRange[1]) && (time > this.originalRange[0])) {
             this.timeline.getBand(0)._decorators[0]._date = time;
             this.timeline.getBand(0)._decorators[0].paint();
             this.timeline.getBand(0).setCenterVisibleDate(time);
