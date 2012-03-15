@@ -136,6 +136,12 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
     schemaCache: {},
 
+    /** api: property[propertyNamesCache]
+     *  ``Object`` An object that contains the property names to query for.
+     *  This should be all attributes except the geometry.
+     */
+    propertyNamesCache: {},
+
     /** private: property[sldCache]
      *  ``Object`` An object that contains the parsed SLD documents.
      */
@@ -174,9 +180,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     /**
      * api: config[bufferFraction]
      * ``Float``
-     * The fraction to take around on both sides of a time filter. Defaults to 0.5.
+     * The fraction to take around on both sides of a time filter. Defaults to 1.
      */
-    bufferFraction: 0.5,
+    bufferFraction: 1,
 
     layout: "border",
 
@@ -434,6 +440,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                     delete this.featureEditor._forcePopupForNoGeometry;
                 }
             } else {
+                if (!feature.geometry && feature.bounds) {
+                    feature.geometry = feature.bounds.toGeometry();
+                }
                 var centroid = feature.geometry.getCentroid();
                 var map = this.viewer.mapPanel.map;
                 this._silentMapMove = true;
@@ -593,7 +602,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
     onTimeChange: function(toolbar, currentTime) {
         this._silent = true;
-        this.setCenterDate(currentTime);
+        if ((currentTime < this.originalRange[1]) && (currentTime > this.originalRange[0])) {
+            this.setCenterDate(currentTime);
+        }
         delete this._silent;
     },
 
@@ -747,6 +758,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         delete this.viewer;
         delete this.layerLookup;
         delete this.schemaCache;
+        delete this.propertyNamesCache;
     },
 
     /** private: method[getKey]
@@ -804,6 +816,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                     scope: this
                 });
                 delete this.schemaCache[key];
+                delete this.propertyNamesCache[key];
                 delete this.layerLookup[key];
                 layer.destroy();
             }
@@ -1092,7 +1105,10 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 if (record.get(mapFilterAttr) && Boolean(record.get(mapFilterAttr))) {
                     var startTime = parseFloat(record.get(this.annotationConfig.timeAttr));
                     var endTime = record.get(this.annotationConfig.endTimeAttr);
-                    var ranged = (endTime !== "" && endTime != null);
+                    var ranged = (endTime != startTime);
+                    if (endTime == "" || endTime == null) {
+                        endTime = this.playbackTool.playbackToolbar.control.range[1].getTime();
+                    }
                     var hasGeometry = (record.getFeature().geometry !== null);
                     if (ranged === true) {
                         if (compare <= parseFloat(endTime) && compare >= startTime) {
@@ -1482,6 +1498,21 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                         } else {
                             this.clearEventsForKey(key);
                         }
+                        var schema = this.schemaCache[key];
+                        var propertyNames = this.propertyNamesCache[key];
+                        if (!propertyNames) {
+                            propertyNames = [];
+                            schema.each(function(r) {
+                                var name = r.get("name");
+                                var type = r.get("type");
+                                if (!type.match(/^[^:]*:?((Multi)?(Point|Line|Polygon|Curve|Surface|Geometry))/)) {
+                                    propertyNames.push(name);
+                                }
+                            });
+                            this.propertyNamesCache[key] = propertyNames;
+                        }
+                        options = options || {};
+                        options.propertyNames = propertyNames;
                         layer.strategies[0].activate();
                         layer.strategies[0].update(options);
                     }
@@ -1642,7 +1673,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 var startIsEmpty = (start == null || start === "");
                 var endIsEmpty = (end == null || end === "");
                 // end is optional
-                var durationEvent = !startIsEmpty && !endIsEmpty; 
+                var durationEvent = (start != end);
                 if (!startIsEmpty) {
                     start = parseFloat(start);
                     if (Ext.isNumber(start)) {
@@ -1661,6 +1692,12 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 }
                 if (durationEvent === false) {
                     end = undefined;
+                } else {
+                    if (end == "" || end == null) {
+                        // Simile does not deal with unlimited ranges, so let's
+                        // take the range from the playback control
+                        end = this.playbackTool.playbackToolbar.control.range[1];
+                    }
                 }
                 events.push({
                     start: start,
