@@ -120,6 +120,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */   
     instructionText: "There are too many events ({count}) to show in the timeline.<br/>Please zoom in or move the vertical slider down (maximum is {max})",
 
+    /** api: config[errorText]
+     *  ``String`` Message to show when there is an exception when retrieving the WFS data (i18n)
+     */
+    errorText: "Something went wrong with retrieving the data for the timeline",
+
     /** private: property[layerCount]
      * ``Integer`` The number of vector layers currently loading.
      */
@@ -565,6 +570,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         if (action !== Ext.data.Api.actions.destroy) {
             this.addFeatures(key, features);
         }
+        //this.annotationsLayer && this.annotationsLayer.redraw();
     },
 
     /**
@@ -602,9 +608,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
     onTimeChange: function(toolbar, currentTime) {
         this._silent = true;
-        if ((currentTime < this.originalRange[1]) && (currentTime > this.originalRange[0])) {
-            this.setCenterDate(currentTime);
-        }
+        this.setCenterDate(currentTime);
         delete this._silent;
     },
 
@@ -1525,8 +1529,13 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                         layer.strategies[0].deactivate();
                     }
                 }
-                var tpl = new Ext.Template(this.instructionText);
-                var msg = tpl.applyTemplate({count: storage.numberOfFeatures, max: this.maxFeatures});
+                var msg;
+                if (isNaN(storage.numberOfFeatures)) {
+                    msg = this.errorText;
+                } else {
+                    var tpl = new Ext.Template(this.instructionText);
+                    msg = tpl.applyTemplate({count: storage.numberOfFeatures, max: this.maxFeatures});
+                }
                 this.timelineContainer.el.mask(msg, '');
                 this.eventSource.clear();
             }
