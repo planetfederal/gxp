@@ -1192,7 +1192,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                         layer && this.setTimeFilter(key, this.createTimeFilter([start, end], key, 0, false));
                     }
                     // do not abort previous requests, since this will lead to blanks in the timeline
-                    this.updateTimelineEvents({force: true, noAbort: false}, true);
+                    this.updateTimelineEvents({force: true, noAbort: true}, true);
                 }
             }
             this.showAnnotations(time);
@@ -1248,7 +1248,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         // when the timeline moves, it does this intelligently as to only fetch the
         // necessary new slice of data, which is represented by start and end.
         this.updateRangeSlider(this.rangeInfo.current);
-        this.findBestZoomLevel([start, end]);
+        if (this.playbackTool && this.playbackTool.playbackToolbar.playing !== true) {
+            // remember this takes a lot of resources from the browser, so don't do this
+            // when in playback mode
+            this.findBestZoomLevel([start, end]);
+        }
         if (this.layerLookup[key].endTimeAttr) {
             return new OpenLayers.Filter({
                 type: OpenLayers.Filter.Logical.OR,
