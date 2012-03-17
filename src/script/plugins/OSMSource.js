@@ -108,18 +108,6 @@ gxp.plugins.OSMSource = Ext.extend(gxp.plugins.LayerSource, {
                     attribution: this.mapnikAttribution,
                     type: "mapnik"
                 }, options)
-            ),
-            new OpenLayers.Layer.OSM(
-                "Tiles@home",
-                [
-                    "http://a.tah.openstreetmap.org/Tiles/tile/${z}/${x}/${y}.png",
-                    "http://b.tah.openstreetmap.org/Tiles/tile/${z}/${x}/${y}.png",
-                    "http://c.tah.openstreetmap.org/Tiles/tile/${z}/${x}/${y}.png"
-                ],
-                OpenLayers.Util.applyDefaults({                
-                    attribution: this.osmarenderAttribution,
-                    type: "osmarender"
-                }, options)
             )
         ];
         
