@@ -105,13 +105,16 @@ gxp.plugins.MapBoxSource = Ext.extend(gxp.plugins.LayerSource, {
         
         var options = {
             projection: "EPSG:900913",
-            maxExtent: new OpenLayers.Bounds(
-                -128 * 156543.0339, -128 * 156543.0339,
-                128 * 156543.0339, 128 * 156543.0339
-            ),
-            maxResolution: 156543.03390625,
             numZoomLevels: 19,
-            units: "m",
+            serverResolutions: [
+                156543.03390625, 78271.516953125, 39135.7584765625,
+                19567.87923828125, 9783.939619140625, 4891.9698095703125,
+                2445.9849047851562, 1222.9924523925781, 611.4962261962891,
+                305.74811309814453, 152.87405654907226, 76.43702827453613,
+                38.218514137268066, 19.109257068634033, 9.554628534317017,
+                4.777314267158508, 2.388657133579254, 1.194328566789627,
+                0.5971642833948135
+            ],
             buffer: 1
         };
         
@@ -148,7 +151,7 @@ gxp.plugins.MapBoxSource = Ext.extend(gxp.plugins.LayerSource, {
                 OpenLayers.Util.applyDefaults({
                     attribution: "<a href='http://mapbox.com'>MapBox</a> | <a href='http://mapbox.com/tos'>Terms of Service</a>",
                     type: "png",
-                    tileOrigin: new OpenLayers.LonLat(-128 * 156543.0339, -128 * 156543.0339),
+                    tileOrigin: new OpenLayers.LonLat(-128 * 156543.03390625, -128 * 156543.03390625),
                     layername: config.name,
                     "abstract": '<div class="thumb-mapbox thumb-mapbox-'+config.name+'"></div>',
                     numZoomLevels: config.numZoomLevels
