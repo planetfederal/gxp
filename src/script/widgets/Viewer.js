@@ -683,6 +683,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         Ext.apply(this.sources, sources);
         
         //standardize portal configuration to portalConfig
+        /*
         if (state.portalItems) {
             //initial config included both portal config and items
             if (state.portalConfig && state.portalConfig.items && state.portalConfig.items.length) {
@@ -699,11 +700,15 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                 state.portalConfig.items = state.portalItems;
             }
         }
-        
+        */
+       
         //get tool states, for most tools this will be the same as its initial config
         state.tools = [];
         Ext.iterate(this.tools,function(key,val,obj){
-            state.tools.push(val.getState());
+            //only get and persist the state if there a tool specific getState method
+            if(val.getState != gxp.plugins.Tool.prototype.getState){
+                state.tools.push(val.getState());
+            }
         });
         return state;
     },

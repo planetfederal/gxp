@@ -120,6 +120,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */   
     instructionText: "There are too many events ({count}) to show in the timeline.<br/>Please zoom in or move the vertical slider down (maximum is {max})",
 
+    /** api: config[errorText]
+     *  ``String`` Message to show when there is an exception when retrieving the WFS data (i18n)
+     */
+    errorText: "Something went wrong with retrieving the data for the timeline",
+
     /** private: property[layerCount]
      * ``Integer`` The number of vector layers currently loading.
      */
@@ -135,6 +140,12 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  ``Object`` An object that contains the attribute stores.
      */
     schemaCache: {},
+
+    /** api: property[propertyNamesCache]
+     *  ``Object`` An object that contains the property names to query for.
+     *  This should be all attributes except the geometry.
+     */
+    propertyNamesCache: {},
 
     /** private: property[sldCache]
      *  ``Object`` An object that contains the parsed SLD documents.
@@ -174,9 +185,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     /**
      * api: config[bufferFraction]
      * ``Float``
-     * The fraction to take around on both sides of a time filter. Defaults to 0.5.
+     * The fraction to take around on both sides of a time filter. Defaults to 1.
      */
-    bufferFraction: 0.5,
+    bufferFraction: 1,
 
     layout: "border",
 
@@ -434,6 +445,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                     delete this.featureEditor._forcePopupForNoGeometry;
                 }
             } else {
+                if (!feature.geometry && feature.bounds) {
+                    feature.geometry = feature.bounds.toGeometry();
+                }
                 var centroid = feature.geometry.getCentroid();
                 var map = this.viewer.mapPanel.map;
                 this._silentMapMove = true;
@@ -556,6 +570,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         if (action !== Ext.data.Api.actions.destroy) {
             this.addFeatures(key, features);
         }
+        //this.annotationsLayer && this.annotationsLayer.redraw();
     },
 
     /**
@@ -697,7 +712,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
     setPlaybackCenter: function(band) {
         var time = band.getCenterVisibleDate();
-        this._silent !== true && this.playbackTool && this.playbackTool.setTime(time);
+        if (this._silent !== true && this.playbackTool && this.playbackTool.playbackToolbar.playing !== true) {
+            this.playbackTool.setTime(time);
+        }
     },
     
     /** private: method[bindViewer]
@@ -745,6 +762,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         delete this.viewer;
         delete this.layerLookup;
         delete this.schemaCache;
+        delete this.propertyNamesCache;
     },
 
     /** private: method[getKey]
@@ -802,6 +820,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                     scope: this
                 });
                 delete this.schemaCache[key];
+                delete this.propertyNamesCache[key];
                 delete this.layerLookup[key];
                 layer.destroy();
             }
@@ -1090,7 +1109,10 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 if (record.get(mapFilterAttr) && Boolean(record.get(mapFilterAttr))) {
                     var startTime = parseFloat(record.get(this.annotationConfig.timeAttr));
                     var endTime = record.get(this.annotationConfig.endTimeAttr);
-                    var ranged = (endTime !== "" && endTime != null);
+                    var ranged = (endTime != startTime);
+                    if (endTime == "" || endTime == null) {
+                        endTime = this.playbackTool.playbackToolbar.control.range[1].getTime();
+                    }
                     var hasGeometry = (record.getFeature().geometry !== null);
                     if (ranged === true) {
                         if (compare <= parseFloat(endTime) && compare >= startTime) {
@@ -1226,7 +1248,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         // when the timeline moves, it does this intelligently as to only fetch the
         // necessary new slice of data, which is represented by start and end.
         this.updateRangeSlider(this.rangeInfo.current);
-        this.findBestZoomLevel([start, end]);
+        if (this.playbackTool && this.playbackTool.playbackToolbar.playing !== true) {
+            // remember this takes a lot of resources from the browser, so don't do this
+            // when in playback mode
+            this.findBestZoomLevel([start, end]);
+        }
         if (this.layerLookup[key].endTimeAttr) {
             return new OpenLayers.Filter({
                 type: OpenLayers.Filter.Logical.OR,
@@ -1480,6 +1506,21 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                         } else {
                             this.clearEventsForKey(key);
                         }
+                        var schema = this.schemaCache[key];
+                        var propertyNames = this.propertyNamesCache[key];
+                        if (!propertyNames) {
+                            propertyNames = [];
+                            schema.each(function(r) {
+                                var name = r.get("name");
+                                var type = r.get("type");
+                                if (!type.match(/^[^:]*:?((Multi)?(Point|Line|Polygon|Curve|Surface|Geometry))/)) {
+                                    propertyNames.push(name);
+                                }
+                            });
+                            this.propertyNamesCache[key] = propertyNames;
+                        }
+                        options = options || {};
+                        options.propertyNames = propertyNames;
                         layer.strategies[0].activate();
                         layer.strategies[0].update(options);
                     }
@@ -1492,8 +1533,13 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                         layer.strategies[0].deactivate();
                     }
                 }
-                var tpl = new Ext.Template(this.instructionText);
-                var msg = tpl.applyTemplate({count: storage.numberOfFeatures, max: this.maxFeatures});
+                var msg;
+                if (isNaN(storage.numberOfFeatures)) {
+                    msg = this.errorText;
+                } else {
+                    var tpl = new Ext.Template(this.instructionText);
+                    msg = tpl.applyTemplate({count: storage.numberOfFeatures, max: this.maxFeatures});
+                }
                 this.timelineContainer.el.mask(msg, '');
                 this.eventSource.clear();
             }
@@ -1640,7 +1686,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 var startIsEmpty = (start == null || start === "");
                 var endIsEmpty = (end == null || end === "");
                 // end is optional
-                var durationEvent = !startIsEmpty && !endIsEmpty; 
+                var durationEvent = (start != end);
                 if (!startIsEmpty) {
                     start = parseFloat(start);
                     if (Ext.isNumber(start)) {
@@ -1659,6 +1705,12 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 }
                 if (durationEvent === false) {
                     end = undefined;
+                } else {
+                    if (end == "" || end == null) {
+                        // Simile does not deal with unlimited ranges, so let's
+                        // take the range from the playback control
+                        end = this.playbackTool.playbackToolbar.control.range[1];
+                    }
                 }
                 events.push({
                     start: start,

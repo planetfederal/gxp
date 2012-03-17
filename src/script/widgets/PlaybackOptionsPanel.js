@@ -108,8 +108,9 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
                     {
                         fieldLabel: this.stepText,
                         xtype: 'numberfield',
+                        enableKeyEvents:true,
                         listeners: {
-                            'select': this.setStep,
+                            'change': this.setStep,
                             scope: this
                         },
                         ref: '../../stepValueField'
@@ -203,10 +204,23 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
         this.timeManager.snapToIntervals = checked;
     },
     setUnits:function(cmp,record,index){
-        this.timeManager.units = record.get('field1'); 
+        var units = record.get('field1');
+        if(this.timeManager.units != units){
+            this.timeManager.units = units;
+            if(this.playbackToolbar.playbackMode != 'track'){
+                this.timeManager.incrementTime();
+            }
+        }
     },
     setStep:function(cmp,newVal,oldVal){
-        this.timeManager.step = newVal;
+        if(cmp.validate() && newVal){
+            this.timeManager.step = newVal;
+            if(this.playbackToolbar.playbackMode == 'ranged' && 
+                this.timeManager.rangeInterval != newVal){
+                    this.timeManager.rangeInterval = newVal;
+                    this.timeManager.incrementTime(newVal);
+            }
+        }
     },
     setPlaybackMode:function(cmp,mode,agents){
         switch(mode){
