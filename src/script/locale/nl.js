@@ -37,7 +37,6 @@ GeoExt.Lang.add("nl", {
     },
 
     "gxp.plugins.GoogleEarth.prototype": {
-        apiKeyPrompt: "Geef a.u.b. de Google API key voor ",
         menuText: "3D weergave",
         tooltip: "Bekijk kaart in 3D"
     },

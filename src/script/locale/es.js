@@ -46,7 +46,6 @@ GeoExt.Lang.add("es", {
     },
 
     "gxp.plugins.GoogleEarth.prototype": {
-        apiKeyPrompt: "Please enter the Google API key for ",
         menuText: "Vista 3D",
         tooltip: "Vista 3D"
     },

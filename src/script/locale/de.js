@@ -46,7 +46,6 @@ GeoExt.Lang.add("de", {
     },
 
     "gxp.plugins.GoogleEarth.prototype": {
-        apiKeyPrompt: "Bitte geben Sie den Google API Key ein für ",
         menuText: "3D Viewer",
         tooltip: "zum 3D Viewer wechseln"
     },
