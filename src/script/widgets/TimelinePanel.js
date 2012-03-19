@@ -613,7 +613,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
     onTimeChange: function(toolbar, currentTime) {
         this._silent = true;
-        this.setCenterDate(currentTime);
+        this._ignoreTimeChange !== true && this.setCenterDate(currentTime);
         delete this._silent;
     },
 
@@ -718,7 +718,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     setPlaybackCenter: function(band) {
         var time = band.getCenterVisibleDate();
         if (this._silent !== true && this.playbackTool && this.playbackTool.playbackToolbar.playing !== true) {
+            this._ignoreTimeChange = true;
             this.playbackTool.setTime(time);
+            this.timeline.getBand(0)._decorators[0]._date = this.playbackTool.playbackToolbar.control.currentTime;
+            this.timeline.getBand(0)._decorators[0].paint();
+            delete this._ignoreTimeChange;
         }
     },
     
