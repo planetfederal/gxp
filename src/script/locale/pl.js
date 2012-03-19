@@ -47,7 +47,6 @@ GeoExt.Lang.add("pl", {
     },
     
     "gxp.plugins.GoogleEarth.prototype": {
-        apiKeyPrompt: "Podaj identyfikator klucza Google Earth dla swojej witryny",
         menuText: "Przeglądarka 3D",
         tooltip: "Przełącz do widoku 3D"
     },

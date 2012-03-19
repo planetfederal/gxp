@@ -61,7 +61,6 @@ Ext.namespace("gxp.plugins");
  *        {
  *            actionTarget: "panel.tbar",
  *            ptype: "gxp_googleearth",
- *            apiKey: 'ABQIAAAAeDjUod8ItM9dBg5_lz0esxTnme5EwnLVtEDGnh-lFVzRJhbdQhQBX5VH8Rb3adNACjSR5kaCLQuBmw'
  *        }
  *    ] 
  */
@@ -78,28 +77,7 @@ gxp.plugins.GoogleEarth = Ext.extend(gxp.plugins.Tool, {
      */
     timeout: 7000,
 
-    /** config: property[apiKey]
-     *  ``String`` The API key required for adding the Google Maps script
-     */
-    
-    /** config: property[apiKeys]
-     *  ``Object``
-     *  If the ``apiKey`` property is not set, this object can be provided as a
-     *  lookup of API keys for multiple URL.  Each key in the object should be
-     *  a hostname (e.g. "example.com"), and each value should be a complete 
-     *  API key.  Include the port number if different than 80.
-     *
-     *  .. code-block:: javascript
-     *
-     *    apiKeys: {
-     *        "localhost": "ABQIAAAAeDjUod8ItM9dBg5_lz0esxTnme5EwnLVtEDGnh-lFVzRJhbdQhQBX5VH8Rb3adNACjSR5kaCLQuBmw",
-     *        "example.com": "-your-key-here-",
-     *        "example.com:8080": "-your-key-here-"
-     *    }
-     */
-
     //i18n
-    apiKeyPrompt: "Please enter the Google API key for ",
     menuText: "3D Viewer",
     tooltip: "Switch to 3D Viewer",
     tooltipMap: "Switch back to normal map view",
@@ -126,24 +104,6 @@ gxp.plugins.GoogleEarth = Ext.extend(gxp.plugins.Tool, {
             },
             scope: this
         }];
-        
-        // TODO: this split between the tool and the panel needs work
-        var ownerCt = this.target.mapPanel.ownerCt;
-        var layout = ownerCt && ownerCt.getLayout();
-        if (layout && layout instanceof Ext.layout.CardLayout) {
-            // TODO: remove this assumption (rework the layout to fully separate the two views - tools and all)
-            var panel = ownerCt.get(1);
-            panel.on({
-                pluginfailure: function(cmp, code) {
-                    // assume API key is bad 
-                    // could check code === "ERR_API_KEY" but I can't find
-                    // this documented
-                    delete this.initialConfig.apiKey;
-                    gxp.plugins.GoogleEarth.loader.unload();
-                },
-                scope: this
-            });
-        }
 
         return gxp.plugins.GoogleEarth.superclass.addActions.apply(this, [actions]);
     },
@@ -157,85 +117,27 @@ gxp.plugins.GoogleEarth = Ext.extend(gxp.plugins.Tool, {
         var layout = ownerCt && ownerCt.getLayout();
         if (layout && layout instanceof Ext.layout.CardLayout) {
             if (displayed === true) {
-                // get API key before displaying
-                this.getAPIKey(function(key) {
-                    this.initialConfig.apiKey = key;
-                    gxp.plugins.GoogleEarth.loader.onLoad({
-                        apiKey: this.initialConfig.apiKey,
-                        callback: function() {
-                            // display the panel
-                            layout.setActiveItem(1);
-                            // enable action press any buttons associated with the action
-                            this.actions[0].enable();
-                            this.actions[0].items[0].setTooltip(this.tooltipMap);
-                            this.actions[0].each(function(cmp) {
-                                if (cmp.toggle) {
-                                    cmp.toggle(true, true);
-                                }
-                            });
-                        },
-                        // TODO: add errback for handling load failures
-                        scope: this
-                    });
+                gxp.plugins.GoogleEarth.loader.onLoad({
+                    callback: function() {
+                        // display the panel
+                        layout.setActiveItem(1);
+                        // enable action press any buttons associated with the action
+                        this.actions[0].enable();
+                        this.actions[0].items[0].setTooltip(this.tooltipMap);
+                        this.actions[0].each(function(cmp) {
+                            if (cmp.toggle) {
+                                cmp.toggle(true, true);
+                            }
+                        });
+                    },
+                    // TODO: add errback for handling load failures
+                    scope: this
                 });
             } else {
                 // hide the panel
                 layout.setActiveItem(0);
                 this.actions[0].items[0].setTooltip(this.tooltip);
             }
-        }
-    },
-
-    /** api: method[hasValidAPIKey]
-     *  :returns: ``String`` if it has a valid key and undefined if not.
-     */
-    hasValidAPIKey: function() {
-        var key = this.initialConfig.apiKey;
-        var keys = this.initialConfig.apiKeys;
-        if (!key && keys) {
-            var host = this.getHost();
-            var hasPort = /:\d+$/;
-            var completeCandidate;
-            for (var candidate in keys) {
-                if (!hasPort.test(candidate)) {
-                    completeCandidate = candidate + ":80";
-                } else {
-                    completeCandidate = candidate;
-                }
-                // check if case-insensitive match
-                if ((new RegExp("^(.*\\.)?" + completeCandidate + "$", "i")).test(host)) {
-                    key = keys[candidate];
-                    break;
-                }
-            }
-        }
-        return key;
-    },
-
-    /** private: method[getAPIKey]
-     *  :arg callback: ``Function`` To be called with API key.
-     */
-    getAPIKey: function(callback) {
-        var key = this.hasValidAPIKey();
-        if (key) {
-            // return then call callback
-            window.setTimeout(
-                (function() {
-                    callback.call(this, key);
-                }).createDelegate(this), 
-                0
-            );
-        } else {
-            // prompt if we still don't have a key
-            Ext.Msg.prompt("Google API Key",
-                this.apiKeyPrompt + window.location.hostname +
-                    " <sup><a target='_blank' href='http://code.google.com/apis/earth/'>?</a></sup>",
-                function(btn, key) {
-                    if (btn === "ok") {
-                        callback.call(this, key);
-                    }
-                }, this
-            );
         }
     },
 
@@ -303,7 +205,6 @@ gxp.plugins.GoogleEarth.loader = new (Ext.extend(Ext.util.Observable, {
      *
      *  Options:
      *
-     *  * apiKey - ``String`` API key for Google Earth plugin.
      *  * callback - ``Function`` Called when script loads.
      *  * errback - ``Function`` Called if loading fails.
      *  * timeout - ``Number`` Time to wait before deciding that loading failed
@@ -338,7 +239,6 @@ gxp.plugins.GoogleEarth.loader = new (Ext.extend(Ext.util.Observable, {
         }
 
         var params = {
-            key: options.apiKey,
             autoload: Ext.encode({
                 modules: [{
                     name: "earth",

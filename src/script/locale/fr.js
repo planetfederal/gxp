@@ -38,7 +38,6 @@ GeoExt.Lang.add("fr", {
     },
 
     "gxp.plugins.GoogleEarth.prototype": {
-        apiKeyPrompt: "Veuillez indiquer la clef Google API pour ",
         menuText: "Passer à la visionneuse 3D",
         tooltip: "Passer à la visionneuse 3D"
     },
