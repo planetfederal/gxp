@@ -565,12 +565,17 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         for (var i=0, ii=data.length; i<ii; i++) {
             var feature = data[i].feature;
             features.push(feature);
-            this.clearEventsForFid(key, feature.fid);
+            var fid = feature.fid;
+            this.clearEventsForFid(key, fid);
+            if (this.tooltips && this.tooltips[fid]) {
+                this.tooltips[fid].destroy();
+                this.tooltips[fid] = null;
+            }
         }
         if (action !== Ext.data.Api.actions.destroy) {
             this.addFeatures(key, features);
         }
-        //this.annotationsLayer && this.annotationsLayer.redraw();
+        this.showAnnotations(this.playbackTool.playbackToolbar.control.currentTime);
     },
 
     /**
