@@ -89,6 +89,7 @@ gxp.plugins.MapProperties = Ext.extend(gxp.plugins.Tool, {
                 listeners: {
                     "change": function(fld, value) {
                         baseLayer.addOptions({numZoomLevels: value});
+                        this.target.mapPanel.map.events.triggerEvent('changebaselayer', {layer: baseLayer});
                     },
                     scope: this
                 }
