@@ -1,3 +1,27 @@
+.gxp-symbolgrid-swatch {
+    width: 50%;
+    margin: 0px auto;
+}
+.gxp-symbolgrid .x-treegrid-col {
+    border: none;
+}
+.x-tree-node .gxp-icon-symbolgrid-none {
+    background-image: none;
+    display: none;
+}
+.x-tree-node .gxp-icon-symbolgrid-point {
+    background-image: url(img/silk/bullet_orange.png);
+}
+.x-tree-node .gxp-icon-symbolgrid-line {
+    background-image: url(img/geosilk/line_orange.png);
+}
+.x-tree-node .gxp-icon-symbolgrid-polygon {
+    background-image: url(img/geosilk/shape_square_orange.png);
+}
+.x-tree-node .gxp-icon-symbolgrid-text {
+    background-image: url(img/silk/font.png);
+}
+
 .x-tree-node-leaf  .gx-tree-layer-icon {
     background-image: url(img/geosilk/vector.png);
 }
