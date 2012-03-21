@@ -1243,7 +1243,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         var start = new Date(range[0].getTime() - fraction * (range[1] - range[0]));
         var end = new Date(range[1].getTime() + fraction * (range[1] - range[0]));
         // don't go beyond the original range
-        if(this.orginalRange){
+        if(this.originalRange){
             start = new Date(Math.max(this.originalRange[0], start));
             end = new Date(Math.min(this.originalRange[1], end));
         }

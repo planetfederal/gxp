@@ -10,7 +10,10 @@
     <script type="text/javascript" src="../../../src/script/loader.js"></script>
 
     <script type="text/javascript">
-       
+
+        // the hidden span element that contains the test iframe
+        var hiddenSpan = window.parent.Test.AnotherWay._g_test_iframe.frameElement.parentNode;
+        
         function test_TimelinePanel(t) {
             t.plan(1);
             
@@ -23,8 +26,10 @@
 
         function test_createTimeline(t) {
             t.plan(3);
+            hiddenSpan.style.display = "";
             var tp = new gxp.TimelinePanel({renderTo: document.body});
             tp.createTimeline([new Date("October 13, 1975 11:13:00"), new Date()]);
+            hiddenSpan.style.display = "none"; 
             t.ok(tp.timeline !== null, "Simile timeline gets created");
             t.eq(tp.timeline.getBandCount(), 2, "Timeline has 2 bands");
             tp.destroy();
@@ -33,7 +38,9 @@
 
         function test_calculateNewRange(t) {
             t.plan(3);
+            hiddenSpan.style.display = "";
             var tp = new gxp.TimelinePanel({renderTo: document.body});
+            hiddenSpan.style.display = "none"; 
             tp.playbackTool = {
                 playbackToolbar: {
                     control: {
@@ -54,7 +61,9 @@
 
         function test_createTimeFilter(t) {
             t.plan(3);
+            hiddenSpan.style.display = ""; 
             var tp = new gxp.TimelinePanel({renderTo: document.body});
+            hiddenSpan.style.display = "none"; 
             tp.layerLookup = {
                 'foo': {}
             };
@@ -67,6 +76,7 @@
                 un: Ext.emptyFn
             };
             tp.originalRange = [new Date("January 1, 1946"), new Date("November 9, 2008")];
+            tp.bufferFraction = 0.5;
             var range = tp.calculateNewRange(tp.originalRange, 25);
             var filter = tp.createTimeFilter(range, 'foo', tp.bufferFraction);
             t.eq(filter.type, "..", "PropertyIsBetween filter created");
@@ -77,6 +87,7 @@
 
         function test_setCenterDate(t) {
             t.plan(7);
+            hiddenSpan.style.display = ""; 
             var tp = new gxp.TimelinePanel({renderTo: document.body});
             tp.layerLookup = {
                 'foo': {
@@ -95,11 +106,14 @@
                         currentTime: new Date("January 1, 1946")
                     }
                 },
+                setTime: Ext.emptyFn,
                 un: Ext.emptyFn
             };
+            tp.bufferFraction = 0.5;
             tp.setRange([new Date("January 1, 1946"), new Date("November 9, 2008")]);
+            hiddenSpan.style.display = "none"; 
             var range = tp.calculateNewRange(tp.originalRange, 25);
-            tp.createTimeFilter(range, 'foo', tp.bufferFraction);
+            tp.setTimeFilter('foo', tp.createTimeFilter(range, 'foo', tp.bufferFraction));
             tp.setCenterDate(new Date("January 1, 1960"));
             var filter = tp.layerLookup['foo'].layer.filter;
             // new data should be retrieved, starting at the previous upperBoundary
