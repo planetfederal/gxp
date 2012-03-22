@@ -54,6 +54,7 @@ gxp.plugins.CatalogueSource = Ext.extend(gxp.plugins.WMSSource, {
     createStore: function() {
         this.store = new Ext.data.Store({
             proxy: new GeoExt.data.ProtocolProxy({
+                setParamsAsOptions: true,
                 protocol: new OpenLayers.Protocol.CSW({
                     url: this.url
                 })

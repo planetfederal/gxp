@@ -29,6 +29,12 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
      */
     border: false,
 
+    /** api: config[maxRecords]
+     *  ``Integer`` The maximum number of records to retrieve in one batch.
+     *  Defaults to 10.
+     */
+    maxRecords: 10,
+
     /** api: config[map]
      *  ``OpenLayers.Map``
      */
@@ -239,7 +245,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                     limit: 'maxRecords'
                 },
                 store: this.sources[this.selectedSource].store,
-                pageSize: 100 
+                pageSize: this.maxRecords
             }),
             loadMask: true,
             hideHeaders: true,
@@ -306,7 +312,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
         }
         var data = {
             "resultType": "results",
-            "maxRecords": 100,
+            "maxRecords": this.maxRecords,
             "Query": {
                 "typeNames": "gmd:MD_Metadata",
                 "ElementSetName": {
