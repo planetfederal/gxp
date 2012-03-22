@@ -376,7 +376,7 @@ div.olMap div.gx-overlay-playback {
     display: none;
 }
 
-
+/***Start Playback Items***/
 .x-btn .gxp-icon-reset{
     background-image:url('img/silk/control_start_blue.png')
 }
@@ -384,7 +384,7 @@ div.olMap div.gx-overlay-playback {
     background-image:url('img/silk/control_equalizer_blue.png')
 }
 .x-btn .gxp-icon-next{
-    background-image:url('img/silk/next.png')
+    background-image:url('img/silk/control_end_blue.png')
 }
 .x-btn .gxp-icon-last{
     background-image:url('img/silk/control_end_blue.png')
@@ -431,19 +431,23 @@ div.olMap div.gx-overlay-playback {
 .x-btn-over .gxp-icon-ffwd,.x-item-disabled .gxp-icon-ffwd{
     background-image:url('img/silk/control_fastforward.png')
 }
-.x-slider-min-thumb{
-    background-image:url('img/silk/resultset_next.png')!important;
-    background-position:0 0 !important;
+
+.x-slider-horz div.x-slider-thumb{
+	background-position:0;
 }
-.x-slider-max-thumb{
-    background-image:url('img/silk/resultset_previous.png')!important;
-    background-position:0 0 !important;
+.x-slider-horz div.x-slider-min-thumb{
+    background-image:url('img/silk/resultset_next.png');
 }
-.x-slider-horz .x-slider-tail-thumb{
-    background-image:url('img/silk/stop.png')!important;
-    background-position:0 0 !important;
+.x-slider-horz div.x-slider-max-thumb{
+    background-image:url('img/silk/resultset_previous.png');
+}
+.x-slider-horz div.x-slider-tail-thumb{
+    background-image:url('img/silk/stop.png');
     left:-14px;
 }
+/***End Playback Items***/
+
+
 .thumb-mapbox {
     width: 128px;
     height: 128px;
