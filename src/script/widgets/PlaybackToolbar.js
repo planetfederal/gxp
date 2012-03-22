@@ -304,7 +304,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                 text: (this.labelButtons) ? this.playLabel : false
             },
             'next': {
-                iconCls: 'gxp-icon-last',
+                iconCls: 'gxp-icon-next',
                 ref:'btnNext',
                 handler: this.control.tick,
                 scope: this.control,
