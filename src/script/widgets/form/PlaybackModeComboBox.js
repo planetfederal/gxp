@@ -69,7 +69,7 @@ gxp.form.PlaybackModeComboBox = Ext.extend(Ext.form.ComboBox, {
         });
         //initialize the default modes
         if(!config.modes && !this.modes.length){
-            this.modes.push([false, this.normalOptText], ['cumulative', this.cumulativeOptText], ['range', this.rangedOptText]);
+            this.modes.push([false, this.normalOptText], ['cumulative', this.cumulativeOptText], ['ranged', this.rangedOptText]);
         }
         gxp.form.PlaybackModeComboBox.superclass.constructor.call(this,config);
   },

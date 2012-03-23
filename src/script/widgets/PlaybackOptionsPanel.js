@@ -60,7 +60,7 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
     initComponent: function() {
         var config = Ext.applyIf(this.initialConfig,{
             minHeight:400,
-            minWidth:250,
+            minWidth:275,
             ref:'optionsPanel',
             items:[
             {
@@ -108,6 +108,7 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
                     {
                         fieldLabel: this.stepText,
                         xtype: 'numberfield',
+                        anchor:'-25',
                         enableKeyEvents:true,
                         listeners: {
                             'change': this.setStep,
@@ -227,7 +228,7 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
             case 'cumulative':
                 this.playbackToolbar.setPlaybackMode('cumulative');
                 break;
-            case 'range':
+            case 'ranged':
                 this.disableListMode(true);
                 this.playbackToolbar.setPlaybackMode('ranged');
                 break;
@@ -235,7 +236,7 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
                 this.playbackToolbar.setPlaybackMode('track');
                 break;
         }
-        if(mode != 'range'){
+        if(mode != 'ranged'){
             this.disableListMode(false);
         }
     },
