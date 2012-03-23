@@ -212,6 +212,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
             'slider': {
                 xtype: 'multislider',
                 ref: 'slider',
+                cls: 'gx_timeslider',
                 maxValue: sliderInfo.maxValue,
                 minValue: sliderInfo.minValue,
                 increment: sliderInfo.interval,

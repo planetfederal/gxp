@@ -376,7 +376,7 @@ div.olMap div.gx-overlay-playback {
     display: none;
 }
 
-/***Start Playback Items***/
+/** gx_playbacktoolbar**/
 .x-btn .gxp-icon-reset{
     background-image:url('img/silk/control_start_blue.png')
 }
@@ -432,20 +432,21 @@ div.olMap div.gx-overlay-playback {
     background-image:url('img/silk/control_fastforward.png')
 }
 
-.x-slider-horz div.x-slider-thumb{
+.gx_timeslider div.x-slider-thumb{
 	background-position:0;
+	cursor: pointer;
 }
-.x-slider-horz div.x-slider-min-thumb{
+.gx_timeslider div.x-slider-min-thumb{
     background-image:url('img/silk/resultset_next.png');
 }
-.x-slider-horz div.x-slider-max-thumb{
+.gx_timeslider div.x-slider-max-thumb{
     background-image:url('img/silk/resultset_previous.png');
 }
-.x-slider-horz div.x-slider-tail-thumb{
+.gx_timeslider div.x-slider-tail-thumb{
     background-image:url('img/silk/stop.png');
     left:-14px;
 }
-/***End Playback Items***/
+
 
 
 .thumb-mapbox {
