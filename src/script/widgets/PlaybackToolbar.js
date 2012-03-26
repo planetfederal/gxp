@@ -36,6 +36,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
     initialTime:null,
     timeFormat:"l, F d, Y g:i:s A",
     toolbarCls:'x-toolbar gx-overlay-playback', //must use toolbarCls since it is used instead of baseCls in toolbars
+    ctCls: 'gx-playback-wrap',
     slider:true,
     dynamicRange:false,
     //api config
