@@ -43,14 +43,21 @@ gxp.CrumbPanel = Ext.extend(Ext.TabPanel, {
         this.widths = {};
     },
     
+    /** private: method[onBeforeAdd]
+     *  :arg cmp: ``Ext.Component``
+     */
+    onBeforeAdd: function(cmp) {
+        gxp.CrumbPanel.superclass.onBeforeAdd.apply(this, arguments);
+        if (cmp.shortTitle) {
+            cmp.title = cmp.shortTitle;
+        }
+    },
+    
     /** private: method[onAdd]
      *  :arg cmp: ``Ext.Component``
      */
     onAdd: function(cmp) {
         gxp.CrumbPanel.superclass.onAdd.apply(this, arguments);
-        if (cmp.shortTitle) {
-            cmp.setTitle(cmp.shortTitle);
-        }
         this.setActiveTab(this.items.getCount() - 1);
         cmp.on("hide", this.onCmpHide, this);
         //TODO investigate why hidden components are displayed again when
