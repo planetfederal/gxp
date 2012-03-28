@@ -214,8 +214,10 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
         var origCfg = this.initialConfig.outputConfig || {};
         this.outputConfig.title = origCfg.title ||
             this.menuText + ": " + record.get("title");
+        this.outputConfig.shortTitle = record.get("title");
 
         Ext.apply(config, gxp.WMSStylesDialog.createGeoServerStylerConfig(record));
+        config.dialogCls = Ext.Container;
         if (this.rasterStyling === true) {
             config.plugins.push({
                 ptype: "gxp_wmsrasterstylesdialog"
@@ -224,8 +226,13 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
         Ext.applyIf(config, {style: "padding: 10px"});
         
         var output = gxp.plugins.Styler.superclass.addOutput.call(this, config);
+        output.showDlg = function(dlg) {
+            output.ownerCt.add(dlg);
+        };
         output.stylesStore.on("load", function() {
-            this.outputTarget || output.ownerCt.ownerCt.center();
+            if (!this.outputTarget && output.ownerCt.ownerCt instanceof Ext.Window) {
+                output.ownerCt.ownerCt.center();
+            }
         });
     }
         
