@@ -82,7 +82,7 @@ gxp.CrumbPanel = Ext.extend(Ext.TabPanel, {
     onRender: function(cmp) {
         if (!this.initialConfig.itemTpl) {
             this.itemTpl = new Ext.Template(
-                 '<li class="{cls} gxp-crumb" id="{id}"><div class="gxp-crumb-separator"></div>',
+                 '<li class="{cls} gxp-crumb" id="{id}"><div class="gxp-crumb-separator">\u00BB</div>',
                  '<a class="x-tab-right" href="#"><em class="x-tab-left">',
                  '<span class="x-tab-strip-inner"><span class="x-tab-strip-text {iconCls}">{text}</span></span></span>',
                  '</em></a></li>'

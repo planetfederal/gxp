@@ -386,13 +386,13 @@ div.olMap div.gx-overlay-playback {
 .gxp-crumb-separator {
     background-repeat: no-repeat;
     display: block;
-	width: 12px;
+    width: 12px;
     height: 11px;
     position: absolute;
-    top: 6px;
-    right: 3px;
+    top: -1px;
+    right: 1px;
     z-index: 2;
-    background-image: url('img/expand.gif');
+    font-size: 18px;
 }
 .gxp-crumb .x-tab-right {
     padding-left: 0px;
@@ -472,8 +472,8 @@ div.olMap div.gx-overlay-playback {
 }
 
 .gx_timeslider div.x-slider-thumb{
-	background-position:0;
-	cursor: pointer;
+    background-position:0;
+    cursor: pointer;
 }
 .gx_timeslider div.x-slider-min-thumb{
     background-image:url('img/silk/resultset_next.png');
