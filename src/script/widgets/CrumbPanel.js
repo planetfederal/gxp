@@ -22,6 +22,9 @@ Ext.namespace("gxp");
  *    rightmost one will close all dialogs that are hosted in tabs on its
  *    right.
  *
+ *    If a component has a ``shortTitle`` configured, it will be used instead
+ *    of the ``title`` in the crumb path.
+ *
  *    Components intended to be reused after being removed from this panel need
  *    the closeAction option set to "hide", like an ``Ext.Window``. 
  */   
@@ -45,6 +48,9 @@ gxp.CrumbPanel = Ext.extend(Ext.TabPanel, {
      */
     onAdd: function(cmp) {
         gxp.CrumbPanel.superclass.onAdd.apply(this, arguments);
+        if (cmp.shortTitle) {
+            cmp.setTitle(cmp.shortTitle);
+        }
         this.setActiveTab(this.items.getCount() - 1);
         cmp.on("hide", this.onCmpHide, this);
         //TODO investigate why hidden components are displayed again when
