@@ -65,6 +65,7 @@ GeoExt.Lang.add("pl", {
     },
     
     "gxp.plugins.LayerTree.prototype": {
+        shortTitle: "Mapa",
         rootNodeText: "Mapa",
         overlayNodeText: "Warstwy",
         baseNodeText: "Mapa referencyjna"

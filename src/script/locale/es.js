@@ -64,6 +64,7 @@ GeoExt.Lang.add("es", {
     },
     
     "gxp.plugins.LayerTree.prototype": {
+        shortTitle: "Capas",
         rootNodeText: "Capas",
         overlayNodeText: "Capas superpuestas",
         baseNodeText: "Capa base"

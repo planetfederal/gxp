@@ -55,6 +55,7 @@ GeoExt.Lang.add("nl", {
     },
     
     "gxp.plugins.LayerTree.prototype": {
+        shortTitle: "Kaartlagen",
         rootNodeText: "Kaartlagen",
         overlayNodeText: "Kaart overlays",
         baseNodeText: "Basis Kaarten"
