@@ -328,7 +328,7 @@ GeoExt.Lang.add("nl", {
         dataStoreEmptyText: "Standaard archief"
     },
 
-    "gxp.NewSourceWindow.prototype": {
+    "gxp.NewSourceDialog.prototype": {
         title: "Add New Server...",
         cancelText: "Cancel",
         addServerText: "Add Server",

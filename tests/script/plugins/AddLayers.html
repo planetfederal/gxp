@@ -45,7 +45,7 @@
             t.delay_call(2, function() {
                 // check if updateName has updated the source title in the
                 // sources combo box
-                t.eq(addLayers.capGrid.getTopToolbar().get(1).getRawValue(), source.title, "Title set to title from source");
+                t.eq(addLayers.capGrid.ownerCt.ownerCt.getTopToolbar().get(1).getRawValue(), source.title, "Title set to title from source");
             });
         }
 

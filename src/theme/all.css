@@ -376,6 +376,45 @@ div.olMap div.gx-overlay-playback {
     display: none;
 }
 
+/* gxp_crumbpanel */
+.gxp-crumbpanel-header ul, li.gxp-crumb {
+    position: relative;
+}
+.gxp-crumb .x-tab-left {
+    padding-right: 19px;
+}
+.gxp-crumb-separator {
+    background-repeat: no-repeat;
+    display: block;
+	width: 12px;
+    height: 11px;
+    position: absolute;
+    top: 6px;
+    right: 3px;
+    z-index: 2;
+    background-image: url('img/expand.gif');
+}
+.gxp-crumb .x-tab-right {
+    padding-left: 0px;
+    background-image: none;
+}
+.gxp-crumb .x-tab-left, .gxp-crumb .x-tab-strip-inner {
+    background-image: none;
+}
+.gxp-crumb .x-tab-strip-text {
+    margin: 0 2px 0 2px;
+}
+.x-tab-strip-active .gxp-crumb-separator {
+    display: none;
+}
+.gxp-crumbpanel-header ul {
+    padding-bottom: 1px;
+    border-bottom: 0;
+}
+.gxp-crumbpanel-header {
+    padding-bottom: 0;
+}
+
 /** gx_playbacktoolbar**/
 .x-btn .gxp-icon-reset{
     background-image:url('img/silk/control_start_blue.png')

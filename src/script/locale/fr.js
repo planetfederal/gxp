@@ -300,7 +300,7 @@ GeoExt.Lang.add("fr", {
         dataStoreEmptyText: "Magasin de données par défaut"
     },
 
-    "gxp.NewSourceWindow.prototype": {
+    "gxp.NewSourceDialog.prototype": {
         title: "Ajouter un nouveau serveur...",
         cancelText: "Annuler",
         addServerText: "Ajouter un serveur",

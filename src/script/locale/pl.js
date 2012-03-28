@@ -346,7 +346,7 @@ GeoExt.Lang.add("pl", {
         dataStoreEmptyText: "Domyślny magazyn danych"
     },
     
-    "gxp.NewSourceWindow.prototype": {
+    "gxp.NewSourceDialog.prototype": {
         title: "Dodaj serwer...",
         cancelText: "Anuluj",
         addServerText: "Dodaj serwer",
