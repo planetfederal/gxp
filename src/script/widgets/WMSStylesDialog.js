@@ -594,6 +594,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     method: "GET",
                     disableCaching: false
                 }),
+                autoScroll: true,
                 border: false,
                 defaults: {
                     autoHeight: true,
@@ -601,7 +602,11 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 },
                 listeners: {
                     "change": this.saveRule,
-                    "tabchange": function() {ruleDlg.syncShadow();},
+                    "tabchange": function() {
+                        if (ruleDlg instanceof Ext.Window) {
+                            ruleDlg.syncShadow();
+                        }
+                    },
                     scope: this
                 }
             }],

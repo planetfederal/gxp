@@ -234,6 +234,8 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
             if (dlg instanceof Ext.Window) {
                 dlg.show();
             } else {
+                dlg.layout = "fit";
+                dlg.autoHeight = false;
                 output.ownerCt.add(dlg);
             }
         };
