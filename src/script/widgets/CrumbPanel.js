@@ -36,6 +36,8 @@ gxp.CrumbPanel = Ext.extend(Ext.TabPanel, {
      */
     widths: null,
     
+    enableTabScroll: true,
+    
     /** private: method[initComponent]
      */
     initComponent: function() {
