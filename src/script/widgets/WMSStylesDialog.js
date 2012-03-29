@@ -1182,7 +1182,8 @@ OpenLayers.Renderer.defaultSymbolizer = {
     fontSize: 10,
     haloColor: "#FFFFFF",
     haloOpacity: 1,
-    haloRadius: 1
+    haloRadius: 1,
+    labelAlign: 'cm'
 };
 
 /** api: xtype = gxp_wmsstylesdialog */
