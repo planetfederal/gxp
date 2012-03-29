@@ -120,9 +120,9 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
             this.timeManager.incrementTime(this.timeManager.rangeInterval, 
                 this.timeManager.units || 
                     OpenLayers.TimeUnit[gxp.PlaybackToolbar.smartIntervalFormat(sliderInfo.interval).units.toUpperCase()]);
-            this.slider.setValue(0,this.timeManager.currentTime.getTime());
+            this.setValue(0,this.timeManager.currentTime.getTime());
         }
-        this.setThumbStyles(this.slider);
+        this.setThumbStyles();
     },
     
     setTimeFormat : function(format){
@@ -170,7 +170,7 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
         var offset = (tailIndex > -1) ? currentTime.getTime() - this.thumbs[0].value : 0;
         this.setValue(0, evt.currentTime.getTime());
         if(tailIndex > -1) {
-            this.setValue(tailIndex, slider.thumbs[tailIndex].value + offset);
+            this.setValue(tailIndex, this.thumbs[tailIndex].value + offset);
         }
         this.updateTimeDisplay();
         //TODO use relay event instead, fire this directly from the slider
@@ -249,7 +249,7 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
         if(!sliderInfo.interval && slider.timeManager.intervals && slider.timeManager.intervals.length > 2) {
             sliderInfo.interval = Math.round((sliderInfo.maxValue - sliderInfo.minValue) / this.timeManager.intervals.length);
         }
-        this.setTimeFormat(this.guessTimeFormat(sliderInfo.interval));
+        this.setTimeFormat(gxp.PlaybackToolbar.guessTimeFormat(sliderInfo.interval));
     },
 
     setThumbStyles : function() {

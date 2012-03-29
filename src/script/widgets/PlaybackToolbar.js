@@ -197,6 +197,10 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
             var tool = this.availableTools[key];
             if(tool){
                 items.push(tool);
+            } else {
+                if(['|',' ','->'].indexOf(key)>-1){
+                    items.push(key);
+                }
             }
         }
         return items;
