@@ -353,7 +353,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
     getTextSymbolizer: function() {
         var symbolizer = this.hasTextSymbolizer();
         if (!symbolizer) {
-            symbolizer = new OpenLayers.Symbolizer.Text();
+            symbolizer = new OpenLayers.Symbolizer.Text({graphic: false});
         }
         return symbolizer;
     },
