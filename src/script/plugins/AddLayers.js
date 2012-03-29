@@ -8,7 +8,7 @@
 
 /**
  * @requires plugins/Tool.js
- * @requires widgets/NewSourceWindow.js
+ * @requires widgets/NewSourceDialog.js
  */
 
 /** api: (define)
@@ -261,6 +261,8 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
     showCapabilitiesGrid: function() {
         if(!this.capGrid) {
             this.initCapGrid();
+        } else {
+            this.addOutput(this.capGrid);
         }
         this.capGrid.show();
     },
@@ -374,16 +376,33 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 text: this.addServerText,
                 iconCls: "gxp-icon-addserver",
                 handler: function() {
-                    newSourceWindow.show();
-                }
+                    if (this.outputTarget) {
+                        this.addOutput(newSourceDialog);
+                    } else {
+                        new Ext.Window({
+                            title: gxp.NewSourceDialog.prototype.title,
+                            modal: true,
+                            hideBorders: true,
+                            width: 300,
+                            items: newSourceDialog
+                        }).show();
+                    }
+                },
+                scope: this
             }));
         }
         
-        var newSourceWindow = new gxp.NewSourceWindow({
-            modal: true,
+        var newSourceDialog = {
+            xtype: "gxp_newsourcedialog",
+            header: false,
             listeners: {
-                "server-added": function(url) {
-                    newSourceWindow.setLoading();
+                "hide": function(cmp) {
+                    if (!this.outputTarget) {
+                        cmp.ownerCt.hide();
+                    }
+                },
+                "urlselected": function(newSourceDialog, url) {
+                    newSourceDialog.setLoading();
                     this.target.addLayerSource({
                         config: {url: url}, // assumes default of gx_wmssource
                         callback: function(id) {
@@ -394,10 +413,10 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                             });
                             sources.insert(0, [record]);
                             sourceComboBox.onSelect(record, 0);
-                            newSourceWindow.hide();
+                            newSourceDialog.hide();
                         },
                         fallback: function(source, msg) {
-                            newSourceWindow.setError(
+                            this.setError(
                                 new Ext.Template(this.addLayerSourceErrorText).apply({msg: msg})
                             );
                         },
@@ -406,7 +425,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 },
                 scope: this
             }
-        });
+        };
         
         var items = {
             xtype: "container",
@@ -449,8 +468,8 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             bbarItems.unshift(uploadButton);
         }
 
-        //TODO use addOutput here instead of just applying outputConfig
-        this.capGrid = new Ext.Window(Ext.apply({
+        var Cls = this.outputTarget ? Ext.Panel : Ext.Window;
+        this.capGrid = new Cls(Ext.apply({
             title: this.availableLayersText,
             closeAction: "hide",
             layout: "border",
@@ -474,6 +493,9 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 scope: this
             }
         }, this.initialConfig.outputConfig));
+        if (Cls === Ext.Panel) {
+            this.addOutput(this.capGrid);
+        }
         
     },
     
@@ -524,12 +546,14 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 hidden: true,
                 handler: function() {
                     var panel = new gxp.LayerUploadPanel(Ext.apply({
+                        title: this.outputTarget ? this.uploadText : undefined,
                         url: url,
                         width: 350,
                         border: false,
                         bodyStyle: "padding: 10px 10px 0 10px;",
                         frame: true,
                         labelWidth: 65,
+                        autoScroll: true,
                         defaults: {
                             anchor: "95%",
                             allowBlank: false,
@@ -544,7 +568,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                                 }
                                 this.selectedSource.store.load({
                                     callback: function(records, options, success) {
-                                        var gridPanel = this.capGrid.items.get(0);
+                                        var gridPanel = this.capGrid.get(0).get(0);
                                         var sel = gridPanel.getSelectionModel();
                                         sel.clearSelections();
                                         // select newly added layers
@@ -565,19 +589,28 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                                     },
                                     scope: this
                                 });
-                                win.close();
+                                if (this.outputTarget) {
+                                    panel.hide();
+                                } else {
+                                    win.close();
+                                }
                             },
                             scope: this
                         }
                     }, uploadConfig));
                     
-                    var win = new Ext.Window({
-                        title: this.uploadText,
-                        modal: true,
-                        resizable: false,
-                        items: [panel]
-                    });
-                    win.show();
+                    var win;
+                    if (this.outputTarget) {
+                        this.addOutput(panel);
+                    } else {
+                        win = new Ext.Window({
+                            title: this.uploadText,
+                            modal: true,
+                            resizable: false,
+                            items: [panel]
+                        });
+                        win.show();
+                    }
                 },
                 scope: this
             });

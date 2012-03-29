@@ -173,6 +173,13 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      *  false.
      */
     modified: false,
+    
+    /** private: config[dialogCls]
+     *  ``Ext.Component`` The dialogue class to use. Default is ``Ext.Window``.
+     *  If using e.g. ``Ext.Container``, override the ``showDlg`` method to
+     *  add the dialogue to a container.
+     */
+    dialogCls: Ext.Window,
         
     /** private: method[initComponent]
      */
@@ -363,9 +370,10 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 }
             }]
         };
-        var styleProperties = new Ext.Window(Ext.apply(buttonCfg, {
+        var styleProperties = new this.dialogCls(Ext.apply(buttonCfg, {
             title: String.format(this.styleWindowTitle,
                 userStyle.title || userStyle.name),
+            shortTitle: userStyle.title || userStyle.name,
             bodyBorder: false,
             autoHeight: true,
             width: 300,
@@ -389,7 +397,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 scope: this
             }
         }));
-        styleProperties.show();
+        this.showDlg(styleProperties);
     },
     
     /** api: method[createSLD]
@@ -564,9 +572,10 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         var rule = this.selectedRule;
         var origRule = rule.clone();
 
-        var ruleDlg = new Ext.Window({
+        var ruleDlg = new this.dialogCls({
             title: String.format(this.ruleWindowTitle,
                 rule.title || rule.name || this.newRuleText),
+            shortTitle: rule.title || rule.name || this.newRuleText,
             width: 340,
             autoHeight: true,
             modal: true,
@@ -585,6 +594,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     method: "GET",
                     disableCaching: false
                 }),
+                autoScroll: true,
                 border: false,
                 defaults: {
                     autoHeight: true,
@@ -592,7 +602,11 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 },
                 listeners: {
                     "change": this.saveRule,
-                    "tabchange": function() {ruleDlg.syncShadow();},
+                    "tabchange": function() {
+                        if (ruleDlg instanceof Ext.Window) {
+                            ruleDlg.syncShadow();
+                        }
+                    },
                     scope: this
                 }
             }],
@@ -610,7 +624,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 handler: function() { ruleDlg.close(); }
             }]
         });
-        ruleDlg.show();
+        this.showDlg(ruleDlg);
     },
     
     /** private: method[saveRule]
@@ -1100,6 +1114,15 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         var layerName = this.layerRecord.get("name");
         return layerName.split(":").pop() + "_" +
             gxp.util.md5(layerName + new Date() + Math.random()).substr(0, 8);
+    },
+    
+    /** private: method[showDlg]
+     *  :arg dlg:
+     *
+     *  Shows a subdialog
+     */
+    showDlg: function(dlg) {
+        dlg.show();
     }
     
 });
@@ -1164,7 +1187,8 @@ OpenLayers.Renderer.defaultSymbolizer = {
     fontSize: 10,
     haloColor: "#FFFFFF",
     haloOpacity: 1,
-    haloRadius: 1
+    haloRadius: 1,
+    labelAlign: 'cm'
 };
 
 /** api: xtype = gxp_wmsstylesdialog */

@@ -64,6 +64,7 @@ GeoExt.Lang.add("ca", {
     },
     
     "gxp.plugins.LayerTree.prototype": {
+        shortTitle: "Capes",
         rootNodeText: "Capes",
         overlayNodeText: "Capes addicionals",
         baseNodeText: "Capa base"
@@ -366,7 +367,7 @@ GeoExt.Lang.add("ca", {
         dataStoreEmptyText: "Magatzem de dades per defecte"
     },
     
-    "gxp.NewSourceWindow.prototype": {
+    "gxp.NewSourceDialog.prototype": {
         title: "Afegeix Servidor...",
         cancelText: "Cancel·la",
         addServerText: "Afegeix Servidor",

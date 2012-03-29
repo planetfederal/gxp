@@ -34,6 +34,12 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
     
     /** api: ptype = gxp_layertree */
     ptype: "gxp_layertree",
+    
+    /** api: config[shortTitle]
+     *  ``String``
+     *  Short title text for this plugin's output (i18n)
+     */
+    shortTitle: "Layers",
 
     /** api: config[rootNodeText]
      *  ``String``
@@ -165,6 +171,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
             xtype: "treepanel",
             root: treeRoot,
             rootVisible: false,
+            shortTitle: this.shortTitle,
             border: false,
             enableDD: true,
             selModel: new Ext.tree.DefaultSelectionModel({

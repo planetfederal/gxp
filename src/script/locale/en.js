@@ -64,6 +64,7 @@ GeoExt.Lang.add("en", {
     },
     
     "gxp.plugins.LayerTree.prototype": {
+        shortTitle: "Layers",
         rootNodeText: "Layers",
         overlayNodeText: "Overlays",
         baseNodeText: "Base Layers"
@@ -367,7 +368,7 @@ GeoExt.Lang.add("en", {
         dataStoreEmptyText: "Default datastore"
     },
     
-    "gxp.NewSourceWindow.prototype": {
+    "gxp.NewSourceDialog.prototype": {
         title: "Add New Server...",
         cancelText: "Cancel",
         addServerText: "Add Server",

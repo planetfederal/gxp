@@ -64,6 +64,7 @@ GeoExt.Lang.add("id", {
     },
     
     "gxp.plugins.LayerTree.prototype": {
+        shortTitle: "Layer-layer",
         rootNodeText: "Layer-layer",
         overlayNodeText: "Superimposisi",
         baseNodeText: "Layer dasar"
@@ -367,7 +368,7 @@ GeoExt.Lang.add("id", {
         dataStoreEmptyText: "Penyimpanan data Default"
     },
     
-    "gxp.NewSourceWindow.prototype": {
+    "gxp.NewSourceDialog.prototype": {
         title: "Add New Server...",
         cancelText: "Cancel",
         addServerText: "Add Server",
