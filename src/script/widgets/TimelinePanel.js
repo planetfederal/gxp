@@ -723,6 +723,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             this.timeline.getBand(0)._decorators[0]._date = this.playbackTool.playbackToolbar.control.currentTime;
             this.timeline.getBand(0)._decorators[0].paint();
             delete this._ignoreTimeChange;
+            this.showAnnotations(time);
         }
     },
     
