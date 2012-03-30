@@ -56,6 +56,18 @@ gxp.plugins.MapProperties = Ext.extend(gxp.plugins.Tool, {
     colorText: "Background color",
 
     addActions: function() {
+        var baseLayer = this.target.mapPanel.map.baseLayer;
+        var container = Ext.get(this.target.mapPanel.map.getViewport());
+        if (this.initialConfig.backgroundColor) {
+            container.setStyle('background-color', this.initialConfig.backgroundColor);
+        }
+        if (this.initialConfig.numZoomLevels) {
+            baseLayer.addOptions({numZoomLevels: this.initialConfig.numZoomLevels});
+            this.target.mapPanel.map.events.triggerEvent('changebaselayer', {layer: baseLayer});
+        }
+        if (this.initialConfig.wrapDateLine) {
+            baseLayer.wrapDateLine = this.initialConfig.wrapDateLine;
+        }
         return gxp.plugins.MapProperties.superclass.addActions.apply(this, [{
             menuText: this.menuText,
             iconCls: "gxp-icon-mapproperties",
@@ -114,9 +126,22 @@ gxp.plugins.MapProperties = Ext.extend(gxp.plugins.Tool, {
                     },
                     scope: this
                 }
-                
             }]
         });
+    },
+
+    /** api: method[getState]
+     *  :return {Object}
+     *  Gets the configured tool state.
+     */
+    getState: function(){
+        var baseLayer = this.target.mapPanel.map.baseLayer;
+        var container = Ext.get(this.target.mapPanel.map.getViewport());
+        var config = gxp.plugins.MapProperties.superclass.getState.call(this);
+        config.backgroundColor = container.getColor('background-color');
+        config.numZoomLevels = baseLayer.numZoomLevels;
+        config.wrapDateLine = baseLayer.wrapDateLine;
+        return config;
     }
 
 });
