@@ -81,6 +81,7 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
                         fieldLabel: this.startText,
                         listeners: {
                             'select': this.setStartTime,
+                            'change': this.setStartTime,
                             scope: this
                         },
                         ref: '../../rangeStartField'
@@ -88,6 +89,7 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
                         fieldLabel: this.endText,
                         listeners: {
                             'select': this.setEndTime,
+                            'change': this.setEndTime,
                             scope: this
                         },
                         ref: '../../rangeEndField'
@@ -190,9 +192,6 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
     },
     setStartTime: function(cmp, date){
         this.timeManager.setStart(date);
-        if(this.timeManager.currentTime<date){
-            this.timeManager.currentTime = date;
-        }
         this.timeManager.fixedRange=true;
     },
     setEndTime:function(cmp,date){
