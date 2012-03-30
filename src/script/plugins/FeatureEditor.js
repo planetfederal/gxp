@@ -44,6 +44,12 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
      */
     iconClsAdd: "gxp-icon-addfeature",
 
+    /** api: config[closeOnSave]
+     * ``Boolean``
+     * If true, close the popup after saving. Defaults to false.
+     */
+    closeOnSave: false,
+
     /** api: config[supportAbstractGeometry]
      *  Should we support layers that advertize an abstract geometry type?
      *  In this case, we will provide menu options for digitizing point, line
@@ -410,8 +416,13 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                                 featureStore.on({
                                     write: {
                                         fn: function() {
-                                            if (popup && popup.isVisible()) {
-                                                popup.enable();
+                                            if (popup) {
+                                                if (popup.isVisible()) {
+                                                    popup.enable();
+                                                }
+                                                if (this.closeOnSave) {
+                                                    popup.close();
+                                                }
                                             }
                                             var layer = featureManager.layerRecord;
                                             this.target.fireEvent("featureedit", featureManager, {
