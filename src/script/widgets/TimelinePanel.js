@@ -1070,7 +1070,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         var fid = record.getFeature().fid;
         if (!this.tooltips[fid]) {
             this.tooltips[fid] = new Ext.ToolTip({
-                html: record.get("title"),
+                cls: 'gxp-annotations-tip',
+                html: '<h4>' + record.get("title") + '</h4>' + record.get('content'),
                 dismissDelay: 0
             });
         }
