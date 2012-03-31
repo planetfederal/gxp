@@ -1076,7 +1076,10 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 dismissDelay: 0
             });
         }
-        this.tooltips[fid].showBy(this.viewer.mapPanel.body, record.get("appearance"));
+        var tooltip = this.tooltips[fid];
+        // http://www.sencha.com/forum/showthread.php?101593-OPEN-1054-Tooltip-anchoring-problem
+        tooltip.showBy(this.viewer.mapPanel.body, record.get("appearance"));
+        tooltip.showBy(this.viewer.mapPanel.body, record.get("appearance"));
     },
 
     /** private: method[hideTooltip]
