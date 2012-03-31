@@ -1104,7 +1104,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             this.annotationsLayer = new OpenLayers.Layer.Vector(null, {
                 displayInLayerSwitcher: false,
                 styleMap: new OpenLayers.StyleMap({'default':{
-                    label: "${title}",
+                    label: "${title}\n${content}",
                     fontColor: "black",
                     fontSize: "12px",
                     fontFamily: "Courier New, monospace",
