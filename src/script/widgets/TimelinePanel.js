@@ -1076,12 +1076,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 dismissDelay: 0
             });
         }
-        var tooltip = this.tooltips[fid];
-        if (tooltip.pageX && tooltip.pageY) {
-            tooltip.showAt([tooltip.pageX, tooltip.pageY]);
-        } else {
-            tooltip.showBy(this.viewer.mapPanel.body, record.get("appearance"));
-        }
+        this.tooltips[fid].showBy(this.viewer.mapPanel.body, record.get("appearance"));
     },
 
     /** private: method[hideTooltip]
