@@ -99,7 +99,11 @@ gxp.plugins.GoogleEarth = Ext.extend(gxp.plugins.Tool, {
             toggleHandler: function(button, state) {
                 // we unpress the button so that it will only show pressed
                 // on successful display
-                button.toggle(false, true);
+                this.actions[0].each(function(cmp) {
+                    if (cmp.toggle) {
+                        cmp.toggle(false, true);
+                    }
+                });
                 this.togglePanelDisplay(state);
             },
             scope: this
