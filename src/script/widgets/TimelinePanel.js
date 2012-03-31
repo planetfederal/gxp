@@ -1211,8 +1211,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                     this.updateTimelineEvents({force: true, noAbort: true}, true);
                 }
             }
-            this.showAnnotations(time);
         }
+        this.showAnnotations(time);
     },
 
     /** private: method[calculateNewRange]
