@@ -1075,10 +1075,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 html: '<h4>' + record.get("title") + '</h4>' + record.get('content'),
                 dismissDelay: 0
             });
+            // pre-show it off screen so that the el will have dimensions
+            // for positioning calcs when getting xy next
+            this.tooltips[fid].showAt([-1000,-1000]);
         }
         var tooltip = this.tooltips[fid];
-        // http://www.sencha.com/forum/showthread.php?101593-OPEN-1054-Tooltip-anchoring-problem
-        tooltip.showBy(this.viewer.mapPanel.body, record.get("appearance"));
         tooltip.showBy(this.viewer.mapPanel.body, record.get("appearance"));
     },
 
