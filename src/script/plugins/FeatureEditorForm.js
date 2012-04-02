@@ -129,10 +129,10 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
                 }
                 var fieldCfg = GeoExt.form.recordToField(r);
                 fieldCfg.fieldLabel = this.propertyNames ? (this.propertyNames[name] || fieldCfg.fieldLabel) : fieldCfg.fieldLabel;
-                fieldCfg.value = this.feature.attributes[name];
                 if (this.fieldConfig && this.fieldConfig[name]) {
                     Ext.apply(fieldCfg, this.fieldConfig[name]);
                 }
+                fieldCfg.value = this.feature.attributes[name];
                 if (fieldCfg.value && fieldCfg.xtype == "checkbox") {
                     fieldCfg.checked = Boolean(fieldCfg.value);
                 }
