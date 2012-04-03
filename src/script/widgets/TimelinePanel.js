@@ -31,6 +31,31 @@
  */
 Ext.namespace("gxp");
 
+// showBy does not allow offsets
+Ext.override(Ext.Tip, {
+    showBy: function(el, pos, offsets){
+        var offsetX = offsets[0];
+        var offsetY = offsets[1];
+        if (pos.charAt(0) === 'b') {
+            offsetY = -offsetY;
+        }
+        if (pos.charAt(0) === 'r' || pos.charAt(1) === 'r') {
+            offsetX = -offsetX;
+        }
+        if (pos.charAt(0) === 'c') {
+            offsetX = 0;
+            offsetY = 0;
+        }
+        if (pos.charAt(0) === 'l' || pos.charAt(0) === 'r') {
+            offsetY = 0;
+        }
+        if(!this.rendered){
+            this.render(Ext.getBody());
+        }
+        this.showAt(this.el.getAlignToXY(el, pos || this.defaultAlign, [offsetX, offsetY]));
+    }   
+});
+
 // TODO use from GeoExt eventually
 GeoExt.FeatureTip = Ext.extend(Ext.Tip, {
 
@@ -1157,8 +1182,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         var tooltip = this.tooltips[fid];
         if (!hasGeometry) {
             // http://www.sencha.com/forum/showthread.php?101593-OPEN-1054-Tooltip-anchoring-problem
-            tooltip.showBy(this.viewer.mapPanel.body, record.get("appearance"));
-            tooltip.showBy(this.viewer.mapPanel.body, record.get("appearance"));
+            tooltip.showBy(this.viewer.mapPanel.body, record.get("appearance"), [10, 10]);
+            tooltip.showBy(this.viewer.mapPanel.body, record.get("appearance"), [10, 10]);
         } else {
             tooltip.show();
         }
