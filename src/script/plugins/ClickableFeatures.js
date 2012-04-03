@@ -28,7 +28,10 @@ Ext.namespace("gxp.plugins");
  *  .. class:: ClickableFeatures(config)
  *
  *    Base class for tools that need to handle feature clicks. Don't create
- *    instances of this base class.
+ *    instances of this base class. This tool uses a combination of WMS
+ *    GetFeatureInfo and WFS GetFeature, because of the better algorithm 
+ *    in WMS GetFeatureInfo to return a limited set of features from a crowded 
+ *    spot.
  */   
 gxp.plugins.ClickableFeatures = Ext.extend(gxp.plugins.Tool, {
     
