@@ -132,7 +132,9 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
                 if (this.fieldConfig && this.fieldConfig[name]) {
                     Ext.apply(fieldCfg, this.fieldConfig[name]);
                 }
-                fieldCfg.value = this.feature.attributes[name];
+                if (this.feature.attributes[name] !== undefined) {
+                    fieldCfg.value = this.feature.attributes[name];
+                }
                 if (fieldCfg.value && fieldCfg.xtype == "checkbox") {
                     fieldCfg.checked = Boolean(fieldCfg.value);
                 }

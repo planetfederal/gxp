@@ -31,6 +31,100 @@
  */
 Ext.namespace("gxp");
 
+// showBy does not allow offsets
+Ext.override(Ext.Tip, {
+    showBy: function(el, pos, offsets){
+        var offsetX = offsets[0];
+        var offsetY = offsets[1];
+        if (pos.charAt(0) === 'b') {
+            offsetY = -offsetY;
+        }
+        if (pos.charAt(0) === 'r' || pos.charAt(1) === 'r') {
+            offsetX = -offsetX;
+        }
+        if (pos.charAt(0) === 'c') {
+            offsetX = 0;
+            offsetY = 0;
+        }
+        if (pos.charAt(0) === 'l' || pos.charAt(0) === 'r') {
+            offsetY = 0;
+        }
+        if(!this.rendered){
+            this.render(Ext.getBody());
+        }
+        this.showAt(this.el.getAlignToXY(el, pos || this.defaultAlign, [offsetX, offsetY]));
+    }   
+});
+
+// TODO use from GeoExt eventually
+GeoExt.FeatureTip = Ext.extend(Ext.Tip, {
+
+    /** api: config[map]
+     *  ``OpenLayers.Map``
+     */
+    map: null,
+
+    /** api: config[location]
+     *  ``OpenLayers.Feature.Vector``
+     */
+    location: null,
+
+    /** private: method[initComponent]
+     *  Initializes the feature tip.
+     */
+    initComponent: function() {
+        var centroid = this.location.geometry.getCentroid();
+        this.location = new OpenLayers.LonLat(centroid.x, centroid.y);
+        this.map.events.on({
+            "move" : this.show,
+            scope : this
+        });
+        GeoExt.FeatureTip.superclass.initComponent.call(this);
+    },
+
+    /** private: method[beforeDestroy]
+     *  Cleanup events before destroying the feature tip.
+     */
+    beforeDestroy: function() {
+        this.map.events.un({
+            "move" : this.show,
+            scope : this
+        });
+        GeoExt.FeatureTip.superclass.beforeDestroy.call(this);
+    },
+
+    /** private: method[getPosition]
+     *  Get the position of the feature in pixel space.
+     *
+     *  :returns: ``Array`` The position of the feature in pixel space or
+     *  null if the feature is not visible in the map.
+     */
+    getPosition: function() {
+        if (this.map.getExtent().containsLonLat(this.location)) {
+            var locationPx = this.map.getPixelFromLonLat(this.location),
+                mapBox = Ext.fly(this.map.div).getBox(true),
+                top = locationPx.y + mapBox.y,
+               left = locationPx.x + mapBox.x;
+            return [left, top];
+        } else {
+            return null;
+        }
+    },
+
+    /** api: method[show]
+     *  Show the feature tip.
+     */
+    show: function() {
+        var position = this.getPosition();
+        if (position !== null) {
+            this.showAt(position);
+        } else {
+            this.hide();
+        }
+    }
+
+});
+
 // http://code.google.com/p/simile-widgets/issues/detail?id=3
 window.Timeline && window.SimileAjax && (function() {
     SimileAjax.History.enabled = false;
@@ -720,7 +814,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         if (this._silent !== true && this.playbackTool && this.playbackTool.playbackToolbar.playing !== true) {
             this._ignoreTimeChange = true;
             this.playbackTool.setTime(time);
-            this.timeline.getBand(0)._decorators[0]._date = this.playbackTool.playbackToolbar.control.currentTime;
+            this.timeline.getBand(0)._decorators[0]._date = time;
             this.timeline.getBand(0)._decorators[0].paint();
             delete this._ignoreTimeChange;
             this.showAnnotations(time);
@@ -1065,21 +1159,34 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  Create and show the tooltip for a record.
      */
     displayTooltip: function(record) {
+        var hasGeometry = (record.getFeature().geometry !== null);
         if (!this.tooltips) {
             this.tooltips = {};
         }
         var fid = record.getFeature().fid;
         if (!this.tooltips[fid]) {
-            this.tooltips[fid] = new Ext.ToolTip({
-                cls: 'gxp-annotations-tip',
-                html: '<h4>' + record.get("title") + '</h4>' + record.get('content'),
-                dismissDelay: 0
-            });
+            if (!hasGeometry) {
+                this.tooltips[fid] = new Ext.Tip({
+                    cls: 'gxp-annotations-tip',
+                    html: '<h4>' + record.get("title") + '</h4>' + record.get('content')
+                });
+            } else {
+                this.tooltips[fid] = new GeoExt.FeatureTip({
+                    map: this.viewer.mapPanel.map,
+                    location: record.getFeature(),
+                    cls: 'gxp-annotations-tip',
+                    html: '<h4>' + record.get("title") + '</h4>' + record.get('content')
+                });
+            }
         }
         var tooltip = this.tooltips[fid];
-        // http://www.sencha.com/forum/showthread.php?101593-OPEN-1054-Tooltip-anchoring-problem
-        tooltip.showBy(this.viewer.mapPanel.body, record.get("appearance"));
-        tooltip.showBy(this.viewer.mapPanel.body, record.get("appearance"));
+        if (!hasGeometry) {
+            // http://www.sencha.com/forum/showthread.php?101593-OPEN-1054-Tooltip-anchoring-problem
+            tooltip.showBy(this.viewer.mapPanel.body, record.get("appearance"), [10, 10]);
+            tooltip.showBy(this.viewer.mapPanel.body, record.get("appearance"), [10, 10]);
+        } else {
+            tooltip.show();
+        }
     },
 
     /** private: method[hideTooltip]
@@ -1127,37 +1234,20 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                     if (endTime == "" || endTime == null) {
                         endTime = this.playbackTool.playbackToolbar.control.range[1].getTime();
                     }
-                    var hasGeometry = (record.getFeature().geometry !== null);
                     if (ranged === true) {
                         if (compare <= parseFloat(endTime) && compare >= startTime) {
-                            if (hasGeometry === true) {
-                                this.annotationsLayer.drawFeature(record.getFeature());
-                            } else {
-                                this.displayTooltip(record);
-                            }
+                            this.displayTooltip(record);
                         } else {
-                            if (hasGeometry === true) {
-                                this.annotationsLayer.eraseFeatures([record.getFeature()]);
-                            } else {
-                                this.hideTooltip(record);
-                            }
+                            this.hideTooltip(record);
                         }
                     } else {
                         var diff = Math.abs(Math.abs(startTime)-Math.abs(compare));
                         var percentage = diff/Math.abs(startTime)*100;
                         // we need to take a margin for the feature to have a chance to show up
                         if (percentage <= 2.5) {
-                            if (hasGeometry === true) {
-                                this.annotationsLayer.drawFeature(record.getFeature());
-                            } else {
-                                this.displayTooltip(record);
-                            }
+                            this.displayTooltip(record);
                         } else {
-                            if (hasGeometry === true) {
-                                this.annotationsLayer.eraseFeatures([record.getFeature()]);
-                            } else {
-                                this.hideTooltip(record);
-                            }
+                            this.hideTooltip(record);
                         }
                     }
                 }
