@@ -185,6 +185,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
      *  Set the playback mode of the control.
      */
     setPlaybackMode: function(mode){
+        this.playbackMode = mode;
         this.slider.setPlaybackMode(mode);
     },
 
@@ -212,7 +213,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                 xtype: 'gxp_timeslider',
                 ref: 'slider',
                 timeManager: this.control,
-                playbackMode: (this.playbackMode) ? this.playbackMode : undefined
+                playbackMode: this.playbackMode
             },
             'reset': {
                 iconCls: 'gxp-icon-reset',
@@ -520,5 +521,3 @@ gxp.PlaybackToolbar.smartIntervalFormat = function(diff){
 
 /** api: xtype = gxp_playbacktoolbar */
 Ext.reg('gxp_playbacktoolbar', gxp.PlaybackToolbar);
-
-
