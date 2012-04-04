@@ -554,7 +554,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             record.json = config;
 
         } else {
-            if (window.console) {
+            if (window.console && this.store.getCount() > 0) {
                 console.warn("Could not create layer record for layer '" + config.name + "'. Check if the layer is found in the WMS GetCapabilities response.");
             }
         }
