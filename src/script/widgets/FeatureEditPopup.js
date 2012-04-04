@@ -98,6 +98,12 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
      *  feature. Default is false.
      */
     allowDelete: false,
+
+    /** api: config[showDeleteAfterEdit]
+     *  ``Boolean`` Set to true to provide a Delete button only after someone
+     *  has pressed the edit button first. Default is false.
+     */
+    showDeleteAfterEdit: false,
     
     /** api: config[editing]
      *  ``Boolean`` Set to true to open the popup in editing mode.
@@ -254,7 +260,7 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
             text: this.deleteButtonText,
             tooltip: this.deleteButtonTooltip,
             iconCls: "delete",
-            hidden: !this.allowDelete,
+            hidden: !this.allowDelete || this.showDeleteAfterEdit,
             handler: this.deleteFeature,
             scope: this
         });
@@ -353,12 +359,16 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
      */
     startEditing: function() {
         if(!this.editing) {
+            if (this.showDeleteAfterEdit && this.allowDelete) {
+                this.deleteButton.show();
+            } else {
+                this.deleteButton.hide();
+            }
             this.fireEvent("startedit", this);
             this.editing = true;
             this.anc && this.unanchorPopup();
 
             this.editButton.hide();
-            this.deleteButton.hide();
             this.saveButton.show();
             this.cancelButton.show();
             
@@ -429,7 +439,11 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
                 this.cancelButton.hide();
                 this.saveButton.hide();
                 this.editButton.show();
-                this.allowDelete && this.deleteButton.show();
+                if (this.allowDelete && !this.showDeleteAfterEdit) {
+                    this.deleteButton.show();
+                } else {
+                    this.deleteButton.hide();
+                }
             }
             
             this.editing = false;
