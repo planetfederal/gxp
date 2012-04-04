@@ -1787,11 +1787,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             } else if (Ext.isBoolean(attributes[filterAttr]) ? attributes[filterAttr] : (attributes[filterAttr] === "true")) {
                 var start = attributes[timeAttr];
                 var end = attributes[endTimeAttr];
-                var startIsEmpty = (start == null || start === "");
-                var endIsEmpty = (end == null || end === "");
                 // end is optional
                 var durationEvent = (start != end);
-                if (!startIsEmpty) {
+                if (!Ext.isEmpty(start)) {
                     start = parseFloat(start);
                     if (Ext.isNumber(start)) {
                         start = new Date(start*1000);
@@ -1799,7 +1797,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                         start = OpenLayers.Date.parse(start);
                     }
                 }
-                if (!endIsEmpty) {
+                if (!Ext.isEmpty(end)) {
                     end = parseFloat(end);
                     if (Ext.isNumber(end)) {
                         end = new Date(end*1000);
