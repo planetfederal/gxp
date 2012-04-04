@@ -81,7 +81,7 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
     /** private: method[initComponent]
      */
     initComponent : function() {
-        this.defaults = Ext.apply(this.defaults || {}, {disabled: true});
+        this.defaults = Ext.apply(this.defaults || {}, {readOnly: true});
 
         this.listeners = {
             clientvalidation: function(panel, valid) {
@@ -233,21 +233,21 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
     },
 
     /** private: method[onStartEdit]
-     *  When editing starts in the feature edit popup, enable all fields
-     *  provided we are not in readOnly mode.
+     *  When editing starts in the feature edit popup, unmark all fields
+     *  as readonly provided we are not in readOnly mode.
      */
     onStartEdit: function() {
-        this.getForm().items.each(function(){
-             this.readOnly !== true && this.enable();
-        });
+        this.getForm().items.each(function(field){
+             this.readOnly !== true && field.setReadOnly(false);
+        }, this);
     },
 
     /** private: method[onStopEdit]
-     *  When editing stops in the feature edit popup, disable all fields.
+     *  When editing stops in the feature edit popup, mark all fields as read only.
      */
     onStopEdit: function() {
-        this.getForm().items.each(function(){
-             this.disable();
+        this.getForm().items.each(function(field){
+             field.setReadOnly(true);
         });
     },
 
