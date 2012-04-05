@@ -22,7 +22,7 @@ Ext.namespace("gxp.grid");
  *
  *      Create a new grid displaying the symbolizers of a style and its subtypes.
  */
-gxp.grid.SymbolizerGrid = Ext.extend(Ext.ux.tree.TreeGrid, {
+gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.extend(Ext.ux.tree.TreeGrid, {
 
     /** api: config[symbolizers]
      *  ``Array`` Array of OpenLayers symbolizer objects which will be
@@ -170,4 +170,4 @@ gxp.grid.SymbolizerGrid = Ext.extend(Ext.ux.tree.TreeGrid, {
 });
 
 /** api: xtype = gxp_symbolgrid */
-Ext.reg('gxp_symbolgrid', gxp.grid.SymbolizerGrid);
+gxp.grid.SymbolizerGrid && Ext.reg('gxp_symbolgrid', gxp.grid.SymbolizerGrid);

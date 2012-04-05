@@ -17,7 +17,7 @@ Ext.ns("gxp.tree");
  *
  *      Create a new UI for tree nodes of a TreeGrid which adds the checkbox.
  */
-gxp.tree.TreeGridNodeUI = Ext.extend(Ext.ux.tree.TreeGridNodeUI, {
+gxp.tree.TreeGridNodeUI = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGridNodeUI && Ext.extend(Ext.ux.tree.TreeGridNodeUI, {
 
     renderElements : function(n, a, targetNode, bulkRender){
         var t = n.getOwnerTree(),
