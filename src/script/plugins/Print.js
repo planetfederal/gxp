@@ -165,8 +165,9 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                 handler: function() {
                     var supported = getSupportedLayers();
                     if (supported.length > 0) {
-                        createPrintWindow.call(this);
+                        var printWindow = createPrintWindow.call(this);
                         showPrintWindow.call(this);
+                        return printWindow;
                     } else {
                         // no layers supported
                         Ext.Msg.alert(
@@ -293,6 +294,7 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                         beforedestroy: destroyPrintComponents
                     }
                 });
+                return printWindow;
             }
 
             function showPrintWindow() {
