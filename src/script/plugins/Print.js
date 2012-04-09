@@ -88,6 +88,12 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      */
     previewText: "Print Preview",
 
+    /** api: config[openInNewWindow]
+     *  ``Boolean``
+     *  If true, always open in new window regardless of the browser type.
+     */
+    openInNewWindow: false,
+
     /** private: method[constructor]
      */
     constructor: function(config) {
@@ -106,6 +112,12 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                 customParams: this.customParams,
                 autoLoad: false,
                 listeners: {
+                    beforedownload: function(provider, url) {
+                        if (this.openInNewWindow === true) {
+                            window.open(url);
+                            return false;
+                        }
+                    },
                     beforeencodelegend: function(provider, jsonData, legend) {
                         if (legend && legend.ptype === "gxp_layermanager") {
                             var encodedLegends = [];
