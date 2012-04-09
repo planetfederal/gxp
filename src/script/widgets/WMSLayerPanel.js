@@ -110,9 +110,20 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
     cacheFieldText: "Use cached tiles",
     stylesText: "Styles",
     displayOptionsText: "Display options",
+    queryText: "Limit with filters",
  
     initComponent: function() {
-        
+        if (this.source) {
+            this.source.getSchema(this.layerRecord, function(attributeStore) {
+                this.filterFieldset.add(
+                    new gxp.FilterBuilder({
+                        allowGroups: false,
+                        attributes: attributeStore
+                    })
+                );
+                this.filterFieldset.doLayout();
+            }, this);
+        }
         this.addEvents(
             /** api: event[change]
              *  Fires when the ``layerRecord`` is changed using this dialog.
@@ -372,6 +383,12 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                         text: this.cacheFieldText
                     }]
                 }]
+            }, {
+                xtype: "fieldset",
+                title: this.queryText,
+                ref: "../filterFieldset",
+                hidden: this.source === null,
+                checkboxToggle: true
             }]
         };
 
