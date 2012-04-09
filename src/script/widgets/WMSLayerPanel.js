@@ -343,6 +343,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                         }
                     }, {
                         xtype: "label",
+                        cls: "gxp-layerproperties-label",
                         text: this.transparentText
                     }]
                 }, {
@@ -364,6 +365,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                         }
                     }, {
                         xtype: "label",
+                        cls: "gxp-layerproperties-label",
                         text: this.cacheFieldText
                     }]
                 }]
