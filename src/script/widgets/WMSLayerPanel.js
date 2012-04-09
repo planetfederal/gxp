@@ -115,13 +115,29 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
     initComponent: function() {
         if (this.source) {
             this.source.getSchema(this.layerRecord, function(attributeStore) {
-                this.filterFieldset.add(
-                    new gxp.FilterBuilder({
+                if (attributeStore !== false) {
+                    this.filterBuilder = new gxp.FilterBuilder({
                         allowGroups: false,
+                        listeners: {
+                            afterrender: function() {
+                                this.filterBuilder.cascade(function(item) {
+                                    if (item.getXType() === "toolbar") {
+                                        item.addText('or ');
+                                        item.addButton({
+                                            text: 'use CQL filter instead',
+                                            handler: this.switchToCQL,
+                                            scope: this
+                                        });
+                                    }
+                                }, this);
+                            },
+                            scope: this
+                        },
                         attributes: attributeStore
-                    })
-                );
-                this.filterFieldset.doLayout();
+                    });
+                    this.filterFieldset.add(this.filterBuilder);
+                    this.filterFieldset.doLayout();
+                }
             }, this);
         }
         this.addEvents(
@@ -154,6 +170,24 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
         }
 
         gxp.WMSLayerPanel.superclass.initComponent.call(this);
+    },
+
+    switchToCQL: function() {
+        var filter = this.filterBuilder.getFilter();
+        var CQL = new OpenLayers.Format.CQL().write(filter);
+        this.filterBuilder.hide();
+        this.cqlField.setValue(CQL);
+        this.cqlField.show();
+        this.cqlToolbar.show();
+    },
+
+    switchToFilterBuilder: function() {
+        var filter = new OpenLayers.Format.CQL().read(this.cqlField.getValue());
+        this.cqlField.hide();
+        this.cqlToolbar.hide();
+        // filterBuilder has no method yet to update the filter
+        // TODO: add this
+        this.filterBuilder.show();
     },
 
     /** private: createStylesPanel
@@ -386,9 +420,28 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
             }, {
                 xtype: "fieldset",
                 title: this.queryText,
+                hideLabels: true,
                 ref: "../filterFieldset",
                 hidden: this.source === null,
-                checkboxToggle: true
+                checkboxToggle: true,
+                items: [{
+                    xtype: "textarea",
+                    grow: true,
+                    anchor: '99%',
+                    width: '100%',
+                    growMax: 100,
+                    ref: "../../cqlField",
+                    hidden: true
+                }, {
+                    xtype: 'toolbar',
+                    ref: "../../cqlToolbar",
+                    hidden: true,
+                    items: [{
+                        text: "Switch back to filter builder",
+                        handler: this.switchToFilterBuilder,
+                        scope: this
+                    }]
+                }]
             }]
         };
 
