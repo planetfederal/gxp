@@ -10,6 +10,7 @@
 /**
  * @include widgets/WMSStylesDialog.js
  * @include plugins/GeoServerStyleWriter.js
+ * @include GeoExt/widgets/LayerOpacitySlider.js
  */
 
 /** api: (define)
@@ -105,10 +106,11 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
     infoFormatText: "Info format",
     infoFormatEmptyText: "Select a format",
     transparentText: "Transparent",
-    cacheText: "Cache",
-    cacheFieldText: "Use cached version",
+    cacheText: "Caching",
+    cacheFieldText: "Use cached tiles",
     stylesText: "Styles",
-    
+    displayOptionsText: "Display options",
+ 
     initComponent: function() {
         
         this.addEvents(
@@ -122,12 +124,6 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
             this.createDisplayPanel()
         ];
 
-        // only add the Cache panel if we know for sure the WMS is GeoServer
-        // which has been integrated with GWC.
-        if (this.layerRecord.get("layer").params.TILED != null) {
-            this.items.push(this.createCachePanel());
-        }
-        
         // only add the Styles panel if we know for sure that we have styles
         if (this.styling && gxp.WMSStylesDialog && this.layerRecord.get("styles")) {
             // TODO: revisit this
@@ -149,32 +145,6 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
         gxp.WMSLayerPanel.superclass.initComponent.call(this);
     },
 
-    /** private: createCachePanel
-     *  Creates the Cache panel.
-     */
-    createCachePanel: function() {
-        return {
-            title: this.cacheText,
-            layout: "form",
-            style: "padding: 10px",
-            items: [{
-                xtype: "checkbox",
-                fieldLabel: this.cacheFieldText,
-                checked: (this.layerRecord.get("layer").params.TILED === true),
-                listeners: {
-                    check: function(checkbox, checked) {
-                        var layer = this.layerRecord.get("layer");
-                        layer.mergeNewParams({
-                            TILED: checked
-                        });
-                        this.fireEvent("change");
-                    },
-                    scope: this
-                }
-            }]    
-        };
-    },
-    
     /** private: createStylesPanel
      *  :arg url: ``String`` url to save styles to
      *
@@ -274,6 +244,27 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
             }]
         };
     },
+
+    /** private: onFormatChange
+     *  Handler for when the image format is changed.
+     */
+    onFormatChange: function(combo) {
+        var layer = this.layerRecord.getLayer();
+        var format = combo.getValue();
+        layer.mergeNewParams({
+            format: format
+        });
+        var cb = this.transparentCb;
+        if (format == "image/jpeg") {
+            this.transparent = cb.getValue();
+            cb.setValue(false);
+        } else if (this.transparent !== null) {
+            cb.setValue(this.transparent);
+            this.transparent = null;
+        }
+        cb.setDisabled(format == "image/jpeg");
+        this.fireEvent("change");
+    },
     
     /** private: createDisplayPanel
      *  Creates the display panel.
@@ -297,56 +288,90 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
         }
         var transparent = layer.params["TRANSPARENT"];
         transparent = (transparent === "true" || transparent === true);
-        
+
         return {
             title: this.displayText,
+            layout: 'form',
             style: {"padding": "10px"},
-            layout: "form",
-            labelWidth: 70,
+            defaults: {
+                labelWidth: 70
+            },
             items: [{
-                xtype: "slider",
-                name: "opacity",
-                fieldLabel: this.opacityText,
-                value: opacity * 100,
-                //TODO remove the line below when switching to Ext 3.2 final
-                values: [opacity * 100],
-                anchor: "99%",
-                isFormField: true,
-                listeners: {
-                    change: function(slider, value) {
-                        layer.setOpacity(value / 100);
-                        this.fireEvent("change");
+                xtype: "fieldset",
+                title: this.displayOptionsText,
+                checkboxToggle: true,
+                items: [{
+                    xtype: "gx_opacityslider",
+                    name: "opacity",
+                    isFormField: true,
+                    fieldLabel: this.opacityText,
+                    listeners: {
+                        change: function() {
+                            this.fireEvent("change");
+                        },
+                        scope: this
                     },
-                    scope: this
-                }
-            }, {
-                xtype: "combo",
-                fieldLabel: this.formatText,
-                store: formats,
-                value: currentFormat,
-                mode: "local",
-                triggerAction: "all",
-                editable: false,
-                anchor: "99%",
-                listeners: {
-                    select: function(combo) {
-                        var format = combo.getValue();
-                        layer.mergeNewParams({
-                            format: format
-                        });
-                        if (format == "image/jpeg") {
-                            this.transparent = Ext.getCmp('transparent').getValue();
-                            Ext.getCmp('transparent').setValue(false);
-                        } else if (this.transparent !== null) {
-                            Ext.getCmp('transparent').setValue(this.transparent);
-                            this.transparent = null;
+                    layer: this.layerRecord
+                }, {
+                    xtype: "compositefield",
+                    fieldLabel: this.formatText,
+                    items: [{
+                        xtype: "combo",
+                        width: 90,
+                        listWidth: 150,
+                        store: formats,
+                        value: currentFormat,
+                        mode: "local",
+                        triggerAction: "all",
+                        editable: false,
+                        listeners: {
+                            select: this.onFormatChange,
+                            scope: this
                         }
-                        Ext.getCmp('transparent').setDisabled(format == "image/jpeg");
-                        this.fireEvent("change");
-                    },
-                    scope: this
-                }
-            }, {
+                    }, {
+                        xtype: "checkbox",
+                        ref: '../../../transparentCb',
+                        checked: transparent,
+                        listeners: {
+                            check: function(checkbox, checked) {
+                                layer.mergeNewParams({
+                                    transparent: checked ? "true" : "false"
+                                });
+                                 this.fireEvent("change");
+                            },
+                            scope: this
+                        }
+                    }, {
+                        xtype: "label",
+                        text: this.transparentText
+                    }]
+                }, {
+                    xtype: "compositefield",
+                    hidden: this.layerRecord.get("layer").params.TILED == null,
+                    fieldLabel: this.cacheText,
+                    items: [{
+                        xtype: "checkbox",
+                        checked: (this.layerRecord.get("layer").params.TILED === true),
+                        listeners: {
+                            check: function(checkbox, checked) {
+                                var layer = this.layerRecord.get("layer");
+                                layer.mergeNewParams({
+                                    TILED: checked
+                                });
+                                this.fireEvent("change");
+                            },
+                            scope: this
+                        }
+                    }, {
+                        xtype: "label",
+                        text: this.cacheFieldText
+                    }]
+                }]
+            }]
+        };
+
+        /* TODO decide where info formats should go
+            {
                 xtype: "combo",
                 fieldLabel: this.infoFormatText,
                 emptyText: this.infoFormatEmptyText,
@@ -365,22 +390,8 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                     }
                 },
                 scope: this
-            }, {
-                xtype: "checkbox",
-                id: 'transparent',
-                fieldLabel: this.transparentText,
-                checked: transparent,
-                listeners: {
-                    check: function(checkbox, checked) {
-                        layer.mergeNewParams({
-                            transparent: checked ? "true" : "false"
-                        });
-                        this.fireEvent("change");
-                    },
-                    scope: this
-                }
-            }]
-        };
+            }
+        */
     }    
 
 });
