@@ -303,6 +303,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                 items: [{
                     xtype: "gx_opacityslider",
                     name: "opacity",
+                    anchor: "99%",
                     isFormField: true,
                     fieldLabel: this.opacityText,
                     listeners: {
@@ -315,6 +316,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                 }, {
                     xtype: "compositefield",
                     fieldLabel: this.formatText,
+                    anchor: "99%",
                     items: [{
                         xtype: "combo",
                         width: 90,
@@ -348,6 +350,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                     }]
                 }, {
                     xtype: "compositefield",
+                    anchor: "99%",
                     hidden: this.layerRecord.get("layer").params.TILED == null,
                     fieldLabel: this.cacheText,
                     items: [{
