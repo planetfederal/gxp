@@ -165,16 +165,18 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
     
     onTimeTick : function(evt) {
         var currentTime = evt.currentTime;
-        var toolbar = this.refOwner; //TODO use relay event instead
-        var tailIndex = this.indexMap ? this.indexMap.indexOf('tail') : -1;
-        var offset = (tailIndex > -1) ? currentTime.getTime() - this.thumbs[0].value : 0;
-        this.setValue(0, evt.currentTime.getTime());
-        if(tailIndex > -1) {
-            this.setValue(tailIndex, this.thumbs[tailIndex].value + offset);
+        if (currentTime) {
+            var toolbar = this.refOwner; //TODO use relay event instead
+            var tailIndex = this.indexMap ? this.indexMap.indexOf('tail') : -1;
+            var offset = (tailIndex > -1) ? currentTime.getTime() - this.thumbs[0].value : 0;
+            this.setValue(0, evt.currentTime.getTime());
+            if(tailIndex > -1) {
+                this.setValue(tailIndex, this.thumbs[tailIndex].value + offset);
+            }
+            this.updateTimeDisplay();
+            //TODO use relay event instead, fire this directly from the slider
+            toolbar.fireEvent('timechange', toolbar, currentTime);
         }
-        this.updateTimeDisplay();
-        //TODO use relay event instead, fire this directly from the slider
-        toolbar.fireEvent('timechange', toolbar, currentTime);
     },
     
     updateTimeDisplay: function(){
