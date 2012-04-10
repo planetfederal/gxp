@@ -102,7 +102,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
     descriptionText: "Description",
     displayText: "Display",
     opacityText: "Opacity",
-    formatText: "Format",
+    formatText: "Tile format",
     infoFormatText: "Info format",
     infoFormatEmptyText: "Select a format",
     transparentText: "Transparent",
@@ -344,7 +344,6 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
             items: [{
                 xtype: "fieldset",
                 title: this.displayOptionsText,
-                checkboxToggle: true,
                 items: [{
                     xtype: "gx_opacityslider",
                     name: "opacity",
@@ -416,6 +415,26 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                         cls: "gxp-layerproperties-label",
                         text: this.cacheFieldText
                     }]
+                }, {
+                    xtype: "combo",
+                    fieldLabel: this.infoFormatText,
+                    emptyText: this.infoFormatEmptyText,
+                    store: record.get("infoFormats"),
+                    value: record.get("infoFormat"),
+                    hidden: (record.get("infoFormats") === undefined),
+                    mode: 'local',
+                    listWidth: 150,
+                    triggerAction: "all",
+                    editable: false,
+                    anchor: "99%", 
+                    listeners: {
+                        select: function(combo) {
+                            var infoFormat = combo.getValue();
+                            record.set("infoFormat", infoFormat);
+                            this.fireEvent("change");
+                        }
+                    }, 
+                    scope: this
                 }]
             }, {
                 xtype: "fieldset",
@@ -444,29 +463,6 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                 }]
             }]
         };
-
-        /* TODO decide where info formats should go
-            {
-                xtype: "combo",
-                fieldLabel: this.infoFormatText,
-                emptyText: this.infoFormatEmptyText,
-                store: record.get("infoFormats"),
-                value: record.get("infoFormat"),
-                hidden: (record.get("infoFormats") === undefined),
-                mode: 'local',
-                triggerAction: "all",
-                editable: false,
-                anchor: "99%",
-                listeners: {
-                    select: function(combo) {
-                        var infoFormat = combo.getValue();
-                        record.set("infoFormat", infoFormat);
-                        this.fireEvent("change");
-                    }
-                },
-                scope: this
-            }
-        */
     }    
 
 });
