@@ -95,6 +95,7 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
             forceSelection: true,
             mode: mode,
             triggerAction: "all",
+            name: "property",
             allowBlank: this.allowBlank,
             displayField: "name",
             valueField: "name",
@@ -176,6 +177,7 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
         return [
             this.attributesComboConfig, Ext.applyIf({
                 xtype: "gxp_comparisoncombo",
+                name: "type",
                 disabled: this.filter.property == null,
                 allowBlank: this.allowBlank,
                 value: this.filter.type,
@@ -193,6 +195,7 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
                 xtype: "textfield",
                 disabled: this.filter.type == null,
                 hidden: isBetween,
+                name: "value",
                 value: this.filter.value,
                 width: 50,
                 grow: true,
@@ -214,6 +217,7 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
                 tooltip: this.lowerBoundaryTip,
                 grow: true,
                 growMin: 30,
+                name: "lowerBoundary",
                 anchor: "100%",
                 allowBlank: this.allowBlank,
                 listeners: {
@@ -239,6 +243,7 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
                 hidden: !isBetween,
                 grow: true,
                 growMin: 30,
+                name: "upperBoundary",
                 value: this.filter.upperBoundary,
                 allowBlank: this.allowBlank,
                 listeners: {
@@ -270,6 +275,30 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
             this.items.get(4).hide();
         }
         this.doLayout();
+    },
+
+    /** api: method[setFilter]
+     *  :arg filter: ``OpenLayers.Filter``` Change the filter object to be
+     *  used.
+     */
+    setFilter: function(filter) {
+        var previousType = this.filter.type;
+        this.filter = filter;
+        if (previousType !== filter.type) {
+            this.setFilterType(filter.type);
+        }
+        var update = function(property) {
+            var idx = this.items.findIndex('name', property);
+            this.items.get(idx).setValue(filter[property]);
+        };
+        update.call(this, ['property']);
+        update.call(this, ['type']);
+        if (filter.type === OpenLayers.Filter.Comparison.BETWEEN) {
+            update.call(this, ['lowerBoundary']);
+            update.call(this, ['upperBoundary']);
+        } else {
+            update.call(this, ['value']);
+        }
     }
 
 });
