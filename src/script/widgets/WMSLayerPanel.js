@@ -195,11 +195,18 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
     },
 
     switchToFilterBuilder: function() {
-        var filter = this.cqlFormat.read(this.cqlField.getValue());
+        var filter = null;
+        // when parsing fails, we keep the previous filter in the filter builder
+        try {
+            filter = this.cqlFormat.read(this.cqlField.getValue());
+        } catch(e) {
+        }
         this.cqlField.hide();
         this.cqlToolbar.hide();
         this.filterBuilder.show();
-        this.filterBuilder.setFilter(filter);
+        if (filter !== null) {
+            this.filterBuilder.setFilter(filter);
+        }
     },
 
     /** private: createStylesPanel
