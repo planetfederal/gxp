@@ -41,22 +41,14 @@
                     ignore: {name: "the_geom"}
                 })
             });
-            var idx;
-            idx = fb.items.findIndex('name', 'property');
-            t.eq(fb.items.get(idx).getValue(), filter.property, "Combo with property name set correctly");
-            idx = fb.items.findIndex('name', 'type');
-            t.eq(fb.items.get(idx).getValue(), filter.type, "Combo with filter type set correctly");
-            idx = fb.items.findIndex('name', 'value');
-            t.eq(fb.items.get(idx).getValue(), filter.value, "Field with filter value set correctly");
+            t.eq(fb['property'].getValue(), filter.property, "Combo with property name set correctly");
+            t.eq(fb['type'].getValue(), filter.type, "Combo with filter type set correctly");
+            t.eq(fb['value'].getValue(), filter.value, "Field with filter value set correctly");
             fb.setFilter(filter2);
-            idx = fb.items.findIndex('name', 'property');
-            t.eq(fb.items.get(idx).getValue(), filter2.property, "Combo with property name set correctly");
-            idx = fb.items.findIndex('name', 'type');
-            t.eq(fb.items.get(idx).getValue(), filter2.type, "Combo with filter type set correctly");
-            idx = fb.items.findIndex('name', 'lowerBoundary');
-            t.eq(fb.items.get(idx).getValue(), filter2.lowerBoundary, "Field with lower boundary set correctly");
-            idx = fb.items.findIndex('name', 'upperBoundary');
-            t.eq(fb.items.get(idx).getValue(), filter2.upperBoundary, "Field with upper boundary set correctly");
+            t.eq(fb['property'].getValue(), filter2.property, "Combo with property name set correctly");
+            t.eq(fb['type'].getValue(), filter2.type, "Combo with filter type set correctly");
+            t.eq(fb['lowerBoundary'].getValue(), filter2.lowerBoundary, "Field with lower boundary set correctly");
+            t.eq(fb['upperBoundary'].getValue(), filter2.upperBoundary, "Field with upper boundary set correctly");
             fb.destroy();
         }
 
