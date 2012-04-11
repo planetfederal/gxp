@@ -185,9 +185,8 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
         var filter = new OpenLayers.Format.CQL().read(this.cqlField.getValue());
         this.cqlField.hide();
         this.cqlToolbar.hide();
-        // filterBuilder has no method yet to update the filter
-        // TODO: add this
         this.filterBuilder.show();
+        this.filterBuilder.setFilter(filter);
     },
 
     /** private: createStylesPanel

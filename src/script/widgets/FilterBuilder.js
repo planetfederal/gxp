@@ -574,7 +574,8 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
      */
     setFilter: function(filter) {
         this.filter = this.customizeFilter(filter);
-        this.builderType = this.getBuilderType();
+        this.builderTypeCombo.setValue(this.builderType);
+        this.changeBuilderType(this.getBuilderType());
         this.builderTypeCombo.setValue(this.builderType);
         this.form.remove(this.childFilterContainer);
         this.form.insert(1, this.createChildFiltersPanel());
