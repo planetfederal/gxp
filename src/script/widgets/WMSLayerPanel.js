@@ -113,6 +113,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
     queryText: "Limit with filters",
  
     initComponent: function() {
+        this.cqlFormat = new OpenLayers.Format.CQL();
         if (this.source) {
             this.source.getSchema(this.layerRecord, function(attributeStore) {
                 if (attributeStore !== false) {
@@ -130,6 +131,15 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                                         });
                                     }
                                 }, this);
+                            },
+                            change: function(builder) {
+                                var filter = builder.getFilter();
+                                if (filter !== false) {
+                                    var cql = this.cqlFormat.write(filter);
+                                    this.layerRecord.getLayer().mergeNewParams({
+                                        CQL_FILTER: cql
+                                    });
+                                }
                             },
                             scope: this
                         },
@@ -174,7 +184,10 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
 
     switchToCQL: function() {
         var filter = this.filterBuilder.getFilter();
-        var CQL = new OpenLayers.Format.CQL().write(filter);
+        var CQL = "";
+        if (filter !== false) {
+            CQL = this.cqlFormat.write(filter);
+        }
         this.filterBuilder.hide();
         this.cqlField.setValue(CQL);
         this.cqlField.show();
@@ -182,7 +195,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
     },
 
     switchToFilterBuilder: function() {
-        var filter = new OpenLayers.Format.CQL().read(this.cqlField.getValue());
+        var filter = this.cqlFormat.read(this.cqlField.getValue());
         this.cqlField.hide();
         this.cqlToolbar.hide();
         this.filterBuilder.show();
@@ -440,6 +453,16 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                 title: this.queryText,
                 hideLabels: true,
                 ref: "../filterFieldset",
+                listeners: {
+                    expand: function() {
+                        this.layerRecord.getLayer().mergeNewParams({CQL_FILTER: this.cqlFilter});
+                    },
+                    collapse: function() {
+                        this.cqlFilter = this.layerRecord.getLayer().params.CQL_FILTER;
+                        this.layerRecord.getLayer().mergeNewParams({CQL_FILTER: null});
+                    },
+                    scope: this
+                },
                 hidden: this.source === null,
                 checkboxToggle: true,
                 items: [{
