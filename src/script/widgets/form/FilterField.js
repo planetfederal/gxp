@@ -295,6 +295,7 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
         } else {
             this['value'].setValue(filter.value);
         }
+        this.fireEvent("change", this.filter, this);
     }
 
 });
