@@ -134,12 +134,13 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                             },
                             change: function(builder) {
                                 var filter = builder.getFilter();
+                                var cql = null;
                                 if (filter !== false) {
-                                    var cql = this.cqlFormat.write(filter);
-                                    this.layerRecord.getLayer().mergeNewParams({
-                                        CQL_FILTER: cql
-                                    });
+                                    cql = this.cqlFormat.write(filter);
                                 }
+                                this.layerRecord.getLayer().mergeNewParams({
+                                    CQL_FILTER: cql
+                                });
                             },
                             scope: this
                         },
