@@ -389,9 +389,12 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
      */
     removeCondition: function(item, filter) {
         var parent = this.filter.filters[0].filters;
-        if(parent.length > 1) {
+        if(parent.length > 0) {
             parent.remove(filter);
             this.childFilterContainer.remove(item, true);
+        }
+        if(parent.length === 0) {
+            this.addCondition();
         }
         this.fireEvent("change", this);
     },
