@@ -111,6 +111,9 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
     stylesText: "Styles",
     displayOptionsText: "Display options",
     queryText: "Limit with filters",
+    scaleText: "Limit by scale",
+    minScaleText: "Min scale",
+    maxScaleText: "Max scale",
  
     initComponent: function() {
         this.cqlFormat = new OpenLayers.Format.CQL();
@@ -330,6 +333,17 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
         cb.setDisabled(format == "image/jpeg");
         this.fireEvent("change");
     },
+
+    addScaleOptions: function(layer, options) {
+        // work around some weird OpenLayers issues for now:
+        // 1. inRange not updated if alwaysInRange is not equal to null
+        // 2. redraw does not hide if out of scale, so use display and 
+        //    calculateInRange instead
+        layer.alwaysInRange = null;
+        layer.addOptions(options);
+        layer.display(layer.calculateInRange());
+        // however this also seems to cause side-effects: layer out of sync with basemap
+    },
     
     /** private: createDisplayPanel
      *  Creates the display panel.
@@ -489,6 +503,72 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                         text: "Switch back to filter builder",
                         handler: this.switchToFilterBuilder,
                         scope: this
+                    }]
+                }]
+            }, {
+                xtype: "fieldset",
+                title: this.scaleText,
+                listeners: {
+                    expand: function() {
+                        var layer = this.layerRecord.getLayer();
+                        if (this.minScale !== undefined || this.maxScale !== undefined) {
+                            this.addScaleOptions(layer, {minScale: this.maxScale, maxScale: this.minScale});
+                        }
+                    },
+                    collapse: function() {
+                        var layer = this.layerRecord.getLayer();
+                        this.minScale = layer.options.maxScale;
+                        this.maxScale = layer.options.minScale;
+                        this.addScaleOptions(layer, {minScale: null, maxScale: null});
+                    },
+                    scope: this
+                },
+                checkboxToggle: true,
+                items: [{
+                    xtype: "compositefield",
+                    fieldLabel: this.minScaleText,
+                    anchor: '99%',
+                    width: '100%',
+                    items: [{
+                        xtype: "label",
+                        text: "1:",
+                        cls: "gxp-layerproperties-label"
+                    }, {
+                        xtype: "numberfield",
+                        listeners: {
+                            'change': function(field) {
+                                var options = {
+                                    maxScale: parseInt(field.getValue())
+                                };
+                                var layer = this.layerRecord.getLayer();
+                                this.addScaleOptions(layer, options);
+                            },
+                            scope: this
+                        },
+                        value: this.layerRecord.getLayer().options.maxScale
+                    }]
+                }, {
+                    xtype: "compositefield",
+                    fieldLabel: this.maxScaleText,
+                    anchor: '99%',
+                    width: '100%',
+                    items: [{
+                        xtype: "label",
+                        text: "1:",
+                        cls: "gxp-layerproperties-label"
+                    }, {
+                        xtype: "numberfield",
+                        listeners: {
+                            'change': function(field) {
+                                var options = {
+                                    minScale: parseInt(field.getValue())
+                                };
+                                var layer = this.layerRecord.getLayer();
+                                this.addScaleOptions(layer, options);
+                            },
+                            scope: this
+                        },
+                        value: this.layerRecord.getLayer().options.minScale
                     }]
                 }]
             }]
