@@ -338,7 +338,8 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
         // work around for https://github.com/openlayers/openlayers/issues/407
         layer.alwaysInRange = null;
         layer.addOptions(options);
-        layer.setVisibility(layer.calculateInRange());
+        layer.display();
+        layer.redraw();
     },
     
     /** private: createDisplayPanel

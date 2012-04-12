@@ -116,8 +116,8 @@ Ext.onReady(function() {
                 url: "/geoserver/wms",
                 version: "1.1.1"
             },
-            google: {
-                ptype: "gxp_googlesource"
+            mapquest: {
+                ptype: "gxp_mapquestsource"
             },
             ol: {
                 ptype: "gxp_olsource"
@@ -130,7 +130,6 @@ Ext.onReady(function() {
             title: "Map",
             projection: "EPSG:900913",
             units: "m",
-            maxResolution: 156543.0339,
             maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
             center: [-10764594.758211, 4523072.3184791],
             zoom: 3,
@@ -141,8 +140,8 @@ Ext.onReady(function() {
                 visibility: false,
                 group: "background"
             }, {
-                source: "google",
-                name: "TERRAIN",
+                source: "mapquest",
+                name: "osm",
                 group: "background"
             }, {
                 source: "local",
