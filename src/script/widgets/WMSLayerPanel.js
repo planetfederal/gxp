@@ -114,7 +114,10 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
     scaleText: "Limit by scale",
     minScaleText: "Min scale",
     maxScaleText: "Max scale",
- 
+    switchToFilterBuilderText: "Switch back to filter builder",
+    cqlPrefixText: "or ",
+    cqlText: "use CQL filter instead",
+
     initComponent: function() {
         this.cqlFormat = new OpenLayers.Format.CQL();
         if (this.source) {
@@ -126,9 +129,9 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                             afterrender: function() {
                                 this.filterBuilder.cascade(function(item) {
                                     if (item.getXType() === "toolbar") {
-                                        item.addText('or ');
+                                        item.addText(this.cqlPrefixText);
                                         item.addButton({
-                                            text: 'use CQL filter instead',
+                                            text: this.cqlText,
                                             handler: this.switchToCQL,
                                             scope: this
                                         });
@@ -492,15 +495,13 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                     growMax: 100,
                     ref: "../../cqlField",
                     hidden: true
-                }, {
-                    xtype: 'toolbar',
-                    ref: "../../cqlToolbar",
+                }],
+                buttons: [{
+                    ref: "../../../cqlToolbar",
                     hidden: true,
-                    items: [{
-                        text: "Switch back to filter builder",
-                        handler: this.switchToFilterBuilder,
-                        scope: this
-                    }]
+                    text: this.switchToFilterBuilderText,
+                    handler: this.switchToFilterBuilder,
+                    scope: this
                 }]
             }, {
                 xtype: "fieldset",
@@ -524,14 +525,14 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                 items: [{
                     xtype: "compositefield",
                     fieldLabel: this.minScaleText,
-                    anchor: '99%',
-                    width: '100%',
                     items: [{
                         xtype: "label",
                         text: "1:",
                         cls: "gxp-layerproperties-label"
                     }, {
                         xtype: "numberfield",
+                        anchor: '99%',
+                        width: '85%',
                         listeners: {
                             'change': function(field) {
                                 var options = {
@@ -547,14 +548,14 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                 }, {
                     xtype: "compositefield",
                     fieldLabel: this.maxScaleText,
-                    anchor: '99%',
-                    width: '100%',
                     items: [{
                         xtype: "label",
                         text: "1:",
                         cls: "gxp-layerproperties-label"
                     }, {
                         xtype: "numberfield",
+                        anchor: '99%',
+                        width: '85%',
                         listeners: {
                             'change': function(field) {
                                 var options = {
