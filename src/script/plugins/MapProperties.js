@@ -137,12 +137,12 @@ gxp.plugins.MapProperties = Ext.extend(gxp.plugins.Tool, {
     getState: function(){
         var baseLayer = this.target.mapPanel.map.baseLayer;
         var container = Ext.get(this.target.mapPanel.map.getViewport());
-        var config = {
+        return {
+            ptype: this.ptype,
             backgroundColor : container.getColor('background-color'),
             numZoomLevels : baseLayer.numZoomLevels,
             wrapDateLine : baseLayer.wrapDateLine
-        }
-        return config;
+        };
     }
 });
 
