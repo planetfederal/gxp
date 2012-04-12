@@ -335,14 +335,10 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
     },
 
     addScaleOptions: function(layer, options) {
-        // work around some weird OpenLayers issues for now:
-        // 1. inRange not updated if alwaysInRange is not equal to null
-        // 2. redraw does not hide if out of scale, so use display and 
-        //    calculateInRange instead
+        // OpenLayers: alwaysInRange not updated if alwaysInRange is not equal to null
         layer.alwaysInRange = null;
         layer.addOptions(options);
-        layer.display(layer.calculateInRange());
-        // however this also seems to cause side-effects: layer out of sync with basemap
+        layer.setVisibility(layer.calculateInRange());
     },
     
     /** private: createDisplayPanel
