@@ -335,7 +335,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
     },
 
     addScaleOptions: function(layer, options) {
-        // OpenLayers: alwaysInRange not updated if alwaysInRange is not equal to null
+        // work around for https://github.com/openlayers/openlayers/issues/407
         layer.alwaysInRange = null;
         layer.addOptions(options);
         layer.setVisibility(layer.calculateInRange());
