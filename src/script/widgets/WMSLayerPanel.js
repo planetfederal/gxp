@@ -189,6 +189,9 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
         gxp.WMSLayerPanel.superclass.initComponent.call(this);
     },
 
+    /** private: method[switchToCQL]
+     *  Switch from filter builder to CQL.
+     */
     switchToCQL: function() {
         var filter = this.filterBuilder.getFilter();
         var CQL = "";
@@ -201,6 +204,9 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
         this.cqlToolbar.show();
     },
 
+    /** private: method[switchToFilterBuilder]
+     *  Switch from CQL field to filter builder.
+     */
     switchToFilterBuilder: function() {
         var filter = null;
         // when parsing fails, we keep the previous filter in the filter builder
@@ -216,7 +222,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
         }
     },
 
-    /** private: createStylesPanel
+    /** private: method[createStylesPanel]
      *  :arg url: ``String`` url to save styles to
      *
      *  Creates the Styles panel.
@@ -265,7 +271,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
         });
     },
     
-    /** private: createAboutPanel
+    /** private: method[createAboutPanel]
      *  Creates the about panel.
      */
     createAboutPanel: function() {
@@ -316,7 +322,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
         };
     },
 
-    /** private: onFormatChange
+    /** private: method[onFormatChange]
      *  Handler for when the image format is changed.
      */
     onFormatChange: function(combo) {
@@ -337,6 +343,12 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
         this.fireEvent("change");
     },
 
+    /** private: method[addScaleOptions]
+     *  :arg layer: ``OpenLayers.Layer.WMS``
+     *  :arg options: ``Object``
+     *
+     *  Apply the scale options to the layer and redraw.
+     */
     addScaleOptions: function(layer, options) {
         // work around for https://github.com/openlayers/openlayers/issues/407
         layer.alwaysInRange = null;
@@ -345,7 +357,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
         layer.redraw();
     },
     
-    /** private: createDisplayPanel
+    /** private: method[createDisplayPanel]
      *  Creates the display panel.
      */
     createDisplayPanel: function() {
