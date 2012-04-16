@@ -261,6 +261,8 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
     showCapabilitiesGrid: function() {
         if(!this.capGrid) {
             this.initCapGrid();
+        } else if (!(this.capGrid instanceof Ext.Window)) {
+            this.addOutput(this.capGrid);
         }
         this.capGrid.show();
     },
