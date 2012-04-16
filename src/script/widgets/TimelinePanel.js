@@ -375,6 +375,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             this.ownerCt.on("beforeexpand", function() {
                 delete this._silentMapMove;
             }, this);
+            this.ownerCt.on("afterlayout", function() {
+                delete this._silent;
+            }, this);
         }
 
         gxp.TimelinePanel.superclass.initComponent.call(this); 
@@ -1082,7 +1085,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             if (this.playbackTool && this.playbackTool.playbackToolbar) {
                 this.setRange(this.playbackTool.playbackToolbar.control.range);
                 this.setCenterDate(this.playbackTool.playbackToolbar.control.currentTime);
-                delete this._silent;
             }
         }
     },
