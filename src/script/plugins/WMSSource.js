@@ -424,6 +424,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             config.url || this.url, {
                 layers: config.name,
                 transparent: "transparent" in config ? config.transparent : true,
+                cql_filter: config.cql_filter,
                 format: config.format
             }, {
                 projection: srs
@@ -495,7 +496,8 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             layer.mergeNewParams({
                 STYLES: config.styles,
                 FORMAT: config.format,
-                TRANSPARENT: config.transparent
+                TRANSPARENT: config.transparent,
+                CQL_FILTER: config.cql_filter
             });
             
             var singleTile = false;
@@ -519,7 +521,9 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 opacity: ("opacity" in config) ? config.opacity : 1,
                 buffer: ("buffer" in config) ? config.buffer : 1,
                 dimensions: original.data.dimensions,
-                transitionEffect: singleTile ? 'resize' : null
+                transitionEffect: singleTile ? 'resize' : null,
+                minScale: config.minscale,
+                maxScale: config.maxscale
             });
             
             // data for the new record
@@ -815,7 +819,8 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 record.json
             ),
             layer = record.getLayer(),
-            params = layer.params;
+            params = layer.params,
+            options = layer.options;
         var name = config.name,
             raw = this.store.reader.raw;
         if (raw) {
@@ -840,7 +845,10 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         return Ext.apply(config, {
             format: params.FORMAT,
             styles: params.STYLES,
-            transparent: params.TRANSPARENT
+            transparent: params.TRANSPARENT,
+            cql_filter: params.CQL_FILTER,
+            minscale: options.minScale,
+            maxscale: options.maxScale
         });
     },
     

@@ -106,6 +106,7 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
         this.items = [{
             xtype: "container",
             layout: "form",
+            ref: "form",
             defaults: {anchor: "100%"},
             hideLabels: true,
             items: [{
@@ -388,9 +389,12 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
      */
     removeCondition: function(item, filter) {
         var parent = this.filter.filters[0].filters;
-        if(parent.length > 1) {
+        if(parent.length > 0) {
             parent.remove(filter);
             this.childFilterContainer.remove(item, true);
+        }
+        if(parent.length === 0) {
+            this.addCondition();
         }
         this.fireEvent("change", this);
     },
@@ -414,6 +418,7 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
                 fields: ["value", "name"]
             }),
             value: this.builderType,
+            ref: "../../builderTypeCombo",
             displayField: "name",
             valueField: "value",
             triggerAction: "all",
@@ -458,7 +463,7 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
             }
         }
     },
-    
+
     /** private: method[createChildFiltersPanel]
      *  :return: ``Ext.Container``
      *  
@@ -533,6 +538,7 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
     },
 
     /** private: method[getBuilderType]
+     *
      *  :return: ``Integer``  One of the builder type constants.
      *  Determine the builder type based on this filter.
      */
@@ -561,6 +567,22 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
             }
         }
         return type;
+    },
+
+    /** api: method[setFilter]
+     *
+     *  :param filter: ``OpenLayers.Filter``
+     *
+     *  Change the filter associated with this instance.
+     */
+    setFilter: function(filter) {
+        this.filter = this.customizeFilter(filter);
+        this.changeBuilderType(this.getBuilderType());
+        this.builderTypeCombo.setValue(this.builderType);
+        this.form.remove(this.childFilterContainer);
+        this.form.insert(1, this.createChildFiltersPanel());
+        this.form.doLayout();
+        this.fireEvent("change", this);
     }
 
 });
