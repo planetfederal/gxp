@@ -66,6 +66,7 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
             {
                 xtype: 'form',
                 layout: 'form',
+                autoScroll: true,
                 ref:'form',
                 labelWidth:10,
                 defaultType: 'textfield',
