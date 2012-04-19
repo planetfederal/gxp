@@ -133,8 +133,9 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
     advancedText: "Advanced",
     limitByScaleText: "Limit by scale",
     limitByConditionText: "Limit by condition",
-    symbolText: "Symbol",
-    nameText: "Name",
+    symbolText: "Preview",
+    nameText: "Label",
+    legendPropertiesText: "Legend properties",
 
     /** private */
     initComponent: function() {
@@ -394,27 +395,26 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
         this.symbolizerSwatch = new GeoExt.FeatureRenderer({
             symbolType: this.symbolType,
             isFormField: true,
-            fieldLabel: this.symbolText
+            width: 25
         });
         return {
             xtype: "form",
+            bodyStyle: {"padding": "10px"},
             border: false,
-            labelAlign: "top",
-            defaults: {border: false},
-            style: {"padding": "0.3em 0 0 1em"},
             items: [{
-                layout: "column",
-                defaults: {
-                    border: false,
-                    style: {"padding-right": "1em"}
-                },
+                xtype: "fieldset",
+                title: this.legendPropertiesText,
                 items: [{
-                    layout: "form",
-                    width: 150,
+                    xtype: "compositefield",
+                    hideLabel: true,
                     items: [{
+                        xtype: "label",
+                        width: 75,
+                        text: this.nameText + ": ",
+                        cls: "gxp-layerproperties-label"
+                    }, {
                         xtype: "textfield",
-                        fieldLabel: this.nameText,
-                        anchor: "95%",
+                        flex: 1,
                         value: this.rule && (this.rule.title || this.rule.name || ""),
                         listeners: {
                             change: function(el, value) {
@@ -423,11 +423,12 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                             },
                             scope: this
                         }
-                    }]
-                }, {
-                    layout: "form",
-                    width: 70,
-                    items: [this.symbolizerSwatch]
+                    }, {
+                        xtype: "label",
+                        width: 75,
+                        text: this.symbolText + ": ",
+                        cls: "gxp-layerproperties-label"
+                    }, this.symbolizerSwatch]
                 }]
             }]
         };
