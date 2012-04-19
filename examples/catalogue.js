@@ -116,6 +116,11 @@ Ext.onReady(function() {
                 ptype: "gxp_cataloguesource",
                 url: "http://gxp.opengeo.org/geonetwork/srv/en/csw",
                 title: "Geonode"
+            },
+            pycsw: {
+                ptype: "gxp_cataloguesource",
+                url: "http://gxp.opengeo.org/pycsw",
+                title: "pycsw"
             }
         },
         
