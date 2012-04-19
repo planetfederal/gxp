@@ -127,12 +127,10 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
     modifyScaleTipContext: Ext.emptyFn,
     
     /** i18n */
-    labelFeaturesText: "Label Features",
-    labelsText: "Labels",
-    basicText: "Basic",
+    ruleText: "Rule",
     advancedText: "Advanced",
     limitByScaleText: "Limit by scale",
-    limitByConditionText: "Limit by condition",
+    limitByConditionText: "Limit with filters",
     symbolText: "Preview",
     nameText: "Label",
     legendPropertiesText: "Legend properties",
@@ -209,105 +207,11 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
             }
         });
         
-        this.items = [{
-            title: this.labelsText,
-            autoScroll: true,
-            bodyStyle: {"padding": "10px"},
-            items: [{
-                xtype: "fieldset",
-                title: this.labelFeaturesText,
-                autoHeight: true,
-                checkboxToggle: true,
-                collapsed: !this.hasTextSymbolizer(),
-                items: [
-                    this.textSymbolizer
-                ],
-                listeners: {
-                    collapse: function() {
-                        OpenLayers.Util.removeItem(this.rule.symbolizers, this.getTextSymbolizer());
-                        this.fireEvent("change", this, this.rule);
-                    },
-                    expand: function() {
-                        this.setTextSymbolizer(this.textSymbolizer.symbolizer);
-                        this.fireEvent("change", this, this.rule);
-                    },
-                    scope: this
-                }
-            }]
-        }];
         if (this.getSymbolTypeFromRule(this.rule) || this.symbolType) {
             this.items = [{
-                title: this.basicText,
+                title: this.ruleText,
                 autoScroll: true,
-                items: [this.createHeaderPanel(), this.createSymbolizerPanel()]
-            }, this.items[0], {
-                title: this.advancedText,
-                defaults: {
-                    style: {
-                        margin: "7px"
-                    }
-                },
-                autoScroll: true,
-                items: [{
-                    xtype: "fieldset",
-                    title: this.limitByScaleText,
-                    checkboxToggle: true,
-                    collapsed: !(this.rule && (this.rule.minScaleDenominator || this.rule.maxScaleDenominator)),
-                    autoHeight: true,
-                    items: [this.scaleLimitPanel],
-                    listeners: {
-                        collapse: function() {
-                            delete this.rule.minScaleDenominator;
-                            delete this.rule.maxScaleDenominator;
-                            this.fireEvent("change", this, this.rule);
-                        },
-                        expand: function() {
-                            /**
-                             * Start workaround for
-                             * http://projects.opengeo.org/suite/ticket/676
-                             */
-                            var tab = this.getActiveTab();
-                            this.activeTab = null;
-                            this.setActiveTab(tab);
-                            /**
-                             * End workaround for
-                             * http://projects.opengeo.org/suite/ticket/676
-                             */
-                            var changed = false;
-                            if (this.scaleLimitPanel.limitMinScaleDenominator) {
-                                this.rule.minScaleDenominator = this.scaleLimitPanel.minScaleDenominator;
-                                changed = true;
-                            }
-                            if (this.scaleLimitPanel.limitMaxScaleDenominator) {
-                                this.rule.maxScaleDenominator = this.scaleLimitPanel.maxScaleDenominator;
-                                changed = true;
-                            }
-                            if (changed) {
-                                this.fireEvent("change", this, this.rule);
-                            }
-                        },
-                        scope: this
-                    }
-                }, {
-                    xtype: "fieldset",
-                    title: this.limitByConditionText,
-                    checkboxToggle: true,
-                    collapsed: !(this.rule && this.rule.filter),
-                    autoHeight: true,
-                    items: [this.filterBuilder],
-                    listeners: {
-                        collapse: function(){
-                            delete this.rule.filter;
-                            this.fireEvent("change", this, this.rule);
-                        },
-                        expand: function(){
-                            var changed = false;
-                            this.rule.filter = this.filterBuilder.getFilter();
-                            this.fireEvent("change", this, this.rule);
-                        },
-                        scope: this
-                    }
-                }]
+                items: [this.createRulePanel()]
             }];
         }
         this.items[0].autoHeight = true;
@@ -387,16 +291,39 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
         return OpenLayers.Util.createUniqueID("rule_");
     },
     
-    /** private: method[createHeaderPanel]
-     *  Creates a panel config containing rule name, symbolizer, and scale
-     *  constraints.
+    /** private: method[createRulePanel]
+     *  Creates a panel config containing rule name, limit with filters and
+     *  limit by scale.
      */
-    createHeaderPanel: function() {
+    createRulePanel: function() {
         this.symbolizerSwatch = new GeoExt.FeatureRenderer({
             symbolType: this.symbolType,
             isFormField: true,
             width: 25
         });
+        // use first symbolizer that matches symbolType
+        var candidate, symbolizer;
+        var Type = OpenLayers.Symbolizer[this.symbolType];
+        var existing = false;
+        if (Type) {
+            for (var i=0, ii=this.rule.symbolizers.length; i<ii; ++i) {
+                candidate = this.rule.symbolizers[i];
+                if (candidate instanceof Type) {
+                    existing = true;
+                    symbolizer = candidate;
+                    break;
+                }
+            }   
+            if (!symbolizer) {
+                // allow addition of new symbolizer
+                symbolizer = new Type({fill: false, stroke: false});
+            }       
+        } else {    
+            throw new Error("Appropriate symbolizer type not included in build: " + this.symbolType);
+        }               
+        this.symbolizerSwatch.setSymbolizers([symbolizer],
+            {draw: this.symbolizerSwatch.rendered}
+        ); 
         return {
             xtype: "form",
             bodyStyle: {"padding": "10px"},
@@ -430,6 +357,65 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                         cls: "gxp-layerproperties-label"
                     }, this.symbolizerSwatch]
                 }]
+            }, {
+                xtype: "fieldset",
+                title: this.limitByConditionText,
+                checkboxToggle: true,
+                collapsed: !(this.rule && this.rule.filter),
+                autoHeight: true,
+                items: [this.filterBuilder],
+                listeners: {
+                    collapse: function(){
+                        delete this.rule.filter;
+                        this.fireEvent("change", this, this.rule);
+                    },
+                    expand: function(){
+                        var changed = false;
+                        this.rule.filter = this.filterBuilder.getFilter();
+                        this.fireEvent("change", this, this.rule);
+                    },
+                    scope: this
+                }
+            }, {
+                xtype: "fieldset",
+                title: this.limitByScaleText,
+                checkboxToggle: true,
+                collapsed: !(this.rule && (this.rule.minScaleDenominator || this.rule.maxScaleDenominator)),
+                autoHeight: true,
+                items: [this.scaleLimitPanel],
+                listeners: {
+                    collapse: function() {
+                        delete this.rule.minScaleDenominator;
+                        delete this.rule.maxScaleDenominator;
+                        this.fireEvent("change", this, this.rule);
+                    },
+                    expand: function() {
+                        /**
+                         * Start workaround for
+                         * http://projects.opengeo.org/suite/ticket/676
+                         */
+                        var tab = this.getActiveTab();
+                        this.activeTab = null;
+                        this.setActiveTab(tab);
+                        /**
+                         * End workaround for
+                         * http://projects.opengeo.org/suite/ticket/676
+                         */
+                        var changed = false;
+                        if (this.scaleLimitPanel.limitMinScaleDenominator) {
+                            this.rule.minScaleDenominator = this.scaleLimitPanel.minScaleDenominator;
+                            changed = true;
+                        }
+                        if (this.scaleLimitPanel.limitMaxScaleDenominator) {
+                            this.rule.maxScaleDenominator = this.scaleLimitPanel.maxScaleDenominator;
+                            changed = true;
+                        }
+                        if (changed) {
+                            this.fireEvent("change", this, this.rule);
+                        }
+                    },
+                    scope: this
+                }
             }]
         };
     },
