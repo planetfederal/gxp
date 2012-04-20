@@ -11,6 +11,7 @@
  * @include widgets/WMSStylesDialog.js
  * @include plugins/GeoServerStyleWriter.js
  * @include GeoExt/widgets/LayerOpacitySlider.js
+ * @include OpenLayers/Format/CQL.js
  */
 
 /** api: (define)
@@ -114,9 +115,6 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
     scaleText: "Limit by scale",
     minScaleText: "Min scale",
     maxScaleText: "Max scale",
-    switchToFilterBuilderText: "Switch back to filter builder",
-    cqlPrefixText: "or ",
-    cqlText: "use CQL filter instead",
 
     initComponent: function() {
         this.cqlFormat = new OpenLayers.Format.CQL();
@@ -125,19 +123,8 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                 if (attributeStore !== false) {
                     this.filterBuilder = new gxp.FilterBuilder({
                         allowGroups: false,
+                        allowCQL: true,
                         listeners: {
-                            afterrender: function() {
-                                this.filterBuilder.cascade(function(item) {
-                                    if (item.getXType() === "toolbar") {
-                                        item.addText(this.cqlPrefixText);
-                                        item.addButton({
-                                            text: this.cqlText,
-                                            handler: this.switchToCQL,
-                                            scope: this
-                                        });
-                                    }
-                                }, this);
-                            },
                             change: function(builder) {
                                 var filter = builder.getFilter();
                                 var cql = null;
@@ -187,39 +174,6 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
         }
 
         gxp.WMSLayerPanel.superclass.initComponent.call(this);
-    },
-
-    /** private: method[switchToCQL]
-     *  Switch from filter builder to CQL.
-     */
-    switchToCQL: function() {
-        var filter = this.filterBuilder.getFilter();
-        var CQL = "";
-        if (filter !== false) {
-            CQL = this.cqlFormat.write(filter);
-        }
-        this.filterBuilder.hide();
-        this.cqlField.setValue(CQL);
-        this.cqlField.show();
-        this.cqlToolbar.show();
-    },
-
-    /** private: method[switchToFilterBuilder]
-     *  Switch from CQL field to filter builder.
-     */
-    switchToFilterBuilder: function() {
-        var filter = null;
-        // when parsing fails, we keep the previous filter in the filter builder
-        try {
-            filter = this.cqlFormat.read(this.cqlField.getValue());
-        } catch(e) {
-        }
-        this.cqlField.hide();
-        this.cqlToolbar.hide();
-        this.filterBuilder.show();
-        if (filter !== null) {
-            this.filterBuilder.setFilter(filter);
-        }
     },
 
     /** private: method[createStylesPanel]
@@ -498,23 +452,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                     scope: this
                 },
                 hidden: this.source === null,
-                checkboxToggle: true,
-                items: [{
-                    xtype: "textarea",
-                    grow: true,
-                    anchor: '99%',
-                    width: '100%',
-                    growMax: 100,
-                    ref: "../../cqlField",
-                    hidden: true
-                }],
-                buttons: [{
-                    ref: "../../../cqlToolbar",
-                    hidden: true,
-                    text: this.switchToFilterBuilderText,
-                    handler: this.switchToFilterBuilder,
-                    scope: this
-                }]
+                checkboxToggle: true
             }, {
                 xtype: "fieldset",
                 title: this.scaleText,
