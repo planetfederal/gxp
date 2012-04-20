@@ -195,6 +195,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
         
         this.filterBuilder = new gxp.FilterBuilder({
             allowGroups: this.nestedFilters,
+            allowCQL: true,
             filter: this.rule && this.rule.filter && this.rule.filter.clone(),
             attributes: this.attributes,
             listeners: {
@@ -208,13 +209,11 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
         });
         
         if (this.getSymbolTypeFromRule(this.rule) || this.symbolType) {
-            this.items = [{
-                title: this.ruleText,
-                autoScroll: true,
-                items: [this.createRulePanel()]
-            }];
+            this.items = [
+                this.createRulePanel(),
+                this.createSymbolizerPanel()
+            ];
         }
-        this.items[0].autoHeight = true;
 
         this.addEvents(
             /** api: events[change]
@@ -301,31 +300,10 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
             isFormField: true,
             width: 25
         });
-        // use first symbolizer that matches symbolType
-        var candidate, symbolizer;
-        var Type = OpenLayers.Symbolizer[this.symbolType];
-        var existing = false;
-        if (Type) {
-            for (var i=0, ii=this.rule.symbolizers.length; i<ii; ++i) {
-                candidate = this.rule.symbolizers[i];
-                if (candidate instanceof Type) {
-                    existing = true;
-                    symbolizer = candidate;
-                    break;
-                }
-            }   
-            if (!symbolizer) {
-                // allow addition of new symbolizer
-                symbolizer = new Type({fill: false, stroke: false});
-            }       
-        } else {    
-            throw new Error("Appropriate symbolizer type not included in build: " + this.symbolType);
-        }               
-        this.symbolizerSwatch.setSymbolizers([symbolizer],
-            {draw: this.symbolizerSwatch.rendered}
-        ); 
         return {
             xtype: "form",
+            title: this.ruleText,
+            autoScroll: true,
             bodyStyle: {"padding": "10px"},
             border: false,
             items: [{
@@ -451,6 +429,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
             symbolizer: symbolizer,
             bodyStyle: {padding: "10px"},
             border: false,
+            title: "Symbology",
             labelWidth: 70,
             defaults: {
                 labelWidth: 70
