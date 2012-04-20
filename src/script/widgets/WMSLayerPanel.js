@@ -11,7 +11,10 @@
  * @include widgets/WMSStylesDialog.js
  * @include plugins/GeoServerStyleWriter.js
  * @include GeoExt/widgets/LayerOpacitySlider.js
- * @include OpenLayers/Format/CQL.js
+ * @requires OpenLayers/Filter/Comparison.js
+ * @requires OpenLayers/Filter/Logical.js
+ * @requires OpenLayers/Filter/Spatial.js
+ * @requires OpenLayers/Format/CQL.js
  */
 
 /** api: (define)
