@@ -13,6 +13,7 @@
  * @include widgets/LineSymbolizer.js
  * @include widgets/PointSymbolizer.js
  * @include widgets/FilterBuilder.js
+ * @include widgets/grid/SymbolizerGrid.js
  */
 
 /** api: (define)
@@ -128,7 +129,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
     
     /** i18n */
     ruleText: "Rule",
-    advancedText: "Advanced",
+    symbologyText: "Symbology",
     limitByScaleText: "Limit by scale",
     limitByConditionText: "Limit with filters",
     symbolText: "Preview",
@@ -425,22 +426,20 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
             {draw: this.symbolizerSwatch.rendered}
         );
         var cfg = {
-            xtype: "gxp_" + this.symbolType.toLowerCase() + "symbolizer",
-            symbolizer: symbolizer,
+            xtype: "gxp_symbolgrid",
+            symbolizers: this.rule.symbolizers,
+            height: 375,
+            width: 400,
             bodyStyle: {padding: "10px"},
-            border: false,
-            title: "Symbology",
-            labelWidth: 70,
-            defaults: {
-                labelWidth: 70
-            },
+            title: this.symbologyText,
             listeners: {
-                change: function(symbolizer) {
+                change: function(grid) {
+                    var symbolizers = grid.getSymbolizers();
                     this.symbolizerSwatch.setSymbolizers(
-                        [symbolizer], {draw: this.symbolizerSwatch.rendered}
-                    );
+                        symbolizers, {draw: this.symbolizerSwatch.rendered}
+                    ); 
                     if (!existing) {
-                        this.rule.symbolizers.push(symbolizer);
+                        this.rule.symbolizers.push(symbolizers);
                         existing = true;
                     }
                     this.fireEvent("change", this, this.rule);
@@ -448,9 +447,6 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                 scope: this
             }
         };
-        if (this.symbolType === "Point" && this.pointGraphics) {
-            cfg.pointGraphics = this.pointGraphics;
-        }
         return cfg;
         
     },

@@ -58,6 +58,17 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
             width: 100,
             dataIndex: 'preview'
         }];
+        this.addEvents(
+            /**
+             * Event: change
+             * Fires when the filter changes.
+             *
+             * Listener arguments:
+             * grid - {gxp.grid.SymbolizerGrid} This symbolizer grid.  Call
+             *     ``getSymbolizers`` to get the updated state.
+             */
+            "change"
+        );
         gxp.grid.SymbolizerGrid.superclass.initComponent.call(this);
     },
 
@@ -145,6 +156,7 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
             });
         }
         r.update({symbolizers: [symbolizer]});
+        this.fireEvent("change", this);
     },
 
     /** private: method[afterRender]
