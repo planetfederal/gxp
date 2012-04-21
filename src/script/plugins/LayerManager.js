@@ -9,6 +9,8 @@
 /**
  * @require plugins/LayerTree.js
  * @require GeoExt/plugins/TreeNodeComponent.js
+ * @require GeoExt/widgets/WMSLegend.js
+ * @require GeoExt/widgets/VectorLegend.js
  */
 
 /** api: (define)
