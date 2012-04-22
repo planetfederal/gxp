@@ -79,6 +79,8 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
      */
     addOutput: function(config){
         delete this._ready;
+        OpenLayers.Control.TimeManager.prototype.maxFrameDelay = 
+            (this.target.tests && this.target.tests.dropFrames) ? 10 : NaN;
         config = Ext.applyIf(config || this.outputConfig || {}, {
             xtype: 'gxp_playbacktoolbar',
             mapPanel:this.target.mapPanel,
