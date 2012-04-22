@@ -41,7 +41,7 @@ GeoExt.Lang.add("de", {
         previousPageTip: "vorherige Seite",
         zoomPageExtentTip: "Zoom zur max. Ausdehnung",
         nextPageTip: "nächste Seite",
-        nextPageTip: "letzte Seite",
+        lastPageTip: "letzte Seite",
         totalMsg: "Total: {0} Datensätze"
     },
 
@@ -68,6 +68,10 @@ GeoExt.Lang.add("de", {
         rootNodeText: "Layer",
         overlayNodeText: "überlagernde Layer",
         baseNodeText: "Basiskarten"
+    },
+    
+    "gxp.plugins.LayerManager.prototype": {
+        baseNodeText: "Basiskarte"
     },
 
     "gxp.plugins.Legend.prototype": {

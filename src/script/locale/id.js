@@ -41,7 +41,7 @@ GeoExt.Lang.add("id", {
         previousPageTip: "Halaman sebelumnya",
         zoomPageExtentTip: "Zoom sampai batas halaman",
         nextPageTip: "Halaman berikut",
-        nextPageTip: "Halaman terakhir",
+        lastPageTip: "Halaman terakhir",
         totalMsg: "Total: {0} records"
     },
     
@@ -67,6 +67,10 @@ GeoExt.Lang.add("id", {
         shortTitle: "Layer-layer",
         rootNodeText: "Layer-layer",
         overlayNodeText: "Superimposisi",
+        baseNodeText: "Layer dasar"
+    },
+
+    "gxp.plugins.LayerManager.prototype": {
         baseNodeText: "Layer dasar"
     },
 

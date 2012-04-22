@@ -41,7 +41,7 @@ GeoExt.Lang.add("ca", {
         previousPageTip: "Pàgina anterior",
         zoomPageExtentTip: "Ajusta vista a l'extensió de la pàgina",
         nextPageTip: "Pàgina següent",
-        nextPageTip: "Pàgina anterior",
+        lastPageTip: "Pàgina anterior",
         totalMsg: "Total: {0} records"
     },
 
@@ -67,6 +67,10 @@ GeoExt.Lang.add("ca", {
         shortTitle: "Capes",
         rootNodeText: "Capes",
         overlayNodeText: "Capes addicionals",
+        baseNodeText: "Capa base"
+    },
+
+    "gxp.plugins.LayerManager.prototype": {
         baseNodeText: "Capa base"
     },
 

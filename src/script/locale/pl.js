@@ -71,6 +71,10 @@ GeoExt.Lang.add("pl", {
         baseNodeText: "Mapa referencyjna"
     },
 
+    "gxp.plugins.LayerManager.prototype": {
+        baseNodeText: "Mapa referencyjna"
+    },
+
     "gxp.plugins.Legend.prototype": {
         menuText: "Legenda mapy",
         tooltip: "Legenda mapy"
