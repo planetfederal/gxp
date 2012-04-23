@@ -106,6 +106,30 @@
     background-image: url(img/silk/delete.png);
 }
 
+.x-btn .pointsymbolizer {
+    background-image: url(img/silk/bullet_orange.png);
+}
+
+.x-btn .linesymbolizer {
+    background-image: url(img/geosilk/line_orange.png);
+}
+
+.x-btn .polygonsymbolizer {
+    background-image: url(img/geosilk/shape_square_orange.png);
+}
+
+.x-btn .textsymbolizer {
+    background-image: url(img/silk/font.png);
+}
+
+.x-btn .moveup {
+    background-image: url(img/silk/arrow_up.png);
+}
+
+.x-btn .movedown {
+    background-image: url(img/silk/arrow_down.png);
+}
+
 .x-btn .duplicate {
     background-image: url(img/silk/arrow_divide.png);
 }
