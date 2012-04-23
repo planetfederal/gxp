@@ -124,6 +124,28 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
         gxp.grid.SymbolizerGrid.superclass.onDestroy.call(this);
     },
 
+    /** api: method[updateSwatch]
+     *  :arg node: ``Ext.data.Node``
+     *  :arg newSymbolizer: ``Object``
+     */
+    updateSwatch: function(node, newSymbolizer) {
+        var a = node.attributes;
+        var r = a.featureRenderer;
+        var symbolizer = a.symbolizer;
+        var fullSymbolizer = node.parentNode.attributes.symbolizer;
+        if (newSymbolizer) {
+            // TODO update originalSymbolizer
+            Ext.apply(fullSymbolizer, newSymbolizer);
+            this.fireEvent("change", this);
+        }
+        if (node.parentNode.attributes.featureRenderer) {
+            node.parentNode.attributes.featureRenderer.update({
+                symbolizers: [fullSymbolizer]
+            });
+        }
+        r.update({symbolizers: [symbolizer]});
+    },
+
     /** private: method[onCheckChange]
      *  :arg node: ``Ext.data.Node``
      *  :arg checked: ``Boolean``
@@ -133,7 +155,6 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
      */
     onCheckChange: function(node, checked) {
         var a = node.attributes;
-        var r = a.featureRenderer;
         var type = a.type.toLowerCase();
         var symbolizer = a.symbolizer;
         var fullSymbolizer = node.parentNode.attributes.symbolizer;
@@ -163,12 +184,7 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
                 symbolizer[type] = fullSymbolizer[type] = "Ab";
             }
         }
-        if (node.parentNode.attributes.featureRenderer) {
-            node.parentNode.attributes.featureRenderer.update({
-                symbolizers: [fullSymbolizer]
-            });
-        }
-        r.update({symbolizers: [symbolizer]});
+        this.updateSwatch(node);
         this.fireEvent("change", this);
     },
 

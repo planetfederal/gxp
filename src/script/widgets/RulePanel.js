@@ -135,6 +135,8 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
     symbolText: "Preview",
     nameText: "Label",
     legendPropertiesText: "Legend properties",
+    symbolizerPropertiesSuffix: "Symbolizer Properties",
+    propertiesSuffix: "Properties",
 
     /** private */
     initComponent: function() {
@@ -465,6 +467,30 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                     symbolizers: this.rule.symbolizers,
                     height: 150,
                     listeners: {
+                        click: function(node) {
+                            var type = node.attributes.type;
+                            if (node.attributes.originalSymbolizer) {
+                                this.properties.setTitle(type + ' ' + this.symbolizerPropertiesSuffix);
+                            } else {
+                                this.properties.setTitle(node.parentNode.attributes.type + " " + type + " " + this.propertiesSuffix);
+                            }
+                            this.properties.items.each(function(item) {
+                                this.remove(item, true);
+                            }, this.properties);
+                            this.properties.add({
+                                listeners: {
+                                    change: function(symbolizer) {
+                                        this.grid.updateSwatch(node, symbolizer);
+                                    },
+                                    scope: this
+                                },
+                                autoScroll: true,
+                                bodyStyle: {"padding": "5px"},
+                                xtype: "gxp_" + this.symbolType.toLowerCase() + "symbolizer",
+                                symbolizer: node.attributes.symbolizer
+                            });
+                            this.properties.doLayout();
+                        },
                         change: function(grid) {
                             var symbolizers = grid.getSymbolizers();
                             this.symbolizerSwatch.setSymbolizers(
@@ -480,6 +506,8 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                     }
                 }, {
                     xtype: 'panel',
+                    ref: "../../properties",
+                    layout: 'fit',
                     title: '&nbsp;',
                     flex: 1
                 }]
