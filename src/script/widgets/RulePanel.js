@@ -426,7 +426,15 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
             {draw: this.symbolizerSwatch.rendered}
         );
         var cfg = {
+            tbar: ['->', {
+                iconCls: 'delete', 
+                handler: function() {
+                    this.grid.removeSelectedSymbolizer();
+                },
+                scope: this
+            }],
             xtype: "gxp_symbolgrid",
+            ref: "grid",
             symbolizers: this.rule.symbolizers,
             height: 375,
             width: 400,
