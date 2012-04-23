@@ -29,7 +29,7 @@ Ext.namespace("gxp");
  *      Create a panel for assembling SLD rules.
  */
 gxp.RulePanel = Ext.extend(Ext.TabPanel, {
-    
+
     /** api: property[fonts]
      *  ``Array(String)`` List of fonts for the font combo.  If not set,
      *      defaults  to the list provided by the <Styler.FontComboBox>.
@@ -425,49 +425,65 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
         this.symbolizerSwatch.setSymbolizers([symbolizer],
             {draw: this.symbolizerSwatch.rendered}
         );
+
         var cfg = {
-            tbar: [
-                {
-                    iconCls: 'textsymbolizer'
-                }, {
-                    iconCls: 'pointsymbolizer'
-                }, {
-                    iconCls: 'linesymbolizer'
-                }, {
-                    iconCls: 'polygonsymbolizer'
-                }, '->', {
-                    iconCls: 'delete', 
-                    handler: function() {
-                        this.grid.removeSelectedSymbolizer();
-                    },
-                    scope: this
-                }, {
-                    iconCls: 'moveup'
-                }, {
-                    iconCls: 'movedown'
-                }
-            ],
-            xtype: "gxp_symbolgrid",
-            ref: "grid",
-            symbolizers: this.rule.symbolizers,
-            height: 375,
-            width: 400,
-            bodyStyle: {padding: "10px"},
+            xtype: 'panel',
+            layout: 'fit',
             title: this.symbologyText,
-            listeners: {
-                change: function(grid) {
-                    var symbolizers = grid.getSymbolizers();
-                    this.symbolizerSwatch.setSymbolizers(
-                        symbolizers, {draw: this.symbolizerSwatch.rendered}
-                    ); 
-                    if (!existing) {
-                        this.rule.symbolizers.push(symbolizers);
-                        existing = true;
-                    }
-                    this.fireEvent("change", this, this.rule);
+            items: [{
+                xtype: 'container',
+                height: 300,
+                layout: 'vbox',
+                layoutConfig: {
+                    align: 'stretch',
+                    pack: 'start'
                 },
-                scope: this
-            }
+                items: [{
+                    tbar: [
+                        {
+                            iconCls: 'textsymbolizer'
+                        }, {
+                            iconCls: 'pointsymbolizer'
+                        }, {
+                            iconCls: 'linesymbolizer'
+                        }, {
+                            iconCls: 'polygonsymbolizer'
+                        }, '->', {
+                            iconCls: 'delete', 
+                            handler: function() {
+                                this.grid.removeSelectedSymbolizer();
+                            },
+                            scope: this
+                        }, {
+                            iconCls: 'moveup'
+                        }, {
+                            iconCls: 'movedown'
+                        }
+                    ],
+                    xtype: "gxp_symbolgrid",
+                    ref: "../../grid",
+                    symbolizers: this.rule.symbolizers,
+                    height: 150,
+                    listeners: {
+                        change: function(grid) {
+                            var symbolizers = grid.getSymbolizers();
+                            this.symbolizerSwatch.setSymbolizers(
+                                symbolizers, {draw: this.symbolizerSwatch.rendered}
+                            ); 
+                            if (!existing) {
+                                this.rule.symbolizers.push(symbolizers);
+                                existing = true;
+                            }
+                            this.fireEvent("change", this, this.rule);
+                        },
+                        scope: this
+                    }
+                }, {
+                    xtype: 'panel',
+                    title: '&nbsp;',
+                    flex: 1
+                }]
+            }]
         };
         return cfg;
         
