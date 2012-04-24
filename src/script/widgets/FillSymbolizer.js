@@ -53,12 +53,6 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
      */
     colorManager: null,
     
-    /** api: config[checkboxToggle]
-     *  ``Boolean`` Set to false if the "Fill" fieldset should not be
-     *  toggleable. Default is true.
-     */
-    checkboxToggle: true,
-    
     /** api: config[defaultColor]
      *  ``String`` Default background color for the Color field. This
      *  color will be displayed when no fillColor value for the symbolizer
@@ -70,7 +64,6 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
     border: false,
     
     /** i18n */
-    fillText: "Fill",
     colorText: "Color",
     opacityText: "Opacity",
     
@@ -92,70 +85,51 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
         else if (OpenLayers.Renderer.defaultSymbolizer[this.opacityProperty]) {
             sliderValue = OpenLayers.Renderer.defaultSymbolizer[this.opacityProperty]*100;
         }
+
+        this.autoHeight = true;
+        this.hideMode = "offsets";
+        this.defaults = {
+            width: 100 // TODO: move to css
+        };
         
         this.items = [{
-            xtype: "fieldset",
-            title: this.fillText,
-            autoHeight: true,
-            checkboxToggle: this.checkboxToggle,
-            collapsed: this.checkboxToggle === true &&
-                this.symbolizer.fill === false,
-            hideMode: "offsets",
-            defaults: {
-                width: 100 // TODO: move to css
-            },
-            items: [{
-                xtype: "gxp_colorfield",
-                fieldLabel: this.colorText,
-                name: "color",
-                emptyText: OpenLayers.Renderer.defaultSymbolizer[this.colorProperty],
-                value: this.symbolizer[this.colorProperty],
-                defaultBackground: this.defaultColor ||
-                    OpenLayers.Renderer.defaultSymbolizer[this.colorProperty],
-                plugins: colorFieldPlugins,
-                listeners: {
-                    valid: function(field) {
-                        var newValue = field.getValue();
-                        var modified = this.symbolizer[this.colorProperty] != newValue; 
-                        this.symbolizer[this.colorProperty] = newValue;
-                        modified && this.fireEvent("change", this.symbolizer);
-                    },
-                    scope: this
-                }
-            }, {
-                xtype: "slider",
-                fieldLabel: this.opacityText,
-                name: "opacity",
-                values: [sliderValue],
-                isFormField: true,
-                listeners: {
-                    changecomplete: function(slider, value) {
-                        this.symbolizer[this.opacityProperty] = value / 100;
-                        this.fireEvent("change", this.symbolizer);
-                    },
-                    scope: this
-                },
-                plugins: [
-                    new GeoExt.SliderTip({
-                        getText: function(thumb) {
-                            return thumb.value + "%";
-                        }
-                    })
-                ]
-            }],
+            xtype: "gxp_colorfield",
+            fieldLabel: this.colorText,
+            name: "color",
+            emptyText: OpenLayers.Renderer.defaultSymbolizer[this.colorProperty],
+            value: this.symbolizer[this.colorProperty],
+            defaultBackground: this.defaultColor ||
+                OpenLayers.Renderer.defaultSymbolizer[this.colorProperty],
+            plugins: colorFieldPlugins,
             listeners: {
-                "collapse": function() {
-                    if (this.symbolizer.fill !== false) {
-                        this.symbolizer.fill = false;
-                        this.fireEvent("change", this.symbolizer);
-                    }
-                },
-                "expand": function() {
-                    this.symbolizer.fill = true;
-                    this.fireEvent("change", this.symbolizer);
+                valid: function(field) {
+                    var newValue = field.getValue();
+                    var modified = this.symbolizer[this.colorProperty] != newValue; 
+                    this.symbolizer[this.colorProperty] = newValue;
+                    modified && this.fireEvent("change", this.symbolizer);
                 },
                 scope: this
             }
+        }, {
+            xtype: "slider",
+            fieldLabel: this.opacityText,
+            name: "opacity",
+            values: [sliderValue],
+            isFormField: true,
+            listeners: {
+                changecomplete: function(slider, value) {
+                    this.symbolizer[this.opacityProperty] = value / 100;
+                    this.fireEvent("change", this.symbolizer);
+                },
+                scope: this
+            },
+            plugins: [
+                new GeoExt.SliderTip({
+                    getText: function(thumb) {
+                        return thumb.value + "%";
+                    }
+                })
+            ]
         }];
 
         this.addEvents(

@@ -486,7 +486,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                                 },
                                 autoScroll: true,
                                 bodyStyle: {"padding": "5px"},
-                                xtype: "gxp_" + this.symbolType.toLowerCase() + "symbolizer",
+                                xtype: "gxp_" + type.toLowerCase() + "symbolizer",
                                 symbolizer: node.attributes.symbolizer
                             });
                             this.properties.doLayout();
