@@ -464,6 +464,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                     ],
                     xtype: "gxp_symbolgrid",
                     ref: "../../grid",
+                    autoScroll: true,
                     symbolizers: this.rule.symbolizers,
                     height: 150,
                     listeners: {
@@ -485,6 +486,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                                     scope: this
                                 },
                                 autoScroll: true,
+                                attributes: this.attributes,
                                 bodyStyle: {"padding": "5px"},
                                 xtype: "gxp_" + type.toLowerCase() + "symbolizer",
                                 symbolizer: node.attributes.symbolizer
