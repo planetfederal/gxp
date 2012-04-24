@@ -67,6 +67,11 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                 if (key === "Polygon" || key === "Point") {
                     id = Ext.id();
                     var strokeSym = fullSymbolizer.clone();
+                    // delete all properties which have to do with fill
+                    var fillProperties = ['fillColor', 'fillOpacity'];
+                    for (var f=0, ff=fillProperties.length; f<ff; ++f) {
+                        delete strokeSym[fillProperties[f]];
+                    }
                     strokeSym.fill = false;
                     child.appendChild(this.createNode({
                         checked: fullSymbolizer.stroke !== undefined ? fullSymbolizer.stroke : true,
@@ -78,6 +83,12 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                     }));
                     id = Ext.id();
                     var fillSym = fullSymbolizer.clone();
+                    // delete all properties which have to do with stroke
+                    // TODO store these in a more central place in GXP?
+                    var strokeProperties = ['strokeDashstyle', 'strokeColor', 'strokeWidth', 'strokeOpacity'];
+                    for (var s=0, ss=strokeProperties.length; s<ss; ++s) {
+                        delete fillSym[strokeProperties[s]];
+                    }
                     fillSym.stroke = false;
                     child.appendChild(this.createNode({
                         checked: fullSymbolizer.fill !== undefined ? fullSymbolizer.fill : true,

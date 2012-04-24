@@ -133,9 +133,13 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
         var r = a.featureRenderer;
         var symbolizer = a.symbolizer;
         var fullSymbolizer = node.parentNode.attributes.symbolizer;
+        var originalSymbolizer = node.parentNode.attributes.originalSymbolizer;
         if (newSymbolizer) {
-            // TODO update originalSymbolizer
-            Ext.apply(fullSymbolizer, newSymbolizer);
+            var clone = newSymbolizer.clone();
+            delete clone['fill'];
+            delete clone['stroke'];
+            Ext.apply(fullSymbolizer, clone);
+            Ext.apply(originalSymbolizer, clone);
             this.fireEvent("change", this);
         }
         if (node.parentNode.attributes.featureRenderer) {
