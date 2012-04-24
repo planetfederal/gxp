@@ -6,11 +6,6 @@
  * of the license.
  */
 
-/** 
- * @include widgets/FillSymbolizer.js
- * @include widgets/StrokeSymbolizer.js
- */
-
 /** api: (define)
  *  module = gxp
  *  class = PointSymbolizer
@@ -106,37 +101,6 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
         
         this.external = !!this.symbolizer["externalGraphic"];
 
-        this.markPanel = new Ext.Panel({
-            border: false,
-            collapsed: this.external,
-            layout: "form",
-            items: [{
-                xtype: "gxp_fillsymbolizer",
-                symbolizer: this.symbolizer,
-                labelWidth: this.labelWidth,
-                labelAlign: this.labelAlign,
-                colorManager: this.colorManager,
-                listeners: {
-                    change: function(symbolizer) {
-                        this.fireEvent("change", this.symbolizer);
-                    },
-                    scope: this
-                }
-            }, {
-                xtype: "gxp_strokesymbolizer",
-                symbolizer: this.symbolizer,
-                labelWidth: this.labelWidth,
-                labelAlign: this.labelAlign,
-                colorManager: this.colorManager,
-                listeners: {
-                    change: function(symbolizer) {
-                        this.fireEvent("change", this.symbolizer);
-                    },
-                    scope: this
-                }
-            }]
-        });
-        
         this.urlField = new Ext.form.TextField({
             name: "url",
             fieldLabel: this.urlText,
@@ -152,34 +116,6 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
             width: 100 // TODO: push this to css
         });
         
-        this.graphicPanel = new Ext.Panel({
-            border: false,
-            collapsed: !this.external,
-            layout: "form",
-            items: [this.urlField, {
-                xtype: "slider",
-                name: "opacity",
-                fieldLabel: this.opacityText,
-                value: [(this.symbolizer["graphicOpacity"] == null) ? 100 : this.symbolizer["graphicOpacity"] * 100],
-                isFormField: true,
-                listeners: {
-                    changecomplete: function(slider, value) {
-                        this.symbolizer["graphicOpacity"] = value / 100;
-                        this.fireEvent("change", this.symbolizer);
-                    },
-                    scope: this
-                },
-                plugins: [
-                    new GeoExt.SliderTip({
-                        getText: function(thumb) {
-                            return thumb.value + "%";
-                        }
-                    })
-                ],
-                width: 100 // TODO: push this to css                
-            }]
-        });
-
         this.items = [{
             xtype: "combo",
             name: "mark",
@@ -221,13 +157,11 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
                         }
                         if(!this.external) {
                             this.external = true;
-                            this.updateGraphicDisplay();
                         }
                     } else {
                         if(this.external) {
                             this.external = false;
                             delete this.symbolizer["externalGraphic"];
-                            this.updateGraphicDisplay();
                         }
                         this.symbolizer["graphicName"] = value;
                     }
@@ -262,7 +196,7 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
                 scope: this
             },
             width: 100 // TODO: push this to css
-        }, this.markPanel, this.graphicPanel
+        }, this.urlField
         ];
 
         this.addEvents(
@@ -279,17 +213,6 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
 
         gxp.PointSymbolizer.superclass.initComponent.call(this);
 
-    },
-    
-    updateGraphicDisplay: function() {
-        if(this.external) {
-            this.markPanel.collapse();
-            this.graphicPanel.expand();
-        } else {
-            this.graphicPanel.collapse();
-            this.markPanel.expand();
-        }
-        // TODO: window shadow fails to sync
     }
     
     
