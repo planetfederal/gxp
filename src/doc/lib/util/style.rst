@@ -5,7 +5,7 @@
 =====================
 
 The :mod:`gxp.util.style` module contains style utility functions for use in
-GXP applications.
+gxp applications.
 
 
 Functions

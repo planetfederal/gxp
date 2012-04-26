@@ -5,7 +5,7 @@
 =====================
 
 The :mod:`gxp.util.color` module contains color utility functions for use in
-GXP applications.
+gxp applications.
 
 
 Functions

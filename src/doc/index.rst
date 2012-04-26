@@ -1,55 +1,22 @@
-.. _api-reference:
+gxp Documentation
+=================
 
-API Reference
-=============
+gxp is OpenGeo's collection of high level components for GeoExt based
+web applications on top of the OpenGeo Suite.
 
-GXP components and data utility classes extend map related functionality to
-equivalent classes in Ext.  The API reference here documents the properties,
-methods, and events that are extensions or modifications to the Ext parent
-classes.  Documentation for each class contains links to the Ext parent class,
-and for a full picture of the API, it is essential to have a copy of the
-`Ext API Documentation`_ at hand.
+gxp is a client-side only javascript library, built on top of OpenLayers,
+GeoExt and Ext JS. The design principles of gxp are:
 
-GXP classes are typically configured with OpenLayers or GeoExt objects.  For
-detail on methods and properties provided by these objects, see the
-`OpenLayers API Documentation`_ and `GeoExt API Documentation`_.
+* Make creating basic web mapping applications is as simple as providing a JSON
+  configuration
+* Provide an extensible framework, making it is easy to add new layer types,
+  tools etc. through simple plugin APIs.
 
-.. _`Ext API Documentation`: http://extjs.com/deploy/dev/docs/
-.. _`OpenLayers API Documentation`: http://dev.openlayers.org/apidocs
-.. _`GeoExt API Documentation`: http://dev.geoext.org/docs/lib/
-
-.. module:: gxp
-    :synopsis: High-level components for mapping applications.
-
-:mod:`gxp`
-----------
+Contents:
 
 .. toctree::
     :maxdepth: 1
 
-    lib/util
-    lib/util/style
-    lib/util/color
-
-.. toctree::
-    :maxdepth: 2
-    
-    lib/widgets
-
-.. toctree::
-    :maxdepth: 2
-
-    lib/data
-
-.. toctree::
-    :maxdepth: 2
-
-    lib/menu
-
-.. toctree::
-    :maxdepth: 2
-
-    lib/plugins
-    
-
-
+    tutorial/index
+    examples/index
+    lib
