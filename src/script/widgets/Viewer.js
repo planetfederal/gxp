@@ -185,6 +185,21 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
      *  :class:`Ext.form.ViewerField`.
      */
     
+    /** api: config[authenticationDialog]
+     *  :class:`Ext.Window`|``Function`` A global authentication dialog that
+     *  is invoked by :meth:`doAuthorized` if no user is logged in or the
+     *  current user is not authorized. That dialog/function is supposed to
+     *  call :meth:`setAuthorizedRoles` upon successful authentication.
+     *  Optional.
+     */
+    
+    /** api: property[authenticationDialog]
+     *  :class:`Ext.Window`|``Function`` Like the config option above, but this
+     *  can be set after configuration e.g. by a plugin that provides
+     *  authentication.
+     */
+    authenticationDialog: null,
+    
     /** api: property[authorizedRoles]
      *  ``Array`` Roles the application is authorized for. This property is
      *  usually set by a component that authenticates the user (e.g. a login
@@ -766,6 +781,43 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
          * authentication challenge up to the browser.
          */
         return !this.authorizedRoles || this.authorizedRoles.length > 0;
+    },
+    
+    /** api: method[doAuthorized]
+     *  :param roles: ``Array`` Roles required for invoking the action
+     *  :param callback: ``Function`` The action to perform
+     *  :param scope: ``Object`` The execution scope for the callback
+     *
+     *  Performs an action (defined as ``callback`` function), but only if
+     *  the user is authorized to perform it. If no user is logged in or the
+     *  logged in user is not authorized, the viewer's ``authenticationDialog``
+     *  will be shown. This method is usually called by plugins.
+     */
+    doAuthorized: function(roles, callback, scope) {
+        var authorized = false;
+        for (var i=roles.length-1; i>=0; --i) {
+            if (this.authorizedRoles.indexOf(roles[i]) !== -1) {
+                authorized = true;
+                break;
+            }
+        }
+        if (authorized) {
+            window.setTimeout(function() { callback.call(scope); }, 0);
+        } else {
+            if (this.authenticationDialog instanceof Ext.Window) {
+                this.authenticationDialog.show();
+            } else {
+                this.authenticationDialog();
+            }
+            if (this._authFn) {
+                this.un("authorizationchange", this._authFn, this, {single: true});
+            }
+            this._authFn = function() {
+                delete this._authFn;
+                this.doAuthorized(roles, callback, scope);
+            };
+            this.on("authorizationchange", this._authFn, this, {single: true});
+        }
     },
     
     /** api: method[destroy]

@@ -130,11 +130,17 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      *  functionality is provided.
      */
     
+    /** api: config[uploadRoles]
+     *  ``Array`` Roles authorized to upload layers. Default is
+     *  ["ROLE_ADMINISTRATOR"]
+     */
+    uploadRoles: ["ROLE_ADMINISTRATOR"],
+    
     /** api: config[uploadText]
      *  ``String``
      *  Text for upload button (only renders if ``upload`` is provided).
      */
-    uploadText: "Upload Data",
+    uploadText: "Upload layers",
 
     /** api: config[nonUploadSources]
      *  ``Array``
@@ -150,6 +156,12 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      *  URLs (e.g. "/geoserver").  Default is ``true``.
      */
     relativeUploadOnly: true,
+    
+    /** api: config[uploadTarget]
+     *  ``String`` URL of a single target GeoServer instance for uploads. If
+     *  provided, the Upload menu item will be shown in the "Add Layers" button
+     *  menu, and no upload button will be available in the Capabilities Grid.
+     */
 
     /** api: config[startSourceId]
      * ``Integer``
@@ -191,23 +203,30 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             iconCls: "gxp-icon-addlayers"
         };
         var options;
-        if (this.initialConfig.search) {
+        if (this.initialConfig.search || (this.upload && this.uploadTarget)) {
+            var items = [new Ext.menu.Item({
+                iconCls: 'gxp-icon-addlayers', 
+                text: this.addActionMenuText, 
+                handler: this.showCapabilitiesGrid, 
+                scope: this
+            })];
+            if (this.initialConfig.search) {
+                items.push(new Ext.menu.Item({
+                    iconCls: 'gxp-icon-addlayers', 
+                    text: this.findActionMenuText,
+                    handler: this.showCatalogueSearch,
+                    scope: this
+                }));
+            }
+            if (this.upload) {
+                var uploadButton = this.createUploadButton(Ext.menu.Item);
+                if (uploadButton) {
+                    items.push(uploadButton);
+                }
+            }
             options = Ext.apply(commonOptions, {
                 menu: new Ext.menu.Menu({
-                    items: [
-                        new Ext.menu.Item({
-                            iconCls: 'gxp-icon-addlayers', 
-                            text: this.addActionMenuText, 
-                            handler: this.showCapabilitiesGrid, 
-                            scope: this
-                        }),
-                        new Ext.menu.Item({
-                            iconCls: 'gxp-icon-addlayers', 
-                            text: this.findActionMenuText,
-                            handler: this.showCatalogueSearch,
-                            scope: this
-                        })
-                    ]
+                    items: items
                 })
             });
         } else {
@@ -468,9 +487,12 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             })
         ];
         
-        var uploadButton = this.createUploadButton();
-        if (uploadButton) {
-            bbarItems.unshift(uploadButton);
+        var uploadButton;
+        if (!this.uploadTarget) {
+            uploadButton = this.createUploadButton();
+            if (uploadButton) {
+                bbarItems.unshift(uploadButton);
+            }
         }
 
         var Cls = this.outputTarget ? Ext.Panel : Ext.Window;
@@ -532,10 +554,14 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
     },
     
     /** api: method[createUploadButton]
+     *  :arg Cls: ``Function`` The class to use for creating the button. If not
+     *      provided, an ``Ext.Button`` instance will be created.
+     *      ``Ext.menu.Item`` would be another option.
      *  If this tool is provided an ``upload`` property, a button will be created
      *  that launches a window with a :class:`gxp.LayerUploadPanel`.
      */
-    createUploadButton: function() {
+    createUploadButton: function(Cls) {
+        Cls = Cls || Ext.Button;
         var button;
         var uploadConfig = this.initialConfig.upload;
         // the url will be set in the sourceselected sequence
@@ -544,78 +570,79 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             if (typeof uploadConfig === "boolean") {
                 uploadConfig = {};
             }
-            button = new Ext.Button({
-                xtype: "button",
+            button = new Cls({
                 text: this.uploadText,
                 iconCls: "gxp-icon-filebrowse",
-                hidden: true,
+                hidden: !this.uploadTarget,
                 handler: function() {
-                    var panel = new gxp.LayerUploadPanel(Ext.apply({
-                        title: this.outputTarget ? this.uploadText : undefined,
-                        url: url,
-                        width: 350,
-                        border: false,
-                        bodyStyle: "padding: 10px 10px 0 10px;",
-                        frame: true,
-                        labelWidth: 65,
-                        autoScroll: true,
-                        defaults: {
-                            anchor: "95%",
-                            allowBlank: false,
-                            msgTarget: "side"
-                        },
-                        listeners: {
-                            uploadcomplete: function(panel, detail) {
-                                var layers = detail.layers;
-                                var names = {};
-                                for (var i=0, len=layers.length; i<len; ++i) {
-                                    names[layers[i].name] = true;
-                                }
-                                this.selectedSource.store.load({
-                                    callback: function(records, options, success) {
-                                        var gridPanel = this.capGrid.get(0).get(0);
-                                        var sel = gridPanel.getSelectionModel();
-                                        sel.clearSelections();
-                                        // select newly added layers
-                                        var newRecords = [];
-                                        var last = 0;
-                                        this.selectedSource.store.each(function(record, index) {
-                                            if (record.get("name") in names) {
-                                                last = index;
-                                                newRecords.push(record);
-                                            }
-                                        });
-                                        sel.selectRecords(newRecords);
-                                        // this needs to be deferred because the 
-                                        // grid view has not refreshed yet
-                                        window.setTimeout(function() {
-                                            gridPanel.getView().focusRow(last);
-                                        }, 100);
-                                    },
-                                    scope: this
-                                });
-                                if (this.outputTarget) {
-                                    panel.hide();
-                                } else {
-                                    win.close();
-                                }
+                    this.target.doAuthorized(this.uploadRoles, function() {
+                        var panel = new gxp.LayerUploadPanel(Ext.apply({
+                            title: this.outputTarget ? this.uploadText : undefined,
+                            url: url,
+                            width: 350,
+                            border: false,
+                            bodyStyle: "padding: 10px 10px 0 10px;",
+                            frame: true,
+                            labelWidth: 65,
+                            autoScroll: true,
+                            defaults: {
+                                anchor: "95%",
+                                allowBlank: false,
+                                msgTarget: "side"
                             },
-                            scope: this
-                        }
-                    }, uploadConfig));
+                            listeners: {
+                                uploadcomplete: function(panel, detail) {
+                                    var layers = detail.layers;
+                                    var names = {};
+                                    for (var i=0, len=layers.length; i<len; ++i) {
+                                        names[layers[i].name] = true;
+                                    }
+                                    this.selectedSource.store.load({
+                                        callback: function(records, options, success) {
+                                            var gridPanel = this.capGrid.get(0).get(0);
+                                            var sel = gridPanel.getSelectionModel();
+                                            sel.clearSelections();
+                                            // select newly added layers
+                                            var newRecords = [];
+                                            var last = 0;
+                                            this.selectedSource.store.each(function(record, index) {
+                                                if (record.get("name") in names) {
+                                                    last = index;
+                                                    newRecords.push(record);
+                                                }
+                                            });
+                                            sel.selectRecords(newRecords);
+                                            // this needs to be deferred because the 
+                                            // grid view has not refreshed yet
+                                            window.setTimeout(function() {
+                                                gridPanel.getView().focusRow(last);
+                                            }, 100);
+                                        },
+                                        scope: this
+                                    });
+                                    if (this.outputTarget) {
+                                        panel.hide();
+                                    } else {
+                                        win.close();
+                                    }
+                                },
+                                scope: this
+                            }
+                        }, uploadConfig));
                     
-                    var win;
-                    if (this.outputTarget) {
-                        this.addOutput(panel);
-                    } else {
-                        win = new Ext.Window({
-                            title: this.uploadText,
-                            modal: true,
-                            resizable: false,
-                            items: [panel]
-                        });
-                        win.show();
-                    }
+                        var win;
+                        if (this.outputTarget) {
+                            this.addOutput(panel);
+                        } else {
+                            win = new Ext.Window({
+                                title: this.uploadText,
+                                modal: true,
+                                resizable: false,
+                                items: [panel]
+                            });
+                            win.show();
+                        }
+                    }, this);
                 },
                 scope: this
             });

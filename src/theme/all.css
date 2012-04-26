@@ -297,7 +297,7 @@
 }
 
 /* gxp_layeruploadpanel */
-.x-btn .gxp-icon-filebrowse { 
+.x-btn .gxp-icon-filebrowse, .x-menu-item .gxp-icon-filebrowse { 
     background-image: url(img/silk/folder.png);
 }
 
