@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# gxp documentation build configuration file, created by
+# GXP documentation build configuration file, created by
 # sphinx-quickstart on Mon Jul 20 20:19:58 2009.
 #
 # This file is execfile()d with the current directory set to its containing dir.
@@ -37,7 +37,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'gxp'
+project = u'GXP'
 copyright = u'2008-2011, The Open Planning Project'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -103,10 +103,10 @@ html_theme = 'sphinxdoc'
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
-html_title = 'gxp v%s' % (version,) 
+html_title = 'GXP v%s' % (version,) 
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
-html_short_title = "gxp"
+html_short_title = "GXP"
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
@@ -158,7 +158,7 @@ html_show_sourcelink = False
 #html_file_suffix = ''
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'gxpdoc'
+htmlhelp_basename = 'GXPdoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -172,7 +172,7 @@ htmlhelp_basename = 'gxpdoc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'gxp.tex', u'gxp Documentation',
+  ('index', 'GXP.tex', u'GXP Documentation',
    u'OpenGeo', 'manual'),
 ]
 

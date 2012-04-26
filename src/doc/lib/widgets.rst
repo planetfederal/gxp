@@ -1,7 +1,7 @@
 Widgets
 =======
 
-gxp widgets are a collection of specialized map related components.
+GXP widgets are a collection of specialized map related components.
 
 .. toctree::
     :maxdepth: 1
