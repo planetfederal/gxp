@@ -796,7 +796,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
     doAuthorized: function(roles, callback, scope) {
         var authorized = false;
         for (var i=roles.length-1; i>=0; --i) {
-            if (this.authorizedRoles.indexOf(roles[i]) !== -1) {
+            if (this.authorizedRoles && this.authorizedRoles.indexOf(roles[i]) !== -1) {
                 authorized = true;
                 break;
             }

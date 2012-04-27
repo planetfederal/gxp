@@ -47,10 +47,10 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
     /** api: config[validFileExtensions]
      *  ``Array``
      *  List of valid file extensions.  These will be used in validating the 
-     *  file input value.  Default is ``[".zip", ".tif", ".gz", ".tar.bz2", 
+     *  file input value.  Default is ``[".zip", ".tif", ".tiff", ".gz", ".tar.bz2", 
      *  ".tar", ".tgz", ".tbz2"]``.
      */
-    validFileExtensions: [".zip", ".tif", ".gz", ".tar.bz2", ".tar", ".tgz", ".tbz2"],
+    validFileExtensions: [".zip", ".tif", ".tiff", ".gz", ".tar.bz2", ".tar", ".tgz", ".tbz2"],
     
     /** api: config[url]
      *  ``String``
@@ -120,7 +120,7 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
                 this.createDataStoresCombo(),
                 {
                     xtype: "textfield",
-                    name: "crs",
+                    name: "nativeCRS",
                     // anchor: "90%",
                     fieldLabel: this.crsLabel,
                     emptyText: this.crsEmptyText,
@@ -144,13 +144,20 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
             handler: function() {
                 var form = this.getForm();
                 if (form.isValid()) {
-                    form.submit({
+                    Ext.Ajax.request({
                         url: this.getUploadUrl(),
-                        submitEmptyText: false,
-                        waitMsg: this.waitMsgText,
-                        waitMsgTarget: true,
-                        reset: true,
-                        success: this.handleUploadSuccess,
+                        method: "POST",
+                        success: function(response) {
+                            this._import = response.getResponseHeader("Location");
+                            form.submit({
+                                url: this._import + "/tasks",
+                                submitEmptyText: false,
+                                waitMsg: this.waitMsgText,
+                                waitMsgTarget: true,
+                                reset: true,
+                                scope: this
+                            });
+                        },
                         scope: this
                     });
                 }
@@ -290,7 +297,7 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
     /** private: method[getUploadUrl]
      */
     getUploadUrl: function() {
-        return this.url + "/upload";
+        return this.url + "/imports";
     },
     
     /** private: method[getWorkspacesUrl]
@@ -305,13 +312,70 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
      */
     handleUploadResponse: function(response) {
         var obj = this.parseResponseText(response.responseText);
-        var success = obj && obj.success;
+        var success = obj && obj.task && obj.task.state === "READY";
         var records = [];
         if (!success) {
             // mark the file field as invlid
-            records = [{data: {id: "file", msg: obj.message}}];
+            records = [{data: {id: "file", msg: obj}}];
+        } else {
+            var formData = this.getForm().getFieldValues(),
+                // for now we only support a single item (items[0])
+                resource = obj.task.items[0].resource,
+                itemModified = !!(formData.title || formData.abstract || formData.nativeCRS),
+                taskModified = !!formData.workspace,
+                queue = [];
+            if (itemModified) {
+                var layer = resource.featureType ? "featureType" : "coverage",
+                    item = {resource: {}};
+                item.resource[layer] = {
+                    title: formData.title || undefined,
+                    abstract: formData.abstract || undefined,
+                    nativeCRS: formData.nativeCRS || undefined
+                };
+                queue.push(function(callback) {
+                    Ext.Ajax.request({
+                        method: "PUT",
+                        url: obj.task.items[0].href,
+                        jsonData: {item: item},
+                        callback: callback
+                    });
+                });
+            }
+            if (taskModified) {
+                var store = obj.task.target.dataStore ? "dataStore" : "coverageStore",
+                    task = {target: {}};
+                task.target[store] = {
+                    name: formData.store || "default",
+                    workspace: {
+                        name: formData.workspace
+                    }
+                };
+                queue.push(function(callback) {
+                    Ext.Ajax.request({
+                        method: "PUT",
+                        url: obj.task.href,
+                        jsonData: {task: task},
+                        callback: callback
+                    });
+                });
+            }
+            if (queue.length) {
+                gxp.util.dispatch(queue, this.finishUpload, this);
+            } else {
+                this.finishUpload();
+            }
         }
         return {success: success, records: records};
+    },
+    
+    finishUpload: function() {
+        Ext.Ajax.request({
+            method: "POST",
+            url: this._import,
+            //TODO error handling
+            success: this.handleUploadSuccess,
+            scope: this
+        });
     },
     
     /** private: parseResponseText
@@ -327,12 +391,12 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
             obj = Ext.decode(text);
         } catch (err) {
             // if response type was text/plain, the text will be wrapped in a <pre>
-            var match = text.match(/^\s*<pre>(.*)<\/pre>\s*/);
+            var match = text.match(/^\s*<pre[^>]*>(.*)<\/pre>\s*/);
             if (match) {
                 try {
                     obj = Ext.decode(match[1]);
                 } catch (err) {
-                    // pass
+                    obj = match[1];
                 }
             }
         }
@@ -341,9 +405,17 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
     
     /** private: method[handleUploadSuccess]
      */
-    handleUploadSuccess: function(form, action) {
-        var details = this.parseResponseText(action.response.responseText);
-        this.fireEvent("uploadcomplete", this, details);
+    handleUploadSuccess: function(response) {
+        Ext.Ajax.request({
+            method: "GET",
+            url: this._import,
+            success: function(response) {
+                delete this._import;
+                var details = Ext.decode(response.responseText);
+                this.fireEvent("uploadcomplete", this, details);
+            },
+            scope: this
+        });
     }
 
 });

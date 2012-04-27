@@ -158,9 +158,10 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
     relativeUploadOnly: true,
     
     /** api: config[uploadTarget]
-     *  ``String`` URL of a single target GeoServer instance for uploads. If
-     *  provided, the Upload menu item will be shown in the "Add Layers" button
-     *  menu, and no upload button will be available in the Capabilities Grid.
+     *  ``String`` id of a WMS source (:class:`gxp.plugins.WMSSource') backed
+     *  by a GeoServer instance that all uploads will be sent to. If provided,
+     *  the Upload menu item will be shown in the "Add Layers" button menu, and
+     *  no upload button will be available in the Capabilities Grid.
      */
 
     /** api: config[startSourceId]
@@ -237,7 +238,17 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         }
         var actions = gxp.plugins.AddLayers.superclass.addActions.apply(this, [options]);
         
-        this.target.on("ready", function() {actions[0].enable();});
+        this.target.on("ready", function() {
+            if (this.uploadTarget) {
+                var source = this.target.layerSources[this.uploadTarget];
+                if (source) {
+                    this.setSelectedSource(source);
+                } else {
+                    throw new Error("Layer source for uploadTarget '" + this.uploadTarget + "' not found.");
+                }
+            }
+            actions[0].enable();
+        }, this);
         return actions;
     },
 
@@ -312,23 +323,9 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         
         function addLayers() {
             var key = sourceComboBox.getValue();
-            var layerStore = this.target.mapPanel.layers;
             var source = this.target.layerSources[key];
             var records = capGridPanel.getSelectionModel().getSelections();
-            var record;
-            for (var i=0, ii=records.length; i<ii; ++i) {
-                record = source.createLayerRecord({
-                    name: records[i].get("name"),
-                    source: key
-                });
-                if (record) {
-                    if (record.get("group") === "background") {
-                        layerStore.insert(0, [record]);
-                    } else {
-                        layerStore.add([record]);
-                    }
-                }
-            }
+            this.addLayers(records, source);
         }
         
         var idx = 0;
@@ -526,6 +523,33 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         
     },
     
+    addLayers: function(records, source, setExtent) {
+        source = source || this.selectedSource;
+        var layerStore = this.target.mapPanel.layers,
+            extent, record;
+        for (var i=0, ii=records.length; i<ii; ++i) {
+            record = source.createLayerRecord({
+                name: records[i].get("name"),
+                source: source.id
+            });
+            if (!extent) {
+                extent = record.getLayer().maxExtent.clone();
+            } else {
+                extent.extend(record.getLayer().maxExtent)
+            }
+            if (record) {
+                if (record.get("group") === "background") {
+                    layerStore.insert(0, [record]);
+                } else {
+                    layerStore.add([record]);
+                }
+            }
+        }
+        if (setExtent) {
+            this.target.mapPanel.map.zoomToExtent(extent);
+        }
+    },
+    
     /** private: method[setSelectedSource]
      *  :arg source: :class:`gxp.plugins.LayerSource`
      */
@@ -533,7 +557,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         this.selectedSource = source;
         var store = source.store;
         this.fireEvent("sourceselected", this, source);
-        if (source.lazy) {
+        if (this.capGrid && source.lazy) {
             source.store.load({callback: (function() {
                 var sourceComboBox = this.capGrid.sourceComboBox,
                     store = sourceComboBox.store,
@@ -592,16 +616,21 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                             },
                             listeners: {
                                 uploadcomplete: function(panel, detail) {
-                                    var layers = detail.layers;
-                                    var names = {};
+                                    var layers = detail["import"].tasks[0].items;
+                                    var names = {}, resource, layer;
                                     for (var i=0, len=layers.length; i<len; ++i) {
-                                        names[layers[i].name] = true;
+                                        resource = layers[i].resource;
+                                        layer = resource.featureType || resource.coverage;
+                                        names[layer.namespace.name + ":" + layer.name] = true;
                                     }
                                     this.selectedSource.store.load({
                                         callback: function(records, options, success) {
-                                            var gridPanel = this.capGrid.get(0).get(0);
-                                            var sel = gridPanel.getSelectionModel();
-                                            sel.clearSelections();
+                                            var gridPanel, sel;
+                                            if (this.capGrid && this.capGrid.isVisible()) {
+                                                gridPanel = this.capGrid.get(0).get(0);
+                                                sel = gridPanel.getSelectionModel();
+                                                sel.clearSelections();
+                                            }
                                             // select newly added layers
                                             var newRecords = [];
                                             var last = 0;
@@ -611,12 +640,16 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                                                     newRecords.push(record);
                                                 }
                                             });
-                                            sel.selectRecords(newRecords);
-                                            // this needs to be deferred because the 
-                                            // grid view has not refreshed yet
-                                            window.setTimeout(function() {
-                                                gridPanel.getView().focusRow(last);
-                                            }, 100);
+                                            if (gridPanel) {
+                                                // this needs to be deferred because the 
+                                                // grid view has not refreshed yet
+                                                window.setTimeout(function() {
+                                                    sel.selectRecords(newRecords);
+                                                    gridPanel.getView().focusRow(last);
+                                                }, 100);
+                                            } else {
+                                                this.addLayers(newRecords, undefined, true);
+                                            }
                                         },
                                         scope: this
                                     });
@@ -669,22 +702,15 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             
             this.on({
                 sourceselected: function(tool, source) {
-                    button.hide();
+                    button[this.uploadTarget ? "show" : "hide"]();
                     var show = false;
                     if (this.isEligibleForUpload(source)) {
-                        // only works with GeoServer
-                        // if url is http://example.com/geoserver/ows, we
-                        // want http://example.com/geoserver/rest.
-                        var parts = source.url.split("/");
-                        parts.pop();
-                        parts.push("rest");
-                        // this sets the url for the layer upload panel
-                        url = parts.join("/");
+                        url = this.getGeoServerRestUrl(source.url);
                         if (this.target.isAuthorized()) {
                             // determine availability of upload functionality based
-                            // on a 405 for GET
-                            getStatus(url + "/upload", function(status) {
-                                button.setVisible(status === 405);
+                            // on a 200 for GET /imports
+                            getStatus(url + "/imports", function(status) {
+                                button.setVisible(status === 200);
                             }, this);
                         }
                     }
@@ -693,6 +719,18 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             });
         }
         return button;
+    },
+    
+    /** private: method[getGeoServerRestUrl]
+     *  :arg url: ``String`` A GeoServer url like "geoserver/ows"
+     *  :returns: ``String`` The rest endpoint for the above GeoServer,
+     *      i.e. "geoserver/rest" 
+     */
+    getGeoServerRestUrl: function(url) {
+        var parts = url.split("/");
+        parts.pop();
+        parts.push("rest");
+        return parts.join("/");
     },
     
     /** private: method[isEligibleForUpload]
