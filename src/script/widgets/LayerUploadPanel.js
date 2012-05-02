@@ -144,9 +144,22 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
             handler: function() {
                 var form = this.getForm();
                 if (form.isValid()) {
+                    var fields = form.getFieldValues(),
+                        jsonData;
+                    if (fields.workspace) {
+                        jsonData = {
+                            import: {
+                                targetWorkspace: {workspace: {name: fields.workspace}}
+                            }
+                        }
+                    }
+                    if (fields.store) {
+                        jsonData.import.targetStore = {dataStore: {name: fields.store}}
+                    }
                     Ext.Ajax.request({
                         url: this.getUploadUrl(),
                         method: "POST",
+                        jsonData: jsonData,
                         success: function(response) {
                             this._import = response.getResponseHeader("Location");
                             form.submit({
@@ -192,8 +205,12 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
              *
              * Listener arguments:
              * panel - {<gxp.LayerUploadPanel} This form panel.
-             * details - {Object} An object with "name" and "href" properties
-             *     corresponding to the uploaded layer name and resource href.
+             * details - {Object} An object with an "import" property,
+             *     representing a summary of the import result as provided by
+             *     GeoServer's Importer API.
+             * tasks - {Array} Uploader task information as reported by
+             *     GeoServer's Importer API for every multipart/form-data
+             *     uploaded task.
              */
             "uploadcomplete"
         ); 
@@ -312,6 +329,7 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
      */
     handleUploadResponse: function(response) {
         var obj = this.parseResponseText(response.responseText);
+        this._importTask = obj.task;
         var success = obj && obj.task && obj.task.state === "READY";
         var records = [];
         if (!success) {
@@ -322,7 +340,6 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
                 // for now we only support a single item (items[0])
                 resource = obj.task.items[0].resource,
                 itemModified = !!(formData.title || formData.abstract || formData.nativeCRS),
-                taskModified = !!formData.workspace,
                 queue = [];
             if (itemModified) {
                 var layer = resource.featureType ? "featureType" : "coverage",
@@ -332,35 +349,13 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
                     abstract: formData.abstract || undefined,
                     nativeCRS: formData.nativeCRS || undefined
                 };
-                queue.push(function(callback) {
-                    Ext.Ajax.request({
-                        method: "PUT",
-                        url: obj.task.items[0].href,
-                        jsonData: {item: item},
-                        callback: callback
-                    });
+                Ext.Ajax.request({
+                    method: "PUT",
+                    url: obj.task.items[0].href,
+                    jsonData: {item: item},
+                    callback: this.finishUpload,
+                    scope: this
                 });
-            }
-            if (taskModified) {
-                var store = obj.task.target.dataStore ? "dataStore" : "coverageStore",
-                    task = {target: {}};
-                task.target[store] = {
-                    name: formData.store || "default",
-                    workspace: {
-                        name: formData.workspace
-                    }
-                };
-                queue.push(function(callback) {
-                    Ext.Ajax.request({
-                        method: "PUT",
-                        url: obj.task.href,
-                        jsonData: {task: task},
-                        callback: callback
-                    });
-                });
-            }
-            if (queue.length) {
-                gxp.util.dispatch(queue, this.finishUpload, this);
             } else {
                 this.finishUpload();
             }
@@ -410,9 +405,12 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
             method: "GET",
             url: this._import,
             success: function(response) {
-                delete this._import;
                 var details = Ext.decode(response.responseText);
-                this.fireEvent("uploadcomplete", this, details);
+                //TODO no need to store this._importTask once SUITE-130 is fixed
+                //TODO also remove from APIdocs!
+                this.fireEvent("uploadcomplete", this, details, [this._importTask]);
+                delete this._import;
+                delete this._importTask;
             },
             scope: this
         });
