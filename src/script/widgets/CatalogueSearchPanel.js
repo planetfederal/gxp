@@ -306,6 +306,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
         if (searchValue !== "") {
             filter = new OpenLayers.Filter.Comparison({
                 type: OpenLayers.Filter.Comparison.LIKE,
+                matchCase: false,
                 property: 'csw:AnyText',
                 value: '*' + searchValue + '*'
             });
