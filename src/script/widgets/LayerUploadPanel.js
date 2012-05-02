@@ -148,13 +148,13 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
                         jsonData;
                     if (fields.workspace) {
                         jsonData = {
-                            import: {
+                            "import": {
                                 targetWorkspace: {workspace: {name: fields.workspace}}
                             }
                         }
                     }
                     if (fields.store) {
-                        jsonData.import.targetStore = {dataStore: {name: fields.store}}
+                        jsonData["import"].targetStore = {dataStore: {name: fields.store}}
                     }
                     Ext.Ajax.request({
                         url: this.getUploadUrl(),
@@ -339,14 +339,14 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
             var formData = this.getForm().getFieldValues(),
                 // for now we only support a single item (items[0])
                 resource = obj.task.items[0].resource,
-                itemModified = !!(formData.title || formData.abstract || formData.nativeCRS),
+                itemModified = !!(formData.title || formData["abstract"] || formData.nativeCRS),
                 queue = [];
             if (itemModified) {
                 var layer = resource.featureType ? "featureType" : "coverage",
                     item = {resource: {}};
                 item.resource[layer] = {
                     title: formData.title || undefined,
-                    abstract: formData.abstract || undefined,
+                    "abstract": formData["abstract"] || undefined,
                     nativeCRS: formData.nativeCRS || undefined
                 };
                 Ext.Ajax.request({

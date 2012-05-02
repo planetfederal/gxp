@@ -630,7 +630,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                                         resource = layers[i].resource;
                                         layer = resource.featureType || resource.coverage;
                                         //TODO always use information from detail once SUITE-130 is fixed
-                                        names[layer.namespace.name + ":" + (detail.import.tasks[0].items[i].resource.featureType || detail.import.tasks[0].items[i].resource.coverage).name] = true;
+                                        names[layer.namespace.name + ":" + (detail["import"].tasks[0].items[i].resource.featureType || detail["import"].tasks[0].items[i].resource.coverage).name] = true;
                                     }
                                     this.selectedSource.store.load({
                                         callback: function(records, options, success) {
