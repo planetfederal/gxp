@@ -523,19 +523,27 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         
     },
     
+    /** private: method[addLayers]
+     *  :arg records: ``Array`` the layer records to add
+     *  :arg source: :class:`gxp.plugins.LayerSource` The source to add from
+     *  :arg setExtent: ``Boolean`` Set extent after adding layers?
+     */
     addLayers: function(records, source, setExtent) {
         source = source || this.selectedSource;
         var layerStore = this.target.mapPanel.layers,
-            extent, record;
+            extent, record, layer;
         for (var i=0, ii=records.length; i<ii; ++i) {
             record = source.createLayerRecord({
                 name: records[i].get("name"),
                 source: source.id
             });
-            if (!extent) {
-                extent = record.getLayer().maxExtent.clone();
-            } else {
-                extent.extend(record.getLayer().maxExtent)
+            layer = record.getLayer();
+            if (layer.maxExtent) {
+                if (!extent) {
+                    extent = record.getLayer().maxExtent.clone();
+                } else {
+                    extent.extend(record.getLayer().maxExtent);
+                }
             }
             if (record) {
                 if (record.get("group") === "background") {
@@ -545,7 +553,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 }
             }
         }
-        if (setExtent) {
+        if (setExtent && extent) {
             this.target.mapPanel.map.zoomToExtent(extent);
         }
     },
