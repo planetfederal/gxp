@@ -208,9 +208,6 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
              * details - {Object} An object with an "import" property,
              *     representing a summary of the import result as provided by
              *     GeoServer's Importer API.
-             * tasks - {Array} Uploader task information as reported by
-             *     GeoServer's Importer API for every multipart/form-data
-             *     uploaded task.
              */
             "uploadcomplete"
         ); 
@@ -329,7 +326,6 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
      */
     handleUploadResponse: function(response) {
         var obj = this.parseResponseText(response.responseText);
-        this._importTask = obj.task;
         var success = obj && obj.task && obj.task.state === "READY";
         var records = [];
         if (!success) {
@@ -406,11 +402,8 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
             url: this._import,
             success: function(response) {
                 var details = Ext.decode(response.responseText);
-                //TODO no need to store this._importTask once SUITE-130 is fixed
-                //TODO also remove from APIdocs!
-                this.fireEvent("uploadcomplete", this, details, [this._importTask]);
+                this.fireEvent("uploadcomplete", this, details);
                 delete this._import;
-                delete this._importTask;
             },
             scope: this
         });
