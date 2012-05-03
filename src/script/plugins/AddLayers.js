@@ -127,7 +127,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      *  If provided, a :class:`gxp.LayerUploadPanel` will be made accessible
      *  from a button on the Available Layers dialog.  This panel will be 
      *  constructed using the provided config.  By default, no upload 
-     *  functionality is provided.
+     *  button will be added to the Available Layers dialog.
      */
     
     /** api: config[uploadRoles]
@@ -157,11 +157,27 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      */
     relativeUploadOnly: true,
     
-    /** api: config[uploadTarget]
+    /** api: config[uploadSource]
      *  ``String`` id of a WMS source (:class:`gxp.plugins.WMSSource') backed
      *  by a GeoServer instance that all uploads will be sent to. If provided,
-     *  the Upload menu item will be shown in the "Add Layers" button menu, and
-     *  no upload button will be available in the Capabilities Grid.
+     *  an Upload menu item will be shown in the "Add Layers" button menu.
+     */
+    
+    /** api: config[postUploadAction]
+     *  ``String|Object`` Either the id of a plugin that provides the action to
+     *  be performed after an upload, or an object with ``plugin`` and
+     *  ``outputConfig`` properties. The ``addOutput`` method of the plugin
+     *  referenced by the provided id (or the ``plugin`` property) will be
+     *  called, with the provided ``outputConfig`` as argument. A usage example
+     *  would be to open the Styles tab of the LayerProperties dialog for a WMS
+     *  layer:
+     *
+     *  .. code-block:: javascript
+     *  
+     *      postUploadAction: {
+     *          plugin: "layerproperties",
+     *          outputConfig: {activeTab: 2}
+     *      }
      */
 
     /** api: config[startSourceId]
@@ -204,7 +220,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             iconCls: "gxp-icon-addlayers"
         };
         var options;
-        if (this.initialConfig.search || (this.upload && this.uploadTarget)) {
+        if (this.initialConfig.search || (this.uploadSource)) {
             var items = [new Ext.menu.Item({
                 iconCls: 'gxp-icon-addlayers', 
                 text: this.addActionMenuText, 
@@ -219,7 +235,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     scope: this
                 }));
             }
-            if (this.upload) {
+            if (this.uploadSource) {
                 var uploadButton = this.createUploadButton(Ext.menu.Item);
                 if (uploadButton) {
                     items.push(uploadButton);
@@ -239,12 +255,12 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         var actions = gxp.plugins.AddLayers.superclass.addActions.apply(this, [options]);
         
         this.target.on("ready", function() {
-            if (this.uploadTarget) {
-                var source = this.target.layerSources[this.uploadTarget];
+            if (this.uploadSource) {
+                var source = this.target.layerSources[this.uploadSource];
                 if (source) {
                     this.setSelectedSource(source);
                 } else {
-                    throw new Error("Layer source for uploadTarget '" + this.uploadTarget + "' not found.");
+                    throw new Error("Layer source for uploadSource '" + this.uploadSource + "' not found.");
                 }
             }
             actions[0].enable();
@@ -485,7 +501,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         ];
         
         var uploadButton;
-        if (!this.uploadTarget) {
+        if (!this.uploadSource) {
             uploadButton = this.createUploadButton();
             if (uploadButton) {
                 bbarItems.unshift(uploadButton);
@@ -526,9 +542,9 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
     /** private: method[addLayers]
      *  :arg records: ``Array`` the layer records to add
      *  :arg source: :class:`gxp.plugins.LayerSource` The source to add from
-     *  :arg setExtent: ``Boolean`` Set extent after adding layers?
+     *  :arg isUpload: ``Boolean`` Do the layers to add come from an upload?
      */
-    addLayers: function(records, source, setExtent) {
+    addLayers: function(records, source, isUpload) {
         source = source || this.selectedSource;
         var layerStore = this.target.mapPanel.layers,
             extent, record, layer;
@@ -537,15 +553,15 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 name: records[i].get("name"),
                 source: source.id
             });
-            layer = record.getLayer();
-            if (layer.maxExtent) {
-                if (!extent) {
-                    extent = record.getLayer().maxExtent.clone();
-                } else {
-                    extent.extend(record.getLayer().maxExtent);
-                }
-            }
             if (record) {
+                layer = record.getLayer();
+                if (layer.maxExtent) {
+                    if (!extent) {
+                        extent = record.getLayer().maxExtent.clone();
+                    } else {
+                        extent.extend(record.getLayer().maxExtent);
+                    }
+                }
                 if (record.get("group") === "background") {
                     layerStore.insert(0, [record]);
                 } else {
@@ -553,8 +569,19 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 }
             }
         }
-        if (setExtent && extent) {
+        if (extent) {
             this.target.mapPanel.map.zoomToExtent(extent);
+        }
+        if (isUpload && this.postUploadAction && records.length === 1 && record) {
+            // show LayerProperties dialog if just one layer was added
+            this.target.selectLayer(record);
+            var outputConfig,
+                actionPlugin = this.postUploadAction;
+            if (!Ext.isString(actionPlugin)) {
+                outputConfig = actionPlugin.outputConfig;
+                actionPlugin = actionPlugin.plugin;
+            }
+            this.target.tools[actionPlugin].addOutput(outputConfig);
         }
     },
     
@@ -595,7 +622,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
     createUploadButton: function(Cls) {
         Cls = Cls || Ext.Button;
         var button;
-        var uploadConfig = this.initialConfig.upload;
+        var uploadConfig = this.initialConfig.upload || !!this.initialConfig.uploadSource;
         // the url will be set in the sourceselected sequence
         var url;
         if (uploadConfig) {
@@ -605,7 +632,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             button = new Cls({
                 text: this.uploadText,
                 iconCls: "gxp-icon-filebrowse",
-                hidden: !this.uploadTarget,
+                hidden: !this.uploadSource,
                 handler: function() {
                     this.target.doAuthorized(this.uploadRoles, function() {
                         var panel = new gxp.LayerUploadPanel(Ext.apply({
@@ -710,7 +737,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             
             this.on({
                 sourceselected: function(tool, source) {
-                    button[this.uploadTarget ? "show" : "hide"]();
+                    button[this.uploadSource ? "show" : "hide"]();
                     var show = false;
                     if (this.isEligibleForUpload(source)) {
                         url = this.getGeoServerRestUrl(source.url);
