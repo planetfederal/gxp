@@ -1,4 +1,4 @@
-.. _gxp.viewer.featureinfo:
+.. _sdk.viewer.featureinfo:
 
 Adding a WMS GetFeatureInfo tool
 ================================
@@ -68,4 +68,4 @@ The button is now the second button in the toolbar:
      :align: center
      :width: 1000px
 
-In the :ref:`next section <gxp.viewer.legend>` we will learn how to add a legend to the viewer.
+In the :ref:`next section <sdk.viewer.legend>` we will learn how to add a legend to the viewer.

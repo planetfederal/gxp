@@ -1,4 +1,4 @@
-.. _gxp.basics.dissect:
+.. _sdk.basics.dissect:
 
 Dissecting your Viewer
 ======================
@@ -11,7 +11,7 @@ second entry of app.js, the first one is the loader file):
      :align: center
      :width: 1000px
 
-When Ext.onReady fires, a new gxp.Viewer object is created. The viewport is
+When Ext.onReady fires, a new sdk.viewer object is created. The viewport is
 filled with a border layout, which has two items, a container in the 'west'
 region of 200 pixels wide, and the map in the 'center' region. Please note that
 all tools in gxp are Ext plugins, so they can be created with a ptype shortcut
@@ -58,4 +58,4 @@ Now we will see the usa:states layer added to the application:
      :align: center
      :width: 1000px
 
-Next we will look at useful :ref:`resources <gxp.basics.resources>` for gxp.
+Next we will look at useful :ref:`resources <sdk.basics.resources>` for gxp.

@@ -1,4 +1,4 @@
-.. _gxp.viewer.geocoder:
+.. _sdk.viewer.geocoder:
 
 Adding a Google Geocoder search field
 =====================================
@@ -41,4 +41,4 @@ Add the plugin to the build config (buildjs.cfg) and restart the application usi
      :align: center
      :width: 1000px
 
-Next we will learn how to add a :ref:`Google base layer <gxp.viewer.googlelayer>`.
+Next we will learn how to add a :ref:`Google base layer <sdk.viewer.googlelayer>`.

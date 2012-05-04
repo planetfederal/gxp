@@ -1,7 +1,7 @@
-.. module:: gxp.viewer
+.. module:: sdk.viewer
     :synopsis: Learn how to add tools and layers to your viewer.
 
-.. _gxp.viewer:
+.. _sdk.viewer:
 
 gxp Viewer
 ==========

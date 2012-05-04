@@ -1,4 +1,4 @@
-.. _gxp.viewer.googlelayer:
+.. _sdk.viewer.googlelayer:
 
 Adding a Google base layer
 ==========================
@@ -28,4 +28,4 @@ We will now have a new base layer, Google RoadMap in our viewer:
      :align: center
      :width: 1000px
 
-So adding layers is really simple and only requires configuration. Next we will see what it takes to change the :ref:`projection of the viewer <gxp.viewer.projection>`.
+So adding layers is really simple and only requires configuration. Next we will see what it takes to change the :ref:`projection of the viewer <sdk.viewer.projection>`.

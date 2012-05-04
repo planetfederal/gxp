@@ -1,4 +1,4 @@
-.. _gxp.editor.featuregrid:
+.. _sdk.editor.featuregrid:
 
 Adding a feature grid
 =====================
@@ -47,4 +47,4 @@ When the button "Display on map" is pressed, all the features are rendered clien
      :align: center
      :width: 1000px
 
-In the next module we will learn how to :ref:`edit styles <gxp.styler>`.
+In the next module we will learn how to :ref:`edit styles <sdk.styler>`.

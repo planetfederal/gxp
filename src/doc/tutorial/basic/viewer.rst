@@ -1,11 +1,11 @@
-.. _gxp.basics.viewer:
+.. _sdk.basics.viewer:
 
 Creating a Viewer
 =================
-The central object in the architecture of gxp is a gxp.Viewer. A viewer
+The central object in the architecture of gxp is a sdk.viewer. A viewer
 basically combines a map panel with tools, but it can do much more than that.
 By default a viewer will fill up the whole  viewport. The main configuration
-options for a gxp.Viewer are:
+options for a sdk.viewer are:
 
 * proxy: The proxy to use in order to bypass the same origin policy when
   accessing remote resources through JavaScript. Will be set as
@@ -51,4 +51,4 @@ Now start up a browser, and type in the address of the application:
 So what you get is a basic webmapping application which contains a layer tree,
 a map panel and some map tools. The map panel contains an OpenStreetMap base
 layer. Having successfully created our first viewer, we'll continue by looking
-more closely at :ref:`the parts <gxp.basics.dissect>`.
+more closely at :ref:`the parts <sdk.basics.dissect>`.

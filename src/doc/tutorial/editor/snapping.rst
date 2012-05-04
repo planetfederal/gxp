@@ -1,4 +1,4 @@
-.. _gxp.editor.snapping:
+.. _sdk.editor.snapping:
 
 Setting up snapping
 ===================
@@ -35,4 +35,4 @@ Zoom in at the west coast of the USA, and digitize a new state. When you get clo
 
 Note: it is possible that the new state will not show up directly in the GeoServer WMS layer, this is mostly caused by the BoundingBoxes being configured too narrow for the layer. By recomputing the bounding boxes after the transaction, or by enlarging them manually, the new state should show up after a refresh.
 
-In the last section of this module we will learn how use a :ref:`featuregrid <gxp.editor.featuregrid>`.
+In the last section of this module we will learn how use a :ref:`featuregrid <sdk.editor.featuregrid>`.

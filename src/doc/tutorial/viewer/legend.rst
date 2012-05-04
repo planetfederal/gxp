@@ -1,4 +1,4 @@
-.. _gxp.viewer.legend:
+.. _sdk.viewer.legend:
 
 Adding a legend tool
 ====================
@@ -63,4 +63,4 @@ Now the legend will show up in the container with the id “legendpanel” :
      :align: center
      :width: 1000px
 
-Next we will learn how to add a :ref:`Google geocoder field <gxp.viewer.geocoder>`.
+Next we will learn how to add a :ref:`Google geocoder field <sdk.viewer.geocoder>`.

@@ -1,4 +1,4 @@
-.. _gxp.styler.styler:
+.. _sdk.styler.styler:
 
 Adding a Styler plugin
 ======================
