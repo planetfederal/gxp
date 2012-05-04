@@ -8,6 +8,8 @@
 
 /**
  * @requires plugins/Tool.js
+ * @require OpenLayers/Control/Snapping.js
+ * @require OpenLayers/Strategy/BBOX.js
  */
 
 /** api: (define)
