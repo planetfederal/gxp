@@ -15,6 +15,7 @@
  * @requires OpenLayers/Handler/Path.js
  * @requires OpenLayers/Handler/Polygon.js
  * @requires OpenLayers/Control/SelectFeature.js
+ * @requires GeoExt/widgets/form.js
  */
 
 /** api: (define)
