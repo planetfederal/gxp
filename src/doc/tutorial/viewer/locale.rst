@@ -4,15 +4,12 @@ Changing the locale of the viewer
 =================================
 Imagine your target audience not being English speaking but French speaking. How do you change the application to be in French?
 
-Open up the file buildjs.cfg and go to the GeoExt section. Add the following::
+Open up your app.js file. Add the following dependencies::
 
-    GeoExt/locale/GeoExt-fr.js
+    * @require GeoExt/locale/GeoExt-fr.js
+    * @require locale/fr.js
 
-Go to the gxp section and add::
-
-    locale/fr.js
-
-Next, open up app.js and add:
+Next, add the following in your main code block:
 
 .. code-block:: javascript
 

@@ -35,7 +35,7 @@ The grid will still be empty, since the feature manager only loads a feature in 
 
     autoLoadFeatures: true
 
-Open up buildjs.cfg, and add plugins/FeatureGrid.js. Restart the application using ant, and reload the browser. Now we will have a feature grid in the bottom of our application, which is initally loaded with all the states:
+At the top of app.js, add plugins/FeatureGrid.js as dependency. Restart the application using ant, and reload the browser. Now we will have a feature grid in the bottom of our application, which is initally loaded with all the states:
 
   .. figure:: gxp-img20.png
      :align: center

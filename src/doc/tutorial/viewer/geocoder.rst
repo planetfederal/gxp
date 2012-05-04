@@ -2,6 +2,12 @@
 
 Adding a Google Geocoder search field
 =====================================
+
+.. warning::
+
+    Before adding Google components to your applications, make sure that
+    Google's Terms of Use allow you to do so.
+
 Open up the gxp API docs again, and search for a plugin that could provide this functionality.
 
 http://gxp.opengeo.org/master/doc/lib/plugins/GoogleGeocoder.html
@@ -10,7 +16,7 @@ As you can see this will need the Google Maps v3 API to be present in the applic
 
 .. code-block:: html
 
-    <script src="http://maps.google.com/maps/api/js?v=3.5&amp;sensor=false"></script>
+    <script src="http://maps.google.com/maps/api/js?v=3.6&amp;sensor=false"></script>
 
 Now open up the file app.js again, and add the tool configuration for this plugin. We want the geocoder field to show up in the map's toolbar:
 
@@ -35,7 +41,7 @@ However to make this happen, we also need to add a tbar to the map's config, oth
         ..
     }
 
-Add the plugin to the build config (buildjs.cfg) and restart the application using ant. We will now have a Google Geocoder in our viewer:
+Add the plugin to the list of dependencies in app.js. The file name is plugins/GoogleGeocoder.js. Restart the application using ant. We will now have a Google Geocoder in our viewer:
 
   .. figure:: gxp-img10.png
      :align: center

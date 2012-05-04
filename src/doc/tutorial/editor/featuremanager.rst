@@ -7,7 +7,7 @@ Editing in gxp always starts with setting up a feature manager. The API docs for
 
 http://gxp.opengeo.org/master/doc/lib/plugins/FeatureManager.html
 
-Add plugins/FeatureManager.js to the build profile of the application (buildjs.cfg). Open up the file app/static/script/app/app.js in the myviewer directory and search for the tools section and add the following plugin to the tools section:
+Open up the file ``app/static/script/app/app.js`` in the myviewer directory.  Add ``plugins/FeatureManager.js`` to the list of dependencies at the top of the file.  Then search for the tools section and add the following plugin to the tools section:
 
 .. code-block:: javascript
 

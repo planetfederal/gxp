@@ -2,14 +2,15 @@
 
 Creating a Viewer
 =================
-The central object in the architecture of gxp is a sdk.viewer. A viewer
+The central object in the architecture of gxp is a gxp.Viewer. A viewer
 basically combines a map panel with tools, but it can do much more than that.
 By default a viewer will fill up the whole  viewport. The main configuration
-options for a sdk.viewer are:
+options for a gxp.Viewer are:
 
 * proxy: The proxy to use in order to bypass the same origin policy when
-  accessing remote resources through JavaScript. Will be set as
-  OpenLayers.ProxyHost.
+  accessing remote resources through JavaScript. Only needed when external
+  resources (i.e. from outside the OpenGeo Suite instance that your app lives
+  in) are used. Will be set as OpenLayers.ProxyHost.
 * portalItems: The items to add to the portal, in addition to the map panel the
   viewer will create automatically.
 * portalConfig: Configuration object for the wrapping container (usually an
