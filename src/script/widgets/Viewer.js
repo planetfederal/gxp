@@ -756,7 +756,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
          */
         var authorized = false;
         if (this.authorizedRoles) {
-            if (roles) {
+            if (!roles) {
                 roles = "ROLE_ADMINISTRATOR";
             }
             if (!Ext.isArray(roles)) {
