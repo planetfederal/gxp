@@ -149,18 +149,16 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
                     vendorParams: vendorParams,
                     eventListeners: {
                         getfeatureinfo: function(evt) {
-                            if (evt.text || (evt.features && evt.features.length > 0)) {
-                                var title = x.get("title") || x.get("name");
-                                if (infoFormat == "text/html") {
-                                    var match = evt.text.match(/<body[^>]*>([\s\S]*)<\/body>/);
-                                    if (match && !match[1].match(/^\s*$/)) {
-                                        this.displayPopup(evt, title, match[1]);
-                                    }
-                                } else if (infoFormat == "text/plain") {
-                                    this.displayPopup(evt, title, '<pre>' + evt.text + '</pre>');
-                                } else {
-                                    this.displayPopup(evt, title);
+                            var title = x.get("title") || x.get("name");
+                            if (infoFormat == "text/html") {
+                                var match = evt.text.match(/<body[^>]*>([\s\S]*)<\/body>/);
+                                if (match && !match[1].match(/^\s*$/)) {
+                                    this.displayPopup(evt, title, match[1]);
                                 }
+                            } else if (infoFormat == "text/plain") {
+                                this.displayPopup(evt, title, '<pre>' + evt.text + '</pre>');
+                            } else if (evt.features && evt.features.length > 0) {
+                                this.displayPopup(evt, title);
                             }
                         },
                         scope: this
