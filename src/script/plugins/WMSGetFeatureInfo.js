@@ -149,7 +149,7 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
                     vendorParams: vendorParams,
                     eventListeners: {
                         getfeatureinfo: function(evt) {
-                            if (evt.features && evt.features.length > 0) {
+                            if (evt.text || (evt.features && evt.features.length > 0)) {
                                 var title = x.get("title") || x.get("name");
                                 if (infoFormat == "text/html") {
                                     var match = evt.text.match(/<body[^>]*>([\s\S]*)<\/body>/);
