@@ -1,4 +1,4 @@
-.. _gxp.viewer.legend:
+.. _sdk.viewer.legend:
 
 Adding a legend tool
 ====================
@@ -15,7 +15,7 @@ The ptype to use is “gxp_legend”. Open up app.js again, and configure anothe
         actionTarget: "map.tbar"
     }
 
-Also add this plugin to the build profile (buildjs.cfg) and restart the web application with ant and reload the browser. If we don't do anything else, we will end up with a button in the map's toolbar that will show a popup window with the legend of all visible layers in the viewer:
+Also add this plugin to the list of dependencies at the top of app.js. The file name is plugins/Legend.js. Restart the web application with ant and reload the browser. If we don't do anything else, we will end up with a button in the map's toolbar that will show a popup window with the legend of all visible layers in the viewer:
 
   .. figure:: gxp-img8.png
      :align: center
@@ -63,4 +63,4 @@ Now the legend will show up in the container with the id “legendpanel” :
      :align: center
      :width: 1000px
 
-Next we will learn how to add a :ref:`Google geocoder field <gxp.viewer.geocoder>`.
+Next we will learn how to add a :ref:`Google geocoder field <sdk.viewer.geocoder>`.

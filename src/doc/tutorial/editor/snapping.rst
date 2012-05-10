@@ -1,4 +1,4 @@
-.. _gxp.editor.snapping:
+.. _sdk.editor.snapping:
 
 Setting up snapping
 ===================
@@ -29,10 +29,11 @@ Now we need to hook up our feature editor with the snapping agent:
         snappingAgent: "snapping-agent"
     }
 
-Also, add plugins/SnappingAgent.js to the gxp section of your build profile, and OpenLayers/Control/Snapping.js and OpenLayers/Strategy/BBOX.js to the openlayers section, and restart the application using ant. Reload the browser. 
+Also, add plugins/SnappingAgent.js to the list of dependencies at the top of
+your app.js file, and restart the application using ant. Reload the browser. 
 
 Zoom in at the west coast of the USA, and digitize a new state. When you get close to the border of an existing state, you will see that the polygon that you are digitizing is being snapped to that border. 
 
 Note: it is possible that the new state will not show up directly in the GeoServer WMS layer, this is mostly caused by the BoundingBoxes being configured too narrow for the layer. By recomputing the bounding boxes after the transaction, or by enlarging them manually, the new state should show up after a refresh.
 
-In the last section of this module we will learn how use a :ref:`featuregrid <gxp.editor.featuregrid>`.
+In the last section of this module we will learn how use a :ref:`featuregrid <sdk.editor.featuregrid>`.

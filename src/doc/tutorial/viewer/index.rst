@@ -1,7 +1,7 @@
-.. module:: gxp.viewer
+.. module:: sdk.viewer
     :synopsis: Learn how to add tools and layers to your viewer.
 
-.. _gxp.viewer:
+.. _sdk.viewer:
 
 gxp Viewer
 ==========
@@ -13,7 +13,8 @@ In this module you will enhance the viewer application that you have built in th
 .. toctree::
     :maxdepth: 1
     
-    Adding a WMS GetFeatureInfo tool. <featureinfo>
+    Adding a 'Zoom to Layer Extent' tool. <zoomtolayerextent>
+    Adding a 'WMS GetFeatureInfo' tool. <featureinfo>
     Adding a legend. <legend>
     Adding a Google Geocoder field. <geocoder>
     Adding a Google base layer. <googlelayer>

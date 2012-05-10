@@ -1,7 +1,7 @@
-.. module:: gxp.editor
+.. module:: sdk.editor
     :synopsis: Learn how to add tools to your viewer that have to do with editing.
 
-.. _gxp.editor:
+.. _sdk.editor:
 
 Editing tools in gxp
 ====================

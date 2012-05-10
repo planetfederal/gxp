@@ -1,7 +1,7 @@
-.. module:: gxp.styler
+.. module:: sdk.styler
     :synopsis: Learn how to add tools to your viewer that have to do with styling.
 
-.. _gxp.styler:
+.. _sdk.styler:
 
 Styling tools in gxp
 ====================

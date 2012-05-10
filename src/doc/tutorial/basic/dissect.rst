@@ -1,4 +1,4 @@
-.. _gxp.basics.dissect:
+.. _sdk.basics.dissect:
 
 Dissecting your Viewer
 ======================
@@ -11,12 +11,33 @@ second entry of app.js, the first one is the loader file):
      :align: center
      :width: 1000px
 
-When Ext.onReady fires, a new gxp.Viewer object is created. The viewport is
-filled with a border layout, which has two items, a container in the 'west'
-region of 200 pixels wide, and the map in the 'center' region. Please note that
-all tools in gxp are Ext plugins, so they can be created with a ptype shortcut
-in the config, similar to the xtype shortcut for Ext components. This viewer
-application defines the following tools:
+Dependency Management
+---------------------
+
+The first thing you'll see in app.js is the list of JavaScript dependencies that are required to run the application. Whenever you add a component to the
+application, be sure to add a line with the relative path to the gxp file it is defined in to this list, using the following pattern:
+
+    .. code-block:: javascript
+    
+        * @require path/to/Dependency.js
+
+Everything listed here will be pulled in by the application build tool. The
+result is a small application footprint, because only the required components
+are included in the build.
+
+    .. note::
+
+        Whenever you add dependencies to app.js, you need to restart your debug
+        server. To do so, go to the console where you ran ``ant debug``, hit
+        Ctrl+C, and run the same command again (e.g. by pressing Key-Up and 
+        Return).
+
+A Quick Look at The Application
+-------------------------------
+
+In the example application, everything is wrapped by an anonymous function which is called when ``Ext.onReady`` fires. This is when the DOM is ready, i.e. when content can be added to a web page.
+
+Our application creates a gxp.Viewer instance. The viewport is filled with a border layout, which has two items, a container in the 'west' region of 200 pixels wide, and the map in the 'center' region. Please note that all tools in gxp are Ext plugins, so they can be created with a ptype shortcut in the config, similar to the xtype shortcut for Ext components. This viewer application defines the following tools:
 
 * A Layer Tree, which will be rendered in the 'west' panel defined in the
   portalConfig.
@@ -58,4 +79,5 @@ Now we will see the usa:states layer added to the application:
      :align: center
      :width: 1000px
 
-Next we will look at useful :ref:`resources <gxp.basics.resources>` for gxp.
+Next we will add more components to our app, and start with some
+:ref:`basic viewer components <sdk.viewer>`.

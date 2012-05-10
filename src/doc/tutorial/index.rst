@@ -1,3 +1,6 @@
+.. module:: sdk
+    :synopsis: Tutorial on app creation with gxp.
+
 Tutorial
 ========
 

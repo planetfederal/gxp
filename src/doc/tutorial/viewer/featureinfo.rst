@@ -1,4 +1,4 @@
-.. _gxp.viewer.featureinfo:
+.. _sdk.viewer.featureinfo:
 
 Adding a WMS GetFeatureInfo tool
 ================================
@@ -18,7 +18,7 @@ Its ptype is "gxp_wmsgetfeatureinfo", so we will add an entry in the tools confi
         ptype: “gxp_wmsgetfeatureinfo”
     }
 
-As the next step we need to add the new tool to our build profile in buildjs.cfg, so open up the file buildjs.cfg (in the root of the myviewer directory) in your favorite editor, and search for a section called gxp. In the include section, add plugins/WMSGetFeatureInfo.js. Now restart the application with ant, and reload the application in your browser. You should now see an extra tool button in the map's toolbar:
+As the next step we need to add the new tool to our build profile, so we add a line for plugins/WMSGetFeatureInfo.js to the list of dependencies at the top of our app.js file. Now restart the application with ant, and reload the application in your browser. You should now see an extra tool button in the map's toolbar:
 
   .. figure:: gxp-img4.png
      :align: center
@@ -68,4 +68,4 @@ The button is now the second button in the toolbar:
      :align: center
      :width: 1000px
 
-In the :ref:`next section <gxp.viewer.legend>` we will learn how to add a legend to the viewer.
+In the :ref:`next section <sdk.viewer.legend>` we will learn how to add a legend to the viewer.

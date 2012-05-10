@@ -1,4 +1,4 @@
-.. _gxp.editor.featuremanager:
+.. _sdk.editor.featuremanager:
 
 Setting up a feature manager
 ============================
@@ -7,7 +7,7 @@ Editing in gxp always starts with setting up a feature manager. The API docs for
 
 http://gxp.opengeo.org/master/doc/lib/plugins/FeatureManager.html
 
-Add plugins/FeatureManager.js to the build profile of the application (buildjs.cfg). Open up the file app/static/script/app/app.js in the myviewer directory and search for the tools section and add the following plugin to the tools section:
+Open up the file ``app/static/script/app/app.js`` in the myviewer directory.  Add ``plugins/FeatureManager.js`` to the list of dependencies at the top of the file.  Then search for the tools section and add the following plugin to the tools section:
 
 .. code-block:: javascript
 
@@ -25,4 +25,4 @@ In the above case we have configured the feature manager with a fixed layer. How
 
 If we reload the application, we will not see any difference. This is because the feature manager is an invisble tool, that can be used by other tools, such as the FeatureEditor. However, if we would open up Firebug we would see 2 additional requests going off: a SLD WMS DescribeLayer request, and a WFS DescribeFeatureType request for the configured layer.
 
-Next we will learn how to :ref:`hook up the feature editor with this feature manager <gxp.editor.featureeditor>`.
+Next we will learn how to :ref:`hook up the feature editor with this feature manager <sdk.editor.featureeditor>`.

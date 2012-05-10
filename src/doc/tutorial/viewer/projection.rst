@@ -1,4 +1,4 @@
-.. _gxp.viewer.projection:
+.. _sdk.viewer.projection:
 
 Changing the projection of the viewer
 =====================================
@@ -60,4 +60,4 @@ This will result in:
      :align: center
      :width: 1000px
 
-In the next section we will change the :ref:`locale of the viewer <gxp.viewer.locale>`.
+In the next section we will change the :ref:`locale of the viewer <sdk.viewer.locale>`.

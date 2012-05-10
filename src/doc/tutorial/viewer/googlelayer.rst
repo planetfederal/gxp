@@ -1,7 +1,13 @@
-.. _gxp.viewer.googlelayer:
+.. _sdk.viewer.googlelayer:
 
 Adding a Google base layer
 ==========================
+
+.. warning::
+
+    Before adding Google components to your applications, make sure that
+    Google's Terms of Use allow you to do so.
+
 Open up the file app.js, search for the sources section, and add a google source:
 
 .. code-block:: javascript
@@ -20,7 +26,7 @@ Next search for the layers section, and add a Google base layer:
         group: "background"
     }
 
-In the build config, add plugins/GoogleSource.js to the gxp include section and restart ant.
+In the build config at the top of app.js, add a dependency line for plugins/GoogleSource.js and restart ant.
 
 We will now have a new base layer, Google RoadMap in our viewer:
 
@@ -28,4 +34,4 @@ We will now have a new base layer, Google RoadMap in our viewer:
      :align: center
      :width: 1000px
 
-So adding layers is really simple and only requires configuration. Next we will see what it takes to change the :ref:`projection of the viewer <gxp.viewer.projection>`.
+So adding layers is really simple and only requires configuration. Next we will see what it takes to change the :ref:`projection of the viewer <sdk.viewer.projection>`.

@@ -3,7 +3,7 @@
 Setting up a feature editor
 ===========================
 
-Unlike the feature manager discussed in the previous section, the feature editor is actually a visible component in the viewer. Again, start with adding plugins/FeatureEditor.js to the build profile, and open up app.js in your editor adding the following to the tools section:
+Unlike the feature manager discussed in the previous section, the feature editor is actually a visible component in the viewer. Again, open app.js in your editor, add plugins/FeatureEditor.js to the list of dependencies, and add the following to the tools section:
 
 .. code-block:: javascript
 
@@ -13,7 +13,6 @@ Unlike the feature manager discussed in the previous section, the feature editor
         autoLoadFeatures: true
     }
 
-However, the FeatureEditor has a dependency on GeoExt/widgets/form.js , so we need to add that to the GeoExt section of buildjs.cfg as well.
 Restart ant, reload the web browser. You will see that 2 new tools were added to the toolbar: one to create new features, and one to modify existing features:
 
   .. figure:: gxp-img16.png

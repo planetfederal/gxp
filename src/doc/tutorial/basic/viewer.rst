@@ -1,4 +1,4 @@
-.. _gxp.basics.viewer:
+.. _sdk.basics.viewer:
 
 Creating a Viewer
 =================
@@ -8,8 +8,9 @@ By default a viewer will fill up the whole  viewport. The main configuration
 options for a gxp.Viewer are:
 
 * proxy: The proxy to use in order to bypass the same origin policy when
-  accessing remote resources through JavaScript. Will be set as
-  OpenLayers.ProxyHost.
+  accessing remote resources through JavaScript. Only needed when external
+  resources (i.e. from outside the OpenGeo Suite instance that your app lives
+  in) are used. Will be set as OpenLayers.ProxyHost.
 * portalItems: The items to add to the portal, in addition to the map panel the
   viewer will create automatically.
 * portalConfig: Configuration object for the wrapping container (usually an
@@ -51,4 +52,4 @@ Now start up a browser, and type in the address of the application:
 So what you get is a basic webmapping application which contains a layer tree,
 a map panel and some map tools. The map panel contains an OpenStreetMap base
 layer. Having successfully created our first viewer, we'll continue by looking
-more closely at :ref:`the parts <gxp.basics.dissect>`.
+more closely at :ref:`the parts <sdk.basics.dissect>`.

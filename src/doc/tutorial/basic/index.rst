@@ -1,7 +1,7 @@
-.. module:: gxp.basics
+.. module:: sdk.basics
     :synopsis: Learn how to create a viewer application using gxp and Readygxp.
 
-.. _gxp.basics:
+.. sdk.basics:
 
 gxp Basics
 ==========
