@@ -1,18 +1,9 @@
-SDK Tutorial
-============
-
-.. toctree::
-    :maxdepth: 2
-    
-    tutorial/index
-    
-    
 .. _api-reference:
 
 API Reference
 =============
 
-gxp components and data utility classes extend map related functionality to
+The gxp components and data utility classes extend map related functionality to
 equivalent classes in Ext.  The API reference here documents the properties,
 methods, and events that are extensions or modifications to the Ext parent
 classes.  Documentation for each class contains links to the Ext parent class,
@@ -60,5 +51,3 @@ detail on methods and properties provided by these objects, see the
 
     lib/plugins
     
-
-
