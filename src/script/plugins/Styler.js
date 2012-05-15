@@ -43,6 +43,12 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
      */
     tooltip: "Manage layer styles",
     
+    /** api: config[roles]
+     *  ``Array`` Roles authorized to style layers. Default is
+     *  ["ROLE_ADMINISTRATOR"]
+     */
+    roles: ["ROLE_ADMINISTRATOR"],
+    
     /** api: config[sameOriginStyling]
      *  ``Boolean``
      *  Only allow editing of styles for layers whose sources have a URL that
@@ -114,7 +120,7 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
             disabled: true,
             tooltip: this.tooltip,
             handler: function() {
-                this.addOutput();
+                this.target.doAuthorized(this.roles, this.addOutput, this);
             },
             scope: this
         }]);
@@ -177,6 +183,14 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
                 // this could be made more robust
                 // for now, only style for sources with relative url
                 editableStyles = url.charAt(0) === "/";
+                // and assume that local sources are GeoServer instances with
+                // styling capabilities
+                if (this.target.authenticate && editableStyles) {
+                    // we'll do on-demand authentication when the button is
+                    // pressed.
+                    this.launchAction.enable();
+                    return;
+                }
             } else {
                 editableStyles = true;
             }

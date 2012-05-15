@@ -185,10 +185,27 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
      *  :class:`Ext.form.ViewerField`.
      */
     
+    /** api: config[authenticate]
+     *  ``Function`` A global authentication function that is invoked by
+     *  :meth:`doAuthorized` if no user is logged in or the current user is not
+     *  authorized. That process is supposed to call :meth:`setAuthorizedRoles`
+     *  upon successful authentication, and :meth:`cancelAuthentication` if the
+     *  user cancels the login process. Typically this function creates and
+     *  opens a login window. Optional, default is null.
+     */
+    
+    /** api: property[authenticate]
+     *  ``Function`` Like the config option above, but this can be set after
+     *  configuration e.g. by a plugin that provides authentication. It can
+     *  also be accessed to check if an authentication mechanism is available.
+     */
+    authenticate: null,
+    
     /** api: property[authorizedRoles]
      *  ``Array`` Roles the application is authorized for. This property is
-     *  usually set by a component that authenticates the user (e.g. a login
-     *  window). After authentication, if the client is authorized to do
+     *  usually set by the :meth:`setAuthorizedRoles` method, which is
+     *  typically called by a component that authenticates the user (e.g. a
+     *  login window. After authentication, if the client is authorized to do
      *  everything,  this should be set to ``["ROLE_ADMINISTRATOR"]``.
      *
      *  If this property is undefined, the ``isAuthorized()`` method will
@@ -197,7 +214,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
      *  component (e.g. a login window), it is recommended to set this to
      *  ``[]`` (equivalent to "not authorized to do anything") initially.
      */
-     
+    
     /** private: method[constructor]
      *  Construct the viewer.
      */
@@ -263,7 +280,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
 
         // private array of pending getLayerRecord requests
         this.createLayerRecordQueue = [];
-
+        
         (config.loadConfig || this.loadConfig).call(this, config, this.applyConfig);
         gxp.Viewer.superclass.constructor.apply(this, arguments);
         
@@ -715,7 +732,9 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
     },
     
     /** api: method[isAuthorized]
-     *  :arg role: ``String`` optional, default is "ROLE_ADMINISTRATOR"
+     *  :arg roles: ``String|Array`` optional, default is "ROLE_ADMINISTRATOR".
+     *       If an array is provided, this method will return if any of the
+     *       roles in the array is authorized.
      *  :returns: ``Boolean`` The user is authorized for the given role.
      *
      *  Returns true if the client is authorized with the provided role.
@@ -724,7 +743,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
      *  authentication challenges from the browser when an action requires 
      *  credentials.
      */
-    isAuthorized: function(role) {
+    isAuthorized: function(roles) {
         /**
          * If the application doesn't support authentication, we expect 
          * authorizedRoles to be undefined.  In this case, from the UI 
@@ -735,8 +754,22 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
          * authorizedRoles to be a list of roles for which the user is 
          * authorized.
          */
-        return !this.authorizedRoles || 
-            (this.authorizedRoles.indexOf(role || "ROLE_ADMINISTRATOR") !== -1);
+        var authorized = false;
+        if (this.authorizedRoles) {
+            if (!roles) {
+                roles = "ROLE_ADMINISTRATOR";
+            }
+            if (!Ext.isArray(roles)) {
+                roles = [roles];
+            }
+            for (var i=roles.length-1; i>=0; --i) {
+                if (~this.authorizedRoles.indexOf(roles[i])) {
+                    authorized = true;
+                    break;
+                }
+            }
+        }
+        return authorized;
     },
 
     /** api: method[setAuthorizedRoles]
@@ -746,6 +779,16 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
      */
     setAuthorizedRoles: function(authorizedRoles) {
         this.authorizedRoles = authorizedRoles;
+        this.fireEvent("authorizationchange");
+    },
+    
+    /** api: method[cancelAuthentication]
+     *  Cancel an authentication process.
+     */
+    cancelAuthentication: function() {
+        if (this._authFn) {
+            this.un("authorizationchange", this._authFn, this);
+        }
         this.fireEvent("authorizationchange");
     },
     
@@ -767,6 +810,29 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
          * authentication challenge up to the browser.
          */
         return !this.authorizedRoles || this.authorizedRoles.length > 0;
+    },
+    
+    /** api: method[doAuthorized]
+     *  :param roles: ``Array`` Roles required for invoking the action
+     *  :param callback: ``Function`` The action to perform
+     *  :param scope: ``Object`` The execution scope for the callback
+     *
+     *  Performs an action (defined as ``callback`` function), but only if
+     *  the user is authorized to perform it. If no user is logged in or the
+     *  logged in user is not authorized, the viewer's :meth:`authenticate`
+     *  function will be invoked. This method is usually called by plugins.
+     */
+    doAuthorized: function(roles, callback, scope) {
+        if (this.isAuthorized(roles) || !this.authenticate) {
+            window.setTimeout(function() { callback.call(scope); }, 0);
+        } else {
+            this.authenticate();
+            this._authFn = function authFn() {
+                delete this._authFn;
+                this.doAuthorized(roles, callback, scope, true);
+            };
+            this.on("authorizationchange", this._authFn, this, {single: true});
+        }
     },
     
     /** api: method[destroy]

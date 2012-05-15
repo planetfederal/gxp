@@ -144,6 +144,12 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
      *  excluded from the property grid of the FeatureEditPopup.
      */
 
+    /** api: config[roles]
+     *  ``Array`` Roles authorized to edit layers. Default is
+     *  ["ROLE_ADMINISTRATOR"]
+     */
+    roles: ["ROLE_ADMINISTRATOR"],
+
     /** private: property[drawControl]
      *  ``OpenLayers.Control.DrawFeature``
      */
@@ -201,14 +207,28 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
      */
     init: function(target) {
         gxp.plugins.FeatureEditor.superclass.init.apply(this, arguments);
-        this.target.on("authorizationchange", this.enableOrDisable, this);
+        this.target.on("authorizationchange", this.onAuthorizationChange, this);
     },
 
     /** private: method[destroy]
      */
     destroy: function() {
-        this.target.un("authorizationchange", this.enableOrDisable, this);
+        this.target.un("authorizationchange", this.onAuthorizationChange, this);
         gxp.plugins.FeatureEditor.superclass.destroy.apply(this, arguments);
+    },
+    
+    /** private: method[onAuthorizationChange]
+     */
+    onAuthorizationChange: function() {
+        if (!this.target.isAuthorized(this.roles)) {
+            //TODO if a popup is open, this won't take care of closing it when
+            // a user logs out.
+            this.selectControl.deactivate();
+            this.drawControl.deactivate();
+        }
+        // we don't want to return false here, otherwise we would abort the
+        // event chain.
+        this.enableOrDisable();
     },
 
     /** api: method[addActions]
@@ -278,9 +298,11 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                         }
                     },
                     activate: function() {
-                        featureManager.showLayer(
-                            this.id, this.showSelectedOnly && "selected"
-                        );
+                        this.target.doAuthorized(this.roles, function() {
+                            featureManager.showLayer(
+                                this.id, this.showSelectedOnly && "selected"
+                            );
+                        }, this);
                     },
                     deactivate: function() {
                         featureManager.hideLayer(this.id);
@@ -306,17 +328,19 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
             },
             eventListeners: {
                 "activate": function() {
-                    if (this.autoLoadFeature === true || featureManager.paging) {
-                        this.target.mapPanel.map.events.register(
-                            "click", this, this.noFeatureClick
+                    this.target.doAuthorized(this.roles, function() {
+                        if (this.autoLoadFeature === true || featureManager.paging) {
+                            this.target.mapPanel.map.events.register(
+                                "click", this, this.noFeatureClick
+                            );
+                        }
+                        featureManager.showLayer(
+                            this.id, this.showSelectedOnly && "selected"
                         );
-                    }
-                    featureManager.showLayer(
-                        this.id, this.showSelectedOnly && "selected"
-                    );
-                    this.selectControl.unselectAll(
-                        popup && popup.editing && {except: popup.feature}
-                    );
+                        this.selectControl.unselectAll(
+                            popup && popup.editing && {except: popup.feature}
+                        );
+                    }, this);
                 },
                 "deactivate": function() {
                     if (this.autoLoadFeature === true || featureManager.paging) {
@@ -679,7 +703,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
      * private: method[enableOrDisable]
      */
     enableOrDisable: function() {
-        var disable = !this.schema || !this.target.isAuthorized();
+        var disable = !this.schema || !(this.target.isAuthorized() || this.target.authenticate);
         this.actions[0].setDisabled(disable);
         this.actions[1].setDisabled(disable);
         return disable;
