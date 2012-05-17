@@ -219,7 +219,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             disabled: true,
             iconCls: "gxp-icon-addlayers"
         };
-        var options;
+        var options, uploadButton;
         if (this.initialConfig.search || (this.uploadSource)) {
             var items = [new Ext.menu.Item({
                 iconCls: 'gxp-icon-addlayers', 
@@ -236,7 +236,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 }));
             }
             if (this.uploadSource) {
-                var uploadButton = this.createUploadButton(Ext.menu.Item);
+                uploadButton = this.createUploadButton(Ext.menu.Item);
                 if (uploadButton) {
                     items.push(uploadButton);
                 }
@@ -260,7 +260,12 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 if (source) {
                     this.setSelectedSource(source);
                 } else {
-                    throw new Error("Layer source for uploadSource '" + this.uploadSource + "' not found.");
+                    delete this.uploadSource;
+                    if (uploadButton) {
+                        uploadButton.hide();
+                    }
+                    // TODO: add error logging
+                    // throw new Error("Layer source for uploadSource '" + this.uploadSource + "' not found.");
                 }
             }
             actions[0].enable();
