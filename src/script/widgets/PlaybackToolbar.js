@@ -380,6 +380,8 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                 });
             }
         }
+        //DON'T DROP FRAMES
+        //this.controlConfig.maxFrameDelay = NaN;
         var ctl = this.control = new OpenLayers.Control.TimeManager(this.controlConfig);
         ctl.loop = this.looped;
         this.mapPanel.map.addControl(ctl);
