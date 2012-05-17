@@ -584,20 +584,3 @@ div.olMap div.gx-overlay-playback {
 .thumb-mapbox-world-print {
     background-image:url('img/thumbs/mapbox/world-print.png');
 }
-
-
-/**
-    Hack to avoid "Map Data" popup with Google Maps > 3.6.  See 
-    http://product.opengeo.org/browse/SUITE-278
-
-    The v3 mixin tries to reshuffle dom elements (in repositionMapElements) in 
-    order to properly display attribution, terms of use, and the Google logo.
-    This worked for version 3.6, but in newer versions the dom structure has 
-    changed and we mistakenly move the "Map Data" popup to the viewport thinking 
-    it is the "powered by" container.  This temporary workaround hides the popup.
-    There are some clear violations in the terms of use here (links not clickable),
-    so this needs to be addressed properly.
-*/
-.olLayerGoogleV3.olLayerGooglePoweredBy {
-    display: none !important;
-}
