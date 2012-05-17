@@ -84,21 +84,14 @@ gxp.plugins.LayerManager = Ext.extend(gxp.plugins.LayerTree, {
             legendXType = "gx_vectorlegend";
         }
         if (legendXType) {
-            attr.expanded = true;
-            attr.allowDrop = false;
-            attr.children = [{
-                nodeType: "node",
-                cls: "legendnode",
-                uiProvider: Ext.extend(
-                    Ext.tree.TreeNodeUI,
-                    new GeoExt.tree.TreeNodeUIEventMixin()
-                ),
+            Ext.apply(attr, {
                 component: {
                     xtype: legendXType,
                     // TODO these baseParams were only tested with GeoServer,
                     // so maybe they should be configurable - and they are
                     // only relevant for gx_wmslegend.
                     baseParams: {
+                        transparent: true,
                         format: "image/png",
                         legend_options: "fontAntiAliasing:true;fontSize:11;fontName:Arial"
                     },
@@ -107,14 +100,8 @@ gxp.plugins.LayerManager = Ext.extend(gxp.plugins.LayerTree, {
                     // custom class for css positioning
                     // see tree-legend.html
                     cls: "legend"
-                },
-                listeners: {
-                    beforeclick: function() {
-                        this.parentNode.select();
-                        return false;
-                    }
                 }
-            }];
+            });
         }
     }
     

@@ -42,7 +42,7 @@
         <exec executable="sphinx-build" failonerror="true">
             <arg line="-b html"/>
             <arg value="-d"/>
-            <arg path="${src}/doc/_build/doctrees"/>
+            <arg path="${build}/doctrees"/>
             <arg path="${src}/doc"/>
             <arg path="${build}/doc"/>
         </exec>
