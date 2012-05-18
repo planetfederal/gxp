@@ -325,16 +325,27 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
      *  Though it should only be removed if the server always returns text/html!
      */
     handleUploadResponse: function(response) {
-        var obj = this.parseResponseText(response.responseText);
-        var success = obj && obj.task && obj.task.state === "READY";
-        var records = [];
+        var obj = this.parseResponseText(response.responseText),
+            tasks, task, msg, i,
+            success = true;
+        if (obj) {
+            tasks = obj.tasks || [obj.task];
+            for (i=tasks.length-1; i>=0; --i) {
+                task = tasks[i];
+                if (task.state !== "READY") {
+                    success = false;
+                    msg = "Source " + task.source.file + " is " + task.state;
+                    break;
+                }
+            }
+        }
         if (!success) {
             // mark the file field as invlid
-            records = [{data: {id: "file", msg: obj}}];
+            records = [{data: {id: "file", msg: msg}}];
         } else {
             var formData = this.getForm().getFieldValues(),
                 // for now we only support a single item (items[0])
-                resource = obj.task.items[0].resource,
+                resource = task.items[0].resource,
                 itemModified = !!(formData.title || formData["abstract"] || formData.nativeCRS),
                 queue = [];
             if (itemModified) {
@@ -347,7 +358,7 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
                 };
                 Ext.Ajax.request({
                     method: "PUT",
-                    url: obj.task.items[0].href,
+                    url: tasks[0].items[0].href,
                     jsonData: {item: item},
                     callback: this.finishUpload,
                     scope: this
