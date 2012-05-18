@@ -1,7 +1,7 @@
 .. _api-reference:
 
-API Reference
-=============
+OpenGeo SDK Client API Reference
+================================
 
 The gxp components and data utility classes extend map related functionality to
 equivalent classes in Ext.  The API reference here documents the properties,
