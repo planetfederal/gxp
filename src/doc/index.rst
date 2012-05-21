@@ -16,7 +16,7 @@ detail on methods and properties provided by these objects, see the
 
 .. _`Ext API Documentation`: http://extjs.com/deploy/dev/docs/
 .. _`OpenLayers API Documentation`: http://dev.openlayers.org/apidocs
-.. _`GeoExt API Documentation`: http://dev.geoext.org/docs/lib/
+.. _`GeoExt API Documentation`: http://geoext.org/lib/
 
 .. module:: gxp
     :synopsis: High-level components for mapping applications.
