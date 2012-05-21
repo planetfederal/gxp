@@ -11,7 +11,8 @@
  * @include widgets/WMSStylesDialog.js
  * @include plugins/GeoServerStyleWriter.js
  * @include GeoExt/widgets/LayerOpacitySlider.js
- * @requires OpenLayers/Format/CQL.js
+ * @require OpenLayers/Format/CQL.js
+ * @require widgets/FilterBuilder.js
  */
 
 /** api: (define)
@@ -124,7 +125,9 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
         if (this.source) {
             this.source.getSchema(this.layerRecord, function(attributeStore) {
                 if (attributeStore !== false) {
+                    var filter = this.layerRecord.getLayer().params.CQL_FILTER;
                     this.filterBuilder = new gxp.FilterBuilder({
+                        filter: filter && this.cqlFormat.read(filter),
                         allowGroups: false,
                         listeners: {
                             afterrender: function() {
@@ -502,6 +505,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                 checkboxToggle: true,
                 items: [{
                     xtype: "textarea",
+                    value: this.layerRecord.getLayer().params.CQL_FILTER,
                     grow: true,
                     anchor: '99%',
                     width: '100%',

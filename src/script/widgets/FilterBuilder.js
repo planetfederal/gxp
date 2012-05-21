@@ -65,6 +65,11 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
      *  ``"gxp-filterbuilder"``).
      */
     cls: "gxp-filterbuilder",
+    
+    /** api: config[filter]
+     *  ``OpenLayers.Filter``
+     *  Filter to initialize the component with
+     */
 
     /** private: property[builderType]
      */
