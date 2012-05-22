@@ -71,11 +71,25 @@ Ext.reg('gxp_datetimefield', gxp.form.ExtendedDateTimeField);
  */
 gxp.form.ExtendedDateField = Ext.extend(Ext.form.DateField, {
 
-    altFormats : "Y|m/d/Y|n/j/Y|n/j/y|m/j/y|n/d/y|m/j/Y|n/d/Y|m-d-y|m-d-Y|m/d|m-d|md|mdy|mdY|d|Y-m-d|n-j|n/j",
-
+    //negative year formats will parse but give a positive year 
+    altFormats : "-c|-Y|m -Y|n -Y|M -Y|m/d/-Y|n/j/-Y|m/j/-Y|n/d/-Y|c|Y|" + 
+                    "m/d/Y|n/j/Y|n/j/y|m/j/y|n/d/y|m/j/Y|n/d/Y|m-d-y|m-d-Y|" +
+                    "m/d|m-d|md|mdy|mdY|d|Y-m-d|n-j|n/j",
+    
+    bcYrRegEx : /^(-\d+)|(-\d+)$/,
+    
     getValue : function() {
         var value = Ext.form.DateField.superclass.getValue.call(this);
         var date = this.parseDate(value);
+        var bcYear = value.match(this.bcYrRegEx);
+        if (bcYear) {
+            if(date){
+                date = new Date(-1*date.getFullYear(),date.getMonth(),date.getDate(),date.getHours(),date.getMinutes(),date.getSeconds());
+            } else {
+                //just use the year, since that is all we reliably have
+                date = new Date(bcYear[1] || bcYear[2], 0, 1);
+            }
+        }
         return (date) ? date.getTime()/1000 : null;
     },
 
@@ -91,7 +105,7 @@ gxp.form.ExtendedDateField = Ext.extend(Ext.form.DateField, {
         if(this.disabled){
             return;
         }
-        if(this.menu == null){
+        if(!this.menu){
             this.menu = new Ext.menu.DateMenu({
                 hideOnClick: false,
                 focusOnSelect: false
