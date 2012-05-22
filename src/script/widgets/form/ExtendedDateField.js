@@ -17,8 +17,10 @@ Date.defaults.d = 1;
 Date.defaults.m = 1;
 
 gxp.form.ExtendedDateTimeField = Ext.extend(Ext.form.CompositeField, {
-
+   
     initComponent: function() {
+        //ensure that qtips are initialized
+        Ext.QuickTips.init();
         this.items = [{
             xtype: 'gxp_datefield',
             allowBlank: (this.initialConfig.allowBlank !== false),
@@ -77,6 +79,8 @@ gxp.form.ExtendedDateField = Ext.extend(Ext.form.DateField, {
                     "m/d|m-d|md|mdy|mdY|d|Y-m-d|n-j|n/j",
     
     bcYrRegEx : /^(-\d+)|(-\d+)$/,
+    
+    invalidText : "{0} is not a valid date. If you are attempting to enter a BCE date please enter a zero padded 4 digit year or just enter the year",
     
     getValue : function() {
         var value = Ext.form.DateField.superclass.getValue.call(this);
