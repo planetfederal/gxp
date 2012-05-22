@@ -703,7 +703,8 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
      * private: method[enableOrDisable]
      */
     enableOrDisable: function() {
-        var disable = !this.schema || !(this.target.isAuthorized() || this.target.authenticate);
+        // disable editing if no schema
+        var disable = !this.schema;
         this.actions[0].setDisabled(disable);
         this.actions[1].setDisabled(disable);
         return disable;
@@ -718,7 +719,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
         this.schema = schema;
         var disable = this.enableOrDisable();
         if (disable) {
-            // not a wfs capable layer or not authorized
+            // not a wfs capable layer
             this.fireEvent("layereditable", this, layer, false);
             return;
         }
