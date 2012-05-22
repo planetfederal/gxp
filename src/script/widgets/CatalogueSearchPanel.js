@@ -294,84 +294,15 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
     },
 
     /** private: method[performQuery]
-     *  Query the CS-W and show the results.
+     *  Query the Catalogue and show the results.
      */
     performQuery: function() {
-        // TODO consider moving this functionality into the CatalogueSearch plugin
-        var type = this.sources[this.selectedSource].type;
-        var store = this.grid.store;
-        var searchValue = this.search.getValue();
-        if (type === gxp.plugins.CatalogueSource.CSW) {
-            var filter = undefined;
-            if (searchValue !== "") {
-                filter = new OpenLayers.Filter.Comparison({
-                    type: OpenLayers.Filter.Comparison.LIKE,
-                    matchCase: false,
-                    property: 'csw:AnyText',
-                    value: '*' + searchValue + '*'
-                });
-            }
-            var data = {
-                "resultType": "results",
-                "maxRecords": this.maxRecords,
-                "Query": {
-                    "typeNames": "gmd:MD_Metadata",
-                    "ElementSetName": {
-                        "value": "full"
-                    }
-                }
-            };
-            var fullFilter = this.getFullFilter(filter);
-            if (fullFilter !== undefined) {
-                Ext.apply(data.Query, {
-                    "Constraint": {
-                        version: "1.1.0",
-                        Filter: fullFilter
-                    }
-                });
-            }
-            // use baseParams so paging takes them into account
-            store.baseParams = data;
-            store.load();
-        } else if (type === gxp.plugins.CatalogueSource.GEONODE) {
-            var bbox = undefined;
-            for (var i=0, ii=this.filters.length; i<ii; ++i) {
-                var f = this.filters[i];
-                if (f instanceof OpenLayers.Filter.Spatial) {
-                    bbox = f.value.toBBOX();
-                    break;
-                }
-            }
-            Ext.apply(store.baseParams, {
-                'q': searchValue,
-                'limit': this.maxRecords,
-                'bbox': bbox
-            });
-            store.load();
-        }
-    },
-
-    /** private: method[getFullFilter]
-     *  :arg filter: ``OpenLayers.Filter`` The filter to add to the other existing 
-     *  filters. This is normally the free text search filter.
-     *  :returns: ``OpenLayers.Filter`` The combined filter.
-     *
-     *  Get the filter to use in the CS-W query.
-     */
-    getFullFilter: function(filter) {
-        var filters = [];
-        if (filter !== undefined) {
-            filters.push(filter);
-        }
-        filters = filters.concat(this.filters);
-        if (filters.length <= 1) {
-            return filters[0];
-        } else {
-            return new OpenLayers.Filter.Logical({
-                type: OpenLayers.Filter.Logical.AND,
-                filters: filters
-            });
-        }
+        var plugin = this.sources[this.selectedSource];
+        plugin.filter({
+            queryString: this.search.getValue(),
+            limit: this.maxRecords,
+            filters: this.filters
+        });
     },
 
     /** private: method[addFilter]

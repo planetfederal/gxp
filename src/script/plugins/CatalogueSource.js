@@ -178,6 +178,85 @@ gxp.plugins.CatalogueSource = Ext.extend(gxp.plugins.WMSSource, {
                 break;
         }
         return result;
+    },
+
+    /** private: method[getFullFilter]
+     *  :arg filter: ``OpenLayers.Filter`` The filter to add to the other existing 
+     *  filters. This is normally the free text search filter.
+     *  :arg otherFilters: ``Array``
+     *  :returns: ``OpenLayers.Filter`` The combined filter.
+     *
+     *  Get the filter to use in the CS-W query.
+     */
+    getFullFilter: function(filter, otherFilters) {
+        var filters = [];
+        if (filter !== undefined) {
+            filters.push(filter);
+        }
+        filters = filters.concat(otherFilters);
+        if (filters.length <= 1) {
+            return filters[0];
+        } else {
+            return new OpenLayers.Filter.Logical({
+                type: OpenLayers.Filter.Logical.AND,
+                filters: filters
+            });
+        }
+    },
+
+    filter: function(options) {
+        switch (this.type) {
+            case gxp.plugins.CatalogueSource.CSW:
+                var filter = undefined;
+                if (options.queryString !== "") {
+                    filter = new OpenLayers.Filter.Comparison({
+                        type: OpenLayers.Filter.Comparison.LIKE,
+                        matchCase: false,
+                        property: 'csw:AnyText',
+                        value: '*' + options.queryString + '*'
+                    });
+                }
+                var data = {
+                    "resultType": "results",
+                    "maxRecords": options.limit,
+                    "Query": {
+                        "typeNames": "gmd:MD_Metadata",
+                        "ElementSetName": {
+                            "value": "full"
+                        }
+                    }
+                };
+                var fullFilter = this.getFullFilter(filter, options.filters);
+                if (fullFilter !== undefined) {
+                    Ext.apply(data.Query, {
+                        "Constraint": {
+                            version: "1.1.0",
+                            Filter: fullFilter
+                        }
+                    });
+                }
+                Ext.apply(this.store.baseParams, data);
+                this.store.load();
+                break;
+            case gxp.plugins.CatalogueSource.GEONODE:
+                var bbox = undefined;
+                for (var i=0, ii=options.filters.length; i<ii; ++i) {
+                    var f = this.filters[i];
+                    if (f instanceof OpenLayers.Filter.Spatial) {
+                        bbox = f.value.toBBOX();
+                        break;
+                    }
+                }
+                Ext.apply(this.store.baseParams, {
+                    'q': options.queryString,
+                    'limit': options.limit,
+                    'bbox': bbox
+                });
+                this.store.load();
+                break;
+            default:
+                break;
+        }
     }
 
 });
