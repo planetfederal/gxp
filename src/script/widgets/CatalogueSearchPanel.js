@@ -334,9 +334,18 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
             store.baseParams = data;
             store.load();
         } else if (type === gxp.plugins.CatalogueSource.GEONODE) {
+            var bbox = undefined;
+            for (var i=0, ii=this.filters.length; i<ii; ++i) {
+                var f = this.filters[i];
+                if (f instanceof OpenLayers.Filter.Spatial) {
+                    bbox = f.value.toBBOX();
+                    break;
+                }
+            }
             Ext.apply(store.baseParams, {
                 'q': searchValue,
-                'limit': this.maxRecords
+                'limit': this.maxRecords,
+                'bbox': bbox
             });
             store.load();
         }
