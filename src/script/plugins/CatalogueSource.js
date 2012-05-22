@@ -152,6 +152,32 @@ gxp.plugins.CatalogueSource = Ext.extend(gxp.plugins.WMSSource, {
         this.store && this.store.destroy();
         this.store = null;
         gxp.plugins.CatalogueSource.superclass.destroy.apply(this, arguments);
+    },
+
+    /** api: method[getPagingParamNames]
+     *  :return: ``Object`` with keys start and limit.
+     *
+     *  Get the names of the parameters to use for paging.
+     */
+    getPagingParamNames: function() {
+        var result;
+        switch (this.type) {
+            case gxp.plugins.CatalogueSource.CSW:
+                result = {
+                    start: 'startPosition',
+                    limit: 'maxRecords'
+                };
+                break;
+            case gxp.plugins.CatalogueSource.GEONODE:
+                result = {
+                    start: 'startIndex',
+                    limit: 'limit'
+                };
+                break;
+            default:
+                break;
+        }
+        return result;
     }
 
 });
