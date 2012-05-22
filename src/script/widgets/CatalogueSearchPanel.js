@@ -241,8 +241,8 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
             ref: "grid",
             bbar: new Ext.PagingToolbar({
                 paramNames: {
-                    start: 'startPosition', 
-                    limit: 'maxRecords'
+                    start: (this.sources[this.selectedSource].type === gxp.plugins.CatalogueSource.GEONODE) ? 'startIndex' : 'startPosition',
+                    limit: (this.sources[this.selectedSource].type === gxp.plugins.CatalogueSource.GEONODE) ? 'limit' : 'maxRecords'
                 },
                 store: this.sources[this.selectedSource].store,
                 pageSize: this.maxRecords
@@ -337,9 +337,11 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
             store.baseParams = data;
             store.load();
         } else if (type === gxp.plugins.CatalogueSource.GEONODE) {
-            store.load({params: {
-                'q': searchValue
-            }});
+            Ext.apply(store.baseParams, {
+                'q': searchValue,
+                'limit': this.maxRecords
+            });
+            store.load();
         }
     },
 
