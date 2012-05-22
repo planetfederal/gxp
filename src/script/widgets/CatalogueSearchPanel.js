@@ -300,39 +300,47 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
      *  Query the CS-W and show the results.
      */
     performQuery: function() {
+        // TODO consider moving this functionality into the CatalogueSearch plugin
+        var type = this.sources[this.selectedSource].type;
         var store = this.grid.store;
         var searchValue = this.search.getValue();
-        var filter = undefined;
-        if (searchValue !== "") {
-            filter = new OpenLayers.Filter.Comparison({
-                type: OpenLayers.Filter.Comparison.LIKE,
-                matchCase: false,
-                property: 'csw:AnyText',
-                value: '*' + searchValue + '*'
-            });
-        }
-        var data = {
-            "resultType": "results",
-            "maxRecords": this.maxRecords,
-            "Query": {
-                "typeNames": "gmd:MD_Metadata",
-                "ElementSetName": {
-                    "value": "full"
-                }
+        if (type === gxp.plugins.CatalogueSource.CSW) {
+            var filter = undefined;
+            if (searchValue !== "") {
+                filter = new OpenLayers.Filter.Comparison({
+                    type: OpenLayers.Filter.Comparison.LIKE,
+                    matchCase: false,
+                    property: 'csw:AnyText',
+                    value: '*' + searchValue + '*'
+                });
             }
-        };
-        var fullFilter = this.getFullFilter(filter);
-        if (fullFilter !== undefined) {
-            Ext.apply(data.Query, {
-                "Constraint": {
-                    version: "1.1.0",
-                    Filter: fullFilter
+            var data = {
+                "resultType": "results",
+                "maxRecords": this.maxRecords,
+                "Query": {
+                    "typeNames": "gmd:MD_Metadata",
+                    "ElementSetName": {
+                        "value": "full"
+                    }
                 }
-            });
+            };
+            var fullFilter = this.getFullFilter(filter);
+            if (fullFilter !== undefined) {
+                Ext.apply(data.Query, {
+                    "Constraint": {
+                        version: "1.1.0",
+                        Filter: fullFilter
+                    }
+                });
+            }
+            // use baseParams so paging takes them into account
+            store.baseParams = data;
+            store.load();
+        } else if (type === gxp.plugins.CatalogueSource.GEONODE) {
+            store.load({params: {
+                'q': searchValue
+            }});
         }
-        // use baseParams so paging takes them into account
-        store.baseParams = data;
-        store.load();
     },
 
     /** private: method[getFullFilter]

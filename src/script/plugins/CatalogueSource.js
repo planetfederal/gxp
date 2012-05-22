@@ -33,6 +33,13 @@ gxp.plugins.CatalogueSource = Ext.extend(gxp.plugins.WMSSource, {
     /** api: ptype = gxp_cataloguesource */
     ptype: "gxp_cataloguesource",
 
+    /** api: config[type]
+     *  ``Integer`` Type of search back-end to use.
+     *  One of gxp.plugins.CatalogueSource.CSW or
+     *  gxp.plugins.CatalogueSource.GEONODE. Defaults to CSW.
+     */
+    type: null,
+
     /** api: config[url]
      *  ``String`` CS-W service URL for this source
      */
@@ -48,21 +55,41 @@ gxp.plugins.CatalogueSource = Ext.extend(gxp.plugins.WMSSource, {
      */
     lazy: true,
 
+    /** private: method[constructor]
+     */
+    constructor: function(config) {
+        if (!config.type) {
+            config.type = gxp.plugins.CatalogueSource.CSW;
+        }
+        gxp.plugins.CatalogueSource.superclass.constructor.apply(this, arguments);
+    },
+
     /** api: method[createStore]
      *  Create the store that will be used for the CS-W searches.
      */
     createStore: function() {
-        this.store = new Ext.data.Store({
-            proxy: new GeoExt.data.ProtocolProxy({
-                setParamsAsOptions: true,
-                protocol: new OpenLayers.Protocol.CSW({
-                    url: this.url
+        if (this.type === gxp.plugins.CatalogueSource.CSW) {
+            this.store = new Ext.data.Store({
+                proxy: new GeoExt.data.ProtocolProxy({
+                    setParamsAsOptions: true,
+                    protocol: new OpenLayers.Protocol.CSW({
+                        url: this.url
+                    })
+                }),
+                reader: new GeoExt.data.CSWRecordsReader({
+                    fields: ['title', 'abstract', 'URI', 'bounds', 'projection', 'references']
                 })
-            }),
-            reader: new GeoExt.data.CSWRecordsReader({
-               fields: ['title', 'abstract', 'URI', 'bounds', 'projection', 'references']
-            })
-        });
+            });
+        } else if (this.type === gxp.plugins.CatalogueSource.GEONODE) {
+            this.store = new Ext.data.Store({
+                proxy: new Ext.data.HttpProxy({url: this.url, method: 'GET'}),
+                reader: new Ext.data.JsonReader({
+                    root: 'results'
+                }, [
+                    "title"
+                ])
+            });
+        }
         this.fireEvent("ready", this);
     },
 
@@ -104,5 +131,8 @@ gxp.plugins.CatalogueSource = Ext.extend(gxp.plugins.WMSSource, {
     }
 
 });
+
+gxp.plugins.CatalogueSource.CSW = 0;
+gxp.plugins.CatalogueSource.GEONODE = 1;
 
 Ext.preg(gxp.plugins.CatalogueSource.prototype.ptype, gxp.plugins.CatalogueSource);
