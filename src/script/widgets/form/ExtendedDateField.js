@@ -82,6 +82,8 @@ gxp.form.ExtendedDateField = Ext.extend(Ext.form.DateField, {
     
     invalidText : "{0} is not a valid date. If you are attempting to enter a BCE date please enter a zero padded 4 digit year or just enter the year",
     
+    beforeBlur: Ext.emptyFn,
+    
     getValue : function() {
         var value = Ext.form.DateField.superclass.getValue.call(this);
         var date = this.parseDate(value);
