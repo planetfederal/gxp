@@ -82,11 +82,35 @@ gxp.plugins.CatalogueSource = Ext.extend(gxp.plugins.WMSSource, {
             });
         } else if (this.type === gxp.plugins.CatalogueSource.GEONODE) {
             this.store = new Ext.data.Store({
-                proxy: new Ext.data.HttpProxy({url: this.url, method: 'GET'}),
+                proxy: new Ext.data.HttpProxy({
+                    url: this.url, 
+                    method: 'GET'
+                }),
+                baseParams: {
+                    type: 'layer'
+                },
                 reader: new Ext.data.JsonReader({
                     root: 'results'
                 }, [
-                    "title"
+                    {name: "title", convert: function(v) {
+                        return [v];
+                    }},
+                    {name: "abstract", mapping: "description"},
+                    {name: "bounds", mapping: "bbox", convert: function(v) {
+                        return {
+                            left: v.minx,
+                            right: v.maxx,
+                            bottom: v.miny,
+                            top: v.maxy
+                        };
+                    }},
+                    {name: "URI", mapping: "download_links", convert: function(v) {
+                        var result = [];
+                        for (var i=0,ii=v.length;i<ii;++i) {
+                            result.push(v[i][3]);
+                        }
+                        return result;
+                    }}
                 ])
             });
         }
