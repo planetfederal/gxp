@@ -168,7 +168,13 @@ gxp.plugins.SnappingAgent = Ext.extend(gxp.plugins.Tool, {
         var max = snapTarget.maxResolution || Number.POSITIVE_INFINITY;
         var resolution = this.target.mapPanel.map.getResolution();
         if (min <= resolution && resolution < max) {
+            //TODO unhack this - uses a non-API method (update) and sets a
+            // read-only property (visibility) to make the non-API method work
+            // in this context.
+            var visibility = snapTarget.layer.visibility;
+            snapTarget.layer.visibility = true;
             snapTarget.layer.strategies[0].update(options);
+            snapTarget.layer.visibility = visibility;
         }
     },
     

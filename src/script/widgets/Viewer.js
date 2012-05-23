@@ -460,13 +460,15 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             items: this.mapItems,
             plugins: this.mapPlugins,
             tbar: config.tbar || new Ext.Toolbar({
-                hidden: true,
-                listeners: {
-                    show: function() { this.mapPanel.map.updateSize(); },
-                    scope: this
-                }
+                hidden: true
             })
         }, config));
+        this.mapPanel.getTopToolbar().on({
+            afterlayout: this.mapPanel.map.updateSize,
+            show: this.mapPanel.map.updateSize,
+            hide: this.mapPanel.map.updateSize,
+            scope: this.mapPanel.map
+        });
         
         this.mapPanel.layers.on({
             "add": function(store, records) {

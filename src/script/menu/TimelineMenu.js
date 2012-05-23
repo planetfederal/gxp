@@ -6,7 +6,7 @@
  * of the license.
  */
 
-/*
+/**
  * @requires widgets/form/FilterField.js
  */
 

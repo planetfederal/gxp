@@ -6,7 +6,7 @@
  * of the license.
  */
 
-/*
+/**
  * @require plugins/Tool.js
  */
 

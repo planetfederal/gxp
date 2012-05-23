@@ -368,7 +368,7 @@ GeoExt.Lang.add("ca", {
         workspaceLabel: "Espai de treball",
         workspaceEmptyText: "Espai de treball per defecte",
         dataStoreLabel: "Magatzem",
-        dataStoreEmptyText: "Magatzem de dades per defecte"
+        dataStoreEmptyText: "Create new store"
     },
     
     "gxp.NewSourceDialog.prototype": {
