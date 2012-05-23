@@ -421,7 +421,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         }
         
         if(pressed){
-            if(!this.control.timer){
+            if(!this.playing){
                 //don't start playing again if it is already playing
                 this.control.play();
             }
@@ -429,7 +429,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
             btn.btnEl.addClass('gxp-icon-pause');
             btn.setTooltip(this.pauseTooltip);
         } else {
-            if(this.control.timer){
+            if(this.playing){
                 //don't stop playing again if it is already stopped
                 this.control.stop();
             }
