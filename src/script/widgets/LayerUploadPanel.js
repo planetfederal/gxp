@@ -326,7 +326,7 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
      */
     handleUploadResponse: function(response) {
         var obj = this.parseResponseText(response.responseText),
-            tasks, task, msg, i,
+            records, tasks, task, msg, i,
             success = true;
         if (obj) {
             tasks = obj.tasks || [obj.task];
