@@ -34,7 +34,7 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
     workspaceLabel: "Workspace",
     workspaceEmptyText: "Default workspace",
     dataStoreLabel: "Store",
-    dataStoreEmptyText: "Default datastore",
+    dataStoreEmptyText: "Create new store",
     crsLabel: "CRS",
     crsEmptyText: "Coordinate Reference System ID",
     invalidCrsText: "CRS identifier should be an EPSG code (e.g. EPSG:4326)",
