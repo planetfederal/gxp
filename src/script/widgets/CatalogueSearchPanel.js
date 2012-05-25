@@ -24,6 +24,8 @@ Ext.namespace("gxp");
  */
 gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
 
+    width: 400,
+
     /** private: property[border]
      *  ``Boolean``
      */
@@ -238,40 +240,44 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                         scope: this
                     }]
                 }]
-            }]
-        }, {
-            xtype: "grid",
-            border: false,
-            ref: "grid",
-            bbar: new Ext.PagingToolbar({
-                paramNames: this.sources[this.selectedSource].getPagingParamNames(),
-                store: this.sources[this.selectedSource].store,
-                pageSize: this.maxRecords
-            }),
-            loadMask: true,
-            hideHeaders: true,
-            store: this.sources[this.selectedSource].store,
-            columns: [{
-                id: 'title', 
-                xtype: "templatecolumn", 
-                tpl: new Ext.XTemplate('<b>{title}</b><br/>{abstract}'), 
-                sortable: true
             }, {
-                xtype: "actioncolumn",
-                width: 30,
-                items: [{
-                    iconCls: "gxp-icon-addlayers",
-                    tooltip: this.addMapTooltip,
-                    handler: function(grid, rowIndex, colIndex) {
-                        var rec = this.grid.store.getAt(rowIndex);
-                        this.addLayer(rec);
-                    },
-                    scope: this
-                }]
-            }],
-            autoExpandColumn: 'title',
-            width: 400,
-            height: 300
+                xtype: "grid",
+                width: '100%', 
+                anchor: '99%',
+                viewConfig: {
+                    forceFit: true
+                },
+                border: false,
+                ref: "grid",
+                bbar: new Ext.PagingToolbar({
+                    paramNames: this.sources[this.selectedSource].getPagingParamNames(),
+                    store: this.sources[this.selectedSource].store,
+                    pageSize: this.maxRecords
+                }),
+                loadMask: true,
+                hideHeaders: true,
+                store: this.sources[this.selectedSource].store,
+                columns: [{
+                    id: 'title',
+                    xtype: "templatecolumn", 
+                    tpl: new Ext.XTemplate('<b>{title}</b><br/>{abstract}'), 
+                    sortable: true
+                }, {
+                    xtype: "actioncolumn",
+                    width: 30,
+                    items: [{
+                        iconCls: "gxp-icon-addlayers",
+                        tooltip: this.addMapTooltip,
+                        handler: function(grid, rowIndex, colIndex) {
+                            var rec = this.grid.store.getAt(rowIndex);
+                            this.addLayer(rec);
+                        },
+                        scope: this
+                    }]
+                }],
+                autoExpandColumn: 'title',
+                autoHeight: true
+            }] 
         }];
         gxp.CatalogueSearchPanel.superclass.initComponent.apply(this, arguments);
     },
