@@ -227,7 +227,11 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                             btn.ownerCt.items.each(function(item) {
                                 if (item.getXType() === "combo") {
                                     var id = item.getValue();
-                                    this.form.getForm().findField(id).show();
+                                    item.clearValue();
+                                    var field = this.form.getForm().findField(id);
+                                    if (field) {
+                                        field.show();
+                                    }
                                 }
                             }, this);
                         },
