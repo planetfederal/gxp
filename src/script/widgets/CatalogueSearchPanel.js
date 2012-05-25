@@ -245,6 +245,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                 width: '100%', 
                 anchor: '99%',
                 viewConfig: {
+                    scrollOffset: 0,
                     forceFit: true
                 },
                 border: false,
