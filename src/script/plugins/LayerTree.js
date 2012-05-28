@@ -227,6 +227,15 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
                             }
                         }, this);
                     },
+                    // embrapa - davi custodio
+    				// implementa o auto zoomtoextent na layer baseando-se no atributo autoextent da class WMSSource
+                    // implements self zoomtoextent the layer based on the class attribute autoextent WMSSource
+					checkchange: function(node, checked){
+					   if( checked && node.layerStore.getByLayer(node.layer).get("autoextent") ){
+					      var dataExtent = node.layer instanceof OpenLayers.Layer.Vector && layer.getDataExtent();
+						  node.layer.map.zoomToExtent( node.layer.restrictedExtent || dataExtent || node.layer.maxExtent || node.layer.map.maxExtent );
+					   }	  
+					},
                     scope: this
                 };
             }
