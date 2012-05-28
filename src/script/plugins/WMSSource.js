@@ -529,6 +529,15 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             // data for the new record
             var data = Ext.applyIf({
                 title: layer.name,
+                
+                // embrapa - davi custodio
+    			// parametro adicionado à configuração da layer para incluir o autoextent a uma layer, fazendo com que ao ser selecionada la LayerTree, automaticamente
+				// faça o zoom ao próprio extent
+				// parameter added to the configuration of the layer to include a autoextent layer, causing it to be selected LayerTree automatically
+                // do zoom to own Extent
+				autoextent: config.autoextent,
+                
+                
                 group: config.group,
                 infoFormat: config.infoFormat,
                 source: config.source,
@@ -541,6 +550,11 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             
             // add additional fields
             var fields = [
+                
+                // embrapa - davi custodio
+                // autoextent field to autoextent atribute
+    		    {name: "autoextent", type: "string"}, 
+                
                 {name: "source", type: "string"}, 
                 {name: "group", type: "string"},
                 {name: "properties", type: "string"},

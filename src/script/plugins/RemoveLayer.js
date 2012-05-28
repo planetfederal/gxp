@@ -64,10 +64,12 @@ gxp.plugins.RemoveLayer = Ext.extend(gxp.plugins.Tool, {
 
         this.target.on("layerselectionchange", function(record) {
             selectedLayer = record;
+            var fixed = (selectedLayer.get("fixed") == true); 
             removeLayerAction.setDisabled(
-                this.target.mapPanel.layers.getCount() <= 1 || !record
+                fixed || this.target.mapPanel.layers.getCount() <= 1 || !record
             );
         }, this);
+        
         var enforceOne = function(store) {
             removeLayerAction.setDisabled(
                 !selectedLayer || store.getCount() <= 1
