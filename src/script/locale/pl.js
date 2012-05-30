@@ -71,6 +71,10 @@ GeoExt.Lang.add("pl", {
         baseNodeText: "Mapa referencyjna"
     },
 
+    "gxp.plugins.LayerManager.prototype": {
+        baseNodeText: "Mapa referencyjna"
+    },
+
     "gxp.plugins.Legend.prototype": {
         menuText: "Legenda mapy",
         tooltip: "Legenda mapy"
@@ -344,7 +348,7 @@ GeoExt.Lang.add("pl", {
         workspaceLabel: "Obszar roboczy",
         workspaceEmptyText: "Domyślny obszar roboczy",
         dataStoreLabel: "Magazyn danych",
-        dataStoreEmptyText: "Domyślny magazyn danych"
+        dataStoreEmptyText: "Create new store"
     },
     
     "gxp.NewSourceDialog.prototype": {

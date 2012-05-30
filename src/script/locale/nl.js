@@ -32,7 +32,7 @@ GeoExt.Lang.add("nl", {
         previousPageTip: "Vorige pagina",
         zoomPageExtentTip: "Zoom naar de uitsnede van de pagina",
         nextPageTip: "Volgende pagina",
-        nextPageTip: "Laatste pagina",
+        lastPageTip: "Laatste pagina",
         totalMsg: "Totaal: {0} rijen"
     },
 
@@ -59,6 +59,10 @@ GeoExt.Lang.add("nl", {
         rootNodeText: "Kaartlagen",
         overlayNodeText: "Kaart overlays",
         baseNodeText: "Basis Kaarten"
+    },
+
+    "gxp.plugins.LayerManager.prototype": {
+        baseNodeText: "Basis Kaart"
     },
 
     "gxp.plugins.Legend.prototype": {
@@ -326,7 +330,7 @@ GeoExt.Lang.add("nl", {
         workspaceLabel: "Werkruimte",
         workspaceEmptyText: "Standaard werkruimte",
         dataStoreLabel: "Archief",
-        dataStoreEmptyText: "Standaard archief"
+        dataStoreEmptyText: "Create new store"
     },
 
     "gxp.NewSourceDialog.prototype": {

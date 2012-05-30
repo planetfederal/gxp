@@ -7,7 +7,8 @@
  */
 
 /**
- * @requires plugins/LayerSource.js
+ * @require plugins/LayerSource.js
+ * @require OpenLayers/Layer/OSM.js
  */
 
 /** api: (define)

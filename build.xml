@@ -8,17 +8,21 @@
     <property name="src" location="src"/>
     <property name="build" location="build"/>
 
+    <condition property="git" value="git.cmd" else="git">
+        <os family="windows"/>
+    </condition>
+
     <target name="init">
         <mkdir dir="${build}"/>
 
         <echo message="pulling in submodules"/>
-        <exec executable="git" failonerror="true">
+        <exec executable="${git}" failonerror="true">
             <arg line="submodule init"/>
         </exec>
-        <exec executable="git" failonerror="true">
+        <exec executable="${git}" failonerror="true">
             <arg line="submodule sync"/>
         </exec>
-        <exec executable="git" failonerror="true">
+        <exec executable="${git}" failonerror="true">
             <arg line="submodule update"/>
         </exec>
 
@@ -38,7 +42,7 @@
         <exec executable="sphinx-build" failonerror="true">
             <arg line="-b html"/>
             <arg value="-d"/>
-            <arg path="${src}/doc/_build/doctrees"/>
+            <arg path="${build}/doctrees"/>
             <arg path="${src}/doc"/>
             <arg path="${build}/doc"/>
         </exec>

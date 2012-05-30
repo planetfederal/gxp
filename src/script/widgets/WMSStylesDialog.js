@@ -578,7 +578,9 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             shortTitle: rule.title || rule.name || this.newRuleText,
             width: 355,
             hideMode: 'offsets',
-            autoHeight: true,
+            layout: "fit",
+            width: 340,
+            height: 450,
             modal: true,
             items: [{
                 xtype: "gxp_rulepanel",

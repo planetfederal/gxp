@@ -175,8 +175,10 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
      *  Set the format string used by the time slider tooltip
      */    
     setTimeFormat: function(format){
-        this.timeFormat = format;
-        this.slider.setTimeFormat(format);
+        if(format){
+            this.timeFormat = format;
+            this.slider.setTimeFormat(format);
+        }
     },
     /** api: method[setPlaybackMode]
      * :arg mode: {String} one of 'track',
@@ -185,8 +187,10 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
      *  Set the playback mode of the control.
      */
     setPlaybackMode: function(mode){
-        this.playbackMode = mode;
-        this.slider.setPlaybackMode(mode);
+        if(mode){
+            this.playbackMode = mode;
+            this.slider.setPlaybackMode(mode);
+        }
     },
 
     /** private: method[buildPlaybackItems] */
@@ -380,6 +384,8 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                 });
             }
         }
+        //DON'T DROP FRAMES
+        //this.controlConfig.maxFrameDelay = NaN;
         var ctl = this.control = new OpenLayers.Control.TimeManager(this.controlConfig);
         ctl.loop = this.looped;
         this.mapPanel.map.addControl(ctl);

@@ -33,7 +33,7 @@ GeoExt.Lang.add("fr", {
         previousPageTip: "Page précédente",
         zoomPageExtentTip: "Zoom sur la page",
         nextPageTip: "Page suivante",
-        nextPageTip: "Dernière page",
+        lastPageTip: "Dernière page",
         totalMsg: "Total : {0} entrées"
     },
 
@@ -60,6 +60,10 @@ GeoExt.Lang.add("fr", {
         rootNodeText: "Layers",
         overlayNodeText: "Surimpressions",
         baseNodeText: "Couches"
+    },
+
+    "gxp.plugins.LayerManager.prototype": {
+        baseNodeText: "Couche"
     },
 
     "gxp.plugins.Legend.prototype": { 
@@ -298,7 +302,7 @@ GeoExt.Lang.add("fr", {
         workspaceLabel: "Espace de travail",
         workspaceEmptyText: "Espace de travail par défaut",
         dataStoreLabel: "Magasin de données",
-        dataStoreEmptyText: "Magasin de données par défaut"
+        dataStoreEmptyText: "Create new store"
     },
 
     "gxp.NewSourceDialog.prototype": {

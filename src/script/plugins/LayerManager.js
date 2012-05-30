@@ -9,6 +9,8 @@
 /**
  * @require plugins/LayerTree.js
  * @require GeoExt/plugins/TreeNodeComponent.js
+ * @require GeoExt/widgets/WMSLegend.js
+ * @require GeoExt/widgets/VectorLegend.js
  */
 
 /** api: (define)
@@ -74,22 +76,22 @@ gxp.plugins.LayerManager = Ext.extend(gxp.plugins.LayerTree, {
     /** private: method[configureLayerNode] */
     configureLayerNode: function(loader, attr) {
         gxp.plugins.LayerManager.superclass.configureLayerNode.apply(this, arguments);
+        var legendXType;
         // add a WMS legend to each node created
-        if (attr.layer instanceof OpenLayers.Layer.WMS) {
-            attr.expanded = true;
-            attr.allowDrop = false;
-            attr.children = [{
-                nodeType: "node",
-                cls: "legendnode",
-                uiProvider: Ext.extend(
-                    Ext.tree.TreeNodeUI,
-                    new GeoExt.tree.TreeNodeUIEventMixin()
-                ),
+        if (OpenLayers.Layer.WMS && attr.layer instanceof OpenLayers.Layer.WMS) {
+            legendXType = "gx_wmslegend";
+        } else if (OpenLayers.Layer.Vector && attr.layer instanceof OpenLayers.Layer.Vector) {
+            legendXType = "gx_vectorlegend";
+        }
+        if (legendXType) {
+            Ext.apply(attr, {
                 component: {
-                    xtype: "gx_wmslegend",
+                    xtype: legendXType,
                     // TODO these baseParams were only tested with GeoServer,
-                    // so maybe they should be configurable.
+                    // so maybe they should be configurable - and they are
+                    // only relevant for gx_wmslegend.
                     baseParams: {
+                        transparent: true,
                         format: "image/png",
                         legend_options: "fontAntiAliasing:true;fontSize:11;fontName:Arial"
                     },
@@ -98,14 +100,8 @@ gxp.plugins.LayerManager = Ext.extend(gxp.plugins.LayerTree, {
                     // custom class for css positioning
                     // see tree-legend.html
                     cls: "legend"
-                },
-                listeners: {
-                    beforeclick: function() {
-                        this.parentNode.select();
-                        return false;
-                    }
                 }
-            }];
+            });
         }
     }
     

@@ -126,7 +126,9 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
     },
     
     setTimeFormat : function(format){
-        this.timeFormat = format;
+        if(format){
+            this.timeFormat = format;
+        }
     },
     
     onRangeModified : function(evt) {

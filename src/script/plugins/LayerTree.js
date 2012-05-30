@@ -62,9 +62,11 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
     /** api: config[groups]
      *  ``Object`` The groups to show in the layer tree. Keys are group names,
      *  and values are either group titles or an object with ``title`` and
-     *  ``exclusive`` properties. ``exclusive`` means that nodes will have
-     *  radio buttons instead of checkboxes, so only one layer of the group can
-     *  be active at a time. Optional, the default is
+     *  ``exclusive`` properties. ``exclusive``, if Boolean, means that nodes
+     *  will have radio buttons instead of checkboxes, so only one layer of the
+     *  group can be active at a time. If String, ``exclusive`` can be used to
+     *  create exclusive sets of layers among several groups, by assigning the
+     *  same string to each group. Optional, the default is
      *
      *  .. code-block:: javascript
      *
@@ -133,18 +135,21 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
         
         var defaultGroup = this.defaultGroup,
             plugin = this,
-            groupConfig;
+            groupConfig,
+            exclusive;
         for (var group in this.groups) {
             groupConfig = typeof this.groups[group] == "string" ?
                 {title: this.groups[group]} : this.groups[group];
+            exclusive = groupConfig.exclusive;
             treeRoot.appendChild(new GeoExt.tree.LayerContainer(Ext.apply({
                 text: groupConfig.title,
                 iconCls: "gxp-folder",
                 expanded: true,
                 group: group == this.defaultGroup ? undefined : group,
                 loader: new GeoExt.tree.LayerLoader({
-                    baseAttrs: groupConfig.exclusive ?
-                        {checkedGroup: group} : undefined,
+                    baseAttrs: exclusive ?
+                        {checkedGroup: Ext.isString(exclusive) ? exclusive : group} :
+                        undefined,
                     store: this.target.mapPanel.layers,
                     filter: (function(group) {
                         return function(record) {
