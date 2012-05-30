@@ -6,7 +6,7 @@
  * of the license.
  */
 
-/*
+/**
  * @include widgets/StrokeSymbolizer.js
  */
 

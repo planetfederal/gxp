@@ -34,7 +34,7 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
     workspaceLabel: "Workspace",
     workspaceEmptyText: "Default workspace",
     dataStoreLabel: "Store",
-    dataStoreEmptyText: "Default datastore",
+    dataStoreEmptyText: "Create new store",
     crsLabel: "CRS",
     crsEmptyText: "Coordinate Reference System ID",
     invalidCrsText: "CRS identifier should be an EPSG code (e.g. EPSG:4326)",
@@ -326,7 +326,7 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
      */
     handleUploadResponse: function(response) {
         var obj = this.parseResponseText(response.responseText),
-            tasks, task, msg, i,
+            records, tasks, task, msg, i,
             success = true;
         if (obj) {
             tasks = obj.tasks || [obj.task];
