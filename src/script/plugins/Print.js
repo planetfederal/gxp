@@ -265,13 +265,12 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                     width: 360,
                     items: [
                         new GeoExt.ux.PrintPreview({
-                            autoHeight: true,
+                            minWidth: 336,
                             mapTitle: this.target.about && this.target.about["title"],
                             comment: this.target.about && this.target.about["abstract"],
-                            minWidth: 336,
                             printMapPanel: {
-                                height: Math.min(450, Ext.get(document.body).getHeight()-150),
                                 autoWidth: true,
+                                height: Math.min(420, Ext.get(document.body).getHeight()-150),
                                 limitScales: true,
                                 map: Ext.applyIf({
                                     controls: [
@@ -294,7 +293,13 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                                     vertical: true,
                                     height: 100,
                                     aggressive: true
-                                }]
+                                }],
+                                listeners: {
+                                    afterlayout: function(evt) {
+                                        printWindow.setWidth(Math.max(360, this.getWidth() + 24));
+                                        printWindow.center();
+                                    }
+                                }
                             },
                             printProvider: printProvider,
                             includeLegend: this.includeLegend,
