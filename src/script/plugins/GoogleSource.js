@@ -176,7 +176,7 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
                 {name: "name", type: "string", mapping: "typeName"},
                 {name: "abstract", type: "string"},
                 {name: "group", type: "string", defaultValue: "background"},
-                {name: "fixed", type: "boolean", defaultValue: true},
+                {name: "fixed", type: "boolean"},
                 {name: "selected", type: "boolean"}
             ]
         });

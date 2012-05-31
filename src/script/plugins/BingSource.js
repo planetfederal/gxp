@@ -127,7 +127,7 @@ gxp.plugins.BingSource = Ext.extend(gxp.plugins.LayerSource, {
                 {name: "name", type: "string", mapping: "type"},
                 {name: "abstract", type: "string", mapping: "attribution"},
                 {name: "group", type: "string", defaultValue: "background"},
-                {name: "fixed", type: "boolean", defaultValue: true},
+                {name: "fixed", type: "boolean"},
                 {name: "selected", type: "boolean"}
             ]
         });
