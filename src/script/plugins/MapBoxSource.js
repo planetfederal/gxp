@@ -149,7 +149,7 @@ gxp.plugins.MapBoxSource = Ext.extend(gxp.plugins.LayerSource, {
                     "http://d.tiles.mapbox.com/mapbox/"
                 ],
                 OpenLayers.Util.applyDefaults({
-                    attribution: /^world/.match(name) ?
+                    attribution: /^world/.test(name) ?
                         "<a href='http://mapbox.com'>MapBox</a> | Some Data &copy; OSM CC-BY-SA | <a href='http://mapbox.com/tos'>Terms of Service</a>" :
                         "<a href='http://mapbox.com'>MapBox</a> | <a href='http://mapbox.com/tos'>Terms of Service</a>",
                     type: "png",
