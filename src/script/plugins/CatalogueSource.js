@@ -55,6 +55,13 @@ gxp.plugins.CatalogueSource = Ext.extend(gxp.plugins.WMSSource, {
      */
     lazy: true,
 
+    /** api: config[proxyOptions]
+     *  ``Object``
+     *  An optional object to pass to the constructor of the ProtocolProxy.
+     *  This can be used e.g. to set listeners.
+     */
+    proxyOptions: null,
+
     /** private: method[constructor]
      */
     constructor: function(config) {
@@ -70,12 +77,12 @@ gxp.plugins.CatalogueSource = Ext.extend(gxp.plugins.WMSSource, {
     createStore: function() {
         if (this.type === gxp.plugins.CatalogueSource.CSW) {
             this.store = new Ext.data.Store({
-                proxy: new GeoExt.data.ProtocolProxy({
+                proxy: new GeoExt.data.ProtocolProxy(Ext.apply({
                     setParamsAsOptions: true,
                     protocol: new OpenLayers.Protocol.CSW({
                         url: this.url
                     })
-                }),
+                }, this.proxyOptions || {})),
                 reader: new GeoExt.data.CSWRecordsReader({
                     fields: ['title', 'abstract', 'URI', 'bounds', 'projection', 'references']
                 })
