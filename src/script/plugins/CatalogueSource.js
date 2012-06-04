@@ -89,10 +89,10 @@ gxp.plugins.CatalogueSource = Ext.extend(gxp.plugins.WMSSource, {
             });
         } else if (this.type === gxp.plugins.CatalogueSource.GEONODE) {
             this.store = new Ext.data.Store({
-                proxy: new Ext.data.HttpProxy({
+                proxy: new Ext.data.HttpProxy(Ext.apply({
                     url: this.url, 
                     method: 'GET'
-                }),
+                }, this.proxyOptions || {})),
                 baseParams: {
                     type: 'layer'
                 },
