@@ -50,7 +50,8 @@ gxp.plugins.CatalogueSource = Ext.extend(gxp.plugins.WMSSource, {
     proxyOptions: null,
 
     /** api: method[createStore]
-     *  Create the store that will be used for the CS-W searches.
+     *  Create the store that will be used for the CS-W searches. At the end
+     *  of this method subclasses should fire the "ready" event.
      */
     createStore: function() {
         // to be implemented by subclasses
