@@ -84,16 +84,15 @@ gxp.plugins.CatalogueSource = Ext.extend(gxp.plugins.WMSSource, {
         this.store && this.store.destroy();
         this.store = null;
         gxp.plugins.CatalogueSource.superclass.destroy.apply(this, arguments);
-    },
+    }
 
     /** api: method[getPagingParamNames]
      *  :return: ``Object`` with keys start and limit.
      *
      *  Get the names of the parameters to use for paging.
+     *
+     *  To be implemented by subclasses
      */
-    getPagingParamNames: function() {
-        // to be implemented by subclasses
-    },
 
     /** api: method[filter]
      *  Filter the store by querying the catalogue service.
@@ -108,9 +107,8 @@ gxp.plugins.CatalogueSource = Ext.extend(gxp.plugins.WMSSource, {
      *       - the maximum number of records to retrieve
      *     * - ``filters``
      *       - additional filters to include in the query
+     *
+     *  To be implemented by subclasses
      */
-    filter: function(options) {
-        // to be implemented by subclasses
-    }
 
 });
