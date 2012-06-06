@@ -93,9 +93,16 @@ gxp.plugins.CSWCatalogueSource = Ext.extend(gxp.plugins.CatalogueSource, {
     /** api: method[filter]
      *  Filter the store by querying the catalogue service.
      *  :param options: ``Object`` An object with the following keys:
-     *    -queryString: the search string
-     *    -limit: the maximum number of records to retrieve
-     *    -filters: additional filters to include in the query
+     *
+     * .. list-table::
+     *     :widths: 20 80
+     * 
+     *     * - ``queryString``
+     *       - the search string
+     *     * - ``limit`` 
+     *       - the maximum number of records to retrieve
+     *     * - ``filters``
+     *       - additional filters to include in the query
      */
     filter: function(options) {
         var filter = undefined;
