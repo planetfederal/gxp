@@ -164,7 +164,6 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
                             this._import = response.getResponseHeader("Location");
                             form.submit({
                                 url: this._import + "/tasks",
-                                submitEmptyText: false,
                                 waitMsg: this.waitMsgText,
                                 waitMsgTarget: true,
                                 reset: true,
