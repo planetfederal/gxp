@@ -64,6 +64,8 @@
         "plugins/MapBoxSource.js",
         "plugins/MapQuestSource.js",
         "plugins/CatalogueSource.js",
+        "plugins/CSWCatalogueSource.js",
+        "plugins/GeoNodeCatalogueSource.js",
         "plugins/StyleWriter.js",
         "plugins/GeoServerStyleWriter.js",
         "plugins/Tool.js",
