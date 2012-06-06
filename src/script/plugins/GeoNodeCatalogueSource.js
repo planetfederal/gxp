@@ -69,7 +69,7 @@ gxp.plugins.GeoNodeCatalogueSource = Ext.extend(gxp.plugins.CatalogueSource, {
                 }}
             ])
         });
-        gxp.plugins.GeoNodeCatalogueSource.superclass.createStore.apply(this, arguments);
+        gxp.plugins.LayerSource.prototype.createStore.apply(this, arguments);
     },
 
     /** api: method[getPagingParamNames]

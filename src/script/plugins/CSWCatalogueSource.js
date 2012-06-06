@@ -51,7 +51,7 @@ gxp.plugins.CSWCatalogueSource = Ext.extend(gxp.plugins.CatalogueSource, {
                 fields: ['title', 'abstract', 'URI', 'bounds', 'projection', 'references']
             })
         });
-        gxp.plugins.CSWCatalogueSource.superclass.createStore.apply(this, arguments);
+        gxp.plugins.LayerSource.prototype.createStore.apply(this, arguments);
     },
 
     /** api: method[getPagingParamNames]
