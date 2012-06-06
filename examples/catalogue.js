@@ -2,7 +2,6 @@ var app;
 Ext.onReady(function() {
     app = new gxp.Viewer({
         proxy: "/geoserver/rest/proxy?url=",
-        proxy: "/cgi-bin/proxy.cgi?url=",
         portalConfig: {
             renderTo: document.body,
             layout: "border",
@@ -49,7 +48,7 @@ Ext.onReady(function() {
         }, {
             ptype: "gxp_addlayers",
             actionTarget: "tree.tbar",
-            search: {selectedSource: "opendri"}
+            search: {selectedSource: "geonode"}
         }, {
             ptype: "gxp_removelayer",
             actionTarget: ["tree.tbar", "tree.contextMenu"]
@@ -122,12 +121,6 @@ Ext.onReady(function() {
                 ptype: "gxp_cataloguesource",
                 url: "http://gxp.opengeo.org/pycsw",
                 title: "pycsw"
-            },
-            opendri: {
-                ptype: "gxp_cataloguesource",
-                type: gxp.plugins.CatalogueSource.GEONODE,
-                url: "http://opendri.dev.opengeo.org/search/api/?",
-                title: "OpenDRI"
             }
         },
         
