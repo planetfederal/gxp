@@ -270,7 +270,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                         iconCls: "gxp-icon-addlayers",
                         tooltip: this.addMapTooltip,
                         handler: function(grid, rowIndex, colIndex) {
-                            var rec = this.grid.store.getAt(rowIndex);
+                            var rec = grid.store.getAt(rowIndex);
                             this.addLayer(rec);
                         },
                         scope: this
