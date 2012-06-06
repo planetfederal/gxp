@@ -23,25 +23,12 @@ Ext.namespace("gxp.plugins");
 /** api: constructor
  *  .. class:: CatalogueSource(config)
  *
- *    Plugin for creating WMS layers lazily. The difference with the WMSSource
- *    is that the url is configured on the layer not on the source. This means
- *    that this source can create WMS layers for any url. This is particularly
- *    useful when working against a Catalogue Service, such as a OGC:CS-W.
+ *    Base class for catalogue sources uses for search.
  */
 gxp.plugins.CatalogueSource = Ext.extend(gxp.plugins.WMSSource, {
 
-    /** api: ptype = gxp_cataloguesource */
-    ptype: "gxp_cataloguesource",
-
-    /** api: config[type]
-     *  ``Integer`` Type of search back-end to use.
-     *  One of gxp.plugins.CatalogueSource.CSW or
-     *  gxp.plugins.CatalogueSource.GEONODE. Defaults to CSW.
-     */
-    type: null,
-
     /** api: config[url]
-     *  ``String`` CS-W service URL for this source
+     *  ``String`` Online resource of the catalogue service.
      */
     url: null,
 
@@ -62,66 +49,11 @@ gxp.plugins.CatalogueSource = Ext.extend(gxp.plugins.WMSSource, {
      */
     proxyOptions: null,
 
-    /** private: method[constructor]
-     */
-    constructor: function(config) {
-        if (!config.type) {
-            config.type = gxp.plugins.CatalogueSource.CSW;
-        }
-        gxp.plugins.CatalogueSource.superclass.constructor.apply(this, arguments);
-    },
-
     /** api: method[createStore]
      *  Create the store that will be used for the CS-W searches.
      */
     createStore: function() {
-        if (this.type === gxp.plugins.CatalogueSource.CSW) {
-            this.store = new Ext.data.Store({
-                proxy: new GeoExt.data.ProtocolProxy(Ext.apply({
-                    setParamsAsOptions: true,
-                    protocol: new OpenLayers.Protocol.CSW({
-                        url: this.url
-                    })
-                }, this.proxyOptions || {})),
-                reader: new GeoExt.data.CSWRecordsReader({
-                    fields: ['title', 'abstract', 'URI', 'bounds', 'projection', 'references']
-                })
-            });
-        } else if (this.type === gxp.plugins.CatalogueSource.GEONODE) {
-            this.store = new Ext.data.Store({
-                proxy: new Ext.data.HttpProxy(Ext.apply({
-                    url: this.url, 
-                    method: 'GET'
-                }, this.proxyOptions || {})),
-                baseParams: {
-                    type: 'layer'
-                },
-                reader: new Ext.data.JsonReader({
-                    root: 'results'
-                }, [
-                    {name: "title", convert: function(v) {
-                        return [v];
-                    }},
-                    {name: "abstract", mapping: "description"},
-                    {name: "bounds", mapping: "bbox", convert: function(v) {
-                        return {
-                            left: v.minx,
-                            right: v.maxx,
-                            bottom: v.miny,
-                            top: v.maxy
-                        };
-                    }},
-                    {name: "URI", mapping: "download_links", convert: function(v) {
-                        var result = [];
-                        for (var i=0,ii=v.length;i<ii;++i) {
-                            result.push(v[i][3]);
-                        }
-                        return result;
-                    }}
-                ])
-            });
-        }
-        this.fireEvent("ready", this);
+        // to be implemented by subclasses
     },
 
     /** api: method[describeLayer]
@@ -167,114 +99,18 @@ gxp.plugins.CatalogueSource = Ext.extend(gxp.plugins.WMSSource, {
      *  Get the names of the parameters to use for paging.
      */
     getPagingParamNames: function() {
-        var result;
-        switch (this.type) {
-            case gxp.plugins.CatalogueSource.CSW:
-                result = {
-                    start: 'startPosition',
-                    limit: 'maxRecords'
-                };
-                break;
-            case gxp.plugins.CatalogueSource.GEONODE:
-                result = {
-                    start: 'startIndex',
-                    limit: 'limit'
-                };
-                break;
-            default:
-                break;
-        }
-        return result;
+        // to be implemented by subclasses
     },
 
-    /** private: method[getFullFilter]
-     *  :arg filter: ``OpenLayers.Filter`` The filter to add to the other existing 
-     *  filters. This is normally the free text search filter.
-     *  :arg otherFilters: ``Array``
-     *  :returns: ``OpenLayers.Filter`` The combined filter.
-     *
-     *  Get the filter to use in the CS-W query.
+    /** api: method[filter]
+     *  Filter the store by querying the catalogue service.
+     *  :param options: ``Object`` An object with the following keys:
+     *    -queryString: the search string
+     *    -limit: the maximum number of records to retrieve
+     *    -filters: additional filters to include in the query
      */
-    getFullFilter: function(filter, otherFilters) {
-        var filters = [];
-        if (filter !== undefined) {
-            filters.push(filter);
-        }
-        filters = filters.concat(otherFilters);
-        if (filters.length <= 1) {
-            return filters[0];
-        } else {
-            return new OpenLayers.Filter.Logical({
-                type: OpenLayers.Filter.Logical.AND,
-                filters: filters
-            });
-        }
-    },
-
     filter: function(options) {
-        switch (this.type) {
-            case gxp.plugins.CatalogueSource.CSW:
-                var filter = undefined;
-                if (options.queryString !== "") {
-                    filter = new OpenLayers.Filter.Comparison({
-                        type: OpenLayers.Filter.Comparison.LIKE,
-                        matchCase: false,
-                        property: 'csw:AnyText',
-                        value: '*' + options.queryString + '*'
-                    });
-                }
-                var data = {
-                    "resultType": "results",
-                    "maxRecords": options.limit,
-                    "Query": {
-                        "typeNames": "gmd:MD_Metadata",
-                        "ElementSetName": {
-                            "value": "full"
-                        }
-                    }
-                };
-                var fullFilter = this.getFullFilter(filter, options.filters);
-                if (fullFilter !== undefined) {
-                    Ext.apply(data.Query, {
-                        "Constraint": {
-                            version: "1.1.0",
-                            Filter: fullFilter
-                        }
-                    });
-                }
-                Ext.apply(this.store.baseParams, data);
-                this.store.load();
-                break;
-            case gxp.plugins.CatalogueSource.GEONODE:
-                var bbox = undefined;
-                for (var i=0, ii=options.filters.length; i<ii; ++i) {
-                    var f = options.filters[i];
-                    if (f instanceof OpenLayers.Filter.Spatial) {
-                        bbox = f.value.toBBOX();
-                        break;
-                    }
-                }
-                Ext.apply(this.store.baseParams, {
-                    'q': options.queryString,
-                    'limit': options.limit
-                });
-                if (bbox !== undefined) {
-                    Ext.apply(this.store.baseParams, {
-                        'bbox': bbox
-                    });
-                } else {
-                    delete this.store.baseParams.bbox;
-                }
-                this.store.load();
-                break;
-            default:
-                break;
-        }
+        // to be implemented by subclasses
     }
 
 });
-
-gxp.plugins.CatalogueSource.CSW = 0;
-gxp.plugins.CatalogueSource.GEONODE = 1;
-
-Ext.preg(gxp.plugins.CatalogueSource.prototype.ptype, gxp.plugins.CatalogueSource);

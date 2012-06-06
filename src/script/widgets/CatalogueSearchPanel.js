@@ -249,7 +249,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                     forceFit: true
                 },
                 border: false,
-                ref: "grid",
+                ref: "../grid",
                 bbar: new Ext.PagingToolbar({
                     paramNames: this.sources[this.selectedSource].getPagingParamNames(),
                     store: this.sources[this.selectedSource].store,
@@ -270,7 +270,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                         iconCls: "gxp-icon-addlayers",
                         tooltip: this.addMapTooltip,
                         handler: function(grid, rowIndex, colIndex) {
-                            var rec = grid.store.getAt(rowIndex);
+                            var rec = this.grid.store.getAt(rowIndex);
                             this.addLayer(rec);
                         },
                         scope: this
