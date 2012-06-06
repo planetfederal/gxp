@@ -248,7 +248,7 @@ gxp.plugins.CatalogueSource = Ext.extend(gxp.plugins.WMSSource, {
             case gxp.plugins.CatalogueSource.GEONODE:
                 var bbox = undefined;
                 for (var i=0, ii=options.filters.length; i<ii; ++i) {
-                    var f = this.filters[i];
+                    var f = options.filters[i];
                     if (f instanceof OpenLayers.Filter.Spatial) {
                         bbox = f.value.toBBOX();
                         break;
@@ -256,9 +256,15 @@ gxp.plugins.CatalogueSource = Ext.extend(gxp.plugins.WMSSource, {
                 }
                 Ext.apply(this.store.baseParams, {
                     'q': options.queryString,
-                    'limit': options.limit,
-                    'bbox': bbox
+                    'limit': options.limit
                 });
+                if (bbox !== undefined) {
+                    Ext.apply(this.store.baseParams, {
+                        'bbox': bbox
+                    });
+                } else {
+                    delete this.store.baseParams.bbox;
+                }
                 this.store.load();
                 break;
             default:
