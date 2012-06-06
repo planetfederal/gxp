@@ -23,18 +23,12 @@ Ext.namespace("gxp.plugins");
 /** api: constructor
  *  .. class:: CatalogueSource(config)
  *
- *    Plugin for creating WMS layers lazily. The difference with the WMSSource
- *    is that the url is configured on the layer not on the source. This means
- *    that this source can create WMS layers for any url. This is particularly
- *    useful when working against a Catalogue Service, such as a OGC:CS-W.
+ *    Base class for catalogue sources uses for search.
  */
 gxp.plugins.CatalogueSource = Ext.extend(gxp.plugins.WMSSource, {
 
-    /** api: ptype = gxp_cataloguesource */
-    ptype: "gxp_cataloguesource",
-
     /** api: config[url]
-     *  ``String`` CS-W service URL for this source
+     *  ``String`` Online resource of the catalogue service.
      */
     url: null,
 
@@ -54,24 +48,6 @@ gxp.plugins.CatalogueSource = Ext.extend(gxp.plugins.WMSSource, {
      *  This can be used e.g. to set listeners.
      */
     proxyOptions: null,
-
-    /** api: method[createStore]
-     *  Create the store that will be used for the CS-W searches.
-     */
-    createStore: function() {
-        this.store = new Ext.data.Store({
-            proxy: new GeoExt.data.ProtocolProxy(Ext.apply({
-                setParamsAsOptions: true,
-                protocol: new OpenLayers.Protocol.CSW({
-                    url: this.url
-                })
-            }, this.proxyOptions || {})),
-            reader: new GeoExt.data.CSWRecordsReader({
-               fields: ['title', 'abstract', 'URI', 'bounds', 'projection', 'references']
-            })
-        });
-        this.fireEvent("ready", this);
-    },
 
     /** api: method[describeLayer]
      *  :arg rec: ``GeoExt.data.LayerRecord`` the layer to issue a WMS
@@ -110,6 +86,29 @@ gxp.plugins.CatalogueSource = Ext.extend(gxp.plugins.WMSSource, {
         gxp.plugins.CatalogueSource.superclass.destroy.apply(this, arguments);
     }
 
-});
+    /** api: method[getPagingParamNames]
+     *  :return: ``Object`` with keys start and limit.
+     *
+     *  Get the names of the parameters to use for paging.
+     *
+     *  To be implemented by subclasses
+     */
 
-Ext.preg(gxp.plugins.CatalogueSource.prototype.ptype, gxp.plugins.CatalogueSource);
+    /** api: method[filter]
+     *  Filter the store by querying the catalogue service.
+     *  :param options: ``Object`` An object with the following keys:
+     *
+     * .. list-table::
+     *     :widths: 20 80
+     * 
+     *     * - ``queryString``
+     *       - the search string
+     *     * - ``limit`` 
+     *       - the maximum number of records to retrieve
+     *     * - ``filters``
+     *       - additional filters to include in the query
+     *
+     *  To be implemented by subclasses
+     */
+
+});
