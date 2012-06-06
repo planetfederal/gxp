@@ -239,20 +239,14 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
         Ext.applyIf(config, {style: "padding: 10px"});
         
         var output = gxp.plugins.Styler.superclass.addOutput.call(this, config);
-        if (output.ownerCt.ownerCt instanceof Ext.Window) {
-            output.dialogCls = Ext.Window;
-        } else {
-            output.dialogCls = Ext.Container;
-        }
-        output.showDlg = function(dlg) {
-            if (dlg instanceof Ext.Window) {
-                dlg.show();
-            } else {
+        if (!(output.ownerCt.ownerCt instanceof Ext.Window)) {
+            output.dialogCls = Ext.Panel;
+            output.showDlg = function(dlg) {
                 dlg.layout = "fit";
                 dlg.autoHeight = false;
                 output.ownerCt.add(dlg);
-            }
-        };
+            };
+        }
         output.stylesStore.on("load", function() {
             if (!this.outputTarget && output.ownerCt.ownerCt instanceof Ext.Window) {
                 output.ownerCt.ownerCt.center();
