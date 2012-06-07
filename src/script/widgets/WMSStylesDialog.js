@@ -350,7 +350,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 iconCls: "cancel",
                 handler: function() {
                     styleProperties.propertiesDialog.userStyle = userStyle;
-                    styleProperties.close();
+                    styleProperties.destroy();
                     if (prevStyle) {
                         this._cancelling = true;
                         this.stylesStore.remove(this.selectedStyle);
@@ -366,7 +366,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 text: this.saveText,
                 iconCls: "save",
                 handler: function() {
-                    styleProperties.close();
+                    styleProperties.destroy();
                 }
             }]
         };
@@ -618,13 +618,13 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 iconCls: "cancel",
                 handler: function() {
                     this.saveRule(ruleDlg.rulePanel, origRule);
-                    ruleDlg.close();
+                    ruleDlg.destroy();
                 },
                 scope: this
             }, {
                 text: this.saveText,
                 iconCls: "save",
-                handler: function() { ruleDlg.close(); }
+                handler: function() { ruleDlg.destroy(); }
             }]
         });
         this.showDlg(ruleDlg);
