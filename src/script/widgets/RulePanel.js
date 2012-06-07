@@ -401,12 +401,17 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
         };
     },
 
-    adaptSymbolizers: function() {
+    adjustSymbolizers: function() {
+        var symbolizers = [];
+        var i, ii;
+        for (i=0, ii=this.rule.symbolizers.length; i<ii; ++i) {
+            symbolizers.push(this.rule.symbolizers[i].clone());
+        }
         if (this.symbolType === "Polygon") {
             // needs point, line and polygon symbolizers
             var hasPoint, hasLine, hasPolygon = false;
-            for (var i=0, ii=this.rule.symbolizers.length; i<ii; ++i) {
-                var symbolizer = this.rule.symbolizers[i];
+            for (i=0, ii=symbolizers.length; i<ii; ++i) {
+                var symbolizer = symbolizers[i];
                 if (symbolizer instanceof OpenLayers.Symbolizer.Polygon) {
                     hasPolygon = true;
                 }
@@ -420,15 +425,16 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
             if (!hasPolygon) {
                 // we need a way to tell the symbolizer loader not to make their
                 // children checked, TODO look for a more elegant solution.
-                this.rule.symbolizers.push(new OpenLayers.Symbolizer.Polygon({checked: false}));
+                symbolizers.push(new OpenLayers.Symbolizer.Polygon({checked: false}));
             }
             if (!hasLine) {
-                this.rule.symbolizers.push(new OpenLayers.Symbolizer.Line({checked: false}));
+                symbolizers.push(new OpenLayers.Symbolizer.Line({checked: false}));
             }
             if (!hasPoint) {
-                this.rule.symbolizers.push(new OpenLayers.Symbolizer.Point({checked: false}));
+                symbolizers.push(new OpenLayers.Symbolizer.Point({checked: false}));
             }
         }
+        return symbolizers;
     },
 
     /** private: method[createSymbolizerPanel]
@@ -437,12 +443,10 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
         // use first symbolizer that matches symbolType
         var candidate, symbolizer;
         var Type = OpenLayers.Symbolizer[this.symbolType];
-        var existing = false;
         if (Type) {
             for (var i=0, ii=this.rule.symbolizers.length; i<ii; ++i) {
                 candidate = this.rule.symbolizers[i];
                 if (candidate instanceof Type) {
-                    existing = true;
                     symbolizer = candidate;
                     break;
                 }
@@ -458,7 +462,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
             {draw: this.symbolizerSwatch.rendered}
         );
 
-        this.adaptSymbolizers();
+        var symbolizers = this.adjustSymbolizers();
 
         var cfg = {
             xtype: 'panel',
@@ -476,8 +480,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                     xtype: "gxp_symbolgrid",
                     ref: "../../grid",
                     autoScroll: true,
-                    symbolizers: this.rule.symbolizers,
-                    symbolType: this.symbolType,
+                    symbolizers: symbolizers,
                     height: 150,
                     listeners: {
                         click: function(node) {
@@ -509,11 +512,8 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                             var symbolizers = grid.getSymbolizers();
                             this.symbolizerSwatch.setSymbolizers(
                                 symbolizers, {draw: this.symbolizerSwatch.rendered}
-                            ); 
-                            if (!existing) {
-                                this.rule.symbolizers.push(symbolizers);
-                                existing = true;
-                            }
+                            );
+                            this.rule.symbolizers = symbolizers;
                             this.fireEvent("change", this, this.rule);
                         },
                         scope: this
