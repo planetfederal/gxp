@@ -54,6 +54,10 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                         fullSymbolizer.graphic = true;
                     }
                 }
+                var overrides = {};
+                if (symbolizer.checked === false) {
+                    overrides.checked = false;
+                }
                 var id = Ext.id();
                 var child = this.createNode({
                     type: key, 
@@ -80,7 +84,7 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                         symbolizer: strokeSym,
                         rendererId: id, 
                         preview: divTpl.applyTemplate({id: id})
-                    }));
+                    }, overrides));
                     id = Ext.id();
                     var fillSym = fullSymbolizer.clone();
                     // delete all properties which have to do with stroke
@@ -97,7 +101,7 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                         symbolizer: fillSym,
                         rendererId: id, 
                         preview: divTpl.applyTemplate({id: id})
-                    }));
+                    }, overrides));
                 } else if (key === "Line") {
                     id = Ext.id();
                     child.appendChild(this.createNode({
@@ -107,7 +111,7 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                         symbolizer: fullSymbolizer.clone(),
                         rendererId: id,
                         preview: divTpl.applyTemplate({id: id})
-                    }));
+                    }, overrides));
                 } else if (key === "Text") {
                     id = Ext.id();
                     var labelSym = fullSymbolizer.clone();
@@ -119,7 +123,7 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                         symbolizer: labelSym,
                         rendererId: id,
                         preview: divTpl.applyTemplate({id: id})
-                    }));
+                    }, overrides));
                     id = Ext.id();
                     var graphicSym = fullSymbolizer.clone();
                     graphicSym.label = "";
@@ -130,7 +134,7 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                         symbolizer: graphicSym,
                         rendererId: id,
                         preview: divTpl.applyTemplate({id: id})
-                    }));
+                    }, overrides));
                 }
                 node.appendChild(child);
             }
@@ -147,9 +151,12 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
      *  Override this function for custom TreeNode node implementation, or to
      *  modify the attributes at creation time.
      */
-    createNode: function(attr) {
+    createNode: function(attr, overrides) {
         if(this.baseAttrs){
             Ext.apply(attr, this.baseAttrs);
+        }
+        if(overrides){
+            Ext.apply(attr, overrides);
         }
         if (!attr.uiProvider) {
             attr.uiProvider = gxp.tree.TreeGridNodeUI;

@@ -98,19 +98,6 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
         return symbolizers;
     },
 
-    /** api: method[removeSelectedSymbolizer]
-     */
-    removeSelectedSymbolizer: function() {
-        var node = this.getSelectionModel().getSelectedNode();
-        if (Ext.isBoolean(node.attributes.checked)) {
-            this.onCheckChange(node, false);
-        }
-        this.root.removeChild(node);
-        if (!Ext.isBoolean(node.attributes.checked)) {
-            this.fireEvent("change", this);
-        }
-    },
-
     /** private: method[beforeDestroy]
      *  Clean up.
      */

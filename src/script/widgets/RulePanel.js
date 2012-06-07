@@ -401,6 +401,36 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
         };
     },
 
+    adaptSymbolizers: function() {
+        if (this.symbolType === "Polygon") {
+            // needs point, line and polygon symbolizers
+            var hasPoint, hasLine, hasPolygon = false;
+            for (var i=0, ii=this.rule.symbolizers.length; i<ii; ++i) {
+                var symbolizer = this.rule.symbolizers[i];
+                if (symbolizer instanceof OpenLayers.Symbolizer.Polygon) {
+                    hasPolygon = true;
+                }
+                if (symbolizer instanceof OpenLayers.Symbolizer.Line) {
+                    hasLine = true;
+                }
+                if (symbolizer instanceof OpenLayers.Symbolizer.Point) {
+                    hasPoint = true;
+                }
+            }   
+            if (!hasPolygon) {
+                // we need a way to tell the symbolizer loader not to make their
+                // children checked, TODO look for a more elegant solution.
+                this.rule.symbolizers.push(new OpenLayers.Symbolizer.Polygon({checked: false}));
+            }
+            if (!hasLine) {
+                this.rule.symbolizers.push(new OpenLayers.Symbolizer.Line({checked: false}));
+            }
+            if (!hasPoint) {
+                this.rule.symbolizers.push(new OpenLayers.Symbolizer.Point({checked: false}));
+            }
+        }
+    },
+
     /** private: method[createSymbolizerPanel]
      */
     createSymbolizerPanel: function() {
@@ -428,6 +458,8 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
             {draw: this.symbolizerSwatch.rendered}
         );
 
+        this.adaptSymbolizers();
+
         var cfg = {
             xtype: 'panel',
             layout: 'fit',
@@ -441,31 +473,11 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                     pack: 'start'
                 },
                 items: [{
-                    tbar: [
-                        {
-                            iconCls: 'textsymbolizer'
-                        }, {
-                            iconCls: 'pointsymbolizer'
-                        }, {
-                            iconCls: 'linesymbolizer'
-                        }, {
-                            iconCls: 'polygonsymbolizer'
-                        }, '->', {
-                            iconCls: 'delete', 
-                            handler: function() {
-                                this.grid.removeSelectedSymbolizer();
-                            },
-                            scope: this
-                        }, {
-                            iconCls: 'moveup'
-                        }, {
-                            iconCls: 'movedown'
-                        }
-                    ],
                     xtype: "gxp_symbolgrid",
                     ref: "../../grid",
                     autoScroll: true,
                     symbolizers: this.rule.symbolizers,
+                    symbolType: this.symbolType,
                     height: 150,
                     listeners: {
                         click: function(node) {
