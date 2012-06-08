@@ -139,11 +139,20 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
 
     notifyLoader: function(node, checked) {
         if (checked) {
-            var className = node.parentNode.attributes.symbolizer.CLASS_NAME;
-            var subType = className.substr(className.lastIndexOf(".")+1);
-            var symbolizer = new OpenLayers.Symbolizer[subType]({checked: false});
-            var newNode = this.loader.addSymbolizer(this.getRootNode(), symbolizer);
-            this.createSwatches(newNode);
+            var type = node.attributes.type;
+            // check if there is still an unchecked node of the same type
+            var hasUnchecked = false;
+            node.parentNode.cascade(function(subNode) {
+                if (subNode.attributes.type === type && subNode.attributes.checked === false) {
+                    hasUnchecked = true;
+                }
+            });
+            if (hasUnchecked === false) {
+                var fullSymbolizer = node.parentNode.attributes.symbolizer;
+                var newNode = this.loader.createSymbolizerPropertyGroup(fullSymbolizer, type);
+                node.parentNode.appendChild(newNode);
+                this.createSwatches(newNode);
+            }
         }
     },
 
