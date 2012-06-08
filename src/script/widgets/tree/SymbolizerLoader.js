@@ -56,12 +56,15 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
         }
     },
 
-    createSymbolizerPropertyGroup: function(fullSymbolizer, type) {
+    createSymbolizerPropertyGroup: function(fullSymbolizer, type, dummy) {
         var id = Ext.id(),
             overrides = {},
             config;
         if (fullSymbolizer.checked === false) {
             overrides.checked = false;
+        }
+        if (dummy === true) {
+            overrides.dummy = true;
         }
         if (type === 'Stroke') {
             var strokeSym = fullSymbolizer.clone();
@@ -143,8 +146,8 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
             preview: divTpl.applyTemplate({id: id})
         });
         if (key === "Polygon" || key === "Point") {
-            child.appendChild(this.createSymbolizerPropertyGroup(fullSymbolizer, 'Stroke'));
             child.appendChild(this.createSymbolizerPropertyGroup(fullSymbolizer, 'Fill'));
+            child.appendChild(this.createSymbolizerPropertyGroup(fullSymbolizer, 'Stroke'));
         } else if (key === "Line") {
             child.appendChild(this.createSymbolizerPropertyGroup(fullSymbolizer, 'Stroke'));
         } else if (key === "Text") {

@@ -84,7 +84,7 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
             var childVisible = false;
             n.eachChild(function(c) {
                 var type = c.attributes.type.toLowerCase();
-                if (type !== "label") {
+                if (type !== "label" && c.attributes.dummy !== true) {
                     n.attributes.originalSymbolizer[type] = c.attributes.checked;
                 }
                 if (c.attributes.checked === true) {
@@ -148,8 +148,12 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
                 }
             });
             if (hasUnchecked === false) {
-                var fullSymbolizer = node.parentNode.attributes.symbolizer;
-                var newNode = this.loader.createSymbolizerPropertyGroup(fullSymbolizer, type);
+                var className = node.parentNode.attributes.symbolizer.CLASS_NAME;
+                var subType = className.substr(className.lastIndexOf(".")+1);
+                // since e.g. a PolgyonSymbolizer cannot contain two strokes, create a
+                // new dummy PolygonSymbolizer to contain the extra stroke.
+                var fullSymbolizer = new OpenLayers.Symbolizer[subType]({checked: false});
+                var newNode = this.loader.createSymbolizerPropertyGroup(fullSymbolizer, type, true);
                 node.parentNode.appendChild(newNode);
                 this.createSwatches(newNode);
             }
