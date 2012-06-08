@@ -137,6 +137,16 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
         r.update({symbolizers: [symbolizer]});
     },
 
+    notifyLoader: function(node, checked) {
+        if (checked) {
+            var className = node.parentNode.attributes.symbolizer.CLASS_NAME;
+            var subType = className.substr(className.lastIndexOf(".")+1);
+            var symbolizer = new OpenLayers.Symbolizer[subType]({checked: false});
+            var newNode = this.loader.addSymbolizer(this.getRootNode(), symbolizer);
+            this.createSwatches(newNode);
+        }
+    },
+
     /** private: method[onCheckChange]
      *  :arg node: ``Ext.data.Node``
      *  :arg checked: ``Boolean``
@@ -145,6 +155,7 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
      *  swatches.
      */
     onCheckChange: function(node, checked) {
+        this.notifyLoader(node, checked);
         var a = node.attributes;
         var type = a.type.toLowerCase();
         var symbolizer = a.symbolizer;
@@ -184,14 +195,18 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
      */
     afterRender: function() {
         gxp.grid.SymbolizerGrid.superclass.afterRender.call(this);
-        this.root.cascade(function(node) {
+        this.createSwatches(this.root);
+    },
+
+    createSwatches: function(rootNode) {
+        rootNode.cascade(function(node) {
             if (node.attributes.rendererId) {
                 var ct = Ext.get(node.attributes.rendererId);
                 if (ct) {
                     node.attributes.featureRenderer = new GeoExt.FeatureRenderer({
                         symbolizers: [node.attributes.symbolizer],
-                        renderTo: ct, 
-                        width:21, 
+                        renderTo: ct,
+                        width:21,
                         height: 21
                     });
                 }
