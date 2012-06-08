@@ -434,6 +434,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                 symbolizers.push(new OpenLayers.Symbolizer.Point({checked: false}));
             }
         }
+        symbolizers.push(new OpenLayers.Symbolizer[this.symbolType]({checked: false}));
         return symbolizers;
     },
 
