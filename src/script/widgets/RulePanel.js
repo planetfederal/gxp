@@ -497,6 +497,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                             this.properties.add({
                                 listeners: {
                                     change: function(symbolizer) {
+                                        node.getUI().toggleCheck(true);
                                         this.grid.updateSwatch(node, symbolizer);
                                     },
                                     scope: this
