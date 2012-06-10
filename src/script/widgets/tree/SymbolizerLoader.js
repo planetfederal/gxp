@@ -45,15 +45,87 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
             while (node.firstChild) {
                 node.removeChild(node.firstChild);
             }
-            for (var i=0, ii=this.symbolizers.length;i<ii;++i) {
+            // we need to group symbolizers per type, since we only
+            // want one of them to show up in UI
+            var symbolizers = {
+                'Polygon': [],
+                'Line': [],
+                'Point': [],
+                'Text': []
+            };
+            var i, ii;
+            for (i=0, ii=this.symbolizers.length;i<ii;++i) {
                 var symbolizer = this.symbolizers[i];
-                this.addSymbolizer(node, symbolizer);
+                var className = symbolizer.CLASS_NAME;
+                var type = className.substr(className.lastIndexOf(".")+1);
+                symbolizers[type].push(symbolizer);
+            }
+            var types = {
+                'Polygon': ['Polygon', 'Point', 'Text'],
+                'Line': ['Line', 'Text'],
+                'Point': ['Point', 'Text'],
+                'Text': ['Text']
+            };
+            var typesNeeded = types[this.symbolType];
+            for (i=0, ii=typesNeeded.length; i<ii; ++i) {
+                if (symbolizers[typesNeeded[i]].length === 0) {
+                    // we should create one
+                    symbolizers[typesNeeded[i]].push(new OpenLayers.Symbolizer[typesNeeded[i]]());
+                }
+            }
+            for (var key in symbolizers) {
+                if (symbolizers[key].length > 0) {
+                    var id = Ext.id();
+                    var child = this.createNode({
+                        type: key,
+                        expanded: true,
+                        rendererId: id,
+                        iconCls: 'gxp-icon-symbolgrid-' + key.toLowerCase(),
+                        preview: this.divTpl.applyTemplate({id: id})
+                    });
+                    for (var j=0, jj=symbolizers[key].length; j<jj; ++j) {
+                        var split = this.splitSymbolizer(symbolizers[key][j]);
+                        for (var s in split) {
+                            id = Ext.id();
+                            child.appendChild(this.createNode({
+                                type: s,
+                                checked: true,
+                                iconCls: "gxp-icon-symbolgrid-none",
+                                symbolizer: split[s],
+                                rendererId: id,
+                                preview: this.divTpl.applyTemplate({id: id})
+                            }));
+                        }
+                    }
+                    node.appendChild(child);
+                }
             }
             if(typeof callback == "function"){
                 callback();
             }
             this.fireEvent("load", this, node);
         }
+    },
+
+    splitSymbolizer: function(symbolizer) {
+        var result = {};
+        if (symbolizer instanceof OpenLayers.Symbolizer.Polygon) {
+            // split up in stroke and fill object hashes
+            result.Fill = {
+                stroke: false,
+                fillColor: symbolizer.fillColor,
+                fillOpacity: symbolizer.fillOpacity
+            };
+            result.Stroke = {
+                fill: false,
+                strokeColor: symbolizer.strokeColor,
+                strokeOpacity: symbolizer.strokeOpacity,
+                strokeWidth: symbolizer.strokeWidth,
+                strokeLinecap: symbolizer.strokeLinecap,
+                strokeDashstyle: symbolizer.strokeDashstyle
+            };
+        }
+        return result;
     },
 
     createSymbolizerPropertyGroup: function(fullSymbolizer, type, dummy) {

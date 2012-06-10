@@ -401,7 +401,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
         };
     },
 
-    adjustSymbolizers: function() {
+/*    adjustSymbolizers: function() {
         var symbolizers = [];
         var i, ii;
         for (i=0, ii=this.rule.symbolizers.length; i<ii; ++i) {
@@ -435,7 +435,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
             }
         }
         return symbolizers;
-    },
+    },*/
 
     /** private: method[createSymbolizerPanel]
      */
@@ -462,7 +462,8 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
             {draw: this.symbolizerSwatch.rendered}
         );
 
-        var symbolizers = this.adjustSymbolizers();
+        var symbolizers = this.rule.symbolizers;
+//this.adjustSymbolizers();
 
         var cfg = {
             xtype: 'panel',
@@ -479,6 +480,8 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                 items: [{
                     xtype: "gxp_symbolgrid",
                     ref: "../../grid",
+                    symbolType: this.symbolType,
+                    tbar: [{text: 'foo', handler: function() { console.log(this.grid.getSymbolizers()); }, scope: this}],
                     autoScroll: true,
                     symbolizers: symbolizers,
                     height: 150,

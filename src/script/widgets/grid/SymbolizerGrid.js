@@ -30,6 +30,8 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
      */
     symbolizers: null,
 
+    symbolType: null,
+
     /** private overrides */
     enableHdMenu: false,
     enableSort: false,
@@ -47,7 +49,8 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
     initComponent: function() {
         this.on('checkchange', this.onCheckChange, this);
         this.loader = new gxp.tree.SymbolizerLoader({
-            symbolizers: this.symbolizers
+            symbolizers: this.symbolizers,
+            symbolType: this.symbolType
         });
         this.columns = [{
             header: this.typeTitle,
