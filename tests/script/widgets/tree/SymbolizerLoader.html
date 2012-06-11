@@ -27,10 +27,6 @@
                 strokeColor: "red",
                 strokeWidth: 1
             }));
-            symbolizers.push(new OpenLayers.Symbolizer.Line({
-                strokeColor: "#669900",
-                strokeWidth: 3
-            }));
             symbolizers.push(new OpenLayers.Symbolizer.Polygon({
                 fillColor: "olive",
                 fillOpacity: 0.25,
@@ -60,7 +56,7 @@
 
         function test_load(t) {
             t.plan(15);
-            var loader = new gxp.tree.SymbolizerLoader({symbolizers: createSymbolizers()});
+            var loader = new gxp.tree.SymbolizerLoader({symbolType: "Polygon", symbolizers: createSymbolizers()});
             var root = new Ext.tree.TreeNode();
             var log = [];
             loader.load(root, function() {
@@ -69,7 +65,7 @@
                         log.push(node);
                     }
                 });
-                t.eq(log.length, 11, "We expect 11 nodes");
+                t.eq(log.length, 10, "We expect 10 nodes");
                 t.eq(log[0].attributes.type, "Point", "Correct type");
                 t.eq(log[1].attributes.type, "Stroke", "Correct subType created");
                 t.eq(log[2].attributes.type, "Fill", "Correct subType created");
