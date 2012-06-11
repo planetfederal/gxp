@@ -200,6 +200,16 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                     preview: this.divTpl.applyTemplate({id: id})
                 });
                 node.parentNode.appendChild(child);
+                node.parentNode.sort(function(node1, node2) {
+                    if (node1.attributes.type === 'Stroke' && node2.attributes.type === 'Fill') {
+                        return -1;
+                    }
+                    else if (node1.attributes.type === 'Fill' && node2.attributes.type === 'Stroke') {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                });
                 this.fireEvent("nodeadded", this, child);
             }
         }
