@@ -70,7 +70,7 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
             for (i=0, ii=typesNeeded.length; i<ii; ++i) {
                 if (symbolizers[typesNeeded[i]].length === 0) {
                     // we should create one
-                    symbolizers[typesNeeded[i]].push(new OpenLayers.Symbolizer[typesNeeded[i]]());
+                    symbolizers[typesNeeded[i]].push(new OpenLayers.Symbolizer[typesNeeded[i]]({checked: false}));
                 }
             }
             for (var key in symbolizers) {
@@ -85,6 +85,10 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                         preview: this.divTpl.applyTemplate({id: id})
                     });
                     for (var j=0, jj=symbolizers[key].length; j<jj; ++j) {
+                        var overrides = {};
+                        if (symbolizers[key][j].checked === false) {
+                            overrides.checked = false;
+                        }
                         var split = this.splitSymbolizer(symbolizers[key][j]);
                         for (var s in split) {
                             id = Ext.id();
@@ -96,7 +100,7 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                                 symbolizer: split[s],
                                 rendererId: id,
                                 preview: this.divTpl.applyTemplate({id: id})
-                            }));
+                            }, overrides));
                         }
                     }
                     node.appendChild(child);
@@ -111,7 +115,7 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
 
     splitSymbolizer: function(symbolizer) {
         var result = {};
-        if (symbolizer instanceof OpenLayers.Symbolizer.Polygon) {
+        if (symbolizer instanceof OpenLayers.Symbolizer.Polygon || symbolizer instanceof OpenLayers.Symbolizer.Point) {
             // split up in stroke and fill object hashes
             result.Fill = {
                 stroke: false,
@@ -126,6 +130,17 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                 strokeLinecap: symbolizer.strokeLinecap,
                 strokeDashstyle: symbolizer.strokeDashstyle
             };
+        } else if (symbolizer instanceof OpenLayers.Symbolizer.Line) {
+            result.Stroke = {
+                fill: false,
+                strokeColor: symbolizer.strokeColor,
+                strokeOpacity: symbolizer.strokeOpacity,
+                strokeWidth: symbolizer.strokeWidth,
+                strokeLinecap: symbolizer.strokeLinecap,
+                strokeDashstyle: symbolizer.strokeDashstyle
+            };
+        } else if (symbolizer instanceof OpenLayers.Symbolizer.Text) {
+            result.Label = Ext.apply({}, symbolizer);
         }
         return result;
     },

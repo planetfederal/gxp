@@ -487,10 +487,10 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                     listeners: {
                         click: function(node) {
                             var type = node.attributes.type;
-                            if (node.attributes.originalSymbolizer) {
-                                this.properties.setTitle(type + ' ' + this.symbolizerPropertiesSuffix);
-                            } else {
+                            if (node.parentNode.attributes.type) {
                                 this.properties.setTitle(node.parentNode.attributes.type + " " + type + " " + this.propertiesSuffix);
+                            } else {
+                                this.properties.setTitle(type + ' ' + this.symbolizerPropertiesSuffix);
                             }
                             this.properties.items.each(function(item) {
                                 this.remove(item, true);

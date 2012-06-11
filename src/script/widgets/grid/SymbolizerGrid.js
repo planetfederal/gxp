@@ -122,7 +122,9 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
      */
     updateSwatch: function(node, newSymbolizer) {
         node.attributes.featureRenderer.drawFeature();
-        node.parentNode.attributes.featureRenderer.drawFeature();
+        if (node.parentNode.attributes.featureRenderer) {
+            node.parentNode.attributes.featureRenderer.drawFeature();
+        }
         if (newSymbolizer) {
             this.fireEvent("change", this);
         }
