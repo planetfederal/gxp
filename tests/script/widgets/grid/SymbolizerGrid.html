@@ -27,10 +27,6 @@
                 strokeColor: "red",
                 strokeWidth: 1
             }));
-            symbolizers.push(new OpenLayers.Symbolizer.Line({
-                strokeColor: "#669900",
-                strokeWidth: 3
-            }));
             symbolizers.push(new OpenLayers.Symbolizer.Polygon({
                 fillColor: "olive",
                 fillOpacity: 0.25,
@@ -52,7 +48,7 @@
         function test_SymbolizerGrid(t) {
             t.plan(1);
             
-            var instance = new gxp.grid.SymbolizerGrid({symbolizers: createSymbolizers()});
+            var instance = new gxp.grid.SymbolizerGrid({symbolizers: createSymbolizers(), symbolType: 'Polygon'});
             
             t.ok(instance instanceof gxp.grid.SymbolizerGrid, "Instance created successfully");
             instance.destroy();
@@ -60,9 +56,9 @@
 
         function test_getSymbolizers(t) {
             t.plan(2);
-            var instance = new gxp.grid.SymbolizerGrid({renderTo: Ext.getBody(), symbolizers: createSymbolizers()});
+            var instance = new gxp.grid.SymbolizerGrid({renderTo: Ext.getBody(), symbolizers: createSymbolizers(), symbolType: 'Polygon'});
             instance.render();
-            t.eq(instance.getSymbolizers().length, 4, "All symbolizers returned");
+            t.eq(instance.getSymbolizers().length, 3, "All symbolizers returned");
             instance.root.eachChild(function(node) {
                 var type = node.attributes.type;
                 node.eachChild(function(n) {
@@ -71,7 +67,7 @@
                     }
                 });
             });
-            t.eq(instance.getSymbolizers().length, 3, "Point symbolizer excluded since all children are unchecked");
+            t.eq(instance.getSymbolizers().length, 2, "Point symbolizer excluded since all children are unchecked");
             instance.destroy();
         }
 
