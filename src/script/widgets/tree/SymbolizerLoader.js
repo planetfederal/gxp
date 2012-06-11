@@ -48,33 +48,57 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
             // we need to group symbolizers per type, since we only
             // want one of them to show up in UI
             var symbolizers = {
-                'Polygon': [],
-                'Line': [],
-                'Point': [],
-                'Text': []
+                Polygon: {
+                    empty: true,
+                    Stroke: [],
+                    Fill: []
+                },
+                Line: {
+                    empty: true,
+                    Stroke: []
+                },
+                Point: {
+                    empty: true,
+                    Stroke: [],
+                    Fill: []
+                },
+                Text: {
+                    empty: true,
+                    Label: []
+                }
             };
-            var i, ii;
+            var i, ii, split, s;
             for (i=0, ii=this.symbolizers.length;i<ii;++i) {
                 var symbolizer = this.symbolizers[i];
                 var className = symbolizer.CLASS_NAME;
                 var type = className.substr(className.lastIndexOf(".")+1);
-                symbolizers[type].push(symbolizer);
+                split = this.splitSymbolizer(symbolizer);
+                for (s in split) {
+                    symbolizers[type].empty = false;
+                    symbolizers[type][s].push(split[s]);
+                }
             }
             var types = {
-                'Polygon': ['Polygon', 'Point', 'Text'],
-                'Line': ['Line', 'Text'],
-                'Point': ['Point', 'Text'],
-                'Text': ['Text']
+                Polygon: ['Polygon', 'Point', 'Text'],
+                Line: ['Line', 'Text'],
+                Point: ['Point', 'Text'],
+                Text: ['Text']
             };
             var typesNeeded = types[this.symbolType];
             for (i=0, ii=typesNeeded.length; i<ii; ++i) {
-                if (symbolizers[typesNeeded[i]].length === 0) {
+                if (symbolizers[typesNeeded[i]].empty || typesNeeded[i] === this.symbolType) {
                     // we should create one
-                    symbolizers[typesNeeded[i]].push(new OpenLayers.Symbolizer[typesNeeded[i]]({checked: false}));
+                    var sym = new OpenLayers.Symbolizer[typesNeeded[i]]();
+                    split = this.splitSymbolizer(sym);
+                    for (s in split) {
+                        split[s].checked = false;
+                        symbolizers[typesNeeded[i]].empty = false;
+                        symbolizers[typesNeeded[i]][s].push(split[s]);
+                    }
                 }
             }
             for (var key in symbolizers) {
-                if (symbolizers[key].length > 0) {
+                if (symbolizers[key].empty === false) {
                     var id = Ext.id();
                     var child = this.createNode({
                         type: key,
@@ -84,20 +108,21 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                         iconCls: 'gxp-icon-symbolgrid-' + key.toLowerCase(),
                         preview: this.divTpl.applyTemplate({id: id})
                     });
-                    for (var j=0, jj=symbolizers[key].length; j<jj; ++j) {
-                        var overrides = {};
-                        if (symbolizers[key][j].checked === false) {
-                            overrides.checked = false;
-                        }
-                        var split = this.splitSymbolizer(symbolizers[key][j]);
-                        for (var s in split) {
+                    for (var subKey in symbolizers[key]) {
+                        for (var k=0, kk=symbolizers[key][subKey].length; k<kk; ++k) {
+                            var overrides = {};
+                            if (symbolizers[key][subKey][k].checked === false) {
+                                overrides.checked = false;
+                            }
                             id = Ext.id();
-                            child.attributes.symbolizer.push(split[s]);
+                            if (overrides.checked !== false) {
+                                child.attributes.symbolizer.push(symbolizers[key][subKey][k]);
+                            }
                             child.appendChild(this.createNode({
-                                type: s,
+                                type: subKey,
                                 checked: true,
                                 iconCls: "gxp-icon-symbolgrid-none",
-                                symbolizer: split[s],
+                                symbolizer: symbolizers[key][subKey][k],
                                 rendererId: id,
                                 preview: this.divTpl.applyTemplate({id: id})
                             }, overrides));
