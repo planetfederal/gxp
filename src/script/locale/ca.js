@@ -1,3 +1,6 @@
+/**
+ * @requires GeoExt/Lang.js
+ */
 
 GeoExt.Lang.add("ca", {
 
@@ -38,12 +41,11 @@ GeoExt.Lang.add("ca", {
         previousPageTip: "Pàgina anterior",
         zoomPageExtentTip: "Ajusta vista a l'extensió de la pàgina",
         nextPageTip: "Pàgina següent",
-        nextPageTip: "Pàgina anterior",
+        lastPageTip: "Pàgina anterior",
         totalMsg: "Total: {0} records"
     },
 
     "gxp.plugins.GoogleEarth.prototype": { 
-        apiKeyPrompt: "Please enter the Google API key for ",
         menuText: "Vista 3D",
         tooltip: "Vista 3D"
     },
@@ -62,8 +64,13 @@ GeoExt.Lang.add("ca", {
     },
     
     "gxp.plugins.LayerTree.prototype": {
+        shortTitle: "Capes",
         rootNodeText: "Capes",
         overlayNodeText: "Capes addicionals",
+        baseNodeText: "Capa base"
+    },
+
+    "gxp.plugins.LayerManager.prototype": {
         baseNodeText: "Capa base"
     },
 
@@ -304,7 +311,9 @@ GeoExt.Lang.add("ca", {
         transparentText: "Transparent",
         cacheText: "Caché",
         cacheFieldText: "Utiliza la versió en caché",
-        stylesText: "Estils"
+        stylesText: "Estils",
+        infoFormatText: "Info format",
+        infoFormatEmptyText: "Select a format"
     },
 
     "gxp.EmbedMapDialog.prototype": {
@@ -359,10 +368,10 @@ GeoExt.Lang.add("ca", {
         workspaceLabel: "Espai de treball",
         workspaceEmptyText: "Espai de treball per defecte",
         dataStoreLabel: "Magatzem",
-        dataStoreEmptyText: "Magatzem de dades per defecte"
+        dataStoreEmptyText: "Create new store"
     },
     
-    "gxp.NewSourceWindow.prototype": {
+    "gxp.NewSourceDialog.prototype": {
         title: "Afegeix Servidor...",
         cancelText: "Cancel·la",
         addServerText: "Afegeix Servidor",

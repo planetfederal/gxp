@@ -3,6 +3,7 @@ var mapPanel;
 Ext.onReady(function() {
     
     var map = new OpenLayers.Map({
+        theme: null,
         allOverlays: true
     });    
 

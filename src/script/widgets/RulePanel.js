@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -308,7 +308,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                     }
                 }]
             }];
-        };
+        }
         this.items[0].autoHeight = true;
 
         this.addEvents(
@@ -353,7 +353,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
     getTextSymbolizer: function() {
         var symbolizer = this.hasTextSymbolizer();
         if (!symbolizer) {
-            symbolizer = new OpenLayers.Symbolizer.Text();
+            symbolizer = new OpenLayers.Symbolizer.Text({graphic: false});
         }
         return symbolizer;
     },

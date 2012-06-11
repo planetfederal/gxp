@@ -1,9 +1,14 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
+ */
+
+/**
+ * @requires GeoExt/widgets/grid/FeatureSelectionModel.js
+ * @requires GeoExt/data/FeatureStore.js
  */
 
 /** api: (define)

@@ -1,9 +1,14 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
+ */
+
+/**
+ * @requires OpenLayers/Control/ScaleLine.js
+ * @requires GeoExt/data/ScaleStore.js
  */
 
 /** api: (define)
@@ -98,6 +103,7 @@ gxp.ScaleOverlay = Ext.extend(Ext.Panel, {
         }, this);
         scaleLinePanel.on('render', function(){
             var scaleLine = new OpenLayers.Control.ScaleLine({
+                geodesic: true,
                 div: scaleLinePanel.getEl().dom
             });
 

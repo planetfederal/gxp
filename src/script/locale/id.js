@@ -1,3 +1,6 @@
+/**
+ * @requires GeoExt/Lang.js
+ */
 
 GeoExt.Lang.add("id", {
 
@@ -38,12 +41,11 @@ GeoExt.Lang.add("id", {
         previousPageTip: "Halaman sebelumnya",
         zoomPageExtentTip: "Zoom sampai batas halaman",
         nextPageTip: "Halaman berikut",
-        nextPageTip: "Halaman terakhir",
+        lastPageTip: "Halaman terakhir",
         totalMsg: "Total: {0} records"
     },
     
     "gxp.plugins.GoogleEarth.prototype": {
-        apiKeyPrompt: "Please enter the Google API key for ",
         menuText: "3D Viewer",
         tooltip: "Switch to 3D Viewer"
     },
@@ -62,8 +64,13 @@ GeoExt.Lang.add("id", {
     },
     
     "gxp.plugins.LayerTree.prototype": {
+        shortTitle: "Layer-layer",
         rootNodeText: "Layer-layer",
         overlayNodeText: "Superimposisi",
+        baseNodeText: "Layer dasar"
+    },
+
+    "gxp.plugins.LayerManager.prototype": {
         baseNodeText: "Layer dasar"
     },
 
@@ -305,7 +312,9 @@ GeoExt.Lang.add("id", {
         transparentText: "Transparent",
         cacheText: "Cache",
         cacheFieldText: "Menggunakan versi cached",
-        stylesText: "Styles"
+        stylesText: "Styles",
+        infoFormatText: "Info format",
+        infoFormatEmptyText: "Select a format"
     },
 
     "gxp.EmbedMapDialog.prototype": {
@@ -360,10 +369,10 @@ GeoExt.Lang.add("id", {
         workspaceLabel: "Ruang Kerja",
         workspaceEmptyText: "Ruang kerja Default",
         dataStoreLabel: "Penyimpanan",
-        dataStoreEmptyText: "Penyimpanan data Default"
+        dataStoreEmptyText: "Create new store"
     },
     
-    "gxp.NewSourceWindow.prototype": {
+    "gxp.NewSourceDialog.prototype": {
         title: "Add New Server...",
         cancelText: "Cancel",
         addServerText: "Add Server",

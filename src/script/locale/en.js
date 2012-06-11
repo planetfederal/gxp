@@ -1,3 +1,6 @@
+/**
+ * @requires GeoExt/Lang.js
+ */
 
 GeoExt.Lang.add("en", {
 
@@ -17,7 +20,7 @@ GeoExt.Lang.add("en", {
         panelTitleText: "Title",
         layerSelectionText: "View available data from:",
         doneText: "Done",
-        uploadText: "Upload Data"
+        uploadText: "Upload layers"
     },
     
     "gxp.plugins.BingSource.prototype": {
@@ -38,12 +41,11 @@ GeoExt.Lang.add("en", {
         previousPageTip: "Previous page",
         zoomPageExtentTip: "Zoom to page extent",
         nextPageTip: "Next page",
-        nextPageTip: "Last page",
+        lastPageTip: "Last page",
         totalMsg: "Total: {0} records"
     },
 
     "gxp.plugins.GoogleEarth.prototype": {
-        apiKeyPrompt: "Please enter the Google API key for ",
         menuText: "3D Viewer",
         tooltip: "Switch to 3D Viewer"
     },
@@ -62,6 +64,7 @@ GeoExt.Lang.add("en", {
     },
     
     "gxp.plugins.LayerTree.prototype": {
+        shortTitle: "Layers",
         rootNodeText: "Layers",
         overlayNodeText: "Overlays",
         baseNodeText: "Base Layers"
@@ -305,7 +308,9 @@ GeoExt.Lang.add("en", {
         transparentText: "Transparent",
         cacheText: "Cache",
         cacheFieldText: "Use cached version",
-        stylesText: "Styles"
+        stylesText: "Styles",
+        infoFormatText: "Info format",
+        infoFormatEmptyText: "Select a format"
     },
 
     "gxp.EmbedMapDialog.prototype": {
@@ -360,10 +365,10 @@ GeoExt.Lang.add("en", {
         workspaceLabel: "Workspace",
         workspaceEmptyText: "Default workspace",
         dataStoreLabel: "Store",
-        dataStoreEmptyText: "Default datastore"
+        dataStoreEmptyText: "Create new store"
     },
     
-    "gxp.NewSourceWindow.prototype": {
+    "gxp.NewSourceDialog.prototype": {
         title: "Add New Server...",
         cancelText: "Cancel",
         addServerText: "Add Server",

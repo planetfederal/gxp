@@ -1,9 +1,13 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
+ */
+
+/**
+ * @requires util.js
  */
 
 /** api: (define)
@@ -11,9 +15,6 @@
  *  class = WMSRasterStylesDialog
  */
 
-/** api: (extends)
- *  plugins/Tool.js
- */
 Ext.namespace("gxp.plugins");
 
 /** api: constructor

@@ -52,6 +52,9 @@ Ext.onReady(function() {
             ptype: "gxp_removelayer",
             actionTarget: ["tree.tbar", "tree.contextMenu"]
         }, {
+            ptype: "gxp_layerproperties",
+            actionTarget: ["tree.tbar", "tree.contextMenu"]
+        }, {
             ptype: "gxp_zoomtoextent",
             actionTarget: "map.tbar"
         }, {
@@ -69,6 +72,11 @@ Ext.onReady(function() {
             actionTarget: "map.tbar", // this is the default, could be omitted
             toggleGroup: "layertools"
         }, {
+            ptype: "gxp_mapproperties",
+            outputConfig: {
+                title: 'Map properties'
+            }
+        }, {
             // shared FeatureManager for feature editing, grid and querying
             ptype: "gxp_featuremanager",
             id: "featuremanager",
@@ -76,7 +84,7 @@ Ext.onReady(function() {
         }, {
             ptype: "gxp_featureeditor",
             featureManager: "featuremanager",
-            autoLoadFeatures: true, // no need to "check out" features
+            autoLoadFeature: true, // no need to "check out" features
             outputConfig: {panIn: false},
             toggleGroup: "layertools"
         }, {
@@ -108,8 +116,11 @@ Ext.onReady(function() {
                 url: "/geoserver/wms",
                 version: "1.1.1"
             },
-            google: {
-                ptype: "gxp_googlesource"
+            mapquest: {
+                ptype: "gxp_mapquestsource"
+            },
+            ol: {
+                ptype: "gxp_olsource"
             }
         },
         
@@ -119,16 +130,25 @@ Ext.onReady(function() {
             title: "Map",
             projection: "EPSG:900913",
             units: "m",
-            maxResolution: 156543.0339,
+            maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
             center: [-10764594.758211, 4523072.3184791],
             zoom: 3,
             layers: [{
-                source: "google",
-                name: "TERRAIN",
+                source: "ol",
+                type: "OpenLayers.Layer",
+                args: ["Blank"],
+                visibility: false,
+                group: "background"
+            }, {
+                source: "mapquest",
+                name: "osm",
                 group: "background"
             }, {
                 source: "local",
                 name: "usa:states",
+                title: "States, USA - Population",
+                queryable: true,
+                bbox: [-13884991.404203, 2870341.1822503, -7455066.2973878, 6338219.3590349],
                 selected: true
             }],
             items: [{

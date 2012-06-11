@@ -14,19 +14,24 @@ Ext.onReady(function() {
     vectorLayer.addFeatures(
         new OpenLayers.Feature.Vector(
             new OpenLayers.Geometry.Point(-45, 5), {
-                "foo": "bar"}
+                "foo": "bar", "altitude": 500, "startdate": "2012-01-06"}
         )
     );
 
     // create select feature control
     var selectCtrl = new OpenLayers.Control.SelectFeature(vectorLayer, {clickout: false});
 
+    var schema = new GeoExt.data.AttributeStore({
+        data: [{name: "foo", type: "xsd:string"}, {name: "altitude", type: "xsd:int"}, {name: "startdate", type: "xsd:date"}]
+    });
+
     // define "createPopup" function
-    var bogusMarkup = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit.";
     function createPopup(feature) {
         popup = new gxp.FeatureEditPopup({
+            editorPluginConfig: {ptype: "gxp_editorform", labelWidth: 50, defaults: {width: 100}, bodyStyle: "padding: 5px 5px 0"},
             feature: feature,
-            width:150,
+            schema: schema,
+            width: 200,
             height: 150,
             collapsible: true,
             listeners: {
@@ -63,6 +68,7 @@ Ext.onReady(function() {
         items: {
             xtype: "gx_mappanel",
             region: "center",
+            map: {theme: null},
             layers: [
                 new OpenLayers.Layer.WMS( 
                     "OpenLayers WMS",

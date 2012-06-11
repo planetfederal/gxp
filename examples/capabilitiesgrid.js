@@ -5,8 +5,7 @@ Ext.onReady(function() {
         })
     });
 
-    insert(metaStore, '/proxy?' + 
-        Ext.urlEncode({'url': 'http://demo.opengeo.org/geoserver/ows?request=GetCapabilities&service=WMS'}));
+    insert(metaStore, '/geoserver/ows?request=GetCapabilities&service=WMS');
 
     var grid = new gxp.grid.CapabilitiesGrid({
         renderTo: 'showGrid',
@@ -16,10 +15,7 @@ Ext.onReady(function() {
         plugins: [],
         store: metaStore.getAt(0).get("store"),
         metaStore: metaStore,
-        addSource: function(url, success, failure, scope) {
-            url = '/proxy?' + Ext.urlEncode({'url': url +'?'+ Ext.urlEncode({'service':'WMS', 'request':'GetCapabilities'})});
-            gxp.grid.CapabilitiesGrid.prototype.addSource.call(this, url, success, failure, scope);
-        }
+        allowNewSources: false
     });
 });
 

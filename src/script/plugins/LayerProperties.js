@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -58,7 +58,7 @@ gxp.plugins.LayerProperties = Ext.extend(gxp.plugins.Tool, {
         
         if (!this.outputConfig) {
             this.outputConfig = {
-                width: 265,
+                width: 325,
                 autoHeight: true
             };
         }
@@ -94,6 +94,7 @@ gxp.plugins.LayerProperties = Ext.extend(gxp.plugins.Tool, {
         var origCfg = this.initialConfig.outputConfig || {};
         this.outputConfig.title = origCfg.title ||
             this.menuText + ": " + record.get("title");
+        this.outputConfig.shortTitle = record.get("title");
         
         //TODO create generic gxp_layerpanel
         var xtype = record.get("properties") || "gxp_layerpanel";

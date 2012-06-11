@@ -1,13 +1,14 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
 
 /**
  * @requires plugins/LayerSource.js
+ * @requires OpenLayers/Layer/OSM.js
  */
 
 /** api: (define)
@@ -91,7 +92,8 @@ gxp.plugins.OSMSource = Ext.extend(gxp.plugins.LayerSource, {
             maxResolution: 156543.03390625,
             numZoomLevels: 19,
             units: "m",
-            buffer: 1
+            buffer: 1,
+            transitionEffect: "resize"
         };
         
         var layers = [
@@ -105,18 +107,6 @@ gxp.plugins.OSMSource = Ext.extend(gxp.plugins.LayerSource, {
                 OpenLayers.Util.applyDefaults({                
                     attribution: this.mapnikAttribution,
                     type: "mapnik"
-                }, options)
-            ),
-            new OpenLayers.Layer.OSM(
-                "Tiles@home",
-                [
-                    "http://a.tah.openstreetmap.org/Tiles/tile/${z}/${x}/${y}.png",
-                    "http://b.tah.openstreetmap.org/Tiles/tile/${z}/${x}/${y}.png",
-                    "http://c.tah.openstreetmap.org/Tiles/tile/${z}/${x}/${y}.png"
-                ],
-                OpenLayers.Util.applyDefaults({                
-                    attribution: this.osmarenderAttribution,
-                    type: "osmarender"
                 }, options)
             )
         ];

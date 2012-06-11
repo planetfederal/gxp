@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -33,13 +33,14 @@ Ext.namespace("gxp.plugins");
   *  .. code-block:: javascript
   *
   *    tools: [{
-  *        ptype: "gxp_selectedFeatureActions",
+  *        ptype: "gxp_selectedfeatureactions",
   *        featureManager: "myfeaturemanager",
   *        actionTarget: "featuregrid.contextMenu",
   *        actions: [{
   *            menuText: "Search for title",
   *            urlTemplate: "http://google.com/search?q={title}",
   *            iconCls: "google-icon"
+  *        }]
   *        }
   *        //...
   *    ]

@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -56,9 +56,12 @@ gxp.plugins.ZoomToLayerExtent = Ext.extend(gxp.plugins.ZoomToExtent, {
     /** api: method[extent]
      */
     extent: function() {
-        var layer = this.selectedRecord.getLayer();
-        var dataExtent = layer instanceof OpenLayers.Layer.Vector &&
-            layer.getDataExtent();
+        var layer = this.selectedRecord.getLayer(),
+            dataExtent;
+        if (OpenLayers.Layer.Vector) {
+            dataExtent = layer instanceof OpenLayers.Layer.Vector &&
+                layer.getDataExtent();
+        }
         return layer.restrictedExtent || dataExtent || layer.maxExtent || map.maxExtent;
     },
 

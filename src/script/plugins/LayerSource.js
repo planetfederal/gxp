@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -33,6 +33,12 @@ gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
      *  ``Object``
      *  The object that this plugin is plugged into.
      */
+    
+    /** api: property[lazy]
+     *  ``Boolean``. true when the source is ready, but its store hasn't
+     *  been loaded yet (i.e. lazy source). Read-only.
+     */
+    lazy: false,
      
     /** api: property[title]
      *  ``String``
@@ -138,6 +144,16 @@ gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
             fixed: record.get("fixed"),
             selected: record.get("selected")
         };
-    }
+    },
     
+    /** api: method[getState]
+     *  :returns: ``Object``
+     *
+     *  Gets the configured source state.
+     */
+    getState: function() {
+        //  Overwrite in subclasses to return anything other than a copy
+        // of the initialConfig property.
+        return Ext.apply({}, this.initialConfig);
+    }
 });

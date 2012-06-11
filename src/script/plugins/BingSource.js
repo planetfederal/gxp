@@ -1,13 +1,14 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
 
 /**
  * @requires plugins/LayerSource.js
+ * @requires OpenLayers/Layer/Bing.js
  */
 
 /** api: (define)
@@ -100,19 +101,22 @@ gxp.plugins.BingSource = Ext.extend(gxp.plugins.LayerSource, {
                 key: this.apiKey,
                 name: this.roadTitle,
                 type: "Road",
-                buffer: 1
+                buffer: 1,
+                transitionEffect: "resize"
             }),
             new OpenLayers.Layer.Bing({
                 key: this.apiKey,
                 name: this.aerialTitle,
                 type: "Aerial",
-                buffer: 1
+                buffer: 1,
+                transitionEffect: "resize"
             }),
             new OpenLayers.Layer.Bing({
                 key: this.apiKey,
                 name: this.labeledAerialTitle,
                 type: "AerialWithLabels",
-                buffer: 1
+                buffer: 1,
+                transitionEffect: "resize"
             })
         ];
         
@@ -174,7 +178,7 @@ gxp.plugins.BingSource = Ext.extend(gxp.plugins.LayerSource, {
 
             record.data.layer = layer;
             record.commit();
-        };
+        }
         return record;
     }
 

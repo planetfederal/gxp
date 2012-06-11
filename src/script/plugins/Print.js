@@ -1,13 +1,14 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
 
 /**
  * @requires plugins/Tool.js
+ * @requires GeoExt/data/PrintProvider.js
  */
 
 /** api: (define)
@@ -23,7 +24,8 @@ Ext.namespace("gxp.plugins");
 /** api: constructor
  *  .. class:: Print(config)
  *
- *    Provides an action to print the map.
+ *    Provides an action to print the map. Requires GeoExt.ux.PrintPreview,
+ *    which is currently mirrored at git://github.com/GeoNode/PrintPreview.git.
  */
 gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
     
@@ -32,9 +34,17 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
 
     /** api: config[printService]
      *  ``String``
-     *  URL of the print service.
+     *  URL of the print service. Specify either printService
+     *  or printCapabilities.
      */
     printService: null,
+
+    /** api: config[printCapabilities]
+     *  ``Object``
+     *  Capabilities object of the print service. Specify either printService
+     *  or printCapabilities.
+     */
+    printCapabilities: null,
 
     /** api: config[customParams]
      *  ``Object`` Key-value pairs of custom data to be sent to the print
@@ -42,6 +52,11 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      *  on the server side that require additional parameters.
      */
     customParams: null,
+
+    /** api: config[includeLegend]
+     *  ``Boolean`` Should we include the legend in the print? Defaults to false.
+     */
+    includeLegend: false,
 
     /** api: config[menuText]
      *  ``String``
@@ -73,6 +88,12 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      */
     previewText: "Print Preview",
 
+    /** api: config[openInNewWindow]
+     *  ``Boolean``
+     *  If true, always open in new window regardless of the browser type.
+     */
+    openInNewWindow: false,
+
     /** private: method[constructor]
      */
     constructor: function(config) {
@@ -82,15 +103,40 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
     /** api: method[addActions]
      */
     addActions: function() {
-
         // don't add any action if there is no print service configured
-        if (this.printService !== null) {
+        if (this.printService !== null || this.printCapabilities != null) {
 
             var printProvider = new GeoExt.data.PrintProvider({
+                capabilities: this.printCapabilities,
                 url: this.printService,
                 customParams: this.customParams,
                 autoLoad: false,
                 listeners: {
+                    beforedownload: function(provider, url) {
+                        if (this.openInNewWindow === true) {
+                            window.open(url);
+                            return false;
+                        }
+                    },
+                    beforeencodelegend: function(provider, jsonData, legend) {
+                        if (legend && legend.ptype === "gxp_layermanager") {
+                            var encodedLegends = [];
+                            var output = legend.output;
+                            if (output && output[0]) {
+                                output[0].getRootNode().cascade(function(node) {
+                                    if (node.component && !node.component.hidden) {
+                                        var cmp = node.component;
+                                        var encFn = this.encoders.legends[cmp.getXType()];
+                                        encodedLegends = encodedLegends.concat(
+                                            encFn.call(this, cmp, jsonData.pages[0].scale));
+                                    }
+                                }, provider);
+                            }
+                            jsonData.legends = encodedLegends;
+                            // cancel normal encoding of legend
+                            return false;
+                        }
+                    },
                     beforeprint: function() {
                         // The print module does not like array params.
                         // TODO Remove when http://trac.geoext.org/ticket/216 is fixed.
@@ -104,8 +150,10 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                         });
                     },
                     loadcapabilities: function() {
-                        printButton.initialConfig.disabled = false;
-                        printButton.enable();
+                        if (printButton) {
+                            printButton.initialConfig.disabled = false;
+                            printButton.enable();
+                        }
                     },
                     print: function() {
                         try {
@@ -113,7 +161,11 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                         } catch (err) {
                             // TODO: improve destroy
                         }
-                    }
+                    },
+                    printException: function(cmp, response) {
+                        this.target.displayXHRTrouble && this.target.displayXHRTrouble(response);
+                    },
+                    scope: this
                 }
             });
 
@@ -121,12 +173,13 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                 menuText: this.menuText,
                 tooltip: this.tooltip,
                 iconCls: "gxp-icon-print",
-                disabled: true,
+                disabled: this.printCapabilities !== null ? false : true,
                 handler: function() {
                     var supported = getSupportedLayers();
                     if (supported.length > 0) {
-                        createPrintWindow.call(this);
+                        var printWindow = createPrintWindow.call(this);
                         showPrintWindow.call(this);
+                        return printWindow;
                     } else {
                         // no layers supported
                         Ext.Msg.alert(
@@ -144,7 +197,7 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                 }
             }]);
 
-            var printButton = this.actions[0].items[0];
+            var printButton = actions[0].items[0];
 
             var printWindow;
 
@@ -182,21 +235,49 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
             }
 
             function createPrintWindow() {
+                var legend = null;
+                if (this.includeLegend === true) {
+                    var key, tool;
+                    for (key in this.target.tools) {
+                        tool = this.target.tools[key];
+                        if (tool.ptype === "gxp_legend") {
+                            legend = tool.getLegendPanel();
+                            break;
+                        }
+                    }
+                    // if not found, look for a layer manager instead
+                    if (legend === null) {
+                        for (key in this.target.tools) {
+                            tool = this.target.tools[key];
+                            if (tool.ptype === "gxp_layermanager") {
+                                legend = tool;
+                                break;
+                            }
+                        }
+                    }
+                }
                 printWindow = new Ext.Window({
                     title: this.previewText,
                     modal: true,
                     border: false,
+                    autoHeight: true,
                     resizable: false,
                     width: 360,
                     items: [
                         new GeoExt.ux.PrintPreview({
-                            autoHeight: true,
+                            minWidth: 336,
                             mapTitle: this.target.about && this.target.about["title"],
                             comment: this.target.about && this.target.about["abstract"],
                             printMapPanel: {
+                                autoWidth: true,
+                                height: Math.min(420, Ext.get(document.body).getHeight()-150),
+                                limitScales: true,
                                 map: Ext.applyIf({
                                     controls: [
-                                        new OpenLayers.Control.Navigation(),
+                                        new OpenLayers.Control.Navigation({
+                                            zoomWheelEnabled: false,
+                                            zoomBoxEnabled: false
+                                        }),
                                         new OpenLayers.Control.PanPanel(),
                                         new OpenLayers.Control.ZoomPanel(),
                                         new OpenLayers.Control.Attribution()
@@ -212,10 +293,17 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                                     vertical: true,
                                     height: 100,
                                     aggressive: true
-                                }]
+                                }],
+                                listeners: {
+                                    afterlayout: function(evt) {
+                                        printWindow.setWidth(Math.max(360, this.getWidth() + 24));
+                                        printWindow.center();
+                                    }
+                                }
                             },
                             printProvider: printProvider,
-                            includeLegend: false,
+                            includeLegend: this.includeLegend,
+                            legend: legend,
                             sourceMap: mapPanel
                         })
                     ],
@@ -223,6 +311,7 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                         beforedestroy: destroyPrintComponents
                     }
                 });
+                return printWindow;
             }
 
             function showPrintWindow() {

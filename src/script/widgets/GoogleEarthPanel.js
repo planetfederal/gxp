@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -30,7 +30,14 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
      * work.
      */
     HORIZONTAL_FIELD_OF_VIEW: (30 * Math.PI) / 180,
-    
+
+    /** api: config[flyToSpeed]
+     *  ``Number``
+     *  Specifies the speed (0.0 to 5.0) at which the camera moves to the
+     *  target extent. Set to null to use the Google Earth default. By default
+     *  we show the target extent immediately, without flying to it.
+     */
+
     /** private: property[map]
      *  ``OpenLayers.Map``
      *  The OpenLayers map associated with this panel.  Defaults
@@ -79,7 +86,12 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
              *  will receive two arguments: this plugin and the failure code
              *  (see the Google Earth API docs for details on the failure codes).
              */
-            "pluginfailure"
+            "pluginfailure",
+            /** api: event[pluginready]
+             *  Fires when the instance is ready.  Listeners will receive one
+             *  argument: the GEPlugin instance.
+             */
+            "pluginready"
         );
 
         gxp.GoogleEarthPanel.superclass.initComponent.call(this);
@@ -95,25 +107,9 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
         this.layers = mapPanel.layers;
 
         this.projection = new OpenLayers.Projection("EPSG:4326");
-        
-        // Unfortunately, the Google Earth plugin does not like to be hidden.
-        // No matter whether you hide it through CSS visibility, CSS offsets,
-        // or CSS display = none, the Google Earth plugin will show an error
-        // message when it is re-enabled. To counteract this, we delete 
-        // the instance and create a new one each time.
-        function render() {
-            if (this.rendered) {
-                this.layerCache = {};
-                google.earth.createInstance(
-                    this.body.dom, 
-                    this.onEarthReady.createDelegate(this), 
-                    (function(code) {
-                        this.fireEvent("pluginfailure", this, code);
-                    }).createDelegate(this)
-                );
-            }
-        };
-        this.on("show", render, this);
+
+        this.on("render", this.onRenderEvent, this);
+        this.on("show", this.onShowEvent, this);
         
         this.on("hide", function() {
             if (this.earth != null) {
@@ -132,8 +128,12 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
     onEarthReady: function(object){
         this.earth = object;
         
-        // We don't want to fly. Just go to the right spot immediately.
-        this.earth.getOptions().setFlyToSpeed(this.earth.SPEED_TELEPORT);
+        if (this.flyToSpeed === undefined) {
+            // We don't want to fly. Just go to the right spot immediately.
+            this.earth.getOptions().setFlyToSpeed(this.earth.SPEED_TELEPORT);
+        } else if (this.flyToSpeed !== null) {
+            this.earth.getOptions().setFlyToSpeed(this.flyToSpeed);
+        }
         
         // Set the extent of the earth to be that shown in OpenLayers.
         this.resetCamera();
@@ -159,11 +159,59 @@ gxp.GoogleEarthPanel = Ext.extend(Ext.Panel, {
         this.layers.on("update", this.updateLayers, this);
         
         this.layers.on("add", this.updateLayers, this);
-        
+
+        this.fireEvent("pluginready", this.earth);
+
         // Set up events. Notice global google namespace.
         // google.earth.addEventListener(this.earth.getView(), 
             // "viewchangeend", 
             // this.updateMap.createDelegate(this));
+    },
+
+    /** private: method[onRenderEvent]
+     *  Unfortunately, Ext does not call show() if the component is initally
+     *  displayed, so we need to fake it.
+     *  We can't call this method onRender because Ext has already stolen
+     *  the name for internal use :-(
+     */
+
+    onRenderEvent: function() {
+        var isCard = this.ownerCt && this.ownerCt.layout instanceof Ext.layout.CardLayout;
+        if (!this.hidden && !isCard) {
+            this.onShowEvent();
+        }
+    },
+
+    /** private: method[onShowEvent]
+     *  Unfortunately, the Google Earth plugin does not like to be hidden.
+     *  No matter whether you hide it through CSS visibility, CSS offsets,
+     *  or CSS display = none, the Google Earth plugin will show an error
+     *  message when it is re-enabled. To counteract this, we delete
+     *  the instance and create a new one each time.
+     *  We can't call this method onShow because Ext has already stolen
+     *  the name for internal use :-(
+     */
+
+    onShowEvent: function() {
+        if (this.rendered) {
+            this.layerCache = {};
+            google.earth.createInstance(
+                this.body.dom,
+                this.onEarthReady.createDelegate(this),
+                (function(code) {
+                    this.fireEvent("pluginfailure", this, code);
+                }).createDelegate(this)
+            );
+        }
+    },
+
+    /**
+     */
+    beforeDestroy: function() {
+        this.layers.un("remove", this.updateLayers, this);
+        this.layers.un("update", this.updateLayers, this);
+        this.layers.un("add", this.updateLayers, this);
+        gxp.GoogleEarthPanel.superclass.beforeDestroy.call(this);
     },
 
     /** private: method[updateLayers]

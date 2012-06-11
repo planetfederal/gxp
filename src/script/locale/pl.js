@@ -1,3 +1,6 @@
+/**
+ * @requires GeoExt/Lang.js
+ */
 
 GeoExt.Lang.add("pl", {
 
@@ -44,7 +47,6 @@ GeoExt.Lang.add("pl", {
     },
     
     "gxp.plugins.GoogleEarth.prototype": {
-        apiKeyPrompt: "Podaj identyfikator klucza Google Earth dla swojej witryny",
         menuText: "Przeglądarka 3D",
         tooltip: "Przełącz do widoku 3D"
     },
@@ -63,8 +65,13 @@ GeoExt.Lang.add("pl", {
     },
     
     "gxp.plugins.LayerTree.prototype": {
+        shortTitle: "Mapa",
         rootNodeText: "Mapa",
         overlayNodeText: "Warstwy",
+        baseNodeText: "Mapa referencyjna"
+    },
+
+    "gxp.plugins.LayerManager.prototype": {
         baseNodeText: "Mapa referencyjna"
     },
 
@@ -284,7 +291,9 @@ GeoExt.Lang.add("pl", {
         transparentText: "Przeźr.",
         cacheText: "Cache",
         cacheFieldText: "Użyj wersji cache",
-        stylesText: "Style"
+        stylesText: "Style",
+        infoFormatText: "Info format",
+        infoFormatEmptyText: "Select a format"
     },
 
     "gxp.EmbedMapDialog.prototype": {
@@ -339,10 +348,10 @@ GeoExt.Lang.add("pl", {
         workspaceLabel: "Obszar roboczy",
         workspaceEmptyText: "Domyślny obszar roboczy",
         dataStoreLabel: "Magazyn danych",
-        dataStoreEmptyText: "Domyślny magazyn danych"
+        dataStoreEmptyText: "Create new store"
     },
     
-    "gxp.NewSourceWindow.prototype": {
+    "gxp.NewSourceDialog.prototype": {
         title: "Dodaj serwer...",
         cancelText: "Anuluj",
         addServerText: "Dodaj serwer",

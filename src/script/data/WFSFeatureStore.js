@@ -1,13 +1,14 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
 
 /**
- * @include data/WFSProtocolProxy.js
+ * @requires data/WFSProtocolProxy.js
+ * @requires GeoExt/data/FeatureStore.js
  */
 
 /** api: (define)

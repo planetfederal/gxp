@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -9,6 +9,12 @@
 /**
  * @requires plugins/Tool.js
  * @requires data/WFSFeatureStore.js
+ * @requires OpenLayers/StyleMap.js
+ * @requires OpenLayers/Rule.js
+ * @requires OpenLayers/Layer/Vector.js
+ * @requires OpenLayers/Renderer/SVG.js
+ * @requires OpenLayers/Renderer/VML.js
+ * @requires OpenLayers/Renderer/Canvas.js
  */
 
 /** api: (define)
@@ -408,7 +414,8 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
                 this.target.on("beforelayerselectionchange", this.setLayer, this);
             }
             if (this.layer) {
-                this.target.createLayerRecord(this.layer, this.setLayer, this);
+                var config = Ext.apply({}, this.layer);
+                this.target.createLayerRecord(config, this.setLayer, this);
             }
             this.on("layerchange", this.setSchema, this);
             return true;
@@ -457,7 +464,9 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
         var change = this.fireEvent("beforelayerchange", this, layerRecord);
         if (change !== false) {
             if (layerRecord) {
-                this.featureLayer.projection = this.getProjection(layerRecord);
+                // do not use getProjection here since we never want to use the 
+                // map's projection on the feature layer
+                this.featureLayer.projection = layerRecord.getLayer().projection;
             }
             if (layerRecord !== this.layerRecord) {
                 this.clearFeatureStore();
@@ -637,6 +646,8 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      *  :returns: ``OpenLayers.Projection``
      *
      *  Gets the appropriate projection to use for feature requests.
+     *  Use layer projection if it equals the map projection, and use the 
+     *  map projection otherwise.
      */
     getProjection: function(record) {
         var projection = this.target.mapPanel.map.getProjectionObject();
@@ -644,7 +655,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
         if (layerProj && layerProj.equals(projection)) {
             projection = layerProj;
         }
-        return layerProj;
+        return projection;
     },
     
     /** private: method[setFeatureStore]

@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
@@ -128,7 +128,7 @@ gxp.GoogleStreetViewPanel = Ext.extend(Ext.Panel, {
         gxp.GoogleStreetViewPanel.superclass.onResize.apply(this, arguments);
         if (this.panorama) {
             if (typeof this.panorama == "object") {
-                google.maps.event.trigger(this.panorama, "resize")
+                google.maps.event.trigger(this.panorama, "resize");
             }
         }
     },
@@ -140,7 +140,7 @@ gxp.GoogleStreetViewPanel = Ext.extend(Ext.Panel, {
         gxp.GoogleStreetViewPanel.superclass.setSize.apply(this, arguments);
         if (this.panorama) {
             if (typeof this.panorama == "object") {
-                google.maps.event.trigger(this.panorama, "resize")
+                google.maps.event.trigger(this.panorama, "resize");
             }
         }
     }

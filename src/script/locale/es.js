@@ -1,3 +1,6 @@
+/**
+ * @requires GeoExt/Lang.js
+ */
 
 GeoExt.Lang.add("es", {
 
@@ -38,12 +41,11 @@ GeoExt.Lang.add("es", {
         previousPageTip: "Página anterior",
         zoomPageExtentTip: "Zoom a la extensión de la página",
         nextPageTip: "Página siguiente",
-        nextPageTip: "Última página",
+        lastPageTip: "Última página",
         totalMsg: "Total: {0} records"
     },
 
     "gxp.plugins.GoogleEarth.prototype": {
-        apiKeyPrompt: "Please enter the Google API key for ",
         menuText: "Vista 3D",
         tooltip: "Vista 3D"
     },
@@ -62,8 +64,13 @@ GeoExt.Lang.add("es", {
     },
     
     "gxp.plugins.LayerTree.prototype": {
+        shortTitle: "Capas",
         rootNodeText: "Capas",
         overlayNodeText: "Capas superpuestas",
+        baseNodeText: "Capa base"
+    },
+
+    "gxp.plugins.LayerManager.prototype": {
         baseNodeText: "Capa base"
     },
 
@@ -304,7 +311,9 @@ GeoExt.Lang.add("es", {
         transparentText: "Transparente",
         cacheText: "Caché",
         cacheFieldText: "Usar la versión en caché",
-        stylesText: "Estilos"
+        stylesText: "Estilos",
+        infoFormatText: "Info format",
+        infoFormatEmptyText: "Select a format"
     },
 
     "gxp.EmbedMapDialog.prototype": {
@@ -359,10 +368,10 @@ GeoExt.Lang.add("es", {
         workspaceLabel: "Espacio de trabajo",
         workspaceEmptyText: "Espacio de trabajo por defecto",
         dataStoreLabel: "Almacén de datos",
-        dataStoreEmptyText: "Almacén de datos por defecto"
+        dataStoreEmptyText: "Create new store"
     },
     
-    "gxp.NewSourceWindow.prototype": {
+    "gxp.NewSourceDialog.prototype": {
         title: "Añadir Servidor...",
         cancelText: "Cancelar",
         addServerText: "Añadir Servidor",

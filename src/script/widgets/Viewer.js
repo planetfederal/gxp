@@ -1,9 +1,21 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
+ */
+
+/**
+ * @requires util.js
+ * @requires OpenLayers/Control/Attribution.js
+ * @requires OpenLayers/Control/ZoomPanel.js
+ * @requires OpenLayers/Control/Navigation.js
+ * @requires OpenLayers/Kinetic.js
+ * @requires OpenLayers/Control/PanPanel.js
+ * @requires GeoExt/widgets/MapPanel.js
+ * @requires GeoExt/widgets/ZoomSlider.js
+ * @requires GeoExt/widgets/tips/ZoomSliderTip.js
  */
 
 /** api: (define)
@@ -48,11 +60,21 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
     /** private: property[mapPanel]
      *  ``GeoExt.MapPanel``
      */
+
+    /** api: config[proxy]
+     * ``String`` An optional proxy url which can be used to bypass the same
+     * origin policy. This will be set as ``OpenLayers.ProxyHost``.
+     */
     
     /** api: config[mapItems]
      *  ``Array(Ext.Component)``
      *  Any items to be added to the map panel. A typical item to put on a map
      *  would be a ``GeoExt.ZoomSlider``.
+     */
+
+    /** api: config[mapPlugins]
+     *  ``Array(Ext.util.Observable)``
+     *  Any plugins to be added to the map panel, e.g. ``gxp.plugins.LoadingIndicator``.
      */
      
     /** api: config[portalConfig]
@@ -81,6 +103,9 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
      *  * items: not available - use ``mapItems`` instead
      *  * tbar: not available - use :class:`gxp.Tool` plugins to populate
      *    the tbar
+     *  * wrapDateLine: ``Boolean`` Should we wrap the dateline? Defaults to
+     *    true
+     *  * numZoomLevels: ``Integer`` The number of zoom levels to use.
      *  * layers: ``Array(Object)``. Each object has a ``source`` property
      *    referencing a :class:`gxp.plugins.LayerSource`. The viewer will call
      *    the ``createLayerRecord`` of this source with the object as
@@ -160,10 +185,27 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
      *  :class:`Ext.form.ViewerField`.
      */
     
+    /** api: config[authenticate]
+     *  ``Function`` A global authentication function that is invoked by
+     *  :meth:`doAuthorized` if no user is logged in or the current user is not
+     *  authorized. That process is supposed to call :meth:`setAuthorizedRoles`
+     *  upon successful authentication, and :meth:`cancelAuthentication` if the
+     *  user cancels the login process. Typically this function creates and
+     *  opens a login window. Optional, default is null.
+     */
+    
+    /** api: property[authenticate]
+     *  ``Function`` Like the config option above, but this can be set after
+     *  configuration e.g. by a plugin that provides authentication. It can
+     *  also be accessed to check if an authentication mechanism is available.
+     */
+    authenticate: null,
+    
     /** api: property[authorizedRoles]
      *  ``Array`` Roles the application is authorized for. This property is
-     *  usually set by a component that authenticates the user (e.g. a login
-     *  window). After authentication, if the client is authorized to do
+     *  usually set by the :meth:`setAuthorizedRoles` method, which is
+     *  typically called by a component that authenticates the user (e.g. a
+     *  login window. After authentication, if the client is authorized to do
      *  everything,  this should be set to ``["ROLE_ADMINISTRATOR"]``.
      *
      *  If this property is undefined, the ``isAuthorized()`` method will
@@ -172,7 +214,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
      *  component (e.g. a login window), it is recommended to set this to
      *  ``[]`` (equivalent to "not authorized to do anything") initially.
      */
-     
+    
     /** private: method[constructor]
      *  Construct the viewer.
      */
@@ -216,12 +258,19 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
              *  Fired when features were edited.
              *
              *  Listener arguments:
-             *  * featureManager - ``gxp.plugins.FeatureManager`` the
+             *
+             *  * featureManager - :class:`gxp.plugins.FeatureManager` the
              *    the feature manager that was used for editing
              *  * layer - ``Object`` object with name and source of the layer
              *    that was edited
              */
-            "featureedit"
+            "featureedit",
+
+            /** api: event[authorizationchange]
+             *  Fired when the authorizedRoles are changed, e.g. when a user 
+             *  logs in or out.
+             */
+            "authorizationchange"
         );
         
         Ext.apply(this, {
@@ -231,7 +280,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
 
         // private array of pending getLayerRecord requests
         this.createLayerRecordQueue = [];
-
+        
         (config.loadConfig || this.loadConfig).call(this, config, this.applyConfig);
         gxp.Viewer.superclass.constructor.apply(this, arguments);
         
@@ -250,7 +299,13 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         var allow = this.fireEvent("beforelayerselectionchange", record);
         if (allow !== false) {
             changed = true;
+            if (this.selectedLayer) {
+                this.selectedLayer.set("selected", false);
+            }
             this.selectedLayer = record;
+            if (this.selectedLayer) {
+                this.selectedLayer.set("selected", true);
+            }
             this.fireEvent("layerselectionchange", record);
         }
         return changed;
@@ -361,6 +416,12 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         
         var config = Ext.apply({}, this.initialConfig.map);
         var mapConfig = {};
+        var baseLayerConfig = {
+            wrapDateLine: config.wrapDateLine !== undefined ? config.wrapDateLine : true,
+            maxResolution: config.maxResolution,
+            numZoomLevels: config.numZoomLevels,
+            displayInLayerSwitcher: false
+        };
         
         // split initial map configuration into map and panel config
         if (this.initialConfig.map) {
@@ -371,7 +432,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                 if (prop in config) {
                     mapConfig[prop] = config[prop];
                     delete config[prop];
-                };
+                }
             }
         }
 
@@ -380,7 +441,10 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             map: Ext.applyIf({
                 theme: mapConfig.theme || null,
                 controls: mapConfig.controls || [
-                    new OpenLayers.Control.Navigation({zoomWheelOptions: {interval: 250}}),
+                    new OpenLayers.Control.Navigation({
+                        zoomWheelOptions: {interval: 250},
+                        dragPanOptions: {enableKinetic: true}
+                    }),
                     new OpenLayers.Control.PanPanel(),
                     new OpenLayers.Control.ZoomPanel(),
                     new OpenLayers.Control.Attribution()
@@ -392,10 +456,19 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             center: config.center && new OpenLayers.LonLat(config.center[0], config.center[1]),
             resolutions: config.resolutions,
             forceInitialExtent: true,
-            layers: null,
+            layers: [new OpenLayers.Layer(null, baseLayerConfig)],
             items: this.mapItems,
-            tbar: config.tbar || {hidden: true}
+            plugins: this.mapPlugins,
+            tbar: config.tbar || new Ext.Toolbar({
+                hidden: true
+            })
         }, config));
+        this.mapPanel.getTopToolbar().on({
+            afterlayout: this.mapPanel.map.updateSize,
+            show: this.mapPanel.map.updateSize,
+            hide: this.mapPanel.map.updateSize,
+            scope: this.mapPanel.map
+        });
         
         this.mapPanel.layers.on({
             "add": function(store, records) {
@@ -553,14 +626,15 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
      *  Check through createLayerRecord requests to see if any can be satisfied.
      */
     checkLayerRecordQueue: function() {
-        var request, source, record, called;
+        var request, source, s, record, called;
         var remaining = [];
         for (var i=0, ii=this.createLayerRecordQueue.length; i<ii; ++i) {
             called = false;
             request = this.createLayerRecordQueue[i];
-            source = request.config.source;
-            if (source in this.layerSources) {
-                record = this.layerSources[source].createLayerRecord(request.config);
+            s = request.config.source;
+            if (s in this.layerSources) {
+                source = this.layerSources[s];
+                record = source.createLayerRecord(request.config);
                 if (record) {
                     // we call this in the next cycle to guarantee that
                     // createLayerRecord returns before callback is called
@@ -570,6 +644,11 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                         }, 0);
                     })(request, record);
                     called = true;
+                } else if (source.lazy) {
+                    source.store.load({
+                        callback: this.checkLayerRecordQueue,
+                        scope: this
+                    });
                 }
             }
             if (!called) {
@@ -603,7 +682,8 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             layers: []
         });
         
-        // include all layer config (and add new sources)
+        // include all layer config
+        var sources = {};
         this.mapPanel.layers.each(function(record){
             var layer = record.getLayer();
             if (layer.displayInLayerSwitcher) {
@@ -614,17 +694,49 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                 }
                 // add layer
                 state.map.layers.push(source.getConfigForRecord(record));
-                if (!state.sources[id]) {
-                    state.sources[id] = Ext.apply({}, source.initialConfig);
+                if (!sources[id]) {
+                    sources[id] = source.getState();
                 }
             }
         }, this);
+        // update sources, adding new ones
+        Ext.apply(this.sources, sources);
         
+        //standardize portal configuration to portalConfig
+        /*
+        if (state.portalItems) {
+            //initial config included both portal config and items
+            if (state.portalConfig && state.portalConfig.items && state.portalConfig.items.length) {
+                //merge arrays of portalItems and portalConfig.items
+                for (var items = state.portalItems, i = 0, len = items.length; i < len; i++) {
+                    var item = items[i];
+                    if (state.portalConfig.items.indexOf(item) == -1) {
+                        state.portalConfig.items.push(item);
+                    }
+                }
+            }
+            else if (state.portalItems && state.portalItems.length) {
+                !state.portalConfig && (state.portalConfig = {});
+                state.portalConfig.items = state.portalItems;
+            }
+        }
+        */
+       
+        //get tool states, for most tools this will be the same as its initial config
+        state.tools = [];
+        Ext.iterate(this.tools,function(key,val,obj){
+            //only get and persist the state if there a tool specific getState method
+            if(val.getState != gxp.plugins.Tool.prototype.getState){
+                state.tools.push(val.getState());
+            }
+        });
         return state;
     },
     
     /** api: method[isAuthorized]
-     *  :arg role: ``String`` optional, default is "ROLE_ADMINISTRATOR"
+     *  :arg roles: ``String|Array`` optional, default is "ROLE_ADMINISTRATOR".
+     *       If an array is provided, this method will return if any of the
+     *       roles in the array is authorized.
      *  :returns: ``Boolean`` The user is authorized for the given role.
      *
      *  Returns true if the client is authorized with the provided role.
@@ -633,7 +745,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
      *  authentication challenges from the browser when an action requires 
      *  credentials.
      */
-    isAuthorized: function(role) {
+    isAuthorized: function(roles) {
         /**
          * If the application doesn't support authentication, we expect 
          * authorizedRoles to be undefined.  In this case, from the UI 
@@ -644,8 +756,42 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
          * authorizedRoles to be a list of roles for which the user is 
          * authorized.
          */
-        return !this.authorizedRoles || 
-            (this.authorizedRoles.indexOf(role || "ROLE_ADMINISTRATOR") !== -1);
+        var authorized = false;
+        if (this.authorizedRoles) {
+            if (!roles) {
+                roles = "ROLE_ADMINISTRATOR";
+            }
+            if (!Ext.isArray(roles)) {
+                roles = [roles];
+            }
+            for (var i=roles.length-1; i>=0; --i) {
+                if (~this.authorizedRoles.indexOf(roles[i])) {
+                    authorized = true;
+                    break;
+                }
+            }
+        }
+        return authorized;
+    },
+
+    /** api: method[setAuthorizedRoles]
+     *  :arg authorizedRoles: ``Array``
+     *
+     *  Change the authorized roles.
+     */
+    setAuthorizedRoles: function(authorizedRoles) {
+        this.authorizedRoles = authorizedRoles;
+        this.fireEvent("authorizationchange");
+    },
+    
+    /** api: method[cancelAuthentication]
+     *  Cancel an authentication process.
+     */
+    cancelAuthentication: function() {
+        if (this._authFn) {
+            this.un("authorizationchange", this._authFn, this);
+        }
+        this.fireEvent("authorizationchange");
     },
     
     /** api: method[isAuthenticated]
@@ -666,6 +812,29 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
          * authentication challenge up to the browser.
          */
         return !this.authorizedRoles || this.authorizedRoles.length > 0;
+    },
+    
+    /** api: method[doAuthorized]
+     *  :param roles: ``Array`` Roles required for invoking the action
+     *  :param callback: ``Function`` The action to perform
+     *  :param scope: ``Object`` The execution scope for the callback
+     *
+     *  Performs an action (defined as ``callback`` function), but only if
+     *  the user is authorized to perform it. If no user is logged in or the
+     *  logged in user is not authorized, the viewer's :meth:`authenticate`
+     *  function will be invoked. This method is usually called by plugins.
+     */
+    doAuthorized: function(roles, callback, scope) {
+        if (this.isAuthorized(roles) || !this.authenticate) {
+            window.setTimeout(function() { callback.call(scope); }, 0);
+        } else {
+            this.authenticate();
+            this._authFn = function authFn() {
+                delete this._authFn;
+                this.doAuthorized(roles, callback, scope, true);
+            };
+            this.on("authorizationchange", this._authFn, this, {single: true});
+        }
     },
     
     /** api: method[destroy]

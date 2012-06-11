@@ -1,13 +1,17 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
- * Published under the BSD license.
+ * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
 
 /**
  * @requires plugins/Tool.js
+ * @requires OpenLayers/Protocol/HTTP.js
+ * @requires OpenLayers/Control/SelectFeature.js
+ * @requires OpenLayers/Format/WMSGetFeatureInfo.js
+ * @requires OpenLayers/Filter/FeatureId.js
  */
 
 /** api: (define)
@@ -24,7 +28,10 @@ Ext.namespace("gxp.plugins");
  *  .. class:: ClickableFeatures(config)
  *
  *    Base class for tools that need to handle feature clicks. Don't create
- *    instances of this base class.
+ *    instances of this base class. This tool uses a combination of WMS
+ *    GetFeatureInfo and WFS GetFeature, because of the better algorithm 
+ *    in WMS GetFeatureInfo to return a limited set of features from a crowded 
+ *    spot.
  */   
 gxp.plugins.ClickableFeatures = Ext.extend(gxp.plugins.Tool, {
     
@@ -33,6 +40,22 @@ gxp.plugins.ClickableFeatures = Ext.extend(gxp.plugins.Tool, {
      *  with this tool.
      */
     featureManager: null,
+    
+    /** api: config[autoLoadFeature]
+     *  ``Boolean`` Should this tool load a feature on click? If set to true,
+     *  and if there is no loaded feature at the click position, this tool will
+     *  call loadFeatures on the ``featureManager``, with a ``FeatureId``
+     *  filter created from the id of a feature returned from a WMS
+     *  GetFeatureInfo request at the click position. This feature will then be
+     *  selected immediately. Default is false.
+     */
+    autoLoadFeature: false,
+    
+    /** private: property[autoLoadedFeature]
+     *  ``OpenLayers.Feature`` the auto-loaded feature when
+     *  :attr:`autoLoadFeature` is true.
+     */
+    autoLoadedFeature: null,
     
     /** api: config[tolerance]
      *  ``Number`` 
@@ -57,13 +80,34 @@ gxp.plugins.ClickableFeatures = Ext.extend(gxp.plugins.Tool, {
      *  will be created when ``noFeatureClick`` is called for the first time.
      */
     
+    /** api: config[controlOptions]
+     *  ``Object`` Options for the ``OpenLayers.Control.SelectFeature`` used
+     *  with this tool.
+     */
+
+    /** private: method[constructor]
+     */
+    constructor: function(config) {
+        // deal with deprecated autoLoadFeatures config option
+        //TODO remove this before we cut a release
+        if (config && "autoLoadFeatures" in config) {
+            config.autoLoadFeature = config.autoLoadFeatures;
+            delete config.autoLoadFeatures;
+            if (window.console) {
+                console.warn("Deprecated config option 'autoLoadFeatures' for ptype: '" + config.ptype + "'. Use 'autoLoadFeature' instead.");
+            }
+        }
+        gxp.plugins.ClickableFeatures.superclass.constructor.apply(this, [config]);
+    },
+    
     /** private: method[noFeatureClick]
      *  :arg evt: ``Object``
      */
     noFeatureClick: function(evt) {
         if (!this.selectControl) {
             this.selectControl = new OpenLayers.Control.SelectFeature(
-                this.target.tools[this.featureManager].featureLayer
+                this.target.tools[this.featureManager].featureLayer,
+                this.initialConfig.controlOptions
             );
         }
         var evtLL = this.target.mapPanel.map.getLonLatFromPixel(evt.xy);
@@ -90,8 +134,8 @@ gxp.plugins.ClickableFeatures = Ext.extend(gxp.plugins.Tool, {
             BBOX: map.getExtent().toBBOX(),
             WIDTH: size.w,
             HEIGHT: size.h,
-            X: evt.xy.x,
-            Y: evt.xy.y,
+            X: parseInt(evt.xy.x),
+            Y: parseInt(evt.xy.y),
             QUERY_LAYERS: layer.params.LAYERS,
             INFO_FORMAT: "application/vnd.ogc.gml",
             EXCEPTIONS: "application/vnd.ogc.se_xml",
@@ -152,7 +196,7 @@ gxp.plugins.ClickableFeatures = Ext.extend(gxp.plugins.Tool, {
                                 var feature = featureManager.featureLayer.getFeatureByFid(fid);
                                 if (feature) {
                                     this.select(feature);
-                                } else if (this.autoLoadFeatures === true) {
+                                } else if (this.autoLoadFeature === true) {
                                     autoLoad();
                                 }
                             }, this);

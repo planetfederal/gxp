@@ -1,3 +1,6 @@
+/**
+ * @requires GeoExt/Lang.js
+ */
 
 GeoExt.Lang.add("nl", {
 
@@ -29,12 +32,11 @@ GeoExt.Lang.add("nl", {
         previousPageTip: "Vorige pagina",
         zoomPageExtentTip: "Zoom naar de uitsnede van de pagina",
         nextPageTip: "Volgende pagina",
-        nextPageTip: "Laatste pagina",
+        lastPageTip: "Laatste pagina",
         totalMsg: "Totaal: {0} rijen"
     },
 
     "gxp.plugins.GoogleEarth.prototype": {
-        apiKeyPrompt: "Geef a.u.b. de Google API key voor ",
         menuText: "3D weergave",
         tooltip: "Bekijk kaart in 3D"
     },
@@ -53,9 +55,14 @@ GeoExt.Lang.add("nl", {
     },
     
     "gxp.plugins.LayerTree.prototype": {
+        shortTitle: "Kaartlagen",
         rootNodeText: "Kaartlagen",
         overlayNodeText: "Kaart overlays",
         baseNodeText: "Basis Kaarten"
+    },
+
+    "gxp.plugins.LayerManager.prototype": {
+        baseNodeText: "Basis Kaart"
     },
 
     "gxp.plugins.Legend.prototype": {
@@ -269,7 +276,9 @@ GeoExt.Lang.add("nl", {
         transparentText: "Transparant",
         cacheText: "Cache",
         cacheFieldText: "Gebruik de versie vanuit de cache",
-        stylesText: "Stijlen"
+        stylesText: "Stijlen",
+        infoFormatText: "Info formaat",
+        infoFormatEmptyText: "Selecteer een formaat"
     },
 
     "gxp.EmbedMapDialog.prototype": {
@@ -321,10 +330,10 @@ GeoExt.Lang.add("nl", {
         workspaceLabel: "Werkruimte",
         workspaceEmptyText: "Standaard werkruimte",
         dataStoreLabel: "Archief",
-        dataStoreEmptyText: "Standaard archief"
+        dataStoreEmptyText: "Create new store"
     },
 
-    "gxp.NewSourceWindow.prototype": {
+    "gxp.NewSourceDialog.prototype": {
         title: "Add New Server...",
         cancelText: "Cancel",
         addServerText: "Add Server",

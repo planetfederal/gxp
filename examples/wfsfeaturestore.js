@@ -15,16 +15,15 @@ Ext.onReady(function() {
         layer: vectorLayer,
         autoLoad: true,
         url: "/geoserver/wfs",
-        featureType: "points",
-        featureNS: "http://opengeo.org/#tike",
-        schema: "http://localhost/geoserver/wfs?service=WFS&request=DescribeFeatureType&version=1.1.0&typeName=tike:points",
+        featureType: "cities",
+        featureNS: "http://world.opengeo.org",
+        schema: "/geoserver/wfs?service=WFS&request=DescribeFeatureType&version=1.1.0&typeName=world:cities",
         geometryName: "the_geom",
-        fields: [{
-            name: "osm_id", type: "int"
+        fields: [
+        {
+            name: "City", type: "string"
         }, {
-            name: "name", type: "string"
-        }, {
-            name: "type", type: "string"
+            name: "Country", type: "string"
         }]
     });
 
@@ -66,6 +65,7 @@ Ext.onReady(function() {
         renderTo: "container",
         width: 650,
         height: 356,
+        map: {theme: null},
         layers: [
             new OpenLayers.Layer.WMS( 
                 "OpenLayers WMS",
