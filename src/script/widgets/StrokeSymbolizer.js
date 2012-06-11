@@ -149,7 +149,7 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
             xtype: "slider",
             name: "opacity",
             fieldLabel: this.opacityText,
-            values: [(("strokeOpacity" in this.symbolizer) ? this.symbolizer.strokeOpacity : OpenLayers.Renderer.defaultSymbolizer.strokeOpacity) * 100],
+            values: [(("strokeOpacity" in this.symbolizer && this.symbolizer["strokeOpacity"] !== undefined) ? this.symbolizer.strokeOpacity*100 : OpenLayers.Renderer.defaultSymbolizer.strokeOpacity) * 100],
             isFormField: true,
             listeners: {
                 changecomplete: function(slider, value) {

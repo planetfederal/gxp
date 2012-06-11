@@ -82,6 +82,8 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
      *  have any visible children will be filtered out.
      */
     getSymbolizers: function() {
+        // TODO reimplement
+        return [];
         var symbolizers = [];
         this.root.eachChild(function(n){
             var childVisible = false;
@@ -119,6 +121,12 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
      *  :arg newSymbolizer: ``Object``
      */
     updateSwatch: function(node, newSymbolizer) {
+        node.attributes.featureRenderer.drawFeature();
+        node.parentNode.attributes.featureRenderer.drawFeature();
+        if (newSymbolizer) {
+            this.fireEvent("change", this);
+        }
+        return;
         var a = node.attributes;
         var r = a.featureRenderer;
         var symbolizer = a.symbolizer;

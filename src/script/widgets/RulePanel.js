@@ -481,7 +481,6 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                     xtype: "gxp_symbolgrid",
                     ref: "../../grid",
                     symbolType: this.symbolType,
-                    tbar: [{text: 'foo', handler: function() { console.log(this.grid.getSymbolizers()); }, scope: this}],
                     autoScroll: true,
                     symbolizers: symbolizers,
                     height: 150,
@@ -513,6 +512,8 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                             this.properties.doLayout();
                         },
                         change: function(grid) {
+                            // TODO reimplement
+                            return;
                             var symbolizers = grid.getSymbolizers();
                             this.symbolizerSwatch.setSymbolizers(
                                 symbolizers, {draw: this.symbolizerSwatch.rendered}
