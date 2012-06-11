@@ -78,6 +78,7 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                     var id = Ext.id();
                     var child = this.createNode({
                         type: key,
+                        symbolizer: [],
                         expanded: true,
                         rendererId: id,
                         iconCls: 'gxp-icon-symbolgrid-' + key.toLowerCase(),
@@ -87,6 +88,7 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                         var split = this.splitSymbolizer(symbolizers[key][j]);
                         for (var s in split) {
                             id = Ext.id();
+                            child.attributes.symbolizer.push(split[s]);
                             child.appendChild(this.createNode({
                                 type: s,
                                 checked: true,

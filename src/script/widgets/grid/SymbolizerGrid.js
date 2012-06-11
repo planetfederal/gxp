@@ -171,6 +171,16 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
      *  swatches.
      */
     onCheckChange: function(node, checked) {
+        var p = node.parentNode;
+        if (checked === false) {
+            OpenLayers.Util.removeItem(p.attributes.symbolizer, node.attributes.symbolizer);
+        } else {
+            // TODO insert at a certain index?
+            p.attributes.symbolizer.push(node.attributes.symbolizer);
+        }
+        p.attributes.featureRenderer.setSymbolizers(p.attributes.symbolizer);
+        this.fireEvent("change", this);
+        return;
         this.notifyLoader(node, checked);
         var a = node.attributes;
         var type = a.type.toLowerCase();
@@ -220,7 +230,7 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
                 var ct = Ext.get(node.attributes.rendererId);
                 if (ct) {
                     node.attributes.featureRenderer = new GeoExt.FeatureRenderer({
-                        symbolizers: [node.attributes.symbolizer],
+                        symbolizers: Ext.isArray(node.attributes.symbolizer) ? node.attributes.symbolizer : [node.attributes.symbolizer],
                         renderTo: ct,
                         width:21,
                         height: 21
