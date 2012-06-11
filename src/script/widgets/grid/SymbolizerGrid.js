@@ -88,25 +88,47 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
      *  have any visible children will be filtered out.
      */
     getSymbolizers: function() {
-        // TODO reimplement
-        return [];
-        var symbolizers = [];
+        var symbolizers = {};
         this.root.eachChild(function(n){
-            var childVisible = false;
+            var type = n.attributes.type,
+                i, ii,
+                result = [];
             n.eachChild(function(c) {
-                var type = c.attributes.type.toLowerCase();
-                if (type !== "label" && c.attributes.dummy !== true) {
-                    n.attributes.originalSymbolizer[type] = c.attributes.checked;
-                }
                 if (c.attributes.checked === true) {
-                    childVisible = true;
+                    var subType = c.attributes.type;
+                    var emptyFound = false, obj;
+                    for (i=0, ii=result.length; i<ii; ++i) {
+                        obj = result[i];
+                        if (obj[subType] === undefined) {
+                            obj[subType] = c.attributes.symbolizer;
+                            emptyFound = true;
+                            break;
+                        }
+                    }
+                    if (emptyFound === false) {
+                        obj = {};
+                        obj[subType] = c.attributes.symbolizer;
+                        result.push(obj);
+                    }
                 }
             });
-            if (childVisible) {
-                symbolizers.push(n.attributes.originalSymbolizer);
-            }
+            symbolizers[type] = result;
         });
-        return symbolizers;
+        var result = [];
+        for (var key in symbolizers) {
+            if (symbolizers[key].length > 0) {
+                for (i=0, ii=symbolizers[key].length; i<ii; ++i) {
+                    var config = {};
+                    for (var s in symbolizers[key][i]) {
+                        config[s.toLowerCase()] = true;
+                        config = Ext.applyIf(config, symbolizers[key][i][s]);
+                    }
+                    delete config.checked;
+                    result.push(new OpenLayers.Symbolizer[key](config));
+                }
+            }
+        }
+        return result;
     },
 
     /** private: method[beforeDestroy]
@@ -134,26 +156,6 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
         if (newSymbolizer) {
             this.fireEvent("change", this);
         }
-        return;
-        var a = node.attributes;
-        var r = a.featureRenderer;
-        var symbolizer = a.symbolizer;
-        var fullSymbolizer = node.parentNode.attributes.symbolizer;
-        var originalSymbolizer = node.parentNode.attributes.originalSymbolizer;
-        if (newSymbolizer) {
-            var clone = newSymbolizer.clone();
-            delete clone['fill'];
-            delete clone['stroke'];
-            Ext.apply(fullSymbolizer, clone);
-            Ext.apply(originalSymbolizer, clone);
-            this.fireEvent("change", this);
-        }
-        if (node.parentNode.attributes.featureRenderer) {
-            node.parentNode.attributes.featureRenderer.update({
-                symbolizers: [fullSymbolizer]
-            });
-        }
-        r.update({symbolizers: [symbolizer]});
     },
 
     /** private: method[onCheckChange]

@@ -512,8 +512,6 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                             this.properties.doLayout();
                         },
                         change: function(grid) {
-                            // TODO reimplement
-                            return;
                             var symbolizers = grid.getSymbolizers();
                             this.symbolizerSwatch.setSymbolizers(
                                 symbolizers, {draw: this.symbolizerSwatch.rendered}
