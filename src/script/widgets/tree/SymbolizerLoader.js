@@ -19,6 +19,31 @@ Ext.ns("gxp.tree");
 
 gxp.tree.SymbolizerLoader = function(config) {
     Ext.apply(this, config);
+    this.addEvents(
+        /**
+         * @event beforeload
+         * Fires before a network request is made to retrieve the Json text which specifies a node's children.
+         * @param {Object} This TreeLoader object.
+         * @param {Object} node The {@link Ext.tree.TreeNode} object being loaded.
+         * @param {Object} callback The callback function specified in the {@link #load} call.
+         */
+        "beforeload",
+        /**
+         * @event load
+         * Fires when the node has been successfuly loaded.
+         * @param {Object} This TreeLoader object.
+         * @param {Object} node The {@link Ext.tree.TreeNode} object being loaded.
+         * @param {Object} response The response object containing the data from the server.
+         */
+        "load",
+        /**
+         * @event nodeadded
+         * Fires when a new node has been added after load.
+         * @param {Object} This TreeLoader object.
+         * @param {Object} node The {@link Ext.tree.TreeNode} object being added.
+         */
+        "nodeadded"
+    );
     gxp.tree.SymbolizerLoader.superclass.constructor.call(this);
 };
 
@@ -122,6 +147,10 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                             child.appendChild(this.createNode({
                                 type: subKey,
                                 checked: true,
+                                listeners: {
+                                    checkchange: this.onCheckChange,
+                                    scope: this
+                                },
                                 iconCls: "gxp-icon-symbolgrid-none",
                                 symbolizer: symbolizers[key][subKey][i],
                                 rendererId: id,
@@ -136,6 +165,43 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                 callback();
             }
             this.fireEvent("load", this, node);
+        }
+    },
+
+    onCheckChange: function(node, checked) {
+        if (checked) {
+            var type = node.attributes.type;
+            // check if there is still an unchecked node of the same type
+            var hasUnchecked = false;
+            node.parentNode.cascade(function(subNode) {
+                if (subNode.attributes.type === type && subNode.attributes.checked === false) {
+                    hasUnchecked = true;
+                }
+            });
+            if (hasUnchecked === false) {
+                // TODO correct index
+                var id = Ext.id();
+                var symbolizer = {};
+                symbolizer[type.toLowerCase()] = true;
+                symbolizer = Ext.apply({
+                    fill: false, 
+                    stroke: false
+                }, symbolizer);
+                var child = this.createNode({
+                    type: type,
+                    checked: false,
+                    listeners: {
+                        checkchange: this.onCheckChange,
+                        scope: this
+                    },
+                    iconCls: "gxp-icon-symbolgrid-none",
+                    symbolizer: symbolizer,
+                    rendererId: id,
+                    preview: this.divTpl.applyTemplate({id: id})
+                });
+                node.parentNode.appendChild(child);
+                this.fireEvent("nodeadded", this, child);
+            }
         }
     },
 

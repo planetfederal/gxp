@@ -50,7 +50,13 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
         this.on('checkchange', this.onCheckChange, this);
         this.loader = new gxp.tree.SymbolizerLoader({
             symbolizers: this.symbolizers,
-            symbolType: this.symbolType
+            symbolType: this.symbolType,
+            listeners: {
+                'nodeadded': function(loader, node) {
+                    this.createSwatches(node);
+                },
+                scope: this
+            }
         });
         this.columns = [{
             header: this.typeTitle,
@@ -150,29 +156,6 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
         r.update({symbolizers: [symbolizer]});
     },
 
-    notifyLoader: function(node, checked) {
-        if (checked) {
-            var type = node.attributes.type;
-            // check if there is still an unchecked node of the same type
-            var hasUnchecked = false;
-            node.parentNode.cascade(function(subNode) {
-                if (subNode.attributes.type === type && subNode.attributes.checked === false) {
-                    hasUnchecked = true;
-                }
-            });
-            if (hasUnchecked === false) {
-                var className = node.parentNode.attributes.symbolizer.CLASS_NAME;
-                var subType = className.substr(className.lastIndexOf(".")+1);
-                // since e.g. a PolgyonSymbolizer cannot contain two strokes, create a
-                // new dummy PolygonSymbolizer to contain the extra stroke.
-                var fullSymbolizer = new OpenLayers.Symbolizer[subType]({checked: false});
-                var newNode = this.loader.createSymbolizerPropertyGroup(fullSymbolizer, type, true);
-                node.parentNode.appendChild(newNode);
-                this.createSwatches(newNode);
-            }
-        }
-    },
-
     /** private: method[onCheckChange]
      *  :arg node: ``Ext.data.Node``
      *  :arg checked: ``Boolean``
@@ -187,40 +170,6 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
         } else {
             // TODO insert at a certain index?
             p.attributes.symbolizer.push(node.attributes.symbolizer);
-        }
-        p.attributes.featureRenderer.setSymbolizers(p.attributes.symbolizer);
-        this.fireEvent("change", this);
-        return;
-        this.notifyLoader(node, checked);
-        var a = node.attributes;
-        var type = a.type.toLowerCase();
-        var symbolizer = a.symbolizer;
-        var fullSymbolizer = node.parentNode.attributes.symbolizer;
-        if (type !== "label") {
-            // special handling for graphic, can only be turned on if label is on
-            if (type === 'graphic') {
-                var label = node.parentNode.findChild('type', 'Label');
-                if (label !== null) {
-                    var labelChecked = label.attributes.checked;
-                    if ((labelChecked && checked) || !checked) {
-                        fullSymbolizer[type] = symbolizer[type] = checked;
-                    } else {
-                        node.getUI().toggleCheck(false);
-                    }
-                }
-            } else {
-                fullSymbolizer[type] = symbolizer[type] = checked;
-            }
-        } else {
-            if (!checked) {
-                symbolizer[type] = fullSymbolizer[type] = "";
-                var graphic = node.parentNode.findChild('type', 'Graphic');
-                if (graphic !== null) {
-                    graphic.getUI().toggleCheck(false);
-                }
-            } else {
-                symbolizer[type] = fullSymbolizer[type] = "Ab";
-            }
         }
         this.updateSwatch(node);
         this.fireEvent("change", this);
