@@ -84,10 +84,10 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                 Point: ['Point', 'Text'],
                 Text: ['Text']
             };
+            // check if we are missing symbolizers, if yes, create one
             var typesNeeded = types[this.symbolType];
             for (i=0, ii=typesNeeded.length; i<ii; ++i) {
                 if (symbolizers[typesNeeded[i]].empty || typesNeeded[i] === this.symbolType) {
-                    // we should create one
                     var sym = new OpenLayers.Symbolizer[typesNeeded[i]]();
                     split = this.splitSymbolizer(sym);
                     for (s in split) {
@@ -97,6 +97,7 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                     }
                 }
             }
+            // now we have aggregated the complete symbolizer structure, so process
             for (var key in symbolizers) {
                 if (symbolizers[key].empty === false) {
                     var id = Ext.id();
@@ -109,20 +110,20 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                         preview: this.divTpl.applyTemplate({id: id})
                     });
                     for (var subKey in symbolizers[key]) {
-                        for (var k=0, kk=symbolizers[key][subKey].length; k<kk; ++k) {
+                        for (i=0, ii=symbolizers[key][subKey].length; i<ii; ++i) {
                             var overrides = {};
-                            if (symbolizers[key][subKey][k].checked === false) {
+                            if (symbolizers[key][subKey][i].checked === false) {
                                 overrides.checked = false;
                             }
                             id = Ext.id();
                             if (overrides.checked !== false) {
-                                child.attributes.symbolizer.push(symbolizers[key][subKey][k]);
+                                child.attributes.symbolizer.push(symbolizers[key][subKey][i]);
                             }
                             child.appendChild(this.createNode({
                                 type: subKey,
                                 checked: true,
                                 iconCls: "gxp-icon-symbolgrid-none",
-                                symbolizer: symbolizers[key][subKey][k],
+                                symbolizer: symbolizers[key][subKey][i],
                                 rendererId: id,
                                 preview: this.divTpl.applyTemplate({id: id})
                             }, overrides));
@@ -140,8 +141,8 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
 
     splitSymbolizer: function(symbolizer) {
         var result = {};
-        if (symbolizer instanceof OpenLayers.Symbolizer.Polygon || symbolizer instanceof OpenLayers.Symbolizer.Point) {
-            // split up in stroke and fill object hashes
+        if (symbolizer instanceof OpenLayers.Symbolizer.Polygon || 
+          symbolizer instanceof OpenLayers.Symbolizer.Point) {
             result.Fill = {
                 stroke: false,
                 fillColor: symbolizer.fillColor,
@@ -168,108 +169,6 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
             result.Label = Ext.apply({}, symbolizer);
         }
         return result;
-    },
-
-    createSymbolizerPropertyGroup: function(fullSymbolizer, type, dummy) {
-        var id = Ext.id(),
-            overrides = {},
-            config;
-        if (fullSymbolizer.checked === false) {
-            overrides.checked = false;
-        }
-        if (dummy === true) {
-            overrides.dummy = true;
-        }
-        if (type === 'Stroke') {
-            var strokeSym = fullSymbolizer.clone();
-            // delete all properties which have to do with fill
-            var fillProperties = ['fillColor', 'fillOpacity'];
-            for (var f=0, ff=fillProperties.length; f<ff; ++f) {
-                delete strokeSym[fillProperties[f]];
-            }
-            strokeSym.fill = false;
-            config = {
-                checked: fullSymbolizer.stroke !== undefined ? fullSymbolizer.stroke : true,
-                iconCls: "gxp-icon-symbolgrid-none",
-                type: type,
-                symbolizer: strokeSym,
-                rendererId: id,
-                preview: this.divTpl.applyTemplate({id: id})
-            };
-        } else if (type === 'Fill') {
-            var fillSym = fullSymbolizer.clone();
-            // delete all properties which have to do with stroke
-            // TODO store these in a more central place in GXP?
-            var strokeProperties = ['strokeDashstyle', 'strokeColor', 'strokeWidth', 'strokeOpacity'];
-            for (var s=0, ss=strokeProperties.length; s<ss; ++s) {
-                delete fillSym[strokeProperties[s]];
-            }
-            fillSym.stroke = false;
-            config = {
-                checked: fullSymbolizer.fill !== undefined ? fullSymbolizer.fill : true,
-                iconCls: "gxp-icon-symbolgrid-none",
-                type: type,
-                symbolizer: fillSym,
-                rendererId: id,
-                preview: this.divTpl.applyTemplate({id: id})
-            };
-        } else if (type === 'Label') {
-            var labelSym = fullSymbolizer.clone();
-            labelSym.graphic = false;
-            config = {
-                checked: true,
-                iconCls: "gxp-icon-symbolgrid-none",
-                type: type,
-                symbolizer: labelSym,
-                rendererId: id,
-                preview: this.divTpl.applyTemplate({id: id})
-            };
-        } else if (type === 'Graphic') {
-            var graphicSym = fullSymbolizer.clone();
-            graphicSym.label = "";
-            config = {
-                checked: fullSymbolizer.graphic,
-                iconCls: "gxp-icon-symbolgrid-none",
-                type: type,
-                symbolizer: graphicSym,
-                rendererId: id,
-                preview: this.divTpl.applyTemplate({id: id})
-            };
-        }
-        return this.createNode(config, overrides);
-    },
-
-    addSymbolizer: function(node, symbolizer) {
-        var divTpl = new Ext.Template('<div class="gxp-symbolgrid-swatch" id="{id}"></div>');
-        var key = symbolizer.CLASS_NAME.substring(symbolizer.CLASS_NAME.lastIndexOf(".")+1);
-        var fullSymbolizer = symbolizer.clone();
-        if (key === 'Text') {
-            fullSymbolizer.label = "Ab";
-            if (fullSymbolizer.fillColor || fullSymbolizer.graphicName) {
-                fullSymbolizer.graphic = true;
-            }
-        }
-        var id = Ext.id();
-        var child = this.createNode({
-            type: key, 
-            expanded: true, 
-            rendererId: id, 
-            originalSymbolizer: symbolizer,
-            symbolizer: fullSymbolizer, 
-            iconCls: 'gxp-icon-symbolgrid-' + key.toLowerCase(),
-            preview: divTpl.applyTemplate({id: id})
-        });
-        if (key === "Polygon" || key === "Point") {
-            child.appendChild(this.createSymbolizerPropertyGroup(fullSymbolizer, 'Fill'));
-            child.appendChild(this.createSymbolizerPropertyGroup(fullSymbolizer, 'Stroke'));
-        } else if (key === "Line") {
-            child.appendChild(this.createSymbolizerPropertyGroup(fullSymbolizer, 'Stroke'));
-        } else if (key === "Text") {
-            child.appendChild(this.createSymbolizerPropertyGroup(fullSymbolizer, 'Label'));
-            child.appendChild(this.createSymbolizerPropertyGroup(fullSymbolizer, 'Graphic'));
-        }
-        node.appendChild(child);
-        return child;
     },
 
     /** api: method[createNode]
