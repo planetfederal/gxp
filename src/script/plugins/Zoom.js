@@ -9,7 +9,7 @@
 /**
  * @requires plugins/Tool.js
  * @require OpenLayers/Control/ZoomBox.js
- * @require GeoExt/Action.js
+ * @require GeoExt/widgets/Action.js
  */
 
 /** api: (define)
