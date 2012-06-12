@@ -192,6 +192,7 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
                 if (ct) {
                     node.attributes.featureRenderer = new GeoExt.FeatureRenderer({
                         symbolizers: Ext.isArray(node.attributes.symbolizer) ? node.attributes.symbolizer : [node.attributes.symbolizer],
+                        symbolType: node.attributes.symbolType,
                         renderTo: ct,
                         width:21,
                         height: 21

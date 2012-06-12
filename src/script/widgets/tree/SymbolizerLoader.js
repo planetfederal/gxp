@@ -129,6 +129,7 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                     var child = this.createNode({
                         type: key,
                         symbolizer: [],
+                        symbolType: key,
                         expanded: true,
                         rendererId: id,
                         iconCls: 'gxp-icon-symbolgrid-' + key.toLowerCase(),
@@ -146,6 +147,7 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                             }
                             child.appendChild(this.createNode({
                                 type: subKey,
+                                symbolType: key,
                                 checked: true,
                                 listeners: {
                                     checkchange: this.onCheckChange,
