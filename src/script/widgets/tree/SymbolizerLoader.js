@@ -99,7 +99,6 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                 var type = className.substr(className.lastIndexOf(".")+1);
                 split = this.splitSymbolizer(symbolizer);
                 for (s in split) {
-                    symbolizers[type].empty = false;
                     symbolizers[type][s].push(split[s]);
                 }
             }
