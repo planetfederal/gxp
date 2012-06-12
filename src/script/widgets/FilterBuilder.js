@@ -121,7 +121,8 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
         this.builderType = this.getBuilderType();
         
         this.items = [{
-            xtype: "form",
+            xtype: "container",
+            layout: "form",
             hidden: true,
             border: false,
             hideLabels: true,
