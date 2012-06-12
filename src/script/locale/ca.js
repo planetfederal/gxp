@@ -31,6 +31,9 @@ GeoExt.Lang.add("ca", {
     },    
 
     "gxp.plugins.FeatureEditor.prototype": {
+        splitButtonText: "Edit",
+        createFeatureActionText: "Create",
+        editFeatureActionText: "Modify",
         createFeatureActionTip: "Crea nou element",
         editFeatureActionTip: "Edita element existent"
     },
@@ -101,6 +104,7 @@ GeoExt.Lang.add("ca", {
     },
 
     "gxp.plugins.Measure.prototype": {
+        buttonText: "Mesura",
         lengthMenuText: "Longitud",
         areaMenuText: "Àrea",
         lengthTooltip: "Mesura Longitud",
@@ -127,6 +131,7 @@ GeoExt.Lang.add("ca", {
     },
 
     "gxp.plugins.Print.prototype": {
+        buttonText:"Imprimeix",
         menuText: "Imprimeix mapa",
         tooltip: "Imprimeix mapa",
         previewText: "Vista prèvia",
@@ -166,13 +171,16 @@ GeoExt.Lang.add("ca", {
     },
 
     "gxp.plugins.WMSGetFeatureInfo.prototype": {
+        buttonText:"Identify",
         infoActionTip: "Consulta elements",
         popupTitle: "Informació dels elements"
     },
 
     "gxp.plugins.Zoom.prototype": {
+        zoomMenuText: "Zoom Box",
         zoomInMenuText: "Apropa",
         zoomOutMenuText: "Allunya",
+        zoomTooltip: "Zoom by dragging a box",
         zoomInTooltip: "Apropa",
         zoomOutTooltip: "Allunya"
     },

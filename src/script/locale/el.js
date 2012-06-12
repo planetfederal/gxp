@@ -28,6 +28,9 @@ GeoExt.Lang.add("el", {
     },
 
     "gxp.plugins.FeatureEditor.prototype": {
+        splitButtonText: "Edit",
+        createFeatureActionText: "Create",
+        editFeatureActionText: "Modify",
         createFeatureActionTip: "Δημιουργήστε ένα νέο χαρακτηριστικό",
         editFeatureActionTip: "Τροποποιήστε υπάρχον χαρακτηριστικό"
     },
@@ -94,6 +97,7 @@ GeoExt.Lang.add("el", {
     },
 
     "gxp.plugins.Measure.prototype": {
+        buttonText: "Μέτρο",
         lengthMenuText: "Απόσταση",
         areaMenuText: "Εμβαδόν",
         lengthTooltip: "Υπολογίστε απόσταση",
@@ -120,6 +124,7 @@ GeoExt.Lang.add("el", {
     },
 
     "gxp.plugins.Print.prototype": {
+        buttonText:"Εκτύπωση",
         menuText: "Εκτύπωση Χάρτη",
         tooltip: "Εκτύπωση Χάρτη",
         previewText: "Προεπισκόπηση Εκτύπωσης",
@@ -160,13 +165,16 @@ GeoExt.Lang.add("el", {
     },
 
     "gxp.plugins.WMSGetFeatureInfo.prototype": {
+        buttonText:"Identify",
         infoActionTip: "Πάρτε Πληροφορίες Χαρακτηριστικού",
         popupTitle: "Πληροφορίες Χαρακτηριστικού"
     },
 
     "gxp.plugins.Zoom.prototype": {
+        zoomMenuText: "Zoom Box",
         zoomInMenuText: "Ζουμ Μέσα",
         zoomOutMenuText: "Ζουμ Έξω",
+        zoomTooltip: "Zoom by dragging a box",
         zoomInTooltip: "Ζουμ Μέσα",
         zoomOutTooltip: "Ζουμ Έξω"
     },

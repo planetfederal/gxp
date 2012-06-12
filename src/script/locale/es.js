@@ -31,6 +31,9 @@ GeoExt.Lang.add("es", {
     },    
 
     "gxp.plugins.FeatureEditor.prototype": {
+        splitButtonText: "Edit",
+        createFeatureActionText: "Create",
+        editFeatureActionText: "Modify",
         createFeatureActionTip: "Crear nuevo elemento",
         editFeatureActionTip: "Editar elemento existente"
     },
@@ -101,6 +104,7 @@ GeoExt.Lang.add("es", {
     },
 
     "gxp.plugins.Measure.prototype": {
+        buttonText: "Medir",
         lengthMenuText: "Longitud",
         areaMenuText: "Área",
         lengthTooltip: "Medir Longitud",
@@ -127,6 +131,7 @@ GeoExt.Lang.add("es", {
     },
 
     "gxp.plugins.Print.prototype": {
+        buttonText:"Imprimir",
         menuText: "Imprimir mapa",
         tooltip: "Imprimir mapa",
         previewText: "Vista previa",
@@ -166,13 +171,16 @@ GeoExt.Lang.add("es", {
     },
 
     "gxp.plugins.WMSGetFeatureInfo.prototype": {
+        buttonText:"Identify",
         infoActionTip: "Consultar elementos",
         popupTitle: "Información de elementos"
     },
 
     "gxp.plugins.Zoom.prototype": {
+        zoomMenuText: "Zoom Box",
         zoomInMenuText: "Acercar",
         zoomOutMenuText: "Alejar",
+        zoomTooltip: "Zoom by dragging a box",
         zoomInTooltip: "Acercar",
         zoomOutTooltip: "Alejar"
     },

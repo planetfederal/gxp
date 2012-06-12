@@ -31,6 +31,9 @@ GeoExt.Lang.add("id", {
     },    
 
     "gxp.plugins.FeatureEditor.prototype": {
+        splitButtonText: "Edit",
+        createFeatureActionText: "Create",
+        editFeatureActionText: "Modify",
         createFeatureActionTip: "Membuat sebuah fitur",
         editFeatureActionTip: "Edit fitur"
     },
@@ -101,6 +104,7 @@ GeoExt.Lang.add("id", {
     },
 
     "gxp.plugins.Measure.prototype": {
+        buttonText: "Pengukuran"
         lengthMenuText: "Panjang",
         areaMenuText: "Luas",
         lengthTooltip: "Pengukuran panjang",
@@ -127,6 +131,7 @@ GeoExt.Lang.add("id", {
     },
 
     "gxp.plugins.Print.prototype": {
+        buttonText:"Cetak",
         menuText: "Cetak peta",
         tooltip: "Cetak peta",
         previewText: "Preview cetak",
@@ -167,13 +172,16 @@ GeoExt.Lang.add("id", {
     },
 
     "gxp.plugins.WMSGetFeatureInfo.prototype": {
+        buttonText:"Identify",
         infoActionTip: "Get Feature Info",
         popupTitle: "Info fitur"
     },
 
     "gxp.plugins.Zoom.prototype": {
+        zoomMenuText: "Zoom Box",
         zoomInMenuText: "Memperbesar",
         zoomOutMenuText: "Memperkecil",
+        zoomTooltip: "Zoom by dragging a box",
         zoomInTooltip: "Memperbesar",
         zoomOutTooltip: "Memperkecil"
     },

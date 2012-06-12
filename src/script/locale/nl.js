@@ -92,6 +92,10 @@ GeoExt.Lang.add("nl", {
     },
 
     "gxp.plugins.Measure.prototype": {
+        splitButtonText: "Edit",
+        createFeatureActionText: "Create",
+        editFeatureActionText: "Modify",
+        buttonText: "Meten",
         lengthMenuText: "Lengte",
         areaMenuText: "Oppervlakte",
         lengthTooltip: "Meet lengte",
@@ -118,6 +122,7 @@ GeoExt.Lang.add("nl", {
     },
 
     "gxp.plugins.Print.prototype": {
+        buttonText:"Afdrukken",
         menuText: "Afdrukken kaart",
         tooltip: "Afdrukken kaart",
         previewText: "Voorvertoning",
@@ -152,13 +157,16 @@ GeoExt.Lang.add("nl", {
     },
 
     "gxp.plugins.WMSGetFeatureInfo.prototype": {
+        buttonText:"Identify",
         infoActionTip: "Attribuut-informatie",
         popupTitle: "Attribuut-informatie"
     },
 
     "gxp.plugins.Zoom.prototype": {
+        zoomMenuText: "Zoom Box",
         zoomInMenuText: "Inzoomen",
         zoomOutMenuText: "Uitzoomen",
+        zoomTooltip: "Zoom by dragging a box",
         zoomInTooltip: "Inzoomen",
         zoomOutTooltip: "Uitzoomen"
     },
