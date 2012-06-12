@@ -14,7 +14,7 @@ GeoExt.Lang.add("id", {
         addServerText: "Tambahkan server baru",
         addButtonText: "Add layers",
         untitledText: "Untitled",
-        addLayerSourceErrorText: "Kesalahan mendapatkan kemampuan WMS ({msg}). \ nSilakan cek url dan coba lagi.",
+        addLayerSourceErrorText: "Kesalahan mendapatkan kemampuan WMS ({msg}). \nSilakan cek url dan coba lagi.",
         availableLayersText: "Layer tersedia",
         expanderTemplateText: "<p><b>Abstract:</b> {abstract}</p>",
         panelTitleText: "Title",
@@ -104,7 +104,7 @@ GeoExt.Lang.add("id", {
     },
 
     "gxp.plugins.Measure.prototype": {
-        buttonText: "Pengukuran"
+        buttonText: "Pengukuran",
         lengthMenuText: "Panjang",
         areaMenuText: "Luas",
         lengthTooltip: "Pengukuran panjang",
