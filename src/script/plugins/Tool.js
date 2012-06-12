@@ -276,7 +276,7 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
         var actionTargets = this.actionTarget instanceof Array ?
             this.actionTarget : [this.actionTarget];
         var a = actions instanceof Array ? actions : [actions];
-        var action, actionTarget, i, j, jj, ct, index = null;
+        var action, actionTarget, cmp, i, j, jj, ct, index = null;
         for (i=actionTargets.length-1; i>=0; --i) {
             actionTarget = actionTargets[i];
             if (actionTarget) {
@@ -288,6 +288,10 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
             }
             for (j=0, jj=a.length; j<jj; ++j) {
                 if (!(a[j] instanceof Ext.Action || a[j] instanceof Ext.Component)) {
+                    cmp = Ext.getCmp(a[j]);
+                    if (cmp) {
+                        a[j] = cmp;
+                    }
                     if (typeof a[j] != "string") {
                         if (j == this.defaultAction) {
                             a[j].pressed = true;
