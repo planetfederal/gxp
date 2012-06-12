@@ -191,6 +191,7 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                 }, symbolizer);
                 var child = this.createNode({
                     type: type,
+                    symbolType: node.parentNode.attributes.type,
                     checked: false,
                     listeners: {
                         checkchange: this.onCheckChange,
