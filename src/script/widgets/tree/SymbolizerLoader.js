@@ -84,8 +84,8 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                 },
                 Point: {
                     empty: true,
-                    Stroke: [],
-                    Fill: []
+                    Graphic: [],
+                    Mark: []
                 },
                 Text: {
                     empty: true,
@@ -113,6 +113,9 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
             for (i=0, ii=typesNeeded.length; i<ii; ++i) {
                 if (symbolizers[typesNeeded[i]].empty || typesNeeded[i] === this.symbolType) {
                     var sym = new OpenLayers.Symbolizer[typesNeeded[i]]();
+                    if (typesNeeded[i] === 'Point') {
+                        sym.externalGraphic = null;
+                    }
                     split = this.splitSymbolizer(sym);
                     for (s in split) {
                         split[s].checked = false;
@@ -235,18 +238,18 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
             };
         } else if (symbolizer instanceof OpenLayers.Symbolizer.Point) {
             config = {
-                externalGraphic: symbolizer.externalGraphic,
-                graphicName: symbolizer.graphicName,
                 pointRadius: symbolizer.pointRadius,
                 rotation: symbolizer.rotation
             };
-            result.Fill = Ext.apply({
-                stroke: false,
+            if (symbolizer.externalGraphic !== undefined) {
+                result.Graphic = Ext.apply({
+                    externalGraphic: symbolizer.externalGraphic
+                }, config);
+            }
+            result.Mark = Ext.apply({
+                graphicName: symbolizer.graphicName,
                 fillColor: symbolizer.fillColor,
-                fillOpacity: symbolizer.fillOpacity
-            }, config);
-            result.Stroke = Ext.apply({
-                fill: false,
+                fillOpacity: symbolizer.fillOpacity,
                 strokeColor: symbolizer.strokeColor,
                 strokeOpacity: symbolizer.strokeOpacity,
                 strokeWidth: symbolizer.strokeWidth,
