@@ -42,11 +42,13 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
 
     /** api: config[actions]
      *  ``Array`` Custom actions for tools that do not provide their own. Array
-     *  elements are expected to be valid Ext config objects. Actions provided
-     *  here may have an additional ``menuText`` property, which will be used
-     *  as text when the action is used in a menu. The ``text`` property will
-     *  only be used in buttons. Optional, only needed to create custom
-     *  actions.
+     *  elements are expected to be valid Ext config objects or strings
+     *  referencing a valid Ext component. Actions provided here may have
+     *  additional ``menuText`` and ``buttonText`` properties. The former
+     *  will be used as text when the action is used in a menu. The latter will
+     *  be conditionally used on buttons, only if ``showButtonText`` is set to
+     *  true. The native ``text`` property will unconditionally be used for
+     *  buttons. Optional, only needed to create custom actions.
      */
     
     /** api: config[outputAction]
@@ -101,6 +103,12 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
      *  should configure a defaultAction to make sure that an action is active.
      */
     actionTarget: "map.tbar",
+    
+    /** api: config[showButtonText]
+     *  Show the ``buttonText`` an action is configured with, if used as a
+     *  button. Default is false.
+     */
+    showButtonText: false,
         
     /** api: config[toggleGroup]
      *  ``String`` If this tool should be radio-button style toggled with other
@@ -294,6 +302,9 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
                         action.control.activate();
                 }
                 if (ct) {
+                    if (this.showButtonText) {
+                        action.setText(action.initialConfig.buttonText);
+                    }
                     if (ct instanceof Ext.menu.Menu) {
                         action = Ext.apply(new Ext.menu.CheckItem(action), {
                             text: action.initialConfig.menuText,

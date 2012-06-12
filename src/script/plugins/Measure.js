@@ -38,6 +38,12 @@ gxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
      */
     outputTarget: "map",
 
+    /** api: config[buttonText]
+     *  ``String``
+     *  Text for the Measure button (i18n).
+     */
+    buttonText: "Measure",
+
     /** api: config[lengthMenuText]
      *  ``String``
      *  Text for measure length menu item (i18n).
@@ -193,6 +199,7 @@ gxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
         this.button = new Ext.SplitButton({
             iconCls: "gxp-icon-measure-length",
             tooltip: this.measureTooltip,
+            buttonText: this.buttonText,
             enableToggle: true,
             toggleGroup: this.toggleGroup,
             allowDepress: true,

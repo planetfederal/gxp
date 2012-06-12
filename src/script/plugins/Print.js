@@ -70,6 +70,12 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      */
     tooltip: "Print Map",
 
+    /** api: config[text]
+     *  ``String``
+     *  Text for print action button (i18n).
+     */
+    buttonText: "Print",
+
     /** api: config[notAllNotPrintableText]
      *  ``String``
      *  Text for message when not all layers can be printed (i18n).
@@ -171,6 +177,7 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
 
             var actions = gxp.plugins.Print.superclass.addActions.call(this, [{
                 menuText: this.menuText,
+                buttonText: this.buttonText,
                 tooltip: this.tooltip,
                 iconCls: "gxp-icon-print",
                 disabled: this.printCapabilities !== null ? false : true,

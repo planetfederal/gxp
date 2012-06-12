@@ -57,6 +57,11 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
      */
     popupTitle: "Feature Info",
     
+    /** api: config[text]
+     *  ``String`` Text for the GetFeatureInfo button (i18n).
+     */
+    buttonText: "Identify",
+    
     /** api: config[format]
      *  ``String`` Either "html" or "grid". If set to "grid", GML will be
      *  requested from the server and displayed in an Ext.PropertyGrid.
@@ -97,6 +102,7 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
         var actions = gxp.plugins.WMSGetFeatureInfo.superclass.addActions.call(this, [{
             tooltip: this.infoActionTip,
             iconCls: "gxp-icon-getfeatureinfo",
+            buttonText: this.buttonText,
             toggleGroup: this.toggleGroup,
             enableToggle: true,
             allowDepress: true,
