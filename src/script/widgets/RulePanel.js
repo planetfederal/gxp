@@ -381,7 +381,17 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                             this.properties.items.each(function(item) {
                                 this.remove(item, true);
                             }, this.properties);
-                            this.properties.add({
+                            var config = {};
+                            if (Ext.isArray(node.attributes.symbolizer) && node.attributes.symbolizer.length > 0) {
+                                config.symbolizer = node.attributes.symbolizer[0];
+                                config.alternateSymbolizers = [];
+                                for (var i=1, ii=node.attributes.symbolizer.length; i<ii; ++i) {
+                                    config.alternateSymbolizers.push(node.attributes.symbolizer[i]);
+                                }
+                            } else {
+                                config.symbolizer = node.attributes.symbolizer;
+                            }
+                            this.properties.add(Ext.apply({
                                 listeners: {
                                     change: function(symbolizer) {
                                         node.getUI().toggleCheck(true);
@@ -392,9 +402,8 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                                 autoScroll: true,
                                 attributes: this.attributes,
                                 bodyStyle: {"padding": "5px"},
-                                xtype: "gxp_" + type.toLowerCase() + "symbolizer",
-                                symbolizer: node.attributes.symbolizer
-                            });
+                                xtype: "gxp_" + type.toLowerCase() + "symbolizer"
+                            }, config));
                             this.properties.doLayout();
                         },
                         change: function(grid) {

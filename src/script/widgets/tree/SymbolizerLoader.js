@@ -218,9 +218,8 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
     },
 
     splitSymbolizer: function(symbolizer) {
-        var result = {};
-        if (symbolizer instanceof OpenLayers.Symbolizer.Polygon || 
-          symbolizer instanceof OpenLayers.Symbolizer.Point) {
+        var result = {}, config;
+        if (symbolizer instanceof OpenLayers.Symbolizer.Polygon) {
             result.Fill = {
                 stroke: false,
                 fillColor: symbolizer.fillColor,
@@ -234,6 +233,26 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                 strokeLinecap: symbolizer.strokeLinecap,
                 strokeDashstyle: symbolizer.strokeDashstyle
             };
+        } else if (symbolizer instanceof OpenLayers.Symbolizer.Point) {
+            config = {
+                externalGraphic: symbolizer.externalGraphic,
+                graphicName: symbolizer.graphicName,
+                pointRadius: symbolizer.pointRadius,
+                rotation: symbolizer.rotation
+            };
+            result.Fill = Ext.apply({
+                stroke: false,
+                fillColor: symbolizer.fillColor,
+                fillOpacity: symbolizer.fillOpacity
+            }, config);
+            result.Stroke = Ext.apply({
+                fill: false,
+                strokeColor: symbolizer.strokeColor,
+                strokeOpacity: symbolizer.strokeOpacity,
+                strokeWidth: symbolizer.strokeWidth,
+                strokeLinecap: symbolizer.strokeLinecap,
+                strokeDashstyle: symbolizer.strokeDashstyle
+            }, config);
         } else if (symbolizer instanceof OpenLayers.Symbolizer.Line) {
             result.Stroke = {
                 fill: false,

@@ -27,6 +27,11 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
      *  you do not want your symbolizer modified.
      */
     symbolizer: null,
+
+    /** api: config[alternateSymbolizers]
+     *  ``Array`` Additional symbolizer(s) that should be updated.
+     */
+    alternateSymbolizers: null,
     
     /** i18n */
     graphicCircleText: "circle",
@@ -81,6 +86,18 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
      */
     layout: "form",
 
+    /** private: method[updateSymbolizer]
+     *  Update the main symbolizer and any alternate symbolizers.
+     */
+    updateSymbolizer: function(field, value) {
+        this.symbolizer[field] = value;
+        if (this.alternateSymbolizers) {
+            for (var i=0, ii=this.alternateSymbolizers.length; i<ii; ++i) {
+                this.alternateSymbolizers[i][field] = value;
+            }
+        }
+    },
+
     initComponent: function() {
         
         if(!this.symbolizer) {
@@ -108,7 +125,7 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
             hidden: true,
             listeners: {
                 change: function(field, value) {
-                    this.symbolizer["externalGraphic"] = value;
+                    this.updateSymbolizer("externalGraphic", value);
                     this.fireEvent("change", this.symbolizer);
                 },
                 scope: this
@@ -150,7 +167,7 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
                             this.urlField.hide();
                             // this to hide the container - otherwise the label remains
                             this.urlField.getEl().up('.x-form-item').setDisplayed(false);
-                            this.symbolizer["externalGraphic"] = value;
+                            this.updateSymbolizer("externalGraphic", value);
                         } else {
                             this.urlField.show();
                             this.urlField.getEl().up('.x-form-item').setDisplayed(true);
@@ -161,9 +178,9 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
                     } else {
                         if(this.external) {
                             this.external = false;
-                            delete this.symbolizer["externalGraphic"];
+                            this.updateSymbolizer("externalGraphic", undefined);
                         }
-                        this.symbolizer["graphicName"] = value;
+                        this.updateSymbolizer("graphicName", value);
                     }
                     this.fireEvent("change", this.symbolizer);
                 },
@@ -177,7 +194,7 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
             value: this.symbolizer["pointRadius"] && this.symbolizer["pointRadius"] * 2,
             listeners: {
                 change: function(field, value) {
-                    this.symbolizer["pointRadius"] = value / 2;
+                    this.updateSymbolizer("pointRadius", value / 2);
                     this.fireEvent("change", this.symbolizer);
                 },
                 scope: this
@@ -190,7 +207,7 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
             value: this.symbolizer["rotation"],
             listeners: {
                 change: function(field, value) {
-                    this.symbolizer["rotation"] = value;
+                    this.updateSymbolizer("rotation", value);
                     this.fireEvent("change", this.symbolizer);
                 },
                 scope: this

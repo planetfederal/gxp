@@ -152,6 +152,10 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
         node.attributes.featureRenderer.drawFeature();
         if (node.parentNode.attributes.featureRenderer) {
             node.parentNode.attributes.featureRenderer.drawFeature();
+        } else {
+            node.cascade(function(c) {
+                c.attributes.featureRenderer.drawFeature();
+            });
         }
         if (newSymbolizer) {
             this.fireEvent("change", this);
