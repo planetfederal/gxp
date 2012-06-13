@@ -142,6 +142,7 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                             var overrides = {};
                             if (symbolizers[key][subKey][i].checked === false) {
                                 overrides.checked = false;
+                                delete symbolizers[key][subKey][i].checked;
                             }
                             id = Ext.id();
                             if (overrides.checked !== false) {
@@ -178,7 +179,7 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
             // check if there is still an unchecked node of the same type
             var hasUnchecked = false;
             node.parentNode.cascade(function(subNode) {
-                if (subNode.attributes.type === type && subNode.attributes.checked === false) {
+                if (subNode.attributes.type === type && subNode.getUI().isChecked() === false) {
                     hasUnchecked = true;
                 }
             });

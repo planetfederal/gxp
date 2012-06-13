@@ -94,7 +94,7 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
                 i, ii,
                 result = [];
             n.eachChild(function(c) {
-                if (c.attributes.checked === true) {
+                if (c.getUI().isChecked() === true) {
                     var subType = c.attributes.type;
                     var emptyFound = false, obj;
                     for (i=0, ii=result.length; i<ii; ++i) {
@@ -132,7 +132,6 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
                             config[s.toLowerCase()] = true;
                             config = Ext.applyIf(config, symbolizers[key][i][s]);
                         }
-                        delete config.checked;
                         result.push(new OpenLayers.Symbolizer[key](config));
                     }
                 }
@@ -186,14 +185,14 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
         } else {
             var counter = 0;
             p.eachChild(function(c) {
-                if (c.attributes.checked === true) {
+                if (c.getUI().isChecked() === true) {
                     if (node === c) {
                         return false;
                     }
                     counter++;
                 }
             });
-            p.attributes.symbolizer.splice(counter, 1, node.attributes.symbolizer);
+            p.attributes.symbolizer.splice(counter, 0, node.attributes.symbolizer);
         }
         this.updateSwatch(node);
         this.fireEvent("change", this);
