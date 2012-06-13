@@ -384,6 +384,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                             var xtype = "gxp_" + type.toLowerCase() + "symbolizer";
                             if (type === 'Graphic' || type === 'Mark') {
                                 xtype = "gxp_pointsymbolizer";
+                                config.filter = gxp.PointSymbolizer[type.toUpperCase()];
                             }
                             if (type === 'Label') {
                                 xtype = "gxp_textsymbolizer";
