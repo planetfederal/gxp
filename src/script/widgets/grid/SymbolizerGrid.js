@@ -174,8 +174,16 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
         if (checked === false) {
             OpenLayers.Util.removeItem(p.attributes.symbolizer, node.attributes.symbolizer);
         } else {
-            // TODO insert at a certain index?
-            p.attributes.symbolizer.push(node.attributes.symbolizer);
+            var counter = 0;
+            p.eachChild(function(c) {
+                if (c.attributes.checked === true) {
+                    if (node === c) {
+                        return false;
+                    }
+                    counter++;
+                }
+            });
+            p.attributes.symbolizer.splice(counter, 1, node.attributes.symbolizer);
         }
         this.updateSwatch(node);
         this.fireEvent("change", this);
