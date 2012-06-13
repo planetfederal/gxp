@@ -93,7 +93,9 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                 }
             };
             var i, ii, split, s;
-            for (i=0, ii=this.symbolizers.length;i<ii;++i) {
+            // SLD uses the painter's model so, first item in the list is
+            // at the bottom
+            for (i=this.symbolizers.length-1; i>=0; --i) {
                 var symbolizer = this.symbolizers[i];
                 var className = symbolizer.CLASS_NAME;
                 var type = className.substr(className.lastIndexOf(".")+1);
@@ -146,7 +148,7 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                             }
                             id = Ext.id();
                             if (overrides.checked !== false) {
-                                child.attributes.symbolizer.push(symbolizers[key][subKey][i]);
+                                child.attributes.symbolizer.splice(0, 0, symbolizers[key][subKey][i]);
                             }
                             child.appendChild(this.createNode({
                                 type: subKey,
