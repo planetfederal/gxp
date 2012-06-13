@@ -391,6 +391,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                             }
                             if (type === 'Fill' || type === 'Stroke') {
                                 config.checkboxToggle = false;
+                                config.titleText = '';
                             }
                             this.properties.add(Ext.apply({
                                 listeners: {

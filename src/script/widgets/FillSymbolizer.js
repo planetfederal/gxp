@@ -70,7 +70,7 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
     border: false,
     
     /** i18n */
-    fillText: "Fill",
+    titleText: "Fill",
     colorText: "Color",
     opacityText: "Opacity",
     
@@ -95,7 +95,7 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
         
         this.items = [{
             xtype: "fieldset",
-            title: this.fillText,
+            title: this.titleText,
             autoHeight: true,
             checkboxToggle: this.checkboxToggle,
             collapsed: this.checkboxToggle === true &&
