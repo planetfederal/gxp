@@ -117,7 +117,7 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
         var result = [];
         for (var key in symbolizers) {
             if (symbolizers[key].length > 0) {
-                for (i=0, ii=symbolizers[key].length; i<ii; ++i) {
+                for (i=symbolizers[key].length-1; i>=0; --i) {
                     var s;
                     if (key === "Point") {
                         // every subType should create its own symbolizer
