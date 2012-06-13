@@ -118,13 +118,23 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
         for (var key in symbolizers) {
             if (symbolizers[key].length > 0) {
                 for (i=0, ii=symbolizers[key].length; i<ii; ++i) {
-                    var config = {};
-                    for (var s in symbolizers[key][i]) {
-                        config[s.toLowerCase()] = true;
-                        config = Ext.applyIf(config, symbolizers[key][i][s]);
+                    var s;
+                    if (key === "Point") {
+                        // every subType should create its own symbolizer
+                        var tmp = [];
+                        for (s in symbolizers[key][i]) {
+                            tmp.push(new OpenLayers.Symbolizer[key](symbolizers[key][i][s]));
+                        }
+                        result = result.concat(tmp.reverse());
+                    } else {
+                        var config = {};
+                        for (s in symbolizers[key][i]) {
+                            config[s.toLowerCase()] = true;
+                            config = Ext.applyIf(config, symbolizers[key][i][s]);
+                        }
+                        delete config.checked;
+                        result.push(new OpenLayers.Symbolizer[key](config));
                     }
-                    delete config.checked;
-                    result.push(new OpenLayers.Symbolizer[key](config));
                 }
             }
         }
