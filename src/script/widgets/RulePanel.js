@@ -389,6 +389,9 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                             if (type === 'Label') {
                                 xtype = "gxp_textsymbolizer";
                             }
+                            if (type === 'Fill' || type === 'Stroke') {
+                                config.checkboxToggle = false;
+                            }
                             this.properties.add(Ext.apply({
                                 listeners: {
                                     change: function(symbolizer) {

@@ -28,6 +28,7 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
     solidStrokeName: "solid",
     dashStrokeName: "dash",
     dotStrokeName: "dot",
+    titleText: "Stroke",
     styleText: "Style",
     colorText: "Color",
     widthText: "Width",
@@ -48,6 +49,12 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
      *  field.
      */
     colorManager: null,
+    
+    /** api: config[checkboxToggle]
+     *  ``Boolean`` Set to false if the "Fill" fieldset should not be
+     *  toggleable. Default is true.
+     */
+    checkboxToggle: true,
     
     /** api: config[defaultColor]
      *  ``String`` Default background color for the Color field. This
@@ -81,90 +88,112 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
             colorFieldPlugins = [new this.colorManager];
         }
 
-        this.autoHeight = true;
-        this.hideMode = "offsets";
-        this.defaults = {
-            width: 100 // TODO: move to css
-        };
         this.items = [{
-            xtype: "combo",
-            name: "style",
-            fieldLabel: this.styleText,
-            store: new Ext.data.SimpleStore({
-                data: this.dashStyles,
-                fields: ["value", "display"]
-            }),
-            displayField: "display",
-            valueField: "value",
-            value: this.getDashArray(this.symbolizer.strokeDashstyle) || OpenLayers.Renderer.defaultSymbolizer.strokeDashstyle,
-            mode: "local",
-            allowBlank: true,
-            triggerAction: "all",
-            editable: false,
-            listeners: {
-                select: function(combo, record) {
-                    this.symbolizer.strokeDashstyle = record.get("value");
-                    this.fireEvent("change", this.symbolizer);
-                },
-                scope: this
-            }
-        }, {
-            xtype: "gxp_colorfield",
-            name: "color",
-            fieldLabel: this.colorText,
-            emptyText: OpenLayers.Renderer.defaultSymbolizer.strokeColor,
-            value: this.symbolizer.strokeColor,
-            defaultBackground: this.defaultColor ||
-                OpenLayers.Renderer.defaultSymbolizer.strokeColor,
-            plugins: colorFieldPlugins,
-            listeners: {
-                valid: function(field) {
-                    var newValue = field.getValue();
-                    var modified = this.symbolizer.strokeColor != newValue;
-                    this.symbolizer.strokeColor = newValue;
-                    modified && this.fireEvent("change", this.symbolizer);
-                },
-                scope: this
-            }
-        }, {
-            xtype: "numberfield",
-            name: "width",
-            fieldLabel: this.widthText,
-            allowNegative: false,
-            emptyText: OpenLayers.Renderer.defaultSymbolizer.strokeWidth,
-            value: this.symbolizer.strokeWidth,
-            listeners: {
-                change: function(field, value) {
-                    value = parseFloat(value);
-                    if (isNaN(value)) {
-                        delete this.symbolizer.strokeWidth;
-                    } else {
-                        this.symbolizer.strokeWidth = value;
-                    }
-                    this.fireEvent("change", this.symbolizer);
-                },
-                scope: this
-            }
-        }, {
-            xtype: "slider",
-            name: "opacity",
-            fieldLabel: this.opacityText,
-            values: [(("strokeOpacity" in this.symbolizer && this.symbolizer["strokeOpacity"] !== undefined) ? this.symbolizer.strokeOpacity*100 : OpenLayers.Renderer.defaultSymbolizer.strokeOpacity) * 100],
-            isFormField: true,
-            listeners: {
-                changecomplete: function(slider, value) {
-                    this.symbolizer.strokeOpacity = value / 100;
-                    this.fireEvent("change", this.symbolizer);
-                },
-                scope: this
+            xtype: "fieldset",
+            title: this.titleText,
+            autoHeight: true,
+            checkboxToggle: this.checkboxToggle,
+            collapsed: this.checkboxToggle === true &&
+                this.symbolizer.stroke === false,
+            hideMode: "offsets",
+            defaults: {
+                width: 100 // TODO: move to css
             },
-            plugins: [
-                new GeoExt.SliderTip({
-                    getText: function(thumb) {
-                        return thumb.value + "%";
+            items: [{
+                xtype: "combo",
+                name: "style",
+                fieldLabel: this.styleText,
+                store: new Ext.data.SimpleStore({
+                    data: this.dashStyles,
+                    fields: ["value", "display"]
+                }),
+                displayField: "display",
+                valueField: "value",
+                value: this.getDashArray(this.symbolizer.strokeDashstyle) || OpenLayers.Renderer.defaultSymbolizer.strokeDashstyle,
+                mode: "local",
+                allowBlank: true,
+                triggerAction: "all",
+                editable: false,
+                listeners: {
+                    select: function(combo, record) {
+                        this.symbolizer.strokeDashstyle = record.get("value");
+                        this.fireEvent("change", this.symbolizer);
+                    },
+                    scope: this
+                }
+            }, {
+                xtype: "gxp_colorfield",
+                name: "color",
+                fieldLabel: this.colorText,
+                emptyText: OpenLayers.Renderer.defaultSymbolizer.strokeColor,
+                value: this.symbolizer.strokeColor,
+                defaultBackground: this.defaultColor ||
+                    OpenLayers.Renderer.defaultSymbolizer.strokeColor,
+                plugins: colorFieldPlugins,
+                listeners: {
+                    valid: function(field) {
+                        var newValue = field.getValue();
+                        var modified = this.symbolizer.strokeColor != newValue;
+                        this.symbolizer.strokeColor = newValue;
+                        modified && this.fireEvent("change", this.symbolizer);
+                    },
+                    scope: this
+                }
+            }, {
+                xtype: "numberfield",
+                name: "width",
+                fieldLabel: this.widthText,
+                allowNegative: false,
+                emptyText: OpenLayers.Renderer.defaultSymbolizer.strokeWidth,
+                value: this.symbolizer.strokeWidth,
+                listeners: {
+                    change: function(field, value) {
+                        value = parseFloat(value);
+                        if (isNaN(value)) {
+                            delete this.symbolizer.strokeWidth;
+                        } else {
+                            this.symbolizer.strokeWidth = value;
+                        }
+                        this.fireEvent("change", this.symbolizer);
+                    },
+                    scope: this
+                }
+            }, {
+                xtype: "slider",
+                name: "opacity",
+                fieldLabel: this.opacityText,
+                values: [(("strokeOpacity" in this.symbolizer && this.symbolizer["strokeOpacity"] !== undefined) ? 
+                    this.symbolizer.strokeOpacity*100 : 
+                        OpenLayers.Renderer.defaultSymbolizer.strokeOpacity) * 100],
+                isFormField: true,
+                listeners: {
+                    changecomplete: function(slider, value) {
+                        this.symbolizer.strokeOpacity = value / 100;
+                        this.fireEvent("change", this.symbolizer);
+                    },
+                    scope: this
+                },
+                plugins: [
+                    new GeoExt.SliderTip({
+                        getText: function(thumb) {
+                            return thumb.value + "%";
+                        }
+                    })
+                ]
+            }],
+            listeners: {
+                "collapse": function() {
+                    if (this.symbolizer.stroke !== false) {
+                        this.symbolizer.stroke = false;
+                        this.fireEvent("change", this.symbolizer);
                     }
-                })
-            ]
+                },
+                "expand": function() {
+                    this.symbolizer.stroke = true;
+                    this.fireEvent("change", this.symbolizer);
+                },
+                scope: this
+            }
         }];
 
         this.addEvents(
