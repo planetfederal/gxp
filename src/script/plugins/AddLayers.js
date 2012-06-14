@@ -577,16 +577,19 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         if (extent) {
             this.target.mapPanel.map.zoomToExtent(extent);
         }
-        if (isUpload && this.postUploadAction && records.length === 1 && record) {
-            // show LayerProperties dialog if just one layer was added
+        if (records.length === 1 && record) {
+            // select the added layer
             this.target.selectLayer(record);
-            var outputConfig,
-                actionPlugin = this.postUploadAction;
-            if (!Ext.isString(actionPlugin)) {
-                outputConfig = actionPlugin.outputConfig;
-                actionPlugin = actionPlugin.plugin;
+            if (isUpload && this.postUploadAction) {
+                // show LayerProperties dialog if just one layer was uploaded
+                var outputConfig,
+                    actionPlugin = this.postUploadAction;
+                if (!Ext.isString(actionPlugin)) {
+                    outputConfig = actionPlugin.outputConfig;
+                    actionPlugin = actionPlugin.plugin;
+                }
+                this.target.tools[actionPlugin].addOutput(outputConfig);
             }
-            this.target.tools[actionPlugin].addOutput(outputConfig);
         }
     },
     
