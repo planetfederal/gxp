@@ -60,7 +60,7 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
         });
         this.columns = [{
             header: this.typeTitle,
-            dataIndex: 'type',
+            dataIndex: 'text',
             width: 200
         }, {
             header: this.previewTitle,

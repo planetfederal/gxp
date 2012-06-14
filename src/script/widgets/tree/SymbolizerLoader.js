@@ -135,6 +135,7 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                     var id = Ext.id();
                     var child = this.createNode({
                         type: key,
+                        text: key,
                         symbolizer: [],
                         symbolType: key,
                         expanded: true,
@@ -144,7 +145,10 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                     });
                     for (var subKey in symbolizers[key]) {
                         for (i=0, ii=symbolizers[key][subKey].length; i<ii; ++i) {
-                            var overrides = {};
+                            var overrides = {}, text = subKey;
+                            if (subKey === 'Label' && symbolizers[key][subKey][i].label) {
+                                text = symbolizers[key][subKey][i].label;
+                            }
                             if (symbolizers[key][subKey][i].checked === false) {
                                 overrides.checked = false;
                                 delete symbolizers[key][subKey][i].checked;
@@ -155,6 +159,7 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                             }
                             child.appendChild(this.createNode({
                                 type: subKey,
+                                text: text,
                                 symbolType: key,
                                 checked: true,
                                 listeners: {
