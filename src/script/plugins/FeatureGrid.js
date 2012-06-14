@@ -314,11 +314,20 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
             });
             featureGrid.ignoreFields = ignoreFields;
             featureGrid.setStore(featureManager.featureStore, schema);
+            if (!featureManager.featureStore) {
+                // not a feature layer, reset toolbar
+                featureGrid.lastPageButton.disable();
+                featureGrid.nextPageButton.disable();
+                featureGrid.firstPageButton.disable();
+                featureGrid.prevPageButton.disable();
+                featureGrid.zoomToPageButton.disable();
+                this.displayTotalResults();
+            }
         }
 
         if (featureManager.featureStore) {
             onLayerChange.call(this);
-        }
+        } 
         featureManager.on("layerchange", onLayerChange, this);
         
         return featureGrid;
