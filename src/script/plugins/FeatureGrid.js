@@ -149,7 +149,7 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
             featureManager.featureLayer, this.initialConfig.controlOptions
         );
         if (this.selectOnMap) {
-             if (featureManager.paging) {
+             if (this.autoLoadFeature || (featureManager.paging && featureManager.pagingType === gxp.plugins.FeatureManager.QUADTREE_PAGING)) {
                 this.selectControl.events.on({
                     "activate": function() {
                         map.events.register(
