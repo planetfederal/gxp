@@ -143,8 +143,7 @@ GeoExt.Lang.add("fr", {
         queryActionText: "Interrogation",
         queryMenuText: "Couche de requêtes",
         queryActionTip: "Interroger la couche sélectionnée",
-        queryByLocationText: "Interroger par lieu",
-        currentTextText: "Étendue actuelle",
+        queryByLocationText: "Query by current map extent",
         queryByAttributesText: "Requête par attributs"
     },
 
