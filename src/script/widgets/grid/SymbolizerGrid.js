@@ -48,6 +48,11 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
      *  Initializes the SymbolizerGrid.
      */
     initComponent: function() {
+        this.dropConfig = Ext.apply(this.dropConfig || {}, {
+            isValidDropPoint : function(n, pt, dd, e, data){
+                return (n.node.parentNode === data.node.parentNode);
+            }
+        });
         this.on('checkchange', this.onCheckChange, this);
         this.on('movenode', this.onMoveNode, this);
         this.loader = new gxp.tree.SymbolizerLoader({
