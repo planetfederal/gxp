@@ -129,7 +129,9 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
                     } else {
                         var config = {};
                         for (s in symbolizers[key][i]) {
-                            config[s.toLowerCase()] = true;
+                            if (s !== "Label") {
+                                config[s.toLowerCase()] = true;
+                            }
                             config = Ext.applyIf(config, symbolizers[key][i][s]);
                         }
                         result.push(new OpenLayers.Symbolizer[key](config));
@@ -212,6 +214,7 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
                 var ct = Ext.get(node.attributes.rendererId);
                 if (ct) {
                     node.attributes.featureRenderer = new GeoExt.FeatureRenderer({
+                        labelText: "Ab",
                         symbolizers: Ext.isArray(node.attributes.symbolizer) ? node.attributes.symbolizer : [node.attributes.symbolizer],
                         symbolType: node.attributes.symbolType,
                         renderTo: ct,

@@ -114,10 +114,13 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
             var typesNeeded = types[this.symbolType];
             for (i=0, ii=typesNeeded.length; i<ii; ++i) {
                 if (symbolizers[typesNeeded[i]].empty || typesNeeded[i] === this.symbolType) {
-                    var sym = new OpenLayers.Symbolizer[typesNeeded[i]]();
+                    var config = {};
                     if (typesNeeded[i] === 'Point') {
-                        sym.externalGraphic = null;
+                         config.externalGraphic = null;
+                    } else if (typesNeeded[i] === 'Text') {
+                        config.graphic = false;
                     }
+                    var sym = new OpenLayers.Symbolizer[typesNeeded[i]](config);
                     split = this.splitSymbolizer(sym);
                     for (s in split) {
                         split[s].checked = false;
