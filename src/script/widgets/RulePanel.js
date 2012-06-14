@@ -385,6 +385,9 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                         this.properties = this.grid.ownerCt.add(Ext.apply({
                             listeners: {
                                 change: function(symbolizer) {
+                                    if (symbolizer.label) {
+                                        node.setText(symbolizer.label);
+                                    }
                                     node.getUI().toggleCheck(true);
                                     this.grid.updateSwatch(node, symbolizer);
                                 },
