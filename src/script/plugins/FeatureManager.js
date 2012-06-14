@@ -54,8 +54,8 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
 
     /** api: config[pagingType]
      * ``Integer`` Paging type to use, one of: 
-     * gxp.plugins.FeatureManager.QUADTREE_PAGING or
-     * gxp.plugins.FeatureManager.WFS_PAGING
+     * gxp.plugins.FeatureManager.QUADTREE_PAGING (0) or
+     * gxp.plugins.FeatureManager.WFS_PAGING (1)
      */
     pagingType: null,
     
@@ -776,6 +776,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
             this.featureStore.unbind();
             // end remove
             this.featureStore.destroy();
+            this.numberOfFeatures = null;
             this.featureStore = null;
             this.geometryType = null;
         }

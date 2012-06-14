@@ -128,12 +128,12 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
      */
     displayTotalResults: function() {
         var featureManager = this.target.tools[this.featureManager];
-        if (this.showTotalResults === true && featureManager.numberOfFeatures !== null) {
+        if (this.showTotalResults === true) {
             this.displayItem.setText(
-                String.format(
+                featureManager.numberOfFeatures !== null ? String.format(
                     this.totalMsg,
                     featureManager.numberOfFeatures
-                )
+                ) : ""
             );
         }
     },
