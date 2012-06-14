@@ -242,6 +242,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
     createRulePanel: function() {
         this.symbolizerSwatch = new GeoExt.FeatureRenderer({
             symbolType: this.symbolType,
+            labelText: "Ab",
             isFormField: true,
             width: 25
         });
