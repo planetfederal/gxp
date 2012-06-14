@@ -352,83 +352,65 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
 
         var cfg = {
             xtype: 'panel',
-            layout: 'fit',
             title: this.symbologyText,
             items: [{
-                xtype: 'container',
-                height: 300,
-                layout: 'vbox',
-                layoutConfig: {
-                    align: 'stretch',
-                    pack: 'start'
-                },
-                items: [{
-                    xtype: "gxp_symbolgrid",
-                    ref: "../../grid",
-                    symbolType: this.symbolType,
-                    autoScroll: true,
-                    symbolizers: this.rule.symbolizers,
-                    height: 150,
-                    listeners: {
-                        click: function(node) {
-                            this.properties.removeAll(true);
-                            this.properties.setTitle('');
-                            if (node.parentNode === this.grid.getRootNode()) {
-                                return;
-                            } 
-                            var type = node.attributes.type;
-                            this.properties.setTitle(node.parentNode.attributes.type + " " + type + " " + this.propertiesSuffix);
-                            var config = {
-                                symbolizer: node.attributes.symbolizer
-                            };
-                            var xtype = "gxp_" + type.toLowerCase() + "symbolizer";
-                            if (type === 'Graphic' || type === 'Mark') {
-                                xtype = "gxp_pointsymbolizer";
-                                config.filter = gxp.PointSymbolizer[type.toUpperCase()];
-                            }
-                            if (type === 'Label') {
-                                xtype = "gxp_textsymbolizer";
-                            }
-                            if (type === 'Fill' || type === 'Stroke') {
-                                config.checkboxToggle = false;
-                                config.titleText = '';
-                            }
-                            this.properties.add(Ext.apply({
-                                listeners: {
-                                    change: function(symbolizer) {
-                                        node.getUI().toggleCheck(true);
-                                        this.grid.updateSwatch(node, symbolizer);
-                                    },
-                                    scope: this
+                xtype: "gxp_symbolgrid",
+                ref: "../grid",
+                symbolType: this.symbolType,
+                autoScroll: true,
+                symbolizers: this.rule.symbolizers,
+                height: 150,
+                listeners: {
+                    click: function(node) {
+                        this.grid.ownerCt.remove(this.properties, true);
+                        if (node.parentNode === this.grid.getRootNode()) {
+                            return;
+                        } 
+                        var type = node.attributes.type;
+                        var config = {
+                            symbolizer: node.attributes.symbolizer
+                        };
+                        var xtype = "gxp_" + type.toLowerCase() + "symbolizer";
+                        if (type === 'Graphic' || type === 'Mark') {
+                            xtype = "gxp_pointsymbolizer";
+                            config.filter = gxp.PointSymbolizer[type.toUpperCase()];
+                        }
+                        if (type === 'Label') {
+                            xtype = "gxp_textsymbolizer";
+                        }
+                        if (type === 'Fill' || type === 'Stroke') {
+                            config.checkboxToggle = false;
+                            config.titleText = '';
+                        }
+                        this.properties = this.grid.ownerCt.add(Ext.apply({
+                            listeners: {
+                                change: function(symbolizer) {
+                                    node.getUI().toggleCheck(true);
+                                    this.grid.updateSwatch(node, symbolizer);
                                 },
-                                autoScroll: true,
-                                attributes: this.attributes,
-                                bodyStyle: {"padding": "5px"},
-                                xtype: xtype
-                            }, config));
-                            this.properties.doLayout();
-                        },
-                        change: function(grid) {
-                            var symbolizers = grid.getSymbolizers();
-                            this.symbolizerSwatch.setSymbolizers(
-                                symbolizers, {draw: this.symbolizerSwatch.rendered}
-                            );
-                            this.rule.symbolizers = symbolizers;
-                            this.fireEvent("change", this, this.rule);
-                        },
-                        scope: this
-                    }
-                }, {
-                    xtype: 'panel',
-                    ref: "../../properties",
-                    layout: 'fit',
-                    title: '&nbsp;',
-                    flex: 1
-                }]
+                                scope: this
+                            },
+                            autoScroll: true,
+                            title: node.parentNode.attributes.type + " " + type + " " + this.propertiesSuffix,
+                            attributes: this.attributes,
+                            bodyStyle: {"padding": "5px"},
+                            xtype: xtype
+                        }, config));
+                        this.grid.ownerCt.doLayout();
+                    },
+                    change: function(grid) {
+                        var symbolizers = grid.getSymbolizers();
+                        this.symbolizerSwatch.setSymbolizers(
+                            symbolizers, {draw: this.symbolizerSwatch.rendered}
+                        );
+                        this.rule.symbolizers = symbolizers;
+                        this.fireEvent("change", this, this.rule);
+                    },
+                    scope: this
+                }
             }]
         };
         return cfg;
-        
     },
 
     /** private: method[getSymbolTypeFromRule]
