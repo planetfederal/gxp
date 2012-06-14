@@ -33,6 +33,7 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
     symbolType: null,
 
     /** private overrides */
+    enableDD: true,
     enableHdMenu: false,
     enableSort: false,
     useArrows: false,
@@ -48,6 +49,7 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
      */
     initComponent: function() {
         this.on('checkchange', this.onCheckChange, this);
+        this.on('movenode', this.onMoveNode, this);
         this.loader = new gxp.tree.SymbolizerLoader({
             symbolizers: this.symbolizers,
             symbolType: this.symbolType,
@@ -173,6 +175,35 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
         }
     },
 
+    getNodeIndex: function(node) {
+        var p = node.parentNode;
+        var idx = 0;
+        p.eachChild(function(c) {
+            if (c.getUI().isChecked() === true) {
+                if (node === c) {
+                    return false;
+                }
+                idx++;
+            }
+        });
+        return idx;
+    },
+
+    /** private: method[onMoveNode]
+     *
+     *  Handle the movenode event for drag and drop. Update the symbolizers
+     *  and their swatches.
+     */
+    onMoveNode: function(tree, node, oldParent, newParent, index) {
+        var p = node.parentNode;
+        OpenLayers.Util.removeItem(p.attributes.symbolizer, node.attributes.symbolizer);
+        // we cannot use index directly since it takes into account unchecked nodes
+        var idx = this.getNodeIndex(node);
+        p.attributes.symbolizer.splice(idx, 0, node.attributes.symbolizer);
+        this.updateSwatch(node);
+        this.fireEvent("change", this);
+    },
+
     /** private: method[onCheckChange]
      *  :arg node: ``Ext.data.Node``
      *  :arg checked: ``Boolean``
@@ -185,16 +216,8 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
         if (checked === false) {
             OpenLayers.Util.removeItem(p.attributes.symbolizer, node.attributes.symbolizer);
         } else {
-            var counter = 0;
-            p.eachChild(function(c) {
-                if (c.getUI().isChecked() === true) {
-                    if (node === c) {
-                        return false;
-                    }
-                    counter++;
-                }
-            });
-            p.attributes.symbolizer.splice(counter, 0, node.attributes.symbolizer);
+            var idx = this.getNodeIndex(node);
+            p.attributes.symbolizer.splice(idx, 0, node.attributes.symbolizer);
         }
         this.updateSwatch(node);
         this.fireEvent("change", this);

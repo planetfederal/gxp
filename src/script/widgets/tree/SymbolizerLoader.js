@@ -135,6 +135,7 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                     var id = Ext.id();
                     var child = this.createNode({
                         type: key,
+                        draggable: false,
                         text: key,
                         symbolizer: [],
                         symbolType: key,
@@ -160,6 +161,7 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                             child.appendChild(this.createNode({
                                 type: subKey,
                                 text: text,
+                                leaf: true,
                                 symbolType: key,
                                 checked: true,
                                 listeners: {
