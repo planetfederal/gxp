@@ -96,10 +96,12 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
      */
     getSymbolizers: function() {
         var symbolizers = {};
+        var keys = [];
         this.root.eachChild(function(n){
             var type = n.attributes.type,
-                i, ii,
+                i, ii, j, jj,
                 result = [];
+            keys.push(type);
             n.eachChild(function(c) {
                 if (c.getUI().isChecked() === true) {
                     var subType = c.attributes.type;
@@ -122,24 +124,25 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
             symbolizers[type] = result;
         });
         var result = [];
-        for (var key in symbolizers) {
+        for (i=keys.length-1; i>=0; --i) {
+            var key = keys[i];
             if (symbolizers[key].length > 0) {
-                for (i=symbolizers[key].length-1; i>=0; --i) {
+                for (j=symbolizers[key].length-1; j>=0; --j) {
                     var s;
                     if (key === "Point") {
                         // every subType should create its own symbolizer
                         var tmp = [];
-                        for (s in symbolizers[key][i]) {
-                            tmp.push(new OpenLayers.Symbolizer[key](symbolizers[key][i][s]));
+                        for (s in symbolizers[key][j]) {
+                            tmp.push(new OpenLayers.Symbolizer[key](symbolizers[key][j][s]));
                         }
                         result = result.concat(tmp.reverse());
                     } else {
                         var config = {};
-                        for (s in symbolizers[key][i]) {
+                        for (s in symbolizers[key][j]) {
                             if (s !== "Label") {
                                 config[s.toLowerCase()] = true;
                             }
-                            config = Ext.applyIf(config, symbolizers[key][i][s]);
+                            config = Ext.applyIf(config, symbolizers[key][j][s]);
                         }
                         result.push(new OpenLayers.Symbolizer[key](config));
                     }
