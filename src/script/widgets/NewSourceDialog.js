@@ -39,7 +39,19 @@ gxp.NewSourceDialog = Ext.extend(Ext.Panel, {
      *  Text for add server button (i18n).
      */
     addServerText: "Add Server",
-    
+
+    /** api: config[wmsText]
+     *  ``String``
+     *  Text for WMS radio-button(i18n).
+     */
+    addWMSText: "WMS",
+
+    /** api: config[arcText]
+     *  ``String``
+     *  Text for ArcGIS REST radio-button(i18n).
+     */
+    addArcText: "ArcGIS REST",
+
     /** api: config[invalidURLText]
      *  ``String``
      *  Message to display when an invalid URL is entered (i18n).
@@ -82,9 +94,19 @@ gxp.NewSourceDialog = Ext.extend(Ext.Panel, {
             validator: this.urlValidator.createDelegate(this)
         });
 
+        this.sourceTypeRadioList = new Ext.form.RadioGroup({
+            fieldLabel: 'Type',
+            columns: [50, 190],
+            items: [
+                {name: 'source_type', inputValue: 'gxp_wmscsource', boxLabel: this.addWMSText, checked: true},
+                {name: 'source_type', inputValue: 'gxp_arcrestsource', boxLabel: this.addArcText}
+            ]
+        });
+
         this.form = new Ext.form.FormPanel({
             items: [
-                this.urlTextField
+                this.urlTextField,
+                this.sourceTypeRadioList
             ],
             border: false,
             labelWidth: 30,
@@ -107,7 +129,7 @@ gxp.NewSourceDialog = Ext.extend(Ext.Panel, {
                     // Clear validation before trying again.
                     this.error = null;
                     if (this.urlTextField.validate()) {
-                        this.fireEvent("urlselected", this, this.urlTextField.getValue());
+                        this.fireEvent("urlselected", this, this.urlTextField.getValue(), this.sourceTypeRadioList.getValue());
                     }
                 },
                 scope: this

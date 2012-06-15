@@ -28,10 +28,10 @@ Ext.namespace("gxp.plugins");
  *    TODO Make this plural - selected layers
  */
 gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
-    
+
     /** api: ptype = gxp_addlayers */
     ptype: "gxp_addlayers",
-    
+
     /** api: config[addActionMenuText]
      *  ``String``
      *  Text for add menu item (i18n).
@@ -49,12 +49,12 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      *  Text for add action tooltip (i18n).
      */
     addActionTip: "Add layers",
-    
+
     /** api: config[addActionText]
      *  ``String``
      *  Text for the Add action. None by default.
      */
-   
+
     /** api: config[addServerText]
      *  ``String``
      *  Text for add server button (i18n).
@@ -66,7 +66,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      *  Text for add layers button (i18n).
      */
     addButtonText: "Add layers",
-    
+
     /** api: config[untitledText]
      *  ``String``
      *  Text for an untitled layer (i18n).
@@ -90,7 +90,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      *  Text for the grid expander (i18n).
      */
     expanderTemplateText: "<p><b>Abstract:</b> {abstract}</p>",
-    
+
     /** api: config[availableLayersText]
      *  ``String``
      *  Text for the layer title (i18n).
@@ -102,13 +102,13 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      *  Text for the layer selection (i18n).
      */
     layerSelectionText: "View available data from:",
-    
+
     /** api: config[instructionsText]
      *  ``String``
      *  Text for additional instructions at the bottom of the grid (i18n).
      *  None by default.
      */
-    
+
     /** api: config[doneText]
      *  ``String``
      *  Text for Done button (i18n).
@@ -125,8 +125,8 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
     /** api: config[upload]
      *  ``Object | Boolean``
      *  If provided, a :class:`gxp.LayerUploadPanel` will be made accessible
-     *  from a button on the Available Layers dialog.  This panel will be 
-     *  constructed using the provided config.  By default, no upload 
+     *  from a button on the Available Layers dialog.  This panel will be
+     *  constructed using the provided config.  By default, no upload
      *  button will be added to the Available Layers dialog.
      */
     
@@ -348,7 +348,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             var records = capGridPanel.getSelectionModel().getSelections();
             this.addLayers(records, source);
         }
-        
+
         var idx = 0;
         if (this.startSourceId !== null) {
             sources.each(function(record) {
@@ -443,10 +443,10 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                         cmp.ownerCt.hide();
                     }
                 },
-                "urlselected": function(newSourceDialog, url) {
+                "urlselected": function(newSourceDialog, url, sourceType) {
                     newSourceDialog.setLoading();
                     this.target.addLayerSource({
-                        config: {url: url}, // assumes default of gx_wmssource
+                        config: {url: url,  ptype: sourceType}, // assumes default of gx_wmssource
                         callback: function(id) {
                             // add to combo and select
                             var record = new sources.recordType({
@@ -543,7 +543,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         }
         
     },
-    
+
     /** private: method[addLayers]
      *  :arg records: ``Array`` the layer records to add
      *  :arg source: :class:`gxp.plugins.LayerSource` The source to add from

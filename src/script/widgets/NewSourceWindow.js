@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
- * 
+ *
  * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
@@ -22,7 +22,7 @@ Ext.namespace("gxp");
 /** api: constructor
  * .. class:: gxp.NewSourceWindow(config)
  *
- *     An Ext.Window with some defaults that better lend themselves toward use 
+ *     An Ext.Window with some defaults that better lend themselves toward use
  *     as a quick query to get a service URL from a user.
  */
 gxp.NewSourceWindow = Ext.extend(Ext.Window, {
@@ -36,7 +36,7 @@ gxp.NewSourceWindow = Ext.extend(Ext.Window, {
      *  Defaults to true.
      */
     hideBorders: true,
-    
+
     /** api: config[width]
      * The width defaults to 300
      */
@@ -51,13 +51,13 @@ gxp.NewSourceWindow = Ext.extend(Ext.Window, {
      * ``String``
      * The error message set (for example, when adding the source failed)
      */
-    error: null,    
+    error: null,
 
     /** api: event[server-added]
-     * Fired with the URL that the user provided as a parameter when the form 
+     * Fired with the URL that the user provided as a parameter when the form
      * is submitted.
      */
-    
+
     initComponent: function() {
         window.setTimeout(function() {
             throw("gxp.NewSourceWindow is deprecated. Use gxp.NewSourceDialog instead.");
@@ -79,9 +79,9 @@ gxp.NewSourceWindow = Ext.extend(Ext.Window, {
         this.setError = dialog.setError.createDelegate(dialog);
         this.on("hide", dialog.onHide, dialog);
     },
-    
+
     /** api: config[addSource]
-     * A callback function to be called when the user submits the form in the 
+     * A callback function to be called when the user submits the form in the
      * NewSourceWindow.
      *
      * TODO this can probably be extracted to an event handler
