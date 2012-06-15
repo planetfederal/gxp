@@ -219,8 +219,10 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
     onCheckChange: function(node, checked) {
         var p = node.parentNode;
         if (checked === false) {
+            node.attributes.featureRenderer.hide();
             OpenLayers.Util.removeItem(p.attributes.symbolizer, node.attributes.symbolizer);
         } else {
+            node.attributes.featureRenderer.show();
             var idx = this.getNodeIndex(node);
             p.attributes.symbolizer.splice(idx, 0, node.attributes.symbolizer);
         }
