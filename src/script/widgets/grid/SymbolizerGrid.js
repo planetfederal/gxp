@@ -247,6 +247,7 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
                 if (ct) {
                     node.attributes.featureRenderer = new GeoExt.FeatureRenderer({
                         labelText: "Ab",
+                        hidden: !node.getUI().isChecked(),
                         symbolizers: Ext.isArray(node.attributes.symbolizer) ? node.attributes.symbolizer : [node.attributes.symbolizer],
                         symbolType: node.attributes.symbolType,
                         renderTo: ct,

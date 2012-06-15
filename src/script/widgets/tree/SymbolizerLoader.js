@@ -105,7 +105,7 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                 }
             }
             var types = {
-                Polygon: ['Polygon', 'Point', 'Text'],
+                Polygon: ['Polygon', 'Line', 'Point', 'Text'],
                 Line: ['Line', 'Text'],
                 Point: ['Point', 'Text'],
                 Text: ['Text']
@@ -133,9 +133,13 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
             for (var key in symbolizers) {
                 if (symbolizers[key].empty === false) {
                     var id = Ext.id();
+                    var text = key;
+                    if (key !== 'Text') {
+                        text += 's'; // plural
+                    }
                     var child = this.createNode({
                         type: key,
-                        text: key,
+                        text: text,
                         symbolizer: [],
                         symbolType: key,
                         expanded: true,
@@ -145,9 +149,11 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                     });
                     for (var subKey in symbolizers[key]) {
                         for (i=0, ii=symbolizers[key][subKey].length; i<ii; ++i) {
-                            var overrides = {}, text = subKey;
+                            var overrides = {}; 
                             if (subKey === 'Label' && symbolizers[key][subKey][i].label) {
                                 text = symbolizers[key][subKey][i].label;
+                            } else {
+                                text = subKey;
                             }
                             if (symbolizers[key][subKey][i].checked === false) {
                                 overrides.checked = false;
@@ -195,7 +201,6 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                 }
             });
             if (hasUnchecked === false) {
-                // TODO correct index
                 var id = Ext.id();
                 var symbolizer = {};
                 symbolizer[type.toLowerCase()] = true;
@@ -205,6 +210,7 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                 }, symbolizer);
                 var child = this.createNode({
                     type: type,
+                    text: type,
                     symbolType: node.parentNode.attributes.type,
                     checked: false,
                     listeners: {
