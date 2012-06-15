@@ -99,7 +99,7 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
         var keys = [];
         this.root.eachChild(function(n){
             var type = n.attributes.type,
-                i, ii, j, jj,
+                i, ii, j,
                 result = [];
             keys.push(type);
             n.eachChild(function(c) {

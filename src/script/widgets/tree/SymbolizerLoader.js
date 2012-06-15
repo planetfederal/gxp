@@ -92,13 +92,16 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                     Label: []
                 }
             };
-            var i, ii, split, s;
+            var i, ii, split, s, typeSeq = [];
             // SLD uses the painter's model so, first item in the list is
             // at the bottom
             for (i=this.symbolizers.length-1; i>=0; --i) {
                 var symbolizer = this.symbolizers[i];
                 var className = symbolizer.CLASS_NAME;
                 var type = className.substr(className.lastIndexOf(".")+1);
+                if (OpenLayers.Util.indexOf(typeSeq, type) === -1) {
+                    typeSeq.splice(0, 0, type);
+                }
                 split = this.splitSymbolizer(symbolizer);
                 for (s in split) {
                     symbolizers[type][s].push(split[s]);
@@ -127,10 +130,14 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                         symbolizers[typesNeeded[i]].empty = false;
                         symbolizers[typesNeeded[i]][s].push(split[s]);
                     }
+                    if (OpenLayers.Util.indexOf(typeSeq, typesNeeded[i]) === -1) {
+                        typeSeq.push(typesNeeded[i]);
+                    }
                 }
             }
             // now we have aggregated the complete symbolizer structure, so process
-            for (var key in symbolizers) {
+            for (i=typeSeq.length-1; i>=0; --i) {
+                var key = typeSeq[i];
                 if (symbolizers[key].empty === false) {
                     var id = Ext.id();
                     var text = key;
@@ -148,20 +155,20 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                         preview: this.divTpl.applyTemplate({id: id})
                     });
                     for (var subKey in symbolizers[key]) {
-                        for (i=0, ii=symbolizers[key][subKey].length; i<ii; ++i) {
+                        for (var j=0, jj=symbolizers[key][subKey].length; j<jj; ++j) {
                             var overrides = {}; 
-                            if (subKey === 'Label' && symbolizers[key][subKey][i].label) {
-                                text = symbolizers[key][subKey][i].label;
+                            if (subKey === 'Label' && symbolizers[key][subKey][j].label) {
+                                text = symbolizers[key][subKey][j].label;
                             } else {
                                 text = subKey;
                             }
-                            if (symbolizers[key][subKey][i].checked === false) {
+                            if (symbolizers[key][subKey][j].checked === false) {
                                 overrides.checked = false;
-                                delete symbolizers[key][subKey][i].checked;
+                                delete symbolizers[key][subKey][j].checked;
                             }
                             id = Ext.id();
                             if (overrides.checked !== false) {
-                                child.attributes.symbolizer.splice(0, 0, symbolizers[key][subKey][i]);
+                                child.attributes.symbolizer.splice(0, 0, symbolizers[key][subKey][j]);
                             }
                             child.appendChild(this.createNode({
                                 type: subKey,
@@ -174,7 +181,7 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                                     scope: this
                                 },
                                 iconCls: "gxp-icon-symbolgrid-none",
-                                symbolizer: symbolizers[key][subKey][i],
+                                symbolizer: symbolizers[key][subKey][j],
                                 rendererId: id,
                                 preview: this.divTpl.applyTemplate({id: id})
                             }, overrides));
