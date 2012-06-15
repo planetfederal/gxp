@@ -6,6 +6,11 @@
  * of the license.
  */
 
+/** 
+ * @include widgets/FillSymbolizer.js
+ * @include widgets/StrokeSymbolizer.js
+ */
+
 /** api: (define)
  *  module = gxp
  *  class = PolygonSymbolizer
@@ -16,10 +21,7 @@ Ext.namespace("gxp");
 /** api: constructor
  *  .. class:: PolygonSymbolizer(config)
  *   
- *      Form for configuring a polygon symbolizer. This form only deals with
- *      properties at the level of the symbolizer itself, not with properties
- *      of its children Fill and Stroke. Currently there are no properties at
- *      this level so this means it's just an empty container.
+ *      Form for configuring a polygon symbolizer.
  */
 gxp.PolygonSymbolizer = Ext.extend(Ext.Panel, {
 
@@ -33,6 +35,26 @@ gxp.PolygonSymbolizer = Ext.extend(Ext.Panel, {
 
     initComponent: function() {
         
+        this.items = [{
+            xtype: "gxp_fillsymbolizer",
+            symbolizer: this.symbolizer,
+            listeners: {
+                change: function(symbolizer) {
+                    this.fireEvent("change", this.symbolizer);
+                },
+                scope: this
+            }
+        }, {
+            xtype: "gxp_strokesymbolizer",
+            symbolizer: this.symbolizer,
+            listeners: {
+                change: function(symbolizer) {
+                    this.fireEvent("change", this.symbolizer);
+                },
+                scope: this
+            }
+        }];
+
         this.addEvents(
             /**
              * Event: change

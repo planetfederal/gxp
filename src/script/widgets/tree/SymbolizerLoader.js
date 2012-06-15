@@ -22,7 +22,7 @@ gxp.tree.SymbolizerLoader = function(config) {
     this.addEvents(
         /**
          * @event beforeload
-         * Fires before a network request is made to retrieve the Json text which specifies a node's children.
+         * Fires before loading the tree nodes.
          * @param {Object} This TreeLoader object.
          * @param {Object} node The {@link Ext.tree.TreeNode} object being loaded.
          * @param {Object} callback The callback function specified in the {@link #load} call.
@@ -59,7 +59,15 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
      */
     symbolizers: null,
 
+    /** private: config[divTpl]
+     *  ``Ext.Template`` The template used for the swatches.
+     */
     divTpl: new Ext.Template('<div class="gxp-symbolgrid-swatch" id="{id}"></div>'),
+
+    /** private: config[emptyIconCls]
+     *  ``String`` The css class to use on nodes without an icon in front.
+     */
+    emptyIconCls: "gxp-icon-symbolgrid-none",
 
     /** private: method[load]
      *  :param node: ``Ext.tree.TreeNode`` The node to add children to.
@@ -180,7 +188,7 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                                     checkchange: this.onCheckChange,
                                     scope: this
                                 },
-                                iconCls: "gxp-icon-symbolgrid-none",
+                                iconCls: this.emptyIconCls,
                                 symbolizer: symbolizers[key][subKey][j],
                                 rendererId: id,
                                 preview: this.divTpl.applyTemplate({id: id})
@@ -197,13 +205,20 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
         }
     },
 
+    /** private: method[onCheckChange]
+     *  :param node: ``Ext.tree.TreeNode`` The node whose checkbox state is altered.
+     *  :param checked: ``Boolean``
+     *
+     *  Handle the checkchange event, update the composite swatches.
+     */
     onCheckChange: function(node, checked) {
         if (checked) {
             var type = node.attributes.type;
             // check if there is still an unchecked node of the same type
             var hasUnchecked = false;
             node.parentNode.cascade(function(subNode) {
-                if (subNode.attributes.type === type && subNode.getUI().isChecked() === false) {
+                if (subNode.attributes.type === type && 
+                  subNode.getUI().isChecked() === false) {
                     hasUnchecked = true;
                 }
             });
@@ -224,7 +239,7 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                         checkchange: this.onCheckChange,
                         scope: this
                     },
-                    iconCls: "gxp-icon-symbolgrid-none",
+                    iconCls: this.emptyIconCls,
                     symbolizer: symbolizer,
                     rendererId: id,
                     preview: this.divTpl.applyTemplate({id: id})
@@ -245,6 +260,12 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
         }
     },
 
+    /** private: method[splitSymbolizer]
+     *  :param symbolizer: ``OpenLayers.Symbolizer`` The symbolizer to split up.
+     *
+     *  Split up a symbolizer in its subTypes, such as a PolygonSymbolizer in
+     *  Stroke and Fill.
+     */
     splitSymbolizer: function(symbolizer) {
         var result = {}, config;
         if (symbolizer instanceof OpenLayers.Symbolizer.Polygon) {

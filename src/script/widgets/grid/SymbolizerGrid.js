@@ -30,6 +30,15 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
      */
     symbolizers: null,
 
+    /** api: config[swatchSize]
+     *  ``Array`` Width and height of the swatches / feature renderers. 
+     *  Defaults to 21 pixels.
+     */
+    swatchSize: [21, 21],
+
+    /** api: config[symbolType]
+     *  ``String`` Main symbol type to use, e.g. Point or Polygon.
+     */
     symbolType: null,
 
     /** private overrides */
@@ -183,6 +192,12 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
         }
     },
 
+    /** private: method[getNodeIndex]
+     *  :arg node: ``Ext.data.Node``
+     *  :returns: ``Integer`` The index
+     *
+     *  Get the index of the node in the tree, ignore unchecked nodes.
+     */
     getNodeIndex: function(node) {
         var p = node.parentNode;
         var idx = 0;
@@ -243,19 +258,25 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
         this.createSwatches(this.root);
     },
 
-    createSwatches: function(rootNode) {
-        rootNode.cascade(function(node) {
-            if (node.attributes.rendererId) {
-                var ct = Ext.get(node.attributes.rendererId);
+    /** private: method[createSwatches]
+     *  :arg pNode: ``Ext.data.Node``
+     *
+     *  Create the FeatureRenderer instances on a node and all its subnodes.
+     */
+    createSwatches: function(pNode) {
+        pNode.cascade(function(node) {
+            var attr = node.attributes;
+            if (attr.rendererId) {
+                var ct = Ext.get(attr.rendererId);
                 if (ct) {
-                    node.attributes.featureRenderer = new GeoExt.FeatureRenderer({
+                    attr.featureRenderer = new GeoExt.FeatureRenderer({
                         labelText: "Ab",
                         hidden: !node.getUI().isChecked(),
-                        symbolizers: Ext.isArray(node.attributes.symbolizer) ? node.attributes.symbolizer : [node.attributes.symbolizer],
-                        symbolType: node.attributes.symbolType,
+                        symbolizers: Ext.isArray(attr.symbolizer) ? attr.symbolizer : [attr.symbolizer],
+                        symbolType: attr.symbolType,
                         renderTo: ct,
-                        width:21,
-                        height: 21
+                        width: this.swatchSize[0],
+                        height: this.swatchSize[1]
                     });
                 }
             }

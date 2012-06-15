@@ -122,14 +122,6 @@
     background-image: url(img/silk/font.png);
 }
 
-.x-btn .moveup {
-    background-image: url(img/silk/arrow_up.png);
-}
-
-.x-btn .movedown {
-    background-image: url(img/silk/arrow_down.png);
-}
-
 .x-btn .duplicate {
     background-image: url(img/silk/arrow_divide.png);
 }
