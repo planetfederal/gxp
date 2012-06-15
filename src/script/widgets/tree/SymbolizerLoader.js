@@ -131,7 +131,7 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                         symbolizers[typesNeeded[i]][s].push(split[s]);
                     }
                     if (OpenLayers.Util.indexOf(typeSeq, typesNeeded[i]) === -1) {
-                        typeSeq.push(typesNeeded[i]);
+                        typeSeq.splice(0, 0, typesNeeded[i]);
                     }
                 }
             }
