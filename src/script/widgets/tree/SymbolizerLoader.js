@@ -135,7 +135,6 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                     var id = Ext.id();
                     var child = this.createNode({
                         type: key,
-                        draggable: false,
                         text: key,
                         symbolizer: [],
                         symbolType: key,

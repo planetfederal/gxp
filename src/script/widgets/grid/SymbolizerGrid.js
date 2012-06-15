@@ -50,7 +50,7 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
     initComponent: function() {
         this.dropConfig = Ext.apply(this.dropConfig || {}, {
             isValidDropPoint : function(n, pt, dd, e, data){
-                return (n.node.parentNode === data.node.parentNode);
+                return (pt !== 'append') && (n.node.parentNode === data.node.parentNode);
             }
         });
         this.on('checkchange', this.onCheckChange, this);
@@ -201,11 +201,13 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
      */
     onMoveNode: function(tree, node, oldParent, newParent, index) {
         var p = node.parentNode;
-        OpenLayers.Util.removeItem(p.attributes.symbolizer, node.attributes.symbolizer);
-        // we cannot use index directly since it takes into account unchecked nodes
-        var idx = this.getNodeIndex(node);
-        p.attributes.symbolizer.splice(idx, 0, node.attributes.symbolizer);
-        this.updateSwatch(node);
+        if (p !== this.getRootNode()) {
+            OpenLayers.Util.removeItem(p.attributes.symbolizer, node.attributes.symbolizer);
+            // we cannot use index directly since it takes into account unchecked nodes
+            var idx = this.getNodeIndex(node);
+            p.attributes.symbolizer.splice(idx, 0, node.attributes.symbolizer);
+            this.updateSwatch(node);
+        }
         this.fireEvent("change", this);
     },
 
