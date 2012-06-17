@@ -280,7 +280,7 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
                     });
                 }
             }
-        });
+        }, this);
     }
 
 });
