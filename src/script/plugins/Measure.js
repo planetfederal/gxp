@@ -11,6 +11,9 @@
  * @requires OpenLayers/StyleMap.js
  * @requires OpenLayers/Rule.js
  * @requires OpenLayers/Control/Measure.js
+ * @requires OpenLayers/Renderer/SVG.js
+ * @requires OpenLayers/Renderer/VML.js
+ * @requires OpenLayers/Renderer/Canvas.js
  */
 
 /** api: (define)
