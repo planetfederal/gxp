@@ -568,7 +568,9 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     }
                 }
                 if (record.get("group") === "background") {
-                    layerStore.insert(0, [record]);
+                    // layer index 0 is the invisible base layer, so we insert
+                    // at position 1.
+                    layerStore.insert(1, [record]);
                 } else {
                     layerStore.add([record]);
                 }
