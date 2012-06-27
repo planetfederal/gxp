@@ -651,11 +651,10 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                             width: 350,
                             border: false,
                             bodyStyle: "padding: 10px 10px 0 10px;",
-                            frame: true,
                             labelWidth: 65,
                             autoScroll: true,
                             defaults: {
-                                anchor: "95%",
+                                anchor: "99%",
                                 allowBlank: false,
                                 msgTarget: "side"
                             },
