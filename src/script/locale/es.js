@@ -18,7 +18,8 @@ GeoExt.Lang.add("es", {
         availableLayersText: "Capas disponibles",
         expanderTemplateText: "<p><b>Resumen:</b> {abstract}</p>",
         panelTitleText: "Título",
-        layerSelectionText: "Ver datos disponibles de:",
+        layerSelectionText: "Source:",
+        sourceSelectOrTypeText: "Choose one or type service URL",
         doneText: "Hecho",
         uploadText: "Subir Datos"
     },
