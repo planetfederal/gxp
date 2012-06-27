@@ -309,7 +309,8 @@ GeoExt.Lang.add("fr", {
         workspaceLabel: "Espace de travail",
         workspaceEmptyText: "Espace de travail par défaut",
         dataStoreLabel: "Magasin de données",
-        dataStoreEmptyText: "Create new store"
+        dataStoreEmptyText: "Create new store",
+        defaultDataStoreEmptyText: "Magasin de données par défaut"
     },
 
     "gxp.NewSourceDialog.prototype": {

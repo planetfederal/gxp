@@ -376,7 +376,8 @@ GeoExt.Lang.add("id", {
         workspaceLabel: "Ruang Kerja",
         workspaceEmptyText: "Ruang kerja Default",
         dataStoreLabel: "Penyimpanan",
-        dataStoreEmptyText: "Create new store"
+        dataStoreEmptyText: "Create new store",
+        defaultDataStoreEmptyText: "Penyimpanan data Default"
     },
     
     "gxp.NewSourceDialog.prototype": {

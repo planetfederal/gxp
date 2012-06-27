@@ -372,7 +372,8 @@ GeoExt.Lang.add("en", {
         workspaceLabel: "Workspace",
         workspaceEmptyText: "Default workspace",
         dataStoreLabel: "Store",
-        dataStoreEmptyText: "Create new store"
+        dataStoreEmptyText: "Create new store",
+        defaultDataStoreEmptyText: "Default data store"
     },
     
     "gxp.NewSourceDialog.prototype": {

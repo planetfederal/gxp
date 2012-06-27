@@ -337,7 +337,8 @@ GeoExt.Lang.add("nl", {
         workspaceLabel: "Werkruimte",
         workspaceEmptyText: "Standaard werkruimte",
         dataStoreLabel: "Archief",
-        dataStoreEmptyText: "Create new store"
+        dataStoreEmptyText: "Create new store",
+        defaultDataStoreEmptyText: "Standaard archief"
     },
 
     "gxp.NewSourceDialog.prototype": {

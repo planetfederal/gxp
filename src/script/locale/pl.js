@@ -355,7 +355,8 @@ GeoExt.Lang.add("pl", {
         workspaceLabel: "Obszar roboczy",
         workspaceEmptyText: "Domyślny obszar roboczy",
         dataStoreLabel: "Magazyn danych",
-        dataStoreEmptyText: "Create new store"
+        dataStoreEmptyText: "Create new store",
+        defaultDataStoreEmptyText: "Domyślny magazyn danych"
     },
     
     "gxp.NewSourceDialog.prototype": {

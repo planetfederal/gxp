@@ -367,7 +367,8 @@ GeoExt.Lang.add("el", {
         workspaceLabel: "Χώρος εργασίας",
         workspaceEmptyText: "Προεπιλεγμένος χώρος εργασίας",
         dataStoreLabel: "Αποθήκη",
-        dataStoreEmptyText: "Προεπιλεγμένη αποθήκη"
+        dataStoreEmptyText: "Create new store",
+        defaultDataStoreEmptyText: "Προεπιλεγμένη αποθήκη"
     },
     
     "gxp.NewSourceWindow.prototype": {
