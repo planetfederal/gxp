@@ -363,7 +363,6 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         var capGridPanel = new Ext.grid.GridPanel({
             store: source.store,
             autoScroll: true,
-            flex: 1,
             autoExpandColumn: "title",
             plugins: [expander],
             loadMask: true,
@@ -472,7 +471,8 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         var items = {
             xtype: "container",
             region: "center",
-            layout: "vbox",
+            layout: "fit",
+            hideBorders: true,
             items: [capGridPanel]
         };
         if (this.instructionsText) {
