@@ -46,7 +46,7 @@ GeoExt.Lang.add("de", {
         zoomPageExtentTip: "Zoom zur max. Ausdehnung",
         nextPageTip: "nächste Seite",
         lastPageTip: "letzte Seite",
-        totalMsg: "Total: {0} Datensätze"
+        totalMsg: "{1} bis {2} von {0} Datensätzen"
     },
 
     "gxp.plugins.GoogleEarth.prototype": {

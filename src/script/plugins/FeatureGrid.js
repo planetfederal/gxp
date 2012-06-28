@@ -100,7 +100,7 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
      */
     previousPageTip: "Previous page",
 
-    /** api: config[zoomFirstPageTip]
+    /** api: config[zoomPageExtentTip]
      *  ``String``
      *  Tooltip string for zoom to page extent action (i18n).
      */
@@ -122,7 +122,7 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
      *  ``String``
      *  String template for showing total number of records (i18n).
      */
-    totalMsg: "Total: {0} records",
+    totalMsg: "Features {1} to {2} of {0}",
 
     /** private: method[displayTotalResults]
      */
@@ -132,7 +132,9 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
             this.displayItem.setText(
                 featureManager.numberOfFeatures !== null ? String.format(
                     this.totalMsg,
-                    featureManager.numberOfFeatures
+                    featureManager.numberOfFeatures,
+                    featureManager.pageIndex * featureManager.maxFeatures + 1,
+                    Math.min((featureManager.pageIndex + 1) * featureManager.maxFeatures, featureManager.numberOfFeatures)
                 ) : ""
             );
         }

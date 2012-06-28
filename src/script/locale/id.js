@@ -46,7 +46,7 @@ GeoExt.Lang.add("id", {
         zoomPageExtentTip: "Zoom sampai batas halaman",
         nextPageTip: "Halaman berikut",
         lastPageTip: "Halaman terakhir",
-        totalMsg: "Total: {0} records"
+        totalMsg: "Features {1} to {2} of {0}"
     },
     
     "gxp.plugins.GoogleEarth.prototype": {

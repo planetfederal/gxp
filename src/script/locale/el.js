@@ -43,7 +43,7 @@ GeoExt.Lang.add("el", {
         zoomPageExtentTip: "Ζουμ στο εύρος της σελίδας",
         nextPageTip: "Επόμενη σελίδα",
         nextPageTip: "Τελευταία σελίδα",
-        totalMsg: "Σύνολο: {0} εγγραφές"
+        totalMsg: "Features {1} to {2} of {0}"
     },
 
     "gxp.plugins.GoogleEarth.prototype": {

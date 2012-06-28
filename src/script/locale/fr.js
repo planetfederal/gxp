@@ -39,7 +39,7 @@ GeoExt.Lang.add("fr", {
         zoomPageExtentTip: "Zoom sur la page",
         nextPageTip: "Page suivante",
         lastPageTip: "Dernière page",
-        totalMsg: "Total : {0} entrées"
+        totalMsg: "Features {1} to {2} of {0}"
     },
 
     "gxp.plugins.GoogleEarth.prototype": {

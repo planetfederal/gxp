@@ -46,7 +46,7 @@ GeoExt.Lang.add("pl", {
         zoomPageExtentTip: "Powiększ do zasięgu strony",
         nextPageTip: "Następna strona",
         lastPageTip: "Ostatnia strona",
-        totalMsg: "Razem: {0} wierszy"
+        totalMsg: "Features {1} to {2} of {0}"
 
     },
     
