@@ -189,6 +189,7 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
             border: false,
             sm: new GeoExt.grid.FeatureSelectionModel(smCfg),
             autoScroll: true,
+            columnMenuDisabled: !!featureManager.paging,
             bbar: (featureManager.paging ? [{
                 iconCls: "x-tbar-page-first",
                 ref: "../firstPageButton",
@@ -210,7 +211,8 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                 ref: "../zoomToPageButton",
                 tooltip: this.zoomPageExtentTip,
                 disabled: true,
-                hidden: featureManager.autoZoomPage,
+                hidden: (featureManager.pagingType !== gxp.plugins.FeatureManager.QUADTREE_PAGING) ||
+                    featureManager.autoZoomPage,
                 handler: function() {
                     var extent = featureManager.getPageExtent();
                     if (extent !== null) {
