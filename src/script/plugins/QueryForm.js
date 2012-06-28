@@ -118,6 +118,14 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
      */
     outputAction: 0,
     
+    /** api: config[autoExpand]
+     *  ``String`` If setto the id of a container, the container will be
+     *  expanded when the Query Form is enabled, and collapsed when it is
+     *  disabled. Once the user manually expands/collapses the contaienr, the
+     *  user setting will stick for the current session.
+     */
+    autoExpand: null,
+    
     constructor: function(config) {
         Ext.applyIf(config, {
             actions: [{
@@ -180,12 +188,12 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
                         queryForm.ownerCt.ownerCt;
                     if (ownerCt && ownerCt instanceof Ext.Window) {
                         ownerCt.hide();
-                    } else {
-                        addAttributeFilter(
-                            featureManager, featureManager.layerRecord,
-                            featureManater.schema
-                        );
                     }
+                    addFilterBuilder(
+                        featureManager, featureManager.layerRecord,
+                        featureManager.schema
+                    );
+                    featureManager.loadFeatures();
                 }
             }, {
                 text: this.queryActionText,
@@ -216,9 +224,29 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
         }, config || {});
         var queryForm = gxp.plugins.QueryForm.superclass.addOutput.call(this, config);
         
+        var expandContainer = null, userExpand = true;
+        if (this.autoExpand) {
+            expandContainer = Ext.getCmp(this.autoExpand);
+            function stopAutoExpand() {
+                if (userExpand) {
+                    expandContainer.un('expand', stopAutoExpand);
+                    expandContainer.un('collapse', stopAutoExpand);
+                    expandContainer = null;
+                }
+                userExpand = true;
+            }
+            expandContainer.on({
+                'expand': stopAutoExpand,
+                'collapse': stopAutoExpand
+            });
+        }
         var addFilterBuilder = function(mgr, rec, schema) {
             queryForm.attributeFieldset.removeAll();
             queryForm.setDisabled(!schema);
+            if (expandContainer) {
+                userExpand = false;
+                expandContainer[schema ? 'expand' : 'collapse']();
+            }
             if (schema) {
                 queryForm.attributeFieldset.add({
                     xtype: "gxp_filterbuilder",
