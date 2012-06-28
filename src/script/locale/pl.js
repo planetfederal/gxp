@@ -47,7 +47,6 @@ GeoExt.Lang.add("pl", {
         nextPageTip: "Następna strona",
         lastPageTip: "Ostatnia strona",
         totalMsg: "Features {1} to {2} of {0}"
-
     },
     
     "gxp.plugins.GoogleEarth.prototype": {
