@@ -177,7 +177,7 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                 autoActivateControl: false,
                 listeners: {
                     "beforerowselect": function() {
-                        if(this.selectControl.active || featureManager.featureStore.getModifiedRecords().length) {
+                        if((window.event && window.event.type == "contextmenu") ||this.selectControl.active || featureManager.featureStore.getModifiedRecords().length) {
                             return false;
                         }
                     },
