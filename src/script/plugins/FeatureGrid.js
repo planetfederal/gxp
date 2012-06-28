@@ -133,7 +133,7 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                 featureManager.numberOfFeatures !== null ? String.format(
                     this.totalMsg,
                     featureManager.numberOfFeatures,
-                    featureManager.pageIndex * featureManager.maxFeatures + 1,
+                    featureManager.pageIndex * featureManager.maxFeatures + Math.min(featureManager.numberOfFeatures, 1),
                     Math.min((featureManager.pageIndex + 1) * featureManager.maxFeatures, featureManager.numberOfFeatures)
                 ) : ""
             );
