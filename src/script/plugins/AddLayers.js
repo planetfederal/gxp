@@ -448,7 +448,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 },
                 specialkey: function(field, e) {
                     var value = field.getRawValue();
-                    if (e.getKey() == e.ENTER && sourceComboBox.validator(value) === true) {
+                    if (e.getKey() == e.ENTER && !~sourceComboBox.store.findExact(value) && sourceComboBox.validator(value) === true) {
                         urlSelected(value);
                     }
                 },
