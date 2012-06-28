@@ -144,6 +144,12 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
      */
     toolsShowingLayer: null,
     
+    /** api: config[selectStyle]
+     *  ``Object`` Style properties that override the default style for
+     *  selected features.
+     */
+    selectStyle: null,
+    
     /** private: property[style]
      *  ``Object`` with an "all" and a "selected" property, each holding an
      *  ``OpenLayers.Style``
@@ -379,7 +385,7 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
             displayInLayerSwitcher: false,
             visibility: false,
             styleMap: new OpenLayers.StyleMap({
-                "select": OpenLayers.Util.extend({display: ""},
+                "select": Ext.applyIf(Ext.apply({display: ""}, this.selectStyle),
                     OpenLayers.Feature.Vector.style["select"]),
                 "vertex": this.style["all"]
             }, {extendDefault: false})    
