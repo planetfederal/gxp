@@ -409,7 +409,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         config.srs = {};
         config.srs[srs] = true;
         
-        var bbox = config.bbox || this.target.map.maxExtent;
+        var bbox = config.bbox || this.target.map.maxExtent || OpenLayers.Projection.defaults[srs].maxExtent;
         config.bbox = {};
         config.bbox[srs] = {bbox: bbox};
         

@@ -840,7 +840,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     /** private: method[createStylesStore]
      */
     createStylesStore: function(callback) {
-        var styles = this.layerRecord.get("styles");
+        var styles = this.layerRecord.get("styles") || [];
         this.stylesStore = new Ext.data.JsonStore({
             data: {
                 styles: styles
