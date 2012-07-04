@@ -421,7 +421,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             displayField: "title",
             tpl: '<tpl for="."><div ext:qtip="{url}" class="x-combo-list-item">{title}</div></tpl>',
             triggerAction: "all",
-            allowBlank: false,
+            allowBlank: !!target.proxy,
             editable: !!target.proxy,
             forceSelection: !target.proxy,
             typeAhead: true,
@@ -445,11 +445,22 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     // http://www.extjs.com/forum/showthread.php?100345-GridPanel-reconfigure-should-refocus-view-to-correct-scroller-height&p=471843
                     capGridPanel.getView().focusRow(0);
                     this.setSelectedSource(source);
+                    // blur the combo box
+                    //TODO Investigate if there is a more elegant way to do this.
+                    (function() {
+                        combo.triggerBlur();
+                        combo.el.blur();
+                    }).defer(100);
                 },
                 specialkey: function(field, e) {
                     var value = field.getRawValue();
                     if (e.getKey() == e.ENTER && !~sourceComboBox.store.findExact(value) && sourceComboBox.validator(value) === true) {
                         urlSelected(value);
+                    }
+                },
+                focus: function(field) {
+                    if (target.proxy) {
+                        field.reset();
                     }
                 },
                 scope: this
