@@ -528,7 +528,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             closeAction: "hide",
             layout: "border",
             height: 300,
-            width: 300,
+            width: 315,
             modal: true,
             items: items,
             tbar: capGridToolbar,
