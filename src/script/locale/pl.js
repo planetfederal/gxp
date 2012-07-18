@@ -18,7 +18,8 @@ GeoExt.Lang.add("pl", {
         availableLayersText: "Dostępne warstwy",
         expanderTemplateText: "<p><b>Opis:</b> {abstract}</p>",
         panelTitleText: "Tytuł",
-        layerSelectionText: "Pokaż dostępne warstwy z:",
+        layerSelectionText: "Source:",
+        sourceSelectOrTypeText: "Choose one or type service URL",
         doneText: "Gotowe",
         uploadText: "Wyślij dane"
     },
@@ -31,6 +32,9 @@ GeoExt.Lang.add("pl", {
     },    
 
     "gxp.plugins.FeatureEditor.prototype": {
+        splitButtonText: "Edit",
+        createFeatureActionText: "Create",
+        editFeatureActionText: "Modify",
         createFeatureActionTip: "Utwórz nowy obiekt",
         editFeatureActionTip: "Edytuj istniejący obiekt"
     },
@@ -42,8 +46,7 @@ GeoExt.Lang.add("pl", {
         zoomPageExtentTip: "Powiększ do zasięgu strony",
         nextPageTip: "Następna strona",
         lastPageTip: "Ostatnia strona",
-        totalMsg: "Razem: {0} wierszy"
-
+        totalMsg: "Features {1} to {2} of {0}"
     },
     
     "gxp.plugins.GoogleEarth.prototype": {
@@ -81,6 +84,7 @@ GeoExt.Lang.add("pl", {
     },
 
     "gxp.plugins.Measure.prototype": {
+        buttonText: "Pomiary",
         lengthMenuText: "Długość",
         areaMenuText: "Powierzchnia",
         lengthTooltip: "Pomiar odległości",
@@ -107,6 +111,7 @@ GeoExt.Lang.add("pl", {
     },
 
     "gxp.plugins.Print.prototype": {
+        buttonText:"Drukuj",
         menuText: "Drukuj",
         tooltip: "Drukuj",
         previewText: "Podgląd wydruku",
@@ -126,8 +131,7 @@ GeoExt.Lang.add("pl", {
         queryActionText: "Wyszukaj",
         queryMenuText: "Przeszukaj warstwę",
         queryActionTip: "Przeszukaj zaznaczoną warstwę",
-        queryByLocationText: "Przeszukaj po współrzędnych",
-        currentTextText: "Aktualny obszar",
+        queryByLocationText: "Query by current map extent",
         queryByAttributesText: "Przeszukaj po atrybutach",
         queryMsg: "Przeszukiwanie...",
         cancelButtonText: "Anuluj",
@@ -146,13 +150,16 @@ GeoExt.Lang.add("pl", {
     },
 
     "gxp.plugins.WMSGetFeatureInfo.prototype": {
+        buttonText:"Identify",
         infoActionTip: "Info o obiekcie",
         popupTitle: "Info o obiekcie"
     },
 
     "gxp.plugins.Zoom.prototype": {
+        zoomMenuText: "Zoom Box",
         zoomInMenuText: "Powiększ",
         zoomOutMenuText: "Pomniejsz",
+        zoomTooltip: "Zoom by dragging a box",
         zoomInTooltip: "Powiększ",
         zoomOutTooltip: "Pomniejsz"
     },
@@ -348,7 +355,8 @@ GeoExt.Lang.add("pl", {
         workspaceLabel: "Obszar roboczy",
         workspaceEmptyText: "Domyślny obszar roboczy",
         dataStoreLabel: "Magazyn danych",
-        dataStoreEmptyText: "Create new store"
+        dataStoreEmptyText: "Create new store",
+        defaultDataStoreEmptyText: "Domyślny magazyn danych"
     },
     
     "gxp.NewSourceDialog.prototype": {

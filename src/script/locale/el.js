@@ -15,7 +15,8 @@ GeoExt.Lang.add("el", {
         availableLayersText: "Διαθέσιμες Επιφάνειες",
         expanderTemplateText: "<p><b>Περίληψη:</b> {abstract}</p>",
         panelTitleText: "Τίτλος",
-        layerSelectionText: "Δείτε διαθέσιμα δεδομένα από:",
+        layerSelectionText: "Source:",
+        sourceSelectOrTypeText: "Choose one or type service URL",
         doneText: "Ολοκληρώθηκε",
         uploadText: "Ανεβάστε Δεδομένα"
     },
@@ -28,6 +29,9 @@ GeoExt.Lang.add("el", {
     },
 
     "gxp.plugins.FeatureEditor.prototype": {
+        splitButtonText: "Edit",
+        createFeatureActionText: "Create",
+        editFeatureActionText: "Modify",
         createFeatureActionTip: "Δημιουργήστε ένα νέο χαρακτηριστικό",
         editFeatureActionTip: "Τροποποιήστε υπάρχον χαρακτηριστικό"
     },
@@ -39,7 +43,7 @@ GeoExt.Lang.add("el", {
         zoomPageExtentTip: "Ζουμ στο εύρος της σελίδας",
         nextPageTip: "Επόμενη σελίδα",
         nextPageTip: "Τελευταία σελίδα",
-        totalMsg: "Σύνολο: {0} εγγραφές"
+        totalMsg: "Features {1} to {2} of {0}"
     },
 
     "gxp.plugins.GoogleEarth.prototype": {
@@ -94,6 +98,7 @@ GeoExt.Lang.add("el", {
     },
 
     "gxp.plugins.Measure.prototype": {
+        buttonText: "Μέτρο",
         lengthMenuText: "Απόσταση",
         areaMenuText: "Εμβαδόν",
         lengthTooltip: "Υπολογίστε απόσταση",
@@ -120,6 +125,7 @@ GeoExt.Lang.add("el", {
     },
 
     "gxp.plugins.Print.prototype": {
+        buttonText:"Εκτύπωση",
         menuText: "Εκτύπωση Χάρτη",
         tooltip: "Εκτύπωση Χάρτη",
         previewText: "Προεπισκόπηση Εκτύπωσης",
@@ -139,8 +145,7 @@ GeoExt.Lang.add("el", {
         queryActionText: "Επερώτηση",
         queryMenuText: "Επιφάνεια επερώτησης",
         queryActionTip: "Κάντε επερώτηση στην επιλεγμένη επιφάνεια",
-        queryByLocationText: "Κάντε επερώτηση βάσει τοποθεσίας",
-        currentTextText: "Τρέχον εύρος",
+        queryByLocationText: "Query by current map extent",
         queryByAttributesText: "Επερώτηση βάσει χαρακτηριστικών",
         queryMsg: "Γίνεται επερώτηση...",
         cancelButtonText: "Ακύρωση",
@@ -160,13 +165,16 @@ GeoExt.Lang.add("el", {
     },
 
     "gxp.plugins.WMSGetFeatureInfo.prototype": {
+        buttonText:"Identify",
         infoActionTip: "Πάρτε Πληροφορίες Χαρακτηριστικού",
         popupTitle: "Πληροφορίες Χαρακτηριστικού"
     },
 
     "gxp.plugins.Zoom.prototype": {
+        zoomMenuText: "Zoom Box",
         zoomInMenuText: "Ζουμ Μέσα",
         zoomOutMenuText: "Ζουμ Έξω",
+        zoomTooltip: "Zoom by dragging a box",
         zoomInTooltip: "Ζουμ Μέσα",
         zoomOutTooltip: "Ζουμ Έξω"
     },
@@ -360,7 +368,8 @@ GeoExt.Lang.add("el", {
         workspaceLabel: "Χώρος εργασίας",
         workspaceEmptyText: "Προεπιλεγμένος χώρος εργασίας",
         dataStoreLabel: "Αποθήκη",
-        dataStoreEmptyText: "Προεπιλεγμένη αποθήκη"
+        dataStoreEmptyText: "Create new store",
+        defaultDataStoreEmptyText: "Προεπιλεγμένη αποθήκη"
     },
     
     "gxp.NewSourceWindow.prototype": {

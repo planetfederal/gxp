@@ -18,7 +18,8 @@ GeoExt.Lang.add("ca", {
         availableLayersText: "Capes disponibles",
         expanderTemplateText: "<p><b>Resum:</b> {abstract}</p>",
         panelTitleText: "Títol",
-        layerSelectionText: "Veure dades disponibles de:",
+        layerSelectionText: "Source:",
+        sourceSelectOrTypeText: "Choose one or type service URL",
         doneText: "Fet",
         uploadText: "Puja dades"
     },
@@ -31,6 +32,9 @@ GeoExt.Lang.add("ca", {
     },    
 
     "gxp.plugins.FeatureEditor.prototype": {
+        splitButtonText: "Edit",
+        createFeatureActionText: "Create",
+        editFeatureActionText: "Modify",
         createFeatureActionTip: "Crea nou element",
         editFeatureActionTip: "Edita element existent"
     },
@@ -42,7 +46,7 @@ GeoExt.Lang.add("ca", {
         zoomPageExtentTip: "Ajusta vista a l'extensió de la pàgina",
         nextPageTip: "Pàgina següent",
         lastPageTip: "Pàgina anterior",
-        totalMsg: "Total: {0} records"
+        totalMsg: "Features {1} to {2} of {0}"
     },
 
     "gxp.plugins.GoogleEarth.prototype": { 
@@ -101,6 +105,7 @@ GeoExt.Lang.add("ca", {
     },
 
     "gxp.plugins.Measure.prototype": {
+        buttonText: "Mesura",
         lengthMenuText: "Longitud",
         areaMenuText: "Àrea",
         lengthTooltip: "Mesura Longitud",
@@ -127,6 +132,7 @@ GeoExt.Lang.add("ca", {
     },
 
     "gxp.plugins.Print.prototype": {
+        buttonText:"Imprimeix",
         menuText: "Imprimeix mapa",
         tooltip: "Imprimeix mapa",
         previewText: "Vista prèvia",
@@ -146,8 +152,7 @@ GeoExt.Lang.add("ca", {
         queryActionText: "Consulta",
         queryMenuText: "Consulta layer",
         queryActionTip: "Consulta la capa sel·leccionada",
-        queryByLocationText: "Consulta per lloc",
-        currentTextText: "Extensió de la vista actual",
+        queryByLocationText: "Query by current map extent",
         queryByAttributesText: "Consulta per atributs",
         queryMsg: "Consultant...",
         cancelButtonText: "Cancel·la",
@@ -166,13 +171,16 @@ GeoExt.Lang.add("ca", {
     },
 
     "gxp.plugins.WMSGetFeatureInfo.prototype": {
+        buttonText:"Identify",
         infoActionTip: "Consulta elements",
         popupTitle: "Informació dels elements"
     },
 
     "gxp.plugins.Zoom.prototype": {
+        zoomMenuText: "Zoom Box",
         zoomInMenuText: "Apropa",
         zoomOutMenuText: "Allunya",
+        zoomTooltip: "Zoom by dragging a box",
         zoomInTooltip: "Apropa",
         zoomOutTooltip: "Allunya"
     },
@@ -368,7 +376,8 @@ GeoExt.Lang.add("ca", {
         workspaceLabel: "Espai de treball",
         workspaceEmptyText: "Espai de treball per defecte",
         dataStoreLabel: "Magatzem",
-        dataStoreEmptyText: "Create new store"
+        dataStoreEmptyText: "Create new store",
+        defaultDataStoreEmptyText: "Magatzem de dades per defecte"
     },
     
     "gxp.NewSourceDialog.prototype": {

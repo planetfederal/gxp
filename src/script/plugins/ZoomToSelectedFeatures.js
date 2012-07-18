@@ -53,6 +53,11 @@ gxp.plugins.ZoomToSelectedFeatures = Ext.extend(gxp.plugins.ZoomToExtent, {
      *  contain the entire extent.  Default is false.
      */
     closest: false,
+    
+    /** private: property[layer]
+     *  ``OpenLayers.Layer`` The layer to work with
+     */
+    layer: null,
 
     /** private: property[iconCls]
      */
@@ -82,18 +87,36 @@ gxp.plugins.ZoomToSelectedFeatures = Ext.extend(gxp.plugins.ZoomToExtent, {
     addActions: function() {
         var actions = gxp.plugins.ZoomToSelectedFeatures.superclass.addActions.apply(this, arguments);
         actions[0].disable();
-
-        var layer = this.target.tools[this.featureManager].featureLayer;
-        layer.events.on({
+        
+        var handlers = {
             "featureselected": function(evt) {
                 if (actions[0].isDisabled() && evt.feature.geometry !== null) {
                     actions[0].enable();
                 }
             },
             "featureunselected": function() {
-                layer.selectedFeatures.length === 0 && actions[0].disable();
+                if (this.layer.selectedFeatures.length === 0) {
+                    actions[0].disable();
+                }
+            },
+            scope: this
+        };
+        
+        var featureManager = this.target.tools[this.featureManager];
+        
+        function register() {
+            if (this.layer) {
+                this.layer.events.un(handlers);
             }
-        });
+            this.layer = featureManager.featureLayer;
+            if (this.layer) {
+                this.layer.events.on(handlers);
+            }
+        }
+        
+        this.target.on("layerselectionchange", register);
+        featureManager.on("query", function() { actions[0].disable(); });
+        register.call(this);
         
         return actions;
     }

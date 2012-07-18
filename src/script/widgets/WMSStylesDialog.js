@@ -578,7 +578,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             shortTitle: rule.title || rule.name || this.newRuleText,
             hideMode: 'offsets',
             layout: "fit",
-            width: 355,
+            width: 320,
             height: 450,
             modal: true,
             items: [{
@@ -841,7 +841,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     /** private: method[createStylesStore]
      */
     createStylesStore: function(callback) {
-        var styles = this.layerRecord.get("styles");
+        var styles = this.layerRecord.get("styles") || [];
         this.stylesStore = new Ext.data.JsonStore({
             data: {
                 styles: styles

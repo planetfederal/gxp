@@ -87,6 +87,16 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
      */
     layer: null,
     
+    /** api: config[columnsSortable]
+     *  ``Boolean`` Should fields in the grid be sortable? Default is true.
+     */
+    columnsSortable: true,
+    
+    /** api: config[columnmenuDisabled]
+     *  ``Boolean`` Should the column menu be disabled? Default is false.
+     */
+    columnMenuDisabled: false,
+    
     /** api: method[initComponent]
      *  Initializes the FeatureGrid.
      */
@@ -222,7 +232,8 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
                         (!this.fieldVisibility[name]) : false,
                     header: this.propertyNames ?
                         (this.propertyNames[name] || name) : name,
-                    sortable: true,
+                    sortable: this.columnsSortable,
+                    menuDisabled: this.columnMenuDisabled,
                     xtype: xtype,
                     format: format,
                     renderer: customRenderers[name] ||

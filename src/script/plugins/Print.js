@@ -9,6 +9,7 @@
 /**
  * @requires plugins/Tool.js
  * @requires GeoExt/data/PrintProvider.js
+ * @requires GeoExt/widgets/PrintMapPanel.js
  */
 
 /** api: (define)
@@ -69,6 +70,12 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      *  Text for print action tooltip (i18n).
      */
     tooltip: "Print Map",
+
+    /** api: config[text]
+     *  ``String``
+     *  Text for print action button (i18n).
+     */
+    buttonText: "Print",
 
     /** api: config[notAllNotPrintableText]
      *  ``String``
@@ -171,6 +178,7 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
 
             var actions = gxp.plugins.Print.superclass.addActions.call(this, [{
                 menuText: this.menuText,
+                buttonText: this.buttonText,
                 tooltip: this.tooltip,
                 iconCls: "gxp-icon-print",
                 disabled: this.printCapabilities !== null ? false : true,
