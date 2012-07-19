@@ -163,7 +163,7 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
                 this.fireEvent('rangemodified', this, ctl.range);
             }
             if(!this.timeManager.playing){
-                this.timeManager.setCurrentTime(this.timeManager.range[0]);
+                this.timeManager.setTime(this.timeManager.range[0]);
             }
         }
     },
