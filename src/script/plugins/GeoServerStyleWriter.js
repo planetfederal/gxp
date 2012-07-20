@@ -63,6 +63,7 @@ gxp.plugins.GeoServerStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
      *  * scope - ``Object`` A scope to call the ``success`` function with.
      */
     write: function(options) {
+        delete this._failed;
         options = options || {};
         var dispatchQueue = [];
         var store = this.target.stylesStore;
@@ -71,17 +72,21 @@ gxp.plugins.GeoServerStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
                 this.writeStyle(rec, dispatchQueue);
         }, this);
         var success = function() {
-            // we don't need any callbacks for deleting styles.
-            this.deleteStyles();
-            var modified = this.target.stylesStore.getModifiedRecords();
-            for (var i=modified.length-1; i>=0; --i) {
-                // mark saved
-                modified[i].phantom = false;
-            }
             var target = this.target;
-            target.stylesStore.commitChanges();
-            options.success && options.success.call(options.scope);
-            target.fireEvent("saved", target, target.selectedStyle.get("name"));
+            if (this._failed !== true) {
+                // we don't need any callbacks for deleting styles.
+                this.deleteStyles();
+                var modified = this.target.stylesStore.getModifiedRecords();
+                for (var i=modified.length-1; i>=0; --i) {
+                    // mark saved
+                    modified[i].phantom = false;
+                }
+                target.stylesStore.commitChanges();
+                options.success && options.success.call(options.scope);
+                target.fireEvent("saved", target, target.selectedStyle.get("name"));
+            } else {
+                target.fireEvent("savefailed", target, target.selectedStyle.get("name"));
+            }
         };
         if(dispatchQueue.length > 0) {
             gxp.util.dispatch(dispatchQueue, function() {
@@ -114,6 +119,10 @@ gxp.plugins.GeoServerStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
                 xmlData: this.target.createSLD({
                     userStyles: [styleName]
                 }),
+                failure: function() {
+                    this._failed = true;
+                    callback.call(this);
+                },
                 success: styleRec.phantom === true ? function(){
                     Ext.Ajax.request({
                         method: "POST",
@@ -123,6 +132,10 @@ gxp.plugins.GeoServerStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
                             "style": {
                                 "name": styleName
                             }
+                        },
+                        failure: function() {
+                            this._failed = true;
+                            callback.call(this);
                         },
                         success: callback,
                         scope: this
@@ -165,6 +178,10 @@ gxp.plugins.GeoServerStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
                 }
             },
             success: callback,
+            failure: function() {
+                this._failed = true;
+                callback.call(this);
+            },
             scope: this
         });
     },

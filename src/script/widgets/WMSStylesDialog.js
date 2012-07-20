@@ -89,6 +89,10 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      stylesFieldsetTitle: "Styles",
     /** api: config[rulesFieldsetTitle] (i18n) */
      rulesFieldsetTitle: "Rules",
+    /** api: config[errorTitle] (i18n) */
+     errorTitle: "Error saving style",
+    /** api: config[errorMsg] (i18n) */
+     errorMsg: "There was an error saving the style back to the server.",
 
     //TODO create a StylesStore which can read styles using GetStyles. Create
     // subclasses for that store with writing capabilities, e.g.
@@ -305,6 +309,15 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         this.on({
             "beforesaved": function() { this._saving = true; },
             "saved": function() { delete this._saving; },
+            "savefailed": function() { 
+                Ext.Msg.show({
+                    title: this.errorTitle,
+                    msg: this.errorMsg,
+                    icon: Ext.MessageBox.ERROR,
+                    buttons: {ok: true}
+                });
+                delete this._saving; 
+            },
             "render": function() {
                 gxp.util.dispatch([this.getStyles], function() {
                     this.enable();
