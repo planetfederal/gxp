@@ -240,6 +240,15 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                 ptype: "gxp_wmsrasterstylesdialog"
             });
         }
+        var ownerCt = this.ownerCt;
+        if (!(ownerCt.ownerCt instanceof Ext.Window)) {
+            config.dialogCls = Ext.Panel;
+            config.showDlg = function(dlg) {
+                dlg.layout = "fit";
+                dlg.autoHeight = false;
+                ownerCt.add(dlg);
+            };
+        }
         return Ext.apply(config, {
             title: this.stylesText,
             style: "padding: 10px",
@@ -281,7 +290,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
     createAboutPanel: function() {
         return {
             title: this.aboutText,
-            style: {"padding": "10px"},
+            bodyStyle: {"padding": "10px"},
             defaults: {
                 border: false
             },
@@ -387,7 +396,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
         return {
             title: this.displayText,
             layout: 'form',
-            style: {"padding": "10px"},
+            bodyStyle: {"padding": "10px"},
             defaults: {
                 labelWidth: 70
             },

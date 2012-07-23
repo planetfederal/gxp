@@ -9,6 +9,7 @@
 /**
  * @requires plugins/Tool.js
  * @requires GeoExt/data/PrintProvider.js
+ * @requires GeoExt/widgets/PrintMapPanel.js
  */
 
 /** api: (define)
@@ -69,6 +70,12 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
      *  Text for print action tooltip (i18n).
      */
     tooltip: "Print Map",
+
+    /** api: config[text]
+     *  ``String``
+     *  Text for print action button (i18n).
+     */
+    buttonText: "Print",
 
     /** api: config[notAllNotPrintableText]
      *  ``String``
@@ -171,11 +178,12 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
 
             var actions = gxp.plugins.Print.superclass.addActions.call(this, [{
                 menuText: this.menuText,
+                buttonText: this.buttonText,
                 tooltip: this.tooltip,
                 iconCls: "gxp-icon-print",
                 disabled: this.printCapabilities !== null ? false : true,
                 handler: function() {
-                    var supported = getSupportedLayers();
+                    var supported = getPrintableLayers();
                     if (supported.length > 0) {
                         var printWindow = createPrintWindow.call(this);
                         showPrintWindow.call(this);
@@ -216,19 +224,19 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
             }
 
             var mapPanel = this.target.mapPanel;
-            function getSupportedLayers() {
+            function getPrintableLayers() {
                 var supported = [];
                 mapPanel.layers.each(function(record) {
                     var layer = record.getLayer();
-                    if (isSupported(layer)) {
+                    if (isPrintable(layer)) {
                         supported.push(layer);
                     }
                 });
                 return supported;
             }
 
-            function isSupported(layer) {
-                return (
+            function isPrintable(layer) {
+                return layer.getVisibility() === true && (
                     layer instanceof OpenLayers.Layer.WMS ||
                     layer instanceof OpenLayers.Layer.OSM
                 );
@@ -265,13 +273,12 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                     width: 360,
                     items: [
                         new GeoExt.ux.PrintPreview({
-                            autoHeight: true,
+                            minWidth: 336,
                             mapTitle: this.target.about && this.target.about["title"],
                             comment: this.target.about && this.target.about["abstract"],
-                            minWidth: 336,
                             printMapPanel: {
-                                height: Math.min(450, Ext.get(document.body).getHeight()-150),
                                 autoWidth: true,
+                                height: Math.min(420, Ext.get(document.body).getHeight()-150),
                                 limitScales: true,
                                 map: Ext.applyIf({
                                     controls: [
@@ -285,7 +292,7 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                                     ],
                                     eventListeners: {
                                         preaddlayer: function(evt) {
-                                            return isSupported(evt.layer);
+                                            return isPrintable(evt.layer);
                                         }
                                     }
                                 }, mapPanel.initialConfig.map),
@@ -294,7 +301,13 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                                     vertical: true,
                                     height: 100,
                                     aggressive: true
-                                }]
+                                }],
+                                listeners: {
+                                    afterlayout: function(evt) {
+                                        printWindow.setWidth(Math.max(360, this.getWidth() + 24));
+                                        printWindow.center();
+                                    }
+                                }
                             },
                             printProvider: printProvider,
                             includeLegend: this.includeLegend,

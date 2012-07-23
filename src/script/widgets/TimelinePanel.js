@@ -457,6 +457,10 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         Ext.apply(this.layerLookup[keyToMatch], {
             visible: checked
         });
+        // set visibility on the OL layer as well
+        if (this.layerLookup[keyToMatch].layer) {
+            this.layerLookup[keyToMatch].layer.setVisibility(checked);
+        }
         var filterMatcher = function(evt) {
             var key = evt.getProperty('key');
             if (key === keyToMatch) {

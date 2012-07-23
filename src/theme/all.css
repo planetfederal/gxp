@@ -263,6 +263,9 @@
 }
 
 /* gxp_zoom */
+.x-btn .gxp-icon-zoom, .x-tree-node .gxp-icon-zoom {
+    background-image: url(img/silk/magnifier.png);
+}
 .x-btn .gxp-icon-zoom-in, .x-tree-node .gxp-icon-zoom-in {
     background-image: url(img/silk/magnifier_zoom_in.png);
 }
