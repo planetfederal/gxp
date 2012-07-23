@@ -20,12 +20,21 @@
         }
 
         function test_BC(t) {
-            t.plan(2);
+            t.plan(5);
             var field = new gxp.form.ExtendedDateField({value: '-0987-03-01'});
             t.eq(field.getValue(), -93308806800, "value expected for BCE year which is zero padded");
             field.destroy();
             field = new gxp.form.ExtendedDateField({value: '-987-03-01'});
             t.eq(field.getValue(), null, "if the year if not zero-padded, do not try and parse");
+            field.destroy();
+            field.setValue(-93308806800);
+            t.eq(field.value, "03/01/-0987", "Year is zero-padded upon retrieval");
+            field.setValue(50);
+            t.eq(field.value, "01/01/1970", "Positive years still work as expected");
+            field.destroy();
+            field = new gxp.form.ExtendedDateField({value: '1987-03-01'});
+            t.eq(field.getValue(), -124865715600, "value expected for positive year");
+            field.destroy();
         }
 
     </script>
