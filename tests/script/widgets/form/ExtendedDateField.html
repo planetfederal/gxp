@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html debug="true">
+  <head>
+    <script src="http://extjs.cachefly.net/ext-3.4.0/adapter/ext/ext-base.js"></script>
+    <script src="http://extjs.cachefly.net/ext-3.4.0/ext-all-debug.js"></script>
+    <script type="text/javascript" src="../../../../externals/openlayers/lib/OpenLayers.js"></script>
+    <script type="text/javascript" src="../../../../externals/geoext/lib/GeoExt.js"></script>
+    <script type="text/javascript" src="../../../../src/script/loader.js"></script>
+
+    <script type="text/javascript">
+       
+        function test_ExtendedDateField(t) {
+            t.plan(1);
+            
+            var instance = new gxp.form.ExtendedDateField();
+            
+            t.ok(instance instanceof gxp.form.ExtendedDateField, "Instance created successfully");
+            
+            instance.destroy();
+        }
+
+        function test_BC(t) {
+            t.plan(2);
+            var field = new gxp.form.ExtendedDateField({value: '-0987-03-01'});
+            t.eq(field.getValue(), -93308806800, "value expected for BCE year which is zero padded");
+            field.destroy();
+            field = new gxp.form.ExtendedDateField({value: '-987-03-01'});
+            t.eq(field.getValue(), null, "if the year if not zero-padded, do not try and parse");
+        }
+
+    </script>
+  </head>
+  <body>
+  </body>
+</html>
