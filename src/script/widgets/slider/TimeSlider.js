@@ -162,6 +162,9 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
                 this.setThumbStyles();
                 this.fireEvent('rangemodified', this, ctl.range);
             }
+            if(!this.timeManager.playing){
+                this.timeManager.setTime(this.timeManager.range[0]);
+            }
         }
     },
     
