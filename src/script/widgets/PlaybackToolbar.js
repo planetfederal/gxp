@@ -116,10 +116,6 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
             shadow:false,
             timeDisplayConfig:{'xtype':'tip',format:this.timeFormat,height:'auto',closeable:false,title:false,width:210}
         });
-        if (this._disabled) {
-            Ext.apply(this.defaults, {disabled: true});
-            delete this._disabled;
-        }
         this.addEvents(
             /**
              * Event: timechange
