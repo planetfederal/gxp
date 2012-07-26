@@ -375,7 +375,12 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
         if (ref) {
             container = this.getContainer(ref);
             if (!(config instanceof Ext.Component)) {
+                var defaults; 
+                if (config.defaults && this.outputConfig.defaults) {
+                    defaults = Ext.apply({}, config.defaults);
+                }
                 Ext.apply(config, this.outputConfig);
+                Ext.apply(config.defaults, defaults);
             }
         } else {
             var outputConfig = this.outputConfig || {};

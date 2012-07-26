@@ -190,6 +190,32 @@
             t.ok(state !== initialConfig, "but is a clone initialConfig");            
         }
 
+        function test_defaults(t) {
+            t.plan(2);
+            var ct = new Ext.Panel({
+                id: "foo",
+                renderTo: document.body,
+                width: 100,
+                height: 100,
+                bbar: []
+            });
+            var tool = new gxp.plugins.Tool({
+                outputTarget: 'foo',
+                outputConfig: {
+                    defaults: {foo: 'bar'}
+                }
+            });
+            tool.addOutput({
+                defaults: {
+                    disabled: true
+                }
+            });
+            var def = tool.output[0].defaults;
+            t.eq(def.disabled, true, "value from config param of addOutput function taken into account");
+            t.eq(def.foo, "bar", "value from outputConfig taken into account");
+            ct.destroy();
+        }
+
     </script>
   </head>
   <body>
