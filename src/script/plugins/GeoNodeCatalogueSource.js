@@ -33,6 +33,16 @@ gxp.plugins.GeoNodeCatalogueSource = Ext.extend(gxp.plugins.CatalogueSource, {
     /** api: ptype = gxp_geonodecataloguesource */
     ptype: "gxp_geonodecataloguesource",
 
+    /** api: config[rootProperty]
+     *  ``String`` Root property in the JSON response. Defaults to 'results'.
+     */
+    rootProperty: 'results',
+
+    /** api: config[baseParams]
+     *  ``Object`` Optional additional params to send in the requests.
+     */
+    baseParams: null,
+
     /** api: method[createStore]
      *  Create the store that will be used for the GeoNode searches.
      */
@@ -42,11 +52,11 @@ gxp.plugins.GeoNodeCatalogueSource = Ext.extend(gxp.plugins.CatalogueSource, {
                 url: this.url, 
                 method: 'GET'
             }, this.proxyOptions || {})),
-            baseParams: {
+            baseParams: Ext.apply({
                 type: 'layer'
-            },
+            }, this.baseParams),
             reader: new Ext.data.JsonReader({
-                root: 'results'
+                root: this.rootProperty
             }, [
                 {name: "title", convert: function(v) {
                     return [v];
