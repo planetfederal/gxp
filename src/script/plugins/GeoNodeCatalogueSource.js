@@ -43,6 +43,34 @@ gxp.plugins.GeoNodeCatalogueSource = Ext.extend(gxp.plugins.CatalogueSource, {
      */
     baseParams: null,
 
+    /** api: config[fields]
+     *  ``Array`` Fields to use for the JsonReader. By default the following
+     *  fields are provided: title, abstract, bounds and URI. Optionally this 
+     *  can be overridden by applications to provide different or additional
+     *  mappings.
+     */
+    fields: [
+        {name: "title", convert: function(v) {
+            return [v];
+        }},
+        {name: "abstract", mapping: "description"},
+        {name: "bounds", mapping: "bbox", convert: function(v) {
+            return {
+                left: v.minx,
+                right: v.maxx,
+                bottom: v.miny,
+                top: v.maxy
+            };
+        }},
+        {name: "URI", mapping: "download_links", convert: function(v) {
+            var result = [];
+            for (var i=0,ii=v.length;i<ii;++i) {
+                result.push(v[i][3]);
+            }
+            return result;
+        }}
+    ],
+
     /** api: method[createStore]
      *  Create the store that will be used for the GeoNode searches.
      */
@@ -57,27 +85,7 @@ gxp.plugins.GeoNodeCatalogueSource = Ext.extend(gxp.plugins.CatalogueSource, {
             }, this.baseParams),
             reader: new Ext.data.JsonReader({
                 root: this.rootProperty
-            }, [
-                {name: "title", convert: function(v) {
-                    return [v];
-                }},
-                {name: "abstract", mapping: "description"},
-                {name: "bounds", mapping: "bbox", convert: function(v) {
-                    return {
-                        left: v.minx,
-                        right: v.maxx,
-                        bottom: v.miny,
-                        top: v.maxy
-                    };
-                }},
-                {name: "URI", mapping: "download_links", convert: function(v) {
-                    var result = [];
-                    for (var i=0,ii=v.length;i<ii;++i) {
-                        result.push(v[i][3]);
-                    }
-                    return result;
-                }}
-            ])
+            }, this.fields)
         });
         gxp.plugins.LayerSource.prototype.createStore.apply(this, arguments);
     },
