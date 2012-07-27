@@ -170,7 +170,7 @@ gxp.plugins.WMSCSource = Ext.extend(gxp.plugins.WMSSource, {
             name = config.name,
             tileSetsCap,
             layer = record.getLayer();
-        if (config.capability) {
+        if (config.capability && this.store.reader.raw) {
             var capability = this.store.reader.raw.capability;
             var tileSets = capability.vendorSpecific && capability.vendorSpecific.tileSets;
             if (tileSets) {
