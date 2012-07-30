@@ -44,8 +44,7 @@ gxp.plugins.CSWCatalogueSource = Ext.extend(gxp.plugins.CatalogueSource, {
             proxy: new GeoExt.data.ProtocolProxy(Ext.apply({
                 setParamsAsOptions: true,
                 protocol: new OpenLayers.Protocol.CSW({
-                    url: this.url,
-                    formatOptions: {resultType: 'results'}
+                    url: this.url
                 })
             }, this.proxyOptions || {})),
             reader: new GeoExt.data.CSWRecordsReader({
