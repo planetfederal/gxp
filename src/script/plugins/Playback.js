@@ -183,7 +183,7 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
                             layers : []
                         };
                         for(var j = 0; j < agents[i].layers.length; j++) {
-                            var layerRec = app.mapPanel.layers.getByLayer(agents[i].layers[j]);
+                            var layerRec = this.target.mapPanel.layers.getByLayer(agents[i].layers[j]);
                             var layerConfig = this.target.layerSources[layerRec.get('source')].getConfigForRecord(layerRec);
                             agentConfig.layers.push(layerConfig);
                         }

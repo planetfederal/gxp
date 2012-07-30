@@ -150,6 +150,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
             this.control.destroy();
             this.control = null;
         }
+        this.mapPanel = null;
         gxp.PlaybackToolbar.superclass.destroy.call(this);
     },
     /** api: method[setTime]
@@ -216,6 +217,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
             'slider': {
                 xtype: 'gxp_timeslider',
                 ref: 'slider',
+                map: this.mapPanel.map,
                 timeManager: this.control,
                 playbackMode: this.playbackMode
             },
