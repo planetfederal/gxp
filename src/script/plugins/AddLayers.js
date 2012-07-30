@@ -316,6 +316,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     var bbox = bounds.transform(layerConfig.srs, mapProjection);
                     layerConfig.srs = mapProjection;
                     layerConfig.bbox = bbox.toArray();
+                    layerConfig.source = sourceKey;
                     var record = source.createLayerRecord(layerConfig);
                     this.target.mapPanel.layers.add(record);
                 },
