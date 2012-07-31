@@ -563,63 +563,46 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         source = source || this.selectedSource;
         var layerStore = this.target.mapPanel.layers,
             extent, record, layer;
-
-        var queue = [];
-        var layerRecords = [];
-
-        var i, ii;
-        for (i=0, ii=records.length; i<ii; ++i) {
-            var config = {
+        for (var i=0, ii=records.length; i<ii; ++i) {
+            record = source.createLayerRecord({
                 name: records[i].get("name"),
                 source: source.id
-            };
-            queue.push(function(done) {
-                this.target.createLayerRecord(config, function(record) {
-                    layerRecords.push(record);
-                    done.call();
-                });
             });
-        }
-
-        gxp.util.dispatch(queue, function() {
-            for (i=0, ii=layerRecords.length; i<ii; ++i) {
-                record = layerRecords[i];
-                if (record) {
-                    layer = record.getLayer();
-                    if (layer.maxExtent) {
-                        if (!extent) {
-                            extent = record.getLayer().maxExtent.clone();
-                        } else {
-                            extent.extend(record.getLayer().maxExtent);
-                        }
-                    }
-                    if (record.get("group") === "background") {
-                        // layer index 0 is the invisible base layer, so we insert
-                        // at position 1.
-                        layerStore.insert(1, [record]);
+            if (record) {
+                layer = record.getLayer();
+                if (layer.maxExtent) {
+                    if (!extent) {
+                        extent = record.getLayer().maxExtent.clone();
                     } else {
-                        layerStore.add([record]);
+                        extent.extend(record.getLayer().maxExtent);
                     }
                 }
-            }
-            if (extent) {
-                this.target.mapPanel.map.zoomToExtent(extent);
-            }
-            if (records.length === 1 && record) {
-                // select the added layer
-                this.target.selectLayer(record);
-                if (isUpload && this.postUploadAction) {
-                    // show LayerProperties dialog if just one layer was uploaded
-                    var outputConfig,
-                        actionPlugin = this.postUploadAction;
-                    if (!Ext.isString(actionPlugin)) {
-                        outputConfig = actionPlugin.outputConfig;
-                        actionPlugin = actionPlugin.plugin;
-                    }
-                    this.target.tools[actionPlugin].addOutput(outputConfig);
+                if (record.get("group") === "background") {
+                    // layer index 0 is the invisible base layer, so we insert
+                    // at position 1.
+                    layerStore.insert(1, [record]);
+                } else {
+                    layerStore.add([record]);
                 }
             }
-        }, this);
+        }
+        if (extent) {
+            this.target.mapPanel.map.zoomToExtent(extent);
+        }
+        if (records.length === 1 && record) {
+            // select the added layer
+            this.target.selectLayer(record);
+            if (isUpload && this.postUploadAction) {
+                // show LayerProperties dialog if just one layer was uploaded
+                var outputConfig,
+                    actionPlugin = this.postUploadAction;
+                if (!Ext.isString(actionPlugin)) {
+                    outputConfig = actionPlugin.outputConfig;
+                    actionPlugin = actionPlugin.plugin;
+                }
+                this.target.tools[actionPlugin].addOutput(outputConfig);
+            }
+        }
     },
     
     /** private: method[setSelectedSource]
