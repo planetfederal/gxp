@@ -360,10 +360,28 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         var expander = this.createExpander();
         
         function addLayers() {
-            var key = sourceComboBox.getValue();
-            var source = this.target.layerSources[key];
+            var source = this.selectedSource;
             var records = capGridPanel.getSelectionModel().getSelections();
-            this.addLayers(records, source);
+            var recordsToAdd = [],
+                numRecords = records.length;
+            function collectRecords(record) {
+                if (recordsToAdd) {
+                    recordsToAdd.push(record);
+                }
+                numRecords--;
+                if (numRecords === 0) {
+                    this.addLayers(recordsToAdd);
+                }
+            }
+            for (var i=0, ii=records.length; i<ii; ++i) {
+                var record = source.createLayerRecord({
+                    name: records[i].get("name"),
+                    source: source.id
+                }, collectRecords, this);
+                if (record) {
+                    collectRecords.call(this, record);
+                }
+            }
         }
         
         function urlSelected(url) {
@@ -556,18 +574,14 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
     
     /** private: method[addLayers]
      *  :arg records: ``Array`` the layer records to add
-     *  :arg source: :class:`gxp.plugins.LayerSource` The source to add from
      *  :arg isUpload: ``Boolean`` Do the layers to add come from an upload?
      */
-    addLayers: function(records, source, isUpload) {
-        source = source || this.selectedSource;
+    addLayers: function(records, isUpload) {
+        var source = this.selectedSource;
         var layerStore = this.target.mapPanel.layers,
             extent, record, layer;
         for (var i=0, ii=records.length; i<ii; ++i) {
-            record = source.createLayerRecord({
-                name: records[i].get("name"),
-                source: source.id
-            });
+            record = records[i];
             if (record) {
                 layer = record.getLayer();
                 if (layer.maxExtent) {
@@ -702,7 +716,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                                                     gridPanel.getView().focusRow(last);
                                                 }, 100);
                                             } else {
-                                                this.addLayers(newRecords, undefined, true);
+                                                this.addLayers(newRecords, true);
                                             }
                                         },
                                         scope: this
