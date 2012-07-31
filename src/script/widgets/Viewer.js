@@ -749,8 +749,9 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
          * authorizedRoles to be a list of roles for which the user is 
          * authorized.
          */
-        var authorized = false;
+        var authorized = true;
         if (this.authorizedRoles) {
+            authorized = false;
             if (!roles) {
                 roles = "ROLE_ADMINISTRATOR";
             }
