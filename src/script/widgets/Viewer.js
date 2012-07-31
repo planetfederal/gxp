@@ -627,21 +627,30 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             s = request.config.source;
             if (s in this.layerSources) {
                 source = this.layerSources[s];
-                record = source.createLayerRecord(request.config);
-                if (record) {
-                    // we call this in the next cycle to guarantee that
-                    // createLayerRecord returns before callback is called
-                    (function(req, rec) {
+                if (source.asyncCreateLayerRecord) {
+                    source.createLayerRecord(request.config, function(rec) {
                         window.setTimeout(function() {
-                            req.callback.call(req.scope, rec);                        
+                            request.callback.call(request.scope, rec);
                         }, 0);
-                    })(request, record);
+                    }, request.scope);
                     called = true;
-                } else if (source.lazy) {
-                    source.store.load({
-                        callback: this.checkLayerRecordQueue,
-                        scope: this
-                    });
+                } else {
+                    record = source.createLayerRecord(request.config);
+                    if (record) {
+                        // we call this in the next cycle to guarantee that
+                        // createLayerRecord returns before callback is called
+                        (function(req, rec) {
+                            window.setTimeout(function() {
+                                req.callback.call(req.scope, rec);                        
+                            }, 0);
+                        })(request, record);
+                        called = true;
+                    } else if (source.lazy) {
+                        source.store.load({
+                            callback: this.checkLayerRecordQueue,
+                            scope: this
+                        });
+                    }
                 }
             }
             if (!called) {
