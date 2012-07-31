@@ -32,7 +32,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
      *  The control to configure the playback panel with.
      */
     control: null,
-    viewer: null,
+    mapPanel: null,
     initialTime:null,
     timeFormat:"l, F d, Y g:i:s A",
     toolbarCls:'x-toolbar gx-overlay-playback', //must use toolbarCls since it is used instead of baseCls in toolbars
@@ -150,6 +150,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
             this.control.destroy();
             this.control = null;
         }
+        this.mapPanel = null;
         gxp.PlaybackToolbar.superclass.destroy.call(this);
     },
     /** api: method[setTime]
@@ -216,6 +217,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
             'slider': {
                 xtype: 'gxp_timeslider',
                 ref: 'slider',
+                map: this.mapPanel.map,
                 timeManager: this.control,
                 playbackMode: this.playbackMode
             },
@@ -335,7 +337,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                     //source & name identify different layers, but title & styles
                     //are required to distinguish the same layer added multiple times with a different
                     //style or presentation
-                    var ndx = app.mapPanel.layers.findBy(function(rec) {
+                    var ndx = this.mapPanel.layers.findBy(function(rec) {
                         return rec.json && 
                         rec.json.source == lyrJson.source &&
                         rec.json.title == lyrJson.title &&
@@ -345,9 +347,9 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                     });
 
                     if(ndx > -1) {
-                        layers.push(app.mapPanel.layers.getAt(ndx).getLayer());
+                        layers.push(this.mapPanel.layers.getAt(ndx).getLayer());
                     }
-                });
+                }, this);
 
                 config.layers = layers;
                 delete config.type;

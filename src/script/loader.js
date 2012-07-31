@@ -50,6 +50,8 @@
         "widgets/Histogram.js",
         "widgets/tips/SliderTip.js",
         "widgets/PlaybackToolbar.js",
+        "widgets/form/PlaybackModeComboBox.js",
+        "widgets/PlaybackOptionsPanel.js",
         "widgets/slider/ClassBreakSlider.js",
         "widgets/tips/RangeSliderTip.js",
         "widgets/TimelinePanel.js",
