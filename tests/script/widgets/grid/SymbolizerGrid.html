@@ -27,16 +27,16 @@
                 strokeColor: "red",
                 strokeWidth: 1
             }));
-            symbolizers.push(new OpenLayers.Symbolizer.Line({
-                strokeColor: "#669900",
-                strokeWidth: 3
-            }));
             symbolizers.push(new OpenLayers.Symbolizer.Polygon({
                 fillColor: "olive",
-                fillOpacity: 0.25,
                 strokeColor: "#666666",
                 strokeWidth: 2,
                 strokeDashstyle: "dot"
+            }));
+            symbolizers.push(new OpenLayers.Symbolizer.Polygon({
+                fillColor: "blue",
+                strokeColor: "black",
+                strokeWidth: 2
             }));
             symbolizers.push(new OpenLayers.Symbolizer.Text({
                 label: "${name}",
@@ -52,15 +52,15 @@
         function test_SymbolizerGrid(t) {
             t.plan(1);
             
-            var instance = new gxp.grid.SymbolizerGrid({symbolizers: createSymbolizers()});
+            var instance = new gxp.grid.SymbolizerGrid({symbolizers: createSymbolizers(), symbolType: 'Polygon'});
             
             t.ok(instance instanceof gxp.grid.SymbolizerGrid, "Instance created successfully");
             instance.destroy();
         }
 
         function test_getSymbolizers(t) {
-            t.plan(2);
-            var instance = new gxp.grid.SymbolizerGrid({renderTo: Ext.getBody(), symbolizers: createSymbolizers()});
+            t.plan(5);
+            var instance = new gxp.grid.SymbolizerGrid({renderTo: Ext.getBody(), symbolizers: createSymbolizers(), symbolType: 'Polygon'});
             instance.render();
             t.eq(instance.getSymbolizers().length, 4, "All symbolizers returned");
             instance.root.eachChild(function(node) {
@@ -72,6 +72,11 @@
                 });
             });
             t.eq(instance.getSymbolizers().length, 3, "Point symbolizer excluded since all children are unchecked");
+            var poly = instance.root.findChild('type', 'Polygon');
+            t.eq(poly.childNodes.length, 6, "The two PolygonSymbolizers are combined in one tree node, and an empty symbolizer was added as well");
+            t.eq(poly.attributes.symbolizer[0].fillColor, "olive", "The olive fill is on top");
+            poly.findChild('checked', false).getUI().toggleCheck(true);
+            t.eq(poly.childNodes.length, 7, "Extra node inserted if last unchecked node gets checked");
             instance.destroy();
         }
 

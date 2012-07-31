@@ -27,10 +27,6 @@
                 strokeColor: "red",
                 strokeWidth: 1
             }));
-            symbolizers.push(new OpenLayers.Symbolizer.Line({
-                strokeColor: "#669900",
-                strokeWidth: 3
-            }));
             symbolizers.push(new OpenLayers.Symbolizer.Polygon({
                 fillColor: "olive",
                 fillOpacity: 0.25,
@@ -59,8 +55,8 @@
         }
 
         function test_load(t) {
-            t.plan(15);
-            var loader = new gxp.tree.SymbolizerLoader({symbolizers: createSymbolizers()});
+            t.plan(19);
+            var loader = new gxp.tree.SymbolizerLoader({symbolType: "Polygon", symbolizers: createSymbolizers()});
             var root = new Ext.tree.TreeNode();
             var log = [];
             loader.load(root, function() {
@@ -69,21 +65,25 @@
                         log.push(node);
                     }
                 });
-                t.eq(log.length, 11, "We expect 11 nodes");
-                t.eq(log[0].attributes.type, "Point", "Correct type");
-                t.eq(log[1].attributes.type, "Stroke", "Correct subType created");
-                t.eq(log[2].attributes.type, "Fill", "Correct subType created");
-                t.eq(log[1].attributes.symbolizer.fill, false, "fill set to false for the stroke part of the the point symbolizer");
-                t.eq(log[2].attributes.symbolizer.stroke, false, "stroke set to false for the fill part of the the point symbolizer");
-                t.eq(log[3].attributes.type, "Line", "Correct type");
+                t.eq(log.length, 14, "We expect 14 nodes");
+                t.eq(log[0].attributes.type, "Text", "Correct type");
+                t.eq(log[1].text, "${name}", "Fieldname used in node text");
+                t.eq(log[1].attributes.type, "Label", "Correct subType created");
+                t.ok(log[2].attributes.type === "Label" && log[2].getUI().isChecked() === false, "Correct subType created, but unchecked");
+                t.eq(log[3].attributes.type, "Polygon", "Correct type");
+                t.eq(log[4].attributes.symbolizer.fill, false, "For Stroke, fill is false");
                 t.eq(log[4].attributes.type, "Stroke", "Correct subType");
-                t.eq(log[5].attributes.type, "Polygon", "Correct type");
-                t.eq(log[8].attributes.type, "Text", "Correct type");
-                t.eq(log[9].attributes.type, "Label", "Correct subType");
-                t.eq(log[9].attributes.symbolizer.graphic, false, "Graphic set to false");
-                t.eq(log[9].attributes.symbolizer.label, "Ab", "Label is correct");
-                t.eq(log[10].attributes.type, "Graphic", "Correct subType");
-                t.eq(log[10].attributes.symbolizer.label, "", "Label is emptied for graphic subType");
+                t.ok(log[5].attributes.type === "Stroke" && log[5].getUI().isChecked() === false, "Correct subType created, but unchecked");
+                t.eq(log[6].attributes.type, "Fill", "Correct subType");
+                t.eq(log[6].attributes.symbolizer.stroke, false, "For Fill, stroke is false");
+                t.ok(log[7].attributes.type === "Fill" && log[7].getUI().isChecked() === false, "Correct subType created, but unchecked");
+                t.eq(log[8].attributes.type, "Point", "Correct type");
+                t.eq(log[9].attributes.type, "Graphic", "Correct subType");
+                t.eq(log[10].attributes.type, "Mark", "Correct subType");
+                t.ok(log[11].attributes.type === "Mark" && log[11].getUI().isChecked() === false, "Correct subType created, but unchecked");
+                t.eq(log[12].attributes.type, "Line", "Correct type");
+                t.eq(log[13].attributes.type, "Stroke", "Correct subType");
+                t.ok(log[13].getUI().isChecked() === false, "Node is unchecked");
             });
         }
 
