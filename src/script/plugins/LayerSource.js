@@ -39,6 +39,12 @@ gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
      *  been loaded yet (i.e. lazy source). Read-only.
      */
     lazy: false,
+
+    /** api: property[hidden]
+     *  ``Boolean`` Set to true if you don't want this LayerSource to show
+     *  up in the AddLayers dialog. Defaults to false.
+     */
+    hidden: false,
      
     /** api: property[title]
      *  ``String``

@@ -348,7 +348,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         var source, data = [], target = this.target, me = this;
         for (var id in target.layerSources) {
             source = target.layerSources[id];
-            if (source.store && source.ptype !== "gxp_cataloguesource") {
+            if (source.store && !source.hidden) {
                 data.push([id, source.title || id, source.url]);                
             }
         }

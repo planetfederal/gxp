@@ -42,6 +42,14 @@ gxp.plugins.CatalogueSource = Ext.extend(gxp.plugins.WMSSource, {
      */
     lazy: true,
 
+    /** api: config[hidden]
+     *  ``Boolean`` Normally we do not want these sources to show up in the
+     *  AddLayers dialog for the source combobox. Set to false for a certain 
+     *  source to show up anyway whenever that makes sense, e.g. by using a
+     *  catalogue source to retrieve all the layers for a capabilities grid.
+     */
+    hidden: true,
+
     /** api: config[proxyOptions]
      *  ``Object``
      *  An optional object to pass to the constructor of the ProtocolProxy.
