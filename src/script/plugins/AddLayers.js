@@ -190,6 +190,13 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      * The identifier of the source that we should start with.
      */
     startSourceId: null,
+
+    /** api: config[catalogSourceKey]
+     *  ``String`` When lazy layerRecords are created by the 'Find Layers'
+     *  function, they can optionally be associated with another source. 
+     *  E.g. the 'local' source in GeoNode client.
+     */
+    catalogSourceKey: null,
     
     /** private: property[selectedSource]
      *  :class:`gxp.plugins.LayerSource`
@@ -316,7 +323,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     var bbox = bounds.transform(layerConfig.srs, mapProjection);
                     layerConfig.srs = mapProjection;
                     layerConfig.bbox = bbox.toArray();
-                    layerConfig.source = sourceKey;
+                    layerConfig.source = this.catalogSourceKey || sourceKey;
                     var record = source.createLayerRecord(layerConfig);
                     this.target.mapPanel.layers.add(record);
                 },
