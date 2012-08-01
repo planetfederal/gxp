@@ -64,6 +64,10 @@ Ext.onReady(function() {
             outputTarget: "west",
             actionTarget: ["tree.tbar", "tree.contextMenu"]
         }, {
+            ptype: "gxp_styler",
+            outputTarget: "west",
+            actionTarget: ["tree.tbar", "tree.contextMenu"]
+        }, {
             ptype: "gxp_zoomtoextent",
             actionTarget: "map.tbar"
         }, {

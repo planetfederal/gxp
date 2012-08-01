@@ -74,5 +74,5 @@ gxp.PolygonSymbolizer = Ext.extend(Ext.Panel, {
     
 });
 
-/** api: xtype = gxp_linesymbolizer */
+/** api: xtype = gxp_polygonsymbolizer */
 Ext.reg('gxp_polygonsymbolizer', gxp.PolygonSymbolizer);

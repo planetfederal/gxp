@@ -99,7 +99,8 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
     graphic_marginHelp: "Similar to the margin shorthand property in CSS for HTML, its interpretation varies depending on how many margin values are provided: 1 = use that margin length on all sides of the label 2 = use the first for top & bottom margins and the second for left & right margins. 3 = use the first for the top margin, second for left & right margins, third for the bottom margin. 4 = use the first for the top margin, second for the right margin, third for the bottom margin, and fourth for the left margin.",
 
     initComponent: function() {
-
+        // used to prevent a change event on first render
+        this.collapseCount = 2;
         if(!this.symbolizer) {
             this.symbolizer = {};
         }
@@ -246,27 +247,30 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
             })],
             listeners: {
                 collapse: function() {
-                    this.graphicCache = {
-                        externalGraphic: this.symbolizer.externalGraphic,
-                        fillColor: this.symbolizer.fillColor,
-                        fillOpacity: this.symbolizer.fillOpacity,
-                        graphicName: this.symbolizer.graphicName,
-                        pointRadius: this.symbolizer.pointRadius,
-                        rotation: this.symbolizer.rotation,
-                        strokeColor: this.symbolizer.strokeColor,
-                        strokeWidth: this.symbolizer.strokeWidth,
-                        strokeDashStyle: this.symbolizer.strokeDashStyle
-                    };
-                    delete this.symbolizer.externalGraphic;
-                    delete this.symbolizer.fillColor;
-                    delete this.symbolizer.fillOpacity;
-                    delete this.symbolizer.graphicName;
-                    delete this.symbolizer.pointRadius;
-                    delete this.symbolizer.rotation;
-                    delete this.symbolizer.strokeColor;
-                    delete this.symbolizer.strokeWidth;
-                    delete this.symbolizer.strokeDashStyle;
-                    this.fireEvent("change", this.symbolizer)
+                    if (this.collapseCount == 0) {
+                        this.graphicCache = {
+                            externalGraphic: this.symbolizer.externalGraphic,
+                            fillColor: this.symbolizer.fillColor,
+                            fillOpacity: this.symbolizer.fillOpacity,
+                            graphicName: this.symbolizer.graphicName,
+                            pointRadius: this.symbolizer.pointRadius,
+                            rotation: this.symbolizer.rotation,
+                            strokeColor: this.symbolizer.strokeColor,
+                            strokeWidth: this.symbolizer.strokeWidth,
+                            strokeDashStyle: this.symbolizer.strokeDashStyle
+                        };
+                        delete this.symbolizer.externalGraphic;
+                        delete this.symbolizer.fillColor;
+                        delete this.symbolizer.fillOpacity;
+                        delete this.symbolizer.graphicName;
+                        delete this.symbolizer.pointRadius;
+                        delete this.symbolizer.rotation;
+                        delete this.symbolizer.strokeColor;
+                        delete this.symbolizer.strokeWidth;
+                        delete this.symbolizer.strokeDashStyle;
+                        this.fireEvent("change", this.symbolizer)
+                    }
+                    this.collapseCount--;
                 },
                 expand: function() {
                     Ext.apply(this.symbolizer, this.graphicCache);
@@ -331,15 +335,18 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
             }],
             listeners: {
                 collapse: function() {
-                    this.haloCache = {
-                        haloRadius: this.symbolizer.haloRadius,
-                        haloColor: this.symbolizer.haloColor,
-                        haloOpacity: this.symbolizer.haloOpacity
-                    };
-                    delete this.symbolizer.haloRadius;
-                    delete this.symbolizer.haloColor;
-                    delete this.symbolizer.haloOpacity;
-                    this.fireEvent("change", this.symbolizer)
+                    if (this.collapseCount === 0) { 
+                        this.haloCache = {
+                            haloRadius: this.symbolizer.haloRadius,
+                            haloColor: this.symbolizer.haloColor,
+                            haloOpacity: this.symbolizer.haloOpacity
+                        };
+                        delete this.symbolizer.haloRadius;
+                        delete this.symbolizer.haloColor;
+                        delete this.symbolizer.haloOpacity;
+                        this.fireEvent("change", this.symbolizer)
+                    }
+                    this.collapseCount--;
                 },
                 expand: function() {
                     Ext.apply(this.symbolizer, this.haloCache);
