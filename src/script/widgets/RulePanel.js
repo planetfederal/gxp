@@ -395,7 +395,8 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                                 },
                                 scope: this
                             },
-                            autoScroll: true,
+                            autoScroll: true, 
+                            height: 215,
                             title: node.parentNode.attributes.type + " " + type + " " + this.propertiesSuffix,
                             attributes: this.attributes,
                             bodyStyle: {"padding": "5px"},
