@@ -79,6 +79,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      duplicateRuleTip: "Duplicate the selected rule",
     /** api: config[cancelText] (i18n) */
      cancelText: "Cancel",
+    /** api: config[revertText] (i18n) */
+     revertText: "Revert",
     /** api: config[saveText] (i18n) */
      saveText: "Save",
     /** api: config[stylePropertiesWindowTitle] (i18n) */
@@ -625,17 +627,13 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 }
             }],
             bbar: ["->", {
-                text: this.cancelText,
+                text: this.revertText,
                 iconCls: "cancel",
                 handler: function() {
                     this.saveRule(ruleDlg.rulePanel, origRule);
                     ruleDlg.destroy();
                 },
                 scope: this
-            }, {
-                text: this.saveText,
-                iconCls: "save",
-                handler: function() { ruleDlg.destroy(); }
             }]
         });
         this.showDlg(ruleDlg);
