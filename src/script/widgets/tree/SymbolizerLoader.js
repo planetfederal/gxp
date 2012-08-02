@@ -134,9 +134,17 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
                     var sym = new OpenLayers.Symbolizer[typesNeeded[i]](config);
                     split = this.splitSymbolizer(sym);
                     for (s in split) {
-                        split[s].checked = false;
-                        symbolizers[typesNeeded[i]].empty = false;
-                        symbolizers[typesNeeded[i]][s].push(split[s]);
+                        var hasUnchecked = false;
+                        for (var k=0, kk=symbolizers[typesNeeded[i]][s].length; k<kk; ++k) {
+                            if (symbolizers[typesNeeded[i]][s][k].checked === false) {
+                                hasUnchecked = true;
+                            }
+                        }
+                        if (hasUnchecked === false) {
+                            split[s].checked = false;
+                            symbolizers[typesNeeded[i]].empty = false;
+                            symbolizers[typesNeeded[i]][s].push(split[s]);
+                        }
                     }
                     if (OpenLayers.Util.indexOf(typeSeq, typesNeeded[i]) === -1) {
                         typeSeq.splice(0, 0, typesNeeded[i]);
@@ -271,11 +279,13 @@ Ext.extend(gxp.tree.SymbolizerLoader, Ext.util.Observable, {
         if (symbolizer instanceof OpenLayers.Symbolizer.Polygon) {
             result.Fill = {
                 stroke: false,
+                checked: symbolizer.fill,
                 fillColor: symbolizer.fillColor,
                 fillOpacity: symbolizer.fillOpacity
             };
             result.Stroke = {
                 fill: false,
+                checked: symbolizer.stroke,
                 strokeColor: symbolizer.strokeColor,
                 strokeOpacity: symbolizer.strokeOpacity,
                 strokeWidth: symbolizer.strokeWidth,
