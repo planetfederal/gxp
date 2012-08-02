@@ -361,6 +361,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                 autoScroll: true,
                 symbolizers: this.rule.symbolizers,
                 height: 150,
+                width: 320,
                 listeners: {
                     click: function(node) {
                         this.grid.ownerCt.remove(this.properties, true);

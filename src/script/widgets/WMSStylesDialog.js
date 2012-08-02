@@ -609,7 +609,6 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     method: "GET",
                     disableCaching: false
                 }),
-                autoScroll: true,
                 border: false,
                 defaults: {
                     autoHeight: true,

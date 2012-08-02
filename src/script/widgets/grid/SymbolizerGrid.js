@@ -80,7 +80,7 @@ gxp.grid.SymbolizerGrid = Ext.ux && Ext.ux.tree && Ext.ux.tree.TreeGrid && Ext.e
             width: 200
         }, {
             header: this.previewTitle,
-            width: 100,
+            width: 85,
             dataIndex: 'preview'
         }];
         this.addEvents(
