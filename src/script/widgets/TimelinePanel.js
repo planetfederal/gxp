@@ -158,6 +158,12 @@ window.Timeline && window.SimileAjax && (function() {
  */
 gxp.TimelinePanel = Ext.extend(Ext.Panel, {
 
+    /** api: config[scrollInterval]
+     *  ``Integer`` The Simile scroll event listener will only be handled
+     *  upon every scrollInterval milliseconds. Defaults to 500.
+     */
+    scrollInterval: 500,
+
     /** api: config[featureEditor]
      *  ``gxp.plugins.FeatureEditor``
      */
@@ -806,7 +812,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         // since the bands are linked we need to listen to one band only
         this._silent = true;
         this.timeline.getBand(0).addOnScrollListener(
-            this.setPlaybackCenter.createDelegate(this)
+            gxp.util.throttle(this.setPlaybackCenter.createDelegate(this), this.scrollInterval)
         );
         
     },
