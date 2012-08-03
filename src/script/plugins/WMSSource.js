@@ -201,7 +201,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      *  Reload the store when the authorization changes.
      */
     onAuthorizationChange: function() {
-        if (this.store && this.store.url.charAt(0) === "/") {
+        if (this.store && this.url.charAt(0) === "/") {
             this.store.reload();
         }
     },
@@ -558,7 +558,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             record.json = config;
 
         } else {
-            if (window.console && this.store.getCount() > 0) {
+            if (window.console && this.store.getCount() > 0 && config.name !== undefined) {
                 console.warn("Could not create layer record for layer '" + config.name + "'. Check if the layer is found in the WMS GetCapabilities response.");
             }
         }
