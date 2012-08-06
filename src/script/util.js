@@ -125,65 +125,50 @@ gxp.util = {
 
     /** api: function[throttle]
      *  :arg func: ``Function``
-     *  :arg wait: ``Integer``
+     *  :arg interval: ``Integer``
+     *  :arg scope: ``Object``
      *  :return: ``Function``
      *
      *  Returns a function, that, when invoked, will only be triggered at 
      *  most once during a given window of time.
      */
     throttle: (function() {
-
-        //     Underscore.js 1.3.3
-        //     (c) 2009-2012 Jeremy Ashkenas, DocumentCloud Inc.
-        //     Underscore is freely distributable under the MIT license.
-        //     Portions of Underscore are inspired or borrowed from Prototype,
-        //     Oliver Steele's Functional, and John Resig's Micro-Templating.
-        //     For all details and documentation:
-        //     http://documentcloud.github.com/underscore
-
-        // Returns a function, that, as long as it continues to be invoked, will not
-        // be triggered. The function will be called after it stops being called for
-        // N milliseconds. If `immediate` is passed, trigger the function on the
-        // leading edge, instead of the trailing.
-        var debounce = function(func, wait, immediate) {
-          var timeout;
-          return function() {
-            var context = this, args = arguments;
-            var later = function() {
-              timeout = null;
-              if (!immediate) func.apply(context, args);
+        // taken from ExtJS 4.1
+        // TODO remove when we upgrade to ExtJS 4.1 or higher.
+        /**
+         * Creates a throttled version of the passed function which, when called repeatedly and
+         * rapidly, invokes the passed function only after a certain interval has elapsed since the
+         * previous invocation.
+         *
+         * This is useful for wrapping functions which may be called repeatedly, such as
+         * a handler of a mouse move event when the processing is expensive.
+         *
+         * @param {Function} fn The function to execute at a regular time interval.
+         * @param {Number} interval The interval **in milliseconds** on which the passed function is executed.
+         * @param {Object} scope (optional) The scope (`this` reference) in which
+         * the passed function is executed. If omitted, defaults to the scope specified by the caller.
+         * @returns {Function} A function which invokes the passed function at the specified interval.
+         */
+        var createThrottled = function(fn, interval, scope) {
+            var lastCallTime, elapsed, lastArgs, timer, execute = function() {
+                fn.apply(scope || this, lastArgs);
+                lastCallTime = new Date().getTime();
             };
-            if (immediate && !timeout) func.apply(context, args);
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-          };
-        };
 
-        // Returns a function, that, when invoked, will only be triggered at most once
-        // during a given window of time.
-        var throttle = function(func, wait) {
-          var context, args, timeout, throttling, more, result;
-          var whenDone = debounce(function(){ more = throttling = false; }, wait);
-          return function() {
-            context = this; args = arguments;
-            var later = function() {
-              timeout = null;
-              if (more) func.apply(context, args);
-              whenDone();
+            return function() {
+                elapsed = new Date().getTime() - lastCallTime;
+                lastArgs = arguments;
+
+                clearTimeout(timer);
+                if (!lastCallTime || (elapsed >= interval)) {
+                    execute();
+                } else {
+                    timer = setTimeout(execute, interval - elapsed);
+                }
             };
-            if (!timeout) timeout = setTimeout(later, wait);
-            if (throttling) {
-              more = true;
-            } else {
-              result = func.apply(context, args);
-            }
-            whenDone();
-            throttling = true;
-            return result;
-          };
         };
-        return function(func, wait) {
-            return throttle(func, wait);
+        return function(func, interval, scope) {
+            return createThrottled(func, interval, scope);
         };
     })(),
 
