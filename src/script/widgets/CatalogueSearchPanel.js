@@ -109,6 +109,14 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                     emptyText: this.searchFieldEmptyText,
                     ref: "../../search",
                     name: "search",
+                    listeners: {
+                         specialkey: function(field, e) {
+                             if (e.getKey() == e.ENTER) {
+                                 this.performQuery();
+                             }
+                         },
+                         scope: this
+                    },
                     width: 300
                 }, {
                     xtype: "button",
