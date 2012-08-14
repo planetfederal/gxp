@@ -642,7 +642,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     rec = store.getAt(index),
                     source = rec && this.target.layerSources[rec.get("id")];
                 if (source) {
-                    if (source.title !== rec.get("title")) {
+                    if (source.title !== rec.get("title") && !Ext.isEmpty(source.title)) {
                         rec.set("title", source.title);
                         sourceComboBox.setValue(rec.get(valueField));
                     }
