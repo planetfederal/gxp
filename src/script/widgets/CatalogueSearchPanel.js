@@ -87,6 +87,9 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
         var sourceComboData = [];
         for (var key in this.sources) {
             sourceComboData.push([key, this.sources[key].title]);
+            if (!this.selectedSource && key === "csw") {
+                this.selectedSource = key;
+            }
         }
         if (sourceComboData.length === 1) {
             this.selectedSource = sourceComboData[0][0];
