@@ -588,7 +588,12 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         var layerStore = this.target.mapPanel.layers,
             extent, record, layer;
         for (var i=0, ii=records.length; i<ii; ++i) {
-            record = records[i];
+            // If the source is lazy, then createLayerRecord will not return
+            // a record, and we take the preconfigured record.
+            record = source.createLayerRecord({
+                name: records[i].get("name"),
+                source: source.id
+            }) || records[i];
             if (record) {
                 layer = record.getLayer();
                 if (layer.maxExtent) {
