@@ -158,6 +158,18 @@ window.Timeline && window.SimileAjax && (function() {
  */
 gxp.TimelinePanel = Ext.extend(Ext.Panel, {
 
+    /** api: config[showRangeSlider]
+     *  ``Boolean`` Should we show the range slider and its associated plus
+     *  and minus buttons? Defaults to true
+     */
+    showRangeSlider: true,
+
+    /** api: config[initialRangeSliderValue]
+     *  ``Integer`` Initial value to use for the range slider. Default value
+     *  is 25.
+     */
+    initialRangeSliderValue: 25,
+
     /** api: config[scrollInterval]
      *  ``Integer`` The Simile scroll event listener will only be handled
      *  upon every scrollInterval milliseconds. Defaults to 500.
@@ -305,55 +317,58 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
 
         this.eventSource = new Timeline.DefaultEventSource(0);
 
-        this.items = [{
-            region: "west",
-            xtype: "container",
-            layout: "vbox",
-            margins: "10 5",
-            width: 20,
-            items: [{
-                xtype: "panel",
-                margins: "3 1",
-                cls: "x-tool x-tool-minus",
-                listeners: {
-                    afterrender: function(c){ 
-                        c.getEl().on('click', function() {
-                            var value = this.rangeSlider.getValue();
-                            this.rangeSlider.setValue(0, value+10, true, true);
-                        }, this);
+        this.items = [];
+        if (this.showRangeSlider) {
+            this.items.push({
+                region: "west",
+                xtype: "container",
+                layout: "vbox",
+                margins: "10 5",
+                width: 20,
+                items: [{
+                    xtype: "panel",
+                    margins: "3 1",
+                    cls: "x-tool x-tool-minus",
+                    listeners: {
+                        afterrender: function(c){ 
+                            c.getEl().on('click', function() {
+                                var value = this.rangeSlider.getValue();
+                                this.rangeSlider.setValue(0, value+10, true, true);
+                            }, this);
+                        },
+                        scope: this
+                    }
+                }, {
+                    xtype: "slider",
+                    ref: "../rangeSlider",
+                    vertical: true,
+                    flex: 1,
+                    value: this.initialRangeSliderValue,
+                    minValue: 1,
+                    maxValue: 100,
+                    listeners: {
+                        "change": this.onChange,
+                        "changecomplete": this.onChangeComplete,
+                        scope: this
                     },
-                    scope: this
-                }
-           }, {
-                xtype: "slider",
-                ref: "../rangeSlider",
-                vertical: true,
-                flex: 1,
-                value: 25,
-                minValue: 1,
-                maxValue: 100,
-                listeners: {
-                    "change": this.onChange,
-                    "changecomplete": this.onChangeComplete,
-                    scope: this
-                },
-                plugins: [new gxp.slider.RangeSliderTip()]
-            }, {
-                xtype: "panel",
-                margins: "3 1",
-                cls: "x-tool x-tool-plus",
-                listeners: {
-                    afterrender: function(c){ 
-                        c.getEl().on('click', function() {
-                            var value = this.rangeSlider.getValue();
-                            this.rangeSlider.setValue(0, value-10, true, true);
-                        }, this);
-                    },
-                    scope: this
-                }
-            }]
-        }, this.timelineContainer
-        ];
+                    plugins: [new gxp.slider.RangeSliderTip()]
+                }, {
+                    xtype: "panel",
+                    margins: "3 1",
+                    cls: "x-tool x-tool-plus",
+                    listeners: {
+                        afterrender: function(c){ 
+                            c.getEl().on('click', function() {
+                                var value = this.rangeSlider.getValue();
+                                this.rangeSlider.setValue(0, value-10, true, true);
+                            }, this);
+                        },
+                        scope: this
+                    }
+                }]
+            });
+        } 
+        this.items.push(this.timelineContainer);
 
         // we are binding with viewer to get updates on new layers        
         if (this.initialConfig.viewer) {
@@ -1161,8 +1176,10 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  Update the slider tip for the range slider.
      */
     updateRangeSlider: function(range) {
-        this.rangeSlider.startDate = range[0].dateFormat('Y-m-d');
-        this.rangeSlider.endDate = range[1].dateFormat('Y-m-d');
+        if (this.showRangeSlider) {
+            this.rangeSlider.startDate = range[0].dateFormat('Y-m-d');
+            this.rangeSlider.endDate = range[1].dateFormat('Y-m-d');
+        }
     },
 
     /** private: method[displayTooltip]
@@ -1326,7 +1343,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     calculateNewRange: function(range, percentage) {
         if (this.playbackTool) {
             if (percentage === undefined) {
-                percentage = this.rangeSlider.getValue();
+                percentage = this.showRangeSlider ? this.rangeSlider.getValue() : this.initialRangeSliderValue;
             }
             var span = range[1] - range[0];
             var center = this.playbackTool.playbackToolbar.control.currentTime;

@@ -361,13 +361,18 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
             records, tasks, task, msg, i,
             success = true;
         if (obj) {
-            tasks = obj.tasks || [obj.task];
-            for (i=tasks.length-1; i>=0; --i) {
-                task = tasks[i];
-                if (task.state !== "READY") {
-                    success = false;
-                    msg = "Source " + task.source.file + " is " + task.state;
-                    break;
+            if (typeof obj === "string") {
+                success = false;
+                msg = obj;
+            } else {
+                tasks = obj.tasks || [obj.task];
+                for (i=tasks.length-1; i>=0; --i) {
+                    task = tasks[i];
+                    if (task.state !== "READY") {
+                        success = false;
+                        msg = "Source " + task.source.file + " is " + task.state;
+                        break;
+                    }
                 }
             }
         }

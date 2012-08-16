@@ -10,7 +10,7 @@
  * @requires plugins/CatalogueSource.js
  * @requires GeoExt/data/CSWRecordsReader.js
  * @requires GeoExt/data/ProtocolProxy.js
- * @requires OpenLayers.Protocol.CSW/v2_0_2.js
+ * @requires OpenLayers/Protocol/CSW/v2_0_2.js
  */
 
 /** api: (define)
