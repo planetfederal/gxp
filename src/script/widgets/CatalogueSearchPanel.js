@@ -88,7 +88,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
         for (var key in this.sources) {
             sourceComboData.push([key, this.sources[key].title]);
         }
-        if (sourceComboData.length === 1) {
+        if (sourceComboData.length >= 1) {
             this.selectedSource = sourceComboData[0][0];
         }
         var filterOptions = [['datatype', 'data type'], ['extent', 'spatial extent'], ['category', 'category']];
