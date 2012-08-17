@@ -141,8 +141,14 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
                 allowDepress: true,
                 toggleHandler: function(button, pressed) {
                     if (this.autoExpand && this.output.length > 0) {
-                        Ext.getCmp(this.autoExpand)[pressed ? 'expand' : 'collapse']();
-                        if (!pressed) {
+                        var expandContainer = Ext.getCmp(this.autoExpand);
+                        expandContainer[pressed ? 'expand' : 'collapse']();
+                        if (pressed) {
+                            expandContainer.expand();
+                            if (expandContainer.ownerCt && expandContainer.ownerCt instanceof Ext.Panel) {
+                                expandContainer.ownerCt.expand();
+                            }
+                        } else {
                             this.target.tools[this.featureManager].loadFeatures();
                         }
                     }
@@ -255,7 +261,7 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
                 userExpand = false;
                 expandContainer[schema ? 'expand' : 'collapse']();
                 // if we're wrapped in another collapsed container, expand it
-                if (schema && expandContainer instanceof Ext.Panel && expandContainer.ownerCt.collapsed) {
+                if (schema && expandContainer && expandContainer.ownerCt && expandContainer.ownerCt instanceof Ext.Panel) {
                     expandContainer.ownerCt.expand();
                 }
             }
