@@ -15,8 +15,7 @@ GeoExt.Lang.add("el", {
         availableLayersText: "Διαθέσιμες Επιφάνειες",
         expanderTemplateText: "<p><b>Περίληψη:</b> {abstract}</p>",
         panelTitleText: "Τίτλος",
-        layerSelectionText: "Source:",
-        sourceSelectOrTypeText: "Choose one or type service URL",
+        layerSelectionText: "Δείτε διαθέσιμα δεδομένα από:",
         doneText: "Ολοκληρώθηκε",
         uploadText: "Ανεβάστε Δεδομένα"
     },

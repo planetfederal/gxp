@@ -8,6 +8,7 @@
 
 /**
  * @requires plugins/Tool.js
+ * @requires widgets/NewSourceDialog.js
  */
 
 /** api: (define)
@@ -100,13 +101,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      *  ``String``
      *  Text for the layer selection (i18n).
      */
-    layerSelectionText: "Layers from:",
-    
-    /** api: config[sourceSelectOrTypeText]
-     *  ``String``
-     *  Empty text for the sources combo (i18n).
-     */
-    sourceSelectOrTypeText: "Choose one or type service URL",
+    layerSelectionText: "View available data from:",
     
     /** api: config[instructionsText]
      *  ``String``
@@ -204,16 +199,11 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      */
     selectedSource: null,
     
-    /** private: property[urlRegExp]
-     *  ``RegExp``
+    /** private: property[addServerId]
+     *  ``String`` Id of the record in the sourceComboBox that is used to
+     *  add a new source.
      */
-    urlRegExp: /^(http(s)?:)?\/\/([\w%]+:[\w%]+@)?([^@\/:]+)(:\d+)?\//i,
-
-    /** api: config[invalidURLText]
-     *  ``String``
-     *  Message to display when an invalid URL is entered (i18n).
-     */
-    invalidURLText: "Enter a valid URL to a WMS endpoint (e.g. http://example.com/geoserver/wms)",
+    addServerId: null,
 
     /** private: method[constructor]
      */
@@ -352,7 +342,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      * Constructs a window with a capabilities grid.
      */
     initCapGrid: function() {
-        var source, data = [], target = this.target, me = this;
+        var source, data = [], target = this.target;        
         for (var id in target.layerSources) {
             source = target.layerSources[id];
             if (source.store && !source.hidden) {
@@ -391,26 +381,6 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             }
         }
         
-        function urlSelected(url) {
-            me.target.addLayerSource({
-                config: {url: url}, // assumes default of gx_wmssource
-                callback: function(id) {
-                    // add to combo and select
-                    var record = new sources.recordType({
-                        id: id,
-                        title: me.target.layerSources[id].title || me.untitledText
-                    });
-                    sources.insert(0, [record]);
-                    sourceComboBox.onSelect(record, 0);
-                },
-                fallback: function(source, msg) {
-                    error = new Ext.Template(me.addLayerSourceErrorText).apply({msg: msg});
-                    sourceComboBox.validate();
-                },
-                scope: me
-            });
-        }
-        
         var idx = 0;
         if (this.startSourceId !== null) {
             sources.each(function(record) {
@@ -438,34 +408,29 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 scope: this
             }
         });
-        var error;
+        
         var sourceComboBox = new Ext.form.ComboBox({
             ref: "../sourceComboBox",
-            width: 230,
+            width: 165,
             store: sources,
             valueField: "id",
             displayField: "title",
             tpl: '<tpl for="."><div ext:qtip="{url}" class="x-combo-list-item">{title}</div></tpl>',
             triggerAction: "all",
-            allowBlank: !!target.proxy,
-            editable: !!target.proxy,
-            forceSelection: !target.proxy,
-            typeAhead: true,
+            editable: false,
+            allowBlank: false,
+            forceSelection: true,
             mode: "local",
-            emptyText: target.proxy ? this.sourceSelectOrTypeText : undefined,
-            validationEvent: 'keyup',
-            validator: function(value) {
-                var rv = error;
-                if (!error) {
-                    rv = me.urlRegExp.test(value) || ~sourceComboBox.store.findExact(value) ?
-                        true : me.invalidURLText;
-                }
-                error = null;
-                return rv;
-            },
+            value: data[idx][0],
             listeners: {
                 select: function(combo, record, index) {
-                    var source = this.target.layerSources[record.get("id")];
+                    var id = record.get("id");
+                    if (id === this.addServerId) {
+                        showNewSourceDialog();
+                        sourceComboBox.reset();
+                        return;
+                    }
+                    var source = this.target.layerSources[id];
                     capGridPanel.reconfigure(source.store, capGridPanel.getColumnModel());
                     // TODO: remove the following when this Ext issue is addressed
                     // http://www.extjs.com/forum/showthread.php?100345-GridPanel-reconfigure-should-refocus-view-to-correct-scroller-height&p=471843
@@ -477,12 +442,6 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                         combo.triggerBlur();
                         combo.el.blur();
                     }).defer(100);
-                },
-                specialkey: function(field, e) {
-                    var value = field.getRawValue();
-                    if (e.getKey() == e.ENTER && !~sourceComboBox.store.findExact(value) && sourceComboBox.validator(value) === true) {
-                        urlSelected(value);
-                    }
                 },
                 focus: function(field) {
                     if (target.proxy) {
@@ -502,6 +461,61 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 sourceComboBox
             ];
         }
+        
+        if (this.target.proxy) {
+            this.addServerId = Ext.id();
+            sources.loadData([[this.addServerId, this.addServerText + "..."]], true);
+        }
+        
+        var newSourceDialog = {
+            xtype: "gxp_newsourcedialog",
+            header: false,
+            listeners: {
+                "hide": function(cmp) {
+                    if (!this.outputTarget) {
+                        cmp.ownerCt.hide();
+                    }
+                },
+                "urlselected": function(newSourceDialog, url) {
+                    newSourceDialog.setLoading();
+                    this.target.addLayerSource({
+                        config: {url: url}, // assumes default of gx_wmssource
+                        callback: function(id) {
+                            // add to combo and select
+                            var record = new sources.recordType({
+                                id: id,
+                                title: this.target.layerSources[id].title || this.untitledText
+                            });
+                            sources.insert(0, [record]);
+                            sourceComboBox.onSelect(record, 0);
+                            newSourceDialog.hide();
+                        },
+                        fallback: function(source, msg) {
+                            this.setError(
+                                new Ext.Template(this.addLayerSourceErrorText).apply({msg: msg})
+                            );
+                        },
+                        scope: this
+                    });
+                },
+                scope: this
+            }
+        };
+        var me = this;
+        function showNewSourceDialog() {
+            if (me.outputTarget) {
+                me.addOutput(newSourceDialog);
+            } else {
+                new Ext.Window({
+                    title: gxp.NewSourceDialog.prototype.title,
+                    modal: true,
+                    hideBorders: true,
+                    width: 300,
+                    items: newSourceDialog
+                }).show();
+            }
+        }        
+        
         
         var items = {
             xtype: "container",
@@ -645,7 +659,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     valueField = sourceComboBox.valueField,
                     index = store.findExact(valueField, sourceComboBox.getValue()),
                     rec = store.getAt(index),
-                    source = rec && this.target.layerSources[rec.get("id")];
+                    source = this.target.layerSources[rec.get("id")];
                 if (source) {
                     if (source.title !== rec.get("title") && !Ext.isEmpty(source.title)) {
                         rec.set("title", source.title);
