@@ -16,6 +16,8 @@
  * @requires OpenLayers/Renderer/SVG.js
  * @requires OpenLayers/Renderer/VML.js
  * @requires OpenLayers/Renderer/Canvas.js
+ * @requires OpenLayers/Handler/Polygon.js
+ * @requires OpenLayers/Handler/Path.js
  */
 
 /** api: (define)
