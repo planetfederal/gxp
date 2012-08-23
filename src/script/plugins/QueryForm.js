@@ -119,30 +119,44 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
     outputAction: 0,
     
     /** api: config[autoExpand]
-     *  ``String`` If setto the id of a container, the container will be
+     *  ``String`` If set to the id of a container, the container will be
      *  expanded when the Query Form is enabled, and collapsed when it is
      *  disabled. Once the user manually expands/collapses the contaienr, the
      *  user setting will stick for the current session.
      */
     autoExpand: null,
     
-    constructor: function(config) {
-        Ext.applyIf(config, {
-            actions: [{
+    /** api: method[addActions]
+     */
+    addActions: function(actions) {
+        if (!this.initialConfig.actions && !actions) {
+            actions = [{
                 text: this.queryActionText,
                 menuText: this.queryMenuText,
                 iconCls: "gxp-icon-find",
                 tooltip: this.queryActionTip,
-                disabled: true
-            }]
-        });
-        gxp.plugins.QueryForm.superclass.constructor.apply(this, arguments);
-    },
-    
-    /** api: method[addActions]
-     */
-    addActions: function(actions) {
-        gxp.plugins.QueryForm.superclass.addActions.apply(this, arguments);
+                disabled: true,
+                toggleGroup: this.toggleGroup,
+                enableToggle: true,
+                allowDepress: true,
+                toggleHandler: function(button, pressed) {
+                    if (this.autoExpand && this.output.length > 0) {
+                        var expandContainer = Ext.getCmp(this.autoExpand);
+                        expandContainer[pressed ? 'expand' : 'collapse']();
+                        if (pressed) {
+                            expandContainer.expand();
+                            if (expandContainer.ownerCt && expandContainer.ownerCt instanceof Ext.Panel) {
+                                expandContainer.ownerCt.expand();
+                            }
+                        } else {
+                            this.target.tools[this.featureManager].loadFeatures();
+                        }
+                    }
+                },
+                scope: this
+            }];
+        }
+        this.actions = gxp.plugins.QueryForm.superclass.addActions.apply(this, actions);
         // support custom actions
         if (this.actionTarget !== null && this.actions) {
             this.target.tools[this.featureManager].on("layerchange", function(mgr, rec, schema) {
@@ -246,6 +260,10 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
             if (expandContainer) {
                 userExpand = false;
                 expandContainer[schema ? 'expand' : 'collapse']();
+                // if we're wrapped in another collapsed container, expand it
+                if (schema && expandContainer && expandContainer.ownerCt && expandContainer.ownerCt instanceof Ext.Panel) {
+                    expandContainer.ownerCt.expand();
+                }
             }
             if (schema) {
                 queryForm.attributeFieldset.add({
