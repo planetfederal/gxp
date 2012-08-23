@@ -367,8 +367,15 @@ gxp.FeatureEditPopup = Ext.extend(GeoExt.Popup, {
 
             this.modifyControl = new OpenLayers.Control.ModifyFeature(
                 this.feature.layer,
-                {standalone: true, vertexRenderIntent: this.vertexRenderIntent}
+                {standalone: true, vertexRenderIntent: this.vertexRenderIntent,
+                onModification: function() {
+                    // don't go to previous page when back button is pressed
+                    //TODO consider calling OpenLayers.Event.stop in
+                    // OpenLayers.Control.ModifyFeature::handleKeypress
+                    OpenLayers.Event.stop(window.event);
+                }}
             );
+            this.modifyControl.deleteCodes = [8, 46, 68];
             this.feature.layer.map.addControl(this.modifyControl);
             this.modifyControl.activate();
             if (this.feature.geometry) {
