@@ -109,8 +109,8 @@ gxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                 rules: [new OpenLayers.Rule({
                     symbolizer: {
                         "Point": {
-                            pointRadius: 4,
-                            graphicName: "square",
+                            pointRadius: 3,
+                            graphicName: "circle",
                             fillColor: "white",
                             fillOpacity: 1,
                             strokeWidth: 1,
@@ -118,15 +118,14 @@ gxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
                             strokeColor: "#333333"
                         },
                         "Line": {
-                            strokeWidth: 3,
-                            strokeOpacity: 1,
-                            strokeColor: "#666666",
-                            strokeDashstyle: "dash"
+                            strokeWidth: 2,
+                            strokeOpacity: 0.9,
+                            strokeColor: "#FF0000"
                         },
                         "Polygon": {
                             strokeWidth: 2,
-                            strokeOpacity: 1,
-                            strokeColor: "#666666",
+                            strokeOpacity: 0.9,
+                            strokeColor: "#FF0000",
                             fillColor: "white",
                             fillOpacity: 0.3
                         }
@@ -144,22 +143,22 @@ gxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
             var metric = metricData.measure;
             var metricUnit = metricData.units;
 
-            measureControl.displaySystem = "english";
+            //measureControl.displaySystem = "english";
 
-            var englishData = metricData.geometry.CLASS_NAME.indexOf("LineString") > -1 ?
-            measureControl.getBestLength(metricData.geometry) :
-            measureControl.getBestArea(metricData.geometry);
+            //var englishData = metricData.geometry.CLASS_NAME.indexOf("LineString") > -1 ?
+            //measureControl.getBestLength(metricData.geometry) :
+            //measureControl.getBestArea(metricData.geometry);
 
-            var english = englishData[0];
-            var englishUnit = englishData[1];
+            //var english = englishData[0];
+            //var englishUnit = englishData[1];
 
             measureControl.displaySystem = "metric";
             var dim = metricData.order == 2 ?
             '<sup>2</sup>' :
             '';
 
-            return metric.toFixed(2) + " " + metricUnit + dim + "<br>" +
-                english.toFixed(2) + " " + englishUnit + dim;
+            return metric.toFixed(2) + " " + metricUnit + dim ;
+            //+ "<br>" +   english.toFixed(2) + " " + englishUnit + dim;
         };
 
         var measureToolTip;
