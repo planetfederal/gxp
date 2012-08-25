@@ -7,8 +7,8 @@
  */
 
 /**
- * @requires OpenLayers/Control/TimeManager.js
- * @requires OpenLayers/TimeAgent.js
+ * @requires OpenLayers/Control/DimensionManager.js
+ * @requires OpenLayers/Dimension/Agent.js
  * @requires widgets/slider/TimeSlider.js
  */
 
@@ -93,6 +93,11 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
             this.playbackActions = ["settings","slider","reset","play","fastforward","next","loop"]; 
         }
         if(!this.control){
+            this.controlConfig = Ext.applyIf(this.controlConfig || {}, {
+                dimension: 'time',
+                autoSync: true,
+                snapToList: true
+            });
             this.control = this.buildTimeManager();
         }
         this.control.events.on({
@@ -388,7 +393,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         }
         //DON'T DROP FRAMES
         //this.controlConfig.maxFrameDelay = NaN;
-        var ctl = this.control = new OpenLayers.Control.TimeManager(this.controlConfig);
+        var ctl = this.control = new OpenLayers.Control.DimensionManager(this.controlConfig);
         ctl.loop = this.looped;
         this.mapPanel.map.addControl(ctl);
         if(ctl.layers) {

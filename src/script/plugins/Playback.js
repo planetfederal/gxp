@@ -44,6 +44,12 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
      */    
     looped: false,
     
+    /** api: config[playbackMode]
+     *  ``String``
+     *  One of: 'track', 'cumulative', or 'ranged'
+     */
+    playbackMode: 'track',
+    
     /** api: config[menuText]
      *  ``String``
      *  Text for Playback menu item (i18n).
@@ -79,7 +85,7 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
      */
     addOutput: function(config){
         delete this._ready;
-        OpenLayers.Control.TimeManager.prototype.maxFrameDelay = 
+        OpenLayers.Control.DimensionManager.prototype.maxFrameDelay = 
             (this.target.tests && this.target.tests.dropFrames) ? 10 : NaN;
         config = Ext.applyIf(config || this.outputConfig || {}, {
             xtype: 'gxp_playbacktoolbar',

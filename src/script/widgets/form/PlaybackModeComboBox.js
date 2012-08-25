@@ -36,9 +36,9 @@ gxp.form.PlaybackModeComboBox = Ext.extend(Ext.form.ComboBox, {
     /** api: property[defaultMode]
      *  ``String``
      *  The value of ``modes`` item to select by default.
-     *  Default is ``false`` ('Normal' mode)
+     *  Default is ``track`` ('Normal' mode)
      */
-    defaultMode: false,
+    defaultMode: 'track',
     
     /** api: property[timeAgents]
      *  ``Array``(``OpenLayers.TimeAgent``)
@@ -69,7 +69,7 @@ gxp.form.PlaybackModeComboBox = Ext.extend(Ext.form.ComboBox, {
         });
         //initialize the default modes
         if(!config.modes && !this.modes.length){
-            this.modes.push([false, this.normalOptText], ['cumulative', this.cumulativeOptText], ['ranged', this.rangedOptText]);
+            this.modes.push(['track', this.normalOptText], ['cumulative', this.cumulativeOptText], ['ranged', this.rangedOptText]);
         }
         gxp.form.PlaybackModeComboBox.superclass.constructor.call(this,config);
   },

@@ -9,7 +9,7 @@
 /**
  * @requires widgets/PlaybackToolbar.js
  * @requires widgets/form/PlaybackModeComboBox.js
- * @requires OpenLayers/Control/TimeManager.js
+ * @requires OpenLayers/Control/DimensionManager.js
  */
 
 /** api: (define)
@@ -146,7 +146,7 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
                         //TODO: provide user information about these modes (Change to radio group?)
                         fieldLabel:this.rangedPlayChoiceText,
                         xtype:'gxp_playbackmodecombo',
-                        timeAgents: this.timeManager && this.timeManager.timeAgents,
+                        timeAgents: this.timeManager && this.timeManager.agents,
                         anchor:'-5',
                         listeners:{
                             'modechange':this.setPlaybackMode,
@@ -173,8 +173,8 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
             ],
             listeners:{'show':this.populateForm,scope:this},
             bbar: [{
-                text: 'Save',
-                handler: this.saveValues,
+                text: 'Close',
+                handler: this.close,
                 scope: this
             }, {
                 text: 'Cancel',
@@ -192,24 +192,24 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
         gxp.PlaybackOptionsPanel.superclass.destroy.call(this);
     },
     setStartTime: function(cmp, date){
-        this.timeManager.setStart(date);
+        this.timeManager.setAnimationStart(date.getTime());
         this.timeManager.fixedRange=true;
     },
     setEndTime:function(cmp,date){
-        this.timeManager.setEnd(date);
+        this.timeManager.setEnd(date.getTime());
         this.timeManager.fixedRange=true;
     },
     toggleListMode: function(cmp, checked){
         this.stepValueField.setDisabled(checked);
         this.stepUnitsField.setDisabled(checked);
-        this.timeManager.snapToIntervals = checked;
+        this.timeManager.snapToList = checked;
     },
     setUnits:function(cmp,record,index){
         var units = record.get('field1');
-        if(this.timeManager.units != units){
-            this.timeManager.units = units;
+        if(this.timeManager.timeUnits != units){
+            this.timeManager.timeUnits = units;
             if(this.playbackToolbar.playbackMode != 'track'){
-                this.timeManager.incrementTime();
+                this.timeManager.incrementValue();
             }
         }
     },
@@ -219,7 +219,7 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
             if(this.playbackToolbar.playbackMode == 'ranged' && 
                 this.timeManager.rangeInterval != newVal){
                     this.timeManager.rangeInterval = newVal;
-                    this.timeManager.incrementTime(newVal);
+                    this.timeManager.incrementValue(newVal);
             }
         }
     },
@@ -255,30 +255,34 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
     },
     populateForm: function(cmp){
         if (this.timeManager) {
-            this.rangeStartField.setValue(this.timeManager.range[0]);
-            this.rangeStartField.originalValue = this.timeManager.range[0];
-            this.rangeEndField.setValue(this.timeManager.range[1]);
-            this.rangeEndField.originalValue = this.timeManager.range[1];
-            this.stepValueField.setValue(this.timeManager.step);
-            this.stepValueField.originalValue = this.timeManager.step;
-            this.stepUnitsField.setValue(this.timeManager.units);
-            this.stepUnitsField.originalValue = this.timeManager.units;
-            this.listOnlyCheck.setValue(this.timeManager.snapToIntervals);
-            this.listOnlyCheck.originalValue = this.timeManager.snapToIntervals;
-            var playbackMode = this.playbackToolbar.playbackMode;
-            if(playbackMode == 'track' || !playbackMode) { playbackMode = false; }
+            var start = new Date(this.timeManager.animationRange[0]),
+            end = new Date(this.timeManager.animationRange[1]),
+            step = this.timeManager.step,
+            unit = this.timeManager.timeUnit,
+            snap = this.timeManager.snapToList,
+            mode = this.timeManager.playbackMode,
+            loop = this.timeManager.loop,
+            reverse = this.timeManager.step < 0;
+            this.rangeStartField.setValue(start);
+            this.rangeStartField.originalValue = start;
+            this.rangeEndField.setValue(end);
+            this.rangeEndField.originalValue = end;
+            this.stepValueField.originalValue = this.stepValueField.setRawValue(step);
+            this.stepUnitsField.originalValue = this.stepUnitsField.setRawValue(unit);
+            this.listOnlyCheck.setValue(snap);
+            this.listOnlyCheck.originalValue = snap;
             if(!this.playbackModeField.timeAgents || !this.playbackModeField.timeAgents.length){
-                this.playbackModeField.timeAgents = this.timeManager.timeAgents;
+                this.playbackModeField.timeAgents = this.timeManager.agents;
             }
-            this.playbackModeField.setValue(playbackMode);
-            this.playbackModeField.originalValue = playbackMode;
-            this.loopModeCheck.setValue(this.timeManager.loop);
-            this.loopModeCheck.originalValue=this.timeManager.loop;
-            this.reverseModeCheck.setValue(this.timeManager.step<0);
-            this.reverseModeCheck.originalValue=this.reverseModeCheck.getValue();
+            this.playbackModeField.setValue(mode);
+            this.playbackModeField.originalValue = mode;
+            this.loopModeCheck.setValue(loop);
+            this.loopModeCheck.originalValue = loop;
+            this.reverseModeCheck.setValue(reverse);
+            this.reverseModeCheck.originalValue=reverse;
         }
     },
-    saveValues:function(btn){
+    close: function(btn){
         if(this.ownerCt && this.ownerCt.close){
             this.ownerCt[this.ownerCt.closeAction]();
         }
@@ -287,8 +291,7 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
         this.form.getForm().items.each(function(field){
             field.setValue(field.originalValue);
         });
-        
-        this.saveValues();
+        this.close(btn);
     }
 });
 
