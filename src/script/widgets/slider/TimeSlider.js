@@ -140,33 +140,23 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
     },
     
     onRangeModified : function(evt) {
-        var ctl = this.timeManager;
-        if(!ctl.timeAgents || !ctl.timeAgents.length) {
+        var ctl = evt.object;
+        if(!ctl.agents || !ctl.agents.length) {
             //we don't have any time agents which means we should get rid of the time manager control
             //we will automattically add the control back when a time layer is added via handlers on the
             //playback plugin or the application code if the playback toolbar was not build via the plugin
-            ctl.map.removeControl(this.ctl);
+            ctl.map.removeControl(ctl);
             ctl.destroy();
             ctl = null;
         }
         else {
             var oldvals = {
-                start : ctl.range[0].getTime(),
-                end : ctl.range[1].getTime(),
-                resolution : {
-                    units : ctl.units,
-                    step : ctl.step
-                }
+                start : ctl.range[0],
+                end : ctl.range[1]
             };
             ctl.guessPlaybackRate();
-            if(ctl.range[0].getTime() != oldvals.start || ctl.range[1].getTime() != oldvals.end ||
-                 ctl.units != oldvals.units || ctl.step != oldvals.step) {
+            if(ctl.animationRange[0] != oldvals.start || ctl.animationRange[1] != oldvals.end){
                 this.reconfigureSlider(this.buildSliderValues());
-                /*
-                 if (this.playbackMode == 'ranged') {
-                 this.timeManager.incrementTime(this.control.rangeInterval, this.control.units);
-                 }
-                 */
                 this.setThumbStyles();
                 this.fireEvent('rangemodified', this, ctl.range);
             }
@@ -177,18 +167,18 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
     },
     
     onTimeTick : function(evt) {
-        var currentTime = evt.currentTime;
-        if (currentTime) {
+        var currentVal = evt.currentValue;
+        if (currentVal) {
             var toolbar = this.refOwner; //TODO use relay event instead
             var tailIndex = this.indexMap ? this.indexMap.indexOf('tail') : -1;
-            var offset = (tailIndex > -1) ? currentTime.getTime() - this.thumbs[0].value : 0;
-            this.setValue(0, evt.currentTime.getTime());
+            var offset = (tailIndex > -1) ? currentVal - this.thumbs[0].value : 0;
+            this.setValue(0, currentVal);
             if(tailIndex > -1) {
                 this.setValue(tailIndex, this.thumbs[tailIndex].value + offset);
             }
             this.updateTimeDisplay();
             //TODO use relay event instead, fire this directly from the slider
-            toolbar.fireEvent('timechange', toolbar, currentTime);
+            toolbar.fireEvent('timechange', toolbar, currentVal);
         }
     },
     
