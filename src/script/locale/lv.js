@@ -266,18 +266,18 @@ GeoExt.Lang.add("lv", {
         scaleSliderTemplate: "{scaleType} Mērogs 1:{scale}",
         labelFeaturesText: "Uzraksti",
         labelsText: "Uzraksti",
-        basicText: "Vienkāršs teksts",
+        basicText: "Galvenais",
         advancedText: "Papildiespējas",
         limitByScaleText: "Ierobežot pēc mēroga",
         limitByConditionText: "Ierobežot pēc nosacījuma",
-        symbolText: "Simbols",
+        symbolText: "Kartes simbols",
         nameText: "Nosaukums"
     },
     
     "gxp.ScaleLimitPanel.prototype": {
         scaleSliderTemplate: "{scaleType} Mērogs 1:{scale}",
-        minScaleLimitText: "Minimālais mērogs (tuvākais skats)",
-        maxScaleLimitText: "Maksimālais mērogs (tālākais skats)"
+        minScaleLimitText: "Minimālais mērogs",
+        maxScaleLimitText: "Maksimālais mērogs"
     },
     
     "gxp.StrokeSymbolizer.prototype": {
@@ -298,11 +298,35 @@ GeoExt.Lang.add("lv", {
         abstractFieldText: "Apraksts"
     },
     
-    "gxp.TextSymbolizer.prototype": {
-        labelValuesText: "Uzraksti",
-        haloText: "Kontūra",
-        sizeText: "Izmērs"
-    },
+    "gxp.TextSymbolizer.prototype" : {
+		labelValuesText : "Uzrakstu atribūts",
+		haloText : "Kontūra",
+		sizeText : "Izmērs",
+		priorityText : "Prioritāte",
+		labelOptionsText : "Papildiespējas",
+		autoWrapText : "Nolīdzināt",
+		followLineText : "Sekot līnijai",
+		maxDisplacementText : "Maksimālā novirze",
+		repeatText : "Atkārtot",
+		forceLeftToRightText : "No kreisās uz labo",
+		graphicResizeText : "Graphic resize",
+		graphicMarginText : "Graphic margin",
+		graphicTitle : "Graphic",
+		fontColorTitle : "Krāsa un caurspīdīgums",
+		positioningText : "Novietojums",
+		anchorPointText : "Piesaistes punkts",
+		displacementXText : "Nobīde (pa X asi)",
+		displacementYText : "Nobīde (pa Y asi)",
+		perpendicularOffsetText : "Perpend. nobīde",
+		priorityHelp : "The higher the value of the specified field, the sooner the label will be drawn (which makes it win in the conflict resolution game)",
+		autoWrapHelp : "Pikseļu skaits, par kuru garākus uzrakstus automātiski pārnest jaunā rindā",
+		followLineHelp : "Vai uzrakstam jāseko līnijas ģeometrijai?",
+		maxDisplacementHelp : "Maksimālā uzraksta novirze pikseļos no sākotnējās vietas gadījumos, kad uzraksta vieta pārklāj citu uzrakstu vai objektu",
+		repeatHelp : "Atkārtot uzrakstus pēc noteikta attāluma pikseļos",
+		forceLeftToRightHelp : "Uzraksti tiks automātiski pagriezti, lai būtu labāk lasāmi no kreisās uz labo pusi. Šo neizmantot, ja uzrakstiem ir svarīgs virziens, piemēram, uzraksta simbols ir virziena bulta",
+		graphic_resizeHelp : "Specifies a mode for resizing label graphics (such as highway shields) to fit the text of the label. The default mode, ‘none’, never modifies the label graphic. In stretch mode, GeoServer will resize the graphic to exactly surround the label text, possibly modifying the image’s aspect ratio. In proportional mode, GeoServer will expand the image to be large enough to surround the text while preserving its original aspect ratio.",
+		graphic_marginHelp : "Similar to the margin shorthand property in CSS for HTML, its interpretation varies depending on how many margin values are provided: 1 = use that margin length on all sides of the label 2 = use the first for top & bottom margins and the second for left & right margins. 3 = use the first for the top margin, second for left & right margins, third for the bottom margin. 4 = use the first for the top margin, second for the right margin, third for the bottom margin, and fourth for the left margin."
+	},
     
     "gxp.WMSLayerPanel.prototype": {
         aboutText: "Par..",
