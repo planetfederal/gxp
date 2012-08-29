@@ -87,7 +87,7 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
         if (this.colorManager) {
             colorFieldPlugins = [new this.colorManager];
         }
-
+        
         this.items = [{
             xtype: "fieldset",
             title: this.titleText,
@@ -97,7 +97,7 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
                 this.symbolizer.stroke === false,
             hideMode: "offsets",
             defaults: {
-                width: 100 // TODO: move to css
+            	 anchor:'100%'
             },
             items: [{
                 xtype: "combo",
