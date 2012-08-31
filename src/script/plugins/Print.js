@@ -238,7 +238,9 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
             function isPrintable(layer) {
                 return layer.getVisibility() === true && (
                     layer instanceof OpenLayers.Layer.WMS ||
-                    layer instanceof OpenLayers.Layer.OSM
+                    layer instanceof OpenLayers.Layer.OSM ||
+                    layer instanceof OpenLayers.Layer.TMS ||
+                    layer instanceof OpenLayers.Layer.Vector
                 );
             }
 
