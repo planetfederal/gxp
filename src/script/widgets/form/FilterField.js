@@ -54,7 +54,7 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
      *  ``Object`` Config object for comparison combobox.
      */
 
-    /** api:config[attributesComboConfig]
+    /** api:config[attributesComboCfg]
      *  ``Object`` Config object for attributes combobox.
      */
     
@@ -120,7 +120,9 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
             },
             width: 120
         };
+        this.attributesComboCfg = this.attributesComboCfg || {};
         this.attributesComboConfig = this.attributesComboConfig || {};
+        Ext.apply(this.attributesComboConfig, this.attributesComboCfg);
         Ext.applyIf(this.attributesComboConfig, defAttributesComboConfig);
 
         this.items = this.createFilterItems();
