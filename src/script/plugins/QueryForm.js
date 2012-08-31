@@ -57,6 +57,12 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
      */
     queryActionText: "Query",
     
+    /** api: config[queryButtonText]
+     *  ``String``
+     *  Text for query action (i18n).
+     */
+    queryButtonText: "Query",
+    
     /** api: config[cancelButtonText]
      *  ``String``
      *  Text for cancel button (i18n).
@@ -210,7 +216,7 @@ gxp.plugins.QueryForm = Ext.extend(gxp.plugins.Tool, {
                     featureManager.loadFeatures();
                 }
             }, {
-                text: this.queryActionText,
+                text: this.queryButtonText,
                 iconCls: "gxp-icon-find",
                 handler: function() {
                     var filters = [];
