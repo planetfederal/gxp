@@ -45,7 +45,7 @@ GeoExt.Lang.add("lv", {
         zoomPageExtentTip: "Pietuvināt karti pēc objektiem",
         nextPageTip: "Nākamā lapa",
         lastPageTip: "Pēdējā lapa",
-        totalMsg: "Rāda no {1} līdz {2} objektus (kopā {0})"
+        totalMsg: "Rāda {1} - {2} objektus (kopā {0})"
     },
 
     "gxp.plugins.GoogleEarth.prototype": {
@@ -145,9 +145,10 @@ GeoExt.Lang.add("lv", {
 
     "gxp.plugins.QueryForm.prototype": {
         queryActionText: "Meklēt",
-        queryMenuText: "Meklēt slānī datus",
+        queryButtonText: "Meklēt",
+        queryMenuText: "Meklēt datus pēc atribūtiem",
         queryActionTip: "Meklēt atzīmētajā slānī",
-        queryByLocationText: "Meklēt redzamajā kartes daļā",
+        queryByLocationText: "Meklēt tikai redzamajā kartes daļā",
         queryByAttributesText: "Meklēt pēc atribūtiem",
         queryMsg: "Meklē...",
         cancelButtonText: "Atcelt",
