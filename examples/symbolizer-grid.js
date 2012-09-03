@@ -6,10 +6,6 @@ symbolizers.push(new OpenLayers.Symbolizer.Point({
     strokeColor: "red",
     strokeWidth: 1
 }));
-symbolizers.push(new OpenLayers.Symbolizer.Line({
-    strokeColor: "#669900",
-    strokeWidth: 3
-}));
 symbolizers.push(new OpenLayers.Symbolizer.Polygon({
     fillColor: "olive",
     fillOpacity: 0.25,
@@ -64,6 +60,7 @@ var showSLD = function() {
 Ext.onReady(function() {
     grid = new gxp.grid.SymbolizerGrid({
         symbolizers: symbolizers,
+        symbolType: "Polygon",
         height: 375,
         width: 400,
         renderTo: "grid",

@@ -55,6 +55,9 @@ Ext.onReady(function() {
             ptype: "gxp_layerproperties",
             actionTarget: ["tree.tbar", "tree.contextMenu"]
         }, {
+            ptype: "gxp_styler",
+            actionTarget: ["tree.tbar", "tree.contextMenu"]
+        }, {
             ptype: "gxp_zoomtoextent",
             actionTarget: "map.tbar"
         }, {

@@ -46,6 +46,13 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
     symbolText: "Symbol",
     sizeText: "Size",
     rotationText: "Rotation",
+
+    /** api: config[filter]
+     *  ``Integer`` One of gxp.PointSymbolizer.GRAPHIC or 
+     *  gxp.PointSymbolizer.MARK. If specified, this dialog will only show
+     *  those elements relevant to the filter.
+     */
+    filter: null,
     
     /** api: config[pointGraphics]
      *  ``Array``
@@ -99,12 +106,14 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
                 {display: this.graphicTriangleText, value: "triangle", mark: true},
                 {display: this.graphicStarText, value: "star", mark: true},
                 {display: this.graphicCrossText, value: "cross", mark: true},
-                {display: this.graphicXText, value: "x", mark: true},
-                {display: this.graphicExternalText}
+                {display: this.graphicXText, value: "x", mark: true}
             ];
+            if (this.filter !== gxp.PointSymbolizer.MARK) {
+                this.pointGraphics.push({display: this.graphicExternalText});
+            }
         }
         
-        this.external = !!this.symbolizer["externalGraphic"];
+        this.external = !!this.symbolizer["externalGraphic"] || this.filter === gxp.PointSymbolizer.GRAPHIC;
 
         this.markPanel = new Ext.Panel({
             border: false,
@@ -141,7 +150,7 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
             name: "url",
             fieldLabel: this.urlText,
             value: this.symbolizer["externalGraphic"],
-            hidden: true,
+            hidden: (this.filter !== gxp.PointSymbolizer.GRAPHIC),
             listeners: {
                 change: function(field, value) {
                     this.symbolizer["externalGraphic"] = value;
@@ -183,6 +192,7 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
         this.items = [{
             xtype: "combo",
             name: "mark",
+            hidden: (this.filter === gxp.PointSymbolizer.GRAPHIC),
             fieldLabel: this.symbolText,
             store: new Ext.data.JsonStore({
                 data: {root: this.pointGraphics},
@@ -213,11 +223,11 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
                         if(value) {
                             this.urlField.hide();
                             // this to hide the container - otherwise the label remains
-                            this.urlField.getEl().up('.x-form-item').setDisplayed(false);
+                            //this.urlField.getEl().up('.x-form-item').setDisplayed(false);
                             this.symbolizer["externalGraphic"] = value;
                         } else {
                             this.urlField.show();
-                            this.urlField.getEl().up('.x-form-item').setDisplayed(true);
+                            //this.urlField.getEl().up('.x-form-item').setDisplayed(true);
                         }
                         if(!this.external) {
                             this.external = true;
@@ -294,6 +304,9 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
     
     
 });
+
+gxp.PointSymbolizer.GRAPHIC = 0;
+gxp.PointSymbolizer.MARK = 1;
 
 /** api: xtype = gxp_pointsymbolizer */
 Ext.reg('gxp_pointsymbolizer', gxp.PointSymbolizer);
