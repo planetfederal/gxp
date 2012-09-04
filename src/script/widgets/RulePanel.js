@@ -352,19 +352,21 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
         );
 
         var cfg = {
-            xtype: 'panel',
+            layout: {
+                type: 'vbox',
+                align: 'stretch'
+            },
             title: this.symbologyText,
             items: [{
+                flex: 1,
                 xtype: "gxp_symbolgrid",
                 ref: "../grid",
+                border: false,
                 symbolType: this.symbolType,
-                autoScroll: true,
                 symbolizers: this.rule.symbolizers,
-                height: 150,
-                width: 320,
                 listeners: {
                     click: function(node) {
-                        this.grid.ownerCt.remove(this.properties, true);
+                        this.propertiesContainer.remove(this.properties, true);
                         if (node.parentNode === this.grid.getRootNode()) {
                             return;
                         } 
@@ -384,7 +386,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                             config.checkboxToggle = false;
                             config.titleText = '';
                         }
-                        this.properties = this.grid.ownerCt.add(Ext.apply({
+                        this.properties = this.propertiesContainer.add(Ext.apply({
                             listeners: {
                                 change: function(symbolizer) {
                                     if (symbolizer.label) {
@@ -395,14 +397,13 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                                 },
                                 scope: this
                             },
-                            autoScroll: true, 
-                            height: 215,
+                            autoScroll: true,
                             title: node.parentNode.attributes.type + " " + type + " " + this.propertiesSuffix,
                             attributes: this.attributes,
                             bodyStyle: {"padding": "5px"},
                             xtype: xtype
                         }, config));
-                        this.grid.ownerCt.doLayout();
+                        this.propertiesContainer.doLayout();
                     },
                     change: function(grid) {
                         var symbolizers = grid.getSymbolizers();
@@ -414,6 +415,11 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                     },
                     scope: this
                 }
+            }, {
+                ref: '../propertiesContainer',
+                xtype: 'container',
+                flex: 1,
+                layout: 'fit'
             }]
         };
         return cfg;

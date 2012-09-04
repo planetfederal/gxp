@@ -612,8 +612,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     disableCaching: false
                 }),
                 border: false,
+                layoutOnTabChange: true,
                 defaults: {
-                    autoHeight: true,
                     hideMode: "offsets"
                 },
                 listeners: {
