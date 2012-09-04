@@ -13,6 +13,7 @@
  * @include widgets/LineSymbolizer.js
  * @include widgets/PointSymbolizer.js
  * @include widgets/FilterBuilder.js
+ * @include widgets/grid/SymbolizerGrid.js
  */
 
 /** api: (define)
@@ -28,7 +29,7 @@ Ext.namespace("gxp");
  *      Create a panel for assembling SLD rules.
  */
 gxp.RulePanel = Ext.extend(Ext.TabPanel, {
-    
+
     /** api: property[fonts]
      *  ``Array(String)`` List of fonts for the font combo.  If not set,
      *      defaults  to the list provided by the <Styler.FontComboBox>.
@@ -127,14 +128,14 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
     modifyScaleTipContext: Ext.emptyFn,
     
     /** i18n */
-    labelFeaturesText: "Label Features",
-    labelsText: "Labels",
-    basicText: "Basic",
-    advancedText: "Advanced",
+    ruleText: "Rule",
+    symbologyText: "Symbology",
     limitByScaleText: "Limit by scale",
-    limitByConditionText: "Limit by condition",
-    symbolText: "Symbol",
-    nameText: "Name",
+    limitByConditionText: "Limit with filters",
+    symbolText: "Preview",
+    nameText: "Label",
+    legendPropertiesText: "Legend properties",
+    propertiesSuffix: "Properties",
 
     /** private */
     initComponent: function() {
@@ -156,18 +157,6 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
         }
         
         this.activeTab = 0;
-        
-        this.textSymbolizer = new gxp.TextSymbolizer({
-            symbolizer: this.getTextSymbolizer(),
-            attributes: this.attributes,
-            fonts: this.fonts,
-            listeners: {
-                change: function(symbolizer) {
-                    this.fireEvent("change", this, this.rule);
-                },
-                scope: this
-            }
-        });
         
         /**
          * The interpretation here is that scale values of zero are equivalent to
@@ -196,6 +185,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
         
         this.filterBuilder = new gxp.FilterBuilder({
             allowGroups: this.nestedFilters,
+            allowCQL: true,
             filter: this.rule && this.rule.filter && this.rule.filter.clone(),
             attributes: this.attributes,
             listeners: {
@@ -208,108 +198,12 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
             }
         });
         
-        this.items = [{
-            title: this.labelsText,
-            autoScroll: true,
-            bodyStyle: {"padding": "10px"},
-            items: [{
-                xtype: "fieldset",
-                title: this.labelFeaturesText,
-                autoHeight: true,
-                checkboxToggle: true,
-                collapsed: !this.hasTextSymbolizer(),
-                items: [
-                    this.textSymbolizer
-                ],
-                listeners: {
-                    collapse: function() {
-                        OpenLayers.Util.removeItem(this.rule.symbolizers, this.getTextSymbolizer());
-                        this.fireEvent("change", this, this.rule);
-                    },
-                    expand: function() {
-                        this.setTextSymbolizer(this.textSymbolizer.symbolizer);
-                        this.fireEvent("change", this, this.rule);
-                    },
-                    scope: this
-                }
-            }]
-        }];
         if (this.getSymbolTypeFromRule(this.rule) || this.symbolType) {
-            this.items = [{
-                title: this.basicText,
-                autoScroll: true,
-                items: [this.createHeaderPanel(), this.createSymbolizerPanel()]
-            }, this.items[0], {
-                title: this.advancedText,
-                defaults: {
-                    style: {
-                        margin: "7px"
-                    }
-                },
-                autoScroll: true,
-                items: [{
-                    xtype: "fieldset",
-                    title: this.limitByScaleText,
-                    checkboxToggle: true,
-                    collapsed: !(this.rule && (this.rule.minScaleDenominator || this.rule.maxScaleDenominator)),
-                    autoHeight: true,
-                    items: [this.scaleLimitPanel],
-                    listeners: {
-                        collapse: function() {
-                            delete this.rule.minScaleDenominator;
-                            delete this.rule.maxScaleDenominator;
-                            this.fireEvent("change", this, this.rule);
-                        },
-                        expand: function() {
-                            /**
-                             * Start workaround for
-                             * http://projects.opengeo.org/suite/ticket/676
-                             */
-                            var tab = this.getActiveTab();
-                            this.activeTab = null;
-                            this.setActiveTab(tab);
-                            /**
-                             * End workaround for
-                             * http://projects.opengeo.org/suite/ticket/676
-                             */
-                            var changed = false;
-                            if (this.scaleLimitPanel.limitMinScaleDenominator) {
-                                this.rule.minScaleDenominator = this.scaleLimitPanel.minScaleDenominator;
-                                changed = true;
-                            }
-                            if (this.scaleLimitPanel.limitMaxScaleDenominator) {
-                                this.rule.maxScaleDenominator = this.scaleLimitPanel.maxScaleDenominator;
-                                changed = true;
-                            }
-                            if (changed) {
-                                this.fireEvent("change", this, this.rule);
-                            }
-                        },
-                        scope: this
-                    }
-                }, {
-                    xtype: "fieldset",
-                    title: this.limitByConditionText,
-                    checkboxToggle: true,
-                    collapsed: !(this.rule && this.rule.filter),
-                    autoHeight: true,
-                    items: [this.filterBuilder],
-                    listeners: {
-                        collapse: function(){
-                            delete this.rule.filter;
-                            this.fireEvent("change", this, this.rule);
-                        },
-                        expand: function(){
-                            var changed = false;
-                            this.rule.filter = this.filterBuilder.getFilter();
-                            this.fireEvent("change", this, this.rule);
-                        },
-                        scope: this
-                    }
-                }]
-            }];
+            this.items = [
+                this.createRulePanel(),
+                this.createSymbolizerPanel()
+            ];
         }
-        this.items[0].autoHeight = true;
 
         this.addEvents(
             /** api: events[change]
@@ -332,51 +226,6 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
         gxp.RulePanel.superclass.initComponent.call(this);
     },
 
-    /** private: method[hasTextSymbolizer]
-     */
-    hasTextSymbolizer: function() {
-        var candidate, symbolizer;
-        for (var i=0, ii=this.rule.symbolizers.length; i<ii; ++i) {
-            candidate = this.rule.symbolizers[i];
-            if (candidate instanceof OpenLayers.Symbolizer.Text) {
-                symbolizer = candidate;
-                break;
-            }
-        }
-        return symbolizer;
-    },
-    
-    /** private: method[getTextSymbolizer]
-     *  Get the first text symbolizer in the rule.  If one does not exist,
-     *  create one.
-     */
-    getTextSymbolizer: function() {
-        var symbolizer = this.hasTextSymbolizer();
-        if (!symbolizer) {
-            symbolizer = new OpenLayers.Symbolizer.Text({graphic: false});
-        }
-        return symbolizer;
-    },
-    
-    /** private: method[setTextSymbolizer]
-     *  Update the first text symbolizer in the rule.  If one does not exist,
-     *  add it.
-     */
-    setTextSymbolizer: function(symbolizer) {
-        var found;
-        for (var i=0, ii=this.rule.symbolizers.length; i<ii; ++i) {
-            candidate = this.rule.symbolizers[i];
-            if (this.rule.symbolizers[i] instanceof OpenLayers.Symbolizer.Text) {
-                this.rule.symbolizers[i] = symbolizer;
-                found = true;
-                break;
-            }
-        }
-        if (!found) {
-            this.rule.symbolizers.push(symbolizer);
-        }        
-    },
-
     /** private: method[uniqueRuleName]
      *  Generate a unique rule name.  This name will only be unique for this
      *  session assuming other names are created by the same method.  If
@@ -386,35 +235,37 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
         return OpenLayers.Util.createUniqueID("rule_");
     },
     
-    /** private: method[createHeaderPanel]
-     *  Creates a panel config containing rule name, symbolizer, and scale
-     *  constraints.
+    /** private: method[createRulePanel]
+     *  Creates a panel config containing rule name, limit with filters and
+     *  limit by scale.
      */
-    createHeaderPanel: function() {
+    createRulePanel: function() {
         this.symbolizerSwatch = new GeoExt.FeatureRenderer({
             symbolType: this.symbolType,
+            labelText: "Ab",
             isFormField: true,
-            fieldLabel: this.symbolText
+            width: 25
         });
         return {
             xtype: "form",
+            title: this.ruleText,
+            autoScroll: true,
+            bodyStyle: {"padding": "10px"},
             border: false,
-            labelAlign: "top",
-            defaults: {border: false},
-            style: {"padding": "0.3em 0 0 1em"},
             items: [{
-                layout: "column",
-                defaults: {
-                    border: false,
-                    style: {"padding-right": "1em"}
-                },
+                xtype: "fieldset",
+                title: this.legendPropertiesText,
                 items: [{
-                    layout: "form",
-                    width: 150,
+                    xtype: "compositefield",
+                    hideLabel: true,
                     items: [{
+                        xtype: "label",
+                        width: 75,
+                        text: this.nameText + ": ",
+                        cls: "gxp-layerproperties-label"
+                    }, {
                         xtype: "textfield",
-                        fieldLabel: this.nameText,
-                        anchor: "95%",
+                        flex: 1,
                         value: this.rule && (this.rule.title || this.rule.name || ""),
                         listeners: {
                             change: function(el, value) {
@@ -423,12 +274,72 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                             },
                             scope: this
                         }
-                    }]
-                }, {
-                    layout: "form",
-                    width: 70,
-                    items: [this.symbolizerSwatch]
+                    }, {
+                        xtype: "label",
+                        width: 75,
+                        text: this.symbolText + ": ",
+                        cls: "gxp-layerproperties-label"
+                    }, this.symbolizerSwatch]
                 }]
+            }, {
+                xtype: "fieldset",
+                title: this.limitByConditionText,
+                checkboxToggle: true,
+                collapsed: !(this.rule && this.rule.filter),
+                autoHeight: true,
+                items: [this.filterBuilder],
+                listeners: {
+                    collapse: function(){
+                        delete this.rule.filter;
+                        this.fireEvent("change", this, this.rule);
+                    },
+                    expand: function(){
+                        var changed = false;
+                        this.rule.filter = this.filterBuilder.getFilter();
+                        this.fireEvent("change", this, this.rule);
+                    },
+                    scope: this
+                }
+            }, {
+                xtype: "fieldset",
+                title: this.limitByScaleText,
+                checkboxToggle: true,
+                collapsed: !(this.rule && (this.rule.minScaleDenominator || this.rule.maxScaleDenominator)),
+                autoHeight: true,
+                items: [this.scaleLimitPanel],
+                listeners: {
+                    collapse: function() {
+                        delete this.rule.minScaleDenominator;
+                        delete this.rule.maxScaleDenominator;
+                        this.fireEvent("change", this, this.rule);
+                    },
+                    expand: function() {
+                        /**
+                         * Start workaround for
+                         * http://projects.opengeo.org/suite/ticket/676
+                         */
+                        var tab = this.getActiveTab();
+                        this.activeTab = null;
+                        this.setActiveTab(tab);
+                        /**
+                         * End workaround for
+                         * http://projects.opengeo.org/suite/ticket/676
+                         */
+                        var changed = false;
+                        if (this.scaleLimitPanel.limitMinScaleDenominator) {
+                            this.rule.minScaleDenominator = this.scaleLimitPanel.minScaleDenominator;
+                            changed = true;
+                        }
+                        if (this.scaleLimitPanel.limitMaxScaleDenominator) {
+                            this.rule.maxScaleDenominator = this.scaleLimitPanel.maxScaleDenominator;
+                            changed = true;
+                        }
+                        if (changed) {
+                            this.fireEvent("change", this, this.rule);
+                        }
+                    },
+                    scope: this
+                }
             }]
         };
     },
@@ -436,57 +347,82 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
     /** private: method[createSymbolizerPanel]
      */
     createSymbolizerPanel: function() {
-        // use first symbolizer that matches symbolType
-        var candidate, symbolizer;
-        var Type = OpenLayers.Symbolizer[this.symbolType];
-        var existing = false;
-        if (Type) {
-            for (var i=0, ii=this.rule.symbolizers.length; i<ii; ++i) {
-                candidate = this.rule.symbolizers[i];
-                if (candidate instanceof Type) {
-                    existing = true;
-                    symbolizer = candidate;
-                    break;
-                }
-            }
-            if (!symbolizer) {
-                // allow addition of new symbolizer
-                symbolizer = new Type({fill: false, stroke: false});
-            }
-        } else {
-            throw new Error("Appropriate symbolizer type not included in build: " + this.symbolType);
-        }
-        this.symbolizerSwatch.setSymbolizers([symbolizer],
+        this.symbolizerSwatch.setSymbolizers(this.rule.symbolizers,
             {draw: this.symbolizerSwatch.rendered}
         );
+
         var cfg = {
-            xtype: "gxp_" + this.symbolType.toLowerCase() + "symbolizer",
-            symbolizer: symbolizer,
-            bodyStyle: {padding: "10px"},
-            border: false,
-            labelWidth: 70,
-            defaults: {
-                labelWidth: 70
+            layout: {
+                type: 'vbox',
+                align: 'stretch'
             },
-            listeners: {
-                change: function(symbolizer) {
-                    this.symbolizerSwatch.setSymbolizers(
-                        [symbolizer], {draw: this.symbolizerSwatch.rendered}
-                    );
-                    if (!existing) {
-                        this.rule.symbolizers.push(symbolizer);
-                        existing = true;
-                    }
-                    this.fireEvent("change", this, this.rule);
-                },
-                scope: this
-            }
+            title: this.symbologyText,
+            items: [{
+                flex: 1,
+                xtype: "gxp_symbolgrid",
+                ref: "../grid",
+                border: false,
+                symbolType: this.symbolType,
+                symbolizers: this.rule.symbolizers,
+                listeners: {
+                    click: function(node) {
+                        this.propertiesContainer.remove(this.properties, true);
+                        if (node.parentNode === this.grid.getRootNode()) {
+                            return;
+                        } 
+                        var type = node.attributes.type;
+                        var config = {
+                            symbolizer: node.attributes.symbolizer
+                        };
+                        var xtype = "gxp_" + type.toLowerCase() + "symbolizer";
+                        if (type === 'Graphic' || type === 'Mark') {
+                            xtype = "gxp_pointsymbolizer";
+                            config.filter = gxp.PointSymbolizer[type.toUpperCase()];
+                        }
+                        if (type === 'Label') {
+                            xtype = "gxp_textsymbolizer";
+                        }
+                        if (type === 'Fill' || type === 'Stroke') {
+                            config.checkboxToggle = false;
+                            config.titleText = '';
+                        }
+                        this.properties = this.propertiesContainer.add(Ext.apply({
+                            listeners: {
+                                change: function(symbolizer) {
+                                    if (symbolizer.label) {
+                                        node.setText(symbolizer.label);
+                                    }
+                                    node.getUI().toggleCheck(true);
+                                    this.grid.updateSwatch(node, symbolizer);
+                                },
+                                scope: this
+                            },
+                            autoScroll: true,
+                            title: node.parentNode.attributes.type + " " + type + " " + this.propertiesSuffix,
+                            attributes: this.attributes,
+                            bodyStyle: {"padding": "5px"},
+                            xtype: xtype
+                        }, config));
+                        this.propertiesContainer.doLayout();
+                    },
+                    change: function(grid) {
+                        var symbolizers = grid.getSymbolizers();
+                        this.symbolizerSwatch.setSymbolizers(
+                            symbolizers, {draw: this.symbolizerSwatch.rendered}
+                        );
+                        this.rule.symbolizers = symbolizers;
+                        this.fireEvent("change", this, this.rule);
+                    },
+                    scope: this
+                }
+            }, {
+                ref: '../propertiesContainer',
+                xtype: 'container',
+                flex: 1,
+                layout: 'fit'
+            }]
         };
-        if (this.symbolType === "Point" && this.pointGraphics) {
-            cfg.pointGraphics = this.pointGraphics;
-        }
         return cfg;
-        
     },
 
     /** private: method[getSymbolTypeFromRule]

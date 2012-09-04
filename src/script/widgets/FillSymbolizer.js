@@ -70,7 +70,7 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
     border: false,
     
     /** i18n */
-    fillText: "Fill",
+    titleText: "Fill",
     colorText: "Color",
     opacityText: "Opacity",
     
@@ -86,8 +86,8 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
         }
 
         var sliderValue = 100;
-        if (this.opacityProperty in this.symbolizer) {
-            sliderValue = this.symbolizer[this.opacityProperty];
+        if (this.opacityProperty in this.symbolizer && this.symbolizer[this.opacityProperty] !== undefined) {
+            sliderValue = this.symbolizer[this.opacityProperty]*100;
         }
         else if (OpenLayers.Renderer.defaultSymbolizer[this.opacityProperty]) {
             sliderValue = OpenLayers.Renderer.defaultSymbolizer[this.opacityProperty]*100;
@@ -95,7 +95,7 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
         
         this.items = [{
             xtype: "fieldset",
-            title: this.fillText,
+            title: this.titleText,
             autoHeight: true,
             checkboxToggle: this.checkboxToggle,
             collapsed: this.checkboxToggle === true &&

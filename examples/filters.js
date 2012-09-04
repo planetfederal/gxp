@@ -72,6 +72,29 @@ Ext.onReady(function() {
         }]
     });
 
+    var panelcql = new Ext.Panel({
+        title: "Filter Builder (no groups, but with CQL option)",
+        renderTo: "panelcql",
+        width: 320,
+        items: [{
+            xtype: "gxp_filterbuilder",
+            style: "padding: .3em .3em .1em .1em",
+            allowGroups: false,
+            allowCQL: true,
+            filter: filter.clone(),
+            attributes: new GeoExt.data.AttributeStore({
+                url: "data/describe_feature_type.xml",
+                ignore: {name: "the_geom"}
+            })
+        }],
+        bbar: ["->", {
+            text: "View Filter Encoding",
+            handler: function() {
+                showFE(panel1);
+            }
+        }]
+    });
+
     var panel2 = new Ext.Panel({
         title: "Filter Builder (with groups)",
         renderTo: "panel2",

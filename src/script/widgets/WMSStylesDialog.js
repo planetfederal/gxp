@@ -79,6 +79,8 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      duplicateRuleTip: "Duplicate the selected rule",
     /** api: config[cancelText] (i18n) */
      cancelText: "Cancel",
+    /** api: config[revertText] (i18n) */
+     revertText: "Revert",
     /** api: config[saveText] (i18n) */
      saveText: "Save",
     /** api: config[stylePropertiesWindowTitle] (i18n) */
@@ -589,6 +591,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             title: String.format(this.ruleWindowTitle,
                 rule.title || rule.name || this.newRuleText),
             shortTitle: rule.title || rule.name || this.newRuleText,
+            hideMode: 'offsets',
             layout: "fit",
             width: 320,
             height: 450,
@@ -608,10 +611,9 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     method: "GET",
                     disableCaching: false
                 }),
-                autoScroll: true,
                 border: false,
+                layoutOnTabChange: true,
                 defaults: {
-                    autoHeight: true,
                     hideMode: "offsets"
                 },
                 listeners: {
@@ -625,17 +627,13 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 }
             }],
             bbar: ["->", {
-                text: this.cancelText,
+                text: this.revertText,
                 iconCls: "cancel",
                 handler: function() {
                     this.saveRule(ruleDlg.rulePanel, origRule);
                     ruleDlg.destroy();
                 },
                 scope: this
-            }, {
-                text: this.saveText,
-                iconCls: "save",
-                handler: function() { ruleDlg.destroy(); }
             }]
         });
         this.showDlg(ruleDlg);

@@ -87,6 +87,15 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
     addConditionText: "add condition",
     addGroupText: "add group",
     removeConditionText: "remove condition",
+    switchToFilterBuilderText: "Switch back to filter builder",
+    cqlPrefixText: "or ",
+    cqlText: "use CQL filter instead",
+
+    /** api: config[allowCQL]
+     *  ``Boolean`` If true, provide an option to create a filter by 
+     *  providing CQL. Defaults to false
+     */
+    allowCQL: false,
 
     /** api: config[allowGroups]
      *  ``Boolean``
@@ -97,6 +106,9 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
     allowGroups: true,
 
     initComponent: function() {
+        if (this.allowCQL) {
+            this.cqlFormat = new OpenLayers.Format.CQL();
+        }
         var defConfig = {
             defaultBuilderType: gxp.FilterBuilder.ANY_OF
         };
@@ -109,6 +121,26 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
         this.builderType = this.getBuilderType();
         
         this.items = [{
+            xtype: "container",
+            layout: "form",
+            hidden: true,
+            border: false,
+            hideLabels: true,
+            style: "padding-left: 2px",
+            ref: "cqlForm",
+            items: [{
+                xtype: "textarea",
+                anchor: '99%',
+                ref: "../cqlField",
+                width: '100%',
+                growMax: 100
+            }],
+            buttons: [{
+                text: this.switchToFilterBuilderText,
+                handler: this.switchToFilterBuilder,
+                scope: this
+            }]
+        }, {
             xtype: "container",
             layout: "form",
             ref: "form",
@@ -169,9 +201,48 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
                 scope: this
             });
         }
+        if(this.allowCQL) {
+            bar.push(this.cqlPrefixText);
+            bar.push({
+                text: this.cqlText,
+                handler: this.switchToCQL,
+                scope: this
+            });
+        }
         return bar;
     },
-    
+
+    /** private: method[switchToCQL]
+     *  Switch from filter builder to CQL.
+     */
+    switchToCQL: function() {
+        var filter = this.getFilter();
+        var CQL = "";
+        if (filter !== false) {
+            CQL = this.cqlFormat.write(filter);
+        }
+        this.form.hide();
+        this.cqlField.setValue(CQL);
+        this.cqlForm.show();
+    },
+
+    /** private: method[switchToFilterBuilder]
+     *  Switch from CQL field to filter builder.
+     */
+    switchToFilterBuilder: function() {
+        var filter = null;
+        // when parsing fails, we keep the previous filter in the filter builder
+        try {
+            filter = this.cqlFormat.read(this.cqlField.getValue());
+        } catch(e) {
+        }
+        this.cqlForm.hide();
+        this.form.show();
+        if (filter !== null) {
+            this.setFilter(filter);
+        }
+    },
+
     /** api: method[getFilter]
      *  :return: ``OpenLayers.Filter``
      *  
