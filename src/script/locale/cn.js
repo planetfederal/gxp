@@ -15,36 +15,36 @@ GeoExt.Lang.add("en", {
         addButtonText: "添加图层",
         untitledText: "无标题",
         addLayerSourceErrorText: "Error getting WMS capabilities ({msg}).\nPlease check the url and try again.",
-        availableLayersText: "Available Layers现有图层",
-        expanderTemplateText: "<p><b>Abstract:</b> {abstract}</p>",
-        panelTitleText: "Title标题",
+        availableLayersText: "现有图层",
+        expanderTemplateText: "<p><b>Abstract:简介</b> {abstract}</p>",
+        panelTitleText: "标题",
         layerSelectionText: "View available data from:",
-        doneText: "Done完成",
-        uploadText: "Upload layers上传图层"
+        doneText: "完成",
+        uploadText: "上传图层"
     },
     
     "gxp.plugins.BingSource.prototype": {
-        title: "Bing LayersBing图层",
+        title: "Bing图层",
         roadTitle: "Bing道路",
-        aerialTitle: "Bing AerialBing航空图片",
-        labeledAerialTitle: "Bing Aerial With Labels"
+        aerialTitle: "Bing航拍图片",
+        labeledAerialTitle: "Bing航拍图片带标记"
     },
 
     "gxp.plugins.FeatureEditor.prototype": {
-        splitButtonText: "Edit编辑",
-        createFeatureActionText: "Create创建",
-        editFeatureActionText: "Modify修改",
-        createFeatureActionTip: "Create a new feature创建新图形",
-        editFeatureActionTip: "Edit existing feature修改现有图形"
+        splitButtonText: "编辑",
+        createFeatureActionText: "创建",
+        editFeatureActionText: "修改",
+        createFeatureActionTip: "创建新图形",
+        editFeatureActionTip: "修改已存在图形"
     },
     
     "gxp.plugins.FeatureGrid.prototype": {
-        displayFeatureText: "Display on map在地图上显示",
-        firstPageTip: "First page首页",
-        previousPageTip: "Previous page前一页",
-        zoomPageExtentTip: "Zoom to page extent扩展到页面尺寸",
-        nextPageTip: "Next page下一页",
-        lastPageTip: "Last page最后一页",
+        displayFeatureText: "在地图上显示",
+        firstPageTip: "第一页",
+        previousPageTip: "前一页",
+        zoomPageExtentTip: "聚焦到页面尺寸",
+        nextPageTip: "下一页",
+        lastPageTip: "最后一页",
         totalMsg: "Features {1} to {2} of {0}"
     },
 
@@ -54,32 +54,32 @@ GeoExt.Lang.add("en", {
     },
     
     "gxp.plugins.GoogleSource.prototype": {
-        title: "Google LayersGoogle图层",
-        roadmapAbstract: "Show street map显示街道地图",
-        satelliteAbstract: "Show satellite imagery显示卫星图",
-        hybridAbstract: "Show imagery with street names显示卫星图及街道名称",
-        terrainAbstract: "Show street map with terrain显示街道图和地形"
+        title: "Google图层",
+        roadmapAbstract: "显示街道",
+        satelliteAbstract: "显示卫星图",
+        hybridAbstract: "显示卫星图及街道名称",
+        terrainAbstract: "显示街道和地形"
     },
 
     "gxp.plugins.LayerProperties.prototype": {
-        menuText: "Layer Properties图层属性",
-        toolTip: "Layer Properties图层属性"
+        menuText: "图层属性",
+        toolTip: "图层属性"
     },
     
     "gxp.plugins.LayerTree.prototype": {
-        shortTitle: "Layers图层",
-        rootNodeText: "Layers图层",
-        overlayNodeText: "Overlays叠加",
-        baseNodeText: "Base Layers底图层"
+        shortTitle: "图层",
+        rootNodeText: "图层",
+        overlayNodeText: "叠加",
+        baseNodeText: "基图层"
     },
 
     "gxp.plugins.Legend.prototype": {
-        menuText: "Show Legend显示图例",
-        tooltip: "Show Legend显示图例"
+        menuText: "显示图例",
+        tooltip: "显示图例"
     },
 
     "gxp.plugins.LoadingIndicator.prototype": {
-        loadingMapMessage: "Loading Map...读取地图..."
+        loadingMapMessage: "读取地图..."
     },
 
     "gxp.plugins.MapBoxSource.prototype": {
@@ -88,8 +88,8 @@ GeoExt.Lang.add("en", {
         blueMarbleTopoBathyJulTitle: "Blue Marble Topography & Bathymetry (July)蓝大理石地形图和湖盆图（七月)",
         blueMarbleTopoJanTitle: "Blue Marble Topography (January)蓝大理石地形图（一月）",
         blueMarbleTopoJulTitle: "Blue Marble Topography (July)蓝大理石地形图（七月）",
-        controlRoomTitle: "Control Room",
-        geographyClassTitle: "Geography Class",
+        controlRoomTitle: "Control Room控制室",
+        geographyClassTitle: "Geography Class地理课",
         naturalEarthHypsoTitle: "Natural Earth Hypsometric",
         naturalEarthHypsoBathyTitle: "Natural Earth Hypsometric & Bathymetry",
         naturalEarth1Title: "Natural Earth I",
@@ -100,17 +100,17 @@ GeoExt.Lang.add("en", {
     },
 
     "gxp.plugins.Measure.prototype": {
-        buttonText: "Measure测量",
-        lengthMenuText: "Length长度",
-        areaMenuText: "Area面积",
-        lengthTooltip: "Measure length测量长度",
-        areaTooltip: "Measure area测量面积",
-        measureTooltip: "Measure测量"
+        buttonText: "测量",
+        lengthMenuText: "长度",
+        areaMenuText: "面积",
+        lengthTooltip: "测量长度",
+        areaTooltip: "测量面积",
+        measureTooltip: "测量"
     },
 
     "gxp.plugins.Navigation.prototype": {
-        menuText: "Pan Map平移地图",
-        tooltip: "Pan Map平移地图"
+        menuText: "平移地图",
+        tooltip: "平移地图"
     },
 
     "gxp.plugins.NavigationHistory.prototype": {
@@ -127,12 +127,12 @@ GeoExt.Lang.add("en", {
     },
 
     "gxp.plugins.Print.prototype": {
-        buttonText:"Print打印",
-        menuText: "Print Map打印地图",
-        tooltip: "Print Map打印地图",
-        previewText: "Print Preview打印预览",
-        notAllNotPrintableText: "Not All Layers Can Be Printed不是所有图层都可被打印",
-        nonePrintableText: "None of your current map layers can be printed现有图层都不可打印"
+        buttonText:"打印",
+        menuText: "打印地图",
+        tooltip: "打印地图",
+        previewText: "打印预览",
+        notAllNotPrintableText: "并非所有图层都可打印",
+        nonePrintableText: "现有地图中的图层都不可打印"
     },
 
     "gxp.plugins.MapQuestSource.prototype": {
@@ -144,244 +144,244 @@ GeoExt.Lang.add("en", {
     },
 
     "gxp.plugins.QueryForm.prototype": {
-        queryActionText: "Query搜索",
-        queryMenuText: "Query layer搜索图层",
-        queryActionTip: "Query the selected layer搜索被选择的图层",
-        queryByLocationText: "Query by current map extent根据现有地图尺寸搜索",
-        queryByAttributesText: "Query by attributes根据属性搜索",
-        queryMsg: "Querying...搜索中...",
-        cancelButtonText: "Cancel取消",
-        noFeaturesTitle: "No Match没有吻合对象",
-        noFeaturesMessage: "Your query did not return any results.您的搜索没有任何结果"
+        queryActionText: "查询",
+        queryMenuText: "查询图层",
+        queryActionTip: "查询被选图层",
+        queryByLocationText: "根据现有地图尺寸查询",
+        queryByAttributesText: "根据属性查询",
+        queryMsg: "查询中...",
+        cancelButtonText: "取消",
+        noFeaturesTitle: "没有匹配对象",
+        noFeaturesMessage: "您的查询未返回任何结果"
     },
 
     "gxp.plugins.RemoveLayer.prototype": {
-        removeMenuText: "Remove layer删除图层",
-        removeActionTip: "Remove layer删除图层"
+        removeMenuText: "删除图层",
+        removeActionTip: "删除图层"
     },
     
     "gxp.plugins.Styler.prototype": {
-        menuText: "Edit Styles修改式样",
-        tooltip: "Manage layer styles管理图层式样"
+        menuText: "修改式样",
+        tooltip: "管理图层式样"
 
     },
 
     "gxp.plugins.WMSGetFeatureInfo.prototype": {
-        buttonText:"Identify",
-        infoActionTip: "Get Feature Info获取图形信息",
-        popupTitle: "Feature Info图形信息"
+        buttonText:"Identify特征",
+        infoActionTip: "获取图形信息",
+        popupTitle: "图形信息"
     },
 
     "gxp.plugins.Zoom.prototype": {
         zoomMenuText: "Zoom Box聚焦框",
-        zoomInMenuText: "Zoom In放大",
-        zoomOutMenuText: "Zoom Out缩小",
-        zoomTooltip: "Zoom by dragging a box通过划框聚焦",
-        zoomInTooltip: "Zoom in放大",
-        zoomOutTooltip: "Zoom out缩小"
+        zoomInMenuText: "放大",
+        zoomOutMenuText: "缩小",
+        zoomTooltip: "Zoom by dragging a box依据划框聚焦",
+        zoomInTooltip: "放大",
+        zoomOutTooltip: "缩小"
     },
     
     "gxp.plugins.ZoomToExtent.prototype": {
-        menuText: "Zoom To Max Extent聚焦到最大尺寸",
-        tooltip: "Zoom To Max Extent聚焦到最大尺寸"
+        menuText: "聚焦到最大尺寸",
+        tooltip: "聚焦到最大尺寸"
     },
     
     "gxp.plugins.ZoomToDataExtent.prototype": {
-        menuText: "Zoom to layer extent聚焦到图层尺寸",
-        tooltip: "Zoom to layer extent聚焦到图层尺寸"
+        menuText: "聚焦到图层尺寸",
+        tooltip: "聚焦到图层尺寸"
     },
 
     "gxp.plugins.ZoomToLayerExtent.prototype": {
-        menuText: "Zoom to layer extent聚焦到图层尺寸",
-        tooltip: "Zoom to layer extent聚焦到图层尺寸"
+        menuText: "聚焦到图层尺寸",
+        tooltip: "聚焦到图层尺寸"
     },
     
     "gxp.plugins.ZoomToSelectedFeatures.prototype": {
-        menuText: "Zoom to selected features聚焦到被选的图形",
-        tooltip: "Zoom to selected features聚焦到被选的图形","
+        menuText: "聚焦到被选图形",
+        tooltip: "聚焦到被选图形","
     },
 
     "gxp.FeatureEditPopup.prototype": {
-        closeMsgTitle: "Save Changes?保存修改",
-        closeMsg: "This feature has unsaved changes. Would you like to save your changes?图形修改未被保存，您打算保存这些修改么？",
-        deleteMsgTitle: "Delete Feature?删除图形?",
-        deleteMsg: "Are you sure you want to delete this feature?确定您要删除这些图形？",
-        editButtonText: "Edit修改",
-        editButtonTooltip: "Make this feature editable",
-        deleteButtonText: "Delete删除",
-        deleteButtonTooltip: "Delete this feature删除这一图形",
-        cancelButtonText: "Cancel取消",
-        cancelButtonTooltip: "Stop editing, discard changes停止修改，放弃修改",
-        saveButtonText: "Save保存",
-        saveButtonTooltip: "Save changes保存修改"
+        closeMsgTitle: "保存修改?",
+        closeMsg: "图形修改未被保存，您打算保存这些修改么？",
+        deleteMsgTitle: "删除图形?",
+        deleteMsg: "您确定要删除这些图形？",
+        editButtonText: "修改",
+        editButtonTooltip: "使此图形可编辑",
+        deleteButtonText: "删除",
+        deleteButtonTooltip: "删除这一图形",
+        cancelButtonText: "取消",
+        cancelButtonTooltip: "停止编辑，放弃修改",
+        saveButtonText: "保存",
+        saveButtonTooltip: "保存修改"
     },
     
     "gxp.FillSymbolizer.prototype": {
-        fillText: "Fill",
-        colorText: "Color",
-        opacityText: "Opacity"
+        fillText: "Fill填满",
+        colorText: "颜色",
+        opacityText: "透明度"
     },
     
     "gxp.FilterBuilder.prototype": {
-        builderTypeNames: ["any", "all", "none", "not all"],
-        preComboText: "Match",
+        builderTypeNames: ["any任何", "all全部", "none没有", "not all非全部"],
+        preComboText: "Match匹配",
         postComboText: "of the following:",
         addConditionText: "add condition",
-        addGroupText: "add group",
+        addGroupText: "添加组",
         removeConditionText: "remove condition"
     },
     
     "gxp.grid.CapabilitiesGrid.prototype": {
-        nameHeaderText : "Name",
-        titleHeaderText : "Title",
-        queryableHeaderText : "Queryable",
-        layerSelectionLabel: "View available data from:",
-        layerAdditionLabel: "or add a new server.",
-        expanderTemplateText: "<p><b>Abstract:</b> {abstract}</p>"
+        nameHeaderText : "名字",
+        titleHeaderText : "标题",
+        queryableHeaderText : "Queryable可查询",
+        layerSelectionLabel: "View available data from:查看现有数据",
+        layerAdditionLabel: "or add a new server.或添加新服务器",
+        expanderTemplateText: "<p><b>Abstract:简介</b> {abstract}</p>"
     },
     
     "gxp.PointSymbolizer.prototype": {
-        graphicCircleText: "circle",
-        graphicSquareText: "square",
-        graphicTriangleText: "triangle",
-        graphicStarText: "star",
-        graphicCrossText: "cross",
+        graphicCircleText: "圆",
+        graphicSquareText: "方",
+        graphicTriangleText: "三角",
+        graphicStarText: "星",
+        graphicCrossText: "十字",
         graphicXText: "x",
         graphicExternalText: "external",
         urlText: "URL",
-        opacityText: "opacity",
-        symbolText: "Symbol",
-        sizeText: "Size",
-        rotationText: "Rotation"
+        opacityText: "opacity透明度",
+        symbolText: "Symbol标志",
+        sizeText: "Size尺寸",
+        rotationText: "Rotation旋转"
     },
 
     "gxp.QueryPanel.prototype": {
-        queryByLocationText: "Query by location根据方位查询",
-        currentTextText: "Current extent现有尺寸",
-        queryByAttributesText: "Query by attributes根据属性查询",
-        layerText: "Layer图层"
+        queryByLocationText: "根据方位查询",
+        currentTextText: "现有尺寸",
+        queryByAttributesText: "根据属性查询",
+        layerText: "图层"
     },
     
     "gxp.RulePanel.prototype": {
-        scaleSliderTemplate: "{scaleType} Scale 1:{scale}",
-        labelFeaturesText: "Label Features",
-        labelsText: "Labels",
+        scaleSliderTemplate: "{scaleType} Scale 1:{scale}比例 1：",
+        labelFeaturesText: "Label Features标记图形",
+        labelsText: "Labels标记",
         basicText: "Basic基本",
         advancedText: "Advanced高级",
         limitByScaleText: "Limit by scale",
         limitByConditionText: "Limit by condition",
-        symbolText: "Symbol标志",
-        nameText: "Name名字"
+        symbolText: "标志",
+        nameText: "名字"
     },
     
     "gxp.ScaleLimitPanel.prototype": {
-        scaleSliderTemplate: "{scaleType} Scale 1:{scale}",
-        minScaleLimitText: "Min scale limit",
-        maxScaleLimitText: "Max scale limit"
+        scaleSliderTemplate: "{scaleType} Scale 1:{scale}比例 1：",
+        minScaleLimitText: "Min scale limit最小比例极限",
+        maxScaleLimitText: "Max scale limit最大比例极限"
     },
     
     "gxp.StrokeSymbolizer.prototype": {
-        solidStrokeName: "solid实线",
-        dashStrokeName: "dash虚线",
-        dotStrokeName: "dot点线",
-        titleText: "Stroke",
-        styleText: "Style样式",
-        colorText: "Color颜色",
-        widthText: "Width宽度",
-        opacityText: "Opacity"
+        solidStrokeName: "实线",
+        dashStrokeName: "虚线",
+        dotStrokeName: "点线",
+        titleText: "线宽",
+        styleText: "样式",
+        colorText: "颜色",
+        widthText: "宽度",
+        opacityText: "透明度"
     },
     
     "gxp.StylePropertiesDialog.prototype": {   
-        titleText: "General常规",
-        nameFieldText: "Name名称",
-        titleFieldText: "Title标题",
-        abstractFieldText: "Abstract简介"
+        titleText: "常规",
+        nameFieldText: "名称",
+        titleFieldText: "标题",
+        abstractFieldText: "简介"
     },
     
     "gxp.TextSymbolizer.prototype": {
-        labelValuesText: "Label values",
-        haloText: "Halo",
-        sizeText: "Size"
+        labelValuesText: "Label values标记数值",
+        haloText: "Halo光晕",
+        sizeText: "Size尺寸"
     },
     
     "gxp.WMSLayerPanel.prototype": {
-        aboutText: "About关于",
-        titleText: "Title标题",
-        nameText: "Name名字",
-        descriptionText: "Description描述",
-        displayText: "Display显示",
-        opacityText: "Opacity",
+        aboutText: "关于",
+        titleText: "标题",
+        nameText: "名字",
+        descriptionText: "描述",
+        displayText: "显示",
+        opacityText: "Opacity半透明",
         formatText: "Format格式",
-        transparentText: "Transparent透明度",
-        cacheText: "Cache",
-        cacheFieldText: "Use cached version",
-        stylesText: "Styles式样",
+        transparentText: "Transparent透明",
+        cacheText: "缓存",
+        cacheFieldText: "Use cached version使用缓存版本",
+        stylesText: "式样",
         infoFormatText: "Info format格式信息",
-        infoFormatEmptyText: "Select a format选择一种格式"
+        infoFormatEmptyText: "选择一种格式"
     },
 
     "gxp.EmbedMapDialog.prototype": {
-        publishMessage: "Your map is ready to be published to the web! Simply copy the following HTML to embed the map in your website:",
-        heightLabel: 'Height高',
-        widthLabel: 'Width宽',
-        mapSizeLabel: 'Map Size地图大小',
-        miniSizeLabel: 'Mini迷你',
-        smallSizeLabel: 'Small小',
-        premiumSizeLabel: 'Premium最佳',
-        largeSizeLabel: 'Large大'
+        publishMessage: "您的地图已经可以在网上发布！请拷贝以下HTML以将地图插入您的网站",
+        heightLabel: '高',
+        widthLabel: '宽',
+        mapSizeLabel: '地图大小',
+        miniSizeLabel: '迷你',
+        smallSizeLabel: '小',
+        premiumSizeLabel: '最佳',
+        largeSizeLabel: '大'
     },
     
     "gxp.WMSStylesDialog.prototype": {
-         addStyleText: "Add添加",
-         addStyleTip: "Add a new style添加新式样",
-         chooseStyleText: "Choose style选择式样",
-         deleteStyleText: "Remove移除",
-         deleteStyleTip: "Delete the selected style删除选择的式样",
-         editStyleText: "Edit修改",
-         editStyleTip: "Edit the selected style修改选好的式样",
-         duplicateStyleText: "Duplicate复制",
-         duplicateStyleTip: "Duplicate the selected style复制选好的式样",
-         addRuleText: "Add添加",
-         addRuleTip: "Add a new rule添加新规则",
-         newRuleText: "New Rule新规则",
-         deleteRuleText: "Remove移除",
-         deleteRuleTip: "Delete the selected rule删除选好的规则",
-         editRuleText: "Edit修改",
-         editRuleTip: "Edit the selected rule修改选好的规则",
-         duplicateRuleText: "Duplicate复制",
-         duplicateRuleTip: "Duplicate the selected rule复制选好的规则",
-         cancelText: "Cancel取消",
-         saveText: "Save保存",
+         addStyleText: "添加",
+         addStyleTip: "添加新式样",
+         chooseStyleText: "选择式样",
+         deleteStyleText: "移除",
+         deleteStyleTip: "Delete the selected style删除被选式样",
+         editStyleText: "修改",
+         editStyleTip: "Edit the selected style修改被好式样",
+         duplicateStyleText: "复制",
+         duplicateStyleTip: "Duplicate the selected style复制被选式样",
+         addRuleText: "添加",
+         addRuleTip: "添加新规则",
+         newRuleText: "新规则",
+         deleteRuleText: "移除",
+         deleteRuleTip: "删除被选规则",
+         editRuleText: "修改",
+         editRuleTip: "修改被选规则",
+         duplicateRuleText: "复制",
+         duplicateRuleTip: "复制被选规则",
+         cancelText: "取消",
+         saveText: "保存",
          styleWindowTitle: "User Style: {0}",
          ruleWindowTitle: "Style Rule: {0}",
-         stylesFieldsetTitle: "Styles式样",
-         rulesFieldsetTitle: "Rules规则"
+         stylesFieldsetTitle: "式样",
+         rulesFieldsetTitle: "规则"
     },
 
     "gxp.LayerUploadPanel.prototype": {
-        titleLabel: "Title标题",
-        titleEmptyText: "Layer title图层标题",
-        abstractLabel: "Description描述",
-        abstractEmptyText: "Layer description图层描述",
-        fileLabel: "Data数据",
-        fieldEmptyText: "Browse for data archive...搜索数据档案",
-        uploadText: "Upload上传",
-        waitMsgText: "Uploading your data...上传您的数据",
+        titleLabel: "标题",
+        titleEmptyText: "图层标题",
+        abstractLabel: "描述",
+        abstractEmptyText: "图层描述",
+        fileLabel: "数据",
+        fieldEmptyText: "Browse for data archive...搜索数据档案...",
+        uploadText: "上传",
+        waitMsgText: "上传您的数据",
         invalidFileExtensionText: "File extension must be one of: ",
         optionsText: "Options",
-        workspaceLabel: "Workspace",
-        workspaceEmptyText: "Default workspace",
+        workspaceLabel: "Workspace工作区",
+        workspaceEmptyText: "Default workspace默认工作区",
         dataStoreLabel: "Store",
         dataStoreEmptyText: "Create new store",
         defaultDataStoreEmptyText: "Default data store"
     },
     
     "gxp.NewSourceDialog.prototype": {
-        title: "Add New Server...添加新服务器...",
-        cancelText: "Cancel取消",
-        addServerText: "Add Server添加服务器",
-        invalidURLText: "Enter a valid URL to a WMS endpoint 请添加有效的URL和WMS节点(比如e.g. http://example.com/geoserver/wms)",
-        contactingServerText: "Contacting Server...联接服务器中..."
+        title: "添加新服务器...",
+        cancelText: "取消",
+        addServerText: "添加服务器",
+        invalidURLText: "请添加有效的URL以联接WMS端点(比如http://example.com/geoserver/wms)",
+        contactingServerText: "联接服务器中..."
     },
 
     "gxp.ScaleOverlay.prototype": { 
