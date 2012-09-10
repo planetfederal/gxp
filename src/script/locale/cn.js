@@ -2,94 +2,94 @@
  * @requires GeoExt/Lang.js
  */
 
-GeoExt.Lang.add("cn", {
+GeoExt.Lang.add("en", {
 
     "gxp.menu.LayerMenu.prototype": {
-        layerText: "Í¼ï¿½ï¿½"
+        layerText: "Í¼²ã"
     },
 
     "gxp.plugins.AddLayers.prototype": {
-        addActionMenuText: "ï¿½ï¿½ï¿½Í¼ï¿½ï¿½",
-        addActionTip: "ï¿½ï¿½ï¿½Í¼ï¿½ï¿½",
-        addServerText: "ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½",
-        addButtonText: "ï¿½ï¿½ï¿½Í¼ï¿½ï¿½",
-        untitledText: "ï¿½Þ±ï¿½ï¿½ï¿½",
+        addActionMenuText: "Ìí¼ÓÍ¼²ã",
+        addActionTip: "Ìí¼ÓÍ¼²ã",
+        addServerText: "Ìí¼ÓÐÂ·þÎñÆ÷",
+        addButtonText: "Ìí¼ÓÍ¼²ã",
+        untitledText: "ÎÞ±êÌâ",
         addLayerSourceErrorText: "Error getting WMS capabilities ({msg}).\nPlease check the url and try again.",
-        availableLayersText: "ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½",
-        expanderTemplateText: "<p><b>Abstract:ï¿½ï¿½ï¿½</b> {abstract}</p>",
-        panelTitleText: "ï¿½ï¿½ï¿½ï¿½",
+        availableLayersText: "ÏÖÓÐÍ¼²ã",
+        expanderTemplateText: "<p><b>Abstract:¼ò½é</b> {abstract}</p>",
+        panelTitleText: "±êÌâ",
         layerSelectionText: "View available data from:",
-        doneText: "ï¿½ï¿½ï¿½",
-        uploadText: "ï¿½Ï´ï¿½Í¼ï¿½ï¿½"
+        doneText: "Íê³É",
+        uploadText: "ÉÏ´«Í¼²ã"
     },
     
     "gxp.plugins.BingSource.prototype": {
-        title: "BingÍ¼ï¿½ï¿½",
-        roadTitle: "Bingï¿½ï¿½Â·",
-        aerialTitle: "Bingï¿½ï¿½ï¿½ï¿½Í¼Æ¬",
-        labeledAerialTitle: "Bingï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½ï¿½ï¿½"
+        title: "BingÍ¼²ã",
+        roadTitle: "BingµÀÂ·",
+        aerialTitle: "Bingº½ÅÄÍ¼Æ¬",
+        labeledAerialTitle: "Bingº½ÅÄÍ¼Æ¬´ø±ê¼Ç"
     },
 
     "gxp.plugins.FeatureEditor.prototype": {
-        splitButtonText: "ï¿½à¼­",
-        createFeatureActionText: "ï¿½ï¿½ï¿½ï¿½",
-        editFeatureActionText: "ï¿½Þ¸ï¿½",
-        createFeatureActionTip: "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½",
-        editFeatureActionTip: "ï¿½Þ¸ï¿½ï¿½Ñ´ï¿½ï¿½ï¿½Í¼ï¿½ï¿½"
+        splitButtonText: "±à¼­",
+        createFeatureActionText: "´´½¨",
+        editFeatureActionText: "ÐÞ¸Ä",
+        createFeatureActionTip: "´´½¨ÐÂÍ¼ÐÎ",
+        editFeatureActionTip: "ÐÞ¸ÄÒÑ´æÔÚÍ¼ÐÎ"
     },
     
     "gxp.plugins.FeatureGrid.prototype": {
-        displayFeatureText: "ï¿½Úµï¿½Í¼ï¿½ï¿½ï¿½ï¿½Ê¾",
-        firstPageTip: "ï¿½ï¿½Ò»Ò³",
+        displayFeatureText: "ÔÚµØÍ¼ÉÏÏÔÊ¾",
+        firstPageTip: "µÚÒ»Ò³",
         previousPageTip: "Ç°Ò»Ò³",
-        zoomPageExtentTip: "ï¿½Û½ï¿½ï¿½ï¿½Ò³ï¿½ï¿½ß´ï¿½",
-        nextPageTip: "ï¿½ï¿½Ò»Ò³",
-        lastPageTip: "ï¿½ï¿½ï¿½Ò»Ò³",
+        zoomPageExtentTip: "¾Û½¹µ½Ò³Ãæ³ß´ç",
+        nextPageTip: "ÏÂÒ»Ò³",
+        lastPageTip: "×îºóÒ»Ò³",
         totalMsg: "Features {1} to {2} of {0}"
     },
 
     "gxp.plugins.GoogleEarth.prototype": {
-        menuText: "3D Viewer3Dï¿½Ó½ï¿½",
-        tooltip: "Switch to 3D Viewerï¿½Ð»ï¿½ï¿½ï¿½3Dï¿½Ó½ï¿½"
+        menuText: "3D Viewer3DÊÓ½Ç",
+        tooltip: "Switch to 3D ViewerÇÐ»»µ½3DÊÓ½Ç"
     },
     
     "gxp.plugins.GoogleSource.prototype": {
-        title: "GoogleÍ¼ï¿½ï¿½",
-        roadmapAbstract: "ï¿½ï¿½Ê¾ï¿½Öµï¿½",
-        satelliteAbstract: "ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½Í¼",
-        hybridAbstract: "ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½",
-        terrainAbstract: "ï¿½ï¿½Ê¾ï¿½Öµï¿½Íµï¿½ï¿½ï¿½"
+        title: "GoogleÍ¼²ã",
+        roadmapAbstract: "ÏÔÊ¾½ÖµÀ",
+        satelliteAbstract: "ÏÔÊ¾ÎÀÐÇÍ¼",
+        hybridAbstract: "ÏÔÊ¾ÎÀÐÇÍ¼¼°½ÖµÀÃû³Æ",
+        terrainAbstract: "ÏÔÊ¾½ÖµÀºÍµØÐÎ"
     },
 
     "gxp.plugins.LayerProperties.prototype": {
-        menuText: "Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",
-        toolTip: "Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"
+        menuText: "Í¼²ãÊôÐÔ",
+        toolTip: "Í¼²ãÊôÐÔ"
     },
     
     "gxp.plugins.LayerTree.prototype": {
-        shortTitle: "Í¼ï¿½ï¿½",
-        rootNodeText: "Í¼ï¿½ï¿½",
-        overlayNodeText: "ï¿½ï¿½ï¿½ï¿½",
-        baseNodeText: "ï¿½ï¿½Í¼ï¿½ï¿½"
+        shortTitle: "Í¼²ã",
+        rootNodeText: "Í¼²ã",
+        overlayNodeText: "µþ¼Ó",
+        baseNodeText: "»ùÍ¼²ã"
     },
 
     "gxp.plugins.Legend.prototype": {
-        menuText: "ï¿½ï¿½Ê¾Í¼ï¿½ï¿½",
-        tooltip: "ï¿½ï¿½Ê¾Í¼ï¿½ï¿½"
+        menuText: "ÏÔÊ¾Í¼Àý",
+        tooltip: "ÏÔÊ¾Í¼Àý"
     },
 
     "gxp.plugins.LoadingIndicator.prototype": {
-        loadingMapMessage: "ï¿½ï¿½È¡ï¿½ï¿½Í¼..."
+        loadingMapMessage: "¶ÁÈ¡µØÍ¼..."
     },
 
     "gxp.plugins.MapBoxSource.prototype": {
-        title: "MapBox LayersMapBoxÍ¼ï¿½ï¿½",
-        blueMarbleTopoBathyJanTitle: "Blue Marble Topography & Bathymetry (January)ï¿½ï¿½ï¿½ï¿½ï¿½Ê¯ï¿½ï¿½ï¿½ï¿½Í¼ï¿½Íºï¿½ï¿½ï¿½Í¼ï¿½ï¿½Ò»ï¿½Â£ï¿½",
-        blueMarbleTopoBathyJulTitle: "Blue Marble Topography & Bathymetry (July)ï¿½ï¿½ï¿½ï¿½ï¿½Ê¯ï¿½ï¿½ï¿½ï¿½Í¼ï¿½Íºï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)",
-        blueMarbleTopoJanTitle: "Blue Marble Topography (January)ï¿½ï¿½ï¿½ï¿½ï¿½Ê¯ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½Ò»ï¿½Â£ï¿½",
-        blueMarbleTopoJulTitle: "Blue Marble Topography (July)ï¿½ï¿½ï¿½ï¿½ï¿½Ê¯ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½ï¿½Â£ï¿½",
-        controlRoomTitle: "Control Roomï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",
-        geographyClassTitle: "Geography Classï¿½ï¿½ï¿½ï¿½ï¿½",
+        title: "MapBox LayersMapBoxÍ¼²ã",
+        blueMarbleTopoBathyJanTitle: "Blue Marble Topography & Bathymetry (January)À¶´óÀíÊ¯µØÐÎÍ¼ºÍºþÅèÍ¼£¨Ò»ÔÂ£©",
+        blueMarbleTopoBathyJulTitle: "Blue Marble Topography & Bathymetry (July)À¶´óÀíÊ¯µØÐÎÍ¼ºÍºþÅèÍ¼£¨ÆßÔÂ)",
+        blueMarbleTopoJanTitle: "Blue Marble Topography (January)À¶´óÀíÊ¯µØÐÎÍ¼£¨Ò»ÔÂ£©",
+        blueMarbleTopoJulTitle: "Blue Marble Topography (July)À¶´óÀíÊ¯µØÐÎÍ¼£¨ÆßÔÂ£©",
+        controlRoomTitle: "Control Room¿ØÖÆÊÒ",
+        geographyClassTitle: "Geography ClassµØÀí¿Î",
         naturalEarthHypsoTitle: "Natural Earth Hypsometric",
         naturalEarthHypsoBathyTitle: "Natural Earth Hypsometric & Bathymetry",
         naturalEarth1Title: "Natural Earth I",
@@ -100,43 +100,43 @@ GeoExt.Lang.add("cn", {
     },
 
     "gxp.plugins.Measure.prototype": {
-        buttonText: "ï¿½ï¿½ï¿½",
-        lengthMenuText: "ï¿½ï¿½ï¿½ï¿½",
-        areaMenuText: "ï¿½ï¿½ï¿½",
-        lengthTooltip: "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",
-        areaTooltip: "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",
-        measureTooltip: "ï¿½ï¿½ï¿½"
+        buttonText: "²âÁ¿",
+        lengthMenuText: "³¤¶È",
+        areaMenuText: "Ãæ»ý",
+        lengthTooltip: "²âÁ¿³¤¶È",
+        areaTooltip: "²âÁ¿Ãæ»ý",
+        measureTooltip: "²âÁ¿"
     },
 
     "gxp.plugins.Navigation.prototype": {
-        menuText: "Æ½ï¿½Æµï¿½Í¼",
-        tooltip: "Æ½ï¿½Æµï¿½Í¼"
+        menuText: "Æ½ÒÆµØÍ¼",
+        tooltip: "Æ½ÒÆµØÍ¼"
     },
 
     "gxp.plugins.NavigationHistory.prototype": {
-        previousMenuText: "Zoom To Previous Extentï¿½Û½ï¿½ï¿½ï¿½Ç°Ò»ï¿½ß´ï¿½",
-        nextMenuText: "Zoom To Next Extentï¿½Û¼ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ß´ï¿½",
-        previousTooltip: "Zoom To Previous Extentï¿½Û½ï¿½ï¿½ï¿½Ç°Ò»ï¿½ß´ï¿½",
-        nextTooltip: "Zoom To Next Extentï¿½Û½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ß´ï¿½"
+        previousMenuText: "Zoom To Previous Extent¾Û½¹µ½Ç°Ò»³ß´ç",
+        nextMenuText: "Zoom To Next Extent¾Û¼¯µ½ÏÂÒ»³ß´ç",
+        previousTooltip: "Zoom To Previous Extent¾Û½¹µ½Ç°Ò»³ß´ç",
+        nextTooltip: "Zoom To Next Extent¾Û½¹µ½ÏÂÒ»³ß´ç"
     },
 
     "gxp.plugins.OSMSource.prototype": {
-        title: "OpenStreetMap LayersOpenStreetMapÍ¼ï¿½ï¿½",
+        title: "OpenStreetMap LayersOpenStreetMapÍ¼²ã",
         mapnikAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
         osmarenderAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>"
     },
 
     "gxp.plugins.Print.prototype": {
-        buttonText:"ï¿½ï¿½Ó¡",
-        menuText: "ï¿½ï¿½Ó¡ï¿½ï¿½Í¼",
-        tooltip: "ï¿½ï¿½Ó¡ï¿½ï¿½Í¼",
-        previewText: "ï¿½ï¿½Ó¡Ô¤ï¿½ï¿½",
-        notAllNotPrintableText: "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ã¶¼ï¿½É´ï¿½Ó¡",
-        nonePrintableText: "ï¿½ï¿½ï¿½Ðµï¿½Í¼ï¿½Ðµï¿½Í¼ï¿½ã¶¼ï¿½ï¿½ï¿½É´ï¿½Ó¡"
+        buttonText:"´òÓ¡",
+        menuText: "´òÓ¡µØÍ¼",
+        tooltip: "´òÓ¡µØÍ¼",
+        previewText: "´òÓ¡Ô¤ÀÀ",
+        notAllNotPrintableText: "²¢·ÇËùÓÐÍ¼²ã¶¼¿É´òÓ¡",
+        nonePrintableText: "ÏÖÓÐµØÍ¼ÖÐµÄÍ¼²ã¶¼²»¿É´òÓ¡"
     },
 
     "gxp.plugins.MapQuestSource.prototype": {
-        title: "MapQuest LayersMapQuestÍ¼ï¿½ï¿½",
+        title: "MapQuest LayersMapQuestÍ¼²ã",
         osmAttribution: "Tiles Courtesy of <a href='http://open.mapquest.co.uk/' target='_blank'>MapQuest</a> <img src='http://developer.mapquest.com/content/osm/mq_logo.png' border='0'>",
         osmTitle: "MapQuest OpenStreetMap",
         naipAttribution: "Tiles Courtesy of <a href='http://open.mapquest.co.uk/' target='_blank'>MapQuest</a> <img src='http://developer.mapquest.com/content/osm/mq_logo.png' border='0'>",
@@ -144,244 +144,244 @@ GeoExt.Lang.add("cn", {
     },
 
     "gxp.plugins.QueryForm.prototype": {
-        queryActionText: "ï¿½ï¿½Ñ¯",
-        queryMenuText: "ï¿½ï¿½Ñ¯Í¼ï¿½ï¿½",
-        queryActionTip: "ï¿½ï¿½Ñ¯ï¿½ï¿½Ñ¡Í¼ï¿½ï¿½",
-        queryByLocationText: "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½Í¼ï¿½ß´ï¿½ï¿½Ñ¯",
-        queryByAttributesText: "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô²ï¿½Ñ¯",
-        queryMsg: "ï¿½ï¿½Ñ¯ï¿½ï¿½...",
-        cancelButtonText: "È¡ï¿½ï¿½",
-        noFeaturesTitle: "Ã»ï¿½ï¿½Æ¥ï¿½ï¿½ï¿½ï¿½ï¿½",
-        noFeaturesMessage: "ï¿½ï¿½Ä²ï¿½Ñ¯Î´ï¿½ï¿½ï¿½ï¿½ï¿½ÎºÎ½ï¿½ï¿½"
+        queryActionText: "²éÑ¯",
+        queryMenuText: "²éÑ¯Í¼²ã",
+        queryActionTip: "²éÑ¯±»Ñ¡Í¼²ã",
+        queryByLocationText: "¸ù¾ÝÏÖÓÐµØÍ¼³ß´ç²éÑ¯",
+        queryByAttributesText: "¸ù¾ÝÊôÐÔ²éÑ¯",
+        queryMsg: "²éÑ¯ÖÐ...",
+        cancelButtonText: "È¡Ïû",
+        noFeaturesTitle: "Ã»ÓÐÆ¥Åä¶ÔÏó",
+        noFeaturesMessage: "ÄúµÄ²éÑ¯Î´·µ»ØÈÎºÎ½á¹û"
     },
 
     "gxp.plugins.RemoveLayer.prototype": {
-        removeMenuText: "É¾ï¿½ï¿½Í¼ï¿½ï¿½",
-        removeActionTip: "É¾ï¿½ï¿½Í¼ï¿½ï¿½"
+        removeMenuText: "É¾³ýÍ¼²ã",
+        removeActionTip: "É¾³ýÍ¼²ã"
     },
     
     "gxp.plugins.Styler.prototype": {
-        menuText: "ï¿½Þ¸ï¿½Ê½ï¿½ï¿½",
-        tooltip: "ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½Ê½ï¿½ï¿½"
+        menuText: "ÐÞ¸ÄÊ½Ñù",
+        tooltip: "¹ÜÀíÍ¼²ãÊ½Ñù"
 
     },
 
     "gxp.plugins.WMSGetFeatureInfo.prototype": {
-        buttonText:"Identifyï¿½ï¿½ï¿½ï¿½",
-        infoActionTip: "ï¿½ï¿½È¡Í¼ï¿½ï¿½ï¿½ï¿½Ï¢",
-        popupTitle: "Í¼ï¿½ï¿½ï¿½ï¿½Ï¢"
+        buttonText:"IdentifyÌØÕ÷",
+        infoActionTip: "»ñÈ¡Í¼ÐÎÐÅÏ¢",
+        popupTitle: "Í¼ÐÎÐÅÏ¢"
     },
 
     "gxp.plugins.Zoom.prototype": {
-        zoomMenuText: "Zoom Boxï¿½Û½ï¿½ï¿½ï¿½",
-        zoomInMenuText: "ï¿½Å´ï¿½",
-        zoomOutMenuText: "ï¿½ï¿½Ð¡",
-        zoomTooltip: "Zoom by dragging a boxï¿½ï¿½Ý»ï¿½ï¿½ï¿½Û½ï¿½",
-        zoomInTooltip: "ï¿½Å´ï¿½",
-        zoomOutTooltip: "ï¿½ï¿½Ð¡"
+        zoomMenuText: "Zoom Box¾Û½¹¿ò",
+        zoomInMenuText: "·Å´ó",
+        zoomOutMenuText: "ËõÐ¡",
+        zoomTooltip: "Zoom by dragging a boxÒÀ¾Ý»®¿ò¾Û½¹",
+        zoomInTooltip: "·Å´ó",
+        zoomOutTooltip: "ËõÐ¡"
     },
     
     "gxp.plugins.ZoomToExtent.prototype": {
-        menuText: "ï¿½Û½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß´ï¿½",
-        tooltip: "ï¿½Û½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß´ï¿½"
+        menuText: "¾Û½¹µ½×î´ó³ß´ç",
+        tooltip: "¾Û½¹µ½×î´ó³ß´ç"
     },
     
     "gxp.plugins.ZoomToDataExtent.prototype": {
-        menuText: "ï¿½Û½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ß´ï¿½",
-        tooltip: "ï¿½Û½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ß´ï¿½"
+        menuText: "¾Û½¹µ½Í¼²ã³ß´ç",
+        tooltip: "¾Û½¹µ½Í¼²ã³ß´ç"
     },
 
     "gxp.plugins.ZoomToLayerExtent.prototype": {
-        menuText: "ï¿½Û½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ß´ï¿½",
-        tooltip: "ï¿½Û½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ß´ï¿½"
+        menuText: "¾Û½¹µ½Í¼²ã³ß´ç",
+        tooltip: "¾Û½¹µ½Í¼²ã³ß´ç"
     },
     
     "gxp.plugins.ZoomToSelectedFeatures.prototype": {
-        menuText: "ï¿½Û½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡Í¼ï¿½ï¿½",
-        tooltip: "ï¿½Û½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡Í¼ï¿½ï¿½","
+        menuText: "¾Û½¹µ½±»Ñ¡Í¼ÐÎ",
+        tooltip: "¾Û½¹µ½±»Ñ¡Í¼ÐÎ","
     },
 
     "gxp.FeatureEditPopup.prototype": {
-        closeMsgTitle: "ï¿½ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½?",
-        closeMsg: "Í¼ï¿½ï¿½ï¿½Þ¸ï¿½Î´ï¿½ï¿½ï¿½ï¿½ï¿½æ£¬ï¿½ï¿½ï¿½ï¿½ã±£ï¿½ï¿½ï¿½ï¿½Ð©ï¿½Þ¸ï¿½Ã´ï¿½ï¿½",
-        deleteMsgTitle: "É¾ï¿½ï¿½Í¼ï¿½ï¿½?",
-        deleteMsg: "ï¿½ï¿½È·ï¿½ï¿½ÒªÉ¾ï¿½ï¿½ï¿½ï¿½Ð©Í¼ï¿½Î£ï¿½",
-        editButtonText: "ï¿½Þ¸ï¿½",
-        editButtonTooltip: "Ê¹ï¿½ï¿½Í¼ï¿½Î¿É±à¼­",
-        deleteButtonText: "É¾ï¿½ï¿½",
-        deleteButtonTooltip: "É¾ï¿½ï¿½ï¿½ï¿½Ò»Í¼ï¿½ï¿½",
-        cancelButtonText: "È¡ï¿½ï¿½",
-        cancelButtonTooltip: "Í£Ö¹ï¿½à¼­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½",
-        saveButtonText: "ï¿½ï¿½ï¿½ï¿½",
-        saveButtonTooltip: "ï¿½ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½"
+        closeMsgTitle: "±£´æÐÞ¸Ä?",
+        closeMsg: "Í¼ÐÎÐÞ¸ÄÎ´±»±£´æ£¬Äú´òËã±£´æÕâÐ©ÐÞ¸ÄÃ´£¿",
+        deleteMsgTitle: "É¾³ýÍ¼ÐÎ?",
+        deleteMsg: "ÄúÈ·¶¨ÒªÉ¾³ýÕâÐ©Í¼ÐÎ£¿",
+        editButtonText: "ÐÞ¸Ä",
+        editButtonTooltip: "Ê¹´ËÍ¼ÐÎ¿É±à¼­",
+        deleteButtonText: "É¾³ý",
+        deleteButtonTooltip: "É¾³ýÕâÒ»Í¼ÐÎ",
+        cancelButtonText: "È¡Ïû",
+        cancelButtonTooltip: "Í£Ö¹±à¼­£¬·ÅÆúÐÞ¸Ä",
+        saveButtonText: "±£´æ",
+        saveButtonTooltip: "±£´æÐÞ¸Ä"
     },
     
     "gxp.FillSymbolizer.prototype": {
-        fillText: "Fillï¿½ï¿½ï¿½ï¿½",
-        colorText: "ï¿½ï¿½É«",
-        opacityText: "Í¸ï¿½ï¿½ï¿½"
+        fillText: "FillÌîÂú",
+        colorText: "ÑÕÉ«",
+        opacityText: "Í¸Ã÷¶È"
     },
     
     "gxp.FilterBuilder.prototype": {
-        builderTypeNames: ["anyï¿½Îºï¿½", "allÈ«ï¿½ï¿½", "noneÃ»ï¿½ï¿½", "not allï¿½ï¿½È«ï¿½ï¿½"],
-        preComboText: "MatchÆ¥ï¿½ï¿½",
+        builderTypeNames: ["anyÈÎºÎ", "allÈ«²¿", "noneÃ»ÓÐ", "not all·ÇÈ«²¿"],
+        preComboText: "MatchÆ¥Åä",
         postComboText: "of the following:",
         addConditionText: "add condition",
-        addGroupText: "ï¿½ï¿½ï¿½ï¿½ï¿½",
+        addGroupText: "Ìí¼Ó×é",
         removeConditionText: "remove condition"
     },
     
     "gxp.grid.CapabilitiesGrid.prototype": {
-        nameHeaderText : "ï¿½ï¿½ï¿½ï¿½",
-        titleHeaderText : "ï¿½ï¿½ï¿½ï¿½",
-        queryableHeaderText : "Queryableï¿½É²ï¿½Ñ¯",
-        layerSelectionLabel: "View available data from:ï¿½é¿´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",
-        layerAdditionLabel: "or add a new server.ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½",
-        expanderTemplateText: "<p><b>Abstract:ï¿½ï¿½ï¿½</b> {abstract}</p>"
+        nameHeaderText : "Ãû×Ö",
+        titleHeaderText : "±êÌâ",
+        queryableHeaderText : "Queryable¿É²éÑ¯",
+        layerSelectionLabel: "View available data from:²é¿´ÏÖÓÐÊý¾Ý",
+        layerAdditionLabel: "or add a new server.»òÌí¼ÓÐÂ·þÎñÆ÷",
+        expanderTemplateText: "<p><b>Abstract:¼ò½é</b> {abstract}</p>"
     },
     
     "gxp.PointSymbolizer.prototype": {
         graphicCircleText: "Ô²",
-        graphicSquareText: "ï¿½ï¿½",
-        graphicTriangleText: "ï¿½ï¿½ï¿½",
-        graphicStarText: "ï¿½ï¿½",
-        graphicCrossText: "Ê®ï¿½ï¿½",
+        graphicSquareText: "·½",
+        graphicTriangleText: "Èý½Ç",
+        graphicStarText: "ÐÇ",
+        graphicCrossText: "Ê®×Ö",
         graphicXText: "x",
         graphicExternalText: "external",
         urlText: "URL",
-        opacityText: "opacityÍ¸ï¿½ï¿½ï¿½",
-        symbolText: "Symbolï¿½ï¿½Ö¾",
-        sizeText: "Sizeï¿½ß´ï¿½",
-        rotationText: "Rotationï¿½ï¿½×ª"
+        opacityText: "opacityÍ¸Ã÷¶È",
+        symbolText: "Symbol±êÖ¾",
+        sizeText: "Size³ß´ç",
+        rotationText: "RotationÐý×ª"
     },
 
     "gxp.QueryPanel.prototype": {
-        queryByLocationText: "ï¿½ï¿½Ý·ï¿½Î»ï¿½ï¿½Ñ¯",
-        currentTextText: "ï¿½ï¿½ï¿½Ð³ß´ï¿½",
-        queryByAttributesText: "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô²ï¿½Ñ¯",
-        layerText: "Í¼ï¿½ï¿½"
+        queryByLocationText: "¸ù¾Ý·½Î»²éÑ¯",
+        currentTextText: "ÏÖÓÐ³ß´ç",
+        queryByAttributesText: "¸ù¾ÝÊôÐÔ²éÑ¯",
+        layerText: "Í¼²ã"
     },
     
     "gxp.RulePanel.prototype": {
-        scaleSliderTemplate: "{scaleType} Scale 1:{scale}ï¿½ï¿½ï¿½ï¿½ 1ï¿½ï¿½",
-        labelFeaturesText: "Label Featuresï¿½ï¿½ï¿½Í¼ï¿½ï¿½",
-        labelsText: "Labelsï¿½ï¿½ï¿½",
-        basicText: "Basicï¿½ï¿½",
-        advancedText: "Advancedï¿½ß¼ï¿½",
+        scaleSliderTemplate: "{scaleType} Scale 1:{scale}±ÈÀý 1£º",
+        labelFeaturesText: "Label Features±ê¼ÇÍ¼ÐÎ",
+        labelsText: "Labels±ê¼Ç",
+        basicText: "Basic»ù±¾",
+        advancedText: "Advanced¸ß¼¶",
         limitByScaleText: "Limit by scale",
         limitByConditionText: "Limit by condition",
-        symbolText: "ï¿½ï¿½Ö¾",
-        nameText: "ï¿½ï¿½ï¿½ï¿½"
+        symbolText: "±êÖ¾",
+        nameText: "Ãû×Ö"
     },
     
     "gxp.ScaleLimitPanel.prototype": {
-        scaleSliderTemplate: "{scaleType} Scale 1:{scale}ï¿½ï¿½ï¿½ï¿½ 1ï¿½ï¿½",
-        minScaleLimitText: "Min scale limitï¿½ï¿½Ð¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",
-        maxScaleLimitText: "Max scale limitï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"
+        scaleSliderTemplate: "{scaleType} Scale 1:{scale}±ÈÀý 1£º",
+        minScaleLimitText: "Min scale limit×îÐ¡±ÈÀý¼«ÏÞ",
+        maxScaleLimitText: "Max scale limit×î´ó±ÈÀý¼«ÏÞ"
     },
     
     "gxp.StrokeSymbolizer.prototype": {
-        solidStrokeName: "Êµï¿½ï¿½",
-        dashStrokeName: "ï¿½ï¿½ï¿½ï¿½",
-        dotStrokeName: "ï¿½ï¿½ï¿½ï¿½",
-        titleText: "ï¿½ß¿ï¿½",
-        styleText: "ï¿½ï¿½Ê½",
-        colorText: "ï¿½ï¿½É«",
-        widthText: "ï¿½ï¿½ï¿½",
-        opacityText: "Í¸ï¿½ï¿½ï¿½"
+        solidStrokeName: "ÊµÏß",
+        dashStrokeName: "ÐéÏß",
+        dotStrokeName: "µãÏß",
+        titleText: "Ïß¿í",
+        styleText: "ÑùÊ½",
+        colorText: "ÑÕÉ«",
+        widthText: "¿í¶È",
+        opacityText: "Í¸Ã÷¶È"
     },
     
     "gxp.StylePropertiesDialog.prototype": {   
-        titleText: "ï¿½ï¿½ï¿½ï¿½",
-        nameFieldText: "ï¿½ï¿½ï¿½",
-        titleFieldText: "ï¿½ï¿½ï¿½ï¿½",
-        abstractFieldText: "ï¿½ï¿½ï¿½"
+        titleText: "³£¹æ",
+        nameFieldText: "Ãû³Æ",
+        titleFieldText: "±êÌâ",
+        abstractFieldText: "¼ò½é"
     },
     
     "gxp.TextSymbolizer.prototype": {
-        labelValuesText: "Label valuesï¿½ï¿½ï¿½ï¿½ï¿½Öµ",
-        haloText: "Haloï¿½ï¿½ï¿½ï¿½",
-        sizeText: "Sizeï¿½ß´ï¿½"
+        labelValuesText: "Label values±ê¼ÇÊýÖµ",
+        haloText: "Halo¹âÔÎ",
+        sizeText: "Size³ß´ç"
     },
     
     "gxp.WMSLayerPanel.prototype": {
-        aboutText: "ï¿½ï¿½ï¿½ï¿½",
-        titleText: "ï¿½ï¿½ï¿½ï¿½",
-        nameText: "ï¿½ï¿½ï¿½ï¿½",
-        descriptionText: "ï¿½ï¿½ï¿½ï¿½",
-        displayText: "ï¿½ï¿½Ê¾",
-        opacityText: "Opacityï¿½ï¿½Í¸ï¿½ï¿½",
-        formatText: "Formatï¿½ï¿½Ê½",
-        transparentText: "TransparentÍ¸ï¿½ï¿½",
-        cacheText: "ï¿½ï¿½ï¿½ï¿½",
-        cacheFieldText: "Use cached versionÊ¹ï¿½Ã»ï¿½ï¿½ï¿½æ±¾",
-        stylesText: "Ê½ï¿½ï¿½",
-        infoFormatText: "Info formatï¿½ï¿½Ê½ï¿½ï¿½Ï¢",
-        infoFormatEmptyText: "Ñ¡ï¿½ï¿½Ò»ï¿½Ö¸ï¿½Ê½"
+        aboutText: "¹ØÓÚ",
+        titleText: "±êÌâ",
+        nameText: "Ãû×Ö",
+        descriptionText: "ÃèÊö",
+        displayText: "ÏÔÊ¾",
+        opacityText: "Opacity°ëÍ¸Ã÷",
+        formatText: "Format¸ñÊ½",
+        transparentText: "TransparentÍ¸Ã÷",
+        cacheText: "»º´æ",
+        cacheFieldText: "Use cached versionÊ¹ÓÃ»º´æ°æ±¾",
+        stylesText: "Ê½Ñù",
+        infoFormatText: "Info format¸ñÊ½ÐÅÏ¢",
+        infoFormatEmptyText: "Ñ¡ÔñÒ»ÖÖ¸ñÊ½"
     },
 
     "gxp.EmbedMapDialog.prototype": {
-        publishMessage: "ï¿½ï¿½Äµï¿½Í¼ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ë¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½HTMLï¿½Ô½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¾",
-        heightLabel: 'ï¿½ï¿½',
-        widthLabel: 'ï¿½ï¿½',
-        mapSizeLabel: 'ï¿½ï¿½Í¼ï¿½ï¿½Ð¡',
-        miniSizeLabel: 'ï¿½ï¿½ï¿½ï¿½',
+        publishMessage: "ÄúµÄµØÍ¼ÒÑ¾­¿ÉÒÔÔÚÍøÉÏ·¢²¼£¡Çë¿½±´ÒÔÏÂHTMLÒÔ½«µØÍ¼²åÈëÄúµÄÍøÕ¾",
+        heightLabel: '¸ß',
+        widthLabel: '¿í',
+        mapSizeLabel: 'µØÍ¼´óÐ¡',
+        miniSizeLabel: 'ÃÔÄã',
         smallSizeLabel: 'Ð¡',
-        premiumSizeLabel: 'ï¿½ï¿½ï¿½',
-        largeSizeLabel: 'ï¿½ï¿½'
+        premiumSizeLabel: '×î¼Ñ',
+        largeSizeLabel: '´ó'
     },
     
     "gxp.WMSStylesDialog.prototype": {
-         addStyleText: "ï¿½ï¿½ï¿½",
-         addStyleTip: "ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½",
-         chooseStyleText: "Ñ¡ï¿½ï¿½Ê½ï¿½ï¿½",
-         deleteStyleText: "ï¿½Æ³ï¿½",
-         deleteStyleTip: "Delete the selected styleÉ¾ï¿½ï¿½Ñ¡Ê½ï¿½ï¿½",
-         editStyleText: "ï¿½Þ¸ï¿½",
-         editStyleTip: "Edit the selected styleï¿½Þ¸Ä±ï¿½ï¿½ï¿½Ê½ï¿½ï¿½",
-         duplicateStyleText: "ï¿½ï¿½ï¿½ï¿½",
-         duplicateStyleTip: "Duplicate the selected styleï¿½ï¿½ï¿½Æ±ï¿½Ñ¡Ê½ï¿½ï¿½",
-         addRuleText: "ï¿½ï¿½ï¿½",
-         addRuleTip: "ï¿½ï¿½ï¿½ï¿½Â¹ï¿½ï¿½ï¿½",
-         newRuleText: "ï¿½Â¹ï¿½ï¿½ï¿½",
-         deleteRuleText: "ï¿½Æ³ï¿½",
-         deleteRuleTip: "É¾ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½",
-         editRuleText: "ï¿½Þ¸ï¿½",
-         editRuleTip: "ï¿½Þ¸Ä±ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½",
-         duplicateRuleText: "ï¿½ï¿½ï¿½ï¿½",
-         duplicateRuleTip: "ï¿½ï¿½ï¿½Æ±ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½",
-         cancelText: "È¡ï¿½ï¿½",
-         saveText: "ï¿½ï¿½ï¿½ï¿½",
+         addStyleText: "Ìí¼Ó",
+         addStyleTip: "Ìí¼ÓÐÂÊ½Ñù",
+         chooseStyleText: "Ñ¡ÔñÊ½Ñù",
+         deleteStyleText: "ÒÆ³ý",
+         deleteStyleTip: "Delete the selected styleÉ¾³ý±»Ñ¡Ê½Ñù",
+         editStyleText: "ÐÞ¸Ä",
+         editStyleTip: "Edit the selected styleÐÞ¸Ä±»ºÃÊ½Ñù",
+         duplicateStyleText: "¸´ÖÆ",
+         duplicateStyleTip: "Duplicate the selected style¸´ÖÆ±»Ñ¡Ê½Ñù",
+         addRuleText: "Ìí¼Ó",
+         addRuleTip: "Ìí¼ÓÐÂ¹æÔò",
+         newRuleText: "ÐÂ¹æÔò",
+         deleteRuleText: "ÒÆ³ý",
+         deleteRuleTip: "É¾³ý±»Ñ¡¹æÔò",
+         editRuleText: "ÐÞ¸Ä",
+         editRuleTip: "ÐÞ¸Ä±»Ñ¡¹æÔò",
+         duplicateRuleText: "¸´ÖÆ",
+         duplicateRuleTip: "¸´ÖÆ±»Ñ¡¹æÔò",
+         cancelText: "È¡Ïû",
+         saveText: "±£´æ",
          styleWindowTitle: "User Style: {0}",
          ruleWindowTitle: "Style Rule: {0}",
-         stylesFieldsetTitle: "Ê½ï¿½ï¿½",
-         rulesFieldsetTitle: "ï¿½ï¿½ï¿½ï¿½"
+         stylesFieldsetTitle: "Ê½Ñù",
+         rulesFieldsetTitle: "¹æÔò"
     },
 
     "gxp.LayerUploadPanel.prototype": {
-        titleLabel: "ï¿½ï¿½ï¿½ï¿½",
-        titleEmptyText: "Í¼ï¿½ï¿½ï¿½ï¿½ï¿½",
-        abstractLabel: "ï¿½ï¿½ï¿½ï¿½",
-        abstractEmptyText: "Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",
-        fileLabel: "ï¿½ï¿½ï¿½",
-        fieldEmptyText: "Browse for data archive...ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ýµï¿½ï¿½ï¿½...",
-        uploadText: "ï¿½Ï´ï¿½",
-        waitMsgText: "ï¿½Ï´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",
+        titleLabel: "±êÌâ",
+        titleEmptyText: "Í¼²ã±êÌâ",
+        abstractLabel: "ÃèÊö",
+        abstractEmptyText: "Í¼²ãÃèÊö",
+        fileLabel: "Êý¾Ý",
+        fieldEmptyText: "Browse for data archive...ËÑË÷Êý¾Ýµµ°¸...",
+        uploadText: "ÉÏ´«",
+        waitMsgText: "ÉÏ´«ÄúµÄÊý¾Ý",
         invalidFileExtensionText: "File extension must be one of: ",
         optionsText: "Options",
-        workspaceLabel: "Workspaceï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",
-        workspaceEmptyText: "Default workspaceÄ¬ï¿½Ï¹ï¿½ï¿½ï¿½ï¿½ï¿½",
+        workspaceLabel: "Workspace¹¤×÷Çø",
+        workspaceEmptyText: "Default workspaceÄ¬ÈÏ¹¤×÷Çø",
         dataStoreLabel: "Store",
         dataStoreEmptyText: "Create new store",
         defaultDataStoreEmptyText: "Default data store"
     },
     
     "gxp.NewSourceDialog.prototype": {
-        title: "ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½...",
-        cancelText: "È¡ï¿½ï¿½",
-        addServerText: "ï¿½ï¿½Ó·ï¿½ï¿½ï¿½ï¿½ï¿½",
-        invalidURLText: "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð§ï¿½ï¿½URLï¿½ï¿½ï¿½ï¿½ï¿½WMSï¿½Ëµï¿½(ï¿½ï¿½ï¿½ï¿½http://example.com/geoserver/wms)",
-        contactingServerText: "ï¿½ï¿½Ó·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½..."
+        title: "Ìí¼ÓÐÂ·þÎñÆ÷...",
+        cancelText: "È¡Ïû",
+        addServerText: "Ìí¼Ó·þÎñÆ÷",
+        invalidURLText: "ÇëÌí¼ÓÓÐÐ§µÄURLÒÔÁª½ÓWMS¶Ëµã(±ÈÈçhttp://example.com/geoserver/wms)",
+        contactingServerText: "Áª½Ó·þÎñÆ÷ÖÐ..."
     },
 
     "gxp.ScaleOverlay.prototype": { 
