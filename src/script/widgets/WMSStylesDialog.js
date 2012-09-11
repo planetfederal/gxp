@@ -402,7 +402,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 }
             },
             listeners: {
-                "close": function() {
+                "beforedestroy": function() {
                     this.selectedStyle.set(
                         "userStyle",
                         styleProperties.propertiesDialog.userStyle);
