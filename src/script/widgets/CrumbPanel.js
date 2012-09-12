@@ -83,6 +83,7 @@ gxp.CrumbPanel = Ext.extend(Ext.TabPanel, {
         //TODO investigate why hidden components are displayed again when
         // another crumb is activated - this just works around the issue
         cmp.getEl().dom.style.display = "none";
+        this.activeTab.doLayout();
     },
     
     /** private: method[onRender]
