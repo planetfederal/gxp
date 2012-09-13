@@ -479,6 +479,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             visible: checked
         });
         // set visibility on the OL layer as well
+        // this was needed to actually get features to be retrieved by the 
+        // BBOX strategy, but leads to the points being visible in the map
+        // as a side effect, so we need to work with an invisible style.
         if (this.layerLookup[keyToMatch].layer) {
             this.layerLookup[keyToMatch].layer.setVisibility(checked);
         }
@@ -1527,6 +1530,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             filter: filter,
             protocol: protocol,
             displayInLayerSwitcher: false,
+            style: {
+                pointRadius: 0,
+                strokeWidth: 0,
+                fillOpacity: 1
+            },
             visibility: false
         });
         layer.events.on({
