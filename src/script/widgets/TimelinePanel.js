@@ -1799,6 +1799,16 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  Add some features to the timeline.
      */    
     addFeatures: function(key, features) {
+        var hasFeature = function(fid) {
+            var iterator = this.eventSource.getAllEventIterator();
+            while (iterator.hasNext()) {
+                var evt = iterator.next();
+                if (evt.getProperty('key') === key && evt.getProperty('fid') === fid) {
+                    return true;
+                }
+            }
+            return false;
+        };
         var isDuration = false;
         var titleAttr = this.layerLookup[key].titleAttr;
         var timeAttr = this.layerLookup[key].timeAttr;
@@ -1810,56 +1820,59 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         var num = features.length;
         var events = [];
         var attributes, str;
-        for (var i=0; i<num; ++i) { 
-            attributes = features[i].attributes;
-            if (isDuration === false) {
-                events.push({
-                    start: OpenLayers.Date.parse(attributes[timeAttr]),
-                    title: attributes[titleAttr],
-                    durationEvent: false,
-                    key: key,
-                    icon: this.layerLookup[key].icon,
-                    fid: features[i].fid
-                });
-            } else if (Ext.isBoolean(attributes[filterAttr]) ? attributes[filterAttr] : (attributes[filterAttr] === "true")) {
-                var start = attributes[timeAttr];
-                var end = attributes[endTimeAttr];
-                // end is optional
-                var durationEvent = (start != end);
-                if (!Ext.isEmpty(start)) {
-                    start = parseFloat(start);
-                    if (Ext.isNumber(start)) {
-                        start = new Date(start*1000);
+        for (var i=0; i<num; ++i) {
+            // prevent duplicates
+            if (hasFeature.call(this, features[i].fid) === false) {
+                attributes = features[i].attributes;
+                if (isDuration === false) {
+                    events.push({
+                        start: OpenLayers.Date.parse(attributes[timeAttr]),
+                        title: attributes[titleAttr],
+                        durationEvent: false,
+                        key: key,
+                        icon: this.layerLookup[key].icon,
+                        fid: features[i].fid
+                    });
+                } else if (Ext.isBoolean(attributes[filterAttr]) ? attributes[filterAttr] : (attributes[filterAttr] === "true")) {
+                    var start = attributes[timeAttr];
+                    var end = attributes[endTimeAttr];
+                    // end is optional
+                    var durationEvent = (start != end);
+                    if (!Ext.isEmpty(start)) {
+                        start = parseFloat(start);
+                        if (Ext.isNumber(start)) {
+                            start = new Date(start*1000);
+                        } else {
+                            start = OpenLayers.Date.parse(start);
+                        }
+                    }
+                    if (!Ext.isEmpty(end)) {
+                        end = parseFloat(end);
+                        if (Ext.isNumber(end)) {
+                            end = new Date(end*1000);
+                        } else {
+                            end = OpenLayers.Date.parse(end);
+                        }
+                    }
+                    if (durationEvent === false) {
+                        end = undefined;
                     } else {
-                        start = OpenLayers.Date.parse(start);
+                        if (end == "" || end == null) {
+                            // Simile does not deal with unlimited ranges, so let's
+                            // take the range from the playback control
+                            end = this.playbackTool.playbackToolbar.control.range[1];
+                        }
                     }
+                    events.push({
+                        start: start,
+                        end: end,
+                        icon: this.layerLookup[key].icon,
+                        title: attributes[titleAttr],
+                        durationEvent: durationEvent,
+                        key: key,
+                        fid: features[i].fid
+                    });
                 }
-                if (!Ext.isEmpty(end)) {
-                    end = parseFloat(end);
-                    if (Ext.isNumber(end)) {
-                        end = new Date(end*1000);
-                    } else {
-                        end = OpenLayers.Date.parse(end);
-                    }
-                }
-                if (durationEvent === false) {
-                    end = undefined;
-                } else {
-                    if (end == "" || end == null) {
-                        // Simile does not deal with unlimited ranges, so let's
-                        // take the range from the playback control
-                        end = this.playbackTool.playbackToolbar.control.range[1];
-                    }
-                }
-                events.push({
-                    start: start,
-                    end: end,
-                    icon: this.layerLookup[key].icon,
-                    title: attributes[titleAttr],
-                    durationEvent: durationEvent,
-                    key: key,
-                    fid: features[i].fid
-                });
             }
         }       
         var feed = {
