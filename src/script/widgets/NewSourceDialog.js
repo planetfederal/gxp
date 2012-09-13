@@ -79,7 +79,15 @@ gxp.NewSourceDialog = Ext.extend(Ext.Panel, {
             allowBlank: false,
             width: 240,
             msgTarget: "under",
-            validator: this.urlValidator.createDelegate(this)
+            validator: this.urlValidator.createDelegate(this),
+            listeners: {
+                specialkey: function(f, e) {
+                    if (e.getKey() === e.ENTER) {
+                        this.addServer();
+                    }
+                },
+                scope: this
+            }
         });
 
         this.form = new Ext.form.FormPanel({
@@ -90,7 +98,13 @@ gxp.NewSourceDialog = Ext.extend(Ext.Panel, {
             labelWidth: 30,
             bodyStyle: "padding: 5px",
             autoWidth: true,
-            autoHeight: true
+            autoHeight: true,
+            listeners: {
+                afterrender: function() {
+                    this.urlTextField.focus(false, true);
+                },
+                scope: this
+            }
         });
 
         this.bbar = [
@@ -103,13 +117,7 @@ gxp.NewSourceDialog = Ext.extend(Ext.Panel, {
             new Ext.Button({
                 text: this.addServerText,
                 iconCls: "add",
-                handler: function() {
-                    // Clear validation before trying again.
-                    this.error = null;
-                    if (this.urlTextField.validate()) {
-                        this.fireEvent("urlselected", this, this.urlTextField.getValue());
-                    }
-                },
+                handler: this.addServer,
                 scope: this
             })
         ];
@@ -138,6 +146,16 @@ gxp.NewSourceDialog = Ext.extend(Ext.Panel, {
             this.addSource(url, this.hide, failure, this);
         }, this);
 
+    },
+    
+    /** private: method[addServer]
+     */
+    addServer: function() {
+        // Clear validation before trying again.
+        this.error = null;
+        if (this.urlTextField.validate()) {
+            this.fireEvent("urlselected", this, this.urlTextField.getValue());
+        }
     },
     
     /** API: method[reset]
