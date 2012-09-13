@@ -383,6 +383,8 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                 listeners: {
                     select: function(combo, record) {
                         this.symbolizer.labelAlign = combo.getValue();
+                        delete this.symbolizer.labelAnchorPointX;
+                        delete this.symbolizer.labelAnchorPointY;
                         this.fireEvent("change", this.symbolizer);
                     },
                     scope: this
