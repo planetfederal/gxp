@@ -198,7 +198,7 @@ GeoExt.Lang.add("en", {
     
     "gxp.plugins.ZoomToSelectedFeatures.prototype": {
         menuText: "聚焦到被选图形",
-        tooltip: "聚焦到被选图形","
+        tooltip: "聚焦到被选图形"
     },
 
     "gxp.FeatureEditPopup.prototype": {
