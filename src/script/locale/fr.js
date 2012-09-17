@@ -118,7 +118,7 @@ GeoExt.Lang.add("fr", {
 
     "gxp.plugins.OSMSource.prototype": {
         title: "Calques OpenStreetMap",
-        mapnikAttribution: "Données CC-By-SA par <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
+        mapnikAttribution: "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors",
         osmarenderAttribution: "Données CC-By-SA par <a href='http://openstreetmap.org/'>OpenStreetMap</a>"
     },
 

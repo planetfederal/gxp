@@ -453,7 +453,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             original = this.store.getAt(index);
         } else if (Ext.isObject(config.capability)) {
             original = this.store.reader.readRecords({capability: {
-                request: {getmap: {href: this.url}},
+                request: {getmap: {href: this.trimUrl(this.url, this.baseParams)}},
                 layers: [config.capability]}
             }).records[0];
         } else if (this.layerConfigComplete(config)) {

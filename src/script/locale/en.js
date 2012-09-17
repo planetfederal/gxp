@@ -122,7 +122,7 @@ GeoExt.Lang.add("en", {
 
     "gxp.plugins.OSMSource.prototype": {
         title: "OpenStreetMap Layers",
-        mapnikAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
+        mapnikAttribution: "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors",
         osmarenderAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>"
     },
 
