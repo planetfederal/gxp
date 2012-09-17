@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
- * 
+ *
  * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
@@ -21,17 +21,18 @@ Ext.namespace("gxp");
 
 /** api: constructor
  *  .. class:: PlaybackToolbar(config)
- *   
- *      Create a panel for showing a ScaleLine control and a combobox for 
+ *
+ *      Create a panel for showing a ScaleLine control and a combobox for
  *      selecting the map scale.
  */
 gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
-    
+
     /** api: config[control]
      *  ``OpenLayers.Control`` or :class:`OpenLayers.Control.TimeManager`
      *  The control to configure the playback panel with.
      */
     control: null,
+    dimModel: null,
     mapPanel: null,
     initialTime:null,
     timeFormat:"l, F d, Y g:i:s A",
@@ -40,7 +41,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
     slider:true,
     dynamicRange:false,
     //api config
-    //playback mode is one of: "track","cumulative","ranged",??"decay"??
+    //playback mode is one of: "track","cumulative","ranged"
     playbackMode:"track",
     showIntervals:false,
     labelButtons:false,
@@ -59,7 +60,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
     playing: false,
     // api config
     //playbackActions, default: ["settings","reset","play","fastforward","next","loop"]; also available are "pause" and "end"
-    
+
     //i18n
     /** api: config[playLabel]
      *  ``String``
@@ -90,13 +91,12 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
      */
     initComponent: function() {
         if(!this.playbackActions){
-            this.playbackActions = ["settings","slider","reset","play","fastforward","next","loop"]; 
+            this.playbackActions = ["settings","slider","reset","play","fastforward","next","loop"];
         }
         if(!this.control){
             this.controlConfig = Ext.applyIf(this.controlConfig || {}, {
                 dimension: 'time',
-                autoSync: true,
-                snapToList: true
+                autoSync: false
             });
             this.control = this.buildTimeManager();
         }
@@ -109,9 +109,16 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
             },
             scope: this
         });
-        
+
+        if(!this.dimModel){
+            this.dimModel = new OpenLayers.Dimension.Model({
+                dimension: 'time',
+                map: this.mapPanel.map,
+            });
+        }
+
         this.availableTools = Ext.applyIf(this.availableTools || {}, this.getAvailableTools());
-        
+
         Ext.applyIf(this,{
             defaults:{xtype:'button',flex:1,scale:'small'},
             items:this.buildPlaybackItems(),
@@ -141,9 +148,9 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
              * range - {Array(Date)} The current time range for playback allowed in the
              *      TimeManager control attached to this toolbar
              */
-            "rangemodified"            
+            "rangemodified"
         );
-        gxp.PlaybackToolbar.superclass.initComponent.call(this);        
+        gxp.PlaybackToolbar.superclass.initComponent.call(this);
     },
     /** private: method[destroy]
      *  Destory the component.
@@ -163,7 +170,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
      *  :return: {Boolean} - true if the time could be set to the supplied value
      *          false if the time is outside the current range of the TimeManager
      *          control.
-     *          
+     *
      *  Set the time represented by the playback toolbar programatically
      */
     setTime: function(time){
@@ -177,9 +184,9 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
     },
     /** api: method[setTimeFormat]
      *  :arg format: {String}
-     *  
+     *
      *  Set the format string used by the time slider tooltip
-     */    
+     */
     setTimeFormat: function(format){
         if(format){
             this.timeFormat = format;
@@ -189,7 +196,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
     /** api: method[setPlaybackMode]
      * :arg mode: {String} one of 'track',
      * 'cumulative', or 'ranged'
-     *  
+     *
      *  Set the playback mode of the control.
      */
     setPlaybackMode: function(mode){
@@ -217,13 +224,14 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         return items;
     },
 
-    getAvailableTools: function(){         
+    getAvailableTools: function(){
         var tools = {
             'slider': {
                 xtype: 'gxp_timeslider',
                 ref: 'slider',
                 map: this.mapPanel.map,
                 timeManager: this.control,
+                model: this.dimModel,
                 playbackMode: this.playbackMode
             },
             'reset': {
@@ -343,7 +351,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                     //are required to distinguish the same layer added multiple times with a different
                     //style or presentation
                     var ndx = this.mapPanel.layers.findBy(function(rec) {
-                        return rec.json && 
+                        return rec.json &&
                         rec.json.source == lyrJson.source &&
                         rec.json.title == lyrJson.title &&
                         rec.json.name == lyrJson.name &&
@@ -401,8 +409,8 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         }
         return ctl;
     },
-    
-/** BUTTON HANDLERS **/    
+
+/** BUTTON HANDLERS **/
     forwardToEnd: function(btn){
         var ctl = this.control;
         ctl.setTime(new Date(ctl.range[(ctl.step < 0) ? 0 : 1].getTime()));
@@ -426,7 +434,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
             });
             btn.bound=true;
         }
-        
+
         if(pressed){
             if(!this.playing){
                 //don't start playing again if it is already playing
@@ -444,7 +452,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
             btn.btnEl.removeClass('gxp-icon-pause');
             btn.setTooltip(this.playTooltip);
         }
-        
+
         btn.el.removeClass('x-btn-pressed');
         btn.refOwner.btnFastforward.setDisabled(!pressed);
         if(this.labelButtons && btn.text){
