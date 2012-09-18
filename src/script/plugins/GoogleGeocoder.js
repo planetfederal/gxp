@@ -34,24 +34,9 @@ gxp.plugins.GoogleGeocoder = Ext.extend(gxp.plugins.Tool, {
     /** api: ptype = gxp_googlegeocoder */
     ptype: "gxp_googlegeocoder",
 
-    /** api: config[updateField]
-     *  ``String``
-     *  If value is specified, when an item is selected in the combo, the map
-     *  will be zoomed to the corresponding field value in the selected record.
-     *  If ``null``, no map navigation will occur.  Valid values are the field
-     *  names described for the :class:`gxp.form.GoogleGeocoderComboBox`.
-     *  Default is "viewport".
-     */
-    updateField: "viewport",
-    
     init: function(target) {
 
-        var combo = new gxp.form.GoogleGeocoderComboBox(Ext.apply({
-            listeners: {
-                select: this.onComboSelect,
-                scope: this
-            }
-        }, this.outputConfig));
+        var combo = new gxp.form.GoogleGeocoderComboBox(this.outputConfig);
         
         var bounds = target.mapPanel.map.restrictedExtent;
         if (bounds && !combo.bounds) {
@@ -74,24 +59,6 @@ gxp.plugins.GoogleGeocoder = Ext.extend(gxp.plugins.Tool, {
      */
     addOutput: function(config) {
         return gxp.plugins.GoogleGeocoder.superclass.addOutput.call(this, this.combo);
-    },
-    
-    /** private: method[onComboSelect]
-     *  Listener for combo's select event.
-     */
-    onComboSelect: function(combo, record) {
-        if (this.updateField) {
-            var map = this.target.mapPanel.map;
-            var location = record.get(this.updateField).clone().transform(
-                new OpenLayers.Projection("EPSG:4326"),
-                map.getProjectionObject()
-            );
-            if (location instanceof OpenLayers.Bounds) {
-                map.zoomToExtent(location, true);
-            } else {
-                map.setCenter(location);
-            }
-        }
     }
 
 });
