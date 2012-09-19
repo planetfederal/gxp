@@ -1,13 +1,13 @@
 /**
  * Copyright (c) 2008-2012 The Open Planning Project
- * 
+ *
  * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  * @requires OpenLayers/Control/DimensionManager.js
  * @requires OpenLayers/Dimension/Agent.js
  */
- 
+
 /** api: (define)
  *  module = gxp.slider
  *  class = TimeSlider
@@ -26,15 +26,29 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
     playbackMode : 'track',
     autoPlay : false,
     map: null,
+    conflicts: null,
     initComponent : function() {
         if(!this.timeManager) {
             this.timeManager = new OpenLayers.Control.DimensionManager({dimension: 'time'});
             this.map.addControl(this.timeManager);
         }
-                
+
+        if(!this.model){
+            this.model = this.timeManager.model;
+        }
+
         if(this.timeManager.agents) {
-            if(!this.timeManager.timeUnits) {
-                this.timeManager.guessPlaybackRate();
+            if(!this.timeManager.timeUnits && !this.timeManager.snapToList) {
+                if(this.model.values && !this.model.resolution && this.timeManager.snapToList !== false){
+                    this.timeManager.snapToList = true;
+                }
+                if(this.model.resolution && !this.model.values && this.model.timeUnits){
+                    this.timeManager.timeUnits = this.model.timeUnits;
+                    this.timeManager.step = this.model.timeStep;
+                }
+                if(this.model.values && this.model.resolution){
+                    this.manageConflict();
+                }
             }
             if(this.playbackMode && this.playbackMode != 'track') {
                 if(this.timeManager.timeUnits) {
@@ -42,7 +56,7 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
                 }
             }
         }
-        
+
         var sliderInfo = this.buildSliderValues();
         if(sliderInfo) {
             this.timeManager.guessPlaybackRate();
@@ -67,13 +81,19 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
             Ext.applyIf(this.initialConfig, initialSettings);
             Ext.apply(this, this.initialConfig);
         }
-        
+
         this.timeManager.events.on({
-            'rangemodified': this.onRangeModified,
             'tick': this.onTimeTick,
             scope: this
         });
-        
+
+        this.model.events.on({
+            'rangemodified': this.onModelModified,
+            'valuesmodified': this.onModelModified,
+            'resolutionmodified': this.onModelModified,
+            scope: this
+        });
+
         this.plugins = (this.plugins || []).concat(
             [new Ext.slider.Tip({getText:this.getThumbText})]);
 
@@ -119,7 +139,7 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
     /** api: method[setPlaybackMode]
      * :arg mode: {String} one of 'track',
      * 'cumulative', or 'ranged'
-     *  
+     *
      *  Set the playback mode of the control.
      */
     setPlaybackMode: function(mode){
@@ -132,13 +152,78 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
         }
         this.setThumbStyles();
     },
-    
+
     setTimeFormat : function(format){
         if(format){
             this.timeFormat = format;
         }
     },
-    
+
+    onModelModified : function(evt){
+        var model = this.model || evt.object;
+        var manager = this.timeManager;
+        var lastLayer = model.layers.slice(-1).pop();
+        var lastInfo = lastLayer.metadata[this.dimension + 'Info'];
+        var conflictType, conflict;
+        switch (evt.type){
+            case 'rangemodified':
+                //range modified. test for non overlapping ranges
+                var overlap = lastInfo.range[0] >= manager.animationRange[0] || lastInfo.range[1] <= manager.animationRange[1];
+                if(!overlap){
+                    conflictType = 'rangeoverlap';
+                } else{
+                    conflictType = 'range';
+                }
+                conflict = {
+                    type: conflictType,
+                    layer: lastLayer,
+                    layerRange: lastInfo.range,
+                    controlRange: manager.animationRange
+                };
+                break;
+
+            case 'resolutionmodified':
+                //resolution changed. test for no previous resolution
+                var nores = !evt.prevResolution && evt.prevResolution !== 0;
+                if(nores){
+                    conflictType = 'resolutionmissing';
+                } else {
+                    conflictType = 'resolution';
+                }
+                conflict = {
+                    type: conflictType,
+                    layer: lastLayer,
+                    layerResolution: {
+                        step: lastInfo.timeStep,
+                        units: lastInfo.timeUnits
+                    },
+                    controlResolution: (!nores) ? evt.prevResolution : null
+                };
+                break;
+
+            case 'valuesmodified':
+                //test for no previous values
+                var novals = !evt.prevValues || !evt.prevValues.length;
+                if(novals){
+                    conflictType = 'valuesmissing';
+                } else {
+                    conflictType = 'values';
+                }
+                conflict = {
+                    type: conflictType,
+                    layer: lastLayer,
+                    layerValues: lastInfo.values,
+                    controlValues: (!novals) ? evt.prevValues : null
+                };
+                break;
+        }
+        this.conflicts = this.conflicts || [];
+        this.conflicts.push(conflict);
+        //ensure that we don't call the conflict manager until all
+        //conflicts are identified
+        Ext.util.DelayedTask(this.manageConflict, this, [this.conflicts]).delay(100);
+    },
+
     onRangeModified : function(evt) {
         var ctl = evt.object;
         if(!ctl.agents || !ctl.agents.length) {
@@ -165,7 +250,7 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
             }
         }
     },
-    
+
     onTimeTick : function(evt) {
         var currentVal = evt.currentValue;
         if (currentVal) {
@@ -181,12 +266,12 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
             toolbar.fireEvent('timechange', toolbar, currentVal);
         }
     },
-    
+
     updateTimeDisplay: function(){
         this.sliderTip.onSlide(this,null,this.thumbs[0]);
         this.sliderTip.el.alignTo(this.el, 'b-t?', this.offsets);
     },
-    
+
     buildSliderValues : function() {
         var mngr = this.timeManager;
         if(!mngr.step && !mngr.snapToIntervals){
@@ -194,12 +279,12 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
             return false;
         }
         else{
-            var indexMap = ['primary'], 
-                values = [mngr.currentValue], 
-                min = mngr.animationRange[0], 
+            var indexMap = ['primary'],
+                values = [mngr.currentValue],
+                min = mngr.animationRange[0],
                 max = mngr.animationRange[1],
                 interval = false;
-                
+
             if(this.dynamicRange) {
                 var rangeAdj = (min - max) * 0.1;
                 values.push( min = min - rangeAdj, max = max + rangeAdj);
@@ -268,7 +353,7 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
             tailThumb.constrain = false;
             headThumb.constrain = false;
         }
-    },    
+    },
 
     getThumbText: function(thumb) {
         if(thumb.slider.indexMap[thumb.index] != 'tail') {
@@ -286,7 +371,7 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
         switch (slider.indexMap[thumb.index]) {
             case 'primary':
                 //if we have a tail slider, then the range interval should be updated first
-                var tailIndex = slider.indexMap.indexOf('tail'); 
+                var tailIndex = slider.indexMap.indexOf('tail');
                 if (tailIndex>-1){
                     slider.onSliderChangeComplete(slider,slider.thumbs[tailIndex].value,slider.thumbs[tailIndex],true);
                 }
@@ -308,7 +393,7 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
             case 'tail':
                 for (var i = 0, len = timeManager.timeAgents.length; i < len; i++) {
                     if(timeManager.timeAgents[i].rangeMode == 'range'){
-                        timeManager.timeAgents[i].rangeInterval = (slider.thumbs[0].value - value);  
+                        timeManager.timeAgents[i].rangeInterval = (slider.thumbs[0].value - value);
                     }
                 }
                 if(!silent){
@@ -319,6 +404,20 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
             delete this._restartPlayback;
             timeManager.play();
         }
+    },
+
+    manageConflict: function(conflicts){
+        Ext.Msg.confirm('Time Conflicts Found', 'There were '+ conflicts.length + 'inconsistencies between the layer you just added and the ' +
+            'existing playback control options. \n Are you sure you want to add this layer? \n '+
+            'Pressing YES will open the Playback Options. NO will remove the layer you just added',
+            function(btn, text){
+                if(btn == 'yes'){
+                    alert('find the playback options');
+                } else {
+                    alert('remove the layer');
+                }
+            },
+            this);
     }
 
 });

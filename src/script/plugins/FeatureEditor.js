@@ -471,8 +471,15 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                                 }
                             },
                             "featuremodified": function(popup, feature) {
-                                popup.disable();
                                 featureStore.on({
+                                    beforesave: {
+                                        fn: function() {
+                                            if (popup && popup.isVisible()) {
+                                                popup.disable();
+                                            }
+                                        },
+                                        single: true
+                                    },
                                     write: {
                                         fn: function() {
                                             if (popup) {

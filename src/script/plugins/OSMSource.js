@@ -69,7 +69,7 @@ gxp.plugins.OSMSource = Ext.extend(gxp.plugins.LayerSource, {
      *  ``String``
      *  Attribution string for mapnik generated layer (i18n).
      */
-    mapnikAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/' target='_blank'>OpenStreetMap</a>",
+    mapnikAttribution: "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors",
 
     /** api: config[homeAttribution]
      *  ``String``

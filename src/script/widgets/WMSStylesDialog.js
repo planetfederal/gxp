@@ -184,7 +184,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      *  add the dialogue to a container.
      */
     dialogCls: Ext.Window,
-        
+
     /** private: method[initComponent]
      */
     initComponent: function() {
@@ -402,7 +402,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 }
             },
             listeners: {
-                "close": function() {
+                "beforedestroy": function() {
                     this.selectedStyle.set(
                         "userStyle",
                         styleProperties.propertiesDialog.userStyle);
@@ -472,7 +472,9 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      *  the last rule.
      */
     updateRuleRemoveButton: function() {
-        this.items.get(3).items.get(1).setDisabled(!this.selectedRule);
+        this.items.get(3).items.get(1).setDisabled(
+            !this.selectedRule || this.items.get(2).items.get(0).rules.length < 2
+        );
     },
     
     /** private: method[createRule]
@@ -560,7 +562,9 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
     /** private: method[removeRule]
      */
     removeRule: function() {
-        this.selectedStyle.get("userStyle").rules.remove(this.selectedRule);
+        var selectedRule = this.selectedRule;
+        this.items.get(2).items.get(0).unselect();
+        this.selectedStyle.get("userStyle").rules.remove(selectedRule);
         // mark the style as modified
         this.afterRuleChange();
     },
