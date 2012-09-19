@@ -9,6 +9,7 @@
 /**
  * @requires OpenLayers/Control/DimensionManager.js
  * @requires OpenLayers/Dimension/Agent.js
+ * @requires OpenLayers/Dimension/Agent/WMS.js
  * @requires widgets/slider/TimeSlider.js
  */
 
@@ -22,8 +23,7 @@ Ext.namespace("gxp");
 /** api: constructor
  *  .. class:: PlaybackToolbar(config)
  *   
- *      Create a panel for showing a ScaleLine control and a combobox for 
- *      selecting the map scale.
+ *      Create a toolbar for showing a series of playback controls.
  */
 gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
     
@@ -358,8 +358,8 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
 
                 config.layers = layers;
                 delete config.type;
-                //TODO handle subclasses of TimeAgent subclasses
-                var agent = agentClass ? new OpenLayers.TimeAgent[agentClass](config) : new OpenLayers.TimeAgent(config);
+                //TODO handle other subclasses of Dimension Agent subclasses
+                var agent = agentClass ? new OpenLayers.Dimension.Agent[agentClass](config) : new OpenLayers.Dimension.Agent(config);
                 this.controlConfig.timeAgents[i] = agent;
             }
         }
