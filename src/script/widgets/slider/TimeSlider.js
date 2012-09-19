@@ -1,13 +1,13 @@
 /**
  * Copyright (c) 2008-2012 The Open Planning Project
- *
+ * 
  * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
- * @requires OpenLayers/Control/DimensionManager.js
- * @requires OpenLayers/Dimension/Agent.js
+ * @requires OpenLayers/Control/TimeManager.js
+ * @requires OpenLayers/TimeAgent.js
  */
-
+ 
 /** api: (define)
  *  module = gxp.slider
  *  class = TimeSlider
@@ -26,37 +26,23 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
     playbackMode : 'track',
     autoPlay : false,
     map: null,
-    conflicts: null,
     initComponent : function() {
         if(!this.timeManager) {
-            this.timeManager = new OpenLayers.Control.DimensionManager({dimension: 'time'});
+            this.timeManager = new OpenLayers.Control.TimeManager();
             this.map.addControl(this.timeManager);
         }
-
-        if(!this.model){
-            this.model = this.timeManager.model;
-        }
-
-        if(this.timeManager.agents) {
-            if(!this.timeManager.timeUnits && !this.timeManager.snapToList) {
-                if(this.model.values && !this.model.resolution && this.timeManager.snapToList !== false){
-                    this.timeManager.snapToList = true;
-                }
-                if(this.model.resolution && !this.model.values && this.model.timeUnits){
-                    this.timeManager.timeUnits = this.model.timeUnits;
-                    this.timeManager.step = this.model.timeStep;
-                }
-                if(this.model.values && this.model.resolution){
-                    this.manageConflict();
-                }
+                
+        if(this.timeManager.timeAgents) {
+            if(!this.timeManager.units) {
+                this.timeManager.guessPlaybackRate();
             }
             if(this.playbackMode && this.playbackMode != 'track') {
-                if(this.timeManager.timeUnits) {
-                    this.timeManager.incrementValue(this.timeManager.rangeInterval);
+                if(this.timeManager.units) {
+                    this.timeManager.incrementTime(this.timeManager.rangeInterval, this.timeManager.units);
                 }
             }
         }
-
+        
         var sliderInfo = this.buildSliderValues();
         if(sliderInfo) {
             this.timeManager.guessPlaybackRate();
@@ -70,30 +56,20 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
             };
             //set an appropiate time format if one was not specified
             if(!this.initialConfig.timeFormat){
-                var interval = sliderInfo.interval;
-                if(!interval && this.timeManager.modelCache && this.timeManager.modelCache.values){
-                    interval = Math.round((sliderInfo.maxValue - sliderInfo.minValue) / this.timeManager.modelCache.values.length);
-                }
-                this.setTimeFormat(gxp.PlaybackToolbar.guessTimeFormat(interval));
+                this.setTimeFormat(gxp.PlaybackToolbar.guessTimeFormat(sliderInfo.interval));
             }
             //modify initialConfig so that it properly
             //reflects the initial state of this component
-            Ext.applyIf(this.initialConfig, initialSettings);
-            Ext.apply(this, this.initialConfig);
+            Ext.applyIf(this.initialConfig,initialSettings);
+            Ext.apply(this,this.initialConfig);
         }
-
+        
         this.timeManager.events.on({
+            'rangemodified': this.onRangeModified,
             'tick': this.onTimeTick,
             scope: this
         });
-
-        this.model.events.on({
-            'rangemodified': this.onModelModified,
-            'valuesmodified': this.onModelModified,
-            'resolutionmodified': this.onModelModified,
-            scope: this
-        });
-
+        
         this.plugins = (this.plugins || []).concat(
             [new Ext.slider.Tip({getText:this.getThumbText})]);
 
@@ -107,7 +83,7 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
             },
             'beforechange' : function(slider, newVal, oldVal, thumb) {
                 var allow = true;
-                if(!(this.timeManager.agents || this.timeManager.snapToIntervals)) {
+                if(!(this.timeManager.units || this.timeManager.snapToIntervals)) {
                     allow = false;
                 }
                 else if(this.playbackMode == 'cumulative' && slider.indexMap[thumb.index] == 'tail') {
@@ -117,7 +93,7 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
             },
             'afterrender' : function(slider) {
                 this.sliderTip = slider.plugins[0];
-                if(this.timeManager.agents && slider.thumbs.length > 1) {
+                if(this.timeManager.units && slider.thumbs.length > 1) {
                     slider.setThumbStyles();
                 }
                 //start playing after everything is rendered when autoPlay is true
@@ -139,7 +115,7 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
     /** api: method[setPlaybackMode]
      * :arg mode: {String} one of 'track',
      * 'cumulative', or 'ranged'
-     *
+     *  
      *  Set the playback mode of the control.
      */
     setPlaybackMode: function(mode){
@@ -147,162 +123,109 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
         var sliderInfo = this.buildSliderValues();
         this.reconfigureSlider(sliderInfo);
         if (this.playbackMode != 'track') {
-            this.timeManager.incrementValue(this.timeManager.rangeInterval);
-            this.setValue(0,this.timeManager.currentValue);
+            this.timeManager.incrementTime(this.timeManager.rangeInterval, 
+                this.timeManager.units || 
+                    OpenLayers.TimeUnit[gxp.PlaybackToolbar.smartIntervalFormat(sliderInfo.interval).units.toUpperCase()]);
+            this.setValue(0,this.timeManager.currentTime.getTime());
         }
         this.setThumbStyles();
     },
-
+    
     setTimeFormat : function(format){
         if(format){
             this.timeFormat = format;
         }
     },
-
-    onModelModified : function(evt){
-        var model = this.model || evt.object;
-        var manager = this.timeManager;
-        var lastLayer = model.layers.slice(-1).pop();
-        var lastInfo = lastLayer.metadata[this.dimension + 'Info'];
-        var conflictType, conflict;
-        switch (evt.type){
-            case 'rangemodified':
-                //range modified. test for non overlapping ranges
-                var overlap = lastInfo.range[0] >= manager.animationRange[0] || lastInfo.range[1] <= manager.animationRange[1];
-                if(!overlap){
-                    conflictType = 'rangeoverlap';
-                } else{
-                    conflictType = 'range';
-                }
-                conflict = {
-                    type: conflictType,
-                    layer: lastLayer,
-                    layerRange: lastInfo.range,
-                    controlRange: manager.animationRange
-                };
-                break;
-
-            case 'resolutionmodified':
-                //resolution changed. test for no previous resolution
-                var nores = !evt.prevResolution && evt.prevResolution !== 0;
-                if(nores){
-                    conflictType = 'resolutionmissing';
-                } else {
-                    conflictType = 'resolution';
-                }
-                conflict = {
-                    type: conflictType,
-                    layer: lastLayer,
-                    layerResolution: {
-                        step: lastInfo.timeStep,
-                        units: lastInfo.timeUnits
-                    },
-                    controlResolution: (!nores) ? evt.prevResolution : null
-                };
-                break;
-
-            case 'valuesmodified':
-                //test for no previous values
-                var novals = !evt.prevValues || !evt.prevValues.length;
-                if(novals){
-                    conflictType = 'valuesmissing';
-                } else {
-                    conflictType = 'values';
-                }
-                conflict = {
-                    type: conflictType,
-                    layer: lastLayer,
-                    layerValues: lastInfo.values,
-                    controlValues: (!novals) ? evt.prevValues : null
-                };
-                break;
-        }
-        this.conflicts = this.conflicts || [];
-        this.conflicts.push(conflict);
-        //ensure that we don't call the conflict manager until all
-        //conflicts are identified
-        Ext.util.DelayedTask(this.manageConflict, this, [this.conflicts]).delay(100);
-    },
-
+    
     onRangeModified : function(evt) {
-        var ctl = evt.object;
-        if(!ctl.agents || !ctl.agents.length) {
+        var ctl = this.timeManager;
+        if(!ctl.timeAgents || !ctl.timeAgents.length) {
             //we don't have any time agents which means we should get rid of the time manager control
             //we will automattically add the control back when a time layer is added via handlers on the
             //playback plugin or the application code if the playback toolbar was not build via the plugin
-            ctl.map.removeControl(ctl);
+            ctl.map.removeControl(this.ctl);
             ctl.destroy();
             ctl = null;
         }
         else {
             var oldvals = {
-                start : ctl.range[0],
-                end : ctl.range[1]
+                start : ctl.range[0].getTime(),
+                end : ctl.range[1].getTime(),
+                resolution : {
+                    units : ctl.units,
+                    step : ctl.step
+                }
             };
             ctl.guessPlaybackRate();
-            if(ctl.animationRange[0] != oldvals.start || ctl.animationRange[1] != oldvals.end){
+            if(ctl.range[0].getTime() != oldvals.start || ctl.range[1].getTime() != oldvals.end ||
+                 ctl.units != oldvals.units || ctl.step != oldvals.step) {
                 this.reconfigureSlider(this.buildSliderValues());
+                /*
+                 if (this.playbackMode == 'ranged') {
+                 this.timeManager.incrementTime(this.control.rangeInterval, this.control.units);
+                 }
+                 */
                 this.setThumbStyles();
                 this.fireEvent('rangemodified', this, ctl.range);
             }
-            if(!this.timeManager.playing){
-                this.timeManager.setCurrentValue(this.timeManager.animationRange[0]);
-            }
         }
     },
-
+    
     onTimeTick : function(evt) {
-        var currentVal = evt.currentValue;
-        if (currentVal) {
+        var currentTime = evt.currentTime;
+        if (currentTime) {
             var toolbar = this.refOwner; //TODO use relay event instead
             var tailIndex = this.indexMap ? this.indexMap.indexOf('tail') : -1;
-            var offset = (tailIndex > -1) ? currentVal - this.thumbs[0].value : 0;
-            this.setValue(0, currentVal);
+            var offset = (tailIndex > -1) ? currentTime.getTime() - this.thumbs[0].value : 0;
+            this.setValue(0, evt.currentTime.getTime());
             if(tailIndex > -1) {
                 this.setValue(tailIndex, this.thumbs[tailIndex].value + offset);
             }
             this.updateTimeDisplay();
             //TODO use relay event instead, fire this directly from the slider
-            toolbar.fireEvent('timechange', toolbar, currentVal);
+            toolbar.fireEvent('timechange', toolbar, currentTime);
         }
     },
-
+    
     updateTimeDisplay: function(){
         this.sliderTip.onSlide(this,null,this.thumbs[0]);
         this.sliderTip.el.alignTo(this.el, 'b-t?', this.offsets);
     },
-
+    
     buildSliderValues : function() {
-        var mngr = this.timeManager;
-        if(!mngr.step && !mngr.snapToIntervals){
+        if(!this.timeManager.units && !this.timeManager.snapToIntervals){
             //timeManager is essentially empty if both of these are false/null
             return false;
         }
         else{
-            var indexMap = ['primary'],
-                values = [mngr.currentValue],
-                min = mngr.animationRange[0],
-                max = mngr.animationRange[1],
+            var indexMap = ['primary'], 
+                values = [this.timeManager.currentTime.getTime()], 
+                min = this.timeManager.range[0].getTime(), 
+                max = this.timeManager.range[1].getTime(), 
+                then = new Date(min), 
+                interval;
+            
+            if(this.timeManager.units) {
+                var step = parseFloat(then['getUTC' + this.timeManager.units]()) + parseFloat(this.timeManager.step);
+                var stepTime = then['setUTC' + this.timeManager.units](step);
+                interval = stepTime - min;
+            }
+            else {
                 interval = false;
-
+            }
             if(this.dynamicRange) {
                 var rangeAdj = (min - max) * 0.1;
                 values.push( min = min - rangeAdj, max = max + rangeAdj);
                 indexMap[1] = 'minTime';
                 indexMap[2] = 'maxTime';
             }
-            if(this.playbackMode != 'track') {
+            if(this.playbackMode && this.playbackMode != 'track') {
                 values.push(min);
                 indexMap[indexMap.length] = 'tail';
             }
-            //set slider interval based on the step value
-            if(!mngr.snapToList){
-                if(mngr.timeUnits){
-                    //step is not the real number but a multiple of timeUnits
-                    interval = mngr.step * OpenLayers.TimeStep[mngr.timeUnits];
-                } else {
-                    interval = mngr.step;
-                }
+            //set slider interval based on the interval steps if not determined yet
+            if(!interval && this.timeManager.intervals && this.timeManager.intervals.length>2){
+                interval = Math.round((max-min)/this.timeManager.intervals.length);
             }
 
             return {
@@ -333,8 +256,8 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
             }
         }
         //set format of slider based on the interval steps
-        if(!sliderInfo.interval && slider.timeManager.modelCache.values) {
-            sliderInfo.interval = Math.round((sliderInfo.maxValue - sliderInfo.minValue) / this.timeManager.modelCache.values.length);
+        if(!sliderInfo.interval && slider.timeManager.intervals && slider.timeManager.intervals.length > 2) {
+            sliderInfo.interval = Math.round((sliderInfo.maxValue - sliderInfo.minValue) / this.timeManager.intervals.length);
         }
         this.setTimeFormat(gxp.PlaybackToolbar.guessTimeFormat(sliderInfo.interval));
     },
@@ -353,7 +276,7 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
             tailThumb.constrain = false;
             headThumb.constrain = false;
         }
-    },
+    },    
 
     getThumbText: function(thumb) {
         if(thumb.slider.indexMap[thumb.index] != 'tail') {
@@ -366,34 +289,72 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
     },
 
     onSliderChangeComplete: function(slider, value, thumb, silent){
+        var slideTime = new Date(value);
         var timeManager = slider.timeManager;
         //test if this is the main time slider
         switch (slider.indexMap[thumb.index]) {
             case 'primary':
                 //if we have a tail slider, then the range interval should be updated first
-                var tailIndex = slider.indexMap.indexOf('tail');
+                var tailIndex = slider.indexMap.indexOf('tail'); 
                 if (tailIndex>-1){
                     slider.onSliderChangeComplete(slider,slider.thumbs[tailIndex].value,slider.thumbs[tailIndex],true);
                 }
-                if (!timeManager.snapToIntervals && timeManager.timeUnits) {
-                    //this will make the value actually be modified by the exact time unit
-                    var op = value > timeManager.currentValue ? 'ceil' : 'floor';
-                    var steps = Math[op]((value-timeManager.currentValue)/OpenLayers.TimeStep[timeManager.timeUnits]);
-                    timeManager.setCurrentValue(timeManager.incrementTimeValue(steps));
-                } else {
-                    timeManager.setCurrentValue(value);
+                if (!timeManager.snapToIntervals && timeManager.units) {
+                    timeManager.setTime(slideTime);
+                }
+                else if (timeManager.snapToIntervals && timeManager.intervals.length) {
+                    var targetIndex=0;
+                    Ext.each(timeManager.intervals,function(date, index, intervals){
+                        if(date.getTime() == value){
+                            targetIndex = index;
+                            //stop processing
+                            return false;
+                        }
+                        else{
+                            var diffPrev = value - intervals[targetIndex].getTime();
+                            var diffCurr = date.getTime() - value;
+                            if(diffPrev<diffCurr){
+                                //targetIndex is at the right place, stop
+                                return false;
+                            } else {
+                                targetIndex = index;
+                            }
+                        }
+                    });
+                    timeManager.setTime(timeManager.intervals[targetIndex]);
                 }
                 break;
             case 'min':
-                    timeManager.setAnimationStart(value);
+                if (value >= timeManager.intialRange[0].getTime()) {
+                    timeManager.setStart(new Date(value));
+                }
                 break;
             case 'max':
-                    timeManager.seAnimantionEnd(value);
+                if (value <= timeManager.intialRange[1].getTime()) {
+                    timeManager.setEnd(new Date(value));
+                }
                 break;
             case 'tail':
+                var adj = 1;
+                //Purposely falling through from control units down to seconds to avoid repeating the conversion factors
+                switch (timeManager.units) {
+                    case OpenLayers.TimeUnit.YEARS:
+                        adj *= 12;
+                    case OpenLayers.TimeUnit.MONTHS:
+                        adj *= (365 / 12);
+                    case OpenLayers.TimeUnit.DAYS:
+                        adj *= 24;
+                    case OpenLayers.TimeUnit.HOURS:
+                        adj *= 60;
+                    case OpenLayers.TimeUnit.MINUTES:
+                        adj *= 60;
+                    case OpenLayers.TimeUnit.SECONDS:
+                        adj *= 1000;
+                        break;
+                }
                 for (var i = 0, len = timeManager.timeAgents.length; i < len; i++) {
                     if(timeManager.timeAgents[i].rangeMode == 'range'){
-                        timeManager.timeAgents[i].rangeInterval = (slider.thumbs[0].value - value);
+                        timeManager.timeAgents[i].rangeInterval = (slider.thumbs[0].value - value) / adj;    
                     }
                 }
                 if(!silent){
@@ -404,20 +365,6 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
             delete this._restartPlayback;
             timeManager.play();
         }
-    },
-
-    manageConflict: function(conflicts){
-        Ext.Msg.confirm('Time Conflicts Found', 'There were '+ conflicts.length + 'inconsistencies between the layer you just added and the ' +
-            'existing playback control options. \n Are you sure you want to add this layer? \n '+
-            'Pressing YES will open the Playback Options. NO will remove the layer you just added',
-            function(btn, text){
-                if(btn == 'yes'){
-                    alert('find the playback options');
-                } else {
-                    alert('remove the layer');
-                }
-            },
-            this);
     }
 
 });
