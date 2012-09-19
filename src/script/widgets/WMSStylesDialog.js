@@ -10,7 +10,9 @@
  * @require util.js
  * @require widgets/RulePanel.js
  * @require widgets/StylePropertiesDialog.js
- * @require OpenLayers/Renderer.js
+ * @requires OpenLayers/Renderer/SVG.js
+ * @requires OpenLayers/Renderer/VML.js
+ * @requires OpenLayers/Renderer/Canvas.js
  * @require OpenLayers/Style2.js
  * @require OpenLayers/Format/SLD/v1_0_0_GeoServer.js
  * @require GeoExt/data/AttributeStore.js
