@@ -437,7 +437,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             var range = this.playbackTool.playbackToolbar.control.range;
             range = this.calculateNewRange(range, value);
             // correct for movements of the timeline in the mean time
-            var center = this.playbackTool.playbackToolbar.control.currentTime;
+            var center = this.playbackTool.playbackToolbar.control.currentValue;
             var span = range[1]-range[0];
             var start = new Date(center.getTime() - span/2);
             var end = new Date(center.getTime() + span/2);
@@ -697,7 +697,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         if (action !== Ext.data.Api.actions.destroy) {
             this.addFeatures(key, features);
         }
-        this.showAnnotations(this.playbackTool.playbackToolbar.control.currentTime);
+        this.showAnnotations(this.playbackTool.playbackToolbar.control.currentValue);
     },
 
     /**
@@ -1109,7 +1109,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         if (!this.timeline) {
             if (this.playbackTool && this.playbackTool.playbackToolbar) {
                 this.setRange(this.playbackTool.playbackToolbar.control.range);
-                this.setCenterDate(this.playbackTool.playbackToolbar.control.currentTime);
+                this.setCenterDate(this.playbackTool.playbackToolbar.control.currentValue);
             }
         }
     },
@@ -1252,7 +1252,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             });
             this.viewer && this.viewer.mapPanel.map.addLayer(this.annotationsLayer);
         }
-        var compare = time.getTime()/1000;
+        var compare = time/1000;
         if (this.featureManager && this.featureManager.featureStore) {
             this.featureManager.featureStore.each(function(record) {
                 var mapFilterAttr = this.annotationConfig.mapFilterAttr;
@@ -1346,10 +1346,10 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 percentage = this.showRangeSlider ? this.rangeSlider.getValue() : this.initialRangeSliderValue;
             }
             var span = range[1] - range[0];
-            var center = this.playbackTool.playbackToolbar.control.currentTime;
+            var center = this.playbackTool.playbackToolbar.control.currentValue;
             var newSpan = (percentage/100)*span;
-            var start = new Date(center.getTime() - newSpan/2);
-            var end = new Date(center.getTime() + newSpan/2);
+            var start = new Date(center - newSpan/2);
+            var end = new Date(center + newSpan/2);
             return [start, end];
         }
     },
@@ -1364,8 +1364,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  Create an OpenLayers.Filter to use in the WFS requests.
      */
     createTimeFilter: function(range, key, fraction, updateRangeInfo) {
-        var start = new Date(range[0].getTime() - fraction * (range[1] - range[0]));
-        var end = new Date(range[1].getTime() + fraction * (range[1] - range[0]));
+        var start = new Date(range[0] - fraction * (range[1] - range[0]));
+        var end = new Date(range[1] + fraction * (range[1] - range[0]));
         // don't go beyond the original range
         if(this.originalRange){
             start = new Date(Math.max(this.originalRange[0], start));
@@ -1511,9 +1511,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         this.layerLookup[key].sldFilter = this.getFilterFromSLD(key, style);
         if (this.playbackTool) {
             // TODO consider putting an api method getRange on playback tool
-            var range = this.playbackTool.playbackToolbar.control.range;
+            var range = this.playbackTool.playbackToolbar.control.animationRange;
             range = this.calculateNewRange(range);
-            this.setCenterDate(this.playbackTool.playbackToolbar.control.currentTime);
+            this.setCenterDate(this.playbackTool.playbackToolbar.control.currentValue);
             // create a PropertyIsBetween filter
             this.setTimeFilter(key, this.createTimeFilter(range, key, this.bufferFraction));
         }
