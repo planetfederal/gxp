@@ -84,17 +84,21 @@ gxp.plugins.LayerManager = Ext.extend(gxp.plugins.LayerTree, {
             legendXType = "gx_vectorlegend";
         }
         if (legendXType) {
+            var baseParams;
+            if (loader && loader.baseAttrs && loader.baseAttrs.baseParams) {
+                baseParams = loader.baseAttrs.baseParams;
+            }
             Ext.apply(attr, {
                 component: {
                     xtype: legendXType,
                     // TODO these baseParams were only tested with GeoServer,
                     // so maybe they should be configurable - and they are
                     // only relevant for gx_wmslegend.
-                    baseParams: {
+                    baseParams: Ext.apply({
                         transparent: true,
                         format: "image/png",
                         legend_options: "fontAntiAliasing:true;fontSize:11;fontName:Arial"
-                    },
+                    }, baseParams),
                     layerRecord: this.target.mapPanel.layers.getByLayer(attr.layer),
                     showTitle: false,
                     // custom class for css positioning
