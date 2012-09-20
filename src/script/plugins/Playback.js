@@ -177,13 +177,13 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
                     loop : control.loop,
                     snapToIntervals : control.snapToIntervals
                 };
-                if(control.timeAgents.length > 1) {
-                    var agents = control.timeAgents;
+                if(control.agents.length > 1) {
+                    var agents = control.agents;
                     var agentConfigs = [];
                     for(var i = 0; i < agents.length; i++) {
                         var agentConfig = {
-                            type : agents[i].CLASS_NAME.split("TimeAgent.")[1],
-                            rangeMode : agents[i].rangeMode,
+                            type : agents[i].CLASS_NAME.split("Agent.")[1],
+                            tickMode : agents[i].tickMode,
                             rangeInterval : agents[i].rangeInterval,
                             intervals : agents[i].intervals,
                             layers : []
@@ -195,7 +195,7 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
                         }
                         agentConfigs.push(agentConfig);
                     }
-                    config.outputConfig.controlConfig.timeAgents = agentConfigs;
+                    config.outputConfig.controlConfig.agents = agentConfigs;
                 }
             }
             //get rid of 2 instantiated objects that will cause problems
