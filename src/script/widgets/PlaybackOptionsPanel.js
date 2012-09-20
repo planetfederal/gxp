@@ -208,6 +208,7 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
         var units = record.get('field1');
         if(this.timeManager.timeUnits != units){
             this.timeManager.timeUnits = units;
+            this.timeManager.step = cmp.refOwner.stepValueField.value * OpenLayers.TimeStep[units];
             if(this.playbackToolbar.playbackMode != 'track'){
                 this.timeManager.incrementValue();
             }
@@ -215,7 +216,8 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
     },
     setStep:function(cmp,newVal,oldVal){
         if(cmp.validate() && newVal){
-            this.timeManager.step = newVal;
+            this.timeManager.step = newVal * OpenLayers.TimeStep[this.timeManager.timeUnits];
+            this.timeManager.timeStep = newVal;
             if(this.playbackToolbar.playbackMode == 'ranged' && 
                 this.timeManager.rangeInterval != newVal){
                     this.timeManager.rangeInterval = newVal;
@@ -224,21 +226,17 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
         }
     },
     setPlaybackMode:function(cmp,mode,agents){
-        switch(mode){
-            case 'cumulative':
-                this.playbackToolbar.setPlaybackMode('cumulative');
-                break;
-            case 'ranged':
-                this.disableListMode(true);
-                this.playbackToolbar.setPlaybackMode('ranged');
-                break;
-            default:
-                this.playbackToolbar.setPlaybackMode('track');
-                break;
+        var origMode = cmp.startValue;
+
+        //adjust any time agents which had the same playback mode as the toolbar
+        Ext.each(agents, function(agent){
+            if(agent.tickMode == origMode){
+                agent.tickMode = mode;
         }
-        if(mode != 'ranged'){
-            this.disableListMode(false);
-        }
+        });
+
+        this.disableListMode(mode=='ranged');
+        this.playbackToolbar.setPlaybackMode(mode);
     },
     disableListMode:function(state){
         var disable = state!==false;
@@ -260,7 +258,7 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
             step = this.timeManager.step,
             unit = this.timeManager.timeUnit,
             snap = this.timeManager.snapToList,
-            mode = this.timeManager.playbackMode,
+            mode = (this.playbackToolbar) ? this.playbackToolbar.playbackMode : this.timeManager.agents[0].tickMode,
             loop = this.timeManager.loop,
             reverse = this.timeManager.step < 0;
             this.rangeStartField.setValue(start);
@@ -271,8 +269,8 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
             this.stepUnitsField.originalValue = this.stepUnitsField.setRawValue(unit);
             this.listOnlyCheck.setValue(snap);
             this.listOnlyCheck.originalValue = snap;
-            if(!this.playbackModeField.timeAgents || !this.playbackModeField.timeAgents.length){
-                this.playbackModeField.timeAgents = this.timeManager.agents;
+            if(!this.playbackModeField.agents || !this.playbackModeField.agents.length){
+                this.playbackModeField.agents = this.timeManager.agents;
             }
             this.playbackModeField.setValue(mode);
             this.playbackModeField.originalValue = mode;
