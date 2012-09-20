@@ -203,7 +203,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
     setPlaybackMode: function(mode){
         if(mode){
             this.playbackMode = mode;
-            this.slider.setPlaybackMode(mode);
+            if(this.slider){ this.slider.setPlaybackMode(mode); }
         }
     },
 
@@ -342,8 +342,13 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         }
         // Test for and deal with pre-configured timeAgents & layers
         if(this.controlConfig.timeAgents) {
-            for(var i = 0; i < this.controlConfig.timeAgents.length; i++) {
-                var config = this.controlConfig.timeAgents[i];
+            //handle deprecated timeAgents property
+            this.controlConfig.agents = this.controlConfig.timeAgents;
+            delete this.controlConfig.timeAgents;
+        }
+        if(this.controlConfig.agents){
+            for(var i = 0; i < this.controlConfig.agents.length; i++) {
+                var config = this.controlConfig.agents[i];
                 var agentClass = config.type;
                 var layers = [];
                 //put real layers, not references here
@@ -366,10 +371,17 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                 }, this);
 
                 config.layers = layers;
+                if(config.rangeMode){
+                    //handle deprecated rangeMode property
+                    config.tickMode = config.rangeMode;
+                    delete config.rangeMode;
+                }
                 delete config.type;
+                if(!config.dimension){ config.dimension = 'time'; }
                 //TODO handle other subclasses of Dimension Agent subclasses
-                var agent = agentClass ? new OpenLayers.Dimension.Agent[agentClass](config) : new OpenLayers.Dimension.Agent(config);
-                this.controlConfig.timeAgents[i] = agent;
+                var agent = agentClass && OpenLayers.Dimension.Agent[agentClass] ?
+                    new OpenLayers.Dimension.Agent[agentClass](config) : new OpenLayers.Dimension.Agent(config);
+                this.controlConfig.agents[i] = agent;
             }
         }
         else {
@@ -377,12 +389,12 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                 Ext.apply(this.controlConfig, {
                     agentOptions : {
                         'WMS' : {
-                            rangeMode : 'range',
-                            rangeInterval : this.rangedPlayInterval
+                            tickMode : 'range',
+                            rangeInterval : this.controlConfig.rangeInterval || undefined
                         },
                         'Vector' : {
-                            rangeMode : 'range',
-                            rangeInterval : this.rangedPlayInterval
+                            tickMode : 'range',
+                            rangeInterval : this.controlConfig.rangeInterval || undefined
                         }
                     }
                 });
@@ -391,10 +403,10 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                 Ext.apply(this.controlConfig, {
                     agentOptions : {
                         'WMS' : {
-                            rangeMode : 'cumulative'
+                            tickMode : 'cumulative'
                         },
                         'Vector' : {
-                            rangeMode : 'cumulative'
+                            tickMode : 'cumulative'
                         }
                     }
                 });
@@ -402,6 +414,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         }
         //DON'T DROP FRAMES
         //this.controlConfig.maxFrameDelay = NaN;
+        if(!this.controlConfig.dimension){ this.controlConfig.dimension = 'time'; }
         var ctl = this.control = new OpenLayers.Control.DimensionManager(this.controlConfig);
         ctl.loop = this.looped;
         this.mapPanel.map.addControl(ctl);
