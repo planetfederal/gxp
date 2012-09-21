@@ -136,7 +136,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
              *
              * Listener arguments:
              * toolbar - {gxp.plugin.PlaybackToolbar} This playback toolbar
-             * currentTime - {Date} The current time represented in the TimeManager control
+             * currentValue - {Number} The current time value represented in the DimensionManager control
              *      attached to this toolbar
              */
             "timechange",
