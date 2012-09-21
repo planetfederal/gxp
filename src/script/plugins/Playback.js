@@ -175,7 +175,7 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
                     step : control.step,
                     units : (control.units) ? control.units : undefined,
                     loop : control.loop,
-                    snapToIntervals : control.snapToIntervals
+                    snapToList : control.snapToList
                 };
                 if(control.agents.length > 1) {
                     var agents = control.agents;
