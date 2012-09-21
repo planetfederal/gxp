@@ -52,14 +52,16 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
             }
             if(this.playbackMode && this.playbackMode != 'track') {
                 if(this.timeManager.timeUnits) {
-                    this.timeManager.incrementValue(this.timeManager.rangeInterval);
+                    this.timeManager.incrementTimeValue(this.timeManager.rangeInterval);
                 }
             }
         }
         
         var sliderInfo = this.buildSliderValues();
         if(sliderInfo) {
+            if(!this.timeManager.snapToList && !this.timeManager.timeUnits){
             this.timeManager.guessPlaybackRate();
+            }
             var initialSettings = {
                 maxValue: sliderInfo.maxValue,
                 minValue: sliderInfo.minValue,
@@ -97,7 +99,7 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
             },
             'beforechange' : function(slider, newVal, oldVal, thumb) {
                 var allow = true;
-                if(!(this.timeManager.units || this.timeManager.snapToIntervals)) {
+                if(!(this.timeManager.timeUnits || this.timeManager.snapToList)) {
                     allow = false;
                 }
                 else if(this.playbackMode == 'cumulative' && slider.indexMap[thumb.index] == 'tail') {
@@ -137,7 +139,7 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
         var sliderInfo = this.buildSliderValues();
         this.reconfigureSlider(sliderInfo);
         if (this.playbackMode != 'track') {
-            this.timeManager.incrementValue(this.timeManager.rangeInterval);
+            this.timeManager.incrementTimeValue(this.timeManager.rangeInterval);
             this.setValue(0,this.timeManager.currentValue);
         }
         this.setThumbStyles();
@@ -184,18 +186,18 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
     },
     
     onTimeTick : function(evt) {
-        var currentTime = evt.currentTime;
-        if (currentTime) {
+        var currentValue = evt.currentValue;
+        if (currentValue) {
             var toolbar = this.refOwner; //TODO use relay event instead
             var tailIndex = this.indexMap ? this.indexMap.indexOf('tail') : -1;
-            var offset = (tailIndex > -1) ? currentTime.getTime() - this.thumbs[0].value : 0;
-            this.setValue(0, evt.currentTime.getTime());
+            var offset = (tailIndex > -1) ? currentValue - this.thumbs[0].value : 0;
+            this.setValue(0, currentValue);
             if(tailIndex > -1) {
                 this.setValue(tailIndex, this.thumbs[tailIndex].value + offset);
             }
             this.updateTimeDisplay();
             //TODO use relay event instead, fire this directly from the slider
-            toolbar.fireEvent('timechange', toolbar, currentTime);
+            toolbar.fireEvent('timechange', toolbar, currentValue);
         }
     },
     
@@ -304,7 +306,7 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
                 if (tailIndex>-1){
                     slider.onSliderChangeComplete(slider,slider.thumbs[tailIndex].value,slider.thumbs[tailIndex],true);
                 }
-                if (!timeManager.snapToIntervals && timeManager.timeUnits) {
+                if (!timeManager.snapToList && timeManager.timeUnits) {
                     //this will make the value actually be modified by the exact time unit
                     var op = value > timeManager.currentValue ? 'ceil' : 'floor';
                     var steps = Math[op]((value-timeManager.currentValue)/OpenLayers.TimeStep[timeManager.timeUnits]);
