@@ -732,13 +732,13 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     /**
      * private: method[onTimeChange]
      *  :arg toolbar: ``gxp.plugin.PlaybackToolbar``
-     *  :arg currentTime: ``Date``
+     *  :arg currentValue: ``Number``
      *
      *  Listener for when the playback tool fires timechange.
      */
-    onTimeChange: function(toolbar, currentTime) {
+    onTimeChange: function(toolbar, currentValue) {
         this._silent = true;
-        this._ignoreTimeChange !== true && this.setCenterDate(currentTime);
+        this._ignoreTimeChange !== true && this.setCenterDate(currentValue);
         delete this._silent;
     },
 
@@ -845,7 +845,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         if (this._silent !== true && this.playbackTool && this.playbackTool.playbackToolbar.playing !== true) {
             this._ignoreTimeChange = true;
             this.playbackTool.setTime(time);
-            this.timeline.getBand(0)._decorators[0]._date = this.playbackTool.playbackToolbar.control.currentTime;
+            this.timeline.getBand(0)._decorators[0]._date = this.playbackTool.playbackToolbar.control.currentValue;
             this.timeline.getBand(0)._decorators[0].paint();
             delete this._ignoreTimeChange;
             this.showAnnotations(time);
