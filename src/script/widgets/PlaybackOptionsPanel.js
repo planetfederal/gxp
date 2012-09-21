@@ -221,7 +221,7 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
             if(this.playbackToolbar.playbackMode == 'ranged' && 
                 this.timeManager.rangeInterval != newVal){
                     this.timeManager.rangeInterval = newVal;
-                    this.timeManager.incrementValue(newVal);
+                    this.timeManager.incrementTimeValue(newVal);
             }
         }
     },
@@ -255,7 +255,7 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
         if (this.timeManager) {
             var start = new Date(this.timeManager.animationRange[0]),
             end = new Date(this.timeManager.animationRange[1]),
-            step = this.timeManager.step,
+            step = this.timeManager.timeStep,
             unit = this.timeManager.timeUnit,
             snap = this.timeManager.snapToList,
             mode = (this.playbackToolbar) ? this.playbackToolbar.playbackMode : this.timeManager.agents[0].tickMode,
@@ -265,8 +265,8 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
             this.rangeStartField.originalValue = start;
             this.rangeEndField.setValue(end);
             this.rangeEndField.originalValue = end;
-            this.stepValueField.originalValue = this.stepValueField.setRawValue(step);
-            this.stepUnitsField.originalValue = this.stepUnitsField.setRawValue(unit);
+            this.stepValueField.originalValue = this.stepValueField.setValue(step);
+            this.stepUnitsField.originalValue = this.stepUnitsField.setValue(unit);
             this.listOnlyCheck.setValue(snap);
             this.listOnlyCheck.originalValue = snap;
             if(!this.playbackModeField.agents || !this.playbackModeField.agents.length){
