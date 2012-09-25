@@ -277,6 +277,15 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
 
         var lazy = this.isLazy();
         
+        var procUrl = this.trimUrl(this.url, baseParams);
+        
+        procUrl = OpenLayers.Util.urlAppend(procUrl, 
+            OpenLayers.Util.getParameterString(baseParams));
+        
+        if(this.target.proxy){
+        	procUrl = OpenLayers.Request.makeSameOrigin(procUrl, this.target.proxy);
+        }
+        
         this.store = new GeoExt.data.WMSCapabilitiesStore({
             // Since we want our parameters (e.g. VERSION) to override any in the 
             // given URL, we need to remove corresponding paramters from the 
@@ -284,8 +293,8 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             // enough because Ext just tacks these parameters on to the URL - so
             // we get requests like ?Request=GetCapabilities&REQUEST=GetCapabilities
             // (assuming the user provides a URL with a Request parameter in it).
-            url: this.trimUrl(this.url, baseParams),
-            baseParams: baseParams,
+            url: procUrl,
+            //baseParams: baseParams,
             format: this.format,
             autoLoad: !lazy,
             layerParams: {exceptions: null},
