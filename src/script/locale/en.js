@@ -79,7 +79,7 @@ GeoExt.Lang.add("en", {
     },
 
     "gxp.plugins.LoadingIndicator.prototype": {
-        loadingMapMessage: "Loading Map..."
+        loadingMapMessage: "Loading map..."
     },
 
     "gxp.plugins.MapBoxSource.prototype": {
@@ -109,15 +109,15 @@ GeoExt.Lang.add("en", {
     },
 
     "gxp.plugins.Navigation.prototype": {
-        menuText: "Pan Map",
-        tooltip: "Pan Map"
+        menuText: "Pan map",
+        tooltip: "Pan map"
     },
 
     "gxp.plugins.NavigationHistory.prototype": {
-        previousMenuText: "Zoom To Previous Extent",
-        nextMenuText: "Zoom To Next Extent",
-        previousTooltip: "Zoom To Previous Extent",
-        nextTooltip: "Zoom To Next Extent"
+        previousMenuText: "Zoom To previous extent",
+        nextMenuText: "Zoom To next extent",
+        previousTooltip: "Zoom To previous extent",
+        nextTooltip: "Zoom To next extent"
     },
 
     "gxp.plugins.OSMSource.prototype": {
@@ -128,8 +128,8 @@ GeoExt.Lang.add("en", {
 
     "gxp.plugins.Print.prototype": {
         buttonText:"Print",
-        menuText: "Print Map",
-        tooltip: "Print Map",
+        menuText: "Print map",
+        tooltip: "Print map",
         previewText: "Print Preview",
         notAllNotPrintableText: "Not All Layers Can Be Printed",
         nonePrintableText: "None of your current map layers can be printed"
@@ -161,8 +161,8 @@ GeoExt.Lang.add("en", {
     },
     
     "gxp.plugins.Styler.prototype": {
-        menuText: "Edit Styles",
-        tooltip: "Manage layer styles"
+        menuText: "Layer Styles",
+        tooltip: "Layer styles"
 
     },
 
@@ -182,8 +182,8 @@ GeoExt.Lang.add("en", {
     },
     
     "gxp.plugins.ZoomToExtent.prototype": {
-        menuText: "Zoom To Max Extent",
-        tooltip: "Zoom To Max Extent"
+        menuText: "Zoom To max extent",
+        tooltip: "Zoom To max extent"
     },
     
     "gxp.plugins.ZoomToDataExtent.prototype": {
@@ -377,7 +377,7 @@ GeoExt.Lang.add("en", {
     },
     
     "gxp.NewSourceDialog.prototype": {
-        title: "Add New Server...",
+        title: "Add new server...",
         cancelText: "Cancel",
         addServerText: "Add Server",
         invalidURLText: "Enter a valid URL to a WMS endpoint (e.g. http://example.com/geoserver/wms)",
