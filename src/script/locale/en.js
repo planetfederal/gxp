@@ -162,7 +162,7 @@ GeoExt.Lang.add("en", {
     
     "gxp.plugins.Styler.prototype": {
         menuText: "Layer Styles",
-        tooltip: "Layer styles"
+        tooltip: "Layer Styles"
 
     },
 
