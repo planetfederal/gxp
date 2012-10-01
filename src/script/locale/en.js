@@ -74,8 +74,8 @@ GeoExt.Lang.add("en", {
     },
 
     "gxp.plugins.Legend.prototype": {
-        menuText: "Show Legend",
-        tooltip: "Show Legend"
+        menuText: "Show legend",
+        tooltip: "Show legend"
     },
 
     "gxp.plugins.LoadingIndicator.prototype": {
@@ -114,10 +114,10 @@ GeoExt.Lang.add("en", {
     },
 
     "gxp.plugins.NavigationHistory.prototype": {
-        previousMenuText: "Zoom To previous extent",
-        nextMenuText: "Zoom To next extent",
-        previousTooltip: "Zoom To previous extent",
-        nextTooltip: "Zoom To next extent"
+        previousMenuText: "Zoom to previous extent",
+        nextMenuText: "Zoom to next extent",
+        previousTooltip: "Zoom to previous extent",
+        nextTooltip: "Zoom to next extent"
     },
 
     "gxp.plugins.OSMSource.prototype": {
@@ -173,17 +173,17 @@ GeoExt.Lang.add("en", {
     },
 
     "gxp.plugins.Zoom.prototype": {
-        zoomMenuText: "Zoom Box",
-        zoomInMenuText: "Zoom In",
-        zoomOutMenuText: "Zoom Out",
+        zoomMenuText: "Zoom box",
+        zoomInMenuText: "Zoom in",
+        zoomOutMenuText: "Zoom out",
         zoomTooltip: "Zoom by dragging a box",
         zoomInTooltip: "Zoom in",
         zoomOutTooltip: "Zoom out"
     },
     
     "gxp.plugins.ZoomToExtent.prototype": {
-        menuText: "Zoom To max extent",
-        tooltip: "Zoom To max extent"
+        menuText: "Zoom to max extent",
+        tooltip: "Zoom to max extent"
     },
     
     "gxp.plugins.ZoomToDataExtent.prototype": {
