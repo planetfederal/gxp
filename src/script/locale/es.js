@@ -126,7 +126,7 @@ GeoExt.Lang.add("es", {
 
     "gxp.plugins.OSMSource.prototype": {
         title: "Capas OpenStreetMap",
-        mapnikAttribution: "Datos CC-By-SA de <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
+        mapnikAttribution: "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors",
         osmarenderAttribution: "Datos CC-By-SA de <a href='http://openstreetmap.org/'>OpenStreetMap</a>"
     },
 
