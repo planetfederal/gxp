@@ -47,7 +47,7 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
                     this.timeManager.timeStep = this.model.timeStep;
                 }
                 if(this.model.values && this.model.resolution){
-                    this.manageConflict();
+                    //this.manageConflict();
                 }
             }
             if(this.playbackMode && this.playbackMode != 'track') {
