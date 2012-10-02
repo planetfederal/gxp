@@ -560,7 +560,9 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                             overlayRecords.push(record);
                         }
                     }
-                }
+                } else if (window.console) {
+                    console.warn("Non-existing source '" + conf.source + "' referenced in layer config.");
+                } 
             }
             
             var panel = this.mapPanel;
