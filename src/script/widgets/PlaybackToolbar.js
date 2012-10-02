@@ -96,8 +96,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         if(!this.control){
             this.controlConfig = Ext.applyIf(this.controlConfig || {}, {
                 dimension: 'time',
-                autoSync: true,
-                snapToList: true
+                autoSync: true
             });
             this.control = this.buildTimeManager();
         }
