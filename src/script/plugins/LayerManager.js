@@ -29,6 +29,24 @@ Ext.namespace("gxp.plugins");
  *    Plugin for adding a tree of layers with their legend to a
  *    :class:`gxp.Viewer`. Also provides a context menu on layer nodes.
  */   
+/** api: example
+ *  If you want to change the vendor-specific legend_options parameter that 
+ *  is sent to the WMS for GetLegendGraphic you can use ``baseAttrs`` on the
+ *  ``loader`` config:
+ *
+ *  .. code-block:: javascript
+ *
+ *    var layerManager = new gxp.plugins.LayerManager({
+ *        loader: {
+ *            baseAttrs: {
+ *                baseParams: {
+ *                    legend_options: "fontAntiAliasing:true;fontSize:11;fontName:Arial;fontColor:#FFFFFF"
+ *                }
+ *            }
+ *        }
+ *    });
+ *
+ */
 gxp.plugins.LayerManager = Ext.extend(gxp.plugins.LayerTree, {
     
     /** api: ptype = gxp_layermanager */
@@ -84,17 +102,21 @@ gxp.plugins.LayerManager = Ext.extend(gxp.plugins.LayerTree, {
             legendXType = "gx_vectorlegend";
         }
         if (legendXType) {
+            var baseParams;
+            if (loader && loader.baseAttrs && loader.baseAttrs.baseParams) {
+                baseParams = loader.baseAttrs.baseParams;
+            }
             Ext.apply(attr, {
                 component: {
                     xtype: legendXType,
                     // TODO these baseParams were only tested with GeoServer,
                     // so maybe they should be configurable - and they are
                     // only relevant for gx_wmslegend.
-                    baseParams: {
+                    baseParams: Ext.apply({
                         transparent: true,
                         format: "image/png",
                         legend_options: "fontAntiAliasing:true;fontSize:11;fontName:Arial"
-                    },
+                    }, baseParams),
                     layerRecord: this.target.mapPanel.layers.getByLayer(attr.layer),
                     showTitle: false,
                     // custom class for css positioning
