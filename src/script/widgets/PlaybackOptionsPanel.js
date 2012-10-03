@@ -172,15 +172,15 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
             }
             ],
             listeners:{'show':this.populateForm,scope:this},
-            bbar: [{
-                text: 'Save',
-                handler: this.saveValues,
-                scope: this
-            }, {
-                text: 'Cancel',
-                handler: this.cancelChanges,
-                scope: this
-            }]
+                bbar: [{
+                    text: 'Close',
+                    handler: this.close,
+                    scope: this
+                }, {
+                    text: 'Cancel',
+                    handler: this.cancelChanges,
+                    scope: this
+                }]
         });
         Ext.apply(this,config);
         gxp.PlaybackOptionsPanel.superclass.initComponent.call(this);
@@ -278,7 +278,7 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
             this.reverseModeCheck.originalValue=this.reverseModeCheck.getValue();
         }
     },
-    saveValues:function(btn){
+    close: function(btn){
         if(this.ownerCt && this.ownerCt.close){
             this.ownerCt[this.ownerCt.closeAction]();
         }
