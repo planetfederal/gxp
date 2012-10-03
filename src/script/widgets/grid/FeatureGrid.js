@@ -59,6 +59,11 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
       *  the custom renderer will be used instead of the type specific one.
       */
 
+     /** api: config[customEditors]
+      *  ``Object`` Property name/editor pairs. If specified for a field name,
+      *  the custom editor will be used instead of the standard textfield.
+      */
+
     /** api: config[layer]
      *  ``OpenLayers.Layer.Vector``
      *  The vector layer that will be synchronized with the layer store.
@@ -195,6 +200,7 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
             };
         }
         var columns = [],
+            customEditors = this.customEditors || {},
             customRenderers = this.customRenderers || {},
             name, type, xtype, format, renderer;
         (this.schema || store.fields).each(function(f) {
@@ -235,6 +241,9 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
                     sortable: this.columnsSortable,
                     menuDisabled: this.columnMenuDisabled,
                     xtype: xtype,
+                    editor: customEditors[name] || {
+                        xtype: 'textfield'
+                    },
                     format: format,
                     renderer: customRenderers[name] ||
                         (xtype ? undefined : renderer)
