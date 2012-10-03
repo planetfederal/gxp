@@ -235,6 +235,9 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
                     sortable: this.columnsSortable,
                     menuDisabled: this.columnMenuDisabled,
                     xtype: xtype,
+                    editor: {
+                        xtype: xtype
+                    },
                     format: format,
                     renderer: customRenderers[name] ||
                         (xtype ? undefined : renderer)
