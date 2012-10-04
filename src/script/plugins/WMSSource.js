@@ -531,6 +531,8 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 title: layer.name,
                 group: config.group,
                 infoFormat: config.infoFormat,
+                includeFields: "includeFields" in config ? config.includeFields : null,
+                propertyNames: "propertyNames" in config ? config.propertyNames : null,
                 source: config.source,
                 properties: "gxp_wmslayerpanel",
                 fixed: config.fixed,
@@ -547,7 +549,9 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 {name: "fixed", type: "boolean"},
                 {name: "selected", type: "boolean"},
                 {name: "restUrl", type: "string"},
-                {name: "infoFormat", type: "string"}
+                {name: "infoFormat", type: "string"},
+                {name: "includeFields"},
+                {name: "propertyNames"}
             ];
             original.fields.each(function(field) {
                 fields.push(field);

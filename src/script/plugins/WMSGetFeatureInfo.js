@@ -148,6 +148,10 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
                     // TODO: this will not work for WMS 1.3 (text/xml instead for GML)
                     infoFormat = this.format == "html" ? "text/html" : "application/vnd.ogc.gml";
                 }
+
+                var includeFields = x.get("includeFields");
+                var propertyNames = x.get("propertyNames");
+
                 var control = new OpenLayers.Control.WMSGetFeatureInfo(Ext.applyIf({
                     url: layer.url,
                     queryVisible: true,
@@ -165,7 +169,7 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
                             } else if (infoFormat == "text/plain") {
                                 this.displayPopup(evt, title, '<pre>' + evt.text + '</pre>');
                             } else if (evt.features && evt.features.length > 0) {
-                                this.displayPopup(evt, title);
+                                this.displayPopup(evt, title, null, includeFields, propertyNames);
                             }
                         },
                         scope: this
@@ -194,7 +198,7 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
      *     reporting the info to the user
      * :arg text: ``String`` Body text.
      */
-    displayPopup: function(evt, title, text) {
+    displayPopup: function(evt, title, text, includeFields, propertyNames) {
         var popup;
         var popupKey = evt.xy.x + "." + evt.xy.y;
 
@@ -236,14 +240,17 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
             for (var i=0,ii=features.length; i<ii; ++i) {
                 feature = features[i];
                 config.push(Ext.apply({
-                    xtype: "propertygrid",
+                    xtype: "gxp_propertygrid",
+                    readOnly: true,
                     listeners: {
                         'beforeedit': function (e) { 
                             return false; 
                         } 
                     },
                     title: feature.fid ? feature.fid : title,
-                    source: feature.attributes
+                    source: feature.attributes,
+                    includeFields: includeFields,
+                    propertyNames: propertyNames
                 }, this.itemConfig));
             }
         } else if (text) {
