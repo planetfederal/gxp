@@ -114,7 +114,7 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
                         info.controls[i].deactivate();
                     }
                 }
-            }
+             }
         }]);
         var infoButton = this.actions[0].items[0];
 
