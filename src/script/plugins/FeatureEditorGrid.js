@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2008-2012 The Open Planning Project
- *
+ * 
  * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
@@ -206,7 +206,7 @@ gxp.plugins.FeatureEditorGrid = Ext.extend(Ext.grid.PropertyGrid, {
 
         /**
          * TODO: This is a workaround for getting attributes with undefined
-         * values to show up in the property grid.  Decide if this should be
+         * values to show up in the property grid.  Decide if this should be 
          * handled in another way.
          */
         this.propStore.isEditableValue = function() {return true;};
@@ -214,7 +214,7 @@ gxp.plugins.FeatureEditorGrid = Ext.extend(Ext.grid.PropertyGrid, {
 
     /** private: method[init]
      *
-     *  :arg target: ``gxp.FeatureEditPopup`` The feature edit popup
+     *  :arg target: ``gxp.FeatureEditPopup`` The feature edit popup 
      *  initializing this plugin.
      */
     init: function(target) {
