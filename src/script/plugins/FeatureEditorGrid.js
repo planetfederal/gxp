@@ -249,4 +249,5 @@ gxp.plugins.FeatureEditorGrid = Ext.extend(Ext.grid.PropertyGrid, {
 });
 
 Ext.preg(gxp.plugins.FeatureEditorGrid.prototype.ptype, gxp.plugins.FeatureEditorGrid);
+
 Ext.reg(gxp.plugins.FeatureEditorGrid.prototype.ptype, gxp.plugins.FeatureEditorGrid);

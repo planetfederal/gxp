@@ -51,7 +51,7 @@
     }
     Ext.intercept(GeoExt.data.WMSCapabilitiesReader.prototype, "readRecords", keepRaw);
     GeoExt.data.AttributeReader &&
-    Ext.intercept(GeoExt.data.AttributeReader.prototype, "readRecords", keepRaw);
+        Ext.intercept(GeoExt.data.AttributeReader.prototype, "readRecords", keepRaw);
 })();
 
 /** api: (define)
@@ -393,7 +393,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         return url.split("?").shift() + (keys ?
             "?" + OpenLayers.Util.getParameterString(urlParams) :
             ""
-            );
+        );
     },
 
     /** private: method[createLazyLayerRecord]

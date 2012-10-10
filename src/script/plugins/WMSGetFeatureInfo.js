@@ -115,7 +115,7 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
                         info.controls[i].deactivate();
                     }
                 }
-            }
+             }
         }]);
         var infoButton = this.actions[0].items[0];
 
@@ -210,7 +210,6 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
                 map: this.target.mapPanel,
                 width: 250,
                 height: 300,
-                plugins: [],
                 defaults: {
                     layout: "fit",
                     autoScroll: true,
@@ -234,7 +233,7 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
 
         var features = evt.features, config = [];
         if (!text && features) {
-            var feature, grid;
+            var feature;
             for (var i=0,ii=features.length; i<ii; ++i) {
                 feature = features[i];
                 config.push(Ext.apply({
