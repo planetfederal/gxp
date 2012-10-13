@@ -114,6 +114,7 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
             validator: this.fileNameValidator.createDelegate(this)
         }, {
             xtype: "fieldset",
+            ref: "optionsFieldset",
             title: this.optionsText,
             checkboxToggle: true,
             collapsed: true,
@@ -167,6 +168,7 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
                         jsonData: jsonData,
                         success: function(response) {
                             this._import = response.getResponseHeader("Location");
+                            this.optionsFieldset.expand();
                             form.submit({
                                 url: this._import + "/tasks",
                                 waitMsg: this.waitMsgText,
@@ -333,7 +335,8 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
                     if (json.dataStore && json.dataStore.enabled === true && !/file/i.test(json.dataStore.type)) {
                         this.defaultDataStore = json.dataStore.name;
                         this.dataStore.emptyText = this.defaultDataStoreEmptyText;
-                        this.dataStore.setValue('');
+                        this.workspace.setValue(json.dataStore.workspace.name);
+                        this.dataStore.setValue(this.defaultDataStore);
                     }
                 }
             },
