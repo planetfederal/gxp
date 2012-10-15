@@ -510,13 +510,6 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 }
             }
 
-            if ("getfeatureinfo" in config) {
-                config.getfeatureinfo["fields"] = "fields" in config.getfeatureinfo ? config.getfeatureinfo["fields"]:  null;
-                config.getfeatureinfo["propertyNames"] = "propertyNames" in config.getfeatureinfo ? config.getfeatureinfo["propertyNames"] :  null;
-            } else {
-                config.getfeatureinfo = {"fields": null, "propertyNames": null}
-            }
-
             layer.setName(config.title || layer.name);
             layer.addOptions({
                 attribution: layer.attribution,
@@ -538,7 +531,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 title: layer.name,
                 group: config.group,
                 infoFormat: config.infoFormat,
-                getfeatureinfo:  config.getfeatureinfo,
+                getFeatureInfo:  config.getFeatureInfo,
                 source: config.source,
                 properties: "gxp_wmslayerpanel",
                 fixed: config.fixed,
@@ -556,7 +549,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 {name: "selected", type: "boolean"},
                 {name: "restUrl", type: "string"},
                 {name: "infoFormat", type: "string"},
-                {name: "getfeatureinfo"}
+                {name: "getFeatureInfo"}
             ];
             original.fields.each(function(field) {
                 fields.push(field);

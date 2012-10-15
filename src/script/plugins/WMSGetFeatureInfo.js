@@ -165,7 +165,7 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
                             } else if (infoFormat == "text/plain") {
                                 this.displayPopup(evt, title, '<pre>' + evt.text + '</pre>');
                             } else if (evt.features && evt.features.length > 0) {
-                                this.displayPopup(evt, title, null,  x.get("getfeatureinfo"));
+                                this.displayPopup(evt, title, null,  x.get("getFeatureInfo"));
                             }
                         },
                         scope: this
@@ -197,7 +197,7 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
     displayPopup: function(evt, title, text, featureinfo) {
         var popup;
         var popupKey = evt.xy.x + "." + evt.xy.y;
-
+        featureinfo = featureinfo || {};
         if (!(popupKey in this.popupCache)) {
             popup = this.addOutput({
                 xtype: "gx_popup",

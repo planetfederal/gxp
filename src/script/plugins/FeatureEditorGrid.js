@@ -28,6 +28,9 @@ gxp.plugins.FeatureEditorGrid = Ext.extend(Ext.grid.PropertyGrid, {
     /** api: ptype = gxp_editorgrid */
     ptype: "gxp_editorgrid",
 
+    /** api: xtype = gxp_editorgrid */
+    xtype: "gxp_editorgrid",
+
     /** api: config[feature]
      *  ``OpenLayers.Feature.Vector`` The feature being edited/displayed.
      */
@@ -249,5 +252,4 @@ gxp.plugins.FeatureEditorGrid = Ext.extend(Ext.grid.PropertyGrid, {
 });
 
 Ext.preg(gxp.plugins.FeatureEditorGrid.prototype.ptype, gxp.plugins.FeatureEditorGrid);
-
-Ext.reg(gxp.plugins.FeatureEditorGrid.prototype.ptype, gxp.plugins.FeatureEditorGrid);
+Ext.reg(gxp.plugins.FeatureEditorGrid.prototype.xtype, gxp.plugins.FeatureEditorGrid);
