@@ -94,6 +94,21 @@ Ext.namespace("gxp.plugins");
  *        group: "background"
  *    }
  *
+ * An optional 'getFeatureInfo' property can also be passed to
+ * customize the sort order, visibility, & labels for layer attributes.
+ * A sample 'getFeatureInfo' configuration would look like this:
+ *
+ *  .. code-block:: javascript
+ *
+ *    {
+ *        fields: ["twn_name","pop1990"]
+ *        propertyNames: {"pop1990": "1990 Population",  "twn_name": "Town"}
+ *    }
+ *
+ *  Within the 'getFeatureInfo' configuration, the 'fields' property determines sort
+ *  order & visibility (any attributes not included are not displayed) and
+ *  'propertyNames'  specifies the labels for the attributes.
+ *
  *  For initial programmatic layer configurations, to leverage lazy loading of
  *  the Capabilities document, it is recommended to configure layers with the
  *  fields listed in :obj:`requiredProperties`.
