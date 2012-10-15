@@ -8,6 +8,7 @@
 
 /**
  * @requires plugins/Tool.js
+ * @requires plugins/FeatureEditorGrid.js
  * @requires GeoExt/widgets/Popup.js
  * @requires OpenLayers/Control/WMSGetFeatureInfo.js
  * @requires OpenLayers/Format/WMSGetFeatureInfo.js
