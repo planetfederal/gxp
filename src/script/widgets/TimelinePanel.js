@@ -414,10 +414,10 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
     onChange: function(slider, value, thumb) {
         // TODO this logic needs to be more centralized, it's now in several places
-        var range = this.playbackTool.playbackToolbar.control.range;
+        var range = this.playbackTool.playbackToolbar.control.animationRange;
         range = this.calculateNewRange(range, value);
-        var start = new Date(range[0].getTime() - this.bufferFraction * (range[1] - range[0]));
-        var end = new Date(range[1].getTime() + this.bufferFraction * (range[1] - range[0]));
+        var start = new Date(range[0] - this.bufferFraction * (range[1] - range[0]));
+        var end = new Date(range[1] + this.bufferFraction * (range[1] - range[0]));
         // don't go beyond the original range
         start = new Date(Math.max(this.originalRange[0], start));
         end = new Date(Math.min(this.originalRange[1], end));
@@ -434,13 +434,13 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
     onChangeComplete: function(slider, value) {
         if (this.playbackTool) {
-            var range = this.playbackTool.playbackToolbar.control.range;
+            var range = this.playbackTool.playbackToolbar.control.animationRange;
             range = this.calculateNewRange(range, value);
             // correct for movements of the timeline in the mean time
             var center = this.playbackTool.playbackToolbar.control.currentValue;
             var span = range[1]-range[0];
-            var start = new Date(center.getTime() - span/2);
-            var end = new Date(center.getTime() + span/2);
+            var start = new Date(center - span/2);
+            var end = new Date(center + span/2);
             for (var key in this.layerLookup) {
                 var layer = this.layerLookup[key].layer;
                 layer && this.setTimeFilter(key, this.createTimeFilter([start, end], key, this.bufferFraction));
@@ -1111,8 +1111,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         gxp.TimelinePanel.superclass.onLayout.call(this, arguments);
         if (!this.timeline) {
             if (this.playbackTool && this.playbackTool.playbackToolbar) {
-                this.setRange(this.playbackTool.playbackToolbar.control.range);
-                this.setCenterDate(this.playbackTool.playbackToolbar.control.currentValue);
+                this.setRange(this.playbackTool.playbackToolbar.control.animationRange);
+                this.setCenterDate(new Date(this.playbackTool.playbackToolbar.control.currentValue));
             }
         }
     },
@@ -1264,7 +1264,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                     var endTime = record.get(this.annotationConfig.endTimeAttr);
                     var ranged = (endTime != startTime);
                     if (endTime == "" || endTime == null) {
-                        endTime = this.playbackTool.playbackToolbar.control.range[1].getTime();
+                        endTime = this.playbackTool.playbackToolbar.control.animationRange[1]
                     }
                     if (ranged === true) {
                         if (compare <= parseFloat(endTime) && compare >= startTime) {
@@ -1860,18 +1860,20 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                         if (end == "" || end == null) {
                             // Simile does not deal with unlimited ranges, so let's
                             // take the range from the playback control
-                            end = this.playbackTool.playbackToolbar.control.range[1];
+                            end = new Date(this.playbackTool.playbackToolbar.control.animationRange[1]);
                         }
                     }
-                    events.push({
-                        start: start,
-                        end: end,
-                        icon: this.layerLookup[key].icon,
-                        title: attributes[titleAttr],
-                        durationEvent: durationEvent,
-                        key: key,
-                        fid: features[i].fid
-                    });
+                    if(start != null){
+                        events.push({
+                            start: start,
+                            end: end,
+                            icon: this.layerLookup[key].icon,
+                            title: attributes[titleAttr],
+                            durationEvent: durationEvent,
+                            key: key,
+                            fid: features[i].fid
+                        });
+                    }
                 }
             }
         }       
