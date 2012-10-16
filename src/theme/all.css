@@ -1,3 +1,7 @@
+.ext-chrome input[type="checkbox"] {
+    margin-top: 1px;
+}
+
 .gxp-layerproperties-label {
     line-height: 21px;
 }
