@@ -94,6 +94,21 @@ Ext.namespace("gxp.plugins");
  *        group: "background"
  *    }
  *
+ * An optional 'getFeatureInfo' property can also be passed to
+ * customize the sort order, visibility, & labels for layer attributes.
+ * A sample 'getFeatureInfo' configuration would look like this:
+ *
+ *  .. code-block:: javascript
+ *
+ *    {
+ *        fields: ["twn_name","pop1990"]
+ *        propertyNames: {"pop1990": "1990 Population",  "twn_name": "Town"}
+ *    }
+ *
+ *  Within the 'getFeatureInfo' configuration, the 'fields' property determines sort
+ *  order & visibility (any attributes not included are not displayed) and
+ *  'propertyNames'  specifies the labels for the attributes.
+ *
  *  For initial programmatic layer configurations, to leverage lazy loading of
  *  the Capabilities document, it is recommended to configure layers with the
  *  fields listed in :obj:`requiredProperties`.
@@ -531,6 +546,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 title: layer.name,
                 group: config.group,
                 infoFormat: config.infoFormat,
+                getFeatureInfo:  config.getFeatureInfo,
                 source: config.source,
                 properties: "gxp_wmslayerpanel",
                 fixed: config.fixed,
@@ -547,7 +563,8 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 {name: "fixed", type: "boolean"},
                 {name: "selected", type: "boolean"},
                 {name: "restUrl", type: "string"},
-                {name: "infoFormat", type: "string"}
+                {name: "infoFormat", type: "string"},
+                {name: "getFeatureInfo"}
             ];
             original.fields.each(function(field) {
                 fields.push(field);
