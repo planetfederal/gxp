@@ -96,27 +96,42 @@ Ext.apply(gxp.ColorManager.prototype, {
      */
     fieldFocus: function(field) {
         if(!gxp.ColorManager.pickerWin) {
-            gxp.ColorManager.picker = new Ext.ColorPalette({
-                value: this.getPickerValue()
-            });
+            gxp.ColorManager.picker = new Ext.ColorPalette();
             gxp.ColorManager.pickerWin = new Ext.Window({
                 title: "Color Picker",
                 closeAction: "hide",
                 autoWidth: true,
-                autoHeight: true,
-                items: [gxp.ColorManager.picker]
+                autoHeight: true
             });
         } else {
             gxp.ColorManager.picker.purgeListeners();
-            var value = this.getPickerValue();
-            if (value) {
-                gxp.ColorManager.picker.select(value);
-            }
         }
-        gxp.ColorManager.picker.on({
+        var listenerCfg = {
             select: this.setFieldValue,
             scope: this
-        });
+        };
+        var value = this.getPickerValue();
+        if (value) {
+            var colors = [].concat(gxp.ColorManager.picker.colors);
+            if (!~colors.indexOf(value)) {
+                if (gxp.ColorManager.picker.ownerCt) {
+                    gxp.ColorManager.pickerWin.remove(gxp.ColorManager.picker);
+                    gxp.ColorManager.picker = new Ext.ColorPalette();
+                }
+                colors.push(value);
+                gxp.ColorManager.picker.colors = colors;
+            }
+            gxp.ColorManager.pickerWin.add(gxp.ColorManager.picker);
+            gxp.ColorManager.pickerWin.doLayout();
+            if (gxp.ColorManager.picker.rendered) {
+                gxp.ColorManager.picker.select(value);
+            } else {
+                listenerCfg.afterrender = function() {
+                    gxp.ColorManager.picker.select(value);
+                };
+            }
+        }
+        gxp.ColorManager.picker.on(listenerCfg);
         gxp.ColorManager.pickerWin.show();
     },
     
@@ -140,7 +155,9 @@ Ext.apply(gxp.ColorManager.prototype, {
      */
     getPickerValue: function() {
         var field = this.field;
-        var hex = field.getHexValue ? field.getHexValue() : field.getValue();
+        var hex = field.getHexValue ?
+            (field.getHexValue() || field.defaultBackground) :
+            field.getValue();
         if (hex) {
             return hex.substr(1);
         }
