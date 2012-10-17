@@ -139,8 +139,10 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
         var sliderInfo = this.buildSliderValues();
         this.reconfigureSlider(sliderInfo);
         if (this.playbackMode != 'track') {
-            this.timeManager.incrementTimeValue(this.timeManager.rangeInterval);
-            this.setValue(0,this.timeManager.currentValue);
+            if(this.timeManager.rangeInterval){ 
+                this.timeManager.incrementTimeValue(this.timeManager.rangeInterval); 
+                this.setValue(0,this.timeManager.currentValue);
+            }
         }
         this.setThumbStyles();
     },
@@ -328,7 +330,7 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
                     }
                 }
                 if(!silent){
-                    timeManager.setTime(new Date(slider.thumbs[0].value));
+                    timeManager.setCurrentValue(slider.thumbs[0].value);
                 }
         }
         if (this._restartPlayback) {

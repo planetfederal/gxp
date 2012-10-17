@@ -178,7 +178,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         if(timeVal<this.slider.minValue || timeVal>this.slider.maxValue){
             return false;
         }else{
-            this.control.setTime(time);
+            this.control.setCurrentValue(timeVal);
             return true;
         }
     },
@@ -416,7 +416,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
 /** BUTTON HANDLERS **/
     forwardToEnd: function(btn){
         var ctl = this.control;
-        ctl.setTime(new Date(ctl.range[(ctl.step < 0) ? 0 : 1].getTime()));
+        ctl.setCurrentValue(ctl.animationRange[(ctl.step < 0) ? 0 : 1]);
     },
     toggleAnimation:function(btn,pressed){
         if(!btn.bound && pressed){

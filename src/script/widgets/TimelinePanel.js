@@ -774,7 +774,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             intervalUnits.push(Timeline.DateTime.YEAR);
             intervalUnits.push(Timeline.DateTime.DECADE);
         }
-        var d = new Date(range[0].getTime() + span/2);
+        var d = new Date(range[0] + span/2);
         var bandInfos = [
             Timeline.createBandInfo({
                 width: "80%", 
