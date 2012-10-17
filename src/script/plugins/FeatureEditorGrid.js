@@ -192,10 +192,12 @@ gxp.plugins.FeatureEditorGrid = Ext.extend(Ext.grid.PropertyGrid, {
         };
         this.listeners = {
             "beforeedit": function() {
-                return this.featureEditor.editing;
+                return this.featureEditor && this.featureEditor.editing;
             },
             "propertychange": function() {
-                this.featureEditor.setFeatureState(this.featureEditor.getDirtyState());
+                if (this.featureEditor) {
+                    this.featureEditor.setFeatureState(this.featureEditor.getDirtyState());
+                }
             },
             scope: this
         };
@@ -231,8 +233,10 @@ gxp.plugins.FeatureEditorGrid = Ext.extend(Ext.grid.PropertyGrid, {
      *  Clean up.
      */
     destroy: function() {
-        this.featureEditor.un("canceledit", this.onCancelEdit, this);
-        this.featureEditor = null;
+        if (this.featureEditor) {
+            this.featureEditor.un("canceledit", this.onCancelEdit, this);
+            this.featureEditor = null;
+        }
         gxp.plugins.FeatureEditorGrid.superclass.destroy.call(this);
     },
 
