@@ -329,16 +329,6 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
 
     buildTimeManager:function() {
         this.controlConfig || (this.controlConfig = {});
-        //test for bad range times
-        if(this.controlConfig.range && this.controlConfig.range.length) {
-            for(var i = 0; i < this.controlConfig.range.length; i++) {
-                var dateString = this.controlConfig.range[i];
-                if(dateString.indexOf('T') > -1 && dateString.indexOf('Z') == -1) {
-                    dateString = dateString.substring(0, dateString.indexOf('T'));
-                }
-                this.controlConfig.range[i] = dateString;
-            }
-        }
         // Test for and deal with pre-configured timeAgents & layers
         if(this.controlConfig.timeAgents) {
             //handle deprecated timeAgents property

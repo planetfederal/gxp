@@ -163,15 +163,15 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
         }
         else {
             var oldvals = {
-                start : ctl.range[0].getTime(),
-                end : ctl.range[1].getTime(),
+                start : ctl.animationRange[0],
+                end : ctl.animationRange[1],
                 resolution : {
                     units : ctl.units,
                     step : ctl.step
                 }
             };
             ctl.guessPlaybackRate();
-            if(ctl.range[0].getTime() != oldvals.start || ctl.range[1].getTime() != oldvals.end ||
+            if(ctl.animationRange[0] != oldvals.start || ctl.animationRange[1] != oldvals.end ||
                  ctl.units != oldvals.units || ctl.step != oldvals.step) {
                 this.reconfigureSlider(this.buildSliderValues());
                 /*
@@ -180,7 +180,7 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
                  }
                  */
                 this.setThumbStyles();
-                this.fireEvent('rangemodified', this, ctl.range);
+                this.fireEvent('rangemodified', this, ctl.animationRange);
             }
         }
     },

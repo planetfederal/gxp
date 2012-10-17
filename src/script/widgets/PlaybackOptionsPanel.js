@@ -35,7 +35,7 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
      */
     
     /** api: config[timeManager]
-     *  ``OpenLayers.Control.TimeManager``
+     *  ``OpenLayers.Control.DimensionalManager``
      */
     
     layout: "fit",
@@ -196,7 +196,7 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
         this.timeManager.fixedRange=true;
     },
     setEndTime:function(cmp,date){
-        this.timeManager.setEnd(date.getTime());
+        this.timeManager.setAnimationEnd(date.getTime());
         this.timeManager.fixedRange=true;
     },
     toggleListMode: function(cmp, checked){

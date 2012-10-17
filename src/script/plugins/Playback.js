@@ -146,7 +146,7 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
     /** api: method[setTime]
      *  :arg time: {Date}
      *  :return: {Boolean} - true if the time could be set to the supplied value
-     *          false if the time is outside the current range of the TimeManager
+     *          false if the time is outside the current range of the DimManager
      *          control.
      *          
      *  Set the time represented by the playback toolbar programatically
@@ -170,12 +170,19 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
                 playbackMode : toolbar.playbackMode
             });
             if(control) {
+                var dimModel = control.modelCache || control.model;
                 config.outputConfig.controlConfig = {
-                    range : control.range, //(control.fixedRange) ? control.range : undefined,
-                    step : control.step,
-                    units : (control.units) ? control.units : undefined,
+                    model: {
+                        dimension: dimModel.dimension || control.dimension,
+                        values: dimModel.values,
+                        range: dimModel.range
+                    },
+                    animationRange : control.animationRange,
+                    timeStep : control.timeStep,
+                    timeUnits : (control.timeUnits) ? control.timeUnits : undefined,
                     loop : control.loop,
-                    snapToList : control.snapToList
+                    snapToList : control.snapToList,
+                    dimension : dimModel.dimension || control.dimension
                 };
                 if(control.agents.length > 1) {
                     var agents = control.agents;
@@ -185,13 +192,19 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
                             type : agents[i].CLASS_NAME.split("Agent.")[1],
                             tickMode : agents[i].tickMode,
                             rangeInterval : agents[i].rangeInterval,
-                            intervals : agents[i].intervals,
+                            values : agents[i].values,
                             layers : []
                         };
                         for(var j = 0; j < agents[i].layers.length; j++) {
                             var layerRec = this.target.mapPanel.layers.getByLayer(agents[i].layers[j]);
                             var layerConfig = this.target.layerSources[layerRec.get('source')].getConfigForRecord(layerRec);
-                            agentConfig.layers.push(layerConfig);
+                            //don't need or want to serialize the whole capabilities info, just get the stuff we need
+                            agentConfig.layers.push({
+                                source: layerConfig.source,
+                                title: layerConfig.title,
+                                name: layerConfig.name,
+                                styles: (layerConfig.styles) ? layerConfig.styles : undefined
+                            });
                         }
                         agentConfigs.push(agentConfig);
                     }
