@@ -319,7 +319,7 @@ GeoExt.Lang.add("de", {
         transparentText: "transparent",
         cacheText: "Cache",
         cacheFieldText: "Version aus dem Cache benützen",
-        stylesText: "Styles",
+        stylesText: "Verfügbare Styles",
         infoFormatText: "Info Format",
         infoFormatEmptyText: "Format auswählen"
     },

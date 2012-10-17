@@ -283,7 +283,7 @@ GeoExt.Lang.add("nl", {
         transparentText: "Transparant",
         cacheText: "Cache",
         cacheFieldText: "Gebruik de versie vanuit de cache",
-        stylesText: "Stijlen",
+        stylesText: "Beschikbare Stijlen",
         infoFormatText: "Info formaat",
         infoFormatEmptyText: "Selecteer een formaat"
     },
