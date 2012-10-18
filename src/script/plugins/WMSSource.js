@@ -505,10 +505,10 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 singleTile = !config.tiled;
             } else {
                 // for now, if layer has a time dimension,
-                // use single tile & set removeBackBufferDelay to 50ms
+                // use single tile & set removeBackBufferDelay to 250ms
                 if (original.data.dimensions && original.data.dimensions.time) {
                     singleTile = true;
-                    removeBackBufferDelay = 50
+                    removeBackBufferDelay = 250
                 }
             }
 
