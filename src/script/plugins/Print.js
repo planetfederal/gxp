@@ -10,6 +10,7 @@
  * @requires plugins/Tool.js
  * @requires GeoExt/data/PrintProvider.js
  * @requires GeoExt/widgets/PrintMapPanel.js
+ * @requires GeoExt/widgets/LegendPanel.js
  */
 
 /** api: (define)
@@ -164,7 +165,7 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                     },
                     print: function() {
                         try {
-                            printWindow.close();
+                            //printWindow.close();
                         } catch (err) {
                             // TODO: improve destroy
                         }
@@ -262,6 +263,18 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                                 break;
                             }
                         }
+                    }
+                    // if still not, found create new Geoext LegendPanel
+                    if (legend === null) {
+                    	legend = new GeoExt.LegendPanel({
+							layerStore: this.target.mapPanel.layers,
+							defaults : {
+								cls : 'gxp-legend-item',
+								baseParams : {
+									LEGEND_OPTIONS : 'bgColor:0xFFFFFF;fontAntiAliasing:true;fontName:Times;fontSize:10;forceLabels:on'
+								}
+							}
+						});
                     }
                 }
                 printWindow = new Ext.Window({
