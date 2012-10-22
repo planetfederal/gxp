@@ -8,6 +8,7 @@
 
 /**
  * @requires plugins/Tool.js
+ * @requires plugins/FeatureEditorGrid.js
  * @requires GeoExt/widgets/Popup.js
  * @requires OpenLayers/Control/WMSGetFeatureInfo.js
  * @requires OpenLayers/Format/WMSGetFeatureInfo.js
@@ -165,7 +166,7 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
                             } else if (infoFormat == "text/plain") {
                                 this.displayPopup(evt, title, '<pre>' + evt.text + '</pre>');
                             } else if (evt.features && evt.features.length > 0) {
-                                this.displayPopup(evt, title);
+                                this.displayPopup(evt, title, null,  x.get("getFeatureInfo"));
                             }
                         },
                         scope: this
@@ -194,10 +195,10 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
      *     reporting the info to the user
      * :arg text: ``String`` Body text.
      */
-    displayPopup: function(evt, title, text) {
+    displayPopup: function(evt, title, text, featureinfo) {
         var popup;
         var popupKey = evt.xy.x + "." + evt.xy.y;
-
+        featureinfo = featureinfo || {};
         if (!(popupKey in this.popupCache)) {
             popup = this.addOutput({
                 xtype: "gx_popup",
@@ -236,14 +237,17 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
             for (var i=0,ii=features.length; i<ii; ++i) {
                 feature = features[i];
                 config.push(Ext.apply({
-                    xtype: "propertygrid",
+                    xtype: "gxp_editorgrid",
+                    readOnly: true,
                     listeners: {
-                        'beforeedit': function (e) { 
-                            return false; 
-                        } 
+                        'beforeedit': function (e) {
+                            return false;
+                        }
                     },
                     title: feature.fid ? feature.fid : title,
-                    source: feature.attributes
+                    feature: feature,
+                    fields: featureinfo.fields,
+                    propertyNames: featureinfo.propertyNames
                 }, this.itemConfig));
             }
         } else if (text) {

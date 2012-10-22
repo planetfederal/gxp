@@ -11,6 +11,7 @@
  * @requires GeoExt/data/PrintProvider.js
  * @requires GeoExt/widgets/PrintMapPanel.js
  * @requires GeoExt/widgets/LegendPanel.js
+ * @requires OpenLayers/Control/ScaleLine.js
  */
 
 /** api: (define)

@@ -132,7 +132,12 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
             isTarget: false,
             allowDrop: false
         });
-        
+
+        var baseAttrs;
+        if (this.initialConfig.loader && this.initialConfig.loader.baseAttrs) {
+            baseAttrs = this.initialConfig.loader.baseAttrs;
+        }
+
         this.appendGroups(this.groups, treeRoot);
         
         return {
@@ -180,9 +185,9 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
 								expanded : groupConfig.expanded?groupConfig.expanded:false,
 								group : group == this.defaultGroup ? undefined : group,
 								loader : new GeoExt.tree.LayerLoader({
-											baseAttrs : exclusive ? {
-												checkedGroup : Ext.isString(exclusive) ? exclusive : group
-											} : undefined,
+											baseAttrs: exclusive ?
+                                                Ext.apply({checkedGroup: Ext.isString(exclusive) ? exclusive : group}, baseAttrs) :
+                                                baseAttrs,
 											store : this.target.mapPanel.layers,
 											filter : (function(group) {
 												return function(record) {
