@@ -119,7 +119,7 @@ GeoExt.Lang.add("el", {
 
     "gxp.plugins.OSMSource.prototype": {
         title: "Επιφάνειες OpenStreetMap",
-        mapnikAttribution: "Δεδομένα CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
+        mapnikAttribution: "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors",
         osmarenderAttribution: "Δεδομένα CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>"
     },
 

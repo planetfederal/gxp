@@ -512,6 +512,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                 },
                 hidden: this.source === null,
                 checkboxToggle: true,
+                collapsed: !this.layerRecord.getLayer().params.CQL_FILTER,
                 items: [{
                     xtype: "textarea",
                     value: this.layerRecord.getLayer().params.CQL_FILTER,
@@ -548,6 +549,8 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                     scope: this
                 },
                 checkboxToggle: true,
+                collapsed: this.layerRecord.getLayer().options.maxScale == null &&
+                    this.layerRecord.getLayer().options.minScale == null,
                 items: [{
                     xtype: "compositefield",
                     fieldLabel: this.minScaleText,

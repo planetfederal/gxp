@@ -74,12 +74,12 @@ GeoExt.Lang.add("en", {
     },
 
     "gxp.plugins.Legend.prototype": {
-        menuText: "Show Legend",
-        tooltip: "Show Legend"
+        menuText: "Show legend",
+        tooltip: "Show legend"
     },
 
     "gxp.plugins.LoadingIndicator.prototype": {
-        loadingMapMessage: "Loading Map..."
+        loadingMapMessage: "Loading map..."
     },
 
     "gxp.plugins.MapBoxSource.prototype": {
@@ -109,27 +109,27 @@ GeoExt.Lang.add("en", {
     },
 
     "gxp.plugins.Navigation.prototype": {
-        menuText: "Pan Map",
-        tooltip: "Pan Map"
+        menuText: "Pan map",
+        tooltip: "Pan map"
     },
 
     "gxp.plugins.NavigationHistory.prototype": {
-        previousMenuText: "Zoom To Previous Extent",
-        nextMenuText: "Zoom To Next Extent",
-        previousTooltip: "Zoom To Previous Extent",
-        nextTooltip: "Zoom To Next Extent"
+        previousMenuText: "Zoom to previous extent",
+        nextMenuText: "Zoom to next extent",
+        previousTooltip: "Zoom to previous extent",
+        nextTooltip: "Zoom to next extent"
     },
 
     "gxp.plugins.OSMSource.prototype": {
         title: "OpenStreetMap Layers",
-        mapnikAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
+        mapnikAttribution: "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors",
         osmarenderAttribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>"
     },
 
     "gxp.plugins.Print.prototype": {
         buttonText:"Print",
-        menuText: "Print Map",
-        tooltip: "Print Map",
+        menuText: "Print map",
+        tooltip: "Print map",
         previewText: "Print Preview",
         notAllNotPrintableText: "Not All Layers Can Be Printed",
         nonePrintableText: "None of your current map layers can be printed"
@@ -161,8 +161,8 @@ GeoExt.Lang.add("en", {
     },
     
     "gxp.plugins.Styler.prototype": {
-        menuText: "Edit Styles",
-        tooltip: "Manage layer styles"
+        menuText: "Layer Styles",
+        tooltip: "Layer Styles"
 
     },
 
@@ -173,17 +173,17 @@ GeoExt.Lang.add("en", {
     },
 
     "gxp.plugins.Zoom.prototype": {
-        zoomMenuText: "Zoom Box",
-        zoomInMenuText: "Zoom In",
-        zoomOutMenuText: "Zoom Out",
+        zoomMenuText: "Zoom box",
+        zoomInMenuText: "Zoom in",
+        zoomOutMenuText: "Zoom out",
         zoomTooltip: "Zoom by dragging a box",
         zoomInTooltip: "Zoom in",
         zoomOutTooltip: "Zoom out"
     },
     
     "gxp.plugins.ZoomToExtent.prototype": {
-        menuText: "Zoom To Max Extent",
-        tooltip: "Zoom To Max Extent"
+        menuText: "Zoom to max extent",
+        tooltip: "Zoom to max extent"
     },
     
     "gxp.plugins.ZoomToDataExtent.prototype": {
@@ -377,7 +377,7 @@ GeoExt.Lang.add("en", {
     },
     
     "gxp.NewSourceDialog.prototype": {
-        title: "Add New Server...",
+        title: "Add new server...",
         cancelText: "Cancel",
         addServerText: "Add Server",
         invalidURLText: "Enter a valid URL to a WMS endpoint (e.g. http://example.com/geoserver/wms)",

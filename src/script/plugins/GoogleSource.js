@@ -103,7 +103,7 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
     /** api: config[otherParams]
      *  ``String``
      *  Additional parameters to be sent to Google,
-     *  default is "sensore=false"
+     *  default is "sensor=false"
      */
     otherParams: "sensor=false",
 
