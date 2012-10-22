@@ -298,7 +298,6 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                                             zoomBoxEnabled: false
                                         }),
                                         new OpenLayers.Control.PanPanel(),
-                                        new OpenLayers.Control.ZoomPanel(),
                                         new OpenLayers.Control.Attribution()
                                     ],
                                     eventListeners: {
@@ -307,12 +306,6 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                                         }
                                     }
                                 }, mapPanel.initialConfig.map),
-                                items: [{
-                                    xtype: "gx_zoomslider",
-                                    vertical: true,
-                                    height: 100,
-                                    aggressive: true
-                                }],
                                 listeners: {
                                     afterlayout: function(evt) {
                                         printWindow.setWidth(Math.max(360, this.getWidth() + 24));
