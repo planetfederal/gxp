@@ -84,7 +84,8 @@ gxp.plugins.WMSCSource = Ext.extend(gxp.plugins.WMSSource, {
         if (!config.format) {
             this.format = new OpenLayers.Format.WMSCapabilities({
                 keepData: true,
-                profile: "WMSC"
+                profile: "WMSC",
+                allowFallback: true
             });
         }
         gxp.plugins.WMSCSource.superclass.constructor.apply(this, arguments); 

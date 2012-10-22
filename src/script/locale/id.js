@@ -319,7 +319,7 @@ GeoExt.Lang.add("id", {
         transparentText: "Transparent",
         cacheText: "Cache",
         cacheFieldText: "Menggunakan versi cached",
-        stylesText: "Styles",
+        stylesText: "Styles tersedia",
         infoFormatText: "Info format",
         infoFormatEmptyText: "Select a format"
     },

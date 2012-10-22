@@ -312,7 +312,7 @@ GeoExt.Lang.add("el", {
         transparentText: "Διαφανές",
         cacheText: "Cache",
         cacheFieldText: "Χρησιμοποίησε την cached έκδοση",
-        stylesText: "Στυλ"
+        stylesText: "Διαθέσιμες Στυλ"
     },
 
     "gxp.EmbedMapDialog.prototype": {
