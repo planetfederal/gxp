@@ -138,7 +138,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
             baseAttrs = this.initialConfig.loader.baseAttrs;
         }
 
-        this.appendGroups(this.groups, treeRoot);
+        this.appendGroups(this.groups, treeRoot, baseAttrs);
         
         return {
             xtype: "treepanel",
@@ -164,7 +164,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
         };
     },
     
-    appendGroups : function(groups, parent) {
+    appendGroups : function(groups, parent, baseAttrs) {
 
 		var defaultGroup = this.defaultGroup;
 		var plugin = this;
@@ -216,7 +216,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
 					parent.appendChild(groupNode);
 
 					if (groupConfig.groups) {
-						this.appendGroups(groupConfig.groups, groupNode);
+						this.appendGroups(groupConfig.groups, groupNode, baseAttrs);
 					}
 
 				}
