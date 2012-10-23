@@ -163,6 +163,7 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                             printButton.initialConfig.disabled = false;
                             printButton.enable();
                         }
+                        printProvider.setLayout(printProvider.layouts.getAt(printProvider.layouts.find("name", "A4 p")));
                     },
                     print: function() {
                         try {
@@ -314,7 +315,7 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                                 }
                             },
                             printProvider: printProvider,
-                            includeLegend: this.includeLegend,
+                            includeLegend: false,
                             legend: legend,
                             sourceMap: mapPanel
                         })
