@@ -84,9 +84,9 @@ gxp.plugins.FeatureEditorGrid = Ext.extend(Ext.grid.PropertyGrid, {
             this.timeFormat = Ext.form.TimeField.prototype.format;
         }
         var customEditors = {},
-            customRenderers = {},
             feature = this.feature,
             attributes;
+        var customRenderers = this.customRenderers ? this.customRenderers : {};
         if (this.fields) {
             // determine the order of attributes
             attributes = {};
@@ -145,7 +145,7 @@ gxp.plugins.FeatureEditorGrid = Ext.extend(Ext.grid.PropertyGrid, {
                                     }
                                 }
                             };
-                            customRenderers[name] = (function() {
+                            customRenderers[name] ? customRenderers[name] : (function() {
                                 return function(value) {
                                     //TODO When http://trac.osgeo.org/openlayers/ticket/3131
                                     // is resolved, change the 5 lines below to
