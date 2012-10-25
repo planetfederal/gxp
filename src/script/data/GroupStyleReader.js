@@ -6,6 +6,10 @@
  * of the license.
  */
 
+/**
+ * @require GeoExt/data/StyleReader.js
+ */
+
 Ext.ns("gxp.data");
 
 /** api: (define)
