@@ -56,6 +56,7 @@
         "widgets/TimelinePanel.js",
         "widgets/form/CSWFilterField.js",
         "widgets/CatalogueSearchPanel.js",
+        "widgets/ScaleOverlay.js",
         "plugins/LayerSource.js",
         "plugins/BingSource.js",
         "plugins/WMSSource.js",
