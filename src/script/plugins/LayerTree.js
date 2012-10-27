@@ -204,13 +204,51 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
 								singleClickExpand : true,
 								allowDrag : false,
 								listeners: {
-                    append: function(tree, node, addedNode) {
-                        if(addedNode.attributes.isLeaf){
-                        	var suds = 1;
-                        }
-                    	//node.expand();
-                    }
-                }
+				                    append: function(tree, node, addedNode) {
+				                        if(addedNode.attributes.isLeaf){
+				                        	var suds = 1;
+				                        }
+				                    },
+				                    beforeexpand: function (node) {
+				                    	// if id is wms service then check if there is such a source
+				                    	// if not then add source and add all layers
+                                        var id = '' + node.id;
+				                    	if((id.indexOf("o_") == 0 || id.indexOf("p_") == 0) && !this.target.layerSources[id]){
+				                    			
+                                                
+                                                
+                                                this.target.addLayerSource({
+                                                    id : id,
+                                                    config: {
+                                                        ptype : "gxp_wmscsource",
+							                            url : geoserverUrl + id + "/wms",
+							                            hidden : true
+                                                    },
+                                                    callback: function(sourceId) {
+                                                        var layerStore = this.target.mapPanel.layers;
+                                                    	var source = this.target.layerSources[sourceId];
+                                                        var wmscRecs = [];
+                                                        source.store.each(function(record) {
+                                                            //var process record add group ...
+                                                            var wmscRec = source.createLayerRecord({
+                                                                name : record.get("name"),
+                                                                group : sourceId + "_tematic",
+                                                                visibility : false,
+                                                                tileOrigin : this.target.map.maxExtent
+                                                            });
+                                                            wmscRecs.push(wmscRec);
+			                                            }, this);
+                                                        if(wmscRecs.length > 0){
+                                                            layerStore.add(wmscRecs);
+                                                        }
+                                                    },
+                                                    scope : this
+				                    			});
+				                    	}
+				                    			
+				                    },
+				                    scope:this
+				                }
 							}, groupConfig));
 
 					parent.appendChild(groupNode);
