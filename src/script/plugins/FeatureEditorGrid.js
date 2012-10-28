@@ -28,6 +28,9 @@ gxp.plugins.FeatureEditorGrid = Ext.extend(Ext.grid.PropertyGrid, {
     /** api: ptype = gxp_editorgrid */
     ptype: "gxp_editorgrid",
 
+    /** api: xtype = gxp_editorgrid */
+    xtype: "gxp_editorgrid",
+
     /** api: config[feature]
      *  ``OpenLayers.Feature.Vector`` The feature being edited/displayed.
      */
@@ -189,10 +192,12 @@ gxp.plugins.FeatureEditorGrid = Ext.extend(Ext.grid.PropertyGrid, {
         };
         this.listeners = {
             "beforeedit": function() {
-                return this.featureEditor.editing;
+                return this.featureEditor && this.featureEditor.editing;
             },
             "propertychange": function() {
-                this.featureEditor.setFeatureState(this.featureEditor.getDirtyState());
+                if (this.featureEditor) {
+                    this.featureEditor.setFeatureState(this.featureEditor.getDirtyState());
+                }
             },
             scope: this
         };
@@ -228,8 +233,10 @@ gxp.plugins.FeatureEditorGrid = Ext.extend(Ext.grid.PropertyGrid, {
      *  Clean up.
      */
     destroy: function() {
-        this.featureEditor.un("canceledit", this.onCancelEdit, this);
-        this.featureEditor = null;
+        if (this.featureEditor) {
+            this.featureEditor.un("canceledit", this.onCancelEdit, this);
+            this.featureEditor = null;
+        }
         gxp.plugins.FeatureEditorGrid.superclass.destroy.call(this);
     },
 
@@ -249,3 +256,4 @@ gxp.plugins.FeatureEditorGrid = Ext.extend(Ext.grid.PropertyGrid, {
 });
 
 Ext.preg(gxp.plugins.FeatureEditorGrid.prototype.ptype, gxp.plugins.FeatureEditorGrid);
+Ext.reg(gxp.plugins.FeatureEditorGrid.prototype.xtype, gxp.plugins.FeatureEditorGrid);

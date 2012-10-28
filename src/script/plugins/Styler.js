@@ -9,6 +9,7 @@
 /**
  * @requires plugins/Tool.js
  * @requires widgets/WMSStylesDialog.js
+ * @requires plugins/GeoServerStyleWriter.js
  */
 
 /** api: (define)

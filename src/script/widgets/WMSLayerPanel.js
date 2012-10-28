@@ -110,7 +110,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
     transparentText: "Transparent",
     cacheText: "Caching",
     cacheFieldText: "Use cached tiles",
-    stylesText: "Styles",
+    stylesText: "Available Styles",
     displayOptionsText: "Display options",
     queryText: "Limit with filters",
     scaleText: "Limit by scale",
@@ -252,35 +252,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
         return Ext.apply(config, {
             title: this.stylesText,
             style: "padding: 10px",
-            editable: false,
-            listeners: Ext.apply(config.listeners, {
-                "beforerender": {
-                    fn: function(cmp) {
-                        var render = !this.editableStyles;
-                        if (!render) {
-                            if (typeof this.authorized == 'boolean') {
-                                cmp.editable = this.authorized;
-                                cmp.ownerCt.doLayout();
-                            } else {
-                                Ext.Ajax.request({
-                                    method: "PUT",
-                                    url: url + "/styles",
-                                    callback: function(options, success, response) {
-                                        // we expect a 405 error code here if we are dealing with
-                                        // GeoServer and have write access. Otherwise we will
-                                        // create the panel in readonly mode.
-                                        cmp.editable = (response.status == 405);
-                                        cmp.ownerCt.doLayout();
-                                    }
-                                });
-                            }
-                        }
-                        return render;
-                    },
-                    scope: this,
-                    single: true
-                }
-            })
+            editable: false
         });
     },
     

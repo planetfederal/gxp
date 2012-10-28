@@ -253,7 +253,7 @@ gxp.plugins.GoogleEarth.loader = new (Ext.extend(Ext.util.Observable, {
         };
         
         var script = document.createElement("script");
-        script.src = "http://www.google.com/jsapi?" + Ext.urlEncode(params);
+        script.src = "//www.google.com/jsapi?" + Ext.urlEncode(params);
 
         // cancel loading if monitor is not ready within timeout
         var errback = options.errback || Ext.emptyFn;

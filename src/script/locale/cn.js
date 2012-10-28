@@ -315,7 +315,7 @@ GeoExt.Lang.add("en", {
         transparentText: "透明",
         cacheText: "缓存",
         cacheFieldText: "使用缓存版本",
-        stylesText: "式样",
+        stylesText: "Available styles",
         infoFormatText: "格式信息",
         infoFormatEmptyText: "选择一种格式"
     },
