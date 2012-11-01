@@ -234,7 +234,8 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
                                                                 name : record.get("name"),
                                                                 group : sourceId + "_tematic",
                                                                 visibility : false,
-                                                                tileOrigin : this.target.map.maxExtent
+                                                                tileOrigin : this.target.map.maxExtent,
+                                                                source : sourceId
                                                             });
                                                             wmscRecs.push(wmscRec);
 			                                            }, this);
