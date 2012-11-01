@@ -1273,8 +1273,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                             this.hideTooltip(record);
                         }
                     } else {
-                        var diff = Math.abs(Math.abs(startTime)-Math.abs(compare));
-                        var percentage = diff/Math.abs(startTime)*100;
+                        var diff = (startTime-compare);
+                        var percentage = Math.abs((diff/startTime)*100);
                         // we need to take a margin for the feature to have a chance to show up
                         if (percentage <= 2.5) {
                             this.displayTooltip(record);
