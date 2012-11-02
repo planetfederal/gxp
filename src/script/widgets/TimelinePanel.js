@@ -69,6 +69,14 @@ GeoExt.FeatureTip = Ext.extend(Ext.Tip, {
      */
     location: null,
 
+    /** api: config[shouldBeVisible]
+     *  ``Function``
+     *  Optional function to run to determine if the FeatureTip
+     *  should be visible, this can e.g. be used to add another
+     *  dimension such as time.
+     */
+    shouldBeVisible: null,
+
     /** private: method[initComponent]
      *  Initializes the feature tip.
      */
@@ -116,7 +124,7 @@ GeoExt.FeatureTip = Ext.extend(Ext.Tip, {
      */
     show: function() {
         var position = this.getPosition();
-        if (position !== null) {
+        if (position !== null && (this.shouldBeVisible === null || this.shouldBeVisible.call(this))) {
             this.showAt(position);
         } else {
             this.hide();
@@ -1206,12 +1214,16 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 this.tooltips[fid] = new GeoExt.FeatureTip({
                     map: this.viewer.mapPanel.map,
                     location: record.getFeature(),
+                    shouldBeVisible: function() {
+                        return (this._inTimeRange === true);
+                    },
                     cls: 'gxp-annotations-tip',
                     html: '<h4>' + record.get("title") + '</h4>' + record.get('content')
                 });
             }
         }
         var tooltip = this.tooltips[fid];
+        tooltip._inTimeRange = true;
         if (!hasGeometry) {
             // http://www.sencha.com/forum/showthread.php?101593-OPEN-1054-Tooltip-anchoring-problem
             tooltip.showBy(this.viewer.mapPanel.body, record.get("appearance"), [10, 10]);
@@ -1229,6 +1241,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     hideTooltip: function(record) {
         var fid = record.getFeature().fid;
         if (this.tooltips && this.tooltips[fid]) {
+            this.tooltips[fid]._inTimeRange = false;
             this.tooltips[fid].hide();
         }
     },
