@@ -1,0 +1,134 @@
+/**
+ * Published under the GNU General Public License
+ * Copyright 2011 © The President and Fellows of Harvard College
+ */
+
+
+/**
+ * @requires plugins/FeedSource.js
+ *
+ */
+
+Ext.namespace("gxp.plugins");
+
+/**
+ * Custom format for YouTube features
+ */
+OpenLayers.Format.YouTube = OpenLayers.Class(OpenLayers.Format.GeoRSS, {
+    createFeatureFromItem:function (item) {
+        var feature = OpenLayers.Format.GeoRSS.prototype.createFeatureFromItem.apply(this, arguments);
+        feature.attributes.thumbnail = this.getElementsByTagNameNS(item, "http://search.yahoo.com/mrss/", "thumbnail")[4].getAttribute("url");
+        feature.attributes.content = OpenLayers.Util.getXmlNodeValue(this.getElementsByTagNameNS(item, "*", "summary")[0]);
+        //feature.geometry
+        return feature;
+    }
+});
+
+gxp.plugins.YouTubeFeedSource = Ext.extend(gxp.plugins.FeedSource, {
+
+    /** api: ptype = gxp_rsssource */
+    ptype: "gx_youtubesource",
+
+    /** api: url [String]
+     * The URL for the YouTube GeoRSS feed
+     * **/
+    url: "http://gdata.youtube.com/feeds/api/videos?v=2&prettyprint=true&",
+
+    /**
+     * The default format to use for YouTube features
+     */
+    defaultFormat: "OpenLayers.Format.YouTube",
+
+    /** Title for source **/
+    title: 'YouTube Source',
+
+    /**
+     * Create a YouTube layer record
+     * @param config
+     * @return layerRecord
+     */
+    createLayerRecord:function (config) {
+
+        if (Ext.isEmpty(config.params["max-results"])) {
+            config.params["max-results"] = 50;
+        } else {
+            //Youtube doesn't accept more than 50 results
+            config.params["max-results"] = Math.min(config.params["max-results"], 50);
+        }
+
+        config.url = this.url;
+
+        var record = gxp.plugins.YouTubeFeedSource.superclass.createLayerRecord.apply(this, arguments);
+
+        // Calculate location and location-radius parameters used by YouTube
+        var layer = record.getLayer();
+        layer.events.register("loadstart", layer, function () {
+            //location parameter will  be the center of the map.
+            var location = layer.map.getCenter().transform(layer.map.projection, new OpenLayers.Projection("EPSG:4326"));
+            //calculate the location-radius to use
+            var bounds = layer.map.getExtent();
+            var R = 6378.1370;
+            var PI = 3.1415926;
+            var leftBounds = R * (bounds.left) / 180.0 / PI;
+            var rightBounds = R * (bounds.right) / 180.0 / PI;
+            var radius = Math.min((rightBounds - leftBounds) / 2 * 2, 1000);
+
+            Ext.apply(layer.protocol.params, {
+                "location":"" + location.lat + "," + location.lon,
+                "location-radius":radius + "km"
+            });
+        });
+        return record;
+    },
+
+    /**
+     * Create a popup based on the YouTube feature attributes
+     * @param layer
+     */
+    configureInfoPopup:function (layer) {
+        layer.events.on({
+            "featureselected":function (featureObject) {
+                var feature = featureObject.feature;
+                var pos = feature.geometry;
+
+                if (this.target.selectControl.popup != null) {
+                    this.target.mapPanel.map.removePopup(this.target.selectControl.popup);
+                }
+
+                var content = document.createElement("div");
+                content.innerHTML = feature.attributes.content;
+                this.target.selectControl.popup = new OpenLayers.Popup("popup",
+                    new OpenLayers.LonLat(pos.x, pos.y),
+                    new OpenLayers.Size(240, 180),
+                    "<a target='_blank' href=" +
+                        feature.attributes.link + "><img height='180', width='240' title='" +
+                        feature.attributes.title + "' src='" + feature.attributes.thumbnail + "' /></a>",
+                    false);
+                this.target.selectControl.popup.closeOnMove = true;
+                this.target.selectControl.popup.keepInMap = true;
+                this.target.mapPanel.map.addPopup(this.target.selectControl.popup);
+            },
+
+            "featureunselected":function (featureObject) {
+                this.target.mapPanel.map.removePopup(this.target.selectControl.popup);
+                this.target.selectControl.popup = null;
+            },
+            scope:this
+        });
+    },
+
+    /**
+     * Create an OpenLayers.StyleMap based on configuration parameters
+     * @param config
+     * @return {OpenLayers.StyleMap}
+     */
+    getStyleMap:function (config) {
+        return new OpenLayers.StyleMap({
+            "default":new OpenLayers.Style({externalGraphic:"${thumbnail}", pointRadius:24}),
+            "select":new OpenLayers.Style({pointRadius:30})
+        });
+    }
+
+});
+
+Ext.preg(gxp.plugins.YouTubeFeedSource.prototype.ptype, gxp.plugins.YouTubeFeedSource);

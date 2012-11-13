@@ -44,6 +44,12 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      */
     findActionMenuText: "Find layers",
 
+    /** api: config[addActionMenuText]
+     *  ``String``
+     *  Text for add feed menu item (i18n).
+     */
+    addFeedActionMenuText: "Add feeds",
+
     /** api: config[addActionTip]
      *  ``String``
      *  Text for add action tooltip (i18n).
@@ -248,6 +254,12 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     scope: this
                 }));
             }
+            items.push(new Ext.menu.Item({
+                iconCls: 'gxp-icon-addlayers',
+                text: this.addFeedActionMenuText,
+                handler: this.showFeedDialog,
+                scope: this
+            }));
             if (this.uploadSource) {
                 uploadButton = this.createUploadButton(Ext.menu.Item);
                 if (uploadButton) {
@@ -337,12 +349,44 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         this.capGrid.show();
     },
 
+    /** api: method[showFeedDialog]
+     * Shows the window with a dialog for adding feeds.
+     */
+    showFeedDialog: function() {
+        if(!this.feedDialog) {
+            this.feedDialog = new Ext.Window({
+                closeAction: "hide",
+                title: this.addFeedActionMenuText,
+                items: [{
+                    xtype: "gxp_feedsourcedialog",
+                    target: this.target,
+                    listeners: {
+                        'addFeed':function (ptype, config) {
+                            var sourceConfig = {"config":{"ptype":ptype}};
+                            if (config.url) {
+                                sourceConfig.config["url"] = config.url;
+                            }
+                            var source = this.target.addLayerSource(sourceConfig);
+                            config.source = source.id;
+                            var feedRecord = source.createLayerRecord(config);
+                            this.target.mapPanel.layers.add([feedRecord]);
+                            this.target.selectControl.activate();
+                            this.feedDialog.hide()
+                        },
+                        scope: this
+                    }
+                }]
+            });
+        }
+        this.feedDialog.show();
+    },
+
     /**
      * private: method[initCapGrid]
      * Constructs a window with a capabilities grid.
      */
     initCapGrid: function() {
-        var source, data = [], target = this.target;        
+        var source, data = [], target = this.target;
         for (var id in target.layerSources) {
             source = target.layerSources[id];
             if (source.store && !source.hidden) {
@@ -380,7 +424,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 }
             }
         }
-        
+
         var idx = 0;
         if (this.startSourceId !== null) {
             sources.each(function(record) {
@@ -408,7 +452,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 scope: this
             }
         });
-        
+
         var sourceComboBox = new Ext.form.ComboBox({
             ref: "../sourceComboBox",
             width: 165,
@@ -466,7 +510,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             this.addServerId = Ext.id();
             sources.loadData([[this.addServerId, this.addServerText + "..."]], true);
         }
-        
+
         var newSourceDialog = {
             xtype: "gxp_newsourcedialog",
             header: false,
@@ -514,9 +558,9 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     items: newSourceDialog
                 }).show();
             }
-        }        
-        
-        
+        }
+
+
         var items = {
             xtype: "container",
             region: "center",

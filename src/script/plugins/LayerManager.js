@@ -30,7 +30,7 @@ Ext.namespace("gxp.plugins");
  *    :class:`gxp.Viewer`. Also provides a context menu on layer nodes.
  */   
 /** api: example
- *  If you want to change the vendor-specific legend_options parameter that 
+ *  If you want to change the vendor-specific legend_options parameter that
  *  is sent to the WMS for GetLegendGraphic you can use ``baseAttrs`` on the
  *  ``loader`` config:
  *
@@ -119,6 +119,8 @@ gxp.plugins.LayerManager = Ext.extend(gxp.plugins.LayerTree, {
                     }, baseParams),
                     layerRecord: this.target.mapPanel.layers.getByLayer(attr.layer),
                     showTitle: false,
+                    //Don't show untitled vector legend
+                    untitledPrefix: null,
                     // custom class for css positioning
                     // see tree-legend.html
                     cls: "legend"
