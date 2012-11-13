@@ -386,7 +386,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      * Constructs a window with a capabilities grid.
      */
     initCapGrid: function() {
-        var source, data = [], target = this.target;
+        var source, data = [], target = this.target;        
         for (var id in target.layerSources) {
             source = target.layerSources[id];
             if (source.store && !source.hidden) {
@@ -424,7 +424,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 }
             }
         }
-
+        
         var idx = 0;
         if (this.startSourceId !== null) {
             sources.each(function(record) {
@@ -452,7 +452,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 scope: this
             }
         });
-
+        
         var sourceComboBox = new Ext.form.ComboBox({
             ref: "../sourceComboBox",
             width: 165,
@@ -510,7 +510,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             this.addServerId = Ext.id();
             sources.loadData([[this.addServerId, this.addServerText + "..."]], true);
         }
-
+        
         var newSourceDialog = {
             xtype: "gxp_newsourcedialog",
             header: false,
@@ -558,9 +558,9 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     items: newSourceDialog
                 }).show();
             }
-        }
-
-
+        }        
+        
+        
         var items = {
             xtype: "container",
             region: "center",
