@@ -62,10 +62,10 @@ gxp.plugins.GeoNodeCatalogueSource = Ext.extend(gxp.plugins.CatalogueSource, {
                 top: v.maxy
             };
         }},
-        {name: "URI", mapping: "download_links", convert: function(v) {
+        {name: "URI", mapping: "links", convert: function(v) {
             var result = [];
-            for (var i=0,ii=v.length;i<ii;++i) {
-                result.push(v[i][3]);
+            for (var key in v) {
+                result.push({value: v[key].url});
             }
             return result;
         }}

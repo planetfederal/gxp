@@ -20,7 +20,8 @@ GeoExt.Lang.add("en", {
         panelTitleText: "标题",
         layerSelectionText: "查看现有数据:",
         doneText: "完成",
-        uploadText: "上传图层"
+        uploadText: "上传图层",
+        searchText: "Search for layers"
     },
     
     "gxp.plugins.BingSource.prototype": {
