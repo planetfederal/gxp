@@ -17,7 +17,8 @@ GeoExt.Lang.add("el", {
         panelTitleText: "Τίτλος",
         layerSelectionText: "Δείτε διαθέσιμα δεδομένα από:",
         doneText: "Ολοκληρώθηκε",
-        uploadText: "Ανεβάστε Δεδομένα"
+        uploadText: "Ανεβάστε Δεδομένα",
+        searchText: "Search for layers"
     },
     
     "gxp.plugins.BingSource.prototype": {

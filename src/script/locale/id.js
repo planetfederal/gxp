@@ -20,7 +20,8 @@ GeoExt.Lang.add("id", {
         panelTitleText: "Title",
         layerSelectionText: "View available data from:",
         doneText: "Selesai",
-        uploadText: "Unggah data"
+        uploadText: "Unggah data",
+        searchText: "Search for layers"
     },
     
     "gxp.plugins.BingSource.prototype": {

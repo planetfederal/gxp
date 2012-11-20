@@ -20,7 +20,8 @@ GeoExt.Lang.add("ca", {
         panelTitleText: "Títol",
         layerSelectionText: "Veure dades disponibles de:",
         doneText: "Fet",
-        uploadText: "Puja dades"
+        uploadText: "Puja dades",
+        searchText: "Search for layers"
     },
     
     "gxp.plugins.BingSource.prototype": {

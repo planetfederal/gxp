@@ -20,7 +20,8 @@ GeoExt.Lang.add("pl", {
         panelTitleText: "Tytuł",
         layerSelectionText: "Pokaż dostępne warstwy z:",
         doneText: "Gotowe",
-        uploadText: "Wyślij dane"
+        uploadText: "Wyślij dane",
+        searchText: "Search for layers"
     },
     
     "gxp.plugins.BingSource.prototype": {
