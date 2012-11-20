@@ -30,7 +30,6 @@
         "widgets/PolygonSymbolizer.js",
         "widgets/RulePanel.js",
         "widgets/ScaleLimitPanel.js",
-        "widgets/ScaleOverlay.js",
         "widgets/TextSymbolizer.js",
         "widgets/Viewer.js",
         "widgets/tree/TreeGridNodeUI.js",

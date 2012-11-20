@@ -21,7 +21,8 @@ GeoExt.Lang.add("lv", {
         panelTitleText: "Nosaukums",
         layerSelectionText: "Apskatīt pieejamos datus no:",
         doneText: "Labi",
-        uploadText: "Augšupielādēt slāņus"
+        uploadText: "Augšupielādēt slāņus",
+        searchText: "Meklēt slāņus"
     },
     
     "gxp.plugins.BingSource.prototype": {
@@ -123,7 +124,7 @@ GeoExt.Lang.add("lv", {
 
     "gxp.plugins.OSMSource.prototype": {
         title: "OpenStreetMap slāņi",
-        mapnikAttribution: "Dati CC-By-SA no <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
+        mapnikAttribution: "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors",
         osmarenderAttribution: "Dati CC-By-SA no <a href='http://openstreetmap.org/'>OpenStreetMap</a>"
     },
 
@@ -341,7 +342,7 @@ GeoExt.Lang.add("lv", {
         transparentText: "Caurspīdīgs",
         cacheText: "Kešotā karte",
         cacheFieldText: "Lietot kešoto karti",
-        stylesText: "Apzīmējumi",
+        stylesText: "Pieejamie apzīmējumi",
         infoFormatText: "Informācijas formāts",
         infoFormatEmptyText: "Izvēlieties formātu"
     },
