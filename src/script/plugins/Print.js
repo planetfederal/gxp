@@ -163,6 +163,7 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                             printButton.initialConfig.disabled = false;
                             printButton.enable();
                         }
+                        printProvider.setLayout(printProvider.layouts.getAt(printProvider.layouts.find("name", "A4 p")));
                     },
                     print: function() {
                         try {
@@ -238,10 +239,7 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
             }
 
             function isPrintable(layer) {
-                return layer.getVisibility() === true && (
-                    layer instanceof OpenLayers.Layer.WMS ||
-                    layer instanceof OpenLayers.Layer.OSM
-                );
+                return layer.getVisibility() === true && layer instanceof OpenLayers.Layer.WMS;
             }
 
             function createPrintWindow() {
@@ -301,7 +299,6 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                                             zoomBoxEnabled: false
                                         }),
                                         new OpenLayers.Control.PanPanel(),
-                                        new OpenLayers.Control.ZoomPanel(),
                                         new OpenLayers.Control.Attribution()
                                     ],
                                     eventListeners: {
@@ -310,12 +307,6 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                                         }
                                     }
                                 }, mapPanel.initialConfig.map),
-                                items: [{
-                                    xtype: "gx_zoomslider",
-                                    vertical: true,
-                                    height: 100,
-                                    aggressive: true
-                                }],
                                 listeners: {
                                     afterlayout: function(evt) {
                                         printWindow.setWidth(Math.max(360, this.getWidth() + 24));
@@ -324,7 +315,7 @@ gxp.plugins.Print = Ext.extend(gxp.plugins.Tool, {
                                 }
                             },
                             printProvider: printProvider,
-                            includeLegend: this.includeLegend,
+                            includeLegend: false,
                             legend: legend,
                             sourceMap: mapPanel
                         })

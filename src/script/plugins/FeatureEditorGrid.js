@@ -83,10 +83,10 @@ gxp.plugins.FeatureEditorGrid = Ext.extend(Ext.grid.PropertyGrid, {
         if (!this.timeFormat) {
             this.timeFormat = Ext.form.TimeField.prototype.format;
         }
-        this.customRenderers = this.customRenderers || {};
-        this.customEditors = this.customEditors || {};
-        var feature = this.feature,
+        var customEditors = {},
+            feature = this.feature,
             attributes;
+        var customRenderers = this.customRenderers ? this.customRenderers : {};
         if (this.fields) {
             // determine the order of attributes
             attributes = {};
@@ -145,7 +145,7 @@ gxp.plugins.FeatureEditorGrid = Ext.extend(Ext.grid.PropertyGrid, {
                                     }
                                 }
                             };
-                            this.customRenderers[name] = (function() {
+                            customRenderers[name] ? customRenderers[name] : (function() {
                                 return function(value) {
                                     //TODO When http://trac.osgeo.org/openlayers/ticket/3131
                                     // is resolved, change the 5 lines below to
@@ -169,7 +169,7 @@ gxp.plugins.FeatureEditorGrid = Ext.extend(Ext.grid.PropertyGrid, {
                             break;
                     }
                 }
-                this.customEditors[name] = new Ext.grid.GridEditor({
+                customEditors[name] = new Ext.grid.GridEditor({
                     field: Ext.create(fieldCfg),
                     listeners: listeners
                 });
@@ -178,6 +178,8 @@ gxp.plugins.FeatureEditorGrid = Ext.extend(Ext.grid.PropertyGrid, {
             feature.attributes = attributes;
         }
         this.source = attributes;
+        this.customEditors = customEditors;
+        this.customRenderers = customRenderers;
         var ucExcludeFields = this.excludeFields.length ?
             this.excludeFields.join(",").toUpperCase().split(",") : [];
         this.viewConfig = {

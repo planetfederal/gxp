@@ -225,7 +225,7 @@ GeoExt.Lang.add("lv", {
     },
     
     "gxp.FilterBuilder.prototype": {
-        builderTypeNames: ["jebkuram", "visiem", "nevienam", "ne visiem"],
+        builderTypeNames: ["kaut vienam", "visiem", "nevienam", "ne visiem"],
         preComboText: "Atbilst",
         postComboText: "no nosacījumiem:",
         addConditionText: "pievienot nosacījumu",

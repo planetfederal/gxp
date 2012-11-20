@@ -137,8 +137,45 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
         if (this.initialConfig.loader && this.initialConfig.loader.baseAttrs) {
             baseAttrs = this.initialConfig.loader.baseAttrs;
         }
-
-        this.appendGroups(this.groups, treeRoot);
+        
+        var defaultGroup = this.defaultGroup,
+            plugin = this,
+            groupConfig,
+            exclusive;
+        for (var group in this.groups) {
+            groupConfig = typeof this.groups[group] == "string" ?
+                {title: this.groups[group]} : this.groups[group];
+            exclusive = groupConfig.exclusive;
+            treeRoot.appendChild(new GeoExt.tree.LayerContainer(Ext.apply({
+                text: groupConfig.title,
+                iconCls: "gxp-folder",
+                expanded: true,
+                group: group == this.defaultGroup ? undefined : group,
+                loader: new GeoExt.tree.LayerLoader({
+                    baseAttrs: exclusive ?
+                        Ext.apply({checkedGroup: Ext.isString(exclusive) ? exclusive : group}, baseAttrs) :
+                        baseAttrs,
+                    store: this.target.mapPanel.layers,
+                    filter: (function(group) {
+                        return function(record) {
+                            return (record.get("group") || defaultGroup) == group &&
+                                record.getLayer().displayInLayerSwitcher == true;
+                        };
+                    })(group),
+                    createNode: function(attr) {
+                        plugin.configureLayerNode(this, attr);
+                        return GeoExt.tree.LayerLoader.prototype.createNode.apply(this, arguments);
+                    }
+                }),
+                singleClickExpand: true,
+                allowDrag: false,
+                listeners: {
+                    append: function(tree, node) {
+                        node.expand();
+                    }
+                }
+            }, groupConfig)));
+        }
         
         return {
             xtype: "treepanel",
@@ -163,66 +200,6 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
             })
         };
     },
-    
-    appendGroups : function(groups, parent) {
-
-		var defaultGroup = this.defaultGroup;
-		var plugin = this;
-
-		for (var group in groups) {
-
-					var groupConfig = typeof groups[group] == "string" ? {
-						title : groups[group]
-					} : groups[group];
-
-					var exclusive = groupConfig.exclusive;
-
-					var groupNode = new GeoExt.tree.LayerContainer(Ext.apply({
-								text : groupConfig.title,
-								iconCls : "gxp-folder",
-								isLeaf : false,
-								//nodeType: "gx_layer",
-								expanded : groupConfig.expanded?groupConfig.expanded:false,
-								group : group == this.defaultGroup ? undefined : group,
-								loader : new GeoExt.tree.LayerLoader({
-											baseAttrs: exclusive ?
-                                                Ext.apply({checkedGroup: Ext.isString(exclusive) ? exclusive : group}, baseAttrs) :
-                                                baseAttrs,
-											store : this.target.mapPanel.layers,
-											filter : (function(group) {
-												return function(record) {
-													return (record.get("group") || defaultGroup) == group
-															&& record.getLayer().displayInLayerSwitcher == true;
-												};
-											})(group),
-											createNode : function(attr) {
-												plugin.configureLayerNode(this, attr);
-												return GeoExt.tree.LayerLoader.prototype.createNode.apply(this,
-														arguments);
-											}
-										}),
-								singleClickExpand : true,
-								allowDrag : false,
-								listeners: {
-                    append: function(tree, node, addedNode) {
-                        if(addedNode.attributes.isLeaf){
-                        	var suds = 1;
-                        }
-                    	//node.expand();
-                    }
-                }
-							}, groupConfig));
-
-					parent.appendChild(groupNode);
-
-					if (groupConfig.groups) {
-						this.appendGroups(groupConfig.groups, groupNode);
-					}
-
-				}
-
-			},
-
     
     /** private: method[configureLayerNode]
      *  :arg loader: ``GeoExt.tree.LayerLoader``

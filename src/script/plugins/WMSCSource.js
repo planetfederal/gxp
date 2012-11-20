@@ -127,7 +127,7 @@ gxp.plugins.WMSCSource = Ext.extend(gxp.plugins.WMSSource, {
                     }
                 }
             }
-        } else if (this.lazy) {
+        } else {
             // lazy loading
             var tileSize = config.tileSize,
                 tileOrigin = config.tileOrigin;
