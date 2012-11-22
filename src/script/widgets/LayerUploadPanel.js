@@ -262,7 +262,7 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
             mode: "local",
             allowBlank: true,
             triggerAction: "all",
-            editable: false,
+            forceSelection: true,
             listeners: {
                 select: function(combo, record, index) {
                     this.getDefaultDataStore(record.get('name'));
@@ -307,7 +307,7 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
             mode: "local",
             allowBlank: true,
             triggerAction: "all",
-            editable: false,
+            forceSelection: true,
             listeners: {
                 select: function(combo, record, index) {
                     this.fireEvent("datastoreselected", this, record);
@@ -363,7 +363,8 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
     handleUploadResponse: function(response) {
         var obj = this.parseResponseText(response.responseText),
             records, tasks, task, msg, i,
-            success = true;
+            formData = this.getForm().getFieldValues(),
+            success = !!obj;
         if (obj) {
             if (typeof obj === "string") {
                 success = false;
@@ -379,11 +380,15 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
                         if (!task) {
                             success = false;
                             msg = "Unknown upload error";
-                            break;
-                        } else if (task.state !== "READY") {
+                        } else if (!task.items.length) {
                             success = false;
-                            msg = "Source " + task.source.file + " is " + task.state;
-                            break;
+                            msg = "Upload contains no items that can be imported.";
+                        } else if (task.state !== "READY") {
+                            if (!(task.state === "INCOMPLETE" && task.items[0].state === "NO_CRS" && formData.nativeCRS)) {
+                                success = false;
+                                msg = "Source " + task.source.file + " is " + task.state + ": " + task.items[0].state;
+                                break;
+                            }
                         }
                     }
                 }
@@ -391,33 +396,53 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
         }
         if (!success) {
             // mark the file field as invlid
-            records = [{data: {id: "file", msg: msg}}];
+            records = [{data: {id: "file", msg: msg || "Upload failed"}}];
         } else {
-            var formData = this.getForm().getFieldValues(),
-                // for now we only support a single item (items[0])
-                resource = task.items[0].resource,
-                itemModified = !!(formData.title || formData["abstract"] || formData.nativeCRS),
+            var itemModified = !!(formData.title || formData["abstract"] || formData.nativeCRS),
                 queue = [];
             if (itemModified) {
-                var layer = resource.featureType ? "featureType" : "coverage",
-                    item = {resource: {}};
+                // for now we only support a single item (items[0])
+                var resource = task.items[0].resource,
+                    layer = resource.featureType ? "featureType" : "coverage",
+                    item = {id: task.items[0].id, resource: {}};
                 item.resource[layer] = {
                     title: formData.title || undefined,
                     "abstract": formData["abstract"] || undefined,
-                    nativeCRS: formData.nativeCRS || undefined
+                    srs: formData.nativeCRS || undefined
                 };
                 Ext.Ajax.request({
                     method: "PUT",
                     url: tasks[0].items[0].href,
-                    jsonData: {item: item},
-                    callback: this.finishUpload,
+                    jsonData: item,
+                    success: this.finishUpload,
+                    failure: function(response) {
+                        var errors = [];
+                        try {
+                            var json = Ext.decode(response.responseText);
+                            if (json.errors) {
+                                for (var i=0, ii=json.errors.length; i<ii; ++i) {
+                                    errors.push({
+                                        id: ~json.errors[i].indexOf('SRS') ? 'nativeCRS' : 'file',
+                                        msg: json.errors[i]
+                                    });
+                                }
+                            }
+                        } catch(e) {
+                            errors.push({
+                                id: "file",
+                                msg: response.responseText
+                            });
+                        }
+                        this.getForm().markInvalid(errors);
+                    },
                     scope: this
                 });
             } else {
                 this.finishUpload();
             }
         }
-        return {success: success, records: records};
+        // always return unsuccessful - we manually reset the form in callbacks
+        return {success: false, records: records};
     },
     
     finishUpload: function() {
@@ -462,6 +487,7 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
             method: "GET",
             url: this._import,
             success: function(response) {
+                this.getForm().reset();
                 var details = Ext.decode(response.responseText);
                 this.fireEvent("uploadcomplete", this, details);
                 delete this._import;
