@@ -189,7 +189,7 @@ gxp.plugins.WMSCSource = Ext.extend(gxp.plugins.WMSSource, {
             if (tileSize) {
                 config.tileSize = [tileSize.w, tileSize.h];
             }
-            config.tileOrigin = layer.options.tileOrigin;
+            config.tileOrigin = layer.options.tileOrigin?[layer.options.tileOrigin.lon, layer.options.tileOrigin.lat]:null;
             config.resolutions = layer.options.resolutions;
         }
         return Ext.applyIf(config, {
