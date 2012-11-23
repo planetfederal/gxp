@@ -371,6 +371,8 @@ GeoExt.Lang.add("de", {
         fileLabel: "Daten",
         fieldEmptyText: "Datenarchiv durchsuchen...",
         uploadText: "Hochladen",
+        uploadFailedText: "Hochladen fehlgeschlagen",
+        processingUploadText: "Upload wird bearbeitet",
         waitMsgText: "Ihre Daten werden hochgeladen...",
         invalidFileExtensionText: "Dateierweiterung muss eine sein von: ",
         optionsText: "Optionen",

@@ -362,6 +362,8 @@ GeoExt.Lang.add("el", {
         fileLabel: "Δεδομένα",
         fieldEmptyText: "Βρείτε το μονοπάτι για ένα αρχείο δεδομένων...",
         uploadText: "Ανέβασμα",
+        uploadFailedText: "Upload failed",
+        processingUploadText: "Processing upload...",
         waitMsgText: "Τα δεδομένα σας ανεβαίνουν...",
         invalidFileExtensionText: "Ο τύπος αρχείου πρέπει να είναι ένας από τους: ",
         optionsText: "Επιλογές",

@@ -332,6 +332,8 @@ GeoExt.Lang.add("nl", {
         fileLabel: "Data",
         fieldEmptyText: "Kies data archief...",
         uploadText: "Upload",
+        uploadFailedText: "Upload failed",
+        processingUploadText: "Processing upload...",
         waitMsgText: "Bezig met uploaden van de data...",
         invalidFileExtensionText: "Bestandsextensie is een van: ",
         optionsText: "Opties",

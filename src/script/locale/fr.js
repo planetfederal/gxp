@@ -305,6 +305,8 @@ GeoExt.Lang.add("fr", {
         fileLabel: "Données",
         fieldEmptyText: "Parcourir pour ...",
         uploadText: "Upload",
+        uploadFailedText: "Upload failed",
+        processingUploadText: "Processing upload...",
         waitMsgText: "Transfert de vos données ...",
         invalidFileExtensionText: "L'extension du fichier doit être : ",
         optionsText: "Options",

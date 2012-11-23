@@ -28,6 +28,8 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
     fileLabel: "Data",
     fieldEmptyText: "Browse for data archive...",
     uploadText: "Upload",
+    uploadFailedText: "Upload failed",
+    processingUploadText: "Processing upload...",
     waitMsgText: "Uploading your data...",
     invalidFileExtensionText: "File extension must be one of: ",
     optionsText: "Options",
@@ -396,11 +398,13 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
         }
         if (!success) {
             // mark the file field as invlid
-            records = [{data: {id: "file", msg: msg || "Upload failed"}}];
+            records = [{data: {id: "file", msg: msg || this.uploadFailedText}}];
         } else {
             var itemModified = !!(formData.title || formData["abstract"] || formData.nativeCRS),
                 queue = [];
             if (itemModified) {
+                this.waitMsg = new Ext.LoadMask((this.ownerCt || this).getEl(), {msg: this.processingUploadText});
+                this.waitMsg.show();
                 // for now we only support a single item (items[0])
                 var resource = task.items[0].resource,
                     layer = resource.featureType ? "featureType" : "coverage",
@@ -416,6 +420,7 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
                     jsonData: item,
                     success: this.finishUpload,
                     failure: function(response) {
+                        this.waitMsg.hide();
                         var errors = [];
                         try {
                             var json = Ext.decode(response.responseText);
@@ -449,7 +454,7 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
         Ext.Ajax.request({
             method: "POST",
             url: this._import,
-            //TODO error handling
+            failure: this.handleFailure,
             success: this.handleUploadSuccess,
             scope: this
         });
@@ -486,7 +491,9 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
         Ext.Ajax.request({
             method: "GET",
             url: this._import,
+            failure: this.handleFailure,
             success: function(response) {
+                this.waitMsg.hide();
                 this.getForm().reset();
                 var details = Ext.decode(response.responseText);
                 this.fireEvent("uploadcomplete", this, details);
@@ -494,6 +501,13 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
             },
             scope: this
         });
+    },
+    
+    /** private: method[handleFailure]
+     */
+    handleFailure: function() {
+        this.waitMsg.hide();
+        this.getForm().markInvalid([{file: this.uploadFailedText}]);
     }
 
 });

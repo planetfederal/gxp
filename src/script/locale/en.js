@@ -367,6 +367,8 @@ GeoExt.Lang.add("en", {
         fileLabel: "Data",
         fieldEmptyText: "Browse for data archive...",
         uploadText: "Upload",
+        uploadFailedText: "Upload failed",
+        processingUploadText: "Processing upload...",
         waitMsgText: "Uploading your data...",
         invalidFileExtensionText: "File extension must be one of: ",
         optionsText: "Options",
