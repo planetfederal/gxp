@@ -98,7 +98,7 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
 
     initComponent: function() {
         var defConfig = {
-            defaultBuilderType: gxp.FilterBuilder.ANY_OF
+            defaultBuilderType: gxp.FilterBuilder.ALL_OF
         };
         Ext.applyIf(this, defConfig);
         
