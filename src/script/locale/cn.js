@@ -389,6 +389,16 @@ GeoExt.Lang.add("en", {
 
     "gxp.ScaleOverlay.prototype": { 
         zoomLevelText: "聚焦度"
+    },
+    
+    "gxp.form.FilterField.prototype": { 
+        lowerBoundaryTip: "lower boundary",
+        upperBoundaryTip: "upper boundary"
+    },
+    
+    "gxp.form.ComparisonComboBox.prototype": { 
+        betweenFilterText: "between",
+        likeFilterText: "like"
     }
 
 });
