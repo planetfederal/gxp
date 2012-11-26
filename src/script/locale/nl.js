@@ -352,6 +352,16 @@ GeoExt.Lang.add("nl", {
 
     "gxp.ScaleOverlay.prototype": { 
         zoomLevelText: "Zoom niveau"
+    },
+    
+    "gxp.form.FilterField.prototype": { 
+        lowerBoundaryTip: "lower boundary",
+        upperBoundaryTip: "upper boundary"
+    },
+    
+    "gxp.form.ComparisonComboBox.prototype": { 
+        betweenFilterText: "between",
+        likeFilterText: "like"
     }
 
 });

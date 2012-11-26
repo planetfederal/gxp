@@ -413,6 +413,16 @@ GeoExt.Lang.add("lv", {
 
     "gxp.ScaleOverlay.prototype": { 
         zoomLevelText: "Tuvinājums"
+    },
+    
+    "gxp.form.FilterField.prototype": { 
+        lowerBoundaryTip: "'no' vērtība",
+        upperBoundaryTip: "'līdz' vērtība"
+    },
+    
+    "gxp.form.ComparisonComboBox.prototype": { 
+        betweenFilterText: "starp",
+        likeFilterText: "līdzīgs"
     }
 
 });
