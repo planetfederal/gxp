@@ -209,6 +209,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
             opacityProperty: "fontOpacity",
             checkboxToggle: false,
             autoHeight: true,
+            width: 213,
             labelWidth: 70,
             plugins: this.colorManager && [new this.colorManager()],
             listeners: {

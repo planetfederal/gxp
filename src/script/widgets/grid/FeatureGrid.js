@@ -229,14 +229,6 @@ gxp.grid.FeatureGrid = Ext.extend(Ext.grid.GridPanel, {
                     case "string":
                         xtype = "gridcolumn";
                         break;
-                    case "int":
-                        xtype = "numbercolumn";
-                        format = '0';
-                        break;
-                    case "double":
-                        xtype = "numbercolumn";
-                        format = '0.00';
-                        break;
                     default:
                         xtype = "numbercolumn";
                         break;

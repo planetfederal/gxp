@@ -208,8 +208,8 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
                 autoScroll: true,
                 location: evt.xy,
                 map: this.target.mapPanel,
-                width: 300,
-                height: 400,
+                width: 250,
+                height: 300,
                 defaults: {
                     layout: "fit",
                     autoScroll: true,
