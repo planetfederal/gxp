@@ -113,7 +113,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         if(!this.dimModel){
             this.dimModel = new OpenLayers.Dimension.Model({
                 dimension: 'time',
-                map: this.mapPanel.map,
+                map: this.mapPanel.map
             });
         }
 
