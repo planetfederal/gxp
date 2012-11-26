@@ -367,6 +367,8 @@ GeoExt.Lang.add("en", {
         fileLabel: "数据",
         fieldEmptyText: "浏览数据档案...",
         uploadText: "上传",
+        uploadFailedText: "Upload failed",
+        processingUploadText: "Processing upload...",
         waitMsgText: "上传您的数据",
         invalidFileExtensionText: "文件后缀名必须是: ",
         optionsText: "选项",

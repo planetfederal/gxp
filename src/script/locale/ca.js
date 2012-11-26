@@ -370,6 +370,8 @@ GeoExt.Lang.add("ca", {
         fileLabel: "Dades",
         fieldEmptyText: "Navegueu per les dades...",
         uploadText: "Puja",
+        uploadFailedText: "Upload failed",
+        processingUploadText: "Processing upload...",
         waitMsgText: "Pugeu les vostres dades...",
         invalidFileExtensionText: "L'extensió del fitxer ha de ser alguna d'aquestes: ",
         optionsText: "Opcions",
