@@ -97,7 +97,7 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
                 this.symbolizer.stroke === false,
             hideMode: "offsets",
             defaults: {
-            	 anchor:'100%'
+                anchor:'100%'
             },
             items: [{
                 xtype: "combo",

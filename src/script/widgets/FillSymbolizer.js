@@ -102,7 +102,7 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
                 this.symbolizer.fill === false,
             hideMode: "offsets",
             defaults: {
-            	 anchor:'100%'
+                anchor:'100%'
             },
             items: [{
                 xtype: "gxp_colorfield",
