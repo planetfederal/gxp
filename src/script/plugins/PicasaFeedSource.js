@@ -1,6 +1,9 @@
 /**
- * Published under the GNU General Public License
- * Copyright 2011 © The President and Fellows of Harvard College
+ * Copyright (c) 2008-2011 The Open Planning Project
+ *
+ * Published under the GPL license.
+ * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
+ * of the license.
  */
 
 /**
@@ -25,7 +28,7 @@ OpenLayers.Format.Picasa = OpenLayers.Class(OpenLayers.Format.GeoRSS, {
 gxp.plugins.PicasaFeedSource = Ext.extend(gxp.plugins.FeedSource, {
 
     /** api: ptype = gxp_rsssource */
-    ptype: "gx_picasasource",
+    ptype: "gxp_picasasource",
 
 
     /** api: url
@@ -36,12 +39,23 @@ gxp.plugins.PicasaFeedSource = Ext.extend(gxp.plugins.FeedSource, {
     /** api:defaultFormat
      *  The default feature format for the feed source
      */
-    defaultFormat: "OpenLayers.Format.Picasa",
+    format: "OpenLayers.Format.Picasa",
 
     /** api:title
      * Title for source
      **/
-    title: 'Picasa Source',
+    title: 'Picasa Photos',
+
+    /** api:pointRadius
+     * Size of thumbnails
+     **/
+    pointRadius: 14,
+
+    /** api:popupTemplate
+     * Template for specifying HTML contents of popup
+     **/
+    popupTemplate:  '<tpl for="."><a target="_blank" href="{link}"><img  title="{title}" src="{thumbnail}"/></a></tpl>',
+
 
     /**
      * Create a Picasa layer record
@@ -58,47 +72,61 @@ gxp.plugins.PicasaFeedSource = Ext.extend(gxp.plugins.FeedSource, {
 
         var layer = record.getLayer();
 
-        //Prevent invalid bounds from being sent to Picasa
-        layer.events.register("loadstart", layer, function(filter) {
-            var bounds = layer.strategies[0].bounds;
-            if (layer.strategies[0].bounds) {
-                layer.strategies[0].bounds = new OpenLayers.Bounds(
-                    Math.max(-180, layer.strategies[0].bounds.left),
-                    Math.max(-90,layer.strategies[0].bounds.bottom),
-                    Math.min(180, layer.strategies[0].bounds.right),
-                    Math.min(90,layer.strategies[0].bounds.top));
+        //Picasa will not return results if bounds are invalid
+        layer.protocol.filterToParams =  function(filter, params) {
+            if (filter.type === OpenLayers.Filter.Spatial.BBOX) {
+                var bbox =  filter.value.toArray();
+                params.bbox = [Math.max(-180,bbox[0]), Math.max(-90, bbox[1]), Math.min(180, bbox[2]), Math.min(90, bbox[3]) ];
             }
-        });
+            return params;
+        }
 
         return record;
     },
 
     configureInfoPopup: function(layer) {
+        var tpl = new Ext.XTemplate(this.popupTemplate);
         layer.events.on({
             "featureselected": function(featureObject) {
                 var feature = featureObject.feature;
                 var pos = feature.geometry;
 
                 if (this.target.selectControl.popup != null) {
-                    this.target.mapPanel.map.removePopup(this.target.selectControl.popup);
+                    this.target.selectControl.popup.close();
                 }
 
                 var content = document.createElement("div");
                 content.innerHTML = feature.attributes.content;
-                this.target.selectControl.popup = new OpenLayers.Popup("popup",
-                    new OpenLayers.LonLat(pos.x, pos.y),
-                    new OpenLayers.Size(160,160),
-                    "<a target='_blank' href=" +
-                        content.getElementsByTagName('a')[0].getAttribute('href') +"><img title='" +
-                        feature.attributes.title +"' src='" + feature.attributes.thumbnail +"' /></a>",
-                    false);
-                this.target.selectControl.popup.closeOnMove = true;
-                this.target.selectControl.popup.keepInMap = true;
-                this.target.mapPanel.map.addPopup(this.target.selectControl.popup);
+
+                var popupFeature = {
+                    "link": content.getElementsByTagName('a')[0].getAttribute('href'),
+                    "title": feature.attributes.title,
+                    "thumbnail": feature.attributes.thumbnail
+                };
+
+                this.target.selectControl.popup = new GeoExt.Popup({
+                    title: feature.attributes.title,
+                    closeAction: 'destroy',
+                    location : feature,
+                    width: 175,
+                    height: 200,
+                    html: tpl.apply(popupFeature)
+                });
+                this.target.selectControl.popup.show();
+//                this.target.selectControl.popup = new OpenLayers.Popup("popup",
+//                    new OpenLayers.LonLat(pos.x, pos.y),
+//                    new OpenLayers.Size(160,160),
+//                    "<a target='_blank' href=" +
+//                        content.getElementsByTagName('a')[0].getAttribute('href') +"><img title='" +
+//                        feature.attributes.title +"' src='" + feature.attributes.thumbnail +"' /></a>",
+//                    false);
+//                this.target.selectControl.popup.closeOnMove = true;
+//                this.target.selectControl.popup.keepInMap = true;
+//                this.target.mapPanel.map.addPopup(this.target.selectControl.popup);
             },
 
             "featureunselected" : function(featureObject) {
-                this.target.mapPanel.map.removePopup(this.target.selectControl.popup);
+                this.target.selectControl.popup.close();
                 this.target.selectControl.popup = null;
             },
             scope: this
@@ -107,8 +135,10 @@ gxp.plugins.PicasaFeedSource = Ext.extend(gxp.plugins.FeedSource, {
 
     getStyleMap: function(config) {
         return new OpenLayers.StyleMap({
-            "default": new OpenLayers.Style({externalGraphic: "${thumbnail}", pointRadius: 14}),
-            "select": new OpenLayers.Style({pointRadius: 20})
+            "default": new OpenLayers.Style(
+                {externalGraphic: "${thumbnail}", pointRadius: this.pointRadius},
+                {title: this.title}),
+            "select": new OpenLayers.Style({pointRadius: this.pointRadius+5})
         });
     }
 

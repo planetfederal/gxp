@@ -1,6 +1,9 @@
 /**
- * Published under the GNU General Public License
- * Copyright 2011 © The President and Fellows of Harvard College
+ * Copyright (c) 2008-2011 The Open Planning Project
+ *
+ * Published under the GPL license.
+ * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
+ * of the license.
  */
 
 
@@ -27,7 +30,7 @@ OpenLayers.Format.YouTube = OpenLayers.Class(OpenLayers.Format.GeoRSS, {
 gxp.plugins.YouTubeFeedSource = Ext.extend(gxp.plugins.FeedSource, {
 
     /** api: ptype = gxp_rsssource */
-    ptype: "gx_youtubesource",
+    ptype: "gxp_youtubesource",
 
     /** api: url [String]
      * The URL for the YouTube GeoRSS feed
@@ -37,10 +40,22 @@ gxp.plugins.YouTubeFeedSource = Ext.extend(gxp.plugins.FeedSource, {
     /**
      * The default format to use for YouTube features
      */
-    defaultFormat: "OpenLayers.Format.YouTube",
+    format: "OpenLayers.Format.YouTube",
 
-    /** Title for source **/
-    title: 'YouTube Source',
+    /** api:title
+     * Title for source
+     **/
+    title: 'Youtube Videos',
+
+    /** api:pointRadius
+     * Size of thumbnails
+     **/
+    pointRadius: 24,
+
+    /** api:popupTemplate
+     * Template for specifying HTML contents of popup
+     **/
+    popupTemplate:  '<tpl for="."><a target="_blank" href="{link}"><img height="180"  width="240" title="{title}" src="{thumbnail}"/></a></tpl>',
 
     /**
      * Create a YouTube layer record
@@ -59,6 +74,26 @@ gxp.plugins.YouTubeFeedSource = Ext.extend(gxp.plugins.FeedSource, {
         config.url = this.url;
 
         var record = gxp.plugins.YouTubeFeedSource.superclass.createLayerRecord.apply(this, arguments);
+
+        var layer = record.getLayer();
+
+        layer.protocol.filterToParams =  function(filter, params) {
+            if (filter.type === OpenLayers.Filter.Spatial.BBOX) {
+                var bounds =  filter.value;
+                var location = bounds.getCenterLonLat();
+                //calculate the location-radius to use
+                var R = 6378.1370;
+                var PI = 3.1415926;
+                var leftBounds = R * (bounds.left) / 180.0 / PI;
+                var rightBounds = R * (bounds.right) / 180.0 / PI;
+                var radius = Math.min((rightBounds - leftBounds) / 2 * 2, 1000);
+                Ext.apply(params, {
+                    "location":"" + location.lat + "," + location.lon,
+                    "location-radius":radius + "km"
+                });
+            }
+            return params;
+        }
 
         // Calculate location and location-radius parameters used by YouTube
         var layer = record.getLayer();
@@ -86,31 +121,29 @@ gxp.plugins.YouTubeFeedSource = Ext.extend(gxp.plugins.FeedSource, {
      * @param layer
      */
     configureInfoPopup:function (layer) {
+        var tpl = new Ext.XTemplate(this.popupTemplate);
         layer.events.on({
             "featureselected":function (featureObject) {
                 var feature = featureObject.feature;
                 var pos = feature.geometry;
 
                 if (this.target.selectControl.popup != null) {
-                    this.target.mapPanel.map.removePopup(this.target.selectControl.popup);
+                    this.target.selectControl.popup.close();
                 }
 
-                var content = document.createElement("div");
-                content.innerHTML = feature.attributes.content;
-                this.target.selectControl.popup = new OpenLayers.Popup("popup",
-                    new OpenLayers.LonLat(pos.x, pos.y),
-                    new OpenLayers.Size(240, 180),
-                    "<a target='_blank' href=" +
-                        feature.attributes.link + "><img height='180', width='240' title='" +
-                        feature.attributes.title + "' src='" + feature.attributes.thumbnail + "' /></a>",
-                    false);
-                this.target.selectControl.popup.closeOnMove = true;
-                this.target.selectControl.popup.keepInMap = true;
-                this.target.mapPanel.map.addPopup(this.target.selectControl.popup);
+                this.target.selectControl.popup = new GeoExt.Popup({
+                    title: feature.attributes.title,
+                    location : feature,
+                    width: 240,
+                    height: 220,
+                    closeAction: 'destroy',
+                    html: tpl.apply(feature.attributes)
+                });
+                this.target.selectControl.popup.show();
             },
 
             "featureunselected":function (featureObject) {
-                this.target.mapPanel.map.removePopup(this.target.selectControl.popup);
+                this.target.selectControl.popup.close();
                 this.target.selectControl.popup = null;
             },
             scope:this
@@ -124,8 +157,10 @@ gxp.plugins.YouTubeFeedSource = Ext.extend(gxp.plugins.FeedSource, {
      */
     getStyleMap:function (config) {
         return new OpenLayers.StyleMap({
-            "default":new OpenLayers.Style({externalGraphic:"${thumbnail}", pointRadius:24}),
-            "select":new OpenLayers.Style({pointRadius:30})
+            "default":new OpenLayers.Style(
+                {externalGraphic:"${thumbnail}", pointRadius:24},
+                {title: this.title}),
+            "select":new OpenLayers.Style({pointRadius:this.pointRadius+5})
         });
     }
 

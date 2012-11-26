@@ -20,7 +20,8 @@ GeoExt.Lang.add("de", {
         panelTitleText: "Titel",
         layerSelectionText: "Verfügbare Daten anzeigen von:",
         doneText: "Fertig",
-        uploadText: "Daten hochladen"
+        uploadText: "Daten hochladen",
+        addFeedActionMenuText: "Add feeds"
     },
     
     "gxp.plugins.BingSource.prototype": {

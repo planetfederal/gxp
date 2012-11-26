@@ -119,8 +119,6 @@ gxp.plugins.LayerManager = Ext.extend(gxp.plugins.LayerTree, {
                     }, baseParams),
                     layerRecord: this.target.mapPanel.layers.getByLayer(attr.layer),
                     showTitle: false,
-                    //Don't show untitled vector legend
-                    untitledPrefix: null,
                     // custom class for css positioning
                     // see tree-legend.html
                     cls: "legend"

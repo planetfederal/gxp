@@ -1,6 +1,9 @@
 /**
- * Published under the GNU General Public License
- * Copyright 2011 © The President and Fellows of Harvard College
+ * Copyright (c) 2008-2011 The Open Planning Project
+ *
+ * Published under the GPL license.
+ * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
+ * of the license.
  */
 
 /**
@@ -34,7 +37,7 @@ gxp.FeedSourceDialog = Ext.extend(Ext.Container, {
      */
     target : null,
 
-    width: 600,
+    width: 400,
 
     autoHeight: true,
 
@@ -52,10 +55,16 @@ gxp.FeedSourceDialog = Ext.extend(Ext.Container, {
 
         if (!this.feedTypes) {
             this.feedTypes  = [
-                ["gx_picasasource", this.addPicasaText],
-                ["gx_youtubesource", this.addYouTubeText],
-                ["gx_feedsource", this.addRSSText]
+                [gxp.plugins.FeedSource.ptype, this.addRSSText]
             ];
+
+            if (gxp.plugins.YouTubeFeedSource) {
+                this.feedTypes.unshift( [gxp.plugins.YouTubeFeedSource.ptype, this.addYouTubeText]);
+            }
+
+            if (gxp.plugins.PicasaFeedSource) {
+                this.feedTypes.unshift([gxp.plugins.PicasaFeedSource.ptype, this.addPicasaText]);
+            }
         }
 
         var feedStore = new Ext.data.ArrayStore({
@@ -75,16 +84,17 @@ gxp.FeedSourceDialog = Ext.extend(Ext.Container, {
             selectOnFocus:true,
             listeners: {
                 "select": function(choice) {
-                    if (choice.value == "gx_feedsource") {
+                    console.log(choice.value);
+                    if (choice.value == gxp.plugins.FeedSource.ptype) {
                         urlTextField.show();
                         keywordTextField.hide();
                         maxResultsField.hide();
                         symbolizerField.show();
                     } else {
-                       urlTextField.hide();
-                       keywordTextField.show();
-                       maxResultsField.show();
-                       symbolizerField.hide();
+                        urlTextField.hide();
+                        keywordTextField.show();
+                        maxResultsField.show();
+                        symbolizerField.hide();
                     }
                     submitButton.setDisabled(choice.value == null);
                 },
@@ -116,7 +126,7 @@ gxp.FeedSourceDialog = Ext.extend(Ext.Container, {
             msgTarget: "right"
         });
 
-       var maxResultsField = new Ext.form.ComboBox({
+        var maxResultsField = new Ext.form.ComboBox({
             fieldLabel: 'Maximum # Results',
             hidden: true,
             hiddenName: 'max-results',
@@ -164,7 +174,7 @@ gxp.FeedSourceDialog = Ext.extend(Ext.Container, {
                     "name" : titleTextField.getValue()
                 };
 
-                if (ptype != "gx_feedsource") {
+                if (ptype != "gxp_feedsource") {
                     config.params = {"q" : keywordTextField.getValue(), "max-results" : maxResultsField.getValue()}
 
                 } else {

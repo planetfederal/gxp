@@ -1,10 +1,21 @@
 /**
- * Published under the GNU General Public License
- * Copyright 2011 © The President and Fellows of Harvard College
+ * Copyright (c) 2008-2011 The Open Planning Project
+ *
+ * Published under the GPL license.
+ * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
+ * of the license.
  */
 
 /**
  * @requires plugins/LayerSource.js
+ * @requires OpenLayers/Format/GeoRSS.js
+ * @requires OpenLayers/Format/GeoJSON.js
+ * @requires OpenLayers/Format/GML.js
+ * @requires OpenLayers/Format/QueryStringFilter.js
+ * @requires OpenLayers/Protocol/HTTP.js
+ * @requires OpenLayers/Strategy/BBOX.js
+ * @requires  OpenLayers/Filter/Spatial.js
+ * @requires OpenLayers/Popup/FramedCloud.js
  */
 
 Ext.namespace("gxp.plugins");
@@ -12,14 +23,14 @@ Ext.namespace("gxp.plugins");
 gxp.plugins.FeedSource = Ext.extend(gxp.plugins.LayerSource, {
 
     /** api: ptype = gxp_feedsource */
-    ptype: "gx_feedsource",
+    ptype: "gxp_feedsource",
 
 
     /** Title for source **/
     title: 'Feed Source',
 
     /** Default format of vector layer **/
-    defaultFormat: "OpenLayers.Format.GeoRSS",
+    format: "OpenLayers.Format.GeoRSS",
 
 
     /** api: method[createLayerRecord]
@@ -44,29 +55,6 @@ gxp.plugins.FeedSource = Ext.extend(gxp.plugins.LayerSource, {
             styleMap: this.getStyleMap(config)
         });
 
-        layer.events.register("added", this, function() {
-            //Create a SelectFeature control & add layer to it.
-            if (this.target.selectControl == null) {
-                this.target.selectControl = new OpenLayers.Control.SelectFeature(layer, {
-                    clickout: true,
-                    listeners: {
-                        'clickoutFeature': function () {
-                        }
-                    },
-                    scope: this
-                });
-
-                this.target.mapPanel.map.addControl(this.target.selectControl);
-
-            } else {
-                var currentLayers = this.target.selectControl.layers ? this.target.selectControl.layers :
-                    (this.target.selectControl.layer ? [this.target.selectControl.layer] : []);
-                currentLayers.push(layer);
-                this.target.selectControl.setLayer(currentLayers);
-            }
-        },
-       this
-    );
 
         //configure the popup balloons for feed items
         this.configureInfoPopup(layer);
@@ -98,7 +86,7 @@ gxp.plugins.FeedSource = Ext.extend(gxp.plugins.LayerSource, {
             selected: ("selected" in config) ? config.selected : false,
             params: ("params" in config) ? config.params : {},
             visibility: ("visibility" in config) ? config.visibility : false,
-           format: ("format" in config) ? config.format : this.defaultFormat,
+           format: ("format" in config) ? config.format : this.format,
             defaultStyle: ("defaultStyle" in config) ? config.defaultStyle : {},
             selectStyle: ("selectStyle" in config) ? config.selectStyle : {}
         };
@@ -142,7 +130,7 @@ gxp.plugins.FeedSource = Ext.extend(gxp.plugins.LayerSource, {
     getFormat: function (config) {
         // get class based on rssFormat in config
         var Class = window;
-        var formatConfig = ("rssFormat" in config) ? config.rssFormat : this.defaultFormat;
+        var formatConfig = ("format" in config) ? config.format : this.format;
 
         var parts = formatConfig.split(".");
         for (var i=0, ii=parts.length; i<ii; ++i) {
@@ -175,7 +163,7 @@ gxp.plugins.FeedSource = Ext.extend(gxp.plugins.LayerSource, {
      */
     getStyleMap: function(config) {
         return new OpenLayers.StyleMap({
-            "default": new OpenLayers.Style("defaultStyle" in config ? config.defaultStyle : {graphicName: "circle", pointRadius: 5, fillOpacity: 0.7, fillColor: 'Red'}),
+            "default": new OpenLayers.Style("defaultStyle" in config ? config.defaultStyle : {graphicName: "circle", pointRadius: 5, fillOpacity: 0.7, fillColor: 'Red'},{title: config.name}),
             "select": new OpenLayers.Style("selectStyle" in config ? config.selectStyle : {graphicName: "circle", pointRadius: 10, fillOpacity: 1.0, fillColor: "Yellow"})
         })
     },
@@ -215,39 +203,10 @@ gxp.plugins.FeedSource = Ext.extend(gxp.plugins.LayerSource, {
                     this.target.selectControl.popup = null;
                 }
             },
-            "removed":  this.removeFromSelectControl,
             scope: this
         });
-    },
-
-
-    /**
-     * Remove a feed layer from the SelectFeatureControl (if present) when that layer is removed from the map.
-     * If this is not done, the layer will remain on the map even after the record is deleted.
-     * @param record
-     */
-    removeFromSelectControl:  function(record){
-        if (this.target.selectControl ) {
-            var recordLayer = record.layer;
-            //SelectControl might have layers array or single layer object
-            if (this.target.selectControl.layers != null){
-                for (var x = 0; x < this.target.selectControl.layers.length; x++)
-                {
-                    var selectLayer = this.target.selectControl.layers[x];
-                    var selectLayers = this.target.selectControl.layers;
-                    if (selectLayer.id === recordLayer.id) {
-                        selectLayers.splice(x,1);
-                        this.target.selectControl.setLayer(selectLayers);
-                    }
-                }
-            }
-            if (this.target.selectControl.layer != null) {
-                if (recordLayer.id === this.target.selectControl.layer.id) {
-                    this.target.selectControl.setLayer([]);
-                }
-            }
-        }
     }
+
 
 });
 Ext.preg(gxp.plugins.FeedSource.prototype.ptype, gxp.plugins.FeedSource);
