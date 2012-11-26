@@ -69,12 +69,6 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      */
     addButtonText: "Add layers",
     
-    /** api: config[addButtonToBackgroundText]
-     *  ``String``
-     *  Text for add layers to background button (i18n).
-     */
-    addButtonToBackgroundText: "Add layers to background",
-    
     /** api: config[untitledText]
      *  ``String``
      *  Text for an untitled layer (i18n).
@@ -376,12 +370,8 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         });
 
         var expander = this.createExpander();
- 
-        function addLayersToBackground(){
-        	addLayers.call(this,true);
-        }
         
-        function addLayers(background) {
+        function addLayers() {
             var source = this.selectedSource;
             var records = capGridPanel.getSelectionModel().getSelections();
             var recordsToAdd = [],
@@ -396,14 +386,10 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 }
             }
             for (var i=0, ii=records.length; i<ii; ++i) {
-                var conf = {
+                var record = source.createLayerRecord({
                     name: records[i].get("name"),
                     source: source.id
-                };
-                if(background===true){
-                	conf.group = "background";
-                }
-                var record = source.createLayerRecord(conf, collectRecords, this);
+                }, collectRecords, this);
                 if (record) {
                     collectRecords.call(this, record);
                 }
@@ -575,12 +561,6 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 scope : this
             }),
             new Ext.Button({
-                text: this.addButtonToBackgroundText,
-                iconCls: "gxp-icon-addlayers",
-                handler: addLayersToBackground,
-                scope : this
-            }),
-            new Ext.Button({
                 text: this.doneText,
                 handler: function() {
                     this.capGrid.hide();
@@ -641,7 +621,6 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             // a record, and we take the preconfigured record.
             record = source.createLayerRecord({
                 name: records[i].get("name"),
-                group: records[i].get("group"),
                 source: source.id
             }) || records[i];
             if (record) {

@@ -203,12 +203,20 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
             popup = this.addOutput({
                 xtype: "gx_popup",
                 title: this.popupTitle,
+                layout: "accordion",
                 fill: false,
                 autoScroll: true,
                 location: evt.xy,
                 map: this.target.mapPanel,
                 width: 300,
                 height: 400,
+                defaults: {
+                    layout: "fit",
+                    autoScroll: true,
+                    autoHeight: true,
+                    autoWidth: true,
+                    collapsible: true
+                },
                 listeners: {
                     close: (function(key) {
                         return function(panel){
@@ -216,26 +224,8 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
                         };
                     })(popupKey),
                     scope: this
-                },
-                items:[{
-                         xtype: 'displayfield',
-                         value: "<p>&nbsp;&nbsp;&nbsp;Meklēts tiek kartē redzamajos slāņos</p>",
-                         cls : "geokods-crosslayerqueryform-limit-msg",
-                         hideLabel : true
-                       },{
-                   ref: "info_container",
-                   layout: "accordion",
-                   defaults: {
-                       layout: "fit",
-                       autoScroll: true,
-                       autoHeight: true,
-                       autoWidth: true,
-                       collapsible: true
-                   }
-                }]
-            },{
-                         
-                       });
+                }
+            });
             this.popupCache[popupKey] = popup;
         } else {
             popup = this.popupCache[popupKey];
@@ -266,7 +256,7 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
                 html: text
             }, this.itemConfig));
         }
-        popup.info_container.add(config);
+        popup.add(config);
         popup.doLayout();
     }
     
