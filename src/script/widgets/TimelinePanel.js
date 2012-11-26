@@ -94,6 +94,10 @@ GeoExt.FeatureTip = Ext.extend(Ext.Tip, {
      *  Cleanup events before destroying the feature tip.
      */
     beforeDestroy: function() {
+        for (var key in this.youtubePlayers) {
+            this.youtubePlayers[key].destroy();
+            delete this.youtubePlayers[key]; 
+      }
         this.map.events.un({
             "move" : this.show,
             scope : this
@@ -165,6 +169,8 @@ window.Timeline && window.SimileAjax && (function() {
  *      A panel for displaying a Similie Timeline.
  */
 gxp.TimelinePanel = Ext.extend(Ext.Panel, {
+
+    youtubePlayers: {},
 
     /** api: config[showRangeSlider]
      *  ``Boolean`` Should we show the range slider and its associated plus
@@ -1193,6 +1199,19 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }
     },
 
+    buildHTML: function(record) {
+        var content = record.get('content');
+        if (content.indexOf('http://www.youtube.com/embed/') !== -1) {
+            var fid = record.getFeature().fid;
+            var id = 'player_' + fid;
+            return '<iframe id="' + id + '" type="text/html" width="250" height="250" ' +
+                'src="' + content + '?enablejsapi=1&origin='+ window.location.origin + 
+                '" frameborder="0"></iframe>';
+        } else {
+            return content;
+        }
+    },
+
     /** private: method[displayTooltip]
      *  :arg record: ``GeoExt.data.FeatureRecord``
      *
@@ -1208,7 +1227,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             if (!hasGeometry) {
                 this.tooltips[fid] = new Ext.Tip({
                     cls: 'gxp-annotations-tip',
-                    html: '<h4>' + record.get("title") + '</h4>' + record.get('content')
+                    title: record.get("title"),
+                    html: this.buildHTML(record)
                 });
             } else {
                 this.tooltips[fid] = new GeoExt.FeatureTip({
@@ -1218,7 +1238,44 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                         return (this._inTimeRange === true);
                     },
                     cls: 'gxp-annotations-tip',
-                    html: '<h4>' + record.get("title") + '</h4>' + record.get('content')
+                    title: record.get("title"),
+                    listeners: {
+                        'show': function() {
+                            if (this.youtubePlayers[fid]._ready) {
+                                this.youtubePlayers[fid].playVideo();
+                            }
+                        },
+                        'afterrender': function() {
+                            if (!this.youtubePlayers[fid]) {
+                                var id = 'player_' + fid;
+                                var me = this;
+                                this.youtubePlayers[fid] = new YT.Player(id, {
+                                    events: {
+                                        'onReady': function(evt) {
+                                            evt.target._ready = true;
+                                            evt.target.playVideo();
+                                        },
+                                        'onStateChange': function(evt) {
+                                            if (evt.data === YT.PlayerState.PLAYING) {
+                                                if (me.playbackTool.playbackToolbar.playing) {
+                                                    me.playbackTool.playbackToolbar._weStopped = true;
+                                                    me.playbackTool.playbackToolbar.control.stop();
+                                                }
+                                            }
+                                            else if (evt.data == YT.PlayerState.ENDED) {
+                                                if (me.playbackTool.playbackToolbar._weStopped) {
+                                                    me.playbackTool.playbackToolbar.control.play();
+                                                    delete me.playbackTool.playbackToolbar._weStopped;
+                                                }
+                                            }
+                                        }
+                                    } 
+                                });
+                            }
+                        },
+                        scope: this
+                    },
+                    html: this.buildHTML(record)
                 });
             }
         }
@@ -1229,7 +1286,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             tooltip.showBy(this.viewer.mapPanel.body, record.get("appearance"), [10, 10]);
             tooltip.showBy(this.viewer.mapPanel.body, record.get("appearance"), [10, 10]);
         } else {
-            tooltip.show();
+            if (!tooltip.isVisible()) {
+                tooltip.show();
+            }
         }
     },
 
