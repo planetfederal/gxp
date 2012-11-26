@@ -20,7 +20,8 @@ GeoExt.Lang.add("ca", {
         panelTitleText: "Títol",
         layerSelectionText: "Veure dades disponibles de:",
         doneText: "Fet",
-        uploadText: "Puja dades"
+        uploadText: "Puja dades",
+        searchText: "Search for layers"
     },
     
     "gxp.plugins.BingSource.prototype": {
@@ -369,6 +370,8 @@ GeoExt.Lang.add("ca", {
         fileLabel: "Dades",
         fieldEmptyText: "Navegueu per les dades...",
         uploadText: "Puja",
+        uploadFailedText: "Upload failed",
+        processingUploadText: "Processing upload...",
         waitMsgText: "Pugeu les vostres dades...",
         invalidFileExtensionText: "L'extensió del fitxer ha de ser alguna d'aquestes: ",
         optionsText: "Opcions",
@@ -389,6 +392,16 @@ GeoExt.Lang.add("ca", {
 
     "gxp.ScaleOverlay.prototype": {
         zoomLevelText: "Escala"
+    },
+    
+    "gxp.form.FilterField.prototype": { 
+        lowerBoundaryTip: "lower boundary",
+        upperBoundaryTip: "upper boundary"
+    },
+    
+    "gxp.form.ComparisonComboBox.prototype": { 
+        betweenFilterText: "between",
+        likeFilterText: "like"
     }
 
 });

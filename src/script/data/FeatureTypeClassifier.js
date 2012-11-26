@@ -7,7 +7,7 @@
  */
 
 /**
- * @require OpenLayers.Format.WPSExecute.js
+ * @require OpenLayers/Format/WPSExecute.js
  * @require util/style.js
  */
 

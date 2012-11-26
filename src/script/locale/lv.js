@@ -21,7 +21,8 @@ GeoExt.Lang.add("lv", {
         panelTitleText: "Nosaukums",
         layerSelectionText: "Apskatīt pieejamos datus no:",
         doneText: "Labi",
-        uploadText: "Augšupielādēt slāņus"
+        uploadText: "Augšupielādēt slāņus",
+        searchText: "Meklēt slāņus"
     },
     
     "gxp.plugins.BingSource.prototype": {
@@ -123,7 +124,7 @@ GeoExt.Lang.add("lv", {
 
     "gxp.plugins.OSMSource.prototype": {
         title: "OpenStreetMap slāņi",
-        mapnikAttribution: "Dati CC-By-SA no <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
+        mapnikAttribution: "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors",
         osmarenderAttribution: "Dati CC-By-SA no <a href='http://openstreetmap.org/'>OpenStreetMap</a>"
     },
 
@@ -225,7 +226,7 @@ GeoExt.Lang.add("lv", {
     },
     
     "gxp.FilterBuilder.prototype": {
-        builderTypeNames: ["jebkuram", "visiem", "nevienam", "ne visiem"],
+        builderTypeNames: ["kaut vienam", "visiem", "nevienam", "ne visiem"],
         preComboText: "Atbilst",
         postComboText: "no nosacījumiem:",
         addConditionText: "pievienot nosacījumu",
@@ -341,7 +342,7 @@ GeoExt.Lang.add("lv", {
         transparentText: "Caurspīdīgs",
         cacheText: "Kešotā karte",
         cacheFieldText: "Lietot kešoto karti",
-        stylesText: "Apzīmējumi",
+        stylesText: "Pieejamie apzīmējumi",
         infoFormatText: "Informācijas formāts",
         infoFormatEmptyText: "Izvēlieties formātu"
     },
@@ -412,6 +413,16 @@ GeoExt.Lang.add("lv", {
 
     "gxp.ScaleOverlay.prototype": { 
         zoomLevelText: "Tuvinājums"
+    },
+    
+    "gxp.form.FilterField.prototype": { 
+        lowerBoundaryTip: "'no' vērtība",
+        upperBoundaryTip: "'līdz' vērtība"
+    },
+    
+    "gxp.form.ComparisonComboBox.prototype": { 
+        betweenFilterText: "starp",
+        likeFilterText: "līdzīgs"
     }
 
 });

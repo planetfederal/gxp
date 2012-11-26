@@ -509,7 +509,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
 
     initPortal: function() {
         
-        var config = this.portalConfig || {};
+        var config = Ext.apply({}, this.portalConfig);
         
         if (this.portalItems.length === 0) {
             this.mapPanel.region = "center";

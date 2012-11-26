@@ -17,7 +17,8 @@ GeoExt.Lang.add("el", {
         panelTitleText: "Τίτλος",
         layerSelectionText: "Δείτε διαθέσιμα δεδομένα από:",
         doneText: "Ολοκληρώθηκε",
-        uploadText: "Ανεβάστε Δεδομένα"
+        uploadText: "Ανεβάστε Δεδομένα",
+        searchText: "Search for layers"
     },
     
     "gxp.plugins.BingSource.prototype": {
@@ -361,6 +362,8 @@ GeoExt.Lang.add("el", {
         fileLabel: "Δεδομένα",
         fieldEmptyText: "Βρείτε το μονοπάτι για ένα αρχείο δεδομένων...",
         uploadText: "Ανέβασμα",
+        uploadFailedText: "Upload failed",
+        processingUploadText: "Processing upload...",
         waitMsgText: "Τα δεδομένα σας ανεβαίνουν...",
         invalidFileExtensionText: "Ο τύπος αρχείου πρέπει να είναι ένας από τους: ",
         optionsText: "Επιλογές",
@@ -381,6 +384,16 @@ GeoExt.Lang.add("el", {
 
     "gxp.ScaleOverlay.prototype": { 
         zoomLevelText: "Επίπεδο ζουμ"
+    },
+    
+    "gxp.form.FilterField.prototype": { 
+        lowerBoundaryTip: "lower boundary",
+        upperBoundaryTip: "upper boundary"
+    },
+    
+    "gxp.form.ComparisonComboBox.prototype": { 
+        betweenFilterText: "between",
+        likeFilterText: "like"
     }
 
 });

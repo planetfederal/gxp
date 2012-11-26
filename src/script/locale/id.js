@@ -20,7 +20,8 @@ GeoExt.Lang.add("id", {
         panelTitleText: "Title",
         layerSelectionText: "View available data from:",
         doneText: "Selesai",
-        uploadText: "Unggah data"
+        uploadText: "Unggah data",
+        searchText: "Search for layers"
     },
     
     "gxp.plugins.BingSource.prototype": {
@@ -370,6 +371,8 @@ GeoExt.Lang.add("id", {
         fileLabel: "Data",
         fieldEmptyText: "Pencarian arsip data...",
         uploadText: "Pengisian",
+        uploadFailedText: "Upload failed",
+        processingUploadText: "Processing upload...",
         waitMsgText: "Mengisi Data anda...",
         invalidFileExtensionText: "Ekstensi file harus salah satu: ",
         optionsText: "Pilihan",
@@ -390,6 +393,16 @@ GeoExt.Lang.add("id", {
 
     "gxp.ScaleOverlay.prototype": { 
         zoomLevelText: "Zoom level"
+    },
+    
+    "gxp.form.FilterField.prototype": { 
+        lowerBoundaryTip: "lower boundary",
+        upperBoundaryTip: "upper boundary"
+    },
+    
+    "gxp.form.ComparisonComboBox.prototype": { 
+        betweenFilterText: "between",
+        likeFilterText: "like"
     }
 
 });

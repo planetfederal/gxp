@@ -24,8 +24,6 @@ Ext.namespace("gxp");
  */
 gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
 
-    width: 400,
-
     /** private: property[border]
      *  ``Boolean``
      */
@@ -117,7 +115,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                          },
                          scope: this
                     },
-                    width: 300
+                    width: 250
                 }, {
                     xtype: "button",
                     text: this.searchButtonText,
@@ -129,6 +127,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                 collapsible: true,
                 collapsed: true,
                 hideLabels: false,
+                hidden: true,
                 title: this.advancedTitle,
                 items: [{
                     xtype: 'gxp_cswfilterfield',
@@ -351,14 +350,26 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
      *  preferably.
      */
     findWMS: function(links) {
-        var url = null, name = null;
-        for (var i=0, ii=links.length; i<ii; ++i) {
-            var link = links[i];
-            if (link && link.toLowerCase().indexOf('service=wms') > 0) {
-                var obj = OpenLayers.Util.createUrlObject(link);
-                url = obj.protocol + "//" + obj.host + ":" + obj.port + obj.pathname;
-                name = obj.args.layers;
+        var url = null, name = null, i, ii, link;
+        // search for a protocol that matches WMS
+        for (i=0, ii=links.length; i<ii; ++i) {
+            link = links[i];
+            if (link.protocol && link.protocol.toUpperCase() === "OGC:WMS" && link.value && link.name) {
+                url = link.value;
+                name = link.name;
                 break;
+            }
+        }
+        // if not found by protocol, try by inspecting the url
+        if (url === null) {
+            for (i=0, ii=links.length; i<ii; ++i) {
+                link = links[i];
+                if (link.value && link.value.toLowerCase().indexOf('service=wms') > 0) {
+                    var obj = OpenLayers.Util.createUrlObject(link.value);
+                    url = obj.protocol + "//" + obj.host + ":" + obj.port + obj.pathname;
+                    name = obj.args.layers;
+                    break;
+                }
             }
         }
         if (url !== null && name !== null) {

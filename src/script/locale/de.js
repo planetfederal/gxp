@@ -20,7 +20,8 @@ GeoExt.Lang.add("de", {
         panelTitleText: "Titel",
         layerSelectionText: "Verfügbare Daten anzeigen von:",
         doneText: "Fertig",
-        uploadText: "Daten hochladen"
+        uploadText: "Daten hochladen",
+        searchText: "Search for layers"
     },
     
     "gxp.plugins.BingSource.prototype": {
@@ -370,6 +371,8 @@ GeoExt.Lang.add("de", {
         fileLabel: "Daten",
         fieldEmptyText: "Datenarchiv durchsuchen...",
         uploadText: "Hochladen",
+        uploadFailedText: "Hochladen fehlgeschlagen",
+        processingUploadText: "Upload wird bearbeitet",
         waitMsgText: "Ihre Daten werden hochgeladen...",
         invalidFileExtensionText: "Dateierweiterung muss eine sein von: ",
         optionsText: "Optionen",
@@ -390,6 +393,16 @@ GeoExt.Lang.add("de", {
 
     "gxp.ScaleOverlay.prototype": { 
         zoomLevelText: "Zoomstufe"
+    },
+    
+    "gxp.form.FilterField.prototype": { 
+        lowerBoundaryTip: "lower boundary",
+        upperBoundaryTip: "upper boundary"
+    },
+    
+    "gxp.form.ComparisonComboBox.prototype": { 
+        betweenFilterText: "between",
+        likeFilterText: "like"
     }
 
 });
