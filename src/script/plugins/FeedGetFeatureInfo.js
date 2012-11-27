@@ -32,11 +32,6 @@ gxp.plugins.FeedGetFeatureInfo =  Ext.extend(gxp.plugins.Tool,{
     /** api: ptype = gxp_getfeedfeatureinfo */
     ptype: "gxp_getfeedfeatureinfo",
 
-
-    construction: function(config) {
-        gxp.plugins.FeedGetFeatureInfo.superclass.constructor.apply(this, arguments);
-    },
-
     addActions: function() {
         this.target.mapPanel.layers.on({
             "add": this.addLayer,
