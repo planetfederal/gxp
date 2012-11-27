@@ -20,7 +20,8 @@ GeoExt.Lang.add("en", {
         panelTitleText: "标题",
         layerSelectionText: "查看现有数据:",
         doneText: "完成",
-        uploadText: "上传图层"
+        uploadText: "上传图层",
+        searchText: "Search for layers"
     },
     
     "gxp.plugins.BingSource.prototype": {
@@ -366,6 +367,8 @@ GeoExt.Lang.add("en", {
         fileLabel: "数据",
         fieldEmptyText: "浏览数据档案...",
         uploadText: "上传",
+        uploadFailedText: "Upload failed",
+        processingUploadText: "Processing upload...",
         waitMsgText: "上传您的数据",
         invalidFileExtensionText: "文件后缀名必须是: ",
         optionsText: "选项",

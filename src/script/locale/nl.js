@@ -11,7 +11,8 @@ GeoExt.Lang.add("nl", {
         untitledText: "Onbekend",
         addLayerSourceErrorText: "Probleem bij het ophalen van de Error WMS GetCapabilities ({msg}).\nControleer de URL en probeer opnieuw.",
         availableLayersText: "Beschikbare kaartlagen",
-        doneText: "Klaar"
+        doneText: "Klaar",
+        searchText: "Zoek naar kaartlagen"
     },
     
     "gxp.plugins.BingSource.prototype": {
@@ -331,6 +332,8 @@ GeoExt.Lang.add("nl", {
         fileLabel: "Data",
         fieldEmptyText: "Kies data archief...",
         uploadText: "Upload",
+        uploadFailedText: "Upload failed",
+        processingUploadText: "Processing upload...",
         waitMsgText: "Bezig met uploaden van de data...",
         invalidFileExtensionText: "Bestandsextensie is een van: ",
         optionsText: "Opties",

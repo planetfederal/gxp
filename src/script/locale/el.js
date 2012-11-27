@@ -17,7 +17,8 @@ GeoExt.Lang.add("el", {
         panelTitleText: "Τίτλος",
         layerSelectionText: "Δείτε διαθέσιμα δεδομένα από:",
         doneText: "Ολοκληρώθηκε",
-        uploadText: "Ανεβάστε Δεδομένα"
+        uploadText: "Ανεβάστε Δεδομένα",
+        searchText: "Search for layers"
     },
     
     "gxp.plugins.BingSource.prototype": {
@@ -361,6 +362,8 @@ GeoExt.Lang.add("el", {
         fileLabel: "Δεδομένα",
         fieldEmptyText: "Βρείτε το μονοπάτι για ένα αρχείο δεδομένων...",
         uploadText: "Ανέβασμα",
+        uploadFailedText: "Upload failed",
+        processingUploadText: "Processing upload...",
         waitMsgText: "Τα δεδομένα σας ανεβαίνουν...",
         invalidFileExtensionText: "Ο τύπος αρχείου πρέπει να είναι ένας από τους: ",
         optionsText: "Επιλογές",

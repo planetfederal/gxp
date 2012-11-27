@@ -12,7 +12,8 @@ GeoExt.Lang.add("fr", {
         addLayerSourceErrorText: "Impossible d'obtenir les capacités WMS ({msg}).\nVeuillez vérifier l'URL et essayez à nouveau.",
         availableLayersText: "Couches disponibles",
         doneText: "Terminé",
-        uploadText: "Télécharger des données"
+        uploadText: "Télécharger des données",
+        searchText: "Search for layers"
     },
     
     "gxp.plugins.BingSource.prototype": {
@@ -304,6 +305,8 @@ GeoExt.Lang.add("fr", {
         fileLabel: "Données",
         fieldEmptyText: "Parcourir pour ...",
         uploadText: "Upload",
+        uploadFailedText: "Upload failed",
+        processingUploadText: "Processing upload...",
         waitMsgText: "Transfert de vos données ...",
         invalidFileExtensionText: "L'extension du fichier doit être : ",
         optionsText: "Options",

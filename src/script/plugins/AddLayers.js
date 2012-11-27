@@ -9,6 +9,8 @@
 /**
  * @requires plugins/Tool.js
  * @requires widgets/NewSourceDialog.js
+ * @requires plugins/GeoNodeCatalogueSource.js
+ * @requires widgets/CatalogueSearchPanel.js
  */
 
 /** api: (define)
@@ -85,19 +87,25 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      */
     availableLayersText: "Available Layers",
 
-    /** api: config[availableLayersText]
+    /** api: config[searchText]
+     *  ``String``
+     *  Text for the search dialog title (i18n).
+     */
+    searchText: "Search for layers",
+
+    /** api: config[expanderTemplateText]
      *  ``String``
      *  Text for the grid expander (i18n).
      */
     expanderTemplateText: "<p><b>Abstract:</b> {abstract}</p>",
     
-    /** api: config[availableLayersText]
+    /** api: config[panelTitleText]
      *  ``String``
      *  Text for the layer title (i18n).
      */
     panelTitleText: "Title",
 
-    /** api: config[availableLayersText]
+    /** api: config[layerSelectionText]
      *  ``String``
      *  Text for the layer selection (i18n).
      */
@@ -302,6 +310,9 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         }
         var output = gxp.plugins.AddLayers.superclass.addOutput.apply(this, [{
             sources: sources,
+            title: this.searchText,
+            height: 300,
+            width: 315,
             selectedSource: selectedSource,
             xtype: 'gxp_cataloguesearchpanel',
             map: this.target.mapPanel.map,
@@ -313,9 +324,13 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     var bbox = bounds.transform(layerConfig.srs, mapProjection);
                     layerConfig.srs = mapProjection;
                     layerConfig.bbox = bbox.toArray();
-                    layerConfig.source = this.catalogSourceKey || sourceKey;
+                    layerConfig.source = this.initialConfig.catalogSourceKey !== null ? 
+                        this.initialConfig.catalogSourceKey : sourceKey;
                     var record = source.createLayerRecord(layerConfig);
                     this.target.mapPanel.layers.add(record);
+                    if (bbox) {
+                        this.target.mapPanel.map.zoomToExtent(bbox);
+                    }
                 },
                 scope: this
             }
