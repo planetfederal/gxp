@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
- *
+ * 
  * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
@@ -29,10 +29,10 @@ Ext.namespace("gxp.plugins");
  *    TODO Make this plural - selected layers
  */
 gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
-
+    
     /** api: ptype = gxp_addlayers */
     ptype: "gxp_addlayers",
-
+    
     /** api: config[addActionMenuText]
      *  ``String``
      *  Text for add menu item (i18n).
@@ -56,12 +56,12 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      *  Text for add action tooltip (i18n).
      */
     addActionTip: "Add layers",
-
+    
     /** api: config[addActionText]
      *  ``String``
      *  Text for the Add action. None by default.
      */
-
+   
     /** api: config[addServerText]
      *  ``String``
      *  Text for add server button (i18n).
@@ -73,7 +73,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      *  Text for add layers button (i18n).
      */
     addButtonText: "Add layers",
-
+    
     /** api: config[untitledText]
      *  ``String``
      *  Text for an untitled layer (i18n).
@@ -97,7 +97,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      *  Text for the grid expander (i18n).
      */
     expanderTemplateText: "<p><b>Abstract:</b> {abstract}</p>",
-
+    
     /** api: config[availableLayersText]
      *  ``String``
      *  Text for the layer title (i18n).
@@ -109,13 +109,13 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      *  Text for the layer selection (i18n).
      */
     layerSelectionText: "View available data from:",
-
+    
     /** api: config[instructionsText]
      *  ``String``
      *  Text for additional instructions at the bottom of the grid (i18n).
      *  None by default.
      */
-
+    
     /** api: config[doneText]
      *  ``String``
      *  Text for Done button (i18n).
@@ -132,17 +132,17 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
     /** api: config[upload]
      *  ``Object | Boolean``
      *  If provided, a :class:`gxp.LayerUploadPanel` will be made accessible
-     *  from a button on the Available Layers dialog.  This panel will be
-     *  constructed using the provided config.  By default, no upload
+     *  from a button on the Available Layers dialog.  This panel will be 
+     *  constructed using the provided config.  By default, no upload 
      *  button will be added to the Available Layers dialog.
      */
-
+    
     /** api: config[uploadRoles]
      *  ``Array`` Roles authorized to upload layers. Default is
      *  ["ROLE_ADMINISTRATOR"]
      */
     uploadRoles: ["ROLE_ADMINISTRATOR"],
-
+    
     /** api: config[uploadText]
      *  ``String``
      *  Text for upload button (only renders if ``upload`` is provided).
@@ -151,9 +151,9 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
 
     /** api: config[nonUploadSources]
      *  ``Array``
-     *  If ``upload`` is enabled, the upload button will not be displayed for
-     *  sources whose identifiers or URLs are in the provided array.  By
-     *  default, the upload button will make an effort to be shown for all
+     *  If ``upload`` is enabled, the upload button will not be displayed for 
+     *  sources whose identifiers or URLs are in the provided array.  By 
+     *  default, the upload button will make an effort to be shown for all 
      *  sources with a url property.
      */
 
@@ -163,13 +163,13 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      *  URLs (e.g. "/geoserver").  Default is ``true``.
      */
     relativeUploadOnly: true,
-
+    
     /** api: config[uploadSource]
      *  ``String`` id of a WMS source (:class:`gxp.plugins.WMSSource') backed
      *  by a GeoServer instance that all uploads will be sent to. If provided,
      *  an Upload menu item will be shown in the "Add Layers" button menu.
      */
-
+    
     /** api: config[postUploadAction]
      *  ``String|Object`` Either the id of a plugin that provides the action to
      *  be performed after an upload, or an object with ``plugin`` and
@@ -180,7 +180,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      *  layer:
      *
      *  .. code-block:: javascript
-     *
+     *  
      *      postUploadAction: {
      *          plugin: "layerproperties",
      *          outputConfig: {activeTab: 2}
@@ -195,17 +195,17 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
 
     /** api: config[catalogSourceKey]
      *  ``String`` When lazy layerRecords are created by the 'Find Layers'
-     *  function, they can optionally be associated with another source.
+     *  function, they can optionally be associated with another source. 
      *  E.g. the 'local' source in GeoNode client.
      */
     catalogSourceKey: null,
-
+    
     /** private: property[selectedSource]
      *  :class:`gxp.plugins.LayerSource`
      *  The currently selected layer source.
      */
     selectedSource: null,
-
+    
     /** private: property[addServerId]
      *  ``String`` Id of the record in the sourceComboBox that is used to
      *  add a new source.
@@ -226,9 +226,9 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
              */
             "sourceselected"
         );
-        gxp.plugins.AddLayers.superclass.constructor.apply(this, arguments);
+        gxp.plugins.AddLayers.superclass.constructor.apply(this, arguments);        
     },
-
+    
     /** api: method[addActions]
      */
     addActions: function() {
@@ -242,14 +242,14 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         var options, uploadButton;
         if (this.initialConfig.search || (this.uploadSource)) {
             var items = [new Ext.menu.Item({
-                iconCls: 'gxp-icon-addlayers',
-                text: this.addActionMenuText,
-                handler: this.showCapabilitiesGrid,
+                iconCls: 'gxp-icon-addlayers', 
+                text: this.addActionMenuText, 
+                handler: this.showCapabilitiesGrid, 
                 scope: this
             })];
             if (this.initialConfig.search) {
                 items.push(new Ext.menu.Item({
-                    iconCls: 'gxp-icon-addlayers',
+                    iconCls: 'gxp-icon-addlayers', 
                     text: this.findActionMenuText,
                     handler: this.showCatalogueSearch,
                     scope: this
@@ -281,7 +281,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             });
         }
         var actions = gxp.plugins.AddLayers.superclass.addActions.apply(this, [options]);
-
+        
         this.target.on("ready", function() {
             if (this.uploadSource) {
                 var source = this.target.layerSources[this.uploadSource];
@@ -339,7 +339,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         popup && popup.center();
         return output;
     },
-
+        
     /** api: method[showCapabilitiesGrid]
      * Shows the window with a capabilities grid.
      */
@@ -393,11 +393,11 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      * Constructs a window with a capabilities grid.
      */
     initCapGrid: function() {
-        var source, data = [], target = this.target;
+        var source, data = [], target = this.target;        
         for (var id in target.layerSources) {
             source = target.layerSources[id];
             if (source.store && !source.hidden) {
-                data.push([id, source.title || id, source.url]);
+                data.push([id, source.title || id, source.url]);                
             }
         }
         var sources = new Ext.data.ArrayStore({
@@ -406,7 +406,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         });
 
         var expander = this.createExpander();
-
+        
         function addLayers() {
             var source = this.selectedSource;
             var records = capGridPanel.getSelectionModel().getSelections();
@@ -431,7 +431,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 }
             }
         }
-
+        
         var idx = 0;
         if (this.startSourceId !== null) {
             sources.each(function(record) {
@@ -459,7 +459,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 scope: this
             }
         });
-
+        
         var sourceComboBox = new Ext.form.ComboBox({
             ref: "../sourceComboBox",
             width: 165,
@@ -502,7 +502,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 scope: this
             }
         });
-
+        
         var capGridToolbar = null;
         if (this.target.proxy || data.length > 1) {
             capGridToolbar = [
@@ -512,12 +512,12 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 sourceComboBox
             ];
         }
-
+        
         if (this.target.proxy) {
             this.addServerId = Ext.id();
             sources.loadData([[this.addServerId, this.addServerText + "..."]], true);
         }
-
+        
         var newSourceDialog = {
             xtype: "gxp_newsourcedialog",
             header: false,
@@ -565,9 +565,9 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     items: newSourceDialog
                 }).show();
             }
-        }
-
-
+        }        
+        
+        
         var items = {
             xtype: "container",
             region: "center",
@@ -587,7 +587,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 html: this.instructionsText
             });
         }
-
+        
         var bbarItems = [
             "->",
             new Ext.Button({
@@ -604,7 +604,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 scope: this
             })
         ];
-
+        
         var uploadButton;
         if (!this.uploadSource) {
             uploadButton = this.createUploadButton();
@@ -641,9 +641,9 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         if (Cls === Ext.Panel) {
             this.addOutput(this.capGrid);
         }
-
+        
     },
-
+    
     /** private: method[addLayers]
      *  :arg records: ``Array`` the layer records to add
      *  :arg isUpload: ``Boolean`` Do the layers to add come from an upload?
@@ -695,7 +695,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             }
         }
     },
-
+    
     /** private: method[setSelectedSource]
      *  :arg source: :class:`gxp.plugins.LayerSource`
      */
@@ -722,7 +722,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             }).createDelegate(this)});
         }
     },
-
+    
     /** api: method[createUploadButton]
      *  :arg Cls: ``Function`` The class to use for creating the button. If not
      *      provided, an ``Ext.Button`` instance will be created.
@@ -791,7 +791,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                                                 }
                                             });
                                             if (gridPanel) {
-                                                // this needs to be deferred because the
+                                                // this needs to be deferred because the 
                                                 // grid view has not refreshed yet
                                                 window.setTimeout(function() {
                                                     sel.selectRecords(newRecords);
@@ -812,7 +812,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                                 scope: this
                             }
                         }, uploadConfig));
-
+                    
                         var win;
                         if (this.outputTarget) {
                             this.addOutput(panel);
@@ -829,7 +829,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 },
                 scope: this
             });
-
+            
             var urlCache = {};
             function getStatus(url, callback, scope) {
                 if (url in urlCache) {
@@ -849,7 +849,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     });
                 }
             }
-
+            
             this.on({
                 sourceselected: function(tool, source) {
                     button[this.uploadSource ? "show" : "hide"]();
@@ -870,11 +870,11 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         }
         return button;
     },
-
+    
     /** private: method[getGeoServerRestUrl]
      *  :arg url: ``String`` A GeoServer url like "geoserver/ows"
      *  :returns: ``String`` The rest endpoint for the above GeoServer,
-     *      i.e. "geoserver/rest"
+     *      i.e. "geoserver/rest" 
      */
     getGeoServerRestUrl: function(url) {
         var parts = url.split("/");
@@ -882,7 +882,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         parts.push("rest");
         return parts.join("/");
     },
-
+    
     /** private: method[isEligibleForUpload]
      *  :arg source: :class:`gxp.plugins.LayerSource`
      *  :returns: ``Boolean``
@@ -893,11 +893,11 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
     isEligibleForUpload: function(source) {
         return (
             source.url &&
-                (this.relativeUploadOnly ? (source.url.charAt(0) === "/") : true) &&
-                (this.nonUploadSources || []).indexOf(source.id) === -1
-            );
+            (this.relativeUploadOnly ? (source.url.charAt(0) === "/") : true) &&
+            (this.nonUploadSources || []).indexOf(source.id) === -1
+        );
     },
-
+    
     /** api: config[createExpander]
      *  ``Function`` Returns an ``Ext.grid.RowExpander``. Can be overridden
      *  by applications/subclasses to provide a custom expander.
