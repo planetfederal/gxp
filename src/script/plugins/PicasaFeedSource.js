@@ -34,7 +34,7 @@ gxp.plugins.PicasaFeedSource = Ext.extend(gxp.plugins.FeedSource, {
     /** api: url
      * The URL of the Picasa feed
      */
-   url: "http://picasaweb.google.com/data/feed/base/all?thumbsize=160c&",
+    url: "http://picasaweb.google.com/data/feed/base/all?thumbsize=160c&",
 
     /** api:defaultFormat
      *  The default feature format for the feed source
@@ -113,21 +113,12 @@ gxp.plugins.PicasaFeedSource = Ext.extend(gxp.plugins.FeedSource, {
                     html: tpl.apply(popupFeature)
                 });
                 this.target.selectControl.popup.show();
-//                this.target.selectControl.popup = new OpenLayers.Popup("popup",
-//                    new OpenLayers.LonLat(pos.x, pos.y),
-//                    new OpenLayers.Size(160,160),
-//                    "<a target='_blank' href=" +
-//                        content.getElementsByTagName('a')[0].getAttribute('href') +"><img title='" +
-//                        feature.attributes.title +"' src='" + feature.attributes.thumbnail +"' /></a>",
-//                    false);
-//                this.target.selectControl.popup.closeOnMove = true;
-//                this.target.selectControl.popup.keepInMap = true;
-//                this.target.mapPanel.map.addPopup(this.target.selectControl.popup);
             },
 
             "featureunselected" : function(featureObject) {
-                this.target.selectControl.popup.close();
-                this.target.selectControl.popup = null;
+                if (this.target.selectControl && this.target.selectControl.popup) {
+                    this.target.selectControl.popup.close();
+                }
             },
             scope: this
         });

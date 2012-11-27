@@ -143,8 +143,9 @@ gxp.plugins.YouTubeFeedSource = Ext.extend(gxp.plugins.FeedSource, {
             },
 
             "featureunselected":function (featureObject) {
-                this.target.selectControl.popup.close();
-                this.target.selectControl.popup = null;
+                if (this.target.selectControl && this.target.selectControl.popup) {
+                    this.target.selectControl.popup.close();
+                }
             },
             scope:this
         });

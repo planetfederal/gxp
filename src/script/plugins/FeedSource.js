@@ -23,15 +23,16 @@ Ext.namespace("gxp.plugins");
 gxp.plugins.FeedSource = Ext.extend(gxp.plugins.LayerSource, {
 
     /** api: ptype = gxp_feedsource */
-    ptype: "gxp_feedsource",
+    ptype: 'gxp_feedsource',
 
 
     /** Title for source **/
     title: 'Feed Source',
 
     /** Default format of vector layer **/
-    format: "OpenLayers.Format.GeoRSS",
+    format: 'OpenLayers.Format.GeoRSS',
 
+    popupTemplate:  '<a target="_blank" href="{link}">{description}</a>',
 
     /** api: method[createLayerRecord]
      *  :arg config:  ``Object``  The application config for this layer.
@@ -86,7 +87,7 @@ gxp.plugins.FeedSource = Ext.extend(gxp.plugins.LayerSource, {
             selected: ("selected" in config) ? config.selected : false,
             params: ("params" in config) ? config.params : {},
             visibility: ("visibility" in config) ? config.visibility : false,
-           format: ("format" in config) ? config.format : this.format,
+            format: ("format" in config) ? config.format : this.format,
             defaultStyle: ("defaultStyle" in config) ? config.defaultStyle : {},
             selectStyle: ("selectStyle" in config) ? config.selectStyle : {}
         };
@@ -173,34 +174,29 @@ gxp.plugins.FeedSource = Ext.extend(gxp.plugins.LayerSource, {
      * Configure a popup to display information on selected feed item.
      */
     configureInfoPopup: function(layer) {
+        var tpl = new Ext.XTemplate(this.popupTemplate);
         layer.events.on({
             "featureselected": function(featureObject) {
                 var feature = featureObject.feature;
                 var pos = feature.geometry;
-                if (this.target.selectControl.popup) {
-                    this.target.mapPanel.map.removePopup(this.target.selectControl.popup);
+                if(this.target.selectControl) {
+                    if (this.target.selectControl.popup) {
+                        this.target.selectControl.popup.close();
+                    }
+                    this.target.selectControl.popup = new GeoExt.Popup({
+                        title: feature.attributes.title,
+                        closeAction: 'destroy',
+                        location : feature,
+                        html: tpl.apply(feature.attributes)
+                    });
+                    this.target.selectControl.popup.show();
                 }
-                this.target.selectControl.popup = new OpenLayers.Popup.FramedCloud("popup",
-                    feature.geometry.getBounds().getCenterLonLat(),
-                    new OpenLayers.Size(300,300),
-                    "<a target='_blank' href=\"" +
-                        feature.attributes.link + "\">" +  feature.attributes.title +"</a><p>"+ feature.attributes.description + "</p>",
-                    null, true);
-                this.target.selectControl.popup.closeOnMove = true;
-                this.target.selectControl.popup.keepInMap = true;
-                this.target.selectControl.popup.panMapIfOutOfView = false;
-                this.target.selectControl.popup.autoSize = true;
-                this.target.mapPanel.map.addPopup(this.target.selectControl.popup);
+
             },
 
             "featureunselected" : function() {
-                this.target.mapPanel.map.removePopup(this.target.selectControl.popup);
-                this.target.selectControl.popup = null;
-            },
-
-            "moveend" :  function(rec) {
-                if (this.target.selectControl) {
-                    this.target.selectControl.popup = null;
+                if (this.target.selectControl && this.target.selectControl.popup) {
+                    this.target.selectControl.popup.close();
                 }
             },
             scope: this
