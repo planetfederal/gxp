@@ -1222,9 +1222,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             url = 'http://www.youtube.com/embed/' + params.v;
             var fid = record.getFeature().fid;
             var id = 'player_' + fid;
-            return header + '<br/>' + '<iframe id="' + id + '" type="text/html" width="'+width+'" height="'+height+'" ' +
-                'src="' + url + '?enablejsapi=1&origin='+ window.location.origin + 
-                '" frameborder="0"></iframe>' + '<br/>' + footer;
+            return header + '<br/>' + '<iframe id="' + id + 
+                '" type="text/html" width="' + width + '" height="' + 
+                height + '" ' + 'src="' + url + '?enablejsapi=1&origin=' + 
+                window.location.origin + '" frameborder="0"></iframe>' + 
+                '<br/>' + footer;
         } else {
             return content;
         }
