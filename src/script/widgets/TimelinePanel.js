@@ -129,7 +129,11 @@ GeoExt.FeatureTip = Ext.extend(Ext.Tip, {
     show: function() {
         var position = this.getPosition();
         if (position !== null && (this.shouldBeVisible === null || this.shouldBeVisible.call(this))) {
-            this.showAt(position);
+            if (!this.isVisible()) {
+                this.showAt(position);
+            } else {
+                this.setPagePosition(position[0], position[1]);
+            }
         } else {
             this.hide();
         }
@@ -1201,12 +1205,21 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
 
     buildHTML: function(record) {
         var content = record.get('content');
-        if (content.indexOf('http://www.youtube.com/embed/') !== -1) {
+        var start = content.indexOf('[youtube=');
+        if (start !== -1) {
+            var header = content.substr(0, start);
+            var end = content.indexOf(']', start);
+            var footer  = content.substr(end+1);
+            var url = content.substr(start+9, end-9);
+            var params = OpenLayers.Util.getParameters(url);
+            var width = params.w || 250;
+            var height = params.h || 250;
+            url = 'http://www.youtube.com/embed/' + params.v;
             var fid = record.getFeature().fid;
             var id = 'player_' + fid;
-            return '<iframe id="' + id + '" type="text/html" width="250" height="250" ' +
-                'src="' + content + '?enablejsapi=1&origin='+ window.location.origin + 
-                '" frameborder="0"></iframe>';
+            return header + '<br/>' + '<iframe id="' + id + '" type="text/html" width="'+width+'" height="'+height+'" ' +
+                'src="' + url + '?enablejsapi=1&origin='+ window.location.origin + 
+                '" frameborder="0"></iframe>' + '<br/>' + footer;
         } else {
             return content;
         }
@@ -1227,6 +1240,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             if (!hasGeometry) {
                 this.tooltips[fid] = new Ext.Tip({
                     cls: 'gxp-annotations-tip',
+                    maxWidth: 500,
                     title: record.get("title"),
                     html: this.buildHTML(record)
                 });
@@ -1238,10 +1252,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                         return (this._inTimeRange === true);
                     },
                     cls: 'gxp-annotations-tip',
+                    maxWidth: 500,
                     title: record.get("title"),
                     listeners: {
                         'show': function() {
-                            if (this.youtubePlayers[fid]._ready) {
+                            if (this.youtubePlayers[fid]._ready && this.playbackTool.playbackToolbar.playing) {
                                 this.youtubePlayers[fid].playVideo();
                             }
                         },
@@ -1253,7 +1268,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                                     events: {
                                         'onReady': function(evt) {
                                             evt.target._ready = true;
-                                            evt.target.playVideo();
+                                            if (me.playbackTool.playbackToolbar.playing) {
+                                                evt.target.playVideo();
+                                            }
                                         },
                                         'onStateChange': function(evt) {
                                             if (evt.data === YT.PlayerState.PLAYING) {
