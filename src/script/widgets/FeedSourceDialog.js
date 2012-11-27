@@ -84,7 +84,6 @@ gxp.FeedSourceDialog = Ext.extend(Ext.Container, {
             selectOnFocus:true,
             listeners: {
                 "select": function(choice) {
-                    console.log(choice.value);
                     if (choice.value == gxp.plugins.FeedSource.ptype) {
                         urlTextField.show();
                         keywordTextField.hide();
