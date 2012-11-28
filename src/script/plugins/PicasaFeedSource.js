@@ -10,6 +10,15 @@
  * @requires plugins/FeedSource.js
  */
 
+/** api: (define)
+ *  module = gxp.plugins
+ *  class = PicasaFeedSource
+ */
+
+/** api: (extends)
+ *  plugins/FeedSource.js
+ */
+
 Ext.namespace("gxp.plugins");
 
 /**
@@ -25,33 +34,38 @@ OpenLayers.Format.Picasa = OpenLayers.Class(OpenLayers.Format.GeoRSS, {
     }
 });
 
+/** api: constructor
+ *  .. class:: PicasaFeedSource(config)
+ *
+ *       Plugin for using Picasa geoRSS   feeds as layers with :class:`gxp.Viewer` instances.
+ */
 gxp.plugins.PicasaFeedSource = Ext.extend(gxp.plugins.FeedSource, {
 
-    /** api: ptype = gxp_rsssource */
+    /** api: ptype = gxp_picasasource */
     ptype: "gxp_picasasource",
 
 
-    /** api: url
+    /** api: url [String]
      * The URL of the Picasa feed
      */
     url: "http://picasaweb.google.com/data/feed/base/all?thumbsize=160c&",
 
-    /** api:defaultFormat
+    /** api:format [String]
      *  The default feature format for the feed source
      */
     format: "OpenLayers.Format.Picasa",
 
-    /** api:title
+    /** api:title [String]
      * Title for source
      **/
     title: 'Picasa Photos',
 
-    /** api:pointRadius
+    /** api:pointRadius [Number]
      * Size of thumbnails
      **/
     pointRadius: 14,
 
-    /** api:popupTemplate
+    /** api:popupTemplate [String]
      * Template for specifying HTML contents of popup
      **/
     popupTemplate:  '<tpl for="."><a target="_blank" href="{link}"><img  title="{title}" src="{thumbnail}"/></a></tpl>',
@@ -84,6 +98,10 @@ gxp.plugins.PicasaFeedSource = Ext.extend(gxp.plugins.FeedSource, {
         return record;
     },
 
+    /**
+     * Configure popup to display larger Picasa thumbnail
+     * @param layer
+     */
     configureInfoPopup: function(layer) {
         var tpl = new Ext.XTemplate(this.popupTemplate);
         layer.events.on({

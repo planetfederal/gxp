@@ -11,47 +11,67 @@
  * @requires widgets/PointSymbolizer.js
  */
 
+/** api: (define)
+ *  module = gxp
+ *  class = FeedSourceDialog
+ *  base_link = `Ext.Container <http://extjs.com/deploy/dev/docs/?class=Ext.Container>`_
+ */
+
 Ext.namespace("gxp");
 
+/** api: constructor
+ *  .. class:: FeedSourceDialog(config)
+ *
+ *      A  dialog for creating a GeoRSS feed layer
+ */
 gxp.FeedSourceDialog = Ext.extend(Ext.Container, {
-
+    /** api: config[feedTypeText] ``String`` i18n */
     feedTypeText: "Feed Source",
-
+    /** api: config[addPicasaText] ``String`` i18n */
     addPicasaText: "Picasa Photos",
-
+    /** api: config[addYouTubeText] ``String`` i18n */
     addYouTubeText: "YouTube Videos",
-
+    /** api: config[addRSSText] ``String`` i18n */
     addRSSText: "Other GeoRSS Feed",
-
+    /** api: config[addFeedText] ``String`` i18n */
     addFeedText: "Add to Map",
-
+    /** api: config[addTitleText] ``String`` i18n */
     addTitleText: "Feed Title",
-
+    /** api: config[keywordText] ``String`` i18n */
     keywordText: "Keyword",
-
+    /** api: config[doneText] ``String`` i18n */
     doneText: "Done",
-
-    /** config: config[mapPanel]
-     *  ``GeoExt.MapPanel``
-     *  GeoExplorer object to which layers can be added.
-     */
-    target : null,
-
-    width: 400,
-
-    autoHeight: true,
-
-    closeAction: 'destroy',
-
+    /** api: config[titleText] ``String`` i18n */
     titleText: "Add Feeds",
 
+    /**
+     * api: config[width]
+     * ``Number`` width of dialog
+     */
+    width: 400,
+
+    /**
+     * api: config[autoHeight]
+     * ``Boolean`` default is true
+     */
+    autoHeight: true,
+
+    /**
+     * api: config[closeAction]
+     * ``String`` default is destroy
+     */
+    closeAction: 'destroy',
 
     /** private: method[initComponent]
      */
     initComponent: function() {
 
+        /** api: event[addFeed]
+         * Fired after the dialog form is submitted.
+         * Intended to be used for adding the feed
+         * layer to the map
+         */
         this.addEvents("addFeed");
-
 
         if (!this.feedTypes) {
             this.feedTypes  = [
@@ -272,7 +292,7 @@ gxp.FeedSourceDialog = Ext.extend(Ext.Container, {
 
 });
 
-/** api: xtype = gxp_embedmapdialog */
+/** api: xtype = gxp_feedsourcedialog */
 Ext.reg('gxp_feedsourcedialog', gxp.FeedSourceDialog);
 
 

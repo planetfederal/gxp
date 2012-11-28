@@ -12,6 +12,15 @@
  *
  */
 
+/** api: (define)
+ *  module = gxp.plugins
+ *  class = YouTubeFeedSource
+ */
+
+/** api: (extends)
+ *  plugins/FeedSource.js
+ */
+
 Ext.namespace("gxp.plugins");
 
 /**
@@ -27,9 +36,14 @@ OpenLayers.Format.YouTube = OpenLayers.Class(OpenLayers.Format.GeoRSS, {
     }
 });
 
+/** api: constructor
+ *  .. class:: YouTubeFeedSource(config)
+ *
+ *       Plugin for using Youtube  geoRSS  feeds as layers with :class:`gxp.Viewer` instances.
+ */
 gxp.plugins.YouTubeFeedSource = Ext.extend(gxp.plugins.FeedSource, {
 
-    /** api: ptype = gxp_rsssource */
+    /** api: ptype = gxp_youtubesource */
     ptype: "gxp_youtubesource",
 
     /** api: url [String]
@@ -37,22 +51,22 @@ gxp.plugins.YouTubeFeedSource = Ext.extend(gxp.plugins.FeedSource, {
      * **/
     url: "http://gdata.youtube.com/feeds/api/videos?v=2&prettyprint=true&",
 
-    /**
+    /**api: format [String]
      * The default format to use for YouTube features
      */
     format: "OpenLayers.Format.YouTube",
 
-    /** api:title
+    /** api:title [String]
      * Title for source
      **/
     title: 'Youtube Videos',
 
-    /** api:pointRadius
+    /** api:pointRadius [Number]
      * Size of thumbnails
      **/
     pointRadius: 24,
 
-    /** api:popupTemplate
+    /** api:popupTemplate [String]
      * Template for specifying HTML contents of popup
      **/
     popupTemplate:  '<tpl for="."><a target="_blank" href="{link}"><img height="180"  width="240" title="{title}" src="{thumbnail}"/></a></tpl>',
@@ -95,24 +109,6 @@ gxp.plugins.YouTubeFeedSource = Ext.extend(gxp.plugins.FeedSource, {
             return params;
         }
 
-        // Calculate location and location-radius parameters used by YouTube
-        var layer = record.getLayer();
-        layer.events.register("loadstart", layer, function () {
-            //location parameter will  be the center of the map.
-            var location = layer.map.getCenter().transform(layer.map.projection, new OpenLayers.Projection("EPSG:4326"));
-            //calculate the location-radius to use
-            var bounds = layer.map.getExtent();
-            var R = 6378.1370;
-            var PI = 3.1415926;
-            var leftBounds = R * (bounds.left) / 180.0 / PI;
-            var rightBounds = R * (bounds.right) / 180.0 / PI;
-            var radius = Math.min((rightBounds - leftBounds) / 2 * 2, 1000);
-
-            Ext.apply(layer.protocol.params, {
-                "location":"" + location.lat + "," + location.lon,
-                "location-radius":radius + "km"
-            });
-        });
         return record;
     },
 

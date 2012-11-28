@@ -22,8 +22,8 @@ Ext.namespace("gxp.plugins");
 
 /** api: constructor
  *  .. class:: FeedGetFeatureInfo(config)
- *
- *    Plugin for removing a selected layer from the map.
+
+ *    Plugin to display info popups for geoRSS feed layers
  *    TODO Make this plural - selected layers
  */
 
@@ -40,8 +40,12 @@ gxp.plugins.FeedGetFeatureInfo =  Ext.extend(gxp.plugins.Tool,{
         });
     },
 
+    /** private: method [addLayer]
+     *
+     * Adds a geoRSS layer to the SelectControl
+     *
+     */
     addLayer: function(store, records, index){
-
         for (var i = 0,  ii = records.length; i < ii; ++i) {
             var record = records[i];
         var source = this.target.getSource(record);
@@ -75,10 +79,11 @@ gxp.plugins.FeedGetFeatureInfo =  Ext.extend(gxp.plugins.Tool,{
 
 
 
-    /**
+    /** private: method[removeLayer]
+     *
      * Remove a feed layer from the SelectFeatureControl (if present) when that layer is removed from the map.
      * If this is not done, the layer will remain on the map even after the record is deleted.
-     * @param record
+     *
      */
     removeLayer:  function(store, records, index){
         for (var i = 0,  ii = records.length; i < ii; ++i) {
