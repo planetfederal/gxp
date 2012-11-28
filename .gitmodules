@@ -13,6 +13,3 @@
 [submodule "externals/PrintPreview"]
 	path = externals/PrintPreview
 	url = git://github.com/GeoNode/PrintPreview.git
-[submodule "externals/TimeManager"]
-	path = externals/TimeManager
-	url = git://github.com/mpriour/TimeManager_OpenLayers-Addin.git

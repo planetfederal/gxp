@@ -510,7 +510,7 @@ div.olMap div.gx-overlay-playback {
 }
 
 .gx_timeslider div.x-slider-thumb{
-    background-position:0;
+/*    background-position:0; */
     cursor: pointer;
 }
 .gx_timeslider div.x-slider-min-thumb{

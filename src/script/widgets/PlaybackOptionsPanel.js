@@ -9,7 +9,7 @@
 /**
  * @requires widgets/PlaybackToolbar.js
  * @requires widgets/form/PlaybackModeComboBox.js
- * @requires OpenLayers/Control/TimeManager.js
+ * @requires OpenLayers/Control/DimensionManager.js
  */
 
 /** api: (define)
@@ -35,7 +35,7 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
      */
     
     /** api: config[timeManager]
-     *  ``OpenLayers.Control.TimeManager``
+     *  ``OpenLayers.Control.DimensionalManager``
      */
     
     layout: "fit",
@@ -146,7 +146,7 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
                         //TODO: provide user information about these modes (Change to radio group?)
                         fieldLabel:this.rangedPlayChoiceText,
                         xtype:'gxp_playbackmodecombo',
-                        timeAgents: this.timeManager && this.timeManager.timeAgents,
+                        timeAgents: this.timeManager && this.timeManager.agents,
                         anchor:'-5',
                         listeners:{
                             'modechange':this.setPlaybackMode,
@@ -172,15 +172,15 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
             }
             ],
             listeners:{'show':this.populateForm,scope:this},
-                bbar: [{
-                    text: 'Close',
-                    handler: this.close,
-                    scope: this
-                }, {
-                    text: 'Cancel',
-                    handler: this.cancelChanges,
-                    scope: this
-                }]
+            bbar: [{
+                text: 'Save',
+                handler: this.saveValues,
+                scope: this
+            }, {
+                text: 'Cancel',
+                handler: this.cancelChanges,
+                scope: this
+            }]
         });
         Ext.apply(this,config);
         gxp.PlaybackOptionsPanel.superclass.initComponent.call(this);
@@ -192,53 +192,51 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
         gxp.PlaybackOptionsPanel.superclass.destroy.call(this);
     },
     setStartTime: function(cmp, date){
-        this.timeManager.setStart(date);
+        this.timeManager.setAnimationStart(date.getTime());
         this.timeManager.fixedRange=true;
     },
     setEndTime:function(cmp,date){
-        this.timeManager.setEnd(date);
+        this.timeManager.setAnimationEnd(date.getTime());
         this.timeManager.fixedRange=true;
     },
     toggleListMode: function(cmp, checked){
         this.stepValueField.setDisabled(checked);
         this.stepUnitsField.setDisabled(checked);
-        this.timeManager.snapToIntervals = checked;
+        this.timeManager.snapToList = checked;
     },
     setUnits:function(cmp,record,index){
         var units = record.get('field1');
-        if(this.timeManager.units != units){
-            this.timeManager.units = units;
+        if(this.timeManager.timeUnits != units){
+            this.timeManager.timeUnits = units;
+            this.timeManager.step = cmp.refOwner.stepValueField.value * OpenLayers.TimeStep[units];
             if(this.playbackToolbar.playbackMode != 'track'){
-                this.timeManager.incrementTime();
+                this.timeManager.incrementValue();
             }
         }
     },
     setStep:function(cmp,newVal,oldVal){
         if(cmp.validate() && newVal){
-            this.timeManager.step = newVal;
+            this.timeManager.step = newVal * OpenLayers.TimeStep[this.timeManager.timeUnits];
+            this.timeManager.timeStep = newVal;
             if(this.playbackToolbar.playbackMode == 'ranged' && 
                 this.timeManager.rangeInterval != newVal){
                     this.timeManager.rangeInterval = newVal;
-                    this.timeManager.incrementTime(newVal);
+                    this.timeManager.incrementTimeValue(newVal);
             }
         }
     },
     setPlaybackMode:function(cmp,mode,agents){
-        switch(mode){
-            case 'cumulative':
-                this.playbackToolbar.setPlaybackMode('cumulative');
-                break;
-            case 'ranged':
-                this.disableListMode(true);
-                this.playbackToolbar.setPlaybackMode('ranged');
-                break;
-            default:
-                this.playbackToolbar.setPlaybackMode('track');
-                break;
+        var origMode = cmp.startValue;
+
+        //adjust any time agents which had the same playback mode as the toolbar
+        Ext.each(agents, function(agent){
+            if(agent.tickMode == origMode){
+                agent.tickMode = mode;
         }
-        if(mode != 'ranged'){
-            this.disableListMode(false);
-        }
+        });
+
+        this.disableListMode(mode=='ranged');
+        this.playbackToolbar.setPlaybackMode(mode);
     },
     disableListMode:function(state){
         var disable = state!==false;
@@ -255,27 +253,31 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
     },
     populateForm: function(cmp){
         if (this.timeManager) {
-            this.rangeStartField.setValue(this.timeManager.range[0]);
-            this.rangeStartField.originalValue = this.timeManager.range[0];
-            this.rangeEndField.setValue(this.timeManager.range[1]);
-            this.rangeEndField.originalValue = this.timeManager.range[1];
-            this.stepValueField.setValue(this.timeManager.step);
-            this.stepValueField.originalValue = this.timeManager.step;
-            this.stepUnitsField.setValue(this.timeManager.units);
-            this.stepUnitsField.originalValue = this.timeManager.units;
-            this.listOnlyCheck.setValue(this.timeManager.snapToIntervals);
-            this.listOnlyCheck.originalValue = this.timeManager.snapToIntervals;
-            var playbackMode = this.playbackToolbar.playbackMode;
-            if(playbackMode == 'track' || !playbackMode) { playbackMode = false; }
-            if(!this.playbackModeField.timeAgents || !this.playbackModeField.timeAgents.length){
-                this.playbackModeField.timeAgents = this.timeManager.timeAgents;
+            var start = new Date(this.timeManager.animationRange[0]),
+            end = new Date(this.timeManager.animationRange[1]),
+            step = this.timeManager.timeStep,
+            unit = this.timeManager.timeUnit,
+            snap = this.timeManager.snapToList,
+            mode = (this.playbackToolbar) ? this.playbackToolbar.playbackMode : this.timeManager.agents[0].tickMode,
+            loop = this.timeManager.loop,
+            reverse = this.timeManager.step < 0;
+            this.rangeStartField.setValue(start);
+            this.rangeStartField.originalValue = start;
+            this.rangeEndField.setValue(end);
+            this.rangeEndField.originalValue = end;
+            this.stepValueField.originalValue = this.stepValueField.setValue(step);
+            this.stepUnitsField.originalValue = this.stepUnitsField.setValue(unit);
+            this.listOnlyCheck.setValue(snap);
+            this.listOnlyCheck.originalValue = snap;
+            if(!this.playbackModeField.agents || !this.playbackModeField.agents.length){
+                this.playbackModeField.agents = this.timeManager.agents;
             }
-            this.playbackModeField.setValue(playbackMode);
-            this.playbackModeField.originalValue = playbackMode;
-            this.loopModeCheck.setValue(this.timeManager.loop);
-            this.loopModeCheck.originalValue=this.timeManager.loop;
-            this.reverseModeCheck.setValue(this.timeManager.step<0);
-            this.reverseModeCheck.originalValue=this.reverseModeCheck.getValue();
+            this.playbackModeField.setValue(mode);
+            this.playbackModeField.originalValue = mode;
+            this.loopModeCheck.setValue(loop);
+            this.loopModeCheck.originalValue = loop;
+            this.reverseModeCheck.setValue(reverse);
+            this.reverseModeCheck.originalValue=reverse;
         }
     },
     close: function(btn){
@@ -287,8 +289,7 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
         this.form.getForm().items.each(function(field){
             field.setValue(field.originalValue);
         });
-        
-        this.saveValues();
+        this.close(btn);
     }
 });
 
