@@ -29,7 +29,7 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
     map: null,
     initComponent : function() {
         if(!this.timeManager) {
-            this.timeManager = new OpenLayers.Control.TimeManager();
+            this.timeManager = new OpenLayers.Control.DimensionManager();
             this.map.addControl(this.timeManager);
         }
                 

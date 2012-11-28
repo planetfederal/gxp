@@ -111,10 +111,10 @@ gxp.form.PlaybackModeComboBox = Ext.extend(Ext.form.ComboBox, {
     
     /**
      * private: guessTimeAgents
-     * Guesses the mapPanel and the ``OpenLayers.Control.TimeManager``
-     * and returns an array of all the ``OpenLayers.TimeAgent`` managed by it
+     * Guesses the mapPanel and the ``OpenLayers.Control.DimensionManager``
+     * and returns an array of all the ``OpenLayers.Dimension.Agent`` managed by it
      * 
-     * return: ``Array``(``OpenLayers.TimeAgent``) 
+     * return: ``Array``(``OpenLayers.Dimension.Agent``) 
      */
     guessTimeAgents: function(){
         

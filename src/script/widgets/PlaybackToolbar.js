@@ -28,7 +28,7 @@ Ext.namespace("gxp");
 gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
     
     /** api: config[control]
-     *  ``OpenLayers.Control`` or :class:`OpenLayers.Control.TimeManager`
+     *  ``OpenLayers.Control`` or :class:`OpenLayers.Control.DimensionManager`
      *  The control to configure the playback panel with.
      */
     control: null,
