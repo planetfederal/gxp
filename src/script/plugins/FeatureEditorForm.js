@@ -112,6 +112,7 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
         var fields = {};
         if (this.schema) {
             this.schema.each(function(r) {
+                var annotation = r.get('annotation');
                 var name = r.get("name");
                 var lower = name.toLowerCase();
                 if (this.fields) {
@@ -128,6 +129,32 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
                     return;
                 }
                 var fieldCfg = GeoExt.form.recordToField(r);
+                if (annotation !== undefined) {
+                    var lang = GeoExt.Lang.locale.split("-").shift();
+                    for (i=0, ii=annotation.appinfo.length; i<ii; ++i) {
+                        var json = Ext.decode(annotation.appinfo[i]);
+                        if (json.title && json.title[lang]) {
+                            fieldCfg.fieldLabel = json.title[lang];
+                            break;
+                        }
+                    }
+                    for (i=0, ii=annotation.documentation.length; i<ii; ++i) {
+                        if (annotation.documentation[i].lang === lang) {
+                            var helpText = annotation.documentation[i].textContent;
+                            fieldCfg.listeners = fieldCfg.listeners || {};
+                            Ext.apply(fieldCfg.listeners, {
+                                'render': function(c) {
+                                    Ext.QuickTips.register({
+                                        target: c.getEl(),
+                                        dismissDelay: 20000,
+                                        text: helpText
+                                    });
+                                }
+                            });
+                            break;
+                        }
+                    }
+                }
                 fieldCfg.fieldLabel = this.propertyNames ? (this.propertyNames[name] || fieldCfg.fieldLabel) : fieldCfg.fieldLabel;
                 if (this.fieldConfig && this.fieldConfig[name]) {
                     Ext.apply(fieldCfg, this.fieldConfig[name]);
