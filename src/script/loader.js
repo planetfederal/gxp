@@ -80,6 +80,7 @@
         "plugins/WMSRasterStylesDialog.js",
         "plugins/WMSGetFeatureInfo.js",
         "plugins/FormFieldHelp.js",
+        "plugins/SchemaAnnotations.js",
         "plugins/FeatureEditorGrid.js",
         "plugins/FeatureEditorForm.js",
         "plugins/FeatureEditor.js",

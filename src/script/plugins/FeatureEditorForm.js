@@ -8,6 +8,7 @@
 
 /**
  * @requires GeoExt/widgets/form.js
+ * @requires plugins/SchemaAnnotations.js
  * @requires plugins/FormFieldHelp.js
  */
 
@@ -113,7 +114,6 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
         var fields = {};
         if (this.schema) {
             this.schema.each(function(r) {
-                var annotation = r.get('annotation');
                 var name = r.get("name");
                 var lower = name.toLowerCase();
                 if (this.fields) {
@@ -130,26 +130,19 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
                     return;
                 }
                 var fieldCfg = GeoExt.form.recordToField(r);
-                if (annotation !== undefined) {
-                    var lang = GeoExt.Lang.locale.split("-").shift();
-                    for (i=0, ii=annotation.appinfo.length; i<ii; ++i) {
-                        var json = Ext.decode(annotation.appinfo[i]);
-                        if (json.title && json.title[lang]) {
-                            fieldCfg.fieldLabel = json.title[lang];
-                            break;
+                var annotations = this.getAnnotationsFromSchema(r);
+                if (annotations !== null) {
+                    if (annotations.helpText) {
+                        if (!fieldCfg.plugins) {
+                            fieldCfg.plugins = [];
                         }
+                        fieldCfg.plugins.push({
+                            ptype: 'gxp_formfieldhelp',
+                            helpText: annotations.helpText
+                        });
                     }
-                    for (i=0, ii=annotation.documentation.length; i<ii; ++i) {
-                        if (annotation.documentation[i].lang === lang) {
-                            if (!fieldCfg.plugins) {
-                                fieldCfg.plugins = [];
-                            }
-                            fieldCfg.plugins.push({
-                                ptype: 'gxp_formfieldhelp',
-                                helpText: annotation.documentation[i].textContent
-                            });
-                            break;
-                        }
+                    if (annotations.label) {
+                        fieldCfg.fieldLabel = annotations.label;
                     }
                 }
                 fieldCfg.fieldLabel = this.propertyNames ? (this.propertyNames[name] || fieldCfg.fieldLabel) : fieldCfg.fieldLabel;
@@ -292,5 +285,8 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
     }
 
 });
+
+// use the schema annotations module
+Ext.override(gxp.plugins.FeatureEditorForm, gxp.plugins.SchemaAnnotations);
 
 Ext.preg(gxp.plugins.FeatureEditorForm.prototype.ptype, gxp.plugins.FeatureEditorForm);
