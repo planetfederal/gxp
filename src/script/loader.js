@@ -79,6 +79,7 @@
         "plugins/WMSFilterView.js",
         "plugins/WMSRasterStylesDialog.js",
         "plugins/WMSGetFeatureInfo.js",
+        "plugins/FormFieldHelp.js",
         "plugins/FeatureEditorGrid.js",
         "plugins/FeatureEditorForm.js",
         "plugins/FeatureEditor.js",

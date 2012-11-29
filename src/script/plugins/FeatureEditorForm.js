@@ -8,6 +8,7 @@
 
 /**
  * @requires GeoExt/widgets/form.js
+ * @requires plugins/FormFieldHelp.js
  */
 
 /** api: (define)
@@ -140,16 +141,12 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
                     }
                     for (i=0, ii=annotation.documentation.length; i<ii; ++i) {
                         if (annotation.documentation[i].lang === lang) {
-                            var helpText = annotation.documentation[i].textContent;
-                            fieldCfg.listeners = fieldCfg.listeners || {};
-                            Ext.apply(fieldCfg.listeners, {
-                                'render': function(c) {
-                                    Ext.QuickTips.register({
-                                        target: c.getEl(),
-                                        dismissDelay: 20000,
-                                        text: helpText
-                                    });
-                                }
+                            if (!fieldCfg.plugins) {
+                                fieldCfg.plugins = [];
+                            }
+                            fieldCfg.plugins.push({
+                                ptype: 'gxp_formfieldhelp',
+                                helpText: annotation.documentation[i].textContent
                             });
                             break;
                         }
