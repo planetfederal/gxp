@@ -19,6 +19,20 @@ Ext.namespace("gxp.plugins");
  *    Plugin for showing a help text when hovering over a form field.
  *    Uses an Ext.QuickTip.
  */
+/** api: example
+ *    The code example below shows how to use this plugin with a form field:
+ *
+ *    .. code-block:: javascript
+ *
+ *      var field = new Ext.form.TextField({
+ *          name: 'foo',
+ *          value: 'bar',
+ *          plugins: [{
+ *              ptype: 'gxp_formfieldhelp',
+ *              helpText: 'This is the help text for my form field'
+ *          }]
+ *      });
+ */
 gxp.plugins.FormFieldHelp = Ext.extend(Object, {
 
     /** api: ptype = gxp_formfieldhelp */
