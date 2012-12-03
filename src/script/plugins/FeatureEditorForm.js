@@ -8,6 +8,8 @@
 
 /**
  * @requires GeoExt/widgets/form.js
+ * @requires plugins/SchemaAnnotations.js
+ * @requires plugins/FormFieldHelp.js
  */
 
 /** api: (define)
@@ -128,6 +130,21 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
                     return;
                 }
                 var fieldCfg = GeoExt.form.recordToField(r);
+                var annotations = this.getAnnotationsFromSchema(r);
+                if (annotations !== null) {
+                    if (annotations.helpText) {
+                        if (!fieldCfg.plugins) {
+                            fieldCfg.plugins = [];
+                        }
+                        fieldCfg.plugins.push({
+                            ptype: 'gxp_formfieldhelp',
+                            helpText: annotations.helpText
+                        });
+                    }
+                    if (annotations.label) {
+                        fieldCfg.fieldLabel = annotations.label;
+                    }
+                }
                 fieldCfg.fieldLabel = this.propertyNames ? (this.propertyNames[name] || fieldCfg.fieldLabel) : fieldCfg.fieldLabel;
                 if (this.fieldConfig && this.fieldConfig[name]) {
                     Ext.apply(fieldCfg, this.fieldConfig[name]);
@@ -268,5 +285,8 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
     }
 
 });
+
+// use the schema annotations module
+Ext.override(gxp.plugins.FeatureEditorForm, gxp.plugins.SchemaAnnotations);
 
 Ext.preg(gxp.plugins.FeatureEditorForm.prototype.ptype, gxp.plugins.FeatureEditorForm);
