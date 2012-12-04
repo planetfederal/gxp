@@ -32,12 +32,15 @@ gxp.plugins.FeedGetFeatureInfo =  Ext.extend(gxp.plugins.Tool,{
     /** api: ptype = gxp_getfeedfeatureinfo */
     ptype: "gxp_getfeedfeatureinfo",
 
-    addActions: function() {
+    init: function(target) {
+        gxp.plugins.FeedGetFeatureInfo.superclass.init.apply(this, arguments);
+
         this.target.mapPanel.layers.on({
             "add": this.addLayer,
             "remove": this.removeLayer,
             scope: this
         });
+
     },
 
     /** private: method [addLayer]
@@ -48,8 +51,8 @@ gxp.plugins.FeedGetFeatureInfo =  Ext.extend(gxp.plugins.Tool,{
     addLayer: function(store, records, index){
         for (var i = 0,  ii = records.length; i < ii; ++i) {
             var record = records[i];
-        var source = this.target.getSource(record);
-        var layer = record.getLayer();
+            var source = this.target.getSource(record);
+            var layer = record.getLayer();
             if (source  instanceof gxp.plugins.FeedSource) {
                 //Create a SelectFeature control & add layer to it.
                 if (this.target.selectControl == null) {
@@ -71,11 +74,11 @@ gxp.plugins.FeedGetFeatureInfo =  Ext.extend(gxp.plugins.Tool,{
                     this.target.selectControl.setLayer(currentLayers);
                 }
             }
-            }
+        }
 
         if (this.target.selectControl)
             this.target.selectControl.activate();
-     },
+    },
 
 
 
@@ -86,11 +89,14 @@ gxp.plugins.FeedGetFeatureInfo =  Ext.extend(gxp.plugins.Tool,{
      *
      */
     removeLayer:  function(store, records, index){
+        if (!records.length) {
+            records = [records];
+        }
         for (var i = 0,  ii = records.length; i < ii; ++i) {
             var layer = records[i].getLayer();
             var selectControl = this.target.selectControl;
             //SelectControl might have layers array or single layer object
-            if ( selectControl  != null){
+            if ( selectControl  != null && selectControl.layers){
                 for (var x = 0; x < selectControl.layers.length; x++)
                 {
                     var selectLayer = selectControl.layers[x];
@@ -100,10 +106,11 @@ gxp.plugins.FeedGetFeatureInfo =  Ext.extend(gxp.plugins.Tool,{
                         selectControl.setLayer(selectLayers);
                     }
                 }
-            }
-            if (selectControl.layer != null) {
-                if (recordLayer.id === selectControl.layer.id) {
-                    selectControl.setLayer([]);
+            } else {
+                if (selectControl.layer != null) {
+                    if (layer.id === selectControl.layer.id) {
+                        selectControl.setLayer([]);
+                    }
                 }
             }
         }

@@ -99,6 +99,7 @@ gxp.plugins.FeedSource = Ext.extend(gxp.plugins.LayerSource, {
             {name:"params"}
         ]);
 
+        var formatConfig = "format" in config ? config.format : this.format;
 
         var data = {
             layer:layer,
@@ -110,7 +111,7 @@ gxp.plugins.FeedSource = Ext.extend(gxp.plugins.LayerSource, {
             selected:("selected" in config) ? config.selected : false,
             params:("params" in config) ? config.params : {},
             visibility:("visibility" in config) ? config.visibility : false,
-            format:("format" in config) ? config.format : this.format,
+            format: formatConfig instanceof String ? formatConfig : null,
             defaultStyle:("defaultStyle" in config) ? config.defaultStyle : {},
             selectStyle:("selectStyle" in config) ? config.selectStyle : {}
         };
@@ -156,27 +157,31 @@ gxp.plugins.FeedSource = Ext.extend(gxp.plugins.LayerSource, {
         var Class = window;
         var formatConfig = ("format" in config) ? config.format : this.format;
 
-        var parts = formatConfig.split(".");
-        for (var i = 0, ii = parts.length; i < ii; ++i) {
-            Class = Class[parts[i]];
-            if (!Class) {
-                break;
+        if (typeof formatConfig == "string" || formatConfig instanceof String) {
+            var parts = formatConfig.split(".");
+            for (var i = 0, ii = parts.length; i < ii; ++i) {
+                Class = Class[parts[i]];
+                if (!Class) {
+                    break;
+                }
             }
-        }
 
-        // TODO: consider static method on OL classes to construct instance with args
-        if (Class && Class.prototype && Class.prototype.initialize) {
+            // TODO: consider static method on OL classes to construct instance with args
+            if (Class && Class.prototype && Class.prototype.initialize) {
 
-            // create a constructor for the given layer format
-            var Constructor = function () {
-                // this only works for args that can be serialized as JSON
-                Class.prototype.initialize.apply(this);
-            };
-            Constructor.prototype = Class.prototype;
+                // create a constructor for the given layer format
+                var Constructor = function () {
+                    // this only works for args that can be serialized as JSON
+                    Class.prototype.initialize.apply(this);
+                };
+                Constructor.prototype = Class.prototype;
 
-            // create a new layer given format
-            var format = new Constructor();
-            return format;
+                // create a new layer given format
+                var format = new Constructor();
+                return format;
+            }
+        } else {
+            return formatConfig;
         }
     },
 
@@ -202,7 +207,6 @@ gxp.plugins.FeedSource = Ext.extend(gxp.plugins.LayerSource, {
                     });
                     this.target.selectControl.popup.show();
                 }
-
             },
             "featureunselected":function () {
                 if (this.target.selectControl && this.target.selectControl.popup) {
@@ -212,7 +216,6 @@ gxp.plugins.FeedSource = Ext.extend(gxp.plugins.LayerSource, {
             scope:this
         });
     },
-
 
     /* api: method[getStyleMap]
      *  :arg config:  ``Object``  The application config for this layer.
@@ -225,7 +228,6 @@ gxp.plugins.FeedSource = Ext.extend(gxp.plugins.LayerSource, {
             "select":new OpenLayers.Style("selectStyle" in config ? config.selectStyle : {graphicName:"circle", pointRadius:10, fillOpacity:1.0, fillColor:"Yellow"})
         })
     }
-
 
 });
 Ext.preg(gxp.plugins.FeedSource.prototype.ptype, gxp.plugins.FeedSource);

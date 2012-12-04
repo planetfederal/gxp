@@ -23,24 +23,6 @@
 
 Ext.namespace("gxp.plugins");
 
-/**
- * Custom format for YouTube features
- */
-OpenLayers.Format.YouTube = OpenLayers.Class(OpenLayers.Format.GeoRSS, {
-    createFeatureFromItem:function (item) {
-        var feature = OpenLayers.Format.GeoRSS.prototype.createFeatureFromItem.apply(this, arguments);
-        feature.attributes.thumbnail = this.getElementsByTagNameNS(item, "http://search.yahoo.com/mrss/", "thumbnail")[4].getAttribute("url");
-        feature.attributes.content = OpenLayers.Util.getXmlNodeValue(this.getElementsByTagNameNS(item, "*", "summary")[0]);
-        //feature.geometry
-        return feature;
-    }
-});
-
-/** api: constructor
- *  .. class:: YouTubeFeedSource(config)
- *
- *       Plugin for using Youtube  geoRSS  feeds as layers with :class:`gxp.Viewer` instances.
- */
 gxp.plugins.YouTubeFeedSource = Ext.extend(gxp.plugins.FeedSource, {
 
     /** api: ptype = gxp_youtubesource */
@@ -86,6 +68,16 @@ gxp.plugins.YouTubeFeedSource = Ext.extend(gxp.plugins.FeedSource, {
         }
 
         config.url = this.url;
+
+        this.format =  new OpenLayers.Format.GeoRSS({
+            // adds the thumbnail attribute to the feature
+            createFeatureFromItem: function(item) {
+                var feature = OpenLayers.Format.GeoRSS.prototype.createFeatureFromItem.apply(this, arguments);
+                feature.attributes.thumbnail = this.getElementsByTagNameNS(item, "http://search.yahoo.com/mrss/", "thumbnail")[4].getAttribute("url");
+                feature.attributes.content = OpenLayers.Util.getXmlNodeValue(this.getElementsByTagNameNS(item, "*", "summary")[0]);
+                return feature;
+            }
+        });
 
         var record = gxp.plugins.YouTubeFeedSource.superclass.createLayerRecord.apply(this, arguments);
 
