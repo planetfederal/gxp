@@ -13,6 +13,7 @@
  * @requires OpenLayers/Control/Navigation.js
  * @requires OpenLayers/Kinetic.js
  * @requires OpenLayers/Control/PanPanel.js
+ * @requires OpenLayers/TileManager.js
  * @requires GeoExt/widgets/MapPanel.js
  * @requires GeoExt/widgets/ZoomSlider.js
  * @requires GeoExt/widgets/tips/ZoomSliderTip.js
