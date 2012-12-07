@@ -30,6 +30,18 @@ gxp.plugins.NavigationHistory = Ext.extend(gxp.plugins.Tool, {
     
     /** api: ptype = gxp_navigationhistory */
     ptype: "gxp_navigationhistory",
+
+    /** api: config[previousButtonText]
+     *  ``String``
+     *  Text for zoom previous menu item (i18n).
+     */
+    previousButtonText: "Zoom Previous",
+
+    /** api: config[nextButtonText]
+     *  ``String``
+     *  Text for zoom next menu item (i18n).
+     */
+    nextButtonText: "Zoom Next",
     
     /** api: config[previousMenuText]
      *  ``String``
@@ -68,12 +80,14 @@ gxp.plugins.NavigationHistory = Ext.extend(gxp.plugins.Tool, {
         this.target.mapPanel.map.addControl(historyControl);
         var actions = [new GeoExt.Action({
             menuText: this.previousMenuText,
+            buttonText: this.previousButtonText,
             iconCls: "gxp-icon-zoom-previous",
             tooltip: this.previousTooltip,
             disabled: true,
             control: historyControl.previous
         }), new GeoExt.Action({
             menuText: this.nextMenuText,
+            buttonText: this.nextButtonText,
             iconCls: "gxp-icon-zoom-next",
             tooltip: this.nextTooltip,
             disabled: true,

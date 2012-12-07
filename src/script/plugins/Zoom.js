@@ -31,6 +31,24 @@ gxp.plugins.Zoom = Ext.extend(gxp.plugins.Tool, {
     
     /** api: ptype = gxp_zoom */
     ptype: "gxp_zoom",
+
+    /** api: config[zoomButtonText]
+     *  ``String``
+     *  Text for zoom box menu item (i18n).
+     */
+    zoomButtonText: "Zoom Box",
+
+    /** api: config[zoomInButtonText]
+     *  ``String``
+     *  Text for zoom in menu item (i18n).
+     */
+    zoomInButtonText: "Zoom In",
+
+    /** api: config[zoomOutButtonText]
+     *  ``String``
+     *  Text for zoom out menu item (i18n).
+     */
+    zoomOutButtonText: "Zoom Out",
     
     /** api: config[zoomMenuText]
      *  ``String``
@@ -92,6 +110,7 @@ gxp.plugins.Zoom = Ext.extend(gxp.plugins.Tool, {
     addActions: function() {
         var actions = [{
             menuText: this.zoomInMenuText,
+            buttonText: this.zoomInButtonText,
             iconCls: "gxp-icon-zoom-in",
             tooltip: this.zoomInTooltip,
             handler: function() {
@@ -100,6 +119,7 @@ gxp.plugins.Zoom = Ext.extend(gxp.plugins.Tool, {
             scope: this
         }, {
             menuText: this.zoomOutMenuText,
+            buttonText: this.zoomOutButtonText,
             iconCls: "gxp-icon-zoom-out",
             tooltip: this.zoomOutTooltip,
             handler: function() {
@@ -109,7 +129,8 @@ gxp.plugins.Zoom = Ext.extend(gxp.plugins.Tool, {
         }];
         if (this.showZoomBoxAction) {
             actions.unshift(new GeoExt.Action({
-                menuText: this.zoomText,
+                menuText: this.zoomMenuText,
+                buttonText: this.zoomButtonText,
                 iconCls: "gxp-icon-zoom",
                 tooltip: this.zoomTooltip,
                 control: new OpenLayers.Control.ZoomBox(this.controlOptions),

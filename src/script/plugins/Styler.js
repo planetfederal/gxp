@@ -31,6 +31,11 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
     
     /** api: ptype = gxp_styler */
     ptype: "gxp_styler",
+
+    /** api: config[buttonText]
+     *  ``String`` Text to show next to the zoom button
+     */
+    buttonText: "Edit Styles",
     
     /** api: config[menuText]
      *  ``String``
@@ -117,6 +122,7 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
         var layerProperties;
         var actions = gxp.plugins.Styler.superclass.addActions.apply(this, [{
             menuText: this.menuText,
+            buttonText: this.buttonText,
             iconCls: "gxp-icon-palette",
             disabled: true,
             tooltip: this.tooltip,
