@@ -5,3 +5,6 @@ src/doc/lib/plugins
 src/doc/lib/widgets
 src/doc/lib/util.rst
 build/
+src/script/plugins/.DS_Store
+
+.DS_Store
