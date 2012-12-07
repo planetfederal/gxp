@@ -1135,7 +1135,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         if (!this.timeline) {
             if (this.playbackTool && this.playbackTool.playbackToolbar) {
                 this.setRange(this.playbackTool.playbackToolbar.control.animationRange);
-                this.setCenterDate(new Date(this.playbackTool.playbackToolbar.control.currentValue));
+                this.setCenterDate(this.playbackTool.playbackToolbar.control.currentValue);
             }
         }
     },
@@ -1390,6 +1390,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  Set the center datetime on the bands of this timeline.
      */
     setCenterDate: function(time) {
+        if (!(time instanceof Date)) {
+            time = new Date(time);
+        }
         if (this.timeline) {
             this.timeline.getBand(0)._decorators[0]._date = time;
             this.timeline.getBand(0)._decorators[0].paint();
