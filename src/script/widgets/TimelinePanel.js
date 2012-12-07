@@ -723,7 +723,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         if (action !== Ext.data.Api.actions.destroy) {
             this.addFeatures(key, features);
         }
-        this.showAnnotations(this.playbackTool.playbackToolbar.control.currentValue);
+        this.showAnnotations();
     },
 
     /**
@@ -1335,7 +1335,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  Show annotations in the map.
      */
     showAnnotations: function() {
-        var time = this.playbackTool.playbackToolbar.control.currentTime;
+        var time = this.playbackTool.playbackToolbar.control.currentValue;
         if (!this.annotationsLayer) {
             this.annotationsLayer = new OpenLayers.Layer.Vector(null, {
                 displayInLayerSwitcher: false,
@@ -1361,7 +1361,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                     var endTime = record.get(this.annotationConfig.endTimeAttr);
                     var ranged = (endTime != startTime);
                     if (endTime == "" || endTime == null) {
-                        endTime = this.playbackTool.playbackToolbar.control.animationRange[1]
+                        endTime = this.playbackTool.playbackToolbar.control.animationRange[1];
                     }
                     if (ranged === true) {
                         if (compare <= parseFloat(endTime) && compare >= startTime) {
