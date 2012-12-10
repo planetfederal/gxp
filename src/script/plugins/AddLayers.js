@@ -129,6 +129,13 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      *  By default, no search functionality is provided.
      */
 
+    /** api: config[feeds]
+     *  ``Object | Boolean``
+     *  If provided, a :class:`gxp.FeedSourceDialog` will be added as a
+     *  menu option. This panel will be constructed using the provided config.
+     *  By default, no feed functionality is provided.
+     */
+
     /** api: config[upload]
      *  ``Object | Boolean``
      *  If provided, a :class:`gxp.LayerUploadPanel` will be made accessible
