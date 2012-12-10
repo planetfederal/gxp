@@ -1243,39 +1243,53 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             this.tooltips = {};
         }
         var fid = record.getFeature().fid;
+        var content = record.get('content') || '';
+        var youtubeContent = content.indexOf('[youtube=') !== -1;
         var listeners = {
             'show': function(cmp) {
-                if (this.youtubePlayers[fid]._ready && this.playbackTool.playbackToolbar.playing) {
-                    this.youtubePlayers[fid].playVideo();
+                if (youtubeContent === true) {
+                    if (this.youtubePlayers[fid]._ready && 
+                        this.playbackTool.playbackToolbar.playing) {
+                            this.youtubePlayers[fid].playVideo();
+                    }
                 }
             },
             'afterrender': function() {
-                if (!this.youtubePlayers[fid]) {
-                    var id = 'player_' + fid;
-                    var me = this;
-                    this.youtubePlayers[fid] = new YT.Player(id, {
-                        events: {
-                            'onReady': function(evt) {
-                                evt.target._ready = true;
-                                if (me.playbackTool.playbackToolbar.playing) {
-                                    evt.target.playVideo();
-                                }
-                            },
-                            'onStateChange': function(evt) {
-                                if (evt.data === YT.PlayerState.PLAYING) {
-                                    if (me.playbackTool.playbackToolbar.playing) {
-                                        me.playbackTool.playbackToolbar._weStopped = true;
-                                        me.playbackTool.playbackToolbar.control.stop();
+                if (youtubeContent === true) {
+                    if (!this.youtubePlayers[fid]) {
+                        var me = this;
+                        // stop immediately, if we wait for PLAYING we might be too late already
+                        if (me.playbackTool.playbackToolbar.playing) {
+                            me.playbackTool.playbackToolbar._weStopped = true;
+                            me.playbackTool.playbackToolbar.control.stop();
+                        }
+                        var id = 'player_' + fid;
+                        this.youtubePlayers[fid] = new YT.Player(id, {
+                            events: {
+                                'onReady': function(evt) {
+                                    evt.target._ready = true;
+                                    if (me.playbackTool.playbackToolbar.playing || 
+                                        me.playbackTool.playbackToolbar._weStopped) {
+                                            evt.target.playVideo();
                                     }
-                                } else if (evt.data == YT.PlayerState.ENDED) {
-                                    if (me.playbackTool.playbackToolbar._weStopped) {
-                                        me.playbackTool.playbackToolbar.control.play();
-                                        delete me.playbackTool.playbackToolbar._weStopped;
+                                },
+                                'onStateChange': function(evt) {
+                                    if (evt.data === YT.PlayerState.PLAYING) {
+                                        if (!me.playbackTool.playbackToolbar._weStopped && 
+                                            me.playbackTool.playbackToolbar.playing) {
+                                                me.playbackTool.playbackToolbar._weStopped = true;
+                                                me.playbackTool.playbackToolbar.control.stop();
+                                        }
+                                    } else if (evt.data == YT.PlayerState.ENDED) {
+                                        if (me.playbackTool.playbackToolbar._weStopped) {
+                                            me.playbackTool.playbackToolbar.control.play();
+                                            delete me.playbackTool.playbackToolbar._weStopped;
+                                        }
                                     }
                                 }
                             }
-                        }
-                    });
+                        });
+                    }
                 }
             },
             scope: this
