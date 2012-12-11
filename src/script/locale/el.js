@@ -33,7 +33,9 @@ GeoExt.Lang.add("el", {
         createFeatureActionText: "Create",
         editFeatureActionText: "Modify",
         createFeatureActionTip: "Δημιουργήστε ένα νέο χαρακτηριστικό",
-        editFeatureActionTip: "Τροποποιήστε υπάρχον χαρακτηριστικό"
+        editFeatureActionTip: "Τροποποιήστε υπάρχον χαρακτηριστικό",
+        commitTitle: "Commit message",
+        commitText: "Please enter a commit message for this edit:"
     },
     
     "gxp.plugins.FeatureGrid.prototype": {

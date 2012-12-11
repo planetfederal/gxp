@@ -38,6 +38,12 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
     
     /** api: ptype = gxp_featureeditor */
     ptype: "gxp_featureeditor",
+
+    /** api: config[commitMsgPrompt]
+     *  ``Boolean`` Should we prompt the user for a commit message?
+     *  Default is false.
+     */
+    commitMsgPrompt: false,
     
     /** api: config[splitButton]
      *  ``Boolean`` If set to true, the actions will be rendered as a single
@@ -91,6 +97,8 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
     lineText: "Line",
     polygonText: "Polygon",
     noGeometryText: "Event",
+    commitTitle: "Commit message",
+    commitText: "Please enter a commit message for this edit:",
 
     /** api: config[createFeatureActionTip]
      *  ``String``
@@ -472,6 +480,30 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                             },
                             "featuremodified": function(popup, feature) {
                                 featureStore.on({
+                                    beforewrite: {
+                                        fn: function(store, action, rs, options) {
+                                            if (this.commitMsgPrompt === true) {
+                                                if (!this._commitMsg) {
+                                                    Ext.Msg.prompt(
+                                                        this.commitTitle, 
+                                                        this.commitMsg,
+                                                        function(btn, text) {
+                                                            if (btn === 'ok') {
+                                                                this._commitMsg = text;
+                                                                featureStore.save();
+                                                            }
+                                                        },
+                                                        this
+                                                    );
+                                                    return false;
+                                                } else {
+                                                    options.params.handle = this._commitMsg;
+                                                    delete this._commitMsg;
+                                                    featureStore.un('beforewrite', arguments.callee, this);
+                                                }
+                                            }
+                                        }
+                                    },
                                     beforesave: {
                                         fn: function() {
                                             if (popup && popup.isVisible()) {

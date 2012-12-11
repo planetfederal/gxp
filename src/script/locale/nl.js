@@ -24,7 +24,9 @@ GeoExt.Lang.add("nl", {
 
     "gxp.plugins.FeatureEditor.prototype": {
         createFeatureActionTip: "Maak een nieuw object",
-        editFeatureActionTip: "Wijzig een bestand object"
+        editFeatureActionTip: "Wijzig een bestand object",
+        commitTitle: "Wijzingsbeschrijving",
+        commitText: "Voor a.u.b. een beschrijving in voor de wijziging:"
     },
     
     "gxp.plugins.FeatureGrid.prototype": {
