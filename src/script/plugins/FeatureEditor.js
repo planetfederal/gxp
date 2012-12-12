@@ -505,8 +505,8 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                                                         fn: function(btn, text) {
                                                             if (btn === 'ok') {
                                                                 this._commitMsg = text;
-                                                                featureStore.save();
                                                                 featureStore.un('beforesave', fn, this);
+                                                                featureStore.save();
                                                             }
                                                         },
                                                         scope: this,
