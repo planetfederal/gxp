@@ -39,11 +39,11 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
     /** api: ptype = gxp_featureeditor */
     ptype: "gxp_featureeditor",
 
-    /** api: config[commitMsgPrompt]
+    /** api: config[commitMessage]
      *  ``Boolean`` Should we prompt the user for a commit message?
      *  Default is false.
      */
-    commitMsgPrompt: false,
+    commitMessage: false,
     
     /** api: config[splitButton]
      *  ``Boolean`` If set to true, the actions will be rendered as a single
@@ -479,58 +479,43 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                                 }
                             },
                             "featuremodified": function(popup, feature) {
-                                var handleDelete = function() {
-                                    /**
-                                     * If the feature state is delete, we need to
-                                     * remove it from the store (so it is collected
-                                     * in the store.removed list.  However, it should
-                                     * not be removed from the layer.  Until
-                                     * http://trac.geoext.org/ticket/141 is addressed
-                                     * we need to stop the store from removing the
-                                     * feature from the layer.
-                                     */
-                                    featureStore._removing = true; // TODO: remove after http://trac.geoext.org/ticket/141
-                                    featureStore.remove(featureStore.getRecordFromFeature(feature));
-                                    delete featureStore._removing; // TODO: remove after http://trac.geoext.org/ticket/141
-                                };
                                 featureStore.on({
                                     beforewrite: {
                                         fn: function(store, action, rs, options) {
-                                            if (this.commitMsgPrompt === true) {
-                                                if (!this._commitMsg) {
-                                                    Ext.Msg.show({
-                                                        prompt: true,
-                                                        title: this.commitTitle, 
-                                                        msg: this.commitText,
-                                                        buttons: Ext.Msg.OK,
-                                                        fn: function(btn, text) {
-                                                            if (btn === 'ok') {
-                                                                this._commitMsg = text;
-                                                                if (feature.state === OpenLayers.State.DELETE) {
-                                                                    handleDelete();
-                                                                }
-                                                                featureStore.save();
-                                                            }
-                                                        },
-                                                        scope: this,
-                                                        multiline: true
-                                                    });
-                                                    return false;
-                                                } else {
-                                                    options.params.handle = this._commitMsg;
-                                                    delete this._commitMsg;
-                                                    featureStore.un('beforewrite', arguments.callee, this);
-                                                }
+                                            if (this.commitMessage === true) {
+                                                options.params.handle = this._commitMsg;
+                                                delete this._commitMsg;
                                             }
-                                        }
+                                        },
+                                        single: true
                                     },
                                     beforesave: {
                                         fn: function() {
                                             if (popup && popup.isVisible()) {
                                                 popup.disable();
                                             }
-                                        },
-                                        single: true
+                                            if (this.commitMessage === true) {
+                                                if (!this._commitMsg) {
+                                                    var fn = arguments.callee;
+                                                    Ext.Msg.show({
+                                                        prompt: true,
+                                                        title: this.commitTitle,
+                                                        msg: this.commitText,
+                                                        buttons: Ext.Msg.OK,
+                                                        fn: function(btn, text) {
+                                                            if (btn === 'ok') {
+                                                                this._commitMsg = text;
+                                                                featureStore.save();
+                                                                featureStore.un('beforesave', fn, this);
+                                                            }
+                                                        },
+                                                        scope: this,
+                                                        multiline: true
+                                                    });
+                                                    return false;
+                                                }
+                                            }
+                                        }
                                     },
                                     write: {
                                         fn: function() {
@@ -584,8 +569,19 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                                     },
                                     scope: this
                                 });                                
-                                if(feature.state === OpenLayers.State.DELETE && !this.commitMsgPrompt) {                                    
-                                    handleDelete();
+                                if(feature.state === OpenLayers.State.DELETE) {
+                                    /**
+                                     * If the feature state is delete, we need to
+                                     * remove it from the store (so it is collected
+                                     * in the store.removed list.  However, it should
+                                     * not be removed from the layer.  Until
+                                     * http://trac.geoext.org/ticket/141 is addressed
+                                     * we need to stop the store from removing the
+                                     * feature from the layer.
+                                     */
+                                    featureStore._removing = true; // TODO: remove after http://trac.geoext.org/ticket/141
+                                    featureStore.remove(featureStore.getRecordFromFeature(feature));
+                                    delete featureStore._removing; // TODO: remove after http://trac.geoext.org/ticket/141
                                 }
                                 featureStore.save();
                             },
