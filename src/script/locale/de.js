@@ -36,7 +36,9 @@ GeoExt.Lang.add("de", {
         createFeatureActionText: "Erzeugen",
         editFeatureActionText: "Bearbeiten",
         createFeatureActionTip: "neues Objekt erstellen",
-        editFeatureActionTip: "bestehendes Objekt bearbeiten"
+        editFeatureActionTip: "bestehendes Objekt bearbeiten",
+        commitTitle: "Commit message",
+        commitText: "Please enter a commit message for this edit:"
     },
     
     "gxp.plugins.FeatureGrid.prototype": {

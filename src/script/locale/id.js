@@ -36,7 +36,9 @@ GeoExt.Lang.add("id", {
         createFeatureActionText: "Create",
         editFeatureActionText: "Modify",
         createFeatureActionTip: "Membuat sebuah fitur",
-        editFeatureActionTip: "Edit fitur"
+        editFeatureActionTip: "Edit fitur",
+        commitTitle: "Commit message",
+        commitText: "Please enter a commit message for this edit:"
     },
     
     "gxp.plugins.FeatureGrid.prototype": {
