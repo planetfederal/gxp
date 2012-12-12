@@ -498,10 +498,12 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                                         fn: function(store, action, rs, options) {
                                             if (this.commitMsgPrompt === true) {
                                                 if (!this._commitMsg) {
-                                                    Ext.Msg.prompt(
-                                                        this.commitTitle, 
-                                                        this.commitText,
-                                                        function(btn, text) {
+                                                    Ext.Msg.show({
+                                                        prompt: true,
+                                                        title: this.commitTitle, 
+                                                        msg: this.commitText,
+                                                        buttons: Ext.Msg.OK,
+                                                        fn: function(btn, text) {
                                                             if (btn === 'ok') {
                                                                 this._commitMsg = text;
                                                                 if (feature.state === OpenLayers.State.DELETE) {
@@ -510,8 +512,9 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                                                                 featureStore.save();
                                                             }
                                                         },
-                                                        this
-                                                    );
+                                                        scope: this,
+                                                        multiline: true
+                                                    });
                                                     return false;
                                                 } else {
                                                     options.params.handle = this._commitMsg;
