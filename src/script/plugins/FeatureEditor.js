@@ -515,7 +515,8 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                                                     return false;
                                                 }
                                             }
-                                        }
+                                        },
+                                        single: this.commitMessage !== true
                                     },
                                     write: {
                                         fn: function() {
