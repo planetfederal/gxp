@@ -479,6 +479,20 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                                 }
                             },
                             "featuremodified": function(popup, feature) {
+                                var handleDelete = function() {
+                                    /**
+                                     * If the feature state is delete, we need to
+                                     * remove it from the store (so it is collected
+                                     * in the store.removed list.  However, it should
+                                     * not be removed from the layer.  Until
+                                     * http://trac.geoext.org/ticket/141 is addressed
+                                     * we need to stop the store from removing the
+                                     * feature from the layer.
+                                     */
+                                    featureStore._removing = true; // TODO: remove after http://trac.geoext.org/ticket/141
+                                    featureStore.remove(featureStore.getRecordFromFeature(feature));
+                                    delete featureStore._removing; // TODO: remove after http://trac.geoext.org/ticket/141
+                                };
                                 featureStore.on({
                                     beforewrite: {
                                         fn: function(store, action, rs, options) {
@@ -486,10 +500,13 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                                                 if (!this._commitMsg) {
                                                     Ext.Msg.prompt(
                                                         this.commitTitle, 
-                                                        this.commitMsg,
+                                                        this.commitText,
                                                         function(btn, text) {
                                                             if (btn === 'ok') {
                                                                 this._commitMsg = text;
+                                                                if (feature.state === OpenLayers.State.DELETE) {
+                                                                    handleDelete();
+                                                                }
                                                                 featureStore.save();
                                                             }
                                                         },
@@ -564,19 +581,8 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                                     },
                                     scope: this
                                 });                                
-                                if(feature.state === OpenLayers.State.DELETE) {                                    
-                                    /**
-                                     * If the feature state is delete, we need to
-                                     * remove it from the store (so it is collected
-                                     * in the store.removed list.  However, it should
-                                     * not be removed from the layer.  Until
-                                     * http://trac.geoext.org/ticket/141 is addressed
-                                     * we need to stop the store from removing the
-                                     * feature from the layer.
-                                     */
-                                    featureStore._removing = true; // TODO: remove after http://trac.geoext.org/ticket/141
-                                    featureStore.remove(featureStore.getRecordFromFeature(feature));
-                                    delete featureStore._removing; // TODO: remove after http://trac.geoext.org/ticket/141
+                                if(feature.state === OpenLayers.State.DELETE && !this.commitMsgPrompt) {                                    
+                                    handleDelete();
                                 }
                                 featureStore.save();
                             },
