@@ -109,6 +109,7 @@
         "plugins/Print.js",
         "plugins/LoadingIndicator.js",
         "plugins/Playback.js",
+        "plugins/OverviewMap.js",
         "locale/es.js",
         "locale/ca.js"
     );
