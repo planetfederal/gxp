@@ -22,7 +22,7 @@
 Ext.namespace("gxp.plugins");
 
 /** api: constructor
- *  .. class:: GoolgeSource(config)
+ *  .. class:: GoogleSource(config)
  *
  *    Plugin for using Google layers with :class:`gxp.Viewer` instances. The
  *    plugin uses the GMaps v3 API and also takes care of loading the
@@ -217,6 +217,9 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
             if ("visibility" in config) {
                 layer.visibility = config.visibility;
             }
+
+            // set additional layer properties if provided
+            Ext.apply(layer, config.layerOptions);
             
             record.set("selected", config.selected || false);
             record.set("source", config.source);
