@@ -350,11 +350,15 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
      *  preferably.
      */
     findWMS: function(links) {
+        var protocols = [
+            'OGC:WMS-1.1.1-HTTP-GET-MAP',
+            'OGC:WMS'
+        ];
         var url = null, name = null, i, ii, link;
         // search for a protocol that matches WMS
         for (i=0, ii=links.length; i<ii; ++i) {
             link = links[i];
-            if (link.protocol && link.protocol.toUpperCase() === "OGC:WMS" && link.value && link.name) {
+            if (link.protocol && protocols.indexOf(link.protocol.toUpperCase()) !== -1 && link.value && link.name) {
                 url = link.value;
                 name = link.name;
                 break;
