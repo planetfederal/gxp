@@ -30,6 +30,9 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
     /** api: ptype = gxp_editorform */
     ptype: 'gxp_editorform',
 
+    /** api: xtype = gxp_editorform */
+    xtype: "gxp_editorform",
+
     /** api: config[feature]
      *  ``OpenLayers.Feature.Vector`` The feature being edited/displayed.
      */
@@ -290,3 +293,4 @@ gxp.plugins.FeatureEditorForm = Ext.extend(Ext.FormPanel, {
 Ext.override(gxp.plugins.FeatureEditorForm, gxp.plugins.SchemaAnnotations);
 
 Ext.preg(gxp.plugins.FeatureEditorForm.prototype.ptype, gxp.plugins.FeatureEditorForm);
+Ext.reg(gxp.plugins.FeatureEditorForm.prototype.xtype, gxp.plugins.FeatureEditorForm);

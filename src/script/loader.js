@@ -83,6 +83,7 @@
         "plugins/SchemaAnnotations.js",
         "plugins/FeatureEditorGrid.js",
         "plugins/FeatureEditorForm.js",
+        "plugins/VersionedEditor.js",
         "plugins/FeatureEditor.js",
         "plugins/FeatureGrid.js",
         "plugins/FeatureManager.js",
