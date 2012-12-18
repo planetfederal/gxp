@@ -57,10 +57,18 @@ gxp.plugins.VersionedEditor = Ext.extend(Ext.TabPanel, {
      */
     initComponent: function() {
         gxp.plugins.VersionedEditor.superclass.initComponent.call(this);
+        var editorConfig = {
+            feature: this.initialConfig.feature,
+            schema: this.initialConfig.schema,
+            fields: this.initialConfig.fields,
+            excludeFields: this.initialConfig.excludeFields,
+            propertyNames: this.initialConfig.propertyNames,
+            readOnly: this.initialConfig.readOnly
+        };
         var config = Ext.apply({
             xtype: this.initialConfig.editor || "gxp_editorgrid",
             title: this.attributesTitle
-        }, this.initialConfig);
+        }, editorConfig);
         this.attributeEditor = Ext.ComponentMgr.create(config);
         this.add(this.attributeEditor);
         var dataView = this.createDataView();
