@@ -25,6 +25,16 @@ Ext.namespace("gxp.form");
  */
 gxp.form.ComparisonComboBox = Ext.extend(Ext.form.ComboBox, {
     
+    /** api:config[betweenFilterText]
+     *  ``String`` text for "between" value (i18n)
+     */
+    betweenFilterText: "between",
+    
+    /** api:config[likeFilterText]
+     *  ``String`` text for "like" value (i18n)
+     */
+    likeFilterText: "like",
+    
     allowedTypes: [
         [OpenLayers.Filter.Comparison.EQUAL_TO, "="],
         [OpenLayers.Filter.Comparison.NOT_EQUAL_TO, "<>"],
@@ -32,8 +42,8 @@ gxp.form.ComparisonComboBox = Ext.extend(Ext.form.ComboBox, {
         [OpenLayers.Filter.Comparison.GREATER_THAN, ">"],
         [OpenLayers.Filter.Comparison.LESS_THAN_OR_EQUAL_TO, "<="],
         [OpenLayers.Filter.Comparison.GREATER_THAN_OR_EQUAL_TO, ">="],
-        [OpenLayers.Filter.Comparison.LIKE, "like"],
-        [OpenLayers.Filter.Comparison.BETWEEN, "between"]
+        [OpenLayers.Filter.Comparison.LIKE, this.likeFilterText],
+        [OpenLayers.Filter.Comparison.BETWEEN, this.betweenFilterText]
     ],
 
     allowBlank: false,
