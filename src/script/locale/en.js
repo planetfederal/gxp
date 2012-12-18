@@ -76,6 +76,10 @@ GeoExt.Lang.add("en", {
         baseNodeText: "Base Layers"
     },
 
+    "gxp.plugins.LayerManager.prototype": {
+        baseNodeText: "Base Maps"
+    },
+
     "gxp.plugins.Legend.prototype": {
         menuText: "Show legend",
         tooltip: "Show legend"
