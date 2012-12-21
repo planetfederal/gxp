@@ -13,3 +13,6 @@
 [submodule "externals/PrintPreview"]
 	path = externals/PrintPreview
 	url = git://github.com/GeoNode/PrintPreview.git
+[submodule "externals/DimensionManager"]
+	path = externals/DimensionManager
+	url = git://github.com/opengeo/openlayers.git
