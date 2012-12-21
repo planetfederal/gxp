@@ -1,8 +1,67 @@
 var app,
 startTime = OpenLayers.Date.parse('2011-08-18T12:00:00.000Z').toISOString();
 Ext.onReady(function() {
+    var values = [
+        '2011-08-17T18:00:00.000Z', 
+        '2011-08-18T00:00:00.000Z', 
+        '2011-08-18T06:00:00.000Z', 
+        '2011-08-18T12:00:00.000Z',
+        '2011-08-18T18:00:00.000Z',
+        '2011-08-19T00:00:00.000Z',
+        '2011-08-19T06:00:00.000Z',
+        '2011-08-19T12:00:00.000Z',
+        '2011-08-19T18:00:00.000Z',
+        '2011-08-20T00:00:00.000Z',
+        '2011-08-20T06:00:00.000Z',
+        '2011-08-20T12:00:00.000Z',
+        '2011-08-20T18:00:00.000Z',
+        '2011-08-21T00:00:00.000Z',
+        '2011-08-21T06:00:00.000Z',
+        '2011-08-21T12:00:00.000Z',
+        '2011-08-21T18:00:00.000Z',
+        '2011-08-22T00:00:00.000Z',
+        '2011-08-22T06:00:00.000Z',
+        '2011-08-22T12:00:00.000Z',
+        '2011-08-22T18:00:00.000Z',
+        '2011-08-23T00:00:00.000Z',
+        '2011-08-23T06:00:00.000Z',
+        '2011-08-23T12:00:00.000Z',
+        '2011-08-23T18:00:00.000Z',
+        '2011-08-24T00:00:00.000Z',
+        '2011-08-24T06:00:00.000Z',
+        '2011-08-24T12:00:00.000Z',
+        '2011-08-24T18:00:00.000Z',
+        '2011-08-25T00:00:00.000Z',
+        '2011-08-25T06:00:00.000Z',
+        '2011-08-25T12:00:00.000Z',
+        '2011-08-25T18:00:00.000Z',
+        '2011-08-26T00:00:00.000Z',
+        '2011-08-26T06:00:00.000Z',
+        '2011-08-26T12:00:00.000Z',
+        '2011-08-26T18:00:00.000Z',
+        '2011-08-27T00:00:00.000Z',
+        '2011-08-27T06:00:00.000Z',
+        '2011-08-27T12:00:00.000Z',
+        '2011-08-27T18:00:00.000Z',
+        '2011-08-28T00:00:00.000Z',
+        '2011-08-28T06:00:00.000Z',
+        '2011-08-28T12:00:00.000Z',
+        '2011-08-28T18:00:00.000Z',
+        '2011-08-29T00:00:00.000Z',
+        '2011-08-29T06:00:00.000Z',
+        '2011-08-29T12:00:00.000Z',
+        '2011-08-29T18:00:00.000Z',
+        '2011-08-30T00:00:00.000Z',
+        '2011-08-30T06:00:00.000Z',
+        '2011-08-30T12:00:00.000Z',
+        '2011-08-30T18:00:00.000Z',
+        '2011-08-31T00:00:00.000Z',
+        '2011-08-31T06:00:00.000Z',
+        '2011-08-31T12:00:00.000Z',
+        '2011-08-31T18:00:00.000Z'
+    ];
     app = new gxp.Viewer({
-        proxy: "/openlayers/examples/proxy.cgi?url=",
+        proxy: "/geoserver/rest/proxy?url=",
         portalConfig: {
             layout: "border",
             // by configuring items here, we don't need to configure portalItems
@@ -39,12 +98,11 @@ Ext.onReady(function() {
             actionTarget: "map.tbar"
         },{
             ptype:'gxp_playback',
+            outputTarget: "map.tbar",
             controlOptions:{
                 units:OpenLayers.TimeUnit.HOURS,
                 step:6
             },
-            //playbackMode:'ranged',
-            //rangedPlayInterval:18,
             outputConfig: {
                 dynamicRange: false
             }
@@ -58,10 +116,7 @@ Ext.onReady(function() {
             },
             osm: {
                 ptype: "gxp_osmsource"
-            }/*,
-            mapstory:{
-                url:'http://mapstory.demo.opengeo.org:8080/geoserver/wms'
-            }*/
+            }
         },
         
         // map and layers
@@ -88,8 +143,10 @@ Ext.onReady(function() {
                     srs: 'EPSG:900913',
                     time: startTime
                 }, {
-                    metadata: {
-                        timeInterval: [['2011-08-18T12:00:00.000Z','2011-08-29T00:00:00.000Z','PT6H']]
+                    dimensions: {
+                        'time': {
+                            values: values
+                        }
                     },
                     singleTile: true,
                     ratio: 1,
@@ -106,9 +163,10 @@ Ext.onReady(function() {
                     format: 'image/png',
                     time: startTime
                 }, {
-                    metadata: {
-                        timeInterval: [['2011-08-18T12:00:00.000Z','2011-08-29T00:00:00.000Z','PT6H']],
-                        allowRange:false
+                    dimensions: {
+                        'time': {
+                            values: values
+                        }
                     },
                     singleTile: true,
                     ratio: 1,
