@@ -36,9 +36,9 @@ gxp.form.PlaybackModeComboBox = Ext.extend(Ext.form.ComboBox, {
     /** api: property[defaultMode]
      *  ``String``
      *  The value of ``modes`` item to select by default.
-     *  Default is ``false`` ('Normal' mode)
+     *  Default is ``track`` ('Normal' mode)
      */
-    defaultMode: false,
+    defaultMode: 'track',
     
     /** api: property[timeAgents]
      *  ``Array``(``OpenLayers.TimeAgent``)
@@ -69,7 +69,7 @@ gxp.form.PlaybackModeComboBox = Ext.extend(Ext.form.ComboBox, {
         });
         //initialize the default modes
         if(!config.modes && !this.modes.length){
-            this.modes.push([false, this.normalOptText], ['cumulative', this.cumulativeOptText], ['ranged', this.rangedOptText]);
+            this.modes.push(['track', this.normalOptText], ['cumulative', this.cumulativeOptText], ['ranged', this.rangedOptText]);
         }
         gxp.form.PlaybackModeComboBox.superclass.constructor.call(this,config);
   },
@@ -94,27 +94,27 @@ gxp.form.PlaybackModeComboBox = Ext.extend(Ext.form.ComboBox, {
     },
     
     setPlaybackMode: function(combo, record, index){
-        if(!this.timeAgents){
-            this.timeAgents = this.guessTimeAgents();
+        if(!this.agents){
+            this.agents = this.guessTimeAgents();
         }
         var mode = record.get('field1');
-        Ext.each(this.timeAgents,function(agent){
-            agent.rangeMode = mode;            
+        Ext.each(this.agents,function(agent){
+            agent.tickMode = mode;
             if(mode == 'range') {
                 if(!agent.rangeInterval) {
                     agent.rangeInterval = 1;
                 }
             }
         });
-        this.fireEvent('modechange',this,mode,this.timeAgents);
+        this.fireEvent('modechange',this,mode,this.agents);
     },
     
     /**
      * private: guessTimeAgents
-     * Guesses the mapPanel and the ``OpenLayers.Control.TimeManager``
-     * and returns an array of all the ``OpenLayers.TimeAgent`` managed by it
+     * Guesses the mapPanel and the ``OpenLayers.Control.DimensionManager``
+     * and returns an array of all the ``OpenLayers.Dimension.Agent`` managed by it
      * 
-     * return: ``Array``(``OpenLayers.TimeAgent``) 
+     * return: ``Array``(``OpenLayers.Dimension.Agent``) 
      */
     guessTimeAgents: function(){
         

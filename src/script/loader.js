@@ -48,6 +48,7 @@
         "widgets/GoogleStreetViewPanel.js",
         "widgets/Histogram.js",
         "widgets/tips/SliderTip.js",
+        "widgets/slider/TimeSlider.js",
         "widgets/PlaybackToolbar.js",
         "widgets/form/PlaybackModeComboBox.js",
         "widgets/PlaybackOptionsPanel.js",
