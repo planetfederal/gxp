@@ -315,26 +315,26 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             width: 315,
             selectedSource: selectedSource,
             xtype: 'gxp_cataloguesearchpanel',
-            map: this.target.mapPanel.map,
-            listeners: {
-                'addlayer': function(cmp, sourceKey, layerConfig) {
-                    var source = this.target.layerSources[sourceKey];
-                    var bounds = OpenLayers.Bounds.fromArray(layerConfig.bbox);
-                    var mapProjection = this.target.mapPanel.map.getProjection();
-                    var bbox = bounds.transform(layerConfig.srs, mapProjection);
-                    layerConfig.srs = mapProjection;
-                    layerConfig.bbox = bbox.toArray();
-                    layerConfig.source = this.initialConfig.catalogSourceKey !== null ? 
-                        this.initialConfig.catalogSourceKey : sourceKey;
-                    var record = source.createLayerRecord(layerConfig);
-                    this.target.mapPanel.layers.add(record);
-                    if (bbox) {
-                        this.target.mapPanel.map.zoomToExtent(bbox);
-                    }
-                },
-                scope: this
-            }
+            map: this.target.mapPanel.map
         }]);
+        output.on({
+            'addlayer': function(cmp, sourceKey, layerConfig) {
+                var source = this.target.layerSources[sourceKey];
+                var bounds = OpenLayers.Bounds.fromArray(layerConfig.bbox);
+                var mapProjection = this.target.mapPanel.map.getProjection();
+                var bbox = bounds.transform(layerConfig.srs, mapProjection);
+                layerConfig.srs = mapProjection;
+                layerConfig.bbox = bbox.toArray();
+                layerConfig.source = this.initialConfig.catalogSourceKey !== null ?
+                    this.initialConfig.catalogSourceKey : sourceKey;
+                var record = source.createLayerRecord(layerConfig);
+                this.target.mapPanel.layers.add(record);
+                if (bbox) {
+                    this.target.mapPanel.map.zoomToExtent(bbox);
+                }
+            },
+            scope: this
+        });
         var popup = output.findParentByType('window');
         popup && popup.center();
         return output;

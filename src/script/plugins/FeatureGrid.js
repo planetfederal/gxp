@@ -246,49 +246,48 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                 },
                 scope: this
             }] : [])),
-            listeners: {
-                "added": function(cmp, ownerCt) {
-                    function onClear() {
-                        this.displayTotalResults();
-                        this.selectOnMap && this.selectControl.deactivate();
-                        this.autoCollapse && typeof ownerCt.collapse == "function" &&
-                            ownerCt.collapse();
-                    }
-                    function onPopulate() {
-                        this.displayTotalResults();
-                        this.selectOnMap && this.selectControl.activate();
-                        this.autoExpand && typeof ownerCt.expand == "function" &&
-                            ownerCt.expand();
-                    }
-                    featureManager.on({
-                        "query": function(tool, store) {
-                            if (store && store.getCount()) {
-                                onPopulate.call(this);
-                            } else {
-                                onClear.call(this);
-                            }
-                        },
-                        "layerchange": onClear,
-                        "clearfeatures": onClear,
-                        scope: this
-                    });
-                },
-                contextmenu: function(event) {
-                    if (featureGrid.contextMenu.items.getCount() > 0) {
-                        var rowIndex = featureGrid.getView().findRowIndex(event.getTarget());
-                        if (rowIndex !== false) {
-                            featureGrid.getSelectionModel().selectRow(rowIndex);
-                            featureGrid.contextMenu.showAt(event.getXY());
-                            event.stopEvent();
-                        }
-                    }
-                },
-                scope: this
-            },
             contextMenu: new Ext.menu.Menu({items: []})
         }, config || {});
         var featureGrid = gxp.plugins.FeatureGrid.superclass.addOutput.call(this, config);
-        
+        featureGrid.on({
+            "added": function(cmp, ownerCt) {
+                function onClear() {
+                    this.displayTotalResults();
+                    this.selectOnMap && this.selectControl.deactivate();
+                    this.autoCollapse && typeof ownerCt.collapse == "function" &&
+                        ownerCt.collapse();
+                }
+                function onPopulate() {
+                    this.displayTotalResults();
+                    this.selectOnMap && this.selectControl.activate();
+                    this.autoExpand && typeof ownerCt.expand == "function" &&
+                        ownerCt.expand();
+                }
+                featureManager.on({
+                    "query": function(tool, store) {
+                        if (store && store.getCount()) {
+                            onPopulate.call(this);
+                        } else {
+                            onClear.call(this);
+                        }
+                    },
+                    "layerchange": onClear,
+                    "clearfeatures": onClear,
+                    scope: this
+                });
+            },
+            contextmenu: function(event) {
+                if (featureGrid.contextMenu.items.getCount() > 0) {
+                    var rowIndex = featureGrid.getView().findRowIndex(event.getTarget());
+                    if (rowIndex !== false) {
+                        featureGrid.getSelectionModel().selectRow(rowIndex);
+                        featureGrid.contextMenu.showAt(event.getXY());
+                        event.stopEvent();
+                    }
+                }
+            },
+            scope: this
+        });
         if (this.alwaysDisplayOnMap || (this.selectOnMap === true && this.displayMode === "selected")) {
             featureManager.showLayer(this.id, this.displayMode);
         }        
