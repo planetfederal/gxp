@@ -229,6 +229,13 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
             items: [{
                 xtype: "gxp_pointsymbolizer",
                 symbolizer: this.symbolizer,
+                listeners: {
+                    "change": function(symbolizer) {
+                        symbolizer.graphic = !!symbolizer.graphicName;
+                        this.fireEvent("change", this.symbolizer);
+                    },
+                    scope: this
+                },
                 border: false,
                 labelWidth: 70
             }, this.createVendorSpecificField({
