@@ -52,7 +52,12 @@ Ext.override(Ext.Tip, {
         if(!this.rendered){
             this.render(Ext.getBody());
         }
-        this.showAt(this.el.getAlignToXY(el, pos || this.defaultAlign, [offsetX, offsetY]));
+        var position = this.el.getAlignToXY(el, pos || this.defaultAlign, [offsetX, offsetY]);
+        if (!this.isVisible()) {
+            this.showAt(position);
+        } else {
+            this.setPagePosition(position[0], position[1]);
+        }
     }   
 });
 
@@ -94,6 +99,10 @@ GeoExt.FeatureTip = Ext.extend(Ext.Tip, {
      *  Cleanup events before destroying the feature tip.
      */
     beforeDestroy: function() {
+        for (var key in this.youtubePlayers) {
+            this.youtubePlayers[key].destroy();
+            delete this.youtubePlayers[key]; 
+        }
         this.map.events.un({
             "move" : this.show,
             scope : this
@@ -125,7 +134,11 @@ GeoExt.FeatureTip = Ext.extend(Ext.Tip, {
     show: function() {
         var position = this.getPosition();
         if (position !== null && (this.shouldBeVisible === null || this.shouldBeVisible.call(this))) {
-            this.showAt(position);
+            if (!this.isVisible()) {
+                this.showAt(position);
+            } else {
+                this.setPagePosition(position[0], position[1]);
+            }
         } else {
             this.hide();
         }
@@ -165,6 +178,8 @@ window.Timeline && window.SimileAjax && (function() {
  *      A panel for displaying a Similie Timeline.
  */
 gxp.TimelinePanel = Ext.extend(Ext.Panel, {
+
+    youtubePlayers: {},
 
     /** api: config[showRangeSlider]
      *  ``Boolean`` Should we show the range slider and its associated plus
@@ -708,7 +723,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         if (action !== Ext.data.Api.actions.destroy) {
             this.addFeatures(key, features);
         }
-        this.showAnnotations(this.playbackTool.playbackToolbar.control.currentTime);
+        this.showAnnotations();
     },
 
     /**
@@ -824,7 +839,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         bandInfos[1].syncWith = 0;
         bandInfos[1].highlight = true;
 
-       bandInfos[0].decorators = [
+        bandInfos[0].decorators = [
             new Timeline.PointHighlightDecorator({
                 date: d,
                 theme: theme
@@ -856,7 +871,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             this.timeline.getBand(0)._decorators[0]._date = this.playbackTool.playbackToolbar.control.currentTime;
             this.timeline.getBand(0)._decorators[0].paint();
             delete this._ignoreTimeChange;
-            this.showAnnotations(time);
+            this.showAnnotations();
         }
     },
     
@@ -1193,6 +1208,30 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }
     },
 
+    buildHTML: function(record) {
+        var content = record.get('content');
+        var start = content.indexOf('[youtube=');
+        if (start !== -1) {
+            var header = content.substr(0, start);
+            var end = content.indexOf(']', start);
+            var footer  = content.substr(end+1);
+            var url = content.substr(start+9, end-9);
+            var params = OpenLayers.Util.getParameters(url);
+            var width = params.w || 250;
+            var height = params.h || 250;
+            url = 'http://www.youtube.com/embed/' + params.v;
+            var fid = record.getFeature().fid;
+            var id = 'player_' + fid;
+            return header + '<br/>' + '<iframe id="' + id + 
+                '" type="text/html" width="' + width + '" height="' + 
+                height + '" ' + 'src="' + url + '?enablejsapi=1&origin=' + 
+                window.location.origin + '" frameborder="0"></iframe>' + 
+                '<br/>' + footer;
+        } else {
+            return content;
+        }
+    },
+
     /** private: method[displayTooltip]
      *  :arg record: ``GeoExt.data.FeatureRecord``
      *
@@ -1204,11 +1243,51 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             this.tooltips = {};
         }
         var fid = record.getFeature().fid;
+        var listeners = {
+            'show': function(cmp) {
+                if (this.youtubePlayers[fid]._ready && this.playbackTool.playbackToolbar.playing) {
+                    this.youtubePlayers[fid].playVideo();
+                }
+            },
+            'afterrender': function() {
+                if (!this.youtubePlayers[fid]) {
+                    var id = 'player_' + fid;
+                    var me = this;
+                    this.youtubePlayers[fid] = new YT.Player(id, {
+                        events: {
+                            'onReady': function(evt) {
+                                evt.target._ready = true;
+                                if (me.playbackTool.playbackToolbar.playing) {
+                                    evt.target.playVideo();
+                                }
+                            },
+                            'onStateChange': function(evt) {
+                                if (evt.data === YT.PlayerState.PLAYING) {
+                                    if (me.playbackTool.playbackToolbar.playing) {
+                                        me.playbackTool.playbackToolbar._weStopped = true;
+                                        me.playbackTool.playbackToolbar.control.stop();
+                                    }
+                                } else if (evt.data == YT.PlayerState.ENDED) {
+                                    if (me.playbackTool.playbackToolbar._weStopped) {
+                                        me.playbackTool.playbackToolbar.control.play();
+                                        delete me.playbackTool.playbackToolbar._weStopped;
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            },
+            scope: this
+        };
         if (!this.tooltips[fid]) {
             if (!hasGeometry) {
                 this.tooltips[fid] = new Ext.Tip({
                     cls: 'gxp-annotations-tip',
-                    html: '<h4>' + record.get("title") + '</h4>' + record.get('content')
+                    maxWidth: 500,
+                    listeners: listeners,
+                    title: record.get("title"),
+                    html: this.buildHTML(record)
                 });
             } else {
                 this.tooltips[fid] = new GeoExt.FeatureTip({
@@ -1218,7 +1297,10 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                         return (this._inTimeRange === true);
                     },
                     cls: 'gxp-annotations-tip',
-                    html: '<h4>' + record.get("title") + '</h4>' + record.get('content')
+                    maxWidth: 500,
+                    title: record.get("title"),
+                    listeners: listeners,
+                    html: this.buildHTML(record)
                 });
             }
         }
@@ -1229,7 +1311,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             tooltip.showBy(this.viewer.mapPanel.body, record.get("appearance"), [10, 10]);
             tooltip.showBy(this.viewer.mapPanel.body, record.get("appearance"), [10, 10]);
         } else {
-            tooltip.show();
+            if (!tooltip.isVisible()) {
+                tooltip.show();
+            }
         }
     },
 
@@ -1247,11 +1331,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     },
 
     /** private: method[showAnnotations]
-     *  :arg time: ``Date``
      *
      *  Show annotations in the map.
      */
-    showAnnotations: function(time) {
+    showAnnotations: function() {
+        var time = this.playbackTool.playbackToolbar.control.currentTime;
         if (!this.annotationsLayer) {
             this.annotationsLayer = new OpenLayers.Layer.Vector(null, {
                 displayInLayerSwitcher: false,
@@ -1345,7 +1429,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 }
             }
         }
-        this.showAnnotations(time);
+        this.showAnnotations();
     },
 
     /** private: method[calculateNewRange]

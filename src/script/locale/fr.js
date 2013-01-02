@@ -13,7 +13,8 @@ GeoExt.Lang.add("fr", {
         availableLayersText: "Couches disponibles",
         doneText: "Terminé",
         uploadText: "Télécharger des données",
-        addFeedActionMenuText: "Add feeds"
+        addFeedActionMenuText: "Add feeds",
+        searchText: "Search for layers"
     },
     
     "gxp.plugins.BingSource.prototype": {
@@ -28,7 +29,9 @@ GeoExt.Lang.add("fr", {
         createFeatureActionText: "Create",
         editFeatureActionText: "Modify",
         createFeatureActionTip: "Créer un nouvel objet",
-        editFeatureActionTip: "Modifier un objet existant"
+        editFeatureActionTip: "Modifier un objet existant",
+        commitTitle: "Commit message",
+        commitText: "Please enter a commit message for this edit:"
     },
     
     "gxp.plugins.FeatureGrid.prototype": {
@@ -305,6 +308,8 @@ GeoExt.Lang.add("fr", {
         fileLabel: "Données",
         fieldEmptyText: "Parcourir pour ...",
         uploadText: "Upload",
+        uploadFailedText: "Upload failed",
+        processingUploadText: "Processing upload...",
         waitMsgText: "Transfert de vos données ...",
         invalidFileExtensionText: "L'extension du fichier doit être : ",
         optionsText: "Options",

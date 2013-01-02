@@ -21,7 +21,8 @@ GeoExt.Lang.add("ca", {
         layerSelectionText: "Veure dades disponibles de:",
         doneText: "Fet",
         uploadText: "Puja dades",
-        addFeedActionMenuText: "Add feeds"
+        addFeedActionMenuText: "Add feeds",
+        searchText: "Search for layers"
     },
     
     "gxp.plugins.BingSource.prototype": {
@@ -36,7 +37,9 @@ GeoExt.Lang.add("ca", {
         createFeatureActionText: "Create",
         editFeatureActionText: "Modify",
         createFeatureActionTip: "Crea nou element",
-        editFeatureActionTip: "Edita element existent"
+        editFeatureActionTip: "Edita element existent",
+        commitTitle: "Commit message",
+        commitText: "Please enter a commit message for this edit:"
     },
     
     "gxp.plugins.FeatureGrid.prototype": {
@@ -370,6 +373,8 @@ GeoExt.Lang.add("ca", {
         fileLabel: "Dades",
         fieldEmptyText: "Navegueu per les dades...",
         uploadText: "Puja",
+        uploadFailedText: "Upload failed",
+        processingUploadText: "Processing upload...",
         waitMsgText: "Pugeu les vostres dades...",
         invalidFileExtensionText: "L'extensió del fitxer ha de ser alguna d'aquestes: ",
         optionsText: "Opcions",

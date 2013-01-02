@@ -21,7 +21,8 @@ GeoExt.Lang.add("es", {
         layerSelectionText: "Ver datos disponibles de:",
         doneText: "Hecho",
         uploadText: "Subir Datos",
-        addFeedActionMenuText: "Add feeds"
+        addFeedActionMenuText: "Add feeds",
+        searchText: "Search for layers"
     },
     
     "gxp.plugins.BingSource.prototype": {
@@ -36,7 +37,9 @@ GeoExt.Lang.add("es", {
         createFeatureActionText: "Create",
         editFeatureActionText: "Modify",
         createFeatureActionTip: "Crear nuevo elemento",
-        editFeatureActionTip: "Editar elemento existente"
+        editFeatureActionTip: "Editar elemento existente",
+        commitTitle: "Commit message",
+        commitText: "Please enter a commit message for this edit:"
     },
     
     "gxp.plugins.FeatureGrid.prototype": {
@@ -370,6 +373,8 @@ GeoExt.Lang.add("es", {
         fileLabel: "Datos",
         fieldEmptyText: "Navegue por los datos...",
         uploadText: "Subir",
+        uploadFailedText: "Upload failed",
+        processingUploadText: "Processing upload...",
         waitMsgText: "Suba sus datos data...",
         invalidFileExtensionText: "El fichero debe tener alguna de estas extensiones: ",
         optionsText: "Opciones",

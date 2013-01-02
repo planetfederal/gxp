@@ -8,6 +8,7 @@
 
 /**
  * @requires GeoExt/widgets/form.js
+ * @requires plugins/SchemaAnnotations.js
  */
 
 /** api: (define)
@@ -83,9 +84,9 @@ gxp.plugins.FeatureEditorGrid = Ext.extend(Ext.grid.PropertyGrid, {
         if (!this.timeFormat) {
             this.timeFormat = Ext.form.TimeField.prototype.format;
         }
-        var customEditors = {},
-            customRenderers = {},
-            feature = this.feature,
+        this.customRenderers = this.customRenderers || {};
+        this.customEditors = this.customEditors || {};
+        var feature = this.feature,
             attributes;
         if (this.fields) {
             // determine the order of attributes
@@ -117,6 +118,11 @@ gxp.plugins.FeatureEditorGrid = Ext.extend(Ext.grid.PropertyGrid, {
                 }
                 var value = feature.attributes[name];
                 var fieldCfg = GeoExt.form.recordToField(r);
+                var annotations = this.getAnnotationsFromSchema(r);
+                if (annotations && annotations.label) {
+                    this.propertyNames = this.propertyNames || {};
+                    this.propertyNames[name] = annotations.label;
+                }
                 var listeners;
                 if (typeof value == "string") {
                     var format;
@@ -145,7 +151,7 @@ gxp.plugins.FeatureEditorGrid = Ext.extend(Ext.grid.PropertyGrid, {
                                     }
                                 }
                             };
-                            customRenderers[name] = (function() {
+                            this.customRenderers[name] = (function() {
                                 return function(value) {
                                     //TODO When http://trac.osgeo.org/openlayers/ticket/3131
                                     // is resolved, change the 5 lines below to
@@ -169,7 +175,7 @@ gxp.plugins.FeatureEditorGrid = Ext.extend(Ext.grid.PropertyGrid, {
                             break;
                     }
                 }
-                customEditors[name] = new Ext.grid.GridEditor({
+                this.customEditors[name] = new Ext.grid.GridEditor({
                     field: Ext.create(fieldCfg),
                     listeners: listeners
                 });
@@ -178,8 +184,6 @@ gxp.plugins.FeatureEditorGrid = Ext.extend(Ext.grid.PropertyGrid, {
             feature.attributes = attributes;
         }
         this.source = attributes;
-        this.customEditors = customEditors;
-        this.customRenderers = customRenderers;
         var ucExcludeFields = this.excludeFields.length ?
             this.excludeFields.join(",").toUpperCase().split(",") : [];
         this.viewConfig = {
@@ -254,6 +258,9 @@ gxp.plugins.FeatureEditorGrid = Ext.extend(Ext.grid.PropertyGrid, {
     }
 
 });
+
+// use the schema annotations module
+Ext.override(gxp.plugins.FeatureEditorGrid, gxp.plugins.SchemaAnnotations);
 
 Ext.preg(gxp.plugins.FeatureEditorGrid.prototype.ptype, gxp.plugins.FeatureEditorGrid);
 Ext.reg(gxp.plugins.FeatureEditorGrid.prototype.xtype, gxp.plugins.FeatureEditorGrid);
