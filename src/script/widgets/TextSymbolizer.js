@@ -243,11 +243,27 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                 xtype: "combo",
                 store: ["none", "stretch", "proportional"],
                 mode: 'local',
+                listeners: {
+                    "select": function(combo, record) {
+                        if (combo.getValue() === "none") {
+                            this.graphicMargin.hide();
+                        } else {
+                            if (Ext.isEmpty(this.graphicMargin.getValue())) {
+                                this.graphicMargin.setValue(0);
+                                this.symbolizer.vendorOptions["graphic-margin"] = 0;
+                            }
+                            this.graphicMargin.show();
+                        }
+                    },
+                    scope: this
+                },
                 width: 100,
                 triggerAction: 'all',
                 fieldLabel: this.graphicResizeText
             }), this.createVendorSpecificField({
                 name: "graphic-margin",
+                ref: "../graphicMargin",
+                hidden: (this.symbolizer.vendorOptions["graphic-resize"] !== "stretch" && this.symbolizer.vendorOptions["graphic-resize"] !== "proportional"),
                 width: 100,
                 fieldLabel: this.graphicMarginText,
                 xtype: "textfield"
@@ -529,7 +545,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
             }
             this.fireEvent("change", this.symbolizer);
         };
-        return Ext.applyIf(config, {
+        var field = Ext.ComponentMgr.create(Ext.applyIf(config, {
             xtype: "numberfield",
             allowNegative: false,
             value: this.symbolizer.vendorOptions[config.name],
@@ -537,13 +553,11 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                 ptype: 'gxp_formfieldhelp',
                 dismissDelay: 20000,
                 helpText: this[config.name.replace(/-/g, '_') + 'Help']
-            }],
-            listeners: {
-                change: listener,
-                check: listener,
-                scope: this
-            }
-        });
+            }]
+        }));
+        field.on("change", listener, this);
+        field.on("check", listener, this);
+        return field;
     }
 
 });
