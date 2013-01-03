@@ -231,7 +231,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                 symbolizer: this.symbolizer,
                 listeners: {
                     "change": function(symbolizer) {
-                        symbolizer.graphic = !!symbolizer.graphicName;
+                        symbolizer.graphic = !!symbolizer.graphicName || !!symbolizer.externalGraphic;
                         this.fireEvent("change", this.symbolizer);
                     },
                     scope: this
