@@ -61,6 +61,12 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
      *  ``GeoExt.MapPanel``
      */
 
+    /** api: config[permalink]
+     *  Should we update window.location.hash with info about the map's
+     *  center and the zoom level? Defaults to false.
+     */
+    permalink: false,
+
     /** api: config[proxy]
      * ``String`` An optional proxy url which can be used to bypass the same
      * origin policy. This will be set as ``OpenLayers.ProxyHost``.
@@ -318,7 +324,30 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
      *  any configuration before applyConfig is called.
      */
     loadConfig: function(config) {
+        if (this.permalink === true) {
+            var urlConfig = this.getUrlConfig();
+            if (urlConfig.z != null) {
+                config.map.zoom = urlConfig.z;
+            }
+            if (urlConfig.c != null) {
+                config.map.center = urlConfig.c.split(",");
+            }
+        }
         this.applyConfig(config);
+    },
+
+    /** private[method] getUrlConfig
+     *  Gets the url config from the anchor/hash in the url.
+     * 
+     *  :returns: ``Object`` Object containing the values for c (center),
+     *  z (zoom level).
+     */
+    getUrlConfig: function(){
+        var hash = window.location.hash, urlConfig = {};
+        if (hash) {
+            Ext.apply(urlConfig, Ext.urlDecode(hash.substr(1)));
+        }
+        return urlConfig;
     },
     
     applyConfig: function(config) {
@@ -527,6 +556,22 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         }), config.renderTo ? "panel" : "viewport");
         
         this.fireEvent("portalready");
+
+        if (this.permalink === true) {
+            var map = this.mapPanel.map;
+            map.events.register("moveend", this, this.updateHash);
+        }
+    },
+
+    /** private: method[updateHash]
+     *  Update the hash on moveend.
+     */
+    updateHash: function() {
+        var map = this.mapPanel.map;
+        var urlConfig = this.getUrlConfig();
+        urlConfig.c = map.getCenter().toShortString().replace(" ", "");
+        urlConfig.z = map.getZoom();
+        window.location.hash = Ext.urlEncode(urlConfig);
     },
     
     activate: function() {
@@ -836,6 +881,12 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
     /** api: method[destroy]
      */
     destroy: function() {
+        if (this.permalink === true) {
+            var map = this.mapPanel.map;
+            if (map && map.events) {
+                map.events.unregister("moveend", this, this.updateHash);
+            }
+        }
         //TODO there is probably more that needs to be destroyed
         this.mapPanel.destroy();
         this.portal && this.portal.destroy();
