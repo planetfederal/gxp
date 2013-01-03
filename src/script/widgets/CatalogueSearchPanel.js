@@ -93,6 +93,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
         if (sourceComboData.length > 1) {
             filterOptions.push(['csw', 'data source']);
         }
+        var me = this;
         this.items = [{
             xtype: 'form',
             border: false,
@@ -274,7 +275,12 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                     xtype: "actioncolumn",
                     width: 30,
                     items: [{
-                        iconCls: "gxp-icon-addlayers",
+                        getClass: function(v, meta, rec) {
+                            if (me.findWMS(rec.get("URI")) !== false || 
+                                me.findWMS(rec.get("references")) !== false) {
+                                    return "gxp-icon-addlayers";
+                            }
+                        },
                         tooltip: this.addMapTooltip,
                         handler: function(grid, rowIndex, colIndex) {
                             var rec = this.grid.store.getAt(rowIndex);
