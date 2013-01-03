@@ -21,6 +21,7 @@ GeoExt.Lang.add("en", {
         layerSelectionText: "View available data from:",
         doneText: "Done",
         uploadText: "Upload layers",
+        addFeedActionMenuText: "Add feeds",
         searchText: "Search for layers"
     },
     

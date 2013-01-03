@@ -18,6 +18,7 @@ GeoExt.Lang.add("el", {
         layerSelectionText: "Δείτε διαθέσιμα δεδομένα από:",
         doneText: "Ολοκληρώθηκε",
         uploadText: "Ανεβάστε Δεδομένα",
+        addFeedActionMenuText: "Add feeds",
         searchText: "Search for layers"
     },
     

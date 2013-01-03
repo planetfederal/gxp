@@ -13,6 +13,7 @@ GeoExt.Lang.add("fr", {
         availableLayersText: "Couches disponibles",
         doneText: "Terminé",
         uploadText: "Télécharger des données",
+        addFeedActionMenuText: "Add feeds",
         searchText: "Search for layers"
     },
     
