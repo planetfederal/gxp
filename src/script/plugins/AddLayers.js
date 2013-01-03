@@ -387,7 +387,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     xtype: "gxp_feedsourcedialog",
                     target: this.target,
                     listeners: {
-                        'addFeed':function (ptype, config) {
+                        'addfeed':function (ptype, config) {
                             var sourceConfig = {"config":{"ptype":ptype}};
                             if (config.url) {
                                 sourceConfig.config["url"] = config.url;

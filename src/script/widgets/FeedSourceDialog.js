@@ -66,12 +66,12 @@ gxp.FeedSourceDialog = Ext.extend(Ext.Container, {
      */
     initComponent: function() {
 
-        /** api: event[addFeed]
+        /** api: event[addfeed]
          * Fired after the dialog form is submitted.
          * Intended to be used for adding the feed
          * layer to the map
          */
-        this.addEvents("addFeed");
+        this.addEvents("addfeed");
 
         if (!this.feedTypes) {
             this.feedTypes  = [
@@ -209,7 +209,7 @@ gxp.FeedSourceDialog = Ext.extend(Ext.Container, {
                     });
                 }
 
-                this.fireEvent("addFeed", ptype, config);
+                this.fireEvent("addfeed", ptype, config);
 
             },
             scope: this
