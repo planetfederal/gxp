@@ -9,6 +9,7 @@
 /**
  * @requires plugins/Tool.js
  * @requires widgets/NewSourceDialog.js
+ * @requires widgets/FeedSourceDialog.js
  * @requires plugins/GeoNodeCatalogueSource.js
  * @requires widgets/CatalogueSearchPanel.js
  */
@@ -45,6 +46,12 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      *  Text for find menu item (i18n).
      */
     findActionMenuText: "Find layers",
+
+    /** api: config[addActionMenuText]
+     *  ``String``
+     *  Text for add feed menu item (i18n).
+     */
+    addFeedActionMenuText: "Add feeds",
 
     /** api: config[addActionTip]
      *  ``String``
@@ -128,6 +135,13 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      *  If provided, a :class:`gxp.CatalogueSearchPanel` will be added as a
      *  menu option. This panel will be constructed using the provided config.
      *  By default, no search functionality is provided.
+     */
+
+    /** api: config[feeds]
+     *  ``Object | Boolean``
+     *  If provided, a :class:`gxp.FeedSourceDialog` will be added as a
+     *  menu option. This panel will be constructed using the provided config.
+     *  By default, no feed functionality is provided.
      */
 
     /** api: config[upload]
@@ -256,6 +270,14 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     scope: this
                 }));
             }
+            if (this.initialConfig.feeds) {
+                items.push(new Ext.menu.Item({
+                    iconCls: 'gxp-icon-addlayers',
+                    text: this.addFeedActionMenuText,
+                    handler: this.showFeedDialog,
+                    scope: this
+                }));
+            }
             if (this.uploadSource) {
                 uploadButton = this.createUploadButton(Ext.menu.Item);
                 if (uploadButton) {
@@ -350,6 +372,42 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             this.addOutput(this.capGrid);
         }
         this.capGrid.show();
+    },
+
+    /** api: method[showFeedDialog]
+     * Shows the window with a dialog for adding feeds.
+     */
+    showFeedDialog: function() {
+        var Cls = this.outputTarget ? Ext.Panel : Ext.Window;
+        if(!this.feedDialog) {
+            this.feedDialog = new Cls(Ext.apply({
+                closeAction: "hide",
+                title: this.addFeedActionMenuText,
+                items: [{
+                    xtype: "gxp_feedsourcedialog",
+                    target: this.target,
+                    listeners: {
+                        'addfeed':function (ptype, config) {
+                            var sourceConfig = {"config":{"ptype":ptype}};
+                            if (config.url) {
+                                sourceConfig.config["url"] = config.url;
+                            }
+                            var source = this.target.addLayerSource(sourceConfig);
+                            config.source = source.id;
+                            var feedRecord = source.createLayerRecord(config);
+                            this.target.mapPanel.layers.add([feedRecord]);
+                            //this.target.selectControl.activate();
+                            this.feedDialog.hide()
+                        },
+                        scope: this
+                    }
+                }]
+            }, this.initialConfig.outputConfig));
+            if (Cls === Ext.Panel) {
+                this.addOutput(this.feedDialog);
+            };
+        }
+        this.feedDialog.show();
     },
 
     /**
