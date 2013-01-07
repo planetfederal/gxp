@@ -286,7 +286,17 @@ GeoExt.Lang.add("fr", {
         cacheFieldText: "Utiliser la version mise en cache",
         stylesText: "Available styles",
         infoFormatText: "Info format",
-        infoFormatEmptyText: "Choisissez un format"
+        infoFormatEmptyText: "Choisissez un format",
+        displayOptionsText: "Display options",
+        queryText: "Limit with filters",
+        scaleText: "Limit by scale",
+        minScaleText: "Min scale",
+        maxScaleText: "Max scale",
+        switchToFilterBuilderText: "Switch back to filter builder",
+        cqlPrefixText: "or ",
+        cqlText: "use CQL filter instead",
+        singleTileText: "Single tile",
+        singleTileFieldText: "Use a single tile"
     },
 
     "gxp.EmbedMapDialog.prototype": {

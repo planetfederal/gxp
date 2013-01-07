@@ -289,7 +289,17 @@ GeoExt.Lang.add("nl", {
         cacheFieldText: "Gebruik de versie vanuit de cache",
         stylesText: "Beschikbare Stijlen",
         infoFormatText: "Info formaat",
-        infoFormatEmptyText: "Selecteer een formaat"
+        infoFormatEmptyText: "Selecteer een formaat",
+        displayOptionsText: "Weergave opties",
+        queryText: "Begrens d.m.v. query",
+        scaleText: "Bregens d.m.v. schaal",
+        minScaleText: "Minimum schaal",
+        maxScaleText: "Maximum schaal",
+        switchToFilterBuilderText: "Terug naar de querybuilder",
+        cqlPrefixText: "of ",
+        cqlText: "gebruik een CQL filter",
+        singleTileText: "Enkele kaarttegel",
+        singleTileFieldText: "Gebruik 1 kaarttegel"
     },
 
     "gxp.EmbedMapDialog.prototype": {
