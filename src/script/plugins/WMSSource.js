@@ -862,6 +862,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         return Ext.apply(config, {
             format: params.FORMAT,
             styles: params.STYLES,
+            tiled: !options.singleTile,
             transparent: params.TRANSPARENT,
             cql_filter: params.CQL_FILTER,
             minscale: options.minScale,

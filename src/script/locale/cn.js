@@ -321,7 +321,17 @@ GeoExt.Lang.add("en", {
         cacheFieldText: "使用缓存版本",
         stylesText: "Available styles",
         infoFormatText: "格式信息",
-        infoFormatEmptyText: "选择一种格式"
+        infoFormatEmptyText: "选择一种格式",
+        displayOptionsText: "Display options",
+        queryText: "Limit with filters",
+        scaleText: "Limit by scale",
+        minScaleText: "Min scale",
+        maxScaleText: "Max scale",
+        switchToFilterBuilderText: "Switch back to filter builder",
+        cqlPrefixText: "or ",
+        cqlText: "use CQL filter instead",
+        singleTileText: "Single tile",
+        singleTileFieldText: "Use a single tile"
     },
 
     "gxp.EmbedMapDialog.prototype": {
