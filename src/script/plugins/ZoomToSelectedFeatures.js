@@ -29,6 +29,12 @@ gxp.plugins.ZoomToSelectedFeatures = Ext.extend(gxp.plugins.ZoomToExtent, {
     
     /** api: ptype = gxp_zoomtoselectedfeatures */
     ptype: "gxp_zoomtoselectedfeatures",
+
+    /** api: config[buttonText]
+     *  ``String``
+     *  Text for zoom button item (i18n).
+     */
+    buttonText: "Zoom selected features",
     
     /** api: config[menuText]
      *  ``String``

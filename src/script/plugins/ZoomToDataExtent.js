@@ -29,6 +29,12 @@ gxp.plugins.ZoomToDataExtent = Ext.extend(gxp.plugins.ZoomToExtent, {
     
     /** api: ptype = gxp_zoomtodataextent */
     ptype: "gxp_zoomtodataextent",
+
+    /** api: config[buttonText]
+     *  ``String``
+     *  Text for zoom button item (i18n).
+     */
+    buttonText: "Zoom layer extent",
     
     /** api: config[menuText]
      *  ``String``

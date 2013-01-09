@@ -21,6 +21,7 @@ GeoExt.Lang.add("ca", {
         layerSelectionText: "Veure dades disponibles de:",
         doneText: "Fet",
         uploadText: "Puja dades",
+        addFeedActionMenuText: "Add feeds",
         searchText: "Search for layers"
     },
     
@@ -36,7 +37,9 @@ GeoExt.Lang.add("ca", {
         createFeatureActionText: "Create",
         editFeatureActionText: "Modify",
         createFeatureActionTip: "Crea nou element",
-        editFeatureActionTip: "Edita element existent"
+        editFeatureActionTip: "Edita element existent",
+        commitTitle: "Commit message",
+        commitText: "Please enter a commit message for this edit:"
     },
     
     "gxp.plugins.FeatureGrid.prototype": {
@@ -321,7 +324,17 @@ GeoExt.Lang.add("ca", {
         cacheFieldText: "Utiliza la versió en caché",
         stylesText: "Estils disponibles",
         infoFormatText: "Info format",
-        infoFormatEmptyText: "Select a format"
+        infoFormatEmptyText: "Select a format",
+        displayOptionsText: "Display options",
+        queryText: "Limit with filters",
+        scaleText: "Limit by scale",
+        minScaleText: "Min scale",
+        maxScaleText: "Max scale",
+        switchToFilterBuilderText: "Switch back to filter builder",
+        cqlPrefixText: "or ",
+        cqlText: "use CQL filter instead",
+        singleTileText: "Single tile",
+        singleTileFieldText: "Use a single tile"
     },
 
     "gxp.EmbedMapDialog.prototype": {

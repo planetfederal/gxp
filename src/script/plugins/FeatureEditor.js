@@ -38,6 +38,12 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
     
     /** api: ptype = gxp_featureeditor */
     ptype: "gxp_featureeditor",
+
+    /** api: config[commitMessage]
+     *  ``Boolean`` Should we prompt the user for a commit message?
+     *  Default is false.
+     */
+    commitMessage: false,
     
     /** api: config[splitButton]
      *  ``Boolean`` If set to true, the actions will be rendered as a single
@@ -51,6 +57,12 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
      *  the reference to the SplitButton once it was created.
      */
     splitButton: null,
+
+    /** api: config[showButtonText]
+     *  Show the ``buttonText`` an action is configured with, if used as a
+     *  button. Default is false.
+     */
+    showButtonText: false,
 
     /** api: config[iconClsAdd]
      *  ``String``
@@ -91,6 +103,8 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
     lineText: "Line",
     polygonText: "Polygon",
     noGeometryText: "Event",
+    commitTitle: "Commit message",
+    commitText: "Please enter a commit message for this edit:",
 
     /** api: config[createFeatureActionTip]
      *  ``String``
@@ -472,13 +486,43 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                             },
                             "featuremodified": function(popup, feature) {
                                 featureStore.on({
+                                    beforewrite: {
+                                        fn: function(store, action, rs, options) {
+                                            if (this.commitMessage === true) {
+                                                options.params.handle = this._commitMsg;
+                                                delete this._commitMsg;
+                                            }
+                                        },
+                                        single: true
+                                    },
                                     beforesave: {
                                         fn: function() {
                                             if (popup && popup.isVisible()) {
                                                 popup.disable();
                                             }
+                                            if (this.commitMessage === true) {
+                                                if (!this._commitMsg) {
+                                                    var fn = arguments.callee;
+                                                    Ext.Msg.show({
+                                                        prompt: true,
+                                                        title: this.commitTitle,
+                                                        msg: this.commitText,
+                                                        buttons: Ext.Msg.OK,
+                                                        fn: function(btn, text) {
+                                                            if (btn === 'ok') {
+                                                                this._commitMsg = text;
+                                                                featureStore.un('beforesave', fn, this);
+                                                                featureStore.save();
+                                                            }
+                                                        },
+                                                        scope: this,
+                                                        multiline: true
+                                                    });
+                                                    return false;
+                                                }
+                                            }
                                         },
-                                        single: true
+                                        single: this.commitMessage !== true
                                     },
                                     write: {
                                         fn: function() {
@@ -532,7 +576,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                                     },
                                     scope: this
                                 });                                
-                                if(feature.state === OpenLayers.State.DELETE) {                                    
+                                if(feature.state === OpenLayers.State.DELETE) {
                                     /**
                                      * If the feature state is delete, we need to
                                      * remove it from the store (so it is collected
@@ -585,6 +629,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
             // backwards compatibility: only show text if configured
             menuText: this.initialConfig.createFeatureActionText,
             text: this.initialConfig.createFeatureActionText,
+            buttonText: this.createFeatureActionText,
             iconCls: this.iconClsAdd,
             disabled: true,
             hidden: this.modifyOnly || this.readOnly,
@@ -682,6 +727,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
             // backwards compatibility: only show text if configured
             text: this.initialConfig.editFeatureActionText,
             menuText: this.initialConfig.editFeatureActionText,
+            buttonText: this.editFeatureActionText,
             iconCls: this.iconClsEdit,
             disabled: true,
             toggleGroup: toggleGroup,
@@ -710,7 +756,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                     })
                 ]},
                 disabled: true,
-                buttonText: this.splitButtonText,
+                text: this.showButtonText ? this.splitButtonText : null,
                 tooltip: this.splitButtonTooltip,
                 iconCls: this.iconClsAdd,
                 enableToggle: true,
