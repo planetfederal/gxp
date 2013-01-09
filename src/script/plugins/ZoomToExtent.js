@@ -34,7 +34,6 @@ gxp.plugins.ZoomToExtent = Ext.extend(gxp.plugins.Tool, {
     /** api: config[buttonText]
      *  ``String`` Text to show next to the zoom button
      */
-     buttonText: "Zoom Extend",
      
     /** api: config[menuText]
      *  ``String``
@@ -86,8 +85,8 @@ gxp.plugins.ZoomToExtent = Ext.extend(gxp.plugins.Tool, {
      */
     addActions: function() {
         return gxp.plugins.ZoomToExtent.superclass.addActions.apply(this, [{
+            text: this.buttonText,
             menuText: this.menuText,
-            buttonText: this.buttonText,
             iconCls: this.iconCls,
             tooltip: this.tooltip,
             handler: function() {

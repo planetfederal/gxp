@@ -31,12 +31,6 @@ gxp.plugins.Navigation = Ext.extend(gxp.plugins.Tool, {
     
     /** api: ptype = gxp_navigation */
     ptype: "gxp_navigation",
-
-    /** api: config[buttonText]
-     *  ``String``
-     *  Text for the Measure button (i18n).
-     */
-    buttonText: "Pan",
     
     /** api: config[menuText]
      *  ``String``
@@ -75,7 +69,6 @@ gxp.plugins.Navigation = Ext.extend(gxp.plugins.Tool, {
         var actions = [new GeoExt.Action({
             tooltip: this.tooltip,
             menuText: this.menuText,
-            buttonText: this.buttonText,
             iconCls: "gxp-icon-pan",
             enableToggle: true,
             pressed: true,

@@ -30,12 +30,6 @@ gxp.plugins.RemoveLayer = Ext.extend(gxp.plugins.Tool, {
     
     /** api: ptype = gxp_removelayer */
     ptype: "gxp_removelayer",
-
-    /** api: config[buttonText]
-     *  ``String``
-     *  Text for the Measure button (i18n).
-     */
-    buttonText: "Remove layer",
     
     /** api: config[removeMenuText]
      *  ``String``
@@ -55,7 +49,6 @@ gxp.plugins.RemoveLayer = Ext.extend(gxp.plugins.Tool, {
         var selectedLayer;
         var actions = gxp.plugins.RemoveLayer.superclass.addActions.apply(this, [{
             menuText: this.removeMenuText,
-            buttonText: this.buttonText,
             iconCls: "gxp-icon-removelayers",
             disabled: true,
             tooltip: this.removeActionTip,

@@ -29,11 +29,6 @@ gxp.plugins.LayerProperties = Ext.extend(gxp.plugins.Tool, {
     
     /** api: ptype = gxp_layerproperties */
     ptype: "gxp_layerproperties",
-
-    /** api: config[buttonText]
-     *  ``String`` Text to show next to the zoom button
-     */
-    buttonText: "Layer Properties",
     
     /** api: config[menuText]
      *  ``String``
@@ -74,7 +69,6 @@ gxp.plugins.LayerProperties = Ext.extend(gxp.plugins.Tool, {
     addActions: function() {
         var actions = gxp.plugins.LayerProperties.superclass.addActions.apply(this, [{
             menuText: this.menuText,
-            buttonText: this.buttonText,
             iconCls: "gxp-icon-layerproperties",
             disabled: true,
             tooltip: this.toolTip,

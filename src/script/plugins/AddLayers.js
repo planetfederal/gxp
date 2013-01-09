@@ -237,7 +237,6 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             tooltip : this.addActionTip,
             text: this.addActionText,
             menuText: this.addActionMenuText,
-            buttonText: this.addButtonText,
             disabled: true,
             iconCls: "gxp-icon-addlayers"
         };

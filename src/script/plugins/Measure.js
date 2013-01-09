@@ -44,12 +44,6 @@ gxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
      */
     outputTarget: "map",
 
-    /** api: config[showButtonText]
-     *  Show the ``buttonText`` an action is configured with, if used as a
-     *  button. Default is false.
-     */
-    showButtonText: false,
-
     /** api: config[buttonText]
      *  ``String``
      *  Text for the Measure button (i18n).
@@ -211,7 +205,7 @@ gxp.plugins.Measure = Ext.extend(gxp.plugins.Tool, {
         this.button = new Ext.SplitButton({
             iconCls: "gxp-icon-measure-length",
             tooltip: this.measureTooltip,
-            text: this.showButtonText ? this.buttonText : null,
+            buttonText: this.buttonText,
             enableToggle: true,
             toggleGroup: this.toggleGroup,
             allowDepress: true,
