@@ -31,6 +31,12 @@ gxp.plugins.Legend = Ext.extend(gxp.plugins.Tool, {
     
     /** api: ptype = gxp_legend */
     ptype: "gxp_legend",
+
+    /** api: config[buttonText]
+     *  ``String``
+     *  Text for legend button item (i18n).
+     */
+    buttonText: "Legend",
     
     /** api: config[menuText]
      *  ``String``
@@ -70,6 +76,7 @@ gxp.plugins.Legend = Ext.extend(gxp.plugins.Tool, {
     addActions: function() {
         var actions = [{
             menuText: this.menuText,
+            buttonText: this.buttonText,
             iconCls: "gxp-icon-legend",
             tooltip: this.tooltip,
             handler: function() {

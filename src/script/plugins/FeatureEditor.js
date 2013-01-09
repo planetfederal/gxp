@@ -58,6 +58,12 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
      */
     splitButton: null,
 
+    /** api: config[showButtonText]
+     *  Show the ``buttonText`` an action is configured with, if used as a
+     *  button. Default is false.
+     */
+    showButtonText: false,
+
     /** api: config[iconClsAdd]
      *  ``String``
      *  iconCls to use for the add button.
@@ -623,6 +629,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
             // backwards compatibility: only show text if configured
             menuText: this.initialConfig.createFeatureActionText,
             text: this.initialConfig.createFeatureActionText,
+            buttonText: this.createFeatureActionText,
             iconCls: this.iconClsAdd,
             disabled: true,
             hidden: this.modifyOnly || this.readOnly,
@@ -720,6 +727,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
             // backwards compatibility: only show text if configured
             text: this.initialConfig.editFeatureActionText,
             menuText: this.initialConfig.editFeatureActionText,
+            buttonText: this.editFeatureActionText,
             iconCls: this.iconClsEdit,
             disabled: true,
             toggleGroup: toggleGroup,
@@ -748,7 +756,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                     })
                 ]},
                 disabled: true,
-                buttonText: this.splitButtonText,
+                text: this.showButtonText ? this.splitButtonText : null,
                 tooltip: this.splitButtonTooltip,
                 iconCls: this.iconClsAdd,
                 enableToggle: true,
