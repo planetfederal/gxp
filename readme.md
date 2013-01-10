@@ -18,7 +18,7 @@ Quickstart
 
 #. Initialize submodule dependencies::
 
-      git submodule init --init --recursive
+      git submodule update --init --recursive
   
   
 # good codes!
