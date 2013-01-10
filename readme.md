@@ -14,11 +14,11 @@ Quickstart
 #. Clone the repository:: 
 
       git clone https://github.com/FuncateMobile/gxp.git
-      cd suite
+      cd gxp
 
 #. Initialize submodule dependencies::
 
-      git submodule update --init --recursive
+      git submodule init --init --recursive
   
   
 # good codes!
