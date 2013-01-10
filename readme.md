@@ -11,14 +11,13 @@ See the [tutorial](http://workshops.opengeo.org/gxp/), [API docs](http://gxp.ope
 Quickstart
 ----------
 
-#. Clone the repository:: 
+1. Clone the repository:: 
 
       git clone https://github.com/FuncateMobile/gxp.git
       cd gxp
 
-#. Initialize submodule dependencies::
+2. Initialize submodule dependencies::
 
       git submodule update --init --recursive
   
-  
-# good codes!
+
