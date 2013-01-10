@@ -367,6 +367,10 @@ GeoExt.Lang.add("nl", {
 
     "gxp.ScaleOverlay.prototype": { 
         zoomLevelText: "Zoom niveau"
+    },
+
+    "gxp.Viewer.prototype": {
+        saveErrorText: "Problemen bij het opslaan: "
     }
 
 });

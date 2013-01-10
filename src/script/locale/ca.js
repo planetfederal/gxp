@@ -405,6 +405,10 @@ GeoExt.Lang.add("ca", {
 
     "gxp.ScaleOverlay.prototype": {
         zoomLevelText: "Escala"
+    },
+
+    "gxp.Viewer.prototype": {
+        saveErrorText: "Trouble saving: "
     }
 
 });
