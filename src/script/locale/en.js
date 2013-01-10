@@ -406,6 +406,10 @@ GeoExt.Lang.add("en", {
 
     "gxp.ScaleOverlay.prototype": { 
         zoomLevelText: "Zoom level"
+    },
+
+    "gxp.Viewer.prototype": {
+        saveErrorText: "Trouble saving: "
     }
 
 });
