@@ -408,7 +408,7 @@ GeoExt.Lang.add("es", {
     },
 
     "gxp.Viewer.prototype": {
-        saveErrorText: "Trouble saving: "
+        saveErrorText: "Problemas guardando: "
     }
 
 });

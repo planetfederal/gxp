@@ -409,7 +409,7 @@ GeoExt.Lang.add("de", {
     },
 
     "gxp.Viewer.prototype": {
-        saveErrorText: "Trouble saving: "
+        saveErrorText: "Beim Speichern ist ein Problem aufgetreten: "
     }
 
 });

@@ -408,7 +408,7 @@ GeoExt.Lang.add("ca", {
     },
 
     "gxp.Viewer.prototype": {
-        saveErrorText: "Trouble saving: "
+        saveErrorText: "Problemes desant: "
     }
 
 });

@@ -343,7 +343,7 @@ GeoExt.Lang.add("fr", {
     },
 
     "gxp.Viewer.prototype": {
-        saveErrorText: "Trouble saving: "
+        saveErrorText: "Sauver Trouble: "
     }
 
 });
