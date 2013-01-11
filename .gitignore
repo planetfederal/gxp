@@ -5,3 +5,20 @@ src/doc/lib/plugins
 src/doc/lib/widgets
 src/doc/lib/util.rst
 build/
+
+# Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
