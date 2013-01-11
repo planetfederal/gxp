@@ -12,7 +12,7 @@
 	url = git://github.com/opengeo/buildkit.git
 [submodule "externals/PrintPreview"]
 	path = externals/PrintPreview
-	url = git://github.com/GeoNode/PrintPreview.git
+	url = git://github.com/opengeo/PrintPreview.git
 [submodule "externals/DimensionManager"]
 	path = externals/DimensionManager
 	url = git://github.com/opengeo/openlayers.git
