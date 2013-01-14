@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sld:StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:sld="http://www.opengis.net/sld" xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml" version="1.0.0">
+<sld:StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:sld="http://www.opengis.net/sld"
+                           xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"
+                           version="1.0.0">
     <sld:NamedLayer>
         <sld:Name>usa:states</sld:Name>
         <sld:UserStyle>
@@ -7,11 +9,13 @@
             <sld:Title>Population in the United States</sld:Title>
             <sld:IsDefault>1</sld:IsDefault>
             <sld:Abstract>A sample filter that filters the United States into three
-        categories of population, drawn in different colors</sld:Abstract>
+                categories of population, drawn in different colors
+            </sld:Abstract>
             <sld:FeatureTypeStyle>
                 <sld:Name>name</sld:Name>
                 <sld:Rule>
-                    <sld:Name>{"group":"Population","method":"graduated","args":["PERSONS",3,"NATURAL_BREAKS"]}</sld:Name>
+                    <sld:Name>{"group":"Population","method":"graduated","args":["PERSONS",3,"NATURAL_BREAKS"]}
+                    </sld:Name>
                     <sld:Title>Population &lt; 2M</sld:Title>
                     <ogc:Filter>
                         <ogc:PropertyIsLessThan>
@@ -27,7 +31,8 @@
                     </sld:PolygonSymbolizer>
                 </sld:Rule>
                 <sld:Rule>
-                    <sld:Name>{"group":"Population","method":"graduated","args":["PERSONS",3,"NATURAL_BREAKS"]}</sld:Name>
+                    <sld:Name>{"group":"Population","method":"graduated","args":["PERSONS",3,"NATURAL_BREAKS"]}
+                    </sld:Name>
                     <sld:Title>Population 2M-4M</sld:Title>
                     <ogc:Filter>
                         <ogc:PropertyIsBetween>
@@ -48,7 +53,8 @@
                     </sld:PolygonSymbolizer>
                 </sld:Rule>
                 <sld:Rule>
-                    <sld:Name>{"group":"Population","method":"graduated","args":["PERSONS",3,"NATURAL_BREAKS"]}</sld:Name>
+                    <sld:Name>{"group":"Population","method":"graduated","args":["PERSONS",3,"NATURAL_BREAKS"]}
+                    </sld:Name>
                     <sld:Title>Population &gt; 4M</sld:Title>
                     <ogc:Filter>
                         <ogc:PropertyIsGreaterThan>
