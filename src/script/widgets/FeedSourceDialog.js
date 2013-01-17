@@ -8,6 +8,8 @@
 
 /**
  * @requires plugins/FeedSource.js
+ * @requires plugins/PicasaFeedSource.js
+ * @requires plugins/YouTubeFeedSource.js
  * @requires widgets/PointSymbolizer.js
  */
 
@@ -26,7 +28,7 @@ Ext.namespace("gxp");
  */
 gxp.FeedSourceDialog = Ext.extend(Ext.Container, {
     /** api: config[feedTypeText] ``String`` i18n */
-    feedTypeText: "Feed Source",
+    feedTypeText: "Source",
     /** api: config[addPicasaText] ``String`` i18n */
     addPicasaText: "Picasa Photos",
     /** api: config[addYouTubeText] ``String`` i18n */
@@ -36,19 +38,21 @@ gxp.FeedSourceDialog = Ext.extend(Ext.Container, {
     /** api: config[addFeedText] ``String`` i18n */
     addFeedText: "Add to Map",
     /** api: config[addTitleText] ``String`` i18n */
-    addTitleText: "Feed Title",
+    addTitleText: "Title",
     /** api: config[keywordText] ``String`` i18n */
     keywordText: "Keyword",
     /** api: config[doneText] ``String`` i18n */
     doneText: "Done",
     /** api: config[titleText] ``String`` i18n */
     titleText: "Add Feeds",
+    /** api: config[maxResultsText] ``String`` i18n */
+    maxResultsText: "Max Items",
 
     /**
      * api: config[width]
      * ``Number`` width of dialog
      */
-    width: 400,
+    width: 300,
 
     /**
      * api: config[autoHeight]
@@ -75,16 +79,10 @@ gxp.FeedSourceDialog = Ext.extend(Ext.Container, {
 
         if (!this.feedTypes) {
             this.feedTypes  = [
+                [gxp.plugins.PicasaFeedSource.ptype, this.addPicasaText],
+                [gxp.plugins.YouTubeFeedSource.ptype, this.addYouTubeText],
                 [gxp.plugins.FeedSource.ptype, this.addRSSText]
-            ];
-
-            if (gxp.plugins.YouTubeFeedSource) {
-                this.feedTypes.unshift( [gxp.plugins.YouTubeFeedSource.ptype, this.addYouTubeText]);
-            }
-
-            if (gxp.plugins.PicasaFeedSource) {
-                this.feedTypes.unshift([gxp.plugins.PicasaFeedSource.ptype, this.addPicasaText]);
-            }
+            ]
         }
 
         var feedStore = new Ext.data.ArrayStore({
@@ -98,6 +96,7 @@ gxp.FeedSourceDialog = Ext.extend(Ext.Container, {
             displayField:'name',
             valueField:'type',
             typeAhead: true,
+            width: 180,
             mode: 'local',
             triggerAction: 'all',
             emptyText:'Select a feed source...',
@@ -125,7 +124,7 @@ gxp.FeedSourceDialog = Ext.extend(Ext.Container, {
             fieldLabel: "URL",
             allowBlank: false,
             //hidden: true,
-            width: 240,
+            width: 180,
             msgTarget: "right",
             validator: this.urlValidator.createDelegate(this)
         });
@@ -134,19 +133,19 @@ gxp.FeedSourceDialog = Ext.extend(Ext.Container, {
             fieldLabel: this.keywordText,
             allowBlank: true,
             hidden: true,
-            width: 150,
+            width: 180,
             msgTarget: "right"
         });
 
         var titleTextField = new Ext.form.TextField({
             fieldLabel: this.addTitleText,
             allowBlank: true,
-            width: 150,
+            width: 180,
             msgTarget: "right"
         });
 
         var maxResultsField = new Ext.form.ComboBox({
-            fieldLabel: 'Maximum # Results',
+            fieldLabel: this.maxResultsText,
             hidden: true,
             hiddenName: 'max-results',
             store: new Ext.data.ArrayStore({
@@ -157,16 +156,17 @@ gxp.FeedSourceDialog = Ext.extend(Ext.Container, {
             mode: 'local',
             triggerAction: 'all',
             emptyText:'Choose number...',
-            labelWidth: 100,
+            labelWidth: 70,
             defaults: {
-                labelWidth: 100,
-                width:100
+                labelWidth: 70,
+                width:70
             }
         });
 
 
         var symbolizerField = new gxp.PointSymbolizer({
             bodyStyle: {padding: "10px"},
+            width: 280,
             border: false,
             hidden: true,
             labelWidth: 70,
@@ -230,6 +230,7 @@ gxp.FeedSourceDialog = Ext.extend(Ext.Container, {
 
         this.panel = new Ext.Panel({
             bbar: bbarItems,
+            autoScroll: true,
             items: [
                 sourceTypeSelect,
                 titleTextField,
@@ -294,7 +295,6 @@ gxp.FeedSourceDialog = Ext.extend(Ext.Container, {
 
 /** api: xtype = gxp_feedsourcedialog */
 Ext.reg('gxp_feedsourcedialog', gxp.FeedSourceDialog);
-
 
 
 

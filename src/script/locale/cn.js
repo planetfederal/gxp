@@ -207,7 +207,7 @@ GeoExt.Lang.add("en", {
 
     "gxp.FeatureEditPopup.prototype": {
         closeMsgTitle: "保存修改?",
-        closeMsg: "图形修改未被保存，您打算保存这些修改么？",
+        closeMsg: "图形修改未被保存,您打算保存这些修改么？",
         deleteMsgTitle: "删除图形?",
         deleteMsg: "您确定要删除这些图形？",
         editButtonText: "修改",
@@ -215,7 +215,7 @@ GeoExt.Lang.add("en", {
         deleteButtonText: "删除",
         deleteButtonTooltip: "删除这一图形",
         cancelButtonText: "取消",
-        cancelButtonTooltip: "停止编辑，放弃修改",
+        cancelButtonTooltip: "停止编辑,放弃修改",
         saveButtonText: "保存",
         saveButtonTooltip: "保存修改"
     },
@@ -406,6 +406,19 @@ GeoExt.Lang.add("en", {
 
     "gxp.Viewer.prototype": {
         saveErrorText: "Trouble saving: "
+    },
+
+    "gxp.FeedSourceDialog.prototype":  {
+        feedTypeText:"源",
+         addPicasaText:"Picasa照片",
+        addYouTubeText:"YouTube視頻",
+        addRSSText:"其他的GeoRSS飼料",
+        addFeedText:"地圖",
+        addTitleText:"標題",
+        keywordText:"關鍵字",
+        doneText:"完成",
+        titleText:"添加訂閱",
+        maxResultsText:"最大項目"
     }
 
 });

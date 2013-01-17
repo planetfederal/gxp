@@ -378,10 +378,11 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      * Shows the window with a dialog for adding feeds.
      */
     showFeedDialog: function() {
-        var Cls = this.outputTarget ? Ext.Panel : Ext.Window;
         if(!this.feedDialog) {
+            var Cls = this.outputTarget ? Ext.Panel : Ext.Window;
             this.feedDialog = new Cls(Ext.apply({
                 closeAction: "hide",
+                autoScroll: true,
                 title: this.addFeedActionMenuText,
                 items: [{
                     xtype: "gxp_feedsourcedialog",
@@ -406,6 +407,9 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             if (Cls === Ext.Panel) {
                 this.addOutput(this.feedDialog);
             };
+        }
+        if (!(this.feedDialog instanceof Ext.Window)) {
+            this.addOutput(this.feedDialog);
         }
         this.feedDialog.show();
     },
