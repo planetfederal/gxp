@@ -411,7 +411,7 @@ GeoExt.Lang.add("ca", {
         saveErrorText: "Problemes desant: "
     },
 
-    "gxp.FeedSourceDialog.prototype":  {
+    "gxp.FeedSourceDialog.prototype": {
         feedTypeText: "Font",
         addPicasaText: "Picasa fotos",
         addYouTubeText: "YouTube Videos",

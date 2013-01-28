@@ -8,6 +8,7 @@
 
 /**
  * @requires plugins/LayerSource.js
+ * @requires plugins/FeedGetFeatureInfo.js
  * @requires OpenLayers/Format/GeoRSS.js
  * @requires OpenLayers/Format/GeoJSON.js
  * @requires OpenLayers/Format/GML.js

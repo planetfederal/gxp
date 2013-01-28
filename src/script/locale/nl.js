@@ -373,7 +373,7 @@ GeoExt.Lang.add("nl", {
         saveErrorText: "Problemen bij het opslaan: "
     },
 
-    "gxp.FeedSourceDialog.prototype":  {
+    "gxp.FeedSourceDialog.prototype": {
         addPicasaText: "Picasa Foto's",
         addYouTubeText: "YouTube video's",
         addRSSText: "Andere GeoRSS Feed",
@@ -381,7 +381,7 @@ GeoExt.Lang.add("nl", {
         addTitleText: "Titel",
         keywordText: "Trefwoord",
         doneText: "Klaar",
-        TitleText: "Voeg Feeds",
+        titleText: "Voeg Feeds",
         maxResultsText: "Max Items"
     }
 

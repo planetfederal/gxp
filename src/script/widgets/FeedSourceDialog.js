@@ -34,7 +34,7 @@ gxp.FeedSourceDialog = Ext.extend(Ext.Container, {
     /** api: config[addYouTubeText] ``String`` i18n */
     addYouTubeText: "YouTube Videos",
     /** api: config[addRSSText] ``String`` i18n */
-    addRSSText: "Other GeoRSS Feed",
+    addRSSText: "GeoRSS Feed",
     /** api: config[addFeedText] ``String`` i18n */
     addFeedText: "Add to Map",
     /** api: config[addTitleText] ``String`` i18n */
@@ -82,7 +82,7 @@ gxp.FeedSourceDialog = Ext.extend(Ext.Container, {
                 [gxp.plugins.PicasaFeedSource.ptype, this.addPicasaText],
                 [gxp.plugins.YouTubeFeedSource.ptype, this.addYouTubeText],
                 [gxp.plugins.FeedSource.ptype, this.addRSSText]
-            ]
+            ];
         }
 
         var feedStore = new Ext.data.ArrayStore({
@@ -157,9 +157,10 @@ gxp.FeedSourceDialog = Ext.extend(Ext.Container, {
             triggerAction: 'all',
             emptyText:'Choose number...',
             labelWidth: 70,
+            width: 180,
             defaults: {
                 labelWidth: 70,
-                width:70
+                width:180
             }
         });
 

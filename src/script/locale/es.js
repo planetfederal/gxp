@@ -411,8 +411,8 @@ GeoExt.Lang.add("es", {
         saveErrorText: "Problemas guardando: "
     },
 
-    "gxp.FeedSourceDialog.prototype":  {
-         feedTypeText: "Fuente",
+    "gxp.FeedSourceDialog.prototype": {
+        feedTypeText: "Fuente",
         addPicasaText: "Picasa fotos",
         addYouTubeText: "YouTube Videos",
         addRSSText: "Feed GeoRSS Otro",

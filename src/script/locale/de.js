@@ -412,7 +412,7 @@ GeoExt.Lang.add("de", {
         saveErrorText: "Beim Speichern ist ein Problem aufgetreten: "
     },
 
-    "gxp.FeedSourceDialog.prototype":  {
+    "gxp.FeedSourceDialog.prototype": {
         feedTypeText: "Source",
         addPicasaText: "Picasa Fotos",
         addYouTubeText: "YouTube Videos",
