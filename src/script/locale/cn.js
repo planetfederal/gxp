@@ -410,7 +410,7 @@ GeoExt.Lang.add("en", {
 
     "gxp.FeedSourceDialog.prototype": {
         feedTypeText:"源",
-         addPicasaText:"Picasa照片",
+        addPicasaText:"Picasa照片",
         addYouTubeText:"YouTube視頻",
         addRSSText:"其他的GeoRSS飼料",
         addFeedText:"地圖",
