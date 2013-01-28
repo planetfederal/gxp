@@ -5,6 +5,7 @@ src/doc/lib/plugins
 src/doc/lib/widgets
 src/doc/lib/util.rst
 build/
+.idea/
 
 # Logs and databases #
 ######################
