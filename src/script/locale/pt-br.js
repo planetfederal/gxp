@@ -34,6 +34,7 @@ GeoExt.Lang.add("pt-br", {
 
     "gxp.plugins.FeatureEditor.prototype":{
         splitButtonText:"Editar",
+        splitButtonTooltip: "Editar feições na camada WMS selecionada",
         createFeatureActionText:"Criar",
         editFeatureActionText:"Modificar",
         createFeatureActionTip:"Criar nova feição",
@@ -164,8 +165,8 @@ GeoExt.Lang.add("pt-br", {
     },
 
     "gxp.plugins.RemoveLayer.prototype":{
-        removeMenuText:"Remove camada",
-        removeActionTip:"Remove camada"
+        removeMenuText:"Remover camada",
+        removeActionTip:"Remover camada"
     },
 
     "gxp.plugins.Styler.prototype":{
