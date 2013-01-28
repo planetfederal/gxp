@@ -374,6 +374,7 @@ GeoExt.Lang.add("nl", {
     },
 
     "gxp.FeedSourceDialog.prototype": {
+    	feedTypeText: "Bron",
         addPicasaText: "Picasa Foto's",
         addYouTubeText: "YouTube video's",
         addRSSText: "Andere GeoRSS Feed",
