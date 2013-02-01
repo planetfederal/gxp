@@ -274,7 +274,12 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                     xtype: "actioncolumn",
                     width: 30,
                     items: [{
-                        iconCls: "gxp-icon-addlayers",
+                        getClass: function(v, meta, rec) {
+                            if (this.findWMS(rec.get("URI")) !== false || 
+                                this.findWMS(rec.get("references")) !== false) {
+                                    return "gxp-icon-addlayers";
+                            }
+                        },
                         tooltip: this.addMapTooltip,
                         handler: function(grid, rowIndex, colIndex) {
                             var rec = this.grid.store.getAt(rowIndex);
@@ -350,11 +355,15 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
      *  preferably.
      */
     findWMS: function(links) {
+        var protocols = [
+            'OGC:WMS-1.1.1-HTTP-GET-MAP',
+            'OGC:WMS'
+        ];
         var url = null, name = null, i, ii, link;
         // search for a protocol that matches WMS
         for (i=0, ii=links.length; i<ii; ++i) {
             link = links[i];
-            if (link.protocol && link.protocol.toUpperCase() === "OGC:WMS" && link.value && link.name) {
+            if (link.protocol && protocols.indexOf(link.protocol.toUpperCase()) !== -1 && link.value && link.name) {
                 url = link.value;
                 name = link.name;
                 break;

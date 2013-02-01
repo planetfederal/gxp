@@ -119,6 +119,8 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
     switchToFilterBuilderText: "Switch back to filter builder",
     cqlPrefixText: "or ",
     cqlText: "use CQL filter instead",
+    singleTileText: "Single tile",
+    singleTileFieldText: "Use a single tile",
 
     initComponent: function() {
         this.cqlFormat = new OpenLayers.Format.CQL();
@@ -414,7 +416,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                                 layer.mergeNewParams({
                                     transparent: checked ? "true" : "false"
                                 });
-                                 this.fireEvent("change");
+                                this.fireEvent("change");
                             },
                             scope: this
                         }
@@ -422,6 +424,25 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                         xtype: "label",
                         cls: "gxp-layerproperties-label",
                         text: this.transparentText
+                    }]
+                }, {
+                    xtype: "compositefield",
+                    fieldLabel: this.singleTileText,
+                    anchor: "99%",
+                    items: [{
+                        xtype: "checkbox",
+                        checked: this.layerRecord.get("layer").singleTile,
+                        listeners: {
+                            check: function(checkbox, checked) {
+                                layer.addOptions({singleTile: checked});
+                                this.fireEvent("change");
+                            },
+                            scope: this
+                        }
+                    }, {
+                        xtype: "label",
+                        cls: "gxp-layerproperties-label",
+                        text: this.singleTileFieldText
                     }]
                 }, {
                     xtype: "compositefield",

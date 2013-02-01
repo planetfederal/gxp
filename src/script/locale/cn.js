@@ -21,6 +21,7 @@ GeoExt.Lang.add("en", {
         layerSelectionText: "查看现有数据:",
         doneText: "完成",
         uploadText: "上传图层",
+        addFeedActionMenuText: "Add feeds",
         searchText: "Search for layers"
     },
     
@@ -36,7 +37,9 @@ GeoExt.Lang.add("en", {
         createFeatureActionText: "创建",
         editFeatureActionText: "修改",
         createFeatureActionTip: "创建新图形",
-        editFeatureActionTip: "修改已存在图形"
+        editFeatureActionTip: "修改已存在图形",
+        commitTitle: "Commit message",
+        commitText: "Please enter a commit message for this edit:"
     },
     
     "gxp.plugins.FeatureGrid.prototype": {
@@ -318,7 +321,17 @@ GeoExt.Lang.add("en", {
         cacheFieldText: "使用缓存版本",
         stylesText: "Available styles",
         infoFormatText: "格式信息",
-        infoFormatEmptyText: "选择一种格式"
+        infoFormatEmptyText: "选择一种格式",
+        displayOptionsText: "Display options",
+        queryText: "Limit with filters",
+        scaleText: "Limit by scale",
+        minScaleText: "Min scale",
+        maxScaleText: "Max scale",
+        switchToFilterBuilderText: "Switch back to filter builder",
+        cqlPrefixText: "or ",
+        cqlText: "use CQL filter instead",
+        singleTileText: "Single tile",
+        singleTileFieldText: "Use a single tile"
     },
 
     "gxp.EmbedMapDialog.prototype": {
@@ -389,6 +402,10 @@ GeoExt.Lang.add("en", {
 
     "gxp.ScaleOverlay.prototype": { 
         zoomLevelText: "聚焦度"
+    },
+
+    "gxp.Viewer.prototype": {
+        saveErrorText: "Trouble saving: "
     }
 
 });

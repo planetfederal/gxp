@@ -215,6 +215,11 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
      *  component (e.g. a login window), it is recommended to set this to
      *  ``[]`` (equivalent to "not authorized to do anything") initially.
      */
+
+    /** api: config[saveErrorText]
+     *  ``String``
+     */
+    saveErrorText: "Trouble saving: ",
     
     /** private: method[constructor]
      *  Construct the viewer.
@@ -271,7 +276,38 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
              *  Fired when the authorizedRoles are changed, e.g. when a user 
              *  logs in or out.
              */
-            "authorizationchange"
+            "authorizationchange",
+
+            /** api: event[beforesave]
+             *  Fires before application saves a map. If the listener returns
+             *  false, the save is cancelled.
+             *
+             *  Listeners arguments:
+             *
+             *  * requestConfig - ``Object`` configuration object for the request,
+             *    which has the following properties: method, url and data.
+             *  * callback - ``Function`` Optional callback function which was
+             *    passed on to the save function.
+             */
+            "beforesave",
+
+            /** api: event[save]
+             *  Fires when the map has been saved.
+             *
+             *  Listener arguments:
+             *  * id - ``Integer`` The identifier of the saved map
+             */
+            "save",
+
+            /** api: event[beforehashchange]
+             *  Fires before the hash is updated after saving a map. Return
+             *  false in the listener not to update the hash.
+             *
+             *  Listeners arguments:
+             *  * hash - ``String`` The hash which will be set as 
+             *    window.location.hash
+             */
+            "beforehashchange"
         );
         
         Ext.apply(this, {
@@ -831,6 +867,60 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                 this.doAuthorized(roles, callback, scope, true);
             };
             this.on("authorizationchange", this._authFn, this, {single: true});
+        }
+    },
+
+    /** private: method[save]
+     *
+     * Saves the map config and displays the URL in a window.
+     */
+    save: function(callback, scope) {
+        var configStr = Ext.util.JSON.encode(this.getState());
+        var method, url;
+        if (this.id) {
+            method = "PUT";
+            url = "../maps/" + this.id;
+        } else {
+            method = "POST";
+            url = "../maps/";
+        }
+        var requestConfig = {
+            method: method,
+            url: url,
+            data: configStr
+        };
+        if (this.fireEvent("beforesave", requestConfig, callback) !== false) {
+            OpenLayers.Request.issue(Ext.apply(requestConfig, {
+                callback: function(request) {
+                    this.handleSave(request);
+                    if (callback) {
+                        callback.call(scope || this);
+                    }
+                },
+                scope: this
+            }));
+        }
+    },
+
+    /** private: method[handleSave]
+     *  :arg: ``XMLHttpRequest``
+     */
+    handleSave: function(request) {
+        if (request.status == 200) {
+            var config = Ext.util.JSON.decode(request.responseText);
+            var mapId = config.id;
+            if (mapId) {
+                this.id = mapId;
+                var hash = "#maps/" + mapId;
+                if (this.fireEvent("beforehashchange", hash) !== false) {
+                    window.location.hash = hash;
+                }
+                this.fireEvent("save", this.id);
+            }
+        } else {
+            if (window.console) {
+                console.warn(this.saveErrorText + request.responseText);
+            }
         }
     },
     
