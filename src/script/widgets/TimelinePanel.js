@@ -627,6 +627,13 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         this.featureEditor = featureEditor;
         this.featureManager = featureEditor.getFeatureManager();
         this.featureManager.on("layerchange", this.onLayerChange, this);
+        this.featureManager.on("query", function(fm ,store) {
+            store.on("load", function(store, rs, options) {
+                if (rs.length > 0) {
+                    this.ownerCt.expand();
+                }
+            }, this, {single: true});
+        }, this, {single: true});
     },
 
     /**
