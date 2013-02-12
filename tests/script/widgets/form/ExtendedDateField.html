@@ -20,7 +20,7 @@
         }
 
         function test_BC(t) {
-            t.plan(6);
+            t.plan(8);
             var field = new gxp.form.ExtendedDateField({value: '-0987-03-01'});
             t.eq(field.getValue(), -93308806800, "value expected for BCE year which is zero padded");
             field.destroy();
@@ -34,8 +34,15 @@
             field.setValue(null);
             t.eq(field.value, null, "setting a value of null does not result in an error");
             field.destroy();
+            var expect = new Date('Mar 01 1987').getTime()/1000;
             field = new gxp.form.ExtendedDateField({value: '1987-03-01'});
-            t.eq(field.getValue(), -124865715600, "value expected for positive year");
+            t.eq(field.getValue(), expect, "value expected for positive year");
+            field.destroy();
+            field = new gxp.form.ExtendedDateField({value: '03/01/-0987'});
+            t.eq(field.getValue(), -93308806800, "value expected for BC year if set in constructor");
+            field.destroy();
+            field = new gxp.form.ExtendedDateField({value: '01-01-1980'});
+            t.ok(field.getValue() > 0, "since date is after 1970, value should be positive");
             field.destroy();
         }
 

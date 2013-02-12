@@ -78,7 +78,7 @@ gxp.form.ExtendedDateField = Ext.extend(Ext.form.DateField, {
                     "m/d/Y|n/j/Y|n/j/y|m/j/y|n/d/y|m/j/Y|n/d/Y|m-d-y|m-d-Y|" +
                     "m/d|m-d|md|mdy|mdY|d|Y-m-d|n-j|n/j",
     
-    bcYrRegEx : /^(-\d+)|(-\d+)$/,
+    bcYrRegEx : /^(-\d{3,4})|(-\d{3,4})$/,
     
     invalidText : "{0} is not a valid date. If you are attempting to enter a BCE date please enter a zero padded 4 digit year or just enter the year",
     
@@ -87,7 +87,7 @@ gxp.form.ExtendedDateField = Ext.extend(Ext.form.DateField, {
     getValue : function() {
         var value = Ext.form.DateField.superclass.getValue.call(this);
         var date = this.parseDate(value);
-        var bcYear = value.match(this.bcYrRegEx);
+        var bcYear = value.match(this.bcYrRegEx) && ((value.match(/-/g)||[]).length === 1 || value.charAt(0) === '-');
         if (bcYear) {
             if(date){
                 date = new Date(-1*date.getFullYear(),date.getMonth(),date.getDate(),date.getHours(),date.getMinutes(),date.getSeconds());
