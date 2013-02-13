@@ -129,7 +129,6 @@ gxp.plugins.GeoNodeCatalogueSource = Ext.extend(gxp.plugins.CatalogueSource, {
                 }
             }
         }
-
         Ext.apply(this.store.baseParams, {
             'q': options.queryString,
             'limit': options.limit
