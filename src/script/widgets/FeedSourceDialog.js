@@ -195,11 +195,10 @@ gxp.FeedSourceDialog = Ext.extend(Ext.Container, {
                 };
 
                 if (ptype != "gxp_feedsource") {
-                    config.params = {"q" : keywordTextField.getValue(), "max-results" : maxResultsField.getValue()}
-
+                    config.params = {"q" : keywordTextField.getValue(), "max-results" : maxResultsField.getValue()};
                 } else {
                     config.url = urlTextField.getValue();
-                    var symbolizer = symbolizerField.symbolizer
+                    var symbolizer = symbolizerField.symbolizer;
                     config.defaultStyle = {};
                     config.selectStyle = {};
                     Ext.apply(config.defaultStyle, symbolizer);

@@ -397,8 +397,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                             config.source = source.id;
                             var feedRecord = source.createLayerRecord(config);
                             this.target.mapPanel.layers.add([feedRecord]);
-                            //this.target.selectControl.activate();
-                            this.feedDialog.hide()
+                            this.feedDialog.hide();
                         },
                         scope: this
                     }
@@ -406,7 +405,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             }, this.initialConfig.outputConfig));
             if (Cls === Ext.Panel) {
                 this.addOutput(this.feedDialog);
-            };
+            }
         }
         if (!(this.feedDialog instanceof Ext.Window)) {
             this.addOutput(this.feedDialog);
