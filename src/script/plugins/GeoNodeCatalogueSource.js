@@ -118,11 +118,15 @@ gxp.plugins.GeoNodeCatalogueSource = Ext.extend(gxp.plugins.CatalogueSource, {
      */
     filter: function(options) {
         var bbox = undefined;
-        for (var i=0, ii=options.filters.length; i<ii; ++i) {
-            var f = options.filters[i];
-            if (f instanceof OpenLayers.Filter.Spatial) {
-                bbox = f.value.toBBOX();
-                break;
+
+        // check for the filters property before using it
+        if (options.filters !== undefined) {
+            for (var i=0, ii=options.filters.length; i<ii; ++i) {
+                var f = options.filters[i];
+                if (f instanceof OpenLayers.Filter.Spatial) {
+                    bbox = f.value.toBBOX();
+                    break;
+                }
             }
         }
         Ext.apply(this.store.baseParams, {
