@@ -410,6 +410,19 @@ GeoExt.Lang.add("en", {
 
     "gxp.Viewer.prototype": {
         saveErrorText: "Trouble saving: "
+    },
+
+    "gxp.FeedSourceDialog.prototype": {
+        feedTypeText: "Source",
+        addPicasaText: "Picasa Photos",
+        addYouTubeText: "YouTube Videos",
+        addRSSText: "Other GeoRSS Feed",
+        addFeedText: "Add to Map",
+        addTitleText: "Title",
+        keywordText: "Keyword",
+        doneText: "Done",
+        titleText: "Add Feeds",
+        maxResultsText: "Max Items"
     }
 
 });

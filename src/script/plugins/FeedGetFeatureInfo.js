@@ -89,31 +89,31 @@ gxp.plugins.FeedGetFeatureInfo =  Ext.extend(gxp.plugins.Tool,{
      *
      */
     removeLayer:  function(store, records, index){
-        if (!records.length) {
-            records = [records];
-        }
-        for (var i = 0,  ii = records.length; i < ii; ++i) {
-            var layer = records[i].getLayer();
-            var selectControl = this.target.selectControl;
-            //SelectControl might have layers array or single layer object
-            if ( selectControl  != null && selectControl.layers){
-                for (var x = 0; x < selectControl.layers.length; x++)
-                {
-                    var selectLayer = selectControl.layers[x];
-                    var selectLayers = selectControl.layers;
-                    if (selectLayer.id === layer.id) {
-                        selectLayers.splice(x,1);
-                        selectControl.setLayer(selectLayers);
-                    }
-                }
-            } else {
-                if (selectControl.layer != null) {
-                    if (layer.id === selectControl.layer.id) {
-                        selectControl.setLayer([]);
-                    }
-                }
-            }
-        }
+    	if (!records.length) {
+    		records = [records];
+    	}
+    	for (var i = 0,  ii = records.length; i < ii; ++i) {
+    		var layer = records[i].getLayer();
+    		var selectControl = this.target.selectControl;
+    		//SelectControl might have layers array or single layer object
+    		if (selectControl != null) {
+    			if (selectControl.layers){
+    				for (var x = 0; x < selectControl.layers.length; x++)
+    				{
+    					var selectLayer = selectControl.layers[x];
+    					var selectLayers = selectControl.layers;
+    					if (selectLayer.id === layer.id) {
+    						selectLayers.splice(x,1);
+    						selectControl.setLayer(selectLayers);
+    					}
+    				}
+    			} else if (selectControl.layer != null) {
+    				if (layer.id === selectControl.layer.id) {
+    					selectControl.setLayer([]);
+    				}
+    			}
+    		}
+    	}
     }
 
 

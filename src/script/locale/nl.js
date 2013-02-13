@@ -371,6 +371,19 @@ GeoExt.Lang.add("nl", {
 
     "gxp.Viewer.prototype": {
         saveErrorText: "Problemen bij het opslaan: "
+    },
+
+    "gxp.FeedSourceDialog.prototype": {
+    	feedTypeText: "Bron",
+        addPicasaText: "Picasa Foto's",
+        addYouTubeText: "YouTube video's",
+        addRSSText: "Andere GeoRSS Feed",
+        addFeedText: "Voeg toe aan Map",
+        addTitleText: "Titel",
+        keywordText: "Trefwoord",
+        doneText: "Klaar",
+        titleText: "Voeg Feeds",
+        maxResultsText: "Max Items"
     }
 
 });
