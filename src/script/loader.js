@@ -42,6 +42,7 @@
         "widgets/form/FontComboBox.js",
         "widgets/form/GoogleGeocoderComboBox.js",
         "widgets/form/ViewerField.js",
+        "widgets/form/ExtendedDateField.js",
         "widgets/grid/CapabilitiesGrid.js",
         "widgets/grid/FeatureGrid.js",
         "widgets/GoogleEarthPanel.js",
