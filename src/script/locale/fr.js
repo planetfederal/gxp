@@ -344,6 +344,19 @@ GeoExt.Lang.add("fr", {
 
     "gxp.Viewer.prototype": {
         saveErrorText: "Sauver Trouble: "
+    },
+
+    "gxp.FeedSourceDialog.prototype": {
+        feedTypeText: "Source",
+        addPicasaText: "Picasa Photos",
+        addYouTubeText: "YouTube Vidéos",
+        addRSSText: "GeoRSS Autre",
+        addFeedText: "Ajouter à la carte",
+        addTitleText: "Titre",
+        keywordText: "Mot-clé",
+        doneText: "Terminé",
+        titletext:  "Ajouter RSS",
+        maxResultsText: "Articles Max"
     }
 
 });
