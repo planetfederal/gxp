@@ -154,6 +154,8 @@ Ext.onReady(function() {
                 xtype: "gx_zoomslider",
                 vertical: true,
                 height: 100
+            }, {
+                xtype: "gxp_scaleoverlay"
             }]
         }
     });
