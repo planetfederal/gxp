@@ -1085,10 +1085,20 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
     onLayerStoreAdd: function(store, records) {
         var record;
+        var canPlay = function(layer) {
+            var result;
+            if (layer.dimensions && layer.dimensions.time) {
+                result = true;
+                if(layer.dimensions.time.values && layer.dimensions.time.values.length === 1) {
+                    result = false;
+                }
+            }
+            return result;
+        };
         for (var i=0, ii=records.length; i<ii; ++i) {
             record = records[i];
             var layer = record.getLayer();
-            if (layer.dimensions && layer.dimensions.time) {
+            if (canPlay(layer) === true) {
                 var source = this.viewer.getSource(record);
                 if (gxp.plugins.WMSSource && (source instanceof gxp.plugins.WMSSource)) {
                     source.getWFSProtocol(record, function(protocol, schema, record) {
