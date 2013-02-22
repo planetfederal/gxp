@@ -109,13 +109,18 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
             },
             scope: this
         });
-
         if(!this.dimModel){
             this.dimModel = new OpenLayers.Dimension.Model({
                 dimension: 'time',
                 map: this.mapPanel.map
             });
         }
+        this.control.model.events.on({
+            'prebuffer': function(evt) {
+                this.slider.progressEl.setWidth(evt.progress*100 + '%');
+            },
+            scope: this
+        });
 
         this.availableTools = Ext.applyIf(this.availableTools || {}, this.getAvailableTools());
         
