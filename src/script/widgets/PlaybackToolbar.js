@@ -49,6 +49,8 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
     rateAdjuster:false,
     looped:false,
     autoPlay:false,
+    /* should the time slider be aggressive or not */
+    aggressive: null,
     //api config ->timeDisplayConfig:null,
     //api property
     optionsWindow:null,
@@ -237,7 +239,8 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                 map: this.mapPanel.map,
                 timeManager: this.control,
                 model: this.dimModel,
-                playbackMode: this.playbackMode
+                playbackMode: this.playbackMode,
+                aggressive: this.aggressive
             },
             'reset': {
                 iconCls: 'gxp-icon-reset',

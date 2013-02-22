@@ -26,6 +26,8 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
     timeManager : null,
     playbackMode : 'track',
     autoPlay : false,
+    aggressive: false,
+    changeBuffer: 10,
     map: null,
     initComponent : function() {
         if(!this.timeManager) {
@@ -90,7 +92,6 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
             [new Ext.slider.Tip({getText:this.getThumbText})]);
 
         this.listeners = Ext.applyIf(this.listeners || {}, {
-            'changecomplete' : this.onSliderChangeComplete,
             'dragstart' : function() {
                 if(this.timeManager.timer) {
                     this.timeManager.stop();
@@ -119,7 +120,11 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
             },
             scope : this
         });
-
+        if (this.aggressive === true) {
+            this.listeners['change'] = {fn: this.onSliderChangeComplete, buffer: this.changeBuffer};
+        } else {
+            this.listeners['changecomplete'] = this.onSliderChangeComplete;
+        }
         gxp.slider.TimeSlider.superclass.initComponent.call(this);
     },
 
