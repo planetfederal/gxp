@@ -304,6 +304,9 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
     },
 
     onSliderChangeComplete: function(slider, value, thumb, silent){
+        if (this._silent === true) {
+            return;
+        }
         var timeManager = slider.timeManager;
         //test if this is the main time slider
         switch (slider.indexMap[thumb.index]) {
