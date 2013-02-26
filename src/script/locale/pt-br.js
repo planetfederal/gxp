@@ -22,7 +22,8 @@ GeoExt.Lang.add("pt-br", {
         doneText:"Concluído",
         uploadText:"Carregar camadas",
         addFeedActionMenuText:"Adicionar feeds",
-        searchText:"Procurar camadas"
+        searchText:"Procurar camadas",
+		zoomToLayerExtentQuestionText: "Deseja aplicar zoom para esta camada?"
     },
 
     "gxp.plugins.BingSource.prototype":{

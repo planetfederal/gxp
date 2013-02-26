@@ -727,7 +727,8 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
 
 
         var lyr = record.data.layer;
-        lyr.mergeNewParams({'time':lyr.dimensions.time.values[0] + "/" + lyr.dimensions.time.values[lyr.dimensions.time.values.length - 1]});
+		if(lyr.dimensions && lyr.dimensions.time && lyr.dimensions.time.values)
+			lyr.mergeNewParams({'time':lyr.dimensions.time.values[0] + "/" + lyr.dimensions.time.values[lyr.dimensions.time.values.length - 1]});
 
         if (records.length === 1 && record) {
             // select the added layer
