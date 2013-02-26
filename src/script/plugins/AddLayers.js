@@ -134,7 +134,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      *  ``String``
      *  Text for ask about zoom to layer extent after the layer have bean added (i18n).
      */
-    zoomToLayerExtentQuestionText:"Do you want to zoom to this layer extent?",
+    zoomToLayerExtentQuestionText:"Gostaria de aplicar zoom a este Layer?",
 
     /** api: config[search]
      *  ``Object | Boolean``
@@ -703,6 +703,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     if (!extent) {
                         extent = record.getLayer().maxExtent.clone();
                     } else {
+                        console.log("zoom!!!")
                         extent.extend(record.getLayer().maxExtent);
                     }
                 }
@@ -717,16 +718,17 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
 
         }
 
-        var lyr = record.data.layer;
-        lyr.mergeNewParams({'time':lyr.dimensions.time.values[0] + "/" + lyr.dimensions.time.values[lyr.dimensions.time.values.length - 1]});
-
         if (extent) {
             Ext.MessageBox.confirm(this.addButtonText, this.zoomToLayerExtentQuestionText, function (btn) {
                 if (btn == 'yes')
                     this.target.mapPanel.map.zoomToExtent(extent);
             }, this);
-
         }
+
+
+        var lyr = record.data.layer;
+        lyr.mergeNewParams({'time':lyr.dimensions.time.values[0] + "/" + lyr.dimensions.time.values[lyr.dimensions.time.values.length - 1]});
+
         if (records.length === 1 && record) {
             // select the added layer
             this.target.selectLayer(record);
