@@ -309,10 +309,9 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
     },
 
     onSliderChangeComplete: function(slider, value, thumb, silent){
-        if (this._click !== true && this._silent === true) {
+        if (this._click !== true) {
             return;
-        }
-        if (this._click === true) {
+        } else {
             delete this._click;
         }
         var timeManager = slider.timeManager;

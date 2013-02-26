@@ -104,11 +104,9 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         }
         this.control.events.on({
             'play':function(evt){
-                this.slider._silent = true;
                 this.playing = true;
             },
             'stop':function(evt){
-                delete this.slider._silent;
                 this.playing = false;
             },
             scope: this
