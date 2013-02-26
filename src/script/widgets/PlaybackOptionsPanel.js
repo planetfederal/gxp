@@ -146,7 +146,7 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
                         //TODO: provide user information about these modes (Change to radio group?)
                         fieldLabel:this.rangedPlayChoiceText,
                         xtype:'gxp_playbackmodecombo',
-                        timeAgents: this.timeManager && this.timeManager.agents,
+                        agents: this.timeManager && this.timeManager.agents,
                         anchor:'-5',
                         listeners:{
                             'modechange':this.setPlaybackMode,
