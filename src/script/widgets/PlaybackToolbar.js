@@ -376,9 +376,9 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                 delete config.type;
                 if(!config.dimension){ config.dimension = 'time'; }
                 //TODO handle other subclasses of Dimension Agent subclasses
-                config.agentClass = agentClass;
-                config.canTick = true;
-                this.controlConfig.agents[i] = config;
+                var agent = agentClass && OpenLayers.Dimension.Agent[agentClass] ?
+                    new OpenLayers.Dimension.Agent[agentClass](config) : new OpenLayers.Dimension.Agent(config);
+                this.controlConfig.agents[i] = agent;
             }
         }
         else {
