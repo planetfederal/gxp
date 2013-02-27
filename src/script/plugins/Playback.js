@@ -128,17 +128,10 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
         this.target.mapPanel.map.events.register('addlayer', this, function(e) {
             var layer = e.layer;
             if (layer instanceof OpenLayers.Layer.WMS && layer.dimensions && layer.dimensions.time) {
-                var canPlay = true;
-                // we can't play if there is just one value
-                if (layer.dimensions.time.values && layer.dimensions.time.values.length === 1) {
-                    canPlay = false;
-                }
-                if (canPlay === true) {
-                    this.target.mapPanel.map.events.unregister('addlayer', this, arguments.callee);
-                    this._ready += 1;
-                    if (this._ready > 1) {
-                        this.addOutput();
-                    }
+                this.target.mapPanel.map.events.unregister('addlayer', this, arguments.callee);
+                this._ready += 1;
+                if (this._ready > 1) {
+                    this.addOutput();
                 }
             }
         });
