@@ -717,14 +717,14 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             }
 
         }
-
+/*
         if (extent) {
             Ext.MessageBox.confirm(this.addButtonText, this.zoomToLayerExtentQuestionText, function (btn) {
                 if (btn == 'yes')
                     this.target.mapPanel.map.zoomToExtent(extent);
             }, this);
         }
-
+*/
 
         var lyr = record.data.layer;
 		if(lyr.dimensions && lyr.dimensions.time && lyr.dimensions.time.values)
