@@ -752,7 +752,6 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         });
 
         var zoomEndCallback = function () {
-            console.log(" max ", maxScaleDenominator, " scale ", map.getScale());
             if (maxScaleDenominator < map.getScale()) { // modifica a mensagem caso a escala não permita a visualização do layer
                 Ext.MessageInfo.msg("Camada não visível", "A camada <b>" + layer.name + "</b> não aparecerá nesta escala")
                 //layer.events.unregister("loadend", layer, zoomEndCallback);
@@ -767,11 +766,8 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 }
             }, this);
         }
-<<<<<<< HEAD
 */
-=======
->>>>>>> edfd4c89364fd28dc344d6f84ac25e7391e28c5a
-
+		layer.events.register("loadend", layer, zoomEndCallback);
         var lyr = record.data.layer;
         if (lyr.dimensions && lyr.dimensions.time && lyr.dimensions.time.values)
             lyr.mergeNewParams({'time':lyr.dimensions.time.values[0] + "/" + lyr.dimensions.time.values[lyr.dimensions.time.values.length - 1]});
