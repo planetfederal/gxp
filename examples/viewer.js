@@ -38,6 +38,8 @@ Ext.onReady(function() {
         
         // configuration of all tool plugins for this application
         tools: [{
+           ptype: "gxp_loadingindicator"
+        }, {
             ptype: "gxp_layertree",
             outputConfig: {
                 id: "tree",
@@ -133,6 +135,11 @@ Ext.onReady(function() {
             maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
             center: [-10764594.758211, 4523072.3184791],
             zoom: 3,
+            controls: [
+                new OpenLayers.Control.Zoom(),
+                new OpenLayers.Control.Attribution(),
+                new OpenLayers.Control.Navigation()
+            ],
             layers: [{
                 source: "ol",
                 type: "OpenLayers.Layer",
@@ -150,11 +157,6 @@ Ext.onReady(function() {
                 queryable: true,
                 bbox: [-13884991.404203, 2870341.1822503, -7455066.2973878, 6338219.3590349],
                 selected: true
-            }],
-            items: [{
-                xtype: "gx_zoomslider",
-                vertical: true,
-                height: 100
             }]
         }
     });
