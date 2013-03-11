@@ -688,8 +688,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      */
     addLayers:function (records, isUpload) {
         var source = this.selectedSource;
-        var layerStore = this.target.mapPanel.layers,
-            extent, record, layer;
+        var layerStore = this.target.mapPanel.layers, extent, record, layer;
         for (var i = 0, ii = records.length; i < ii; ++i) {
             // If the source is lazy, then createLayerRecord will not return
             // a record, and we take the preconfigured record.
@@ -703,7 +702,6 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     if (!extent) {
                         extent = record.getLayer().maxExtent.clone();
                     } else {
-                        console.log("zoom!!!")
                         extent.extend(record.getLayer().maxExtent);
                     }
                 }
@@ -715,20 +713,68 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     layerStore.add([record]);
                 }
             }
+        }
 
+        var map = this.target.mapPanel.map;
+        layer = record.getLayer();
+        var name = record.json.name // get the name of layer to request to geoserver
+        var url = layer.url + "VERSION=1.1.1&REQUEST=GetStyles&LAYERS=" + name;
+        var showConfirmZoomDialog;
+        var maxScaleDenominator;
+
+        // request the SLD to geoserver
+        OpenLayers.Request.GET({
+            url:url,
+            success:function (response) {
+                var format = new OpenLayers.Format.SLD();
+                var sld = format.read(response.responseXML || response.responseText);
+
+                // scroll through the sld to get maxScaleDenominator param
+                for (var l in sld.namedLayers) {
+                    var styles = sld.namedLayers[l].userStyles, style;
+                    for (var i = 0; i < styles.length; i++) {
+                        style = styles[i];
+                        var rules = style.rules;
+                        if (rules) { // if not null
+                            for (var j = 0; j < rules.length; j++) {
+                                if (rules[j].maxScaleDenominator) {
+                                    maxScaleDenominator = rules[j].maxScaleDenominator;
+                                    //scale.toFixed()
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            error:function (response) {
+
+            }
+        });
+
+        var zoomEndCallback = function () {
+            console.log(" max ", maxScaleDenominator, " scale ", map.getScale());
+            if (maxScaleDenominator < map.getScale()) { // modifica a mensagem caso a escala não permita a visualização do layer
+                Ext.MessageInfo.msg("Camada não visível", "A camada <b>" + layer.name + "</b> não aparecerá nesta escala")
+                //layer.events.unregister("loadend", layer, zoomEndCallback);
+            }
         }
 /*
         if (extent) {
             Ext.MessageBox.confirm(this.addButtonText, this.zoomToLayerExtentQuestionText, function (btn) {
-                if (btn == 'yes')
-                    this.target.mapPanel.map.zoomToExtent(extent);
+                if (btn == 'yes') {
+                    layer.events.register("loadend", layer, zoomEndCallback);
+                    map.zoomToExtent(extent);
+                }
             }, this);
         }
+<<<<<<< HEAD
 */
+=======
+>>>>>>> edfd4c89364fd28dc344d6f84ac25e7391e28c5a
 
         var lyr = record.data.layer;
-		if(lyr.dimensions && lyr.dimensions.time && lyr.dimensions.time.values)
-			lyr.mergeNewParams({'time':lyr.dimensions.time.values[0] + "/" + lyr.dimensions.time.values[lyr.dimensions.time.values.length - 1]});
+        if (lyr.dimensions && lyr.dimensions.time && lyr.dimensions.time.values)
+            lyr.mergeNewParams({'time':lyr.dimensions.time.values[0] + "/" + lyr.dimensions.time.values[lyr.dimensions.time.values.length - 1]});
 
         if (records.length === 1 && record) {
             // select the added layer
