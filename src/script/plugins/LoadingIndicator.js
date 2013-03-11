@@ -52,7 +52,8 @@ gxp.plugins.LoadingIndicator = Ext.extend(gxp.plugins.Tool, {
      *  :arg target: ``Object``
      */
     init: function(target) {
-        var map = target.mapPanel.map;
+        var map = target instanceof GeoExt.MapPanel ?
+            target.map : target.mapPanel.map;
         map.events.register("preaddlayer", this, function(e) {
             var layer = e.layer;
             if (layer instanceof OpenLayers.Layer.WMS) {

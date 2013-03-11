@@ -74,7 +74,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
 
     /** api: config[mapPlugins]
      *  ``Array(Ext.util.Observable)``
-     *  Any plugins to be added to the map panel, e.g. ``gxp.plugins.LoadingIndicator``.
+     *  Any plugins to be added to the map panel.
      */
      
     /** api: config[portalConfig]
