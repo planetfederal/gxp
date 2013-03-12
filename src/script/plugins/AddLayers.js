@@ -527,15 +527,19 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 scope: this
             }
         });
-        
-        var capGridToolbar = null;
+
+        var capGridToolbar = null,
+            container;
+
         if (this.target.proxy || data.length > 1) {
-            capGridToolbar = [
-                new Ext.Toolbar.TextItem({
-                    text: this.layerSelectionText
-                }),
-                sourceComboBox
-            ];
+            container = new Ext.Container({
+                cls: 'addLayerSearchContainer',
+                items: [
+                    new Ext.Toolbar.TextItem({text: this.layerSelectionText}),
+                    sourceComboBox
+                ]
+            });
+            capGridToolbar = [container];
         }
         
         if (this.target.proxy) {
