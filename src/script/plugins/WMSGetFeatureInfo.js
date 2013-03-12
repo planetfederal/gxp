@@ -216,15 +216,15 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
                     autoHeight: true,
                     autoWidth: true,
                     collapsible: true
-                },
-                listeners: {
-                    close: (function(key) {
-                        return function(panel){
-                            delete this.popupCache[key];
-                        };
-                    })(popupKey),
-                    scope: this
                 }
+            });
+            popup.on({                    
+                close: (function(key) {
+                    return function(panel){
+                        delete this.popupCache[key];
+                    };
+                })(popupKey),
+                scope: this
             });
             this.popupCache[popupKey] = popup;
         } else {
