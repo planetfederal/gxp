@@ -533,7 +533,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
 
         if (this.target.proxy || data.length > 1) {
             container = new Ext.Container({
-                cls: 'addLayerSearchContainer',
+                cls: 'gxp-addlayers-sourceselect',
                 items: [
                     new Ext.Toolbar.TextItem({text: this.layerSelectionText}),
                     sourceComboBox
