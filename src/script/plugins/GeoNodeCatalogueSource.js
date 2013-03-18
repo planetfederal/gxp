@@ -130,9 +130,13 @@ gxp.plugins.GeoNodeCatalogueSource = Ext.extend(gxp.plugins.CatalogueSource, {
             }
         }
         Ext.apply(this.store.baseParams, {
-            'q': options.queryString,
-            'limit': options.limit
+            'q': options.queryString
         });
+        if (options.limit !== undefined) {
+            Ext.apply(this.store.baseParams, {
+                'limit': options.limit
+            });
+        }
         if (bbox !== undefined) {
             Ext.apply(this.store.baseParams, {
                 'bbox': bbox
