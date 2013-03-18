@@ -486,7 +486,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         });
         
         var sourceComboBox = new Ext.form.ComboBox({
-            ref: "../sourceComboBox",
+            ref: "../../sourceComboBox",
             width: 165,
             store: sources,
             valueField: "id",
