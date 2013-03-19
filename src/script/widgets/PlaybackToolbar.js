@@ -117,7 +117,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                 map: this.mapPanel.map
             });
         }
-        this.control.model.events.on({
+        this.control.events.on({
             'prebuffer': function(evt) {
                 this.slider.progressEl.setWidth(evt.progress*100 + '%');
             },
