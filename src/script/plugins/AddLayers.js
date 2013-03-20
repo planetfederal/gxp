@@ -7,11 +7,11 @@
  */
 
 /**
- * @requires plugins/Tool.js
- * @requires widgets/NewSourceDialog.js
- * @requires widgets/FeedSourceDialog.js
- * @requires plugins/GeoNodeCatalogueSource.js
- * @requires widgets/CatalogueSearchPanel.js
+ * @requires plugins/Tool.js 
+ * @requires widgets/NewSourceDialog.js 
+ * @requires widgets/FeedSourceDialog.js 
+ * @requires plugins/GeoNodeCatalogueSource.js 
+ * @requires widgets/CatalogueSearchPanel.js 
  */
 
 /** api: (define)
@@ -482,12 +482,17 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             store:source.store,
             autoScroll:true,
             autoExpandColumn:"title",
-            plugins:[expander],
+            //plugins:[expander],
+			view: new Ext.grid.GroupingView({
+				forceFit:true,
+				groupTextTpl: '{text} ({[values.rs.length]} {[values.rs.length > 1 ? "camadas" : "camada"]})'
+			}),
             loadMask:true,
             colModel:new Ext.grid.ColumnModel([
-                expander,
-                {id:"title", header:this.panelTitleText, dataIndex:"title", sortable:true},
-                {header:"Id", dataIndex:"name", width:120, sortable:true}
+                //expander,
+                {id:"title", header:this.panelTitleText, dataIndex:"title", sortable:true, menuDisabled:true},
+                {header:"Id", dataIndex:"name", width:120, sortable:true, menuDisabled:true},
+				{header:"", dataIndex:"prefix", width:50, hidden:true, menuDisabled:true},
             ]),
             listeners:{
                 rowdblclick:addLayers,
@@ -657,7 +662,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             closeAction:"hide",
             layout:"border",
             height:300,
-            width:315,
+            width:400,
             modal:true,
             items:items,
             tbar:capGridToolbar,
