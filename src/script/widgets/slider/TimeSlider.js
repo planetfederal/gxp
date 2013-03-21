@@ -126,6 +126,19 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
             this.listeners['changecomplete'] = this.onSliderChangeComplete;
         }
         gxp.slider.TimeSlider.superclass.initComponent.call(this);
+        this.addEvents(
+            /**
+             * @event sliderclick
+             * Fires when somebody clicks in the slider to change its position.
+             * @param {Ext.slider.MultiSlider} slider The slider
+             */
+            'sliderclick'
+        );
+    },
+
+    onClickChange : function(local) {
+        this.fireEvent('sliderclick', this);
+        gxp.slider.TimeSlider.superclass.onClickChange.apply(this, arguments);
     },
 
     beforeDestroy : function(){
