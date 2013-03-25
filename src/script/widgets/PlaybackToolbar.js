@@ -120,6 +120,7 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         this.mapPanel.map.events.on({
             'zoomend': function() {
                 this._stopPrebuffer = true;
+                this.slider.progressEl.hide();
                 this.mapPanel.map.events.un({'zoomend': arguments.callee, scope: this});
             }, scope: this
         });
@@ -248,6 +249,12 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
                 ref: 'slider',
                 listeners: {
                     'sliderclick': {
+                        fn: function() {
+                            this._stopPrebuffer = true;
+                        },
+                        scope: this
+                    },
+                    'dragstart': {
                         fn: function() {
                             this._stopPrebuffer = true;
                         },
