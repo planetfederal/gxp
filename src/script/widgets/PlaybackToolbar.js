@@ -119,11 +119,12 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         }
         this.mapPanel.map.events.on({
             'zoomend': function() {
-                if (this._prebuffer === true) {
+                if (this._prebuffer === true && this.mapPanel.map.zoom !== this.previousZoom) {
                     this._stopPrebuffer = true;
                     this.slider.progressEl.hide();
                     this.mapPanel.map.events.un({'zoomend': arguments.callee, scope: this});
                 }
+                this.previousZoom = this.mapPanel.map.zoom;
             }, scope: this
         });
         this.control.events.on({
