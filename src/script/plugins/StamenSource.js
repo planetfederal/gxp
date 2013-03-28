@@ -25,8 +25,18 @@ Ext.namespace("gxp.plugins");
  *
  *    Plugin for using Stamen layers with :class:`gxp.Viewer` instances.
  *
- *    Available layer names are "toner", "toner-lines", "toner-labels"
- *    "terrain" and "watercolor".
+ *    Available layer names:
+ *     * toner
+ *     * toner-hybrid
+ *     * toner-labels
+ *     * toner-lines
+ *     * toner-background
+ *     * toner-lite
+ *     * terrain
+ *     * terrain-labels
+ *     * terrain-lines
+ *     * terrain-background
+ *     * watercolor
  */
 /** api: example
  *  The configuration in the ``sources`` property of the :class:`gxp.Viewer` is
@@ -55,15 +65,15 @@ gxp.plugins.StamenSource = Ext.extend(gxp.plugins.LayerSource, {
     ptype: "gxp_stamensource",
 
     /** api: property[store]
-     *  ``GeoExt.data.LayerStore``. Will contain records with "osm" and
-     *  "naip" as name field values.
+     *  ``GeoExt.data.LayerStore``. Will contain records with name field values
+     *  matching Stamen layer names.
      */
     
     /** api: config[title]
      *  ``String``
      *  A descriptive title for this layer source (i18n).
      */
-    title: "Stamen Layers",
+    title: "Stamen Design Layers",
 
     /** api: config[osmAttribution]
      *  ``String``
@@ -71,30 +81,18 @@ gxp.plugins.StamenSource = Ext.extend(gxp.plugins.LayerSource, {
      */
     attribution: "Map tiles by <a href='http://stamen.com'>Stamen Design</a>, under <a href='http://creativecommons.org/licenses/by/3.0'>CC BY 3.0</a>. Data by <a href='http://openstreetmap.org'>OpenStreetMap</a>, under <a href='http://creativecommons.org/licenses/by-sa/3.0'>CC BY SA</a>.",
 
-    /** api: config[watercolorTitle]
-     *  ``String``
-     *  Title for Watercolor layer (i18n).
-     */
-    watercolorTitle: "Stamen Watercolor",
-
-    /** api: config[tonerTitle]
-     *  ``String``
-     *  Title for Toner layer (i18n).
-     */
-    tonerTitle: "Stamen Toner",
-
-
-    /** api: config[tonerLinesTitle]
-     *  ``String``
-     *  Title for Toner Lines layer (i18n).
-     */
-    tonerLinesTitle: "Stamen Toner Lines",
-
-    /** api: config[tonerLabelsTitle]
-     *  ``String``
-     *  Title for Toner Labels layer (i18n).
-     */
-    tonerLabelsTitle: "Stamen Toner Labels",
+    /** i18n **/
+    tonerTitle: "Toner",
+    tonerHybridTitle: "Toner Hybrid",
+    tonerLabelsTitle: "Toner Labels",
+    tonerLinesTitle: "Toner Lines",
+    tonerBackgroundTitle: "Toner Background",
+    tonerLiteTitle: "Toner Lite",
+    terrainTitle: "Terrain",
+    terrainLabelsTitle: "Terrain Labels",
+    terrainLinesTitle: "Terrain Lines",
+    terrainBackgroundTitle: "Terrain Background",
+    watercolorTitle: "Watercolor",
 
     /** api: method[createStore]
      *
@@ -111,78 +109,53 @@ gxp.plugins.StamenSource = Ext.extend(gxp.plugins.LayerSource, {
             maxResolution: 156543.03390625,
             numZoomLevels: 20,
             units: "m",
-            buffer: 1,
+            attribution: this.attribution,
+            buffer: 0,
             transitionEffect: "resize",
             tileOptions: {crossOriginKeyword: null}
         };
-        watercolorOptions = options;
-        watercolorOptions.numZoomlevels = 16;
 
-        var layers = [
-            new OpenLayers.Layer.OSM(
-                this.watercolorTitle,
-                [
-                    "http://tile.stamen.com/watercolor/${z}/${x}/${y}.jpg",
-                    "http://a.tile.stamen.com/watercolor/${z}/${x}/${y}.jpg",
-                    "http://b.tile.stamen.com/watercolor/${z}/${x}/${y}.jpg",
-                    "http://c.tile.stamen.com/watercolor/${z}/${x}/${y}.jpg",
-                    "http://d.tile.stamen.com/watercolor/${z}/${x}/${y}.jpg"
-                ],
-                OpenLayers.Util.applyDefaults({                
-                    attribution: this.attribution,
-                    type: "watercolor"
-                }, watercolorOptions)
-            ),
-            new OpenLayers.Layer.OSM(
-                this.tonerTitle,
-                [
-                    "http://tile.stamen.com/toner/${z}/${x}/${y}.jpg",
-                    "http://a.tile.stamen.com/toner/${z}/${x}/${y}.jpg",
-                    "http://b.tile.stamen.com/toner/${z}/${x}/${y}.jpg",
-                    "http://c.tile.stamen.com/toner/${z}/${x}/${y}.jpg",
-                    "http://d.tile.stamen.com/toner/${z}/${x}/${y}.jpg"
-                ],
-                OpenLayers.Util.applyDefaults({
-                    attribution: this.attribution,
-                    type: "toner"
-                }, options)
-             ),
-            new OpenLayers.Layer.OSM(
-                this.tonerLinesTitle,
-                [
-                    "http://tile.stamen.com/toner-lines/${z}/${x}/${y}.jpg",
-                    "http://a.tile.stamen.com/toner-lines/${z}/${x}/${y}.jpg",
-                    "http://b.tile.stamen.com/toner-lines/${z}/${x}/${y}.jpg",
-                    "http://c.tile.stamen.com/toner-lines/${z}/${x}/${y}.jpg",
-                    "http://d.tile.stamen.com/toner-lines/${z}/${x}/${y}.jpg"
-                ],
-                OpenLayers.Util.applyDefaults({
-                    attribution: this.attribution,
-                    type: "toner-lines"
-                }, options)
- 
-            ),
-            new OpenLayers.Layer.OSM(
-                this.tonerLabelsTitle,
-                [
-                    "http://tile.stamen.com/toner-labels/${z}/${x}/${y}.jpg",
-                    "http://a.tile.stamen.com/toner-labels/${z}/${x}/${y}.jpg",
-                    "http://b.tile.stamen.com/toner-labels/${z}/${x}/${y}.jpg",
-                    "http://c.tile.stamen.com/toner-labels/${z}/${x}/${y}.jpg",
-                    "http://d.tile.stamen.com/toner-labels/${z}/${x}/${y}.jpg"
-                ],
-                OpenLayers.Util.applyDefaults({
-                    attribution: this.attribution,
-                    type: "toner-labels"
-                }, options)
-            )
+        var configs = [
+            {name: "toner", type: "png"},
+            {name: "toner-hybrid", type: "png"},
+            {name: "toner-labels", type: "png"},
+            {name: "toner-lines", type: "png"},
+            {name: "toner-background", type: "png"},
+            {name: "toner-lite", type: "png"},
+            {name: "terrain", type: "png", numZoomLevels: 15, maxResolution: 9783.939619140625},
+            {name: "terrain-labels", type: "png", numZoomLevels: 15, maxResolution: 9783.939619140625},
+            {name: "terrain-lines", type: "png", numZoomLevels: 15, maxResolution: 9783.939619140625},
+            {name: "terrain-background", type: "png", numZoomLevels: 15, maxResolution: 9783.939619140625},
+            {name: "watercolor", type: "jpg"}
         ];
+
+        var len = configs.length;
+        var layers = new Array(len);
+        var config;
+        for (var i=0; i<len; ++i) {
+            config = configs[i];
+            layers[i] = new OpenLayers.Layer.OSM(
+                this[OpenLayers.String.camelize(config.name) + "Title"],
+                [
+                    ["http://tile.stamen.com/", config.name ,"/${z}/${x}/${y}.", config.type].join(""),
+                    ["http://a.tile.stamen.com/", config.name ,"/${z}/${x}/${y}.", config.type].join(""),
+                    ["http://b.tile.stamen.com/", config.name ,"/${z}/${x}/${y}.", config.type].join(""),
+                    ["http://c.tile.stamen.com/", config.name ,"/${z}/${x}/${y}.", config.type].join(""),
+                    ["http://d.tile.stamen.com/", config.name ,"/${z}/${x}/${y}.", config.type].join("")
+                ],
+                OpenLayers.Util.applyDefaults({
+                    layername: config.name,
+                    numZoomLevels: config.numZoomLevels,
+                    maxResolution: config.maxResolution
+                }, options)
+            );
+        }
         
         this.store = new GeoExt.data.LayerStore({
             layers: layers,
             fields: [
                 {name: "source", type: "string"},
-                {name: "name", type: "string", mapping: "type"},
+                {name: "name", type: "string", mapping: "layername"},
                 {name: "abstract", type: "string", mapping: "attribution"},
                 {name: "group", type: "string", defaultValue: "background"},
                 {name: "fixed", type: "boolean", defaultValue: true},
@@ -190,7 +163,8 @@ gxp.plugins.StamenSource = Ext.extend(gxp.plugins.LayerSource, {
             ]
         });
         this.store.each(function(l) {
-            l.set("group", "background");
+            if (l.get("name").search(/labels|lines/i) != -1)
+                l.set("group", "");
         });
         this.fireEvent("ready", this);
 
