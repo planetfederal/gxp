@@ -102,13 +102,7 @@ gxp.plugins.StamenSource = Ext.extend(gxp.plugins.LayerSource, {
         
         var options = {
             projection: "EPSG:900913",
-            maxExtent: new OpenLayers.Bounds(
-                -128 * 156543.0339, -128 * 156543.0339,
-                128 * 156543.0339, 128 * 156543.0339
-            ),
-            maxResolution: 156543.03390625,
             numZoomLevels: 20,
-            units: "m",
             attribution: this.attribution,
             buffer: 0,
             transitionEffect: "resize",
