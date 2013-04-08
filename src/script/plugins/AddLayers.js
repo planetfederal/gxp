@@ -492,7 +492,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 //expander,
                 {id:"title", header:this.panelTitleText, dataIndex:"title", sortable:true, menuDisabled:true},
                 {header:"Id", dataIndex:"name", width:120, sortable:true, menuDisabled:true},
-				{header:"", dataIndex:"prefix", width:50, hidden:true, menuDisabled:true},
+				{header:"", dataIndex:"prefix", width:50, hidden:true, menuDisabled:true}
             ]),
             listeners:{
                 rowdblclick:addLayers,
