@@ -61,6 +61,8 @@ gxp.plugins.RemoveLayer = Ext.extend(gxp.plugins.Tool, {
                 if(record) {
                     this.target.mapPanel.layers.remove(record);
                 }
+                this.target.mapPanel.layers.pruneModifiedRecords = false;
+                // retorna a variável para falso caso ela esteja sendo usada em outra parte do sistema.
             },
             scope: this
         }]);
