@@ -744,7 +744,6 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                             for (var j = 0; j < rules.length; j++) {
                                 if (rules[j].maxScaleDenominator) {
                                     maxScaleDenominator = rules[j].maxScaleDenominator;
-                                    //scale.toFixed()
                                 }
                             }
                         }

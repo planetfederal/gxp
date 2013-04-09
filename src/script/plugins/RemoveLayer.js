@@ -54,6 +54,10 @@ gxp.plugins.RemoveLayer = Ext.extend(gxp.plugins.Tool, {
             tooltip: this.removeActionTip,
             handler: function() {
                 var record = selectedLayer;
+                //Modificado para que quando a layer for removida, elas também serão removidas do array "modified",
+                //permitindo assim que as Layers correntes possam ser salvas no MongoDB
+                // Quando ative-se o "pruneModifiedRecords" a função "remove" chamada logo abaixo remove o Layer das layers "modified"
+                this.target.mapPanel.layers.pruneModifiedRecords = true;
                 if(record) {
                     this.target.mapPanel.layers.remove(record);
                 }
