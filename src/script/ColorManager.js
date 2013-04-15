@@ -167,13 +167,13 @@ Ext.apply(gxp.ColorManager.prototype, {
 
 (function() {
     // register the color manager with every color field
-    Ext.util.Observable.observeClass(gxp.form.ColorField);
-    gxp.form.ColorField.on({
+    //Ext.util.Observable.observeClass(gxp.form.ColorField);
+    /*gxp.form.ColorField.on({
         render: function(field) {
             var manager = new gxp.ColorManager();
             manager.register(field);
         }
-    });
+    });*/
 })();
 
 gxp.ColorManager.picker = null;
