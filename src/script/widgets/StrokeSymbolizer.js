@@ -140,14 +140,18 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
                     scope: this
                 }
             }, {
-                xtype: "numberfield",
+                xtype: "spinnerfield",
                 name: "width",
                 fieldLabel: this.widthText,
+            	minValue: 0,
+				accelerate: true,
+            	allowDecimals: false,
                 allowNegative: false,
                 emptyText: OpenLayers.Renderer.defaultSymbolizer.strokeWidth,
                 value: this.symbolizer.strokeWidth,
                 listeners: {
                     change: function(field, value) {
+						console.log(value);
                         value = parseFloat(value);
                         if (isNaN(value)) {
                             delete this.symbolizer.strokeWidth;

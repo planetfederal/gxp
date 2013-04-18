@@ -773,7 +773,9 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
 */
 		layer.events.register("loadend", layer, zoomEndCallback);
         var lyr = record.data.layer;
-        if (lyr.dimensions && lyr.dimensions.time && lyr.dimensions.time.values)
+		lyr.isFeatureLayer = record.data.keywords.indexOf("features")!=-1;
+        if (lyr.dimensions && lyr.dimensions.time && 
+				lyr.dimensions.time.values && lyr.isFeatureLayer)
             lyr.mergeNewParams({'time':lyr.dimensions.time.values[0] + "/" + lyr.dimensions.time.values[lyr.dimensions.time.values.length - 1]});
 
         if (records.length === 1 && record) {
