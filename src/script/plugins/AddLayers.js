@@ -7,11 +7,11 @@
  */
 
 /**
- * @requires plugins/Tool.js 
- * @requires widgets/NewSourceDialog.js 
- * @requires widgets/FeedSourceDialog.js 
- * @requires plugins/GeoNodeCatalogueSource.js 
- * @requires widgets/CatalogueSearchPanel.js 
+ * @requires plugins/Tool.js
+ * @requires widgets/NewSourceDialog.js
+ * @requires widgets/FeedSourceDialog.js
+ * @requires plugins/GeoNodeCatalogueSource.js
+ * @requires widgets/CatalogueSearchPanel.js
  */
 
 /** api: (define)
@@ -756,9 +756,28 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         });
 
         var zoomEndCallback = function () {
-            if (maxScaleDenominator < map.getScale()) { // modifica a mensagem caso a escala não permita a visualização do layer
-                Ext.MessageInfo.msg("Camada não visível", "A camada <b>" + layer.name + "</b> não aparecerá nesta escala")
-                //layer.events.unregister("loadend", layer, zoomEndCallback);
+            var tree = Ext.getCmp("tree")
+            var nodes = tree.root.childNodes[0] // pega o "node" que armazena as Layers na Tree ("Sobreposições") da Tree.
+            var node = null;
+
+            // percorre todos os nós de Layers
+            for (var i = nodes.childNodes.length - 1; i >= 0; i--) {
+                if(nodes.childNodes[i].layer === layer){
+                    node = nodes.childNodes[i];
+                }
+            };
+
+            //Ext.MessageInfo.msg("Camada não visível", "A camada <b>" + layer.name + "</b> não aparecerá nesta escala")
+            //layer.events.unregister("loadend", layer, zoomEndCallback);
+            // se o node for encontrado após a pesquisa anterior
+            if(node){
+                if (maxScaleDenominator < map.getScale()) { // modifica a mensagem caso a escala não permita a visualização do layer
+                    console.log("Vermelho! " + layer.name)
+                    node.setIconCls("red-icon");
+                } else {
+                    console.log("Verde! " + layer.name)
+                    node.setIconCls("green-icon");
+                }
             }
         }
 /*
@@ -774,7 +793,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
 		layer.events.register("loadend", layer, zoomEndCallback);
         var lyr = record.data.layer;
 		lyr.isFeatureLayer = record.data.keywords.indexOf("features")!=-1;
-        if (lyr.dimensions && lyr.dimensions.time && 
+        if (lyr.dimensions && lyr.dimensions.time &&
 				lyr.dimensions.time.values && lyr.isFeatureLayer)
             lyr.mergeNewParams({'time':lyr.dimensions.time.values[0] + "/" + lyr.dimensions.time.values[lyr.dimensions.time.values.length - 1]});
 

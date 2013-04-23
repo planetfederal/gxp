@@ -27,7 +27,7 @@ GeoExt.Lang.add("pt-br", {
     },
 
     "gxp.plugins.BingSource.prototype":{
-        title:"Bing Camadas",
+        title:"Bing Layers",
         roadTitle:"Bing Roads",
         aerialTitle:"Bing Aerial",
         labeledAerialTitle:"Bing Aerial com Labels"
@@ -60,7 +60,7 @@ GeoExt.Lang.add("pt-br", {
     },
 
     "gxp.plugins.GoogleSource.prototype":{
-        title:"Google Camadas",
+        title:"Google Layers",
         roadmapAbstract:"Mostrar mapas de rua",
         satelliteAbstract:"Mostrar imagens de satélite",
         hybridAbstract:"Mostrar imagens de satélite com nomes de ruas",
@@ -131,7 +131,7 @@ GeoExt.Lang.add("pt-br", {
     },
 
     "gxp.plugins.OSMSource.prototype":{
-        title:"OpenStreetMap Camadas",
+        title:"OpenStreetMap Layers",
         mapnikAttribution:"&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors",
         osmarenderAttribution:"Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>"
     },
@@ -141,12 +141,12 @@ GeoExt.Lang.add("pt-br", {
         menuText:"Imprimir mapa",
         tooltip:"Imprimir mapa",
         previewText:"Visualizar Impressão",
-        notAllNotPrintableText:"Nem todos os seus camadas poderão ser impressos...",
-        nonePrintableText:"Nenhum dos seus Camadas selecionados poderão ser impressos..."
+        notAllNotPrintableText:"Nem todos as suas camadas poderão ser impressos...",
+        nonePrintableText:"Nenhuma das suas Camadas selecionadas poderão ser impressas..."
     },
 
     "gxp.plugins.MapQuestSource.prototype":{
-        title:"Camadas do MapQuest",
+        title:"MapQuest Layers",
         osmAttribution:"Tiles Courtesy of <a href='http://open.mapquest.co.uk/' target='_blank'>MapQuest</a> <img src='http://developer.mapquest.com/content/osm/mq_logo.png' border='0'>",
         osmTitle:"MapQuest OpenStreetMap",
         naipAttribution:"Tiles Courtesy of <a href='http://open.mapquest.co.uk/' target='_blank'>MapQuest</a> <img src='http://developer.mapquest.com/content/osm/mq_logo.png' border='0'>",

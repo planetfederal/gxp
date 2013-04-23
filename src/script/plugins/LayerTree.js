@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
- * 
+ *
  * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
@@ -29,12 +29,12 @@ Ext.namespace("gxp.plugins");
  *
  *    Plugin for adding a tree of layers to a :class:`gxp.Viewer`. Also
  *    provides a context menu on layer nodes.
- */   
+ */
 gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
-    
+
     /** api: ptype = gxp_layertree */
     ptype: "gxp_layertree",
-    
+
     /** api: config[shortTitle]
      *  ``String``
      *  Short title text for this plugin's output (i18n)
@@ -58,7 +58,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
      *  Text for baselayer node of layer tree (i18n).
      */
     baseNodeText: "Base Layers",
-    
+
     /** api: config[groups]
      *  ``Object`` The groups to show in the layer tree. Keys are group names,
      *  and values are either group titles or an object with ``title`` and
@@ -79,18 +79,18 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
      *      }
      */
     groups: null,
-    
+
     /** api: config[defaultGroup]
      *  ``String`` The name of the default group, i.e. the group that will be
      *  used when none is specified. Defaults to ``default``.
      */
     defaultGroup: "default",
-    
+
     /** private: config[treeNodeUI]
      *  ``Ext.tree.TreeNodeUI``
      */
     treeNodeUI: null,
-    
+
     /** private: method[constructor]
      *  :arg config: ``Object``
      */
@@ -112,7 +112,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
             );
         }
     },
-    
+
     /** private: method[addOutput]
      *  :arg config: ``Object``
      *  :returns: ``Ext.Component``
@@ -121,7 +121,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
         config = Ext.apply(this.createOutputConfig(), config || {});
         return gxp.plugins.LayerTree.superclass.addOutput.call(this, config);
     },
-    
+
     /** private: method[createOutputConfig]
      *  :returns: ``Object`` Configuration object for an Ext.tree.TreePanel
      */
@@ -137,7 +137,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
         if (this.initialConfig.loader && this.initialConfig.loader.baseAttrs) {
             baseAttrs = this.initialConfig.loader.baseAttrs;
         }
-        
+
         var defaultGroup = this.defaultGroup,
             plugin = this,
             groupConfig,
@@ -176,7 +176,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
                 }
             }, groupConfig)));
         }
-        
+
         return {
             xtype: "treepanel",
             root: treeRoot,
@@ -192,7 +192,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
             }),
             listeners: {
                 contextmenu: this.handleTreeContextMenu,
-                beforemovenode: this.handleBeforeMoveNode,                
+                beforemovenode: this.handleBeforeMoveNode,
                 scope: this
             },
             contextMenu: new Ext.menu.Menu({
@@ -200,7 +200,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
             })
         };
     },
-    
+
     /** private: method[configureLayerNode]
      *  :arg loader: ``GeoExt.tree.LayerLoader``
      *  :arg node: ``Object`` The node
@@ -217,6 +217,8 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
                 attr.qtip = record.get('abstract');
                 if (!record.get("queryable") && !attr.iconCls) {
                     attr.iconCls = "gxp-tree-rasterlayer-icon";
+                } else {
+                    attr.iconCls = "red-icon";
                 }
                 if (record.get("fixed")) {
                     attr.allowDrag = false;
@@ -237,7 +239,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
             }
         }
     },
-    
+
     /** private: method[handleBeforeSelect]
      */
     handleBeforeSelect: function(selModel, node) {
@@ -255,7 +257,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
          this.selectionChanging = false;
          return changed;
      },
-     
+
     /** private: method[handleTreeContextMenu]
      */
     handleTreeContextMenu: function(node, e) {
@@ -269,7 +271,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
             }
         }
     },
-    
+
     /** private: method[handleBeforeMoveNode]
      */
     handleBeforeMoveNode: function(tree, node, oldParent, newParent, i) {
@@ -283,7 +285,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
             record.set("group", newParent.attributes.group);
         }
     }
-        
+
 });
 
 Ext.preg(gxp.plugins.LayerTree.prototype.ptype, gxp.plugins.LayerTree);

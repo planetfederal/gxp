@@ -55,6 +55,13 @@ li.commit div {
     background-image: url(img/silk/map.png);
 }
 
+.x-tree-node-leaf  .red-icon {
+    background-image: url(img/red-icon.png);
+}
+
+.x-tree-node-leaf  .green-icon {
+    background-image: url(img/green-icon.png);
+}
 /* position the zoom slider within map panel */
 .gx-zoomslider {
     top: 90px;
@@ -253,22 +260,22 @@ li.commit div {
 }
 
 /* gxp_zoomtodataextent, gxp_zoomtoselectedfeatures, gxp_zoomtolayerextent */
-.x-btn .gxp-icon-zoom-to, .x-menu-item .gxp-icon-zoom-to, .x-tree-node .gxp-icon-zoom-to { 
+.x-btn .gxp-icon-zoom-to, .x-menu-item .gxp-icon-zoom-to, .x-tree-node .gxp-icon-zoom-to {
     background-image: url(img/silk/magnifier.png);
 }
 
 /* gxp_queryform */
-.x-btn .gxp-icon-find, .x-menu-item .gxp-icon-find { 
+.x-btn .gxp-icon-find, .x-menu-item .gxp-icon-find {
     background-image: url(img/silk/find.png);
 }
 
 /* gxp_selectfeature */
-.x-btn .gxp-icon-selectfeature, .x-menu-item .gxp-icon-selectfeature { 
+.x-btn .gxp-icon-selectfeature, .x-menu-item .gxp-icon-selectfeature {
     background-image: url(img/silk/cursor.png);
 }
 
 /* gxp_zoomtoextent */
-.x-btn .gxp-icon-zoomtoextent, .x-tree-node .gxp-icon-zoomtoextent { 
+.x-btn .gxp-icon-zoomtoextent, .x-tree-node .gxp-icon-zoomtoextent {
     background-image: url(img/silk/arrow_inout.png);
 }
 
@@ -318,7 +325,7 @@ li.commit div {
 }
 
 /* gxp_layeruploadpanel */
-.x-btn .gxp-icon-filebrowse, .x-menu-item .gxp-icon-filebrowse { 
+.x-btn .gxp-icon-filebrowse, .x-menu-item .gxp-icon-filebrowse {
     background-image: url(img/silk/folder.png);
 }
 
