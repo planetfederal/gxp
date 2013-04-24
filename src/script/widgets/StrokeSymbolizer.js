@@ -151,7 +151,6 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
                 value: this.symbolizer.strokeWidth,
                 listeners: {
                     change: function(field, value) {
-						console.log(value);
                         value = parseFloat(value);
                         if (isNaN(value)) {
                             delete this.symbolizer.strokeWidth;
