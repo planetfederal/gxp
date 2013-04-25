@@ -15,6 +15,7 @@
  * @requires OpenLayers/Format/QueryStringFilter.js
  * @requires OpenLayers/Protocol/HTTP.js
  * @requires OpenLayers/Strategy/BBOX.js
+ * @requires OpenLayers/Strategy/Fixed.js
  * @requires OpenLayers/Filter/Spatial.js
  * @requires GeoExt/widgets/Popup.js
  */
@@ -58,6 +59,12 @@ gxp.plugins.FeedSource = Ext.extend(gxp.plugins.LayerSource, {
      *  ``String``  XTemplate string for feature info popup
      */
     popupTemplate:'<a target="_blank" href="{link}">{description}</a>',
+    
+    
+    /** api: config[fixed]
+     * ``Boolean`` Use OpenLayers.Strategy.Fixed if true, BBOX if false
+     **/    
+    fixed: true,
 
     /** api: method[createLayerRecord]
      *  :arg config:  ``Object``  The application config for this layer.
@@ -72,7 +79,7 @@ gxp.plugins.FeedSource = Ext.extend(gxp.plugins.LayerSource, {
         var layer = new OpenLayers.Layer.Vector(config.name, {
             projection:"projection" in config ? config.projection : "EPSG:4326",
             visibility:"visibility" in config ? config.visibility : true,
-            strategies:[new OpenLayers.Strategy.BBOX({resFactor:1, ratio:1})],
+            strategies:[this.fixed?new OpenLayers.Strategy.Fixed():new OpenLayers.Strategy.BBOX({resFactor:1,ratio:1})],
             protocol:new OpenLayers.Protocol.HTTP({
                 url:this.url,
                 params:config.params,
