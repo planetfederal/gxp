@@ -734,6 +734,8 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 var format = new OpenLayers.Format.SLD();
                 var sld = format.read(response.responseXML || response.responseText);
 
+                layer.sld = sld;
+
                 // scroll through the sld to get maxScaleDenominator param
                 for (var l in sld.namedLayers) {
                     var styles = sld.namedLayers[l].userStyles, style;
