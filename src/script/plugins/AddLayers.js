@@ -726,6 +726,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         var url = layer.url + "VERSION=1.1.1&REQUEST=GetStyles&LAYERS=" + name;
         var showConfirmZoomDialog;
         var maxScaleDenominator;
+        layer.originalName = name;
 
         // request the SLD to geoserver
         OpenLayers.Request.GET({
@@ -774,13 +775,16 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             // se o node for encontrado após a pesquisa anterior
             if(node){
                 if (maxScaleDenominator < map.getScale()) { // modifica a mensagem caso a escala não permita a visualização do layer
-                    console.log("Vermelho! " + layer.name)
                     node.setIconCls("red-icon");
                 } else {
-                    console.log("Verde! " + layer.name)
                     node.setIconCls("green-icon");
                 }
             }
+
+            if(layer.params.TIME)
+                layer.setName(layer.originalName + " - " + layer.params.TIME);
+            else
+                layer.setName(layer.originalName);
         }
 /*
         if (extent) {
