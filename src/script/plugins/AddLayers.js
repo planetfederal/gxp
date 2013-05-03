@@ -720,84 +720,8 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             }
         }
 
-        layer = record.getLayer();
-        var name = record.json.name // get the name of layer to request to geoserver
-        var url = layer.url + "VERSION=1.1.1&REQUEST=GetStyles&LAYERS=" + name;
-        var maxScaleDenominator = "";
-
-        // request the SLD to geoserver
-        OpenLayers.Request.GET({
-            url:url,
-            success:function (response) {
-                var format = new OpenLayers.Format.SLD();
-                var sld = format.read(response.responseXML || response.responseText);
-
-                layer.sld = sld;
-
-                // scroll through the sld to get maxScaleDenominator param
-                for (var l in sld.namedLayers) {
-                    var styles = sld.namedLayers[l].userStyles, style;
-                    for (var i = 0; i < styles.length; i++) {
-                        style = styles[i];
-                        var rules = style.rules;
-                        if (rules) { // if not null
-                            for (var j = 0; j < rules.length; j++) {
-                                if (rules[j].maxScaleDenominator) {
-                                    maxScaleDenominator = rules[j].maxScaleDenominator;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                var callbackVisility = function(){
-                    layerVisilityCallback(layer, maxScaleDenominator)
-                };
-
-                layer.events.register("loadend", layer, callbackVisility);
-                layer.events.register("visibilitychanged", layer, callbackVisility);
-                //layer.events.register("loadend",layer, function(){console.log("LoooadEnd")} )
-            },
-            error:function (response) {
-
-            }
-        });
-
-
-        var layerVisilityCallback = function(layer, maxScaleDenominator) {
-            var map = app.mapPanel.map;
-
-            var tree = Ext.getCmp("tree")
-            var nodes = tree.root.childNodes[0] // pega o "node" que armazena as Layers na Tree ("Sobreposições") da Tree.
-            var node = null;
-
-            // percorre todos os nós de Layers
-            for (var i = nodes.childNodes.length - 1; i >= 0; i--) {
-                if(nodes.childNodes[i].layer === layer){
-                    node = nodes.childNodes[i];
-                }
-            };
-
-            //Ext.MessageInfo.msg("Camada não visível", "A camada <b>" + layer.name + "</b> não aparecerá nesta escala")
-            //layer.events.unregister("loadend", layer, layerVisilityCallback);
-            // se o node for encontrado após a pesquisa anterior
-            if(node){
-                // modifica a mensagem caso a escala não permita a visualização do layer
-                if (!layer.visibility || maxScaleDenominator != "" && maxScaleDenominator < map.getScale()){
-                    console.log("Vermelho! " + layer.name)
-                    node.setIconCls("red-icon");
-                } else {
-                    console.log("Verde! " + layer.name)
-                    node.setIconCls("green-icon");
-                }
-            }
-        };
-
-        var lyr = record.data.layer;
-		lyr.isFeatureLayer = record.data.keywords.indexOf("features")!=-1;
-        if (lyr.dimensions && lyr.dimensions.time &&
-				lyr.dimensions.time.values && lyr.isFeatureLayer)
-            lyr.mergeNewParams({'time':lyr.dimensions.time.values[0] + "/" + lyr.dimensions.time.values[lyr.dimensions.time.values.length - 1]});
+        // Função interna da app GeoExplorer, está fora do GXP.
+        utils.Utils.getStyleAndRegisterVisibilityEvents(record);
 
         if (records.length === 1 && record) {
             // select the added layer
