@@ -737,6 +737,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 this.target.tools[actionPlugin].addOutput(outputConfig);
             }
         }
+
     },
 
     /** private: method[setSelectedSource]
