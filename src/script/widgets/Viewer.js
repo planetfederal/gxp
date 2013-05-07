@@ -717,11 +717,11 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         var sources = {};
         this.mapPanel.layers.each(function(record){
             var layer = record.getLayer();
-            if (layer.displayInLayerSwitcher) {
+            if (layer.displayInLayerSwitcher && !(layer instanceof OpenLayers.Layer.Vector) ) {
                 var id = record.get("source");
                 var source = this.layerSources[id];
                 if (!source) {
-                    throw new Error("Could not find source for layer '" + record.get("name") + "'");
+                    throw new Error("Could not find source for record '" + record.get("name") + " and layer " + layer.name + "'");
                 }
                 // add layer
                 state.map.layers.push(source.getConfigForRecord(record));
