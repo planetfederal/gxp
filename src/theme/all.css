@@ -331,7 +331,7 @@ li.commit div {
     position: absolute;
     right: 0;
     -moz-opacity: 0;
-    filter:alpha(opacity: 0);
+    filter:alpha(opacity=0);
     opacity: 0;
     z-index: 2;
     height: 22px;
