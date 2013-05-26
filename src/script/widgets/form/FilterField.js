@@ -35,6 +35,12 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
      */
     upperBoundaryTip: "upper boundary",
      
+    /** api: config[caseInsensitiveMatch]
+     *  ``Boolean``
+     *  Should Comparison Filters for Strings do case insensitive matching?  Default is ``"false"``.
+     */
+    caseInsensitiveMatch: false,
+
     /**
      * Property: filter
      * {OpenLayers.Filter} Optional non-logical filter provided in the initial
@@ -162,10 +168,10 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
      * May be overridden to change the default filter.
      *
      * Returns:
-     * {OpenLayers.Filter} By default, returns a comarison filter.
+     * {OpenLayers.Filter} By default, returns a comparison filter.
      */
     createDefaultFilter: function() {
-        return new OpenLayers.Filter.Comparison();
+        return new OpenLayers.Filter.Comparison({matchCase: !this.caseInsensitiveMatch});
     },
     
     /**
