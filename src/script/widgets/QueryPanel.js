@@ -70,7 +70,13 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
      *  Query by attributes.
      */
     attributeQuery: true,
-    
+
+    /** api: config[caseInsensitiveMatch]
+     *  ``Boolean``
+     *  Should Comparison Filters for Strings do case insensitive matching?  Default is ``"false"``.
+     */
+    caseInsensitiveMatch: false,
+
     /** private: property[selectedLayer]
      *  ``Ext.data.Record``
      *  The currently selected record in the layers combo.
@@ -292,7 +298,8 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
         this.filterBuilder = new gxp.FilterBuilder({
             //anchor: "-8px",
             attributes: this.attributeStore,
-            allowGroups: false
+            allowGroups: false,
+            caseInsensitiveMatch: this.caseInsensitiveMatch
         });
         
         if(owner) {
