@@ -168,10 +168,10 @@ gxp.form.FilterField = Ext.extend(Ext.form.CompositeField, {
      * May be overridden to change the default filter.
      *
      * Returns:
-     * {OpenLayers.Filter} By default, returns a comarison filter.
+     * {OpenLayers.Filter} By default, returns a comparison filter.
      */
     createDefaultFilter: function() {
-        return new OpenLayers.Filter.Comparison({matchCase: this.caseInsensitiveMatch});
+        return new OpenLayers.Filter.Comparison({matchCase: !this.caseInsensitiveMatch});
     },
     
     /**
