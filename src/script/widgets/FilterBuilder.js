@@ -52,6 +52,21 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
      */
     caseInsensitiveMatch: false,
 
+
+    /** api: config[autoWildCardAttach]
+     *  ``Boolean``
+     *  Should search strings (LIKE comparison only) for attribute queries always be pre- and postfixed with wildcards?
+     *  The ``wildCardString`` variable determines the wildcard string to be attached.
+     *  Default is ``"false"``.
+     */
+    autoWildCardAttach: false,
+
+    /** api: config[wildCardString]
+     *  ``String``
+     *  String to be pre- and postfixed for wildcards in LIKE Comparison Filters.
+     */
+    wildCardString: '.*',
+
     /** api: config[preComboText]
      *  ``String``
      *  String to display before filter type combo.  Default is ``"Match"``.
@@ -193,6 +208,11 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
             if(filter instanceof OpenLayers.Filter.Logical) {
                 filter = this.cleanFilter(filter);
             }
+
+            // Should wildcard chars be attached to LIKE Filters?
+            if (this.autoWildCardAttach) {
+                filter = this.attachWildCards(filter);
+            }
         }
         return filter;
     },
@@ -332,6 +352,27 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
         return filter;
     },
     
+    /** api: method[attachWildCards]
+     *  :return: ``OpenLayers.Filter``
+     *
+     *  Returns a filter where wildcard symbols are pre/appended for
+     *  Comparison LIKE Filters.
+     */
+    attachWildCards: function (filter) {
+
+        if (filter instanceof OpenLayers.Filter.Logical) {
+            // Go recursively through composite filter
+            for (var i = 0, len = filter.filters.length; i < len; ++i) {
+                filter = this.attachWildCards(filter.filters[i]);
+            }
+        } else if (filter.type === OpenLayers.Filter.Comparison.LIKE) {
+            // Wrap the value in Wildcard strings.
+            filter.value = this.wildCardString + filter.value + this.wildCardString;
+        }
+
+        return filter;
+    },
+
     createDefaultFilter: function() {
         return new OpenLayers.Filter.Comparison({
                             matchCase: !this.caseInsensitiveMatch});

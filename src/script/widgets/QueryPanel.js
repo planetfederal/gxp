@@ -77,6 +77,13 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
      */
     caseInsensitiveMatch: false,
 
+    /** api: config[autoWildCardAttach]
+     *  ``Boolean``
+     *  Should search strings (LIKE comparison only) for attribute queries always be pre/postpended with a wildcard '*' character?
+     *  Default is ``"false"``.
+     */
+    autoWildCardAttach: false,
+
     /** private: property[selectedLayer]
      *  ``Ext.data.Record``
      *  The currently selected record in the layers combo.
@@ -299,7 +306,8 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
             //anchor: "-8px",
             attributes: this.attributeStore,
             allowGroups: false,
-            caseInsensitiveMatch: this.caseInsensitiveMatch
+            caseInsensitiveMatch: this.caseInsensitiveMatch,
+            autoWildCardAttach: this.autoWildCardAttach
         });
         
         if(owner) {
