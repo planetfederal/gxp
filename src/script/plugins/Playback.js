@@ -91,6 +91,8 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
             xtype: 'gxp_playbacktoolbar',
             mapPanel:this.target.mapPanel,
             playbackMode:this.playbackMode,
+            prebuffer: this.target.prebuffer,
+            maxframes: this.target.maxframes,
             looped:this.looped,
             autoPlay:this.autoStart,
             optionsWindow: new Ext.Window({

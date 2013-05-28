@@ -51,6 +51,10 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
     autoPlay:false,
     /* should the time slider be aggressive or not */
     aggressive: null,
+    /* should we prebuffer the time series or not */
+    prebuffer: null,
+    /* how many frames should we prebuffer at maximum */
+    maxframes: null,
     //api config ->timeDisplayConfig:null,
     //api property
     optionsWindow:null,
@@ -98,6 +102,8 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         if(!this.control){
             this.controlConfig = Ext.applyIf(this.controlConfig || {}, {
                 dimension: 'time',
+                prebuffer: this.prebuffer,
+                maxframes: this.maxframes,
                 autoSync: true
             });
             this.control = this.buildTimeManager();
