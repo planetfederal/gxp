@@ -82,7 +82,7 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
                     for (var i = 1, ii = this.model.values.length; i<ii; ++i) {
                         diff = this.model.values[i] - this.model.values[i-1];
                         info = gxp.PlaybackToolbar.smartIntervalFormat(diff);
-                        if (previousInfo !== null && info.units !== previousInfo.units && info.value !== previousInfo.value) {
+                        if (previousInfo !== null && info.units !== previousInfo.units) {
                             applyTimeFormat = false;
                             break;
                         }
