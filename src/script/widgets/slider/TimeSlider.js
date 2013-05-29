@@ -75,7 +75,8 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
             //set an appropiate time format if one was not specified
             if(!this.initialConfig.timeFormat){
                 if (sliderInfo.interval) {
-                    this.setTimeFormat(gxp.PlaybackToolbar.guessTimeFormat(sliderInfo.interval));
+                    var interval = sliderInfo.interval*OpenLayers.TimeStep[this.timeManager.timeUnits];
+                    this.setTimeFormat(gxp.PlaybackToolbar.guessTimeFormat(interval));
                 } else if (this.model.values) {
                     var allUnits = ['Seconds', 'Minutes', 'Hours', 'Days', 'Months', 'Years'];
                     var units = {};
