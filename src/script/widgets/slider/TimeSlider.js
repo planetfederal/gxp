@@ -77,21 +77,25 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
                 if (sliderInfo.interval) {
                     this.setTimeFormat(gxp.PlaybackToolbar.guessTimeFormat(sliderInfo.interval));
                 } else if (this.model.values) {
-                    // check if we have values that resemble an interval
-                    var info, previousInfo = null, applyTimeFormat = true;
+                    var allUnits = ['Seconds', 'Minutes', 'Hours', 'Days', 'Months', 'Years'];
+                    var units = {};
                     for (var i = 1, ii = this.model.values.length; i<ii; ++i) {
                         diff = this.model.values[i] - this.model.values[i-1];
                         info = gxp.PlaybackToolbar.smartIntervalFormat(diff);
-                        if (previousInfo !== null && info.units !== previousInfo.units) {
-                            applyTimeFormat = false;
+                        units[info.units] = true;
+                    }
+                    var unit = null;
+                    for (i = 0, ii = allUnits.length; i < ii; ++i) {
+                        if (units[allUnits[i]] === true) {
+                            unit = allUnits[i];
                             break;
                         }
-                        previousInfo = info;
                     }
-                    if (applyTimeFormat === true) {
-                        this.setTimeFormat(
-                            gxp.PlaybackToolbar.guessTimeFormat(info)
-                        );
+                    if (unit !== null) {
+                        var format = gxp.PlaybackToolbar.timeFormats[unit];
+                        if (format) {
+                            this.setTimeFormat(format);
+                        }
                     }
                 }
             }
