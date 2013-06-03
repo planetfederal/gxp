@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
- * 
+ *
  * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
@@ -27,10 +27,10 @@ Ext.namespace("gxp.plugins");
  *    TODO Make this plural - selected layers
  */
 gxp.plugins.RemoveLayer = Ext.extend(gxp.plugins.Tool, {
-    
+
     /** api: ptype = gxp_removelayer */
     ptype: "gxp_removelayer",
-    
+
     /** api: config[removeMenuText]
      *  ``String``
      *  Text for remove menu item (i18n).
@@ -42,7 +42,7 @@ gxp.plugins.RemoveLayer = Ext.extend(gxp.plugins.Tool, {
      *  Text for remove action tooltip (i18n).
      */
     removeActionTip: "Remove layer",
-    
+
     /** api: method[addActions]
      */
     addActions: function() {
@@ -83,10 +83,10 @@ gxp.plugins.RemoveLayer = Ext.extend(gxp.plugins.Tool, {
             "add": enforceOne,
             "remove": enforceOne
         });
-        
+
         return actions;
     }
-        
+
 });
 
 Ext.preg(gxp.plugins.RemoveLayer.prototype.ptype, gxp.plugins.RemoveLayer);

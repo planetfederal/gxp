@@ -658,6 +658,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
 
         var Cls = this.outputTarget ? Ext.Panel : Ext.Window;
         this.capGrid = new Cls(Ext.apply({
+            id:"capGridAddLayer",
             title:this.availableLayersText,
             closeAction:"hide",
             layout:"border",
@@ -742,18 +743,28 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
     /** private: method[setSelectedSource]
      *  :arg source: :class:`gxp.plugins.LayerSource`
      */
-    setSelectedSource:function (source, callback) {
+    setSelectedSource:function (source, callback)
+    {
         this.selectedSource = source;
         var store = source.store;
-        this.fireEvent("sourceselected", this, source);
+        var me = this;
+        var loadMask = new Ext.LoadMask("capGridAddLayer", {msg:'Carregando Layers...'});
+        loadMask.show();
+
+        this.fireEvent("sourceselected", me, source);
+
         if (this.capGrid && source.lazy) {
-            source.store.load({callback:(function () {
-                var sourceComboBox = this.capGrid.sourceComboBox,
+
+            utils.Utils.loadSourceStores();
+
+            var callback = function () {
+                var sourceComboBox = me.capGrid.sourceComboBox,
                     store = sourceComboBox.store,
                     valueField = sourceComboBox.valueField,
                     index = store.findExact(valueField, sourceComboBox.getValue()),
                     rec = store.getAt(index),
-                    source = this.target.layerSources[rec.get("id")];
+                    source = me.target.layerSources[rec.get("id")];
+
                 if (source) {
                     if (source.title !== rec.get("title") && !Ext.isEmpty(source.title)) {
                         rec.set("title", source.title);
@@ -762,7 +773,34 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 } else {
                     store.remove(rec);
                 }
-            }).createDelegate(this)});
+
+                loadMask.hide();
+            }
+
+            source.store.on("load", callback);
+
+
+            /*source.store.load(
+                {
+                    callback:(
+                        function () {
+                            var sourceComboBox = this.capGrid.sourceComboBox,
+                                store = sourceComboBox.store,
+                                valueField = sourceComboBox.valueField,
+                                index = store.findExact(valueField, sourceComboBox.getValue()),
+                                rec = store.getAt(index),
+                                source = this.target.layerSources[rec.get("id")];
+                            if (source) {
+                                if (source.title !== rec.get("title") && !Ext.isEmpty(source.title)) {
+                                    rec.set("title", source.title);
+                                    sourceComboBox.setValue(rec.get(valueField));
+                                }
+                            } else {
+                                store.remove(rec);
+                            }
+                        }
+                    ).createDelegate(this)
+                });*/
         }
     },
 
@@ -806,6 +844,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                                 uploadcomplete:function (panel, detail) {
                                     var layers = detail["import"].tasks[0].items;
                                     var item, names = {}, resource, layer;
+
                                     for (var i = 0, len = layers.length; i < len; ++i) {
                                         item = layers[i];
                                         if (item.state === "ERROR") {
@@ -816,8 +855,44 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                                         layer = resource.featureType || resource.coverage;
                                         names[layer.namespace.name + ":" + layer.name] = true;
                                     }
+
+
+                                    var callback = function (records, options, success)
+                                    {
+                                        var gridPanel, sel;
+                                        if (this.capGrid && this.capGrid.isVisible()) {
+                                            gridPanel = this.capGrid.get(0).get(0);
+                                            sel = gridPanel.getSelectionModel();
+                                            sel.clearSelections();
+                                        }
+                                        // select newly added layers
+                                        var newRecords = [];
+                                        var last = 0;
+                                        this.selectedSource.store.each(function (record, index) {
+                                            if (record.get("name") in names) {
+                                                last = index;
+                                                newRecords.push(record);
+                                            }
+                                        });
+                                        if (gridPanel) {
+                                            // this needs to be deferred because the
+                                            // grid view has not refreshed yet
+                                            window.setTimeout(function () {
+                                                sel.selectRecords(newRecords);
+                                                gridPanel.getView().focusRow(last);
+                                            }, 100);
+                                        } else {
+                                            this.addLayers(newRecords, true);
+                                        }
+                                    }
+
+                                    utils.Utils.loadSourceStores();
+                                    this.selectedSource.store.on("load", callback);
+
+                                    /*
                                     this.selectedSource.store.load({
-                                        callback:function (records, options, success) {
+                                        callback:function (records, options, success)
+                                        {
                                             var gridPanel, sel;
                                             if (this.capGrid && this.capGrid.isVisible()) {
                                                 gridPanel = this.capGrid.get(0).get(0);
@@ -843,9 +918,14 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                                             } else {
                                                 this.addLayers(newRecords, true);
                                             }
-                                        },
+                                        }
+
+                                        ,
                                         scope:this
                                     });
+
+                                    */
+
                                     if (this.outputTarget) {
                                         panel.hide();
                                     } else {
