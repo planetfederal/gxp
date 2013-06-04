@@ -750,12 +750,11 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         var store = source.store;
         var me = this;
         var loadMask = new Ext.LoadMask("capGridAddLayer", {msg:'Carregando Layers...'});
-        loadMask.show();
 
         this.fireEvent("sourceselected", me, source);
 
         if (this.capGrid && source.lazy) {
-
+            loadMask.show();
             utils.Utils.loadSourceStores();
 
             var callback = function () {
@@ -780,6 +779,10 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
 
             source.store.on("load", callback);
 
+            source.store.on("loadexception", function(){
+                loadMask.hide();
+                source.store.un("load", loadLayerCallback);
+            });
 
             /*source.store.load(
                 {
