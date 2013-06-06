@@ -171,16 +171,7 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
                 }]
             }
             ],
-            listeners:{'show':this.populateForm,scope:this},
-            bbar: [{
-                text: 'Save',
-                handler: this.saveValues,
-                scope: this
-            }, {
-                text: 'Cancel',
-                handler: this.cancelChanges,
-                scope: this
-            }]
+            listeners:{'show':this.populateForm,scope:this}
         });
         Ext.apply(this,config);
         gxp.PlaybackOptionsPanel.superclass.initComponent.call(this);
@@ -284,12 +275,6 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
         if(this.ownerCt && this.ownerCt.close){
             this.ownerCt[this.ownerCt.closeAction]();
         }
-    },
-    cancelChanges: function(btn){
-        this.form.getForm().items.each(function(field){
-            field.setValue(field.originalValue);
-        });
-        this.close(btn);
     }
 });
 
