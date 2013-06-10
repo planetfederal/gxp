@@ -87,7 +87,7 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
 
         var sliderValue = 100;
         if (this.opacityProperty in this.symbolizer) {
-            sliderValue = this.symbolizer[this.opacityProperty];
+            sliderValue = this.symbolizer[this.opacityProperty]*100;
         }
         else if (OpenLayers.Renderer.defaultSymbolizer[this.opacityProperty]) {
             sliderValue = OpenLayers.Renderer.defaultSymbolizer[this.opacityProperty]*100;
