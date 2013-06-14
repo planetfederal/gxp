@@ -415,8 +415,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             }, this.initialConfig.outputConfig));
             if (Cls === Ext.Panel) {
                 this.addOutput(this.feedDialog);
-            }
-            ;
+            };
         }
         this.feedDialog.show();
     },
@@ -571,7 +570,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 },
                 "urlselected":function (newSourceDialog, url) {
                     newSourceDialog.setLoading();
-                    this.target.addLayerSource({
+                    var src = this.target.addLayerSource({
                         config:{url:url}, // assumes default of gx_wmssource
                         callback:function (id) {
                             // add to combo and select
@@ -590,6 +589,10 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                         },
                         scope:this
                     });
+                    if(src.lazy)
+                    {
+                        src.store.reload();
+                    }
                 },
                 scope:this
             }

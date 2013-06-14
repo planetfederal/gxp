@@ -133,6 +133,7 @@ gxp.plugins.BingSource = Ext.extend(gxp.plugins.LayerSource, {
         });
         this.store.each(function(l) {
             l.set("group", "background");
+            l.set("prefix", "Bing");
         });
         this.fireEvent("ready", this);
 

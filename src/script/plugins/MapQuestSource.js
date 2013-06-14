@@ -151,6 +151,7 @@ gxp.plugins.MapQuestSource = Ext.extend(gxp.plugins.LayerSource, {
         });
         this.store.each(function(l) {
             l.set("group", "background");
+            l.set("prefix", "MapQuest");
         });
         this.fireEvent("ready", this);
 

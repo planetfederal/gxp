@@ -182,6 +182,7 @@ gxp.plugins.GoogleSource = Ext.extend(gxp.plugins.LayerSource, {
         });
         this.store.each(function(l) {
             l.set("abstract", mapTypes[l.get("name")]["abstract"]);
+            l.set("prefix", "Google");
         });
         this.fireEvent("ready", this);
     },

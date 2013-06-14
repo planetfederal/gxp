@@ -213,6 +213,7 @@ gxp.plugins.MapBoxSource = Ext.extend(gxp.plugins.LayerSource, {
             if ("group" in config) {
                 record.set("group", config.group);
             }
+            record.set("prefix", "MapBox");
 
             record.data.layer = layer;
             record.commit();

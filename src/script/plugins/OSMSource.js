@@ -124,6 +124,7 @@ gxp.plugins.OSMSource = Ext.extend(gxp.plugins.LayerSource, {
         });
         this.store.each(function(l) {
             l.set("group", "background");
+            l.set("prefix", "OpenStreetMap");
         });
         this.fireEvent("ready", this);
 
