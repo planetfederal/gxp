@@ -8,7 +8,6 @@
 
 /**
  * @requires util.js
- * @requires widgets/tips/RangeSliderTip.js
  * @requires widgets/FeatureEditPopup.js
  * @requires OpenLayers/Format/SLD/v1_0_0.js
  * @requires OpenLayers/Renderer/SVG.js
@@ -181,18 +180,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
 
     youtubePlayers: {},
 
-    /** api: config[showRangeSlider]
-     *  ``Boolean`` Should we show the range slider and its associated plus
-     *  and minus buttons? Defaults to true
-     */
-    showRangeSlider: true,
-
-    /** api: config[initialRangeSliderValue]
-     *  ``Integer`` Initial value to use for the range slider. Default value
-     *  is 25.
-     */
-    initialRangeSliderValue: 25,
-
     /** api: config[scrollInterval]
      *  ``Integer`` The Simile scroll event listener will only be handled
      *  upon every scrollInterval milliseconds. Defaults to 500.
@@ -253,7 +240,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     /** api: config[instructionText]
      *  ``String`` Message to show when there is too many data for the timeline (i18n)
      */   
-    instructionText: "There are too many events ({count}) to show in the timeline.<br/>Please zoom in or move the vertical slider down (maximum is {max})",
+    instructionText: "There are too many events ({count}) to show in the timeline (maximum is {max})",
 
     /** api: config[errorText]
      *  ``String`` Message to show when there is an exception when retrieving the WFS data (i18n)
@@ -340,58 +327,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
 
         this.eventSource = new Timeline.DefaultEventSource(0);
 
-        this.items = [];
-        if (this.showRangeSlider) {
-            this.items.push({
-                region: "west",
-                xtype: "container",
-                layout: "vbox",
-                margins: "10 5",
-                width: 20,
-                items: [{
-                    xtype: "panel",
-                    margins: "3 1",
-                    cls: "x-tool x-tool-minus",
-                    listeners: {
-                        afterrender: function(c){ 
-                            c.getEl().on('click', function() {
-                                var value = this.rangeSlider.getValue();
-                                this.rangeSlider.setValue(0, value+10, true, true);
-                            }, this);
-                        },
-                        scope: this
-                    }
-                }, {
-                    xtype: "slider",
-                    ref: "../rangeSlider",
-                    vertical: true,
-                    flex: 1,
-                    value: this.initialRangeSliderValue,
-                    minValue: 1,
-                    maxValue: 100,
-                    listeners: {
-                        "change": this.onChange,
-                        "changecomplete": this.onChangeComplete,
-                        scope: this
-                    },
-                    plugins: [new gxp.slider.RangeSliderTip()]
-                }, {
-                    xtype: "panel",
-                    margins: "3 1",
-                    cls: "x-tool x-tool-plus",
-                    listeners: {
-                        afterrender: function(c){ 
-                            c.getEl().on('click', function() {
-                                var value = this.rangeSlider.getValue();
-                                this.rangeSlider.setValue(0, value-10, true, true);
-                            }, this);
-                        },
-                        scope: this
-                    }
-                }]
-            });
-        } 
-        this.items.push(this.timelineContainer);
+        this.items = [this.timelineContainer];
 
         // we are binding with viewer to get updates on new layers        
         if (this.initialConfig.viewer) {
@@ -425,51 +361,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }
 
         gxp.TimelinePanel.superclass.initComponent.call(this); 
-    },
-
-    /**
-     * private: method[onChange]
-     *  :arg slider: ``Ext.Slider``
-     *  :arg value: ``Float``
-     *
-     *  Event listener for when the vertical slider is moved. Update the
-     *  range slider's tooltip.
-     */
-    onChange: function(slider, value, thumb) {
-        // TODO this logic needs to be more centralized, it's now in several places
-        var range = this.playbackTool.playbackToolbar.control.animationRange;
-        range = this.calculateNewRange(range, value);
-        var start = new Date(range[0] - this.bufferFraction * (range[1] - range[0]));
-        var end = new Date(range[1] + this.bufferFraction * (range[1] - range[0]));
-        // don't go beyond the original range
-        start = new Date(Math.max(this.originalRange[0], start));
-        end = new Date(Math.min(this.originalRange[1], end));
-        this.updateRangeSlider([start, end]);
-    },
-
-    /**
-     * private: method[onChangeComplete]
-     *  :arg slider: ``Ext.Slider``
-     *  :arg value: ``Float``
-     *
-     *  Event listener for when the vertical slider is moved. This will
-     *  influence the date range which will be used in the WFS protocol.
-     */
-    onChangeComplete: function(slider, value) {
-        if (this.playbackTool) {
-            var range = this.playbackTool.playbackToolbar.control.animationRange;
-            range = this.calculateNewRange(range, value);
-            // correct for movements of the timeline in the mean time
-            var center = this.playbackTool.playbackToolbar.control.currentValue;
-            var span = range[1]-range[0];
-            var start = new Date(center - span/2);
-            var end = new Date(center + span/2);
-            for (var key in this.layerLookup) {
-                var layer = this.layerLookup[key].layer;
-                layer && this.setTimeFilter(key, this.createTimeFilter([start, end], key, this.bufferFraction));
-            }
-            this.updateTimelineEvents({force: true});
-        }
     },
 
     /**
@@ -1205,18 +1096,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }
     },
 
-    /** private: method[updateRangeSlider]
-     *  :arg range: ``Array``
-     *
-     *  Update the slider tip for the range slider.
-     */
-    updateRangeSlider: function(range) {
-        if (this.showRangeSlider) {
-            this.rangeSlider.startDate = range[0].dateFormat('Y-m-d');
-            this.rangeSlider.endDate = range[1].dateFormat('Y-m-d');
-        }
-    },
-
     buildHTML: function(record) {
         var content = record.get('content');
         var start = content ? content.indexOf('[youtube=') : -1;
@@ -1458,28 +1337,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         this.showAnnotations();
     },
 
-    /** private: method[calculateNewRange]
-     *  :arg range: ``Array``
-     *  :arg percentage: ``Float``
-     *  :returns: ``Array``
-     *      
-     *  Extend the range with a certain percentage. This changes both sides
-     *  of the range.
-     */
-    calculateNewRange: function(range, percentage) {
-        if (this.playbackTool) {
-            if (percentage === undefined) {
-                percentage = this.showRangeSlider ? this.rangeSlider.getValue() : this.initialRangeSliderValue;
-            }
-            var span = range[1] - range[0];
-            var center = this.playbackTool.playbackToolbar.control.currentValue;
-            var newSpan = (percentage/100)*span;
-            var start = new Date(center - newSpan/2);
-            var end = new Date(center + newSpan/2);
-            return [start, end];
-        }
-    },
-
     /** private: method[createTimeFilter]
      *  :arg range: ``Array``
      *  :arg key: ``String``
@@ -1506,7 +1363,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         // do not use start and end, since this might only be a portion of the range
         // when the timeline moves, it does this intelligently as to only fetch the
         // necessary new slice of data, which is represented by start and end.
-        this.updateRangeSlider(this.rangeInfo.current);
         if (this.playbackTool && this.playbackTool.playbackToolbar.playing !== true) {
             // remember this takes a lot of resources from the browser, so don't do this
             // when in playback mode
@@ -1638,7 +1494,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         if (this.playbackTool) {
             // TODO consider putting an api method getRange on playback tool
             var range = this.playbackTool.playbackToolbar.control.animationRange;
-            range = this.calculateNewRange(range);
             this.setCenterDate(this.playbackTool.playbackToolbar.control.currentValue);
             // create a PropertyIsBetween filter
             this.setTimeFilter(key, this.createTimeFilter(range, key, this.bufferFraction));
