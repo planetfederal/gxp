@@ -1,5 +1,4 @@
 /**
- /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
  * Published under the GPL license.
@@ -130,7 +129,6 @@ gxp.NewSourceDialog = Ext.extend(Ext.Panel, {
             }
         });
 
-        
         this.bbar = [
             new Ext.Button({
                 text: this.cancelText,
