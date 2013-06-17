@@ -9,7 +9,6 @@
 /**
  * @requires util.js
  * @requires widgets/FeatureEditPopup.js
- * @requires OpenLayers/Format/SLD/v1_0_0.js
  * @requires OpenLayers/Renderer/SVG.js
  * @requires OpenLayers/Renderer/VML.js
  * @requires OpenLayers/Renderer/Canvas.js
@@ -17,7 +16,6 @@
  * @requires OpenLayers/Strategy/BBOX.js
  * @requires OpenLayers/Filter/Logical.js
  * @requires OpenLayers/Filter/Comparison.js
- * @requires OpenLayers/Protocol/WFS/v1_1_0.js
  * @requires OpenLayers/BaseTypes/Date.js
  * @requires OpenLayers/BaseTypes/LonLat.js
  * @requires OpenLayers/Filter/Spatial.js
@@ -193,12 +191,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     /** private: property[featureManager]
      *  ``gxp.plugins.FeatureManager``
      */
-
-    /** api: config[timeInfoEndpoint]
-     *  ``String``
-     *  url to use to get time info about a certain layer.
-     */
-    timeInfoEndpoint: "/maps/time_info.json?",
 
     /** api: config[annotationConfig]
      *  ``Object`` Configuration object for the integration of annotations
@@ -409,43 +401,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         };
         this.setFilterMatcher(filterMatcher);
         this.updateTimelineEvents();
-    },
-
-    /**
-     * api: method[applyFilter]
-     *  :arg record: ``GeoExt.data.LayerRecord``
-     *  :arg filter: ``OpenLayers.Filter``
-     *  :arg checked: ``Boolean``
-     *
-     *  Filter a layer which is shown in the timeline.
-     */
-    applyFilter: function(record, filter, checked) {
-        var key = this.getKey(record);
-        var layer = this.layerLookup[key].layer;
-        if (checked) {
-            this.layerLookup[key].clientSideFilter = filter;
-        } else {
-            delete this.layerLookup[key].clientSideFilter;
-        }
-        if (this.layerLookup[key].layer) {
-            this.layerLookup[key].layer.filter = this.assembleFullFilter(key);
-        }
-        this.updateTimelineEvents({force: true});
-    },
-
-    /**
-     * api: method[setTitleAttribute]
-     *  :arg record: ``GeoExt.data.LayerRecord``
-     *  :arg titleAttr: ``String``
-     *
-     *  Change the attribute to show in the timeline for a certain layer.
-     *  Currently this means removing all features and re-adding them.
-     */
-    setTitleAttribute: function(record, titleAttr) {
-        var key = this.getKey(record);
-        this.layerLookup[key].titleAttr = titleAttr;
-        this.clearEventsForKey(key);
-        this.onFeaturesAdded({features: this.layerLookup[key].layer.features}, key);
     },
 
     /**
@@ -786,15 +741,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         if (!this.layerLookup) {
             this.layerLookup = {};
         }
-        var layerStore = viewer.mapPanel.layers;
-        if (layerStore.getCount() > 0) {
-            this.onLayerStoreAdd(layerStore, layerStore.getRange());
-        }
-        layerStore.on({
-            add: this.onLayerStoreAdd,
-            remove: this.onLayerStoreRemove,
-            scope: this
-        });
         viewer.mapPanel.map.events.on({
             moveend: this.onMapMoveEnd,
             scope: this
@@ -808,8 +754,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     unbindViewer: function() {
         var mapPanel = this.viewer && this.viewer.mapPanel;
         if (mapPanel) {
-            mapPanel.layers.unregister("add", this.onLayerStoreAdd, this);
-            mapPanel.layers.unregister("remove", this.onLayerStoreRemove, this);
             mapPanel.map.un({
                 moveend: this.onMapMoveEnd,
                 scope: this
@@ -831,201 +775,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         return record.get("source") + "/" + record.get("name");
     },
 
-    /** private: method[getTimeAttribute]
-     *  :arg record: ``GeoExt.data.LayerRecord``
-     *  :arg protocol: ``OpenLayers.Protocol``
-     *  :arg schema: ``GeoExt.data.AttributeStore``
-     *  :arg callback: ``Function``
-     *
-     *  Get the time attribute through the time info endpoint.
-     *  Currently this is a MapStory specific protocol.
-     */
-    getTimeAttribute: function(record, protocol, schema, callback) {
-        var key = this.getKey(record);
-        Ext.Ajax.request({
-            method: "GET",
-            url: this.timeInfoEndpoint,
-            params: {layer: record.get('name')},
-            success: function(response) {
-                var result = Ext.decode(response.responseText);
-                if (result) {
-                    callback.call(this, result, key, record, protocol, schema);
-                }
-            },
-            scope: this
-        });
-    },
-
-    /** private: method[onLayerStoreRemove]
-     *  :arg store: ``GeoExt.data.LayerStore``
-     *  :arg record: ``Ext.data.Record``
-     *  :arg index: ``Integer``
-     *
-     *  Handler for when layers get removed from the map. 
-     */
-    onLayerStoreRemove: function(store, record, index) {
-        var key = this.getKey(record);
-        if (this.layerLookup[key]) {
-            var layer = this.layerLookup[key].layer;
-            if (layer) {
-                this.clearEventsForKey(key);
-                layer.events.un({
-                    loadstart: this.onLoadStart,
-                    loadend: this.onLoadEnd,
-                    featuresremoved: this.onFeaturesRemoved,
-                    scope: this
-                });
-                delete this.schemaCache[key];
-                delete this.propertyNamesCache[key];
-                delete this.layerLookup[key];
-                layer.destroy();
-            }
-        }
-    },
-
-    /** private: method[parseSLD]
-     *  :arg response: ``Object``
-     *  :arg key: ``String``
-     *  :arg callback: ``Function``
-     *
-     *  Parse the SLD using an OpenLayers parser and store it in the cache.
-     */
-    parseSLD: function(response, key, callback) {
-        var parser = new OpenLayers.Format.SLD();
-        this.sldCache[key] = parser.read(response.responseXML || response.responseText);
-        callback && callback.call(this);
-    },
-
-    /** private: method[getFilterFromSLD]
-     *  :arg key: ``String``
-     *  :arg styleName: ``String``
-     *  :returns: ``OpenLayers.Filter``
-     *
-     *  Extract the Filter from the SLD.
-     */
-    getFilterFromSLD: function(key, styleName) {
-        var sld = this.sldCache[key];
-        if (sld === undefined) {
-            return false;
-        }
-        var filters = [];
-        var elseFilter = false;
-        for (var lyr in sld.namedLayers) {
-            for (var i=0, ii=sld.namedLayers[lyr].userStyles.length; i<ii; ++i) {
-                var style = sld.namedLayers[lyr].userStyles[i];
-                if ((styleName === "" && style.isDefault === true) || (style.name === styleName)) {
-                    for (var j=0, jj=style.rules.length; j<jj; ++j) {
-                        var rule = style.rules[j];
-                        if (rule.elseFilter === true) {
-                            elseFilter = true;
-                            break;
-                        } else if (rule.filter) {
-                            filters.push(rule.filter);
-                        }
-                    }
-                        
-                }
-            }
-        }
-        if (elseFilter === true) {
-            return false;
-        }
-        else if (filters.length === 1) {
-            return filters[0];
-        }
-        else if (filters.length > 0) {
-            return new OpenLayers.Filter.Logical({
-                type: OpenLayers.Filter.Logical.OR,
-                filters: filters
-            });
-        } else {
-            return false;
-        }
-    },
-
-    /** private: method[getSLD]
-     *  :arg record: ``GeoExt.data.LayerRecord``
-     *  :arg callback: ``Function``
-     *
-     *  Retrieve the SLD through a GetStyles request.
-     */
-    getSLD: function(record, callback) {
-        var key = this.getKey(record);
-        var layer = record.getLayer();
-        Ext.Ajax.request({
-            url: layer.url,
-            params: {
-                "SERVICE": "WMS",
-                "VERSION": "1.1.1",
-                "REQUEST": "GetStyles",
-                "LAYERS": [layer.params["LAYERS"]].join(",")
-            },
-            method: "GET",
-            disableCaching: false,
-            success: this.parseSLD.createDelegate(this, [key, callback], 1),
-            scope: this
-        });
-    },
-
-    /** private: method[onLayerStoreAdd]
-     *  :arg store: ``GeoExt.data.LayerStore``
-     *  :arg records: ``Array``
-     *
-     *  Handler for when new layers get added to the map. Make sure they also
-     *  show up in the timeline.
-     */
-    onLayerStoreAdd: function(store, records) {
-        var record;
-        for (var i=0, ii=records.length; i<ii; ++i) {
-            record = records[i];
-            var layer = record.getLayer();
-            if (layer.dimensions && layer.dimensions.time) {
-                var source = this.viewer.getSource(record);
-                if (gxp.plugins.WMSSource && (source instanceof gxp.plugins.WMSSource)) {
-                    source.getWFSProtocol(record, function(protocol, schema, record) {
-                        if (!protocol) {
-                            if (window.console) {
-                                console.warn("Failed to get WFS protocol for record: " + record.get("name"));
-                            }
-                            return;
-                        }
-                        var key = this.getKey(record);
-                        this.schemaCache[key] = schema;
-                        var callback = function(result, key, record, protocol, schema) {
-                            if (result.attribute) {
-                                this.layerLookup[key] = Ext.applyIf(this.layerLookup[key] || {}, {
-                                    timeAttr: result.attribute,
-                                    endTimeAttr: result.endAttribute,
-                                    visible: false
-                                });
-                                this.addVectorLayer(record, protocol, schema);
-                            }
-                        };
-                        var sldCallback;
-                        if (this.layerLookup && this.layerLookup[key] && this.layerLookup[key].timeAttr) {
-                            sldCallback = function() {
-                                if (this.layerLookup[key].clientSideFilter) {
-                                    // transform back into an OpenLayers Filter object
-                                    this.layerLookup[key].clientSideFilter = new OpenLayers.Filter(this.layerLookup[key].clientSideFilter);
-                                }
-                                this.addVectorLayer(record, protocol, schema);
-                            };
-                        } else {
-                            sldCallback = function() {
-                                this.getTimeAttribute(record, protocol, schema, callback);
-                            };
-                        }
-                        if (!this.sldCache[key]) {
-                            this.getSLD(record, sldCallback);
-                        } else {
-                            sldCallback.call(this);
-                        }
-                    }, this);
-                }
-            }
-        }
-    },
-
     /** private: method[onLayout]
      *
      *  Fired by Ext, create the timeline.
@@ -1036,42 +785,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             if (this.playbackTool && this.playbackTool.playbackToolbar) {
                 this.setRange(this.playbackTool.playbackToolbar.control.animationRange);
                 this.setCenterDate(this.playbackTool.playbackToolbar.control.currentValue);
-            }
-        }
-    },
-
-    /** private: method[findBestZoomLevel]
-     *  :arg range: ``Array``
-     *
-     *  Find the best zoom level to display the range and perform the zoom.
-     */
-    findBestZoomLevel: function(range) {
-        if (this.timeline) {
-            this._silent = true;
-            var diff = range[1]-range[0];
-            var band = this.timeline.getBand(0);
-            var length = band.getViewLength()/2;
-            if (length > 0) {
-                var level = diff/band.getEther()._interval;
-                var pixels = length/level;
-                var delta;
-                var prevDelta = Number.POSITIVE_INFINITY;
-                var idx;
-                for (var i=0, ii=band._zoomSteps.length; i<ii; ++i) {
-                    delta = Math.abs(band._zoomSteps[i].pixelsPerInterval-pixels);
-                    if (delta < prevDelta) {
-                        idx = i;
-                    }
-                    prevDelta = delta;
-                }
-                if (idx !== band._zoomIndex) {
-                    var zoomIn = idx < band._zoomIndex;
-                    while (idx != band._zoomIndex) {
-                        band.zoom(zoomIn);
-                    }
-                }
-                this.timeline.paint();
-                delete this._silent;
             }
         }
     },
@@ -1363,11 +1076,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         // do not use start and end, since this might only be a portion of the range
         // when the timeline moves, it does this intelligently as to only fetch the
         // necessary new slice of data, which is represented by start and end.
-        if (this.playbackTool && this.playbackTool.playbackToolbar.playing !== true) {
-            // remember this takes a lot of resources from the browser, so don't do this
-            // when in playback mode
-            this.findBestZoomLevel([start, end]);
-        }
         if (this.layerLookup[key].endTimeAttr) {
             return new OpenLayers.Filter({
                 type: OpenLayers.Filter.Logical.OR,
@@ -1394,44 +1102,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 upperBoundary: OpenLayers.Date.toISOString(end)
             });
         }
-    },
-
-    /** private: method[onLoadStart]
-     *
-     *  When a WFS layer loads for the timeline, show a busy mask.
-     */ 
-    onLoadStart: function() {
-        this.layerCount++;
-        if (!this.busyMask) {
-            this.busyMask = new Ext.LoadMask(this.bwrap, {msg: this.loadingMessage});
-        }
-        this.busyMask.show();
-    },
-
-    /** private: method[onLoadEnd]
-     *
-     *  When all WFS layers are ready, hide the busy mask.
-     */
-    onLoadEnd: function() {
-        this.layerCount--;
-        if(this.layerCount === 0) {
-            this.busyMask.hide();
-        }
-    },
-
-    /** private: method[createHitCountProtocol]
-     *  :arg protocolOptions: ``Object``
-     *  :returns: ``OpenLayers.Protocol.WFS``
-     *
-     *  Create a hitCount protocol based on the main WFS protocol. This will
-     *  be used to see if we will get too many features to show in the timeline.
-     */
-    createHitCountProtocol: function(protocolOptions) {
-        return new OpenLayers.Protocol.WFS(Ext.apply({
-            version: "1.1.0",
-            readOptions: {output: "object"},
-            resultType: "hits"
-        }, protocolOptions));
     },
 
     /** private: method[assembleFullFilter]
@@ -1479,59 +1149,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }
     },
     
-    /** private: method[addVectorLayer]
-     *  :arg record: ``GeoExt.data.LayerRecord``
-     *  :arg protocol: ``OpenLayers.Protocol``
-     *  :arg schema: ``GeoExt.data.AttributeStore``
-     *
-     *  Create an internal vector layer which will retrieve the events for
-     *  the timeline, using WFS and a BBOX strategy.
-     */
-    addVectorLayer: function(record, protocol, schema) {
-        var key = this.getKey(record);
-        var style = record.getLayer().params.STYLES;
-        this.layerLookup[key].sldFilter = this.getFilterFromSLD(key, style);
-        if (this.playbackTool) {
-            // TODO consider putting an api method getRange on playback tool
-            var range = this.playbackTool.playbackToolbar.control.animationRange;
-            this.setCenterDate(this.playbackTool.playbackToolbar.control.currentValue);
-            // create a PropertyIsBetween filter
-            this.setTimeFilter(key, this.createTimeFilter(range, key, this.bufferFraction));
-        }
-        var filter = this.assembleFullFilter(key);
-        var layer = new OpenLayers.Layer.Vector(key, {
-            strategies: [new OpenLayers.Strategy.BBOX({
-                ratio: 1.1,
-                resFactor: 1,
-                autoActivate: false
-            })],
-            filter: filter,
-            protocol: protocol,
-            displayInLayerSwitcher: false,
-            style: {
-                pointRadius: 0,
-                strokeWidth: 0,
-                fillOpacity: 1
-            },
-            visibility: false
-        });
-        layer.events.on({
-            /*loadstart: this.onLoadStart,
-            loadend: this.onLoadEnd,*/
-            featuresadded: this.onFeaturesAdded.createDelegate(this, [key], 1),
-            featuresremoved: this.onFeaturesRemoved,
-            scope: this
-        });
-
-        var titleAttr = this.guessTitleAttribute(schema);
-        Ext.applyIf(this.layerLookup[key], {
-            layer: layer,
-            titleAttr: titleAttr,
-            hitCount: this.createHitCountProtocol(protocol.options)
-        });
-        this.viewer.mapPanel.map.addLayer(layer);
-    },
-
     /** private: method[onMapMoveEnd]
      *  Registered as a listener for map moveend.
      */
@@ -1863,17 +1480,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         this.eventSource.loadJSON(feed, "mapstory.org");
     },
 
-    /** private: method[onFeaturesAdded]
-     *  :arg event: ``Object``
-     *  :arg key: ``String``
-     *
-     *  When features get added to the vector layer, add them to the timeline.
-     */
-    onFeaturesAdded: function(event, key) {
-        var features = event.features;
-        this.addFeatures(key, features);
-    },
-
     /** private: method[onResize]
      *  Private method called after the panel has been resized.
      */
@@ -1890,12 +1496,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         for (var key in this.layerLookup) {
             var layer = this.layerLookup[key].layer;
             if (layer) {
-                layer.events.un({
-                    loadstart: this.onLoadStart,
-                    loadend: this.onLoadEnd,
-                    featuresremoved: this.onFeaturesRemoved,
-                    scope: this
-                });
                 layer.destroy();
             }
         }
