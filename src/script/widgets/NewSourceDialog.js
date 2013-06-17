@@ -1,9 +1,15 @@
 /**
+ /**
  * Copyright (c) 2008-2011 The Open Planning Project
  * 
  * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
+ */
+
+/**
+ * @requires plugins/WMSSource.js
+ * @requires plugins/ArcRestSource.js
  */
 
 /** api: (define)
@@ -63,6 +69,12 @@ gxp.NewSourceDialog = Ext.extend(Ext.Panel, {
      */
     error: null,
 
+    /** api: property[sourceTypes]
+     * ``Array``
+     * Array of value/display pairs for server source types
+     */
+    sourceTypes: [['gxp_wmssource','WMS/WFS'],['gxp_arcrestsource','ArcGIS REST']],    
+    
     /** api: event[urlselected]
      *  Fired with a reference to this instance and the URL that the user
      *  provided as a parameters when the form is submitted.
@@ -90,9 +102,20 @@ gxp.NewSourceDialog = Ext.extend(Ext.Panel, {
             }
         });
 
+        this.sourceTypeComboBox = new Ext.form.ComboBox({
+        	store: this.sourceTypes,
+        	mode: 'local',
+        	fieldLabel: 'Type',
+        	forceSelection: true,
+        	triggerAction: 'all',
+        	value: 'gxp_wmssource'
+        });
+
+        
         this.form = new Ext.form.FormPanel({
             items: [
-                this.urlTextField
+                this.urlTextField,
+                this.sourceTypeComboBox
             ],
             border: false,
             labelWidth: 30,
@@ -107,6 +130,7 @@ gxp.NewSourceDialog = Ext.extend(Ext.Panel, {
             }
         });
 
+        
         this.bbar = [
             new Ext.Button({
                 text: this.cancelText,
@@ -136,14 +160,14 @@ gxp.NewSourceDialog = Ext.extend(Ext.Panel, {
             scope: this
         });
 
-        this.on("urlselected", function(cmp, url) {
+        this.on("urlselected", function(cmp, url, type) {
             this.setLoading();
             var failure = function() {
                 this.setError(this.sourceLoadFailureMessage);
             };
 
             // this.explorer.addSource(url, null, success, failure, this);
-            this.addSource(url, this.hide, failure, this);
+            this.addSource(url, type, this.hide, failure, this);
         }, this);
 
     },
@@ -154,7 +178,7 @@ gxp.NewSourceDialog = Ext.extend(Ext.Panel, {
         // Clear validation before trying again.
         this.error = null;
         if (this.urlTextField.validate()) {
-            this.fireEvent("urlselected", this, this.urlTextField.getValue());
+            this.fireEvent("urlselected", this, this.urlTextField.getValue(), this.sourceTypeComboBox.getValue());
         }
     },
     
@@ -229,7 +253,7 @@ gxp.NewSourceDialog = Ext.extend(Ext.Panel, {
      *
      * TODO this can probably be extracted to an event handler
      */
-    addSource: function(url, success, failure, scope) {
+    addSource: function(url, type, success, failure, scope) {
     }
 });
 
