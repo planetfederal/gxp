@@ -49,8 +49,14 @@ gxp.NewSourceDialog = Ext.extend(Ext.Panel, {
      *  ``String``
      *  Message to display when an invalid URL is entered (i18n).
      */
-    invalidURLText: "Enter a valid URL to a WMS endpoint (e.g. http://example.com/geoserver/wms)",
+    invalidURLText: "Enter a valid URL to a WMS/REST endpoint (e.g. http://example.com/geoserver/wms)",
 
+    /** api: config[sourceTypeText]
+     *  ``String``
+     *  Message to display when an invalid URL is entered (i18n).
+     */
+    sourceTypeText: "Type",    
+    
     /** api: config[contactingServerText]
      *  ``String``
      *  Text for server contact (i18n).
@@ -72,7 +78,7 @@ gxp.NewSourceDialog = Ext.extend(Ext.Panel, {
      * ``Array``
      * Array of value/display pairs for server source types
      */
-    sourceTypes: [['gxp_wmssource','WMS/WFS'],['gxp_arcrestsource','ArcGIS REST']],    
+    sourceTypes: [['gxp_wmssource','WMS'],['gxp_arcrestsource','ArcGIS REST']],    
     
     /** api: event[urlselected]
      *  Fired with a reference to this instance and the URL that the user
@@ -104,7 +110,7 @@ gxp.NewSourceDialog = Ext.extend(Ext.Panel, {
         this.sourceTypeComboBox = new Ext.form.ComboBox({
         	store: this.sourceTypes,
         	mode: 'local',
-        	fieldLabel: 'Type',
+        	fieldLabel: this.sourceTypeText,
         	forceSelection: true,
         	triggerAction: 'all',
         	value: 'gxp_wmssource'
