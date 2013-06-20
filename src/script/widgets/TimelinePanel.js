@@ -1219,7 +1219,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
 
     buildHTML: function(record) {
         var content = record.get('content');
-        var start = content.indexOf('[youtube=');
+        var start = content ? content.indexOf('[youtube=') : -1;
         if (start !== -1) {
             var header = content.substr(0, start);
             var end = content.indexOf(']', start);
