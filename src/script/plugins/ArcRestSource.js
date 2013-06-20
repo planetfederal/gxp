@@ -22,7 +22,7 @@
 Ext.namespace("gxp.plugins");
 
 /** api: constructor
- *  .. class:: BingSource(config)
+ *  .. class:: ArcRestSource(config)
  *
  *    Plugin for using ArcGIS REST MapServer layers with :class:`gxp.Viewer` instances.
  *
