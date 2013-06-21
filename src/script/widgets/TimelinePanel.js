@@ -184,12 +184,9 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
     scrollInterval: 500,
 
-    /** api: config[featureEditor]
-     *  ``gxp.plugins.FeatureEditor``
-     */
 
-    /** private: property[featureManager]
-     *  ``gxp.plugins.FeatureManager``
+    /** private: property[annotationsStore]
+     *  ``GeoExt.data.FeatureStore``
      */
 
     /** api: config[annotationConfig]
@@ -327,10 +324,10 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             this.bindViewer(this.initialConfig.viewer);
         }
 
-        // we are binding with a feature editor to get notes/annotations
-        if (this.initialConfig.featureEditor) {
-            delete this.featureEditor;
-            this.bindFeatureEditor(this.initialConfig.featureEditor);
+        // bind to the annotations store for notes
+        if (this.initialConfig.annotationsStore) {
+            delete this.annotationsStore;
+            this.bindAnnotationsStore(this.initialConfig.annotationsStore);
         }
 
         // we are binding with the playback tool to get updates on ranges
@@ -464,91 +461,29 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     },
 
     /**
-     * private: method[bindFeatureEditor]
-     *  :arg featureEditor: ``gxp.plugins.FeatureEditor``
+     * private: method[bindAnnotationsStore]
+     *  :arg store: ``GeoExt.data.FeatureStore``
      *  
-     *  Bind with a feature editor to have notes show up in the timeline.
+     *  Bind with a feature store to have notes show up in the timeline.
      */
-    bindFeatureEditor: function(featureEditor) {
-        this.featureEditor = featureEditor;
-        this.featureManager = featureEditor.getFeatureManager();
-        this.featureManager.on("layerchange", this.onLayerChange, this);
-        this.featureManager.on("query", function(fm ,store) {
-            store.on("load", function(store, rs, options) {
-                if (rs.length > 0) {
-                    this.ownerCt.expand();
-                }
-            }, this, {single: true});
-        }, this, {single: true});
-    },
-
-    /**
-     * private: method[unbindFeatureEditor]
-     *  
-     *  Unbind with a feature editor and its associated feature manager.
-     */
-    unbindFeatureEditor: function() {
-        if (this.featureManager) {
-            if (this.featureManager.featureStore) {
-                this.featureManager.featureStore.un("write", this.onSave, this);
-            }
-            this.featureManager.un("layerchange", this.onLayerChange, this);
-            this.featureManager = null;
-        }
-        this.featureEditor = null;
-    },
-
-    /**
-     * private: method[guessTitleAttribute]
-     *  :arg schema: ``GeoExt.data.AttributeStore``
-     *  :returns: ``String``
-     *
-     *  Find the first string attribute and use that to show events in the
-     *  timeline.
-     */
-    guessTitleAttribute: function(schema) {
-        var titleAttr = null;
-        schema.each(function(record) {
-            if (record.get("type") === "xsd:string") {
-                titleAttr = record.get("name");
-                return false;
-            }           
-        });
-        return titleAttr;
-    },
-
-    /**
-     * private: method[onLayerChange]
-     *  :arg tool: ``gxp.plugins.FeatureManager``
-     *  :arg record: ``GeoExt.data.LayerRecord``
-     *  :arg schema: ``GeoExt.data.AttributeStore``
-     *
-     *  Listener for when the layer record associated with the feature manager
-     *  changes. When this is fired, we can hook up the notes to the timeline.
-     */
-    onLayerChange: function(tool, record, schema) {
-        var key = this.getKey(record);
-        var titleAttr = this.guessTitleAttribute(schema);
-        var layer = this.featureManager.featureLayer;
-        this.layerLookup[key] = Ext.apply({
-            titleAttr: titleAttr,
-            icon: Timeline.urlPrefix + "/images/note.png",
-            layer: layer,
-            visible: true
-        }, this.annotationConfig);
-        this.featureManager.on("query", function(tool, store) {
+    bindAnnotationsStore: function(store) {
+        store.on('load', function(store, rs, options) {
+            var key = 'annotations';
+            this.layerLookup[key] = Ext.apply({
+                titleAttr: 'title',
+                icon: Timeline.urlPrefix + "/images/note.png",
+                layer: store.layer,
+                visible: true
+            }, this.annotationConfig);
             var features = [];
             store.each(function(record) {
                 features.push(record.getFeature());
             });
             this.addFeatures(key, features);
+            if (rs.length > 0) {
+                this.ownerCt.expand();
+            }
         }, this, {single: true});
-        if (this.featureManager.featureStore) {
-            // we cannot use the featureLayer's events here, since features
-            // will be added without attributes
-            this.featureManager.featureStore.on("write", this.onSave, this);
-        }
-        this.annotationsRecord = record;
     },
 
     /**
