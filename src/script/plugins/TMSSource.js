@@ -20,9 +20,16 @@ gxp.data.TMSCapabilitiesReader = Ext.extend(Ext.data.DataReader, {
         if (!meta.format) {
             meta.format = new OpenLayers.Format.TMSCapabilities();
         }
+        if(typeof recordType !== "function") {
+            recordType = GeoExt.data.LayerRecord.create(
+                recordType || meta.fields || [
+                    {name: "name", type: "string"},
+                    {name: "title", type: "string"},
+                    {name: "tileMapUrl", type: "string"}
+                ]);
+        }
         gxp.data.TMSCapabilitiesReader.superclass.constructor.call(
-            this, meta, recordType
-        );
+            this, meta, recordType);
     },
     read: function(request) {
         var data = request.responseXML;
@@ -41,19 +48,16 @@ gxp.data.TMSCapabilitiesReader = Ext.extend(Ext.data.DataReader, {
                 if (this.meta.mapProjection.equals(proj)) {
                     var url = tileMap.href;
                     var layername = url.substring(url.indexOf(this.meta.version+'/')+6);
-                    // TODO ideally type should be taken by resolving the tileMap.href
-                    records.push(new GeoExt.data.LayerRecord({
-                        // TODO zoomOffset, use serverResolutions from second request
+                    records.push(new this.recordType({
                         layer: new OpenLayers.Layer.TMS(
                             tileMap.title, 
                             this.meta.baseUrl, {
-                                zoomOffset: -1,
-                                layername: layername,
-                                type: 'png'
+                                layername: layername
                             }
                         ),
                         title: tileMap.title,
-                        name: tileMap.title
+                        name: tileMap.title,
+                        tileMapUrl: url
                     }));
                 }
             }
@@ -118,10 +122,34 @@ gxp.plugins.TMSSource = Ext.extend(gxp.plugins.LayerSource, {
      *
      *  Create a layer record given the config.
      */
-    createLayerRecord: function(config) {
+    createLayerRecord: function(config, callback, scope) {
         var index = this.store.findExact("name", config.name);
         if (index > -1) {
-            return this.store.getAt(index);
+            var record = this.store.getAt(index);
+            var layer = record.getLayer();
+            if (layer.serverResolutions !== null) {
+                return record;
+            } else {
+                Ext.Ajax.request({
+                    url: record.get('tileMapUrl'),
+                    success: function(response) {
+                        var serverResolutions = [];
+                        var info = this.format.read(response.responseText);
+                        for (var i=0, ii=info.tileSets.length; i<ii; ++i) {
+                            serverResolutions.push(info.tileSets[i].unitsPerPixel);
+                        }
+                        layer.addOptions({
+                            serverResolutions: serverResolutions,
+                            type: info.tileFormat.extension
+                        });
+                        this.target.createLayerRecord({
+                            source: this.id,
+                            name: config.name
+                        }, callback, scope);
+                    },
+                    scope: this
+                });
+            }
         }
     }
 
