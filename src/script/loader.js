@@ -71,6 +71,7 @@
         "plugins/CatalogueSource.js",
         "plugins/CSWCatalogueSource.js",
         "plugins/GeoNodeCatalogueSource.js",
+        "plugins/TMSSource.js",
         "plugins/StyleWriter.js",
         "plugins/GeoServerStyleWriter.js",
         "plugins/Tool.js",
