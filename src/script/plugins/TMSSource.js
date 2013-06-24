@@ -37,9 +37,15 @@ gxp.data.TMSCapabilitiesReader = Ext.extend(Ext.data.DataReader, {
             data = this.meta.format.read(data);
             for (var i=0, ii=data.tileMaps.length; i<ii; ++i) {
                 var tileMap = data.tileMaps[i];
-                if (tileMap.srs === "EPSG:900913") {
+                // TODO compare with map projection, and use equals function on projection object
+                if (tileMap.srs === "EPSG:900913" || tileMap.srs === "OSGEO:41001") {
+                    var url = tileMap.href;
+                    // TODO do not hard code TMS version ideally
+                    var layername = url.substring(url.indexOf('1.0.0/')+6);
+                    // TODO ideally type should be taken by resolving the tileMap.href
                     records.push(new GeoExt.data.LayerRecord({
-                        layer: new OpenLayers.Layer.TMS(tileMap.title, tileMap.href, {layername: tileMap.title, type: 'png'}),
+                        // TODO zoomOffset, use serverResolutions from second request
+                        layer: new OpenLayers.Layer.TMS(tileMap.title, this.meta.baseUrl, {zoomOffset: -1, layername: layername, type: 'png'}),
                         title: tileMap.title,
                         name: tileMap.title
                     }));
@@ -84,8 +90,9 @@ gxp.plugins.TMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 },
                 scope: this
             },
-            proxy: new Ext.data.HttpProxy({url: this.url, disableCaching: false, method: "GET"}),
-            reader: new gxp.data.TMSCapabilitiesReader()
+            // TODO handle check for /
+            proxy: new Ext.data.HttpProxy({url: this.url + this.version, disableCaching: false, method: "GET"}),
+            reader: new gxp.data.TMSCapabilitiesReader({baseUrl: this.url})
         });
     },
 
