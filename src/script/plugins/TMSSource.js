@@ -39,26 +39,51 @@ gxp.data.TMSCapabilitiesReader = Ext.extend(Ext.data.DataReader, {
         return this.readRecords(data);
     },
     readRecords: function(data) {
-        var records = [];
+        var records = [], i, ii, url;
         if (typeof data === "string" || data.nodeType) {
             data = this.meta.format.read(data);
-            for (var i=0, ii=data.tileMaps.length; i<ii; ++i) {
-                var tileMap = data.tileMaps[i];
-                var proj = new OpenLayers.Projection(tileMap.srs);
-                if (this.meta.mapProjection.equals(proj)) {
-                    var url = tileMap.href;
-                    var layername = url.substring(url.indexOf(this.meta.version+'/')+6);
+            // a single tileMap, someone supplied a url to a TileMap
+            if (!data.tileMaps) {
+                if (data.tileSets) {
+                    var serverResolutions = [];
+                    for (i=0, ii=data.tileSets.length; i<ii; ++i) {
+                        serverResolutions.push(data.tileSets[i].unitsPerPixel);
+                    }
+                    url = this.meta.baseUrl;
+                    var layerName = url.substring(url.indexOf(this.meta.version)+this.meta.version.length+1, url.lastIndexOf('/'));
                     records.push(new this.recordType({
                         layer: new OpenLayers.Layer.TMS(
-                            tileMap.title, 
-                            this.meta.baseUrl, {
-                                layername: layername
+                            data.title,
+                            data.tileMapService.replace("/" + this.meta.version, ""), {
+                                serverResolutions: serverResolutions,
+                                type: data.tileFormat.extension,
+                                layername: layerName
                             }
                         ),
-                        title: tileMap.title,
-                        name: tileMap.title,
-                        tileMapUrl: url
+                        title: data.title,
+                        name: data.title,
+                        tileMapUrl: this.meta.baseUrl
                     }));
+                }
+            } else {
+                for (i=0, ii=data.tileMaps.length; i<ii; ++i) {
+                    var tileMap = data.tileMaps[i];
+                    var proj = new OpenLayers.Projection(tileMap.srs);
+                    if (this.meta.mapProjection.equals(proj)) {
+                        url = tileMap.href;
+                        var layername = url.substring(url.indexOf(this.meta.version+'/')+6);
+                        records.push(new this.recordType({
+                            layer: new OpenLayers.Layer.TMS(
+                                tileMap.title, 
+                                this.meta.baseUrl, {
+                                    layername: layername
+                                }
+                            ),
+                            title: tileMap.title,
+                            name: tileMap.title,
+                            tileMapUrl: url
+                        }));
+                    }
                 }
             }
         }
@@ -109,7 +134,7 @@ gxp.plugins.TMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 scope: this
             },
             proxy: new Ext.data.HttpProxy({
-                url: this.url + this.version,
+                url: this.url.indexOf(this.version) === -1 ? this.url + this.version : this.url,
                 disableCaching: false,
                 method: "GET"
             }),
