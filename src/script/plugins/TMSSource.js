@@ -42,6 +42,7 @@ gxp.data.TMSCapabilitiesReader = Ext.extend(Ext.data.DataReader, {
         var records = [], i, ii, url, proj;
         if (typeof data === "string" || data.nodeType) {
             data = this.meta.format.read(data);
+            this.raw = data;
             // a single tileMap, someone supplied a url to a TileMap
             if (!data.tileMaps) {
                 if (data.tileSets) {
@@ -80,7 +81,7 @@ gxp.data.TMSCapabilitiesReader = Ext.extend(Ext.data.DataReader, {
                         records.push(new this.recordType({
                             layer: new OpenLayers.Layer.TMS(
                                 tileMap.title, 
-                                this.meta.baseUrl, {
+                                (this.meta.baseUrl.indexOf(this.meta.version) !== -1) ? this.meta.baseUrl.replace(this.meta.version + '/', '') : this.meta.baseUrl, {
                                     layername: layername
                                 }
                             ),
@@ -152,6 +153,7 @@ gxp.plugins.TMSSource = Ext.extend(gxp.plugins.LayerSource, {
             autoLoad: true,
             listeners: {
                 load: function() {
+                    this.title = this.store.reader.raw.title;
                     this.fireEvent("ready", this);
                 },
                 exception: function() {
