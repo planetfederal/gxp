@@ -79,6 +79,11 @@ gxp.plugins.TMSSource = Ext.extend(gxp.plugins.LayerSource, {
      *  ``String`` TMS service URL for this source
      */
 
+    /** api: config[version]
+     *  ``String`` TMS version to use, defaults to 1.0.0
+     */
+    version: "1.0.0",
+
     /** private: method[constructor]
      */
     constructor: function(config) {

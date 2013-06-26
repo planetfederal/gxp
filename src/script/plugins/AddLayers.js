@@ -556,10 +556,11 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                         cmp.ownerCt.hide();
                     }
                 },
-                "urlselected": function(newSourceDialog, url) {
+                "urlselected": function(newSourceDialog, url, type) {
                     newSourceDialog.setLoading();
+                    var ptype = (type === 'TMS') ? 'gxp_tmssource' : 'gxp_wmscsource';
                     this.target.addLayerSource({
-                        config: {url: url}, // assumes default of gx_wmssource
+                        config: {url: url, ptype: ptype},
                         callback: function(id) {
                             // add to combo and select
                             var record = new sources.recordType({

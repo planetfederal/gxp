@@ -64,8 +64,8 @@ gxp.NewSourceDialog = Ext.extend(Ext.Panel, {
     error: null,
 
     /** api: event[urlselected]
-     *  Fired with a reference to this instance and the URL that the user
-     *  provided as a parameters when the form is submitted.
+     *  Fired with a reference to this instance, the URL that the user
+     *  provided and the type of service  as a parameters when the form is submitted.
      */     
      
     /** private: method[initComponent]
@@ -91,9 +91,19 @@ gxp.NewSourceDialog = Ext.extend(Ext.Panel, {
         });
 
         this.form = new Ext.form.FormPanel({
-            items: [
-                this.urlTextField
-            ],
+            items: [{
+                xtype: 'combo',
+                width: 240,
+                name: 'type',
+                fieldLabel: "Type",
+                value: 'WMS',
+                mode: 'local',
+                triggerAction: 'all',
+                store: [
+                    ['WMS', 'Web Map Service (WMS)'], 
+                    ['TMS', 'Tiled Map Service (TMS)']
+                ]
+            }, this.urlTextField],
             border: false,
             labelWidth: 30,
             bodyStyle: "padding: 5px",
@@ -154,7 +164,8 @@ gxp.NewSourceDialog = Ext.extend(Ext.Panel, {
         // Clear validation before trying again.
         this.error = null;
         if (this.urlTextField.validate()) {
-            this.fireEvent("urlselected", this, this.urlTextField.getValue());
+            this.fireEvent("urlselected", this, this.urlTextField.getValue(),
+                this.form.getForm().findField('type').getValue());
         }
     },
     
