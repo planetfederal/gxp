@@ -39,39 +39,44 @@ gxp.data.TMSCapabilitiesReader = Ext.extend(Ext.data.DataReader, {
         return this.readRecords(data);
     },
     readRecords: function(data) {
-        var records = [], i, ii, url;
+        var records = [], i, ii, url, proj;
         if (typeof data === "string" || data.nodeType) {
             data = this.meta.format.read(data);
             // a single tileMap, someone supplied a url to a TileMap
             if (!data.tileMaps) {
                 if (data.tileSets) {
-                    var serverResolutions = [];
-                    for (i=0, ii=data.tileSets.length; i<ii; ++i) {
-                        serverResolutions.push(data.tileSets[i].unitsPerPixel);
+                    proj = new OpenLayers.Projection(data.srs);
+                    if (this.meta.mapProjection.equals(proj)) {
+                        var serverResolutions = [];
+                        for (i=0, ii=data.tileSets.length; i<ii; ++i) {
+                            serverResolutions.push(data.tileSets[i].unitsPerPixel);
+                        }
+                        url = this.meta.baseUrl;
+                        var layerName = url.substring(
+                            url.indexOf(this.meta.version) + this.meta.version.length + 1,
+                            url.lastIndexOf('/'));
+                        records.push(new this.recordType({
+                            layer: new OpenLayers.Layer.TMS(
+                                data.title,
+                                data.tileMapService.replace("/" + this.meta.version, ""), {
+                                    serverResolutions: serverResolutions,
+                                    type: data.tileFormat.extension,
+                                    layername: layerName
+                                }
+                            ),
+                            title: data.title,
+                            name: data.title,
+                            tileMapUrl: this.meta.baseUrl
+                        }));
                     }
-                    url = this.meta.baseUrl;
-                    var layerName = url.substring(url.indexOf(this.meta.version)+this.meta.version.length+1, url.lastIndexOf('/'));
-                    records.push(new this.recordType({
-                        layer: new OpenLayers.Layer.TMS(
-                            data.title,
-                            data.tileMapService.replace("/" + this.meta.version, ""), {
-                                serverResolutions: serverResolutions,
-                                type: data.tileFormat.extension,
-                                layername: layerName
-                            }
-                        ),
-                        title: data.title,
-                        name: data.title,
-                        tileMapUrl: this.meta.baseUrl
-                    }));
                 }
             } else {
                 for (i=0, ii=data.tileMaps.length; i<ii; ++i) {
                     var tileMap = data.tileMaps[i];
-                    var proj = new OpenLayers.Projection(tileMap.srs);
+                    proj = new OpenLayers.Projection(tileMap.srs);
                     if (this.meta.mapProjection.equals(proj)) {
                         url = tileMap.href;
-                        var layername = url.substring(url.indexOf(this.meta.version+'/')+6);
+                        var layername = url.substring(url.indexOf(this.meta.version + '/') + 6);
                         records.push(new this.recordType({
                             layer: new OpenLayers.Layer.TMS(
                                 tileMap.title, 
@@ -130,6 +135,11 @@ gxp.plugins.TMSSource = Ext.extend(gxp.plugins.LayerSource, {
             listeners: {
                 load: function() {
                     this.fireEvent("ready", this);
+                },
+                exception: function() {
+                    var msg = "Trouble creating TMS layer store from response.";
+                    var details = "Unable to handle response.";
+                    this.fireEvent("failure", this, msg, details);
                 },
                 scope: this
             },

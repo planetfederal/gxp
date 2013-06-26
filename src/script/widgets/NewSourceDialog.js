@@ -44,7 +44,7 @@ gxp.NewSourceDialog = Ext.extend(Ext.Panel, {
      *  ``String``
      *  Message to display when an invalid URL is entered (i18n).
      */
-    invalidURLText: "Enter a valid URL to a WMS endpoint (e.g. http://example.com/geoserver/wms)",
+    invalidURLText: "Enter a valid URL to a WMS/TMS endpoint (e.g. http://example.com/geoserver/wms)",
 
     /** api: config[contactingServerText]
      *  ``String``
