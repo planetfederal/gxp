@@ -1,8 +1,7 @@
 var app;
 Ext.onReady(function() {
     app = new gxp.Viewer({
-        /*proxy: "/geoserver/rest/proxy?url=",*/
-        proxy: "/cgi-bin/proxy.cgi?url=",
+        proxy: "/geoserver/rest/proxy?url=",
         portalConfig: {
             renderTo: document.body,
             layout: "border",
@@ -124,16 +123,6 @@ Ext.onReady(function() {
             },
             ol: {
                 ptype: "gxp_olsource"
-            },
-            tms: {
-                ptype: "gxp_tmssource",
-                version: "1.0.0",
-                url: "/geoserver/gwc/service/tms/"
-            },
-            mapproxy: {
-                ptype: "gxp_tmssource",
-                version: "1.0.0",
-                url: "https://geoinformatics.aalto.fi/mapproxy/tms/" 
             }
         },
         

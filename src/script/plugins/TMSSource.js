@@ -100,6 +100,24 @@ gxp.data.TMSCapabilitiesReader = Ext.extend(Ext.data.DataReader, {
     }
 });
 
+/** api: (define)
+ *  module = gxp.plugins
+ *  class = TMSSource
+ */
+
+/** api: (extends)
+ *  plugins/LayerSource.js
+ */
+
+/** api: constructor
+ *  .. class:: TMSSource(config)
+ *
+ *    Plugin for using TMS layers with :class:`gxp.Viewer` instances. The
+ *    plugin issues a Capabilities request to create a store of the TMS's
+ *    tile maps. It is currently not supported to use this source type directly
+ *    in the viewer config, it is only used to add a TMS service dynamically
+ *    through the AddLayers plugin.
+ */
 gxp.plugins.TMSSource = Ext.extend(gxp.plugins.LayerSource, {
 
     /** api: ptype = gxp_tmssource */
