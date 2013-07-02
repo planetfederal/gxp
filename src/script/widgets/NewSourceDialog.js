@@ -6,11 +6,6 @@
  * of the license.
  */
 
-/**
- * @requires plugins/WMSSource.js
- * @requires plugins/ArcRestSource.js
- */
-
 /** api: (define)
  *  module = gxp
  *  class = NewSourceDialog
@@ -49,14 +44,8 @@ gxp.NewSourceDialog = Ext.extend(Ext.Panel, {
      *  ``String``
      *  Message to display when an invalid URL is entered (i18n).
      */
-    invalidURLText: "Enter a valid URL to a WMS/REST endpoint (e.g. http://example.com/geoserver/wms)",
+    invalidURLText: "Enter a valid URL to a WMS/TMS/REST endpoint (e.g. http://example.com/geoserver/wms)",
 
-    /** api: config[sourceTypeText]
-     *  ``String``
-     *  Message to display when an invalid URL is entered (i18n).
-     */
-    sourceTypeText: "Type",    
-    
     /** api: config[contactingServerText]
      *  ``String``
      *  Text for server contact (i18n).
@@ -74,15 +63,9 @@ gxp.NewSourceDialog = Ext.extend(Ext.Panel, {
      */
     error: null,
 
-    /** api: property[sourceTypes]
-     * ``Array``
-     * Array of value/display pairs for server source types
-     */
-    sourceTypes: [['gxp_wmssource','WMS'],['gxp_arcrestsource','ArcGIS REST']],    
-    
     /** api: event[urlselected]
-     *  Fired with a reference to this instance and the URL that the user
-     *  provided as a parameters when the form is submitted.
+     *  Fired with a reference to this instance, the URL that the user
+     *  provided and the type of service  as a parameters when the form is submitted.
      */     
      
     /** private: method[initComponent]
@@ -107,21 +90,21 @@ gxp.NewSourceDialog = Ext.extend(Ext.Panel, {
             }
         });
 
-        this.sourceTypeComboBox = new Ext.form.ComboBox({
-        	store: this.sourceTypes,
-        	mode: 'local',
-        	fieldLabel: this.sourceTypeText,
-        	forceSelection: true,
-        	triggerAction: 'all',
-        	value: 'gxp_wmssource'
-        });
-
-        
         this.form = new Ext.form.FormPanel({
-            items: [
-                this.urlTextField,
-                this.sourceTypeComboBox
-            ],
+            items: [{
+                xtype: 'combo',
+                width: 240,
+                name: 'type',
+                fieldLabel: "Type",
+                value: 'WMS',
+                mode: 'local',
+                triggerAction: 'all',
+                store: [
+                    ['WMS', 'Web Map Service (WMS)'], 
+                    ['TMS', 'Tiled Map Service (TMS)'],
+                    ['REST', 'ArcGIS REST Service (REST)']    
+                ]
+            }, this.urlTextField],
             border: false,
             labelWidth: 30,
             bodyStyle: "padding: 5px",
@@ -164,14 +147,14 @@ gxp.NewSourceDialog = Ext.extend(Ext.Panel, {
             scope: this
         });
 
-        this.on("urlselected", function(cmp, url, type) {
+        this.on("urlselected", function(cmp, url) {
             this.setLoading();
             var failure = function() {
                 this.setError(this.sourceLoadFailureMessage);
             };
 
             // this.explorer.addSource(url, null, success, failure, this);
-            this.addSource(url, type, this.hide, failure, this);
+            this.addSource(url, this.hide, failure, this);
         }, this);
 
     },
@@ -182,7 +165,8 @@ gxp.NewSourceDialog = Ext.extend(Ext.Panel, {
         // Clear validation before trying again.
         this.error = null;
         if (this.urlTextField.validate()) {
-            this.fireEvent("urlselected", this, this.urlTextField.getValue(), this.sourceTypeComboBox.getValue());
+            this.fireEvent("urlselected", this, this.urlTextField.getValue(),
+                this.form.getForm().findField('type').getValue());
         }
     },
     
@@ -257,7 +241,7 @@ gxp.NewSourceDialog = Ext.extend(Ext.Panel, {
      *
      * TODO this can probably be extracted to an event handler
      */
-    addSource: function(url, type, success, failure, scope) {
+    addSource: function(url, success, failure, scope) {
     }
 });
 

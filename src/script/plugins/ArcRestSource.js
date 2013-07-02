@@ -96,7 +96,7 @@ gxp.plugins.ArcRestSource = Ext.extend(gxp.plugins.LayerSource, {
                             displayInLayerSwitcher:true,
                             visibility:true,
                             projection:layerProjection,
-                            queryable:json.capabilities && json.capabilities.indexOf("Identify") > -1}
+                            queryable:json.capabilities && json.capabilities["Identify"]}
                     ));
                 }
             } else {

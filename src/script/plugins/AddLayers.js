@@ -12,6 +12,8 @@
  * @requires widgets/FeedSourceDialog.js
  * @requires plugins/GeoNodeCatalogueSource.js
  * @requires widgets/CatalogueSearchPanel.js
+ * @requires plugins/TMSSource.js
+ * @requires plugins/ArcRestSource.js
  */
 
 /** api: (define)
@@ -86,7 +88,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      *  ``String``
      *  Text for an error message when WMS GetCapabilities retrieval fails (i18n).
      */
-    addLayerSourceErrorText: "Error getting WMS capabilities ({msg}).\nPlease check the url and try again.",
+    addLayerSourceErrorText: "Error getting {type} capabilities ({msg}).\nPlease check the url and try again.",
 
     /** api: config[availableLayersText]
      *  ``String``
@@ -558,8 +560,19 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 },
                 "urlselected": function(newSourceDialog, url, type) {
                     newSourceDialog.setLoading();
+                    var ptype;
+                    switch (type) {
+                    	case 'TMS':
+                    		ptype = "gxp_tmssource";
+                    		break;
+                    	case 'REST':
+                    		ptype = 'gxp_arcrestsource';
+                    		break;
+                    	default:
+                    		ptype = 'gxp_wmscsource';
+                    }
                     this.target.addLayerSource({
-                        config: {url: url, type: type},
+                        config: {url: url, ptype: ptype},
                         callback: function(id) {
                             // add to combo and select
                             var record = new sources.recordType({
@@ -572,7 +585,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                         },
                         fallback: function(source, msg) {
                             newSourceDialog.setError(
-                                new Ext.Template(this.addLayerSourceErrorText).apply({msg: msg})
+                                new Ext.Template(this.addLayerSourceErrorText).apply({type: type, msg: msg})
                             );
                         },
                         scope: this
