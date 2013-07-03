@@ -13,6 +13,7 @@
  * @requires plugins/GeoNodeCatalogueSource.js
  * @requires widgets/CatalogueSearchPanel.js
  * @requires plugins/TMSSource.js
+ * @requires plugins/ArcRestSource.js
  */
 
 /** api: (define)
@@ -559,7 +560,17 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 },
                 "urlselected": function(newSourceDialog, url, type) {
                     newSourceDialog.setLoading();
-                    var ptype = (type === 'TMS') ? 'gxp_tmssource' : 'gxp_wmscsource';
+                    var ptype;
+                    switch (type) {
+                    	case 'TMS':
+                    		ptype = "gxp_tmssource";
+                    		break;
+                    	case 'REST':
+                    		ptype = 'gxp_arcrestsource';
+                    		break;
+                    	default:
+                    		ptype = 'gxp_wmscsource';
+                    }
                     this.target.addLayerSource({
                         config: {url: url, ptype: ptype},
                         callback: function(id) {
