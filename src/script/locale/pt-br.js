@@ -184,11 +184,11 @@ GeoExt.Lang.add("pt-br", {
 
     "gxp.plugins.Zoom.prototype":{
         zoomMenuText:"Zoom de seleção",
-        zoomInMenuText:"Zoom in",
-        zoomOutMenuText:"Zoom out",
+        zoomInMenuText:"Zoom +",
+        zoomOutMenuText:"Zoom -",
         zoomTooltip:"Zoom selecionando uma área",
-        zoomInTooltip:"Zoom in",
-        zoomOutTooltip:"Zoom out"
+        zoomInTooltip:"Zoom +",
+        zoomOutTooltip:"Zoom -"
     },
 
     "gxp.plugins.ZoomToExtent.prototype":{
