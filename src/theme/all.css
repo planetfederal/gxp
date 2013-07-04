@@ -166,6 +166,7 @@ li.commit div {
 }
 .timeline-highlight-point-decorator {
     background-color: #F46817;
+    width: 5px;
 }
 
 /* gxp_annotation */
