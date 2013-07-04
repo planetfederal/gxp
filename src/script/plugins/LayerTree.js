@@ -219,6 +219,7 @@ gxp.plugins.LayerTree = Ext.extend(gxp.plugins.Tool, {
                     attr.iconCls = "gxp-tree-rasterlayer-icon";
                 } else {
                     attr.iconCls = "red-icon";
+                    layer.outOfScale = true;
                 }
                 if (record.get("fixed")) {
                     attr.allowDrag = false;
