@@ -326,7 +326,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
 
         // bind to the annotations store for notes
         if (this.initialConfig.annotationsStore) {
-            delete this.annotationsStore;
             this.bindAnnotationsStore(this.initialConfig.annotationsStore);
         }
 
@@ -903,8 +902,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             this.viewer && this.viewer.mapPanel.map.addLayer(this.annotationsLayer);
         }
         var compare = time/1000;
-        if (this.featureManager && this.featureManager.featureStore) {
-            this.featureManager.featureStore.each(function(record) {
+        if (this.annotationsStore) {
+            this.annotationsStore.each(function(record) {
                 var mapFilterAttr = this.annotationConfig.mapFilterAttr;
                 if (Ext.isBoolean(record.get(mapFilterAttr)) ? record.get(mapFilterAttr) : (record.get(mapFilterAttr) === "true")) {
                     var startTime = parseFloat(record.get(this.annotationConfig.timeAttr));
