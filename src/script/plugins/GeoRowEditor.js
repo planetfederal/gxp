@@ -5,7 +5,9 @@ gxp.plugins.GeoRowEditor = Ext.extend(Ext.ux.grid.RowEditor, {
     drawControl: null,
     modifyControl: null,
 
-    addGeometryText: 'Add geometry',
+    addPointGeometryText: 'Add point',
+    addLineGeometryText: 'Add line',
+    addPolygonGeometryText: 'Add polygon',
     modifyGeometryText: 'Modify geometry',
     addGeometryTooltip: 'Add a new geometry by clicking in the map',
     modifyGeometryTooltip: 'Modify an existing geometry',
@@ -21,13 +23,13 @@ gxp.plugins.GeoRowEditor = Ext.extend(Ext.ux.grid.RowEditor, {
     /** private: method[handleAddGeometry]
      *  Use a DrawFeature Control to add new geometries.
      */
-    handleAddGeometry: function() {
+    handleAddGeometry: function(handler) {
         var store = this.grid.store;
         this.feature = this.record.get("feature");
         if (this.drawControl === null) {
             this.drawControl = new OpenLayers.Control.DrawFeature(
                 new OpenLayers.Layer.Vector(),
-                OpenLayers.Handler.Point, {
+                handler, {
                 eventListeners: {
                     "featureadded": function(evt) {
                         this.drawControl.deactivate();
@@ -42,8 +44,23 @@ gxp.plugins.GeoRowEditor = Ext.extend(Ext.ux.grid.RowEditor, {
                 }
             });
             this.feature.layer.map.addControl(this.drawControl);
+        } else {
+            this.drawControl.handler.destroy();
+            this.drawControl.handler = new handler();
         }
         this.drawControl.activate();
+    },
+
+    handleAddPointGeometry: function() {
+        this.handleAddGeometry(OpenLayers.Handler.Point);
+    },
+
+    handleAddLineGeometry: function() {
+        this.handleAddGeometry(OpenLayers.Handler.Path);
+    },
+
+    handleAddPolygonGeometry: function() {
+        this.handleAddGeometry(OpenLayers.Handler.Polygon);
     },
 
     /** private: method[handleModifyGeometry]
@@ -138,11 +155,15 @@ gxp.plugins.GeoRowEditor = Ext.extend(Ext.ux.grid.RowEditor, {
                 this.geometry = record.get("feature").geometry && record.get("feature").geometry.clone();
                 if (this.btns) {
                     if (record.get("feature").geometry === null) {
-                        this.btns.items.get(3).hide();
+                        this.btns.items.get(5).hide();
                         this.btns.items.get(2).show();
+                        this.btns.items.get(3).show();
+                        this.btns.items.get(4).show();
                     } else {
                         this.btns.items.get(2).hide();
-                        this.btns.items.get(3).show();
+                        this.btns.items.get(3).hide();
+                        this.btns.items.get(4).hide();
+                        this.btns.items.get(5).show();
                     }
                 }
                 return true;
@@ -152,7 +173,7 @@ gxp.plugins.GeoRowEditor = Ext.extend(Ext.ux.grid.RowEditor, {
     onRender: function(){
         Ext.ux.grid.RowEditor.superclass.onRender.apply(this, arguments);
         this.el.swallowEvent(['keydown', 'keyup', 'keypress']);
-        var numButtons = 3;
+        var numButtons = 5;
         this.btns = new Ext.Panel({
             baseCls: 'x-plain',
             cls: 'x-btns',
@@ -173,13 +194,31 @@ gxp.plugins.GeoRowEditor = Ext.extend(Ext.ux.grid.RowEditor, {
                 handler: this.stopEditing.createDelegate(this, [false])
             }, {
                 xtype: 'button',
-                text: this.addGeometryText,
+                text: this.addPointGeometryText,
                 iconCls: "gxp-icon-addfeature",
                 tooltip: this.addGeometryTooltip,
-                handler: this.handleAddGeometry,
+                handler: this.handleAddPointGeometry,
                 scope: this,
                 hidden: (this.record.get("feature").geometry !== null),
-                width: this.minButtonWidth*2
+                width: this.minButtonWidth*1.5
+            }, {
+                xtype: 'button',
+                text: this.addLineGeometryText,
+                iconCls: "gxp-icon-addfeature",
+                tooltip: this.addGeometryTooltip,
+                handler: this.handleAddLineGeometry,
+                scope: this,
+                hidden: (this.record.get("feature").geometry !== null),
+                width: this.minButtonWidth*1.5
+            }, {
+                xtype: 'button',
+                text: this.addPolygonGeometryText,
+                iconCls: "gxp-icon-addfeature",
+                tooltip: this.addGeometryTooltip,
+                handler: this.handleAddPolygonGeometry,
+                scope: this,
+                hidden: (this.record.get("feature").geometry !== null),
+                width: this.minButtonWidth*1.5
             }, {
                 xtype: 'button',
                 text: this.modifyGeometryText,
@@ -188,7 +227,7 @@ gxp.plugins.GeoRowEditor = Ext.extend(Ext.ux.grid.RowEditor, {
                 handler: this.handleModifyGeometry,
                 scope: this,
                 hidden: (this.record.get("feature").geometry === null),
-                width: this.minButtonWidth*2
+                width: this.minButtonWidth*1.5
             }]
         });
         this.btns.render(this.bwrap);
