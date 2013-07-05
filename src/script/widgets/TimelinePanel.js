@@ -8,17 +8,12 @@
 
 /**
  * @requires util.js
- * @requires widgets/FeatureEditPopup.js
  * @requires OpenLayers/Renderer/SVG.js
  * @requires OpenLayers/Renderer/VML.js
  * @requires OpenLayers/Renderer/Canvas.js
  * @requires OpenLayers/Layer/Vector.js
- * @requires OpenLayers/Strategy/BBOX.js
- * @requires OpenLayers/Filter/Logical.js
- * @requires OpenLayers/Filter/Comparison.js
  * @requires OpenLayers/BaseTypes/Date.js
  * @requires OpenLayers/BaseTypes/LonLat.js
- * @requires OpenLayers/Filter/Spatial.js
  */
 
 /** api: (define)
@@ -184,7 +179,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
     scrollInterval: 500,
 
-
     /** private: property[annotationsStore]
      *  ``GeoExt.data.FeatureStore``
      */
@@ -220,48 +214,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  ``Object``
      *  Timeline event source.
      */
-
-    /** api: config[loadingMessage]
-     *  ``String`` Message to show when the timeline is loading (i18n)
-     */
-    loadingMessage: "Loading Timeline data...",
-
-    /** api: config[instructionText]
-     *  ``String`` Message to show when there is too many data for the timeline (i18n)
-     */   
-    instructionText: "There are too many events ({count}) to show in the timeline (maximum is {max})",
-
-    /** api: config[errorText]
-     *  ``String`` Message to show when there is an exception when retrieving the WFS data (i18n)
-     */
-    errorText: "Something went wrong with retrieving the data for the timeline",
-
-    /** private: property[layerCount]
-     * ``Integer`` The number of vector layers currently loading.
-     */
-    layerCount: 0,
-
-    /**
-     * private: property[busyMask]
-     * ``Ext.LoadMask`` The Ext load mask to show when busy.
-     */
-    busyMask: null,
-
-    /** api: property[schemaCache]
-     *  ``Object`` An object that contains the attribute stores.
-     */
-    schemaCache: {},
-
-    /** api: property[propertyNamesCache]
-     *  ``Object`` An object that contains the property names to query for.
-     *  This should be all attributes except the geometry.
-     */
-    propertyNamesCache: {},
-
-    /** private: property[sldCache]
-     *  ``Object`` An object that contains the parsed SLD documents.
-     */
-    sldCache: {},
 
     /** api: property[layerLookup]
      *  ``Object``
@@ -352,66 +304,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
     },
 
     /**
-     * private: method[setFilterMatcher]
-     *  :arg filterMatcher: ``Function``
-     *
-     *  Filter data in the timeline and repaint.
-     */
-    setFilterMatcher: function(filterMatcher) {
-        if (this.timeline) {
-            this.timeline.getBand(0).getEventPainter().setFilterMatcher(filterMatcher);
-            this.timeline.getBand(1).getEventPainter().setFilterMatcher(filterMatcher);
-            this.timeline.paint();
-        }
-    },
-
-    /**
-     * api: method[setLayerVisibility]
-     *  :arg item: ``Ext.Menu.CheckItem``
-     *  :arg checked: ``Boolean``
-     *  :arg record: ``GeoExt.data.LayerRecord``
-     *  :arg clear: ``Boolean``
-     *
-     *  Change the visibility for a layer which is shown in the timeline.
-     */
-    setLayerVisibility: function(item, checked, record, clear) {
-        var keyToMatch = this.getKey(record);
-        (clear !== false) && this.clearEventsForKey(keyToMatch);
-        Ext.apply(this.layerLookup[keyToMatch], {
-            visible: checked
-        });
-        // set visibility on the OL layer as well
-        // this was needed to actually get features to be retrieved by the 
-        // BBOX strategy, but leads to the points being visible in the map
-        // as a side effect, so we need to work with an invisible style.
-        if (this.layerLookup[keyToMatch].layer) {
-            this.layerLookup[keyToMatch].layer.setVisibility(checked);
-        }
-        var filterMatcher = function(evt) {
-            var key = evt.getProperty('key');
-            if (key === keyToMatch) {
-                return checked;
-            } else {
-                return true;
-            }
-        };
-        this.setFilterMatcher(filterMatcher);
-        this.updateTimelineEvents();
-    },
-
-    /**
-     * private method[destroyPopup]
-     *
-     *  Destroy an existing popup.
-     */
-    destroyPopup: function() {
-        if (this.popup) {
-            this.popup.destroy();
-            this.popup = null;
-        }
-    },
-
-    /**
      * private: method[handleEventClick]
      *  :arg x: ``Integer``
      *  :arg y: ``Integer``
@@ -421,42 +313,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  for a feature and the feature editor for a note/annotation.
      */
     handleEventClick: function(x, y, evt) {
-        var fid = evt.getProperty("fid");
-        var key = evt.getProperty("key");
-        var layer = this.layerLookup[key].layer;
-        var feature = layer && layer.getFeatureByFid(fid);
-        if (feature) {
-            this.destroyPopup();
-            // if annotations, show feature editor
-            if (!layer.protocol) {
-                if (this.featureEditor) { 
-                    this.featureEditor._forcePopupForNoGeometry = true;
-                    layer.events.triggerEvent("featureselected", {feature: feature});
-                    delete this.featureEditor._forcePopupForNoGeometry;
-                }
-            } else {
-                if (!feature.geometry && feature.bounds) {
-                    feature.geometry = feature.bounds.toGeometry();
-                }
-                var centroid = feature.geometry.getCentroid();
-                var map = this.viewer.mapPanel.map;
-                this._silentMapMove = true;
-                map.setCenter(new OpenLayers.LonLat(centroid.x, centroid.y));
-                delete this._silentMapMove;
-                this.popup = new gxp.FeatureEditPopup({
-                    feature: feature,
-                    propertyGridNameText: "Attributes",
-                    title: evt.getProperty("title"),
-                    panIn: false,
-                    width: 200,
-                    height: 250,
-                    collapsible: true,
-                    readOnly: true,
-                    hideMode: 'offsets'
-                });
-                this.popup.show();
-            }
-        }
+        this.fireEvent("click", evt.getProperty('fid'));
     },
 
     /**
@@ -483,34 +340,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 this.ownerCt.expand();
             }
         }, this, {single: true});
-    },
-
-    /**
-     * private: method[onSave]
-     *  :arg store: ``gxp.data.WFSFeatureStore``
-     *  :arg action: ``String``
-     *  :arg data: ``Array``
-     *
-     *  When annotation features are saved to the store, we can add them to
-     *  the timeline.
-     */
-    onSave: function(store, action, data) {
-        var key = this.getKey(this.annotationsRecord);
-        var features = [];
-        for (var i=0, ii=data.length; i<ii; i++) {
-            var feature = data[i].feature;
-            features.push(feature);
-            var fid = feature.fid;
-            this.clearEventsForFid(key, fid);
-            if (this.tooltips && this.tooltips[fid]) {
-                this.tooltips[fid].destroy();
-                this.tooltips[fid] = null;
-            }
-        }
-        if (action !== Ext.data.Api.actions.destroy) {
-            this.addFeatures(key, features);
-        }
-        this.showAnnotations();
     },
 
     /**
@@ -675,10 +504,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         if (!this.layerLookup) {
             this.layerLookup = {};
         }
-        viewer.mapPanel.map.events.on({
-            moveend: this.onMapMoveEnd,
-            scope: this
-        });
     },
     
     /** private: method[unbindViewer]
@@ -686,27 +511,8 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  Unbind this timeline from the current viewer.
      */
     unbindViewer: function() {
-        var mapPanel = this.viewer && this.viewer.mapPanel;
-        if (mapPanel) {
-            mapPanel.map.un({
-                moveend: this.onMapMoveEnd,
-                scope: this
-            });
-        }
         delete this.viewer;
         delete this.layerLookup;
-        delete this.schemaCache;
-        delete this.propertyNamesCache;
-    },
-
-    /** private: method[getKey]
-     *  :arg record: ``GeoExt.data.LayerRecord``
-     *  :returns:  ``String``
-     *
-     *  Get a unique key for the layer record.
-     */
-    getKey: function(record) {
-        return record.get("source") + "/" + record.get("name");
     },
 
     /** private: method[onLayout]
@@ -972,353 +778,12 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                     if (start < currentRange[0] && end > currentRange[0]) {
                         end = currentRange[0];
                     }
-                    for (var key in this.layerLookup) {
-                        var layer = this.layerLookup[key].layer;
-                        layer && this.setTimeFilter(key, this.createTimeFilter([start, end], key, 0, false));
-                    }
-                    // do not abort previous requests, since this will lead to blanks in the timeline
-                    this.updateTimelineEvents({force: true, noAbort: true}, true);
+                    // TODO if we need paging on annotations, we should create the
+                    // time filter here
                 }
             }
         }
         this.showAnnotations();
-    },
-
-    /** private: method[createTimeFilter]
-     *  :arg range: ``Array``
-     *  :arg key: ``String``
-     *  :arg fraction: ``Float``
-     *  :arg updateRangeInfo: ``Boolean`` Should we update this.rangeInfo?
-     *  :returns: ``OpenLayers.Filter``
-     *      
-     *  Create an OpenLayers.Filter to use in the WFS requests.
-     */
-    createTimeFilter: function(range, key, fraction, updateRangeInfo) {
-        var start = new Date(range[0] - fraction * (range[1] - range[0]));
-        var end = new Date(range[1] + fraction * (range[1] - range[0]));
-        // don't go beyond the original range
-        if(this.originalRange){
-            start = new Date(Math.max(this.originalRange[0], start));
-            end = new Date(Math.min(this.originalRange[1], end));
-        }
-        if (updateRangeInfo !== false) {
-            this.rangeInfo = {
-                original: range,
-                current: [start, end]
-            };
-        }
-        // do not use start and end, since this might only be a portion of the range
-        // when the timeline moves, it does this intelligently as to only fetch the
-        // necessary new slice of data, which is represented by start and end.
-        if (this.layerLookup[key].endTimeAttr) {
-            return new OpenLayers.Filter({
-                type: OpenLayers.Filter.Logical.OR,
-                filters: [
-                    new OpenLayers.Filter({
-                        type: OpenLayers.Filter.Comparison.BETWEEN,
-                        property: this.layerLookup[key].timeAttr,
-                        lowerBoundary: OpenLayers.Date.toISOString(start),
-                        upperBoundary: OpenLayers.Date.toISOString(end)
-                    }),
-                    new OpenLayers.Filter({
-                        type: OpenLayers.Filter.Comparison.BETWEEN,
-                        property: this.layerLookup[key].endTimeAttr,
-                        lowerBoundary: OpenLayers.Date.toISOString(start),
-                        upperBoundary: OpenLayers.Date.toISOString(end)
-                    })
-                ]
-            });
-        } else {
-            return new OpenLayers.Filter({
-                type: OpenLayers.Filter.Comparison.BETWEEN,
-                property: this.layerLookup[key].timeAttr,
-                lowerBoundary: OpenLayers.Date.toISOString(start),
-                upperBoundary: OpenLayers.Date.toISOString(end)
-            });
-        }
-    },
-
-    /** private: method[assembleFullFilter]
-     *  :arg key: ``String``
-     *  :returns: ``OpenLayers.Filter``
-     *
-     *  Combine the time filter and filter extracted from the SLD into one
-     *  full filter.
-     */
-    assembleFullFilter: function(key) {
-        var lookup = this.layerLookup[key];
-        var filters = [];
-        if (lookup.sldFilter !== false) {
-            filters.push(lookup.sldFilter);
-        }
-        if (lookup.timeFilter) {
-            filters.push(lookup.timeFilter);
-        }
-        if (lookup.clientSideFilter) {
-            filters.push(lookup.clientSideFilter);
-        }
-        var filter = null;
-        if (filters.length === 1) {
-            filter = filters[0];
-        } else if (filters.length > 1) {
-            filter = new OpenLayers.Filter.Logical({
-                type: OpenLayers.Filter.Logical.AND,
-                filters: filters
-            });
-        }
-        return filter;
-    },
-
-    /** private: method[setTimeFilter]
-     *  :arg key: ``String``
-     *  :arg filter: ``OpenLayers.Filter``
-     *
-     *  Set the time filter on the layer as a property. This will be used by the
-     *  protocol when retrieving data.
-     */
-    setTimeFilter: function(key, filter) {
-        this.layerLookup[key].timeFilter = filter;
-        if (this.layerLookup[key].layer) {
-            this.layerLookup[key].layer.filter = this.assembleFullFilter(key);
-        }
-    },
-    
-    /** private: method[onMapMoveEnd]
-     *  Registered as a listener for map moveend.
-     */
-    onMapMoveEnd: function() {
-        this._silentMapMove !== true && this.updateTimelineEvents();
-        this.filterAnnotationsByBBOX();
-    },
-
-    /** private: method[filterAnnotationsByBBOX]
-     *  Makee sure only annotations show up that are in the map.
-     */
-    filterAnnotationsByBBOX: function() {
-        if (this.featureManager && this.featureManager.featureStore) {
-            var fids = [];
-            this.featureManager.featureStore.each(function(record) {
-                var feature = record.getFeature();
-                if (feature.geometry !== null) {
-                    var bounds = feature.geometry.getBounds();
-                    if (!bounds.intersectsBounds(this.viewer.mapPanel.map.getExtent())) {
-                        fids.push(feature.fid);
-                    }
-                }
-            }, this);
-            var filterMatcher = function(evt) {
-                return (fids.indexOf(evt.getProperty('fid')) === -1);
-            };
-            this.setFilterMatcher(filterMatcher);
-        }
-    },
-    
-    /** private: method[updateTimelineEvents]
-     *  :arg options: `Object` First arg to OpenLayers.Strategy.BBOX::update.
-     *  :arg clearWhenInvisible: ``Boolean`` If true, only clear if events are
-     *  outside of the visible band.
-     *
-     *  Load the data for the timeline. Only load the data if the total number
-     *  features is below a configurable threshold.
-     */
-    updateTimelineEvents: function(options, clearWhenInvisible) {
-        if (!this.rendered) {
-            return;
-        }
-        var dispatchQueue = [];
-        var layer, key;
-        for (key in this.layerLookup) {
-            layer = this.layerLookup[key].layer;
-            if (this.layerLookup[key].visible && layer && layer.strategies !== null) {
-                var protocol = this.layerLookup[key].hitCount;
-
-                // a real solution would be something like:
-                // http://trac.osgeo.org/openlayers/ticket/3569
-                var bounds = layer.strategies[0].bounds;
-                layer.strategies[0].calculateBounds();
-                var filter = new OpenLayers.Filter.Spatial({
-                    type: OpenLayers.Filter.Spatial.BBOX,
-                    value: layer.strategies[0].bounds,
-                    projection: layer.projection
-                });
-                layer.strategies[0].bounds = bounds;
-            
-                if (layer.filter) {
-                    filter = new OpenLayers.Filter.Logical({
-                        type: OpenLayers.Filter.Logical.AND,
-                        filters: [layer.filter, filter]
-                    });
-                }
-                // end of TODO
-                protocol.filter = protocol.options.filter = filter;
-                var func = function(done, storage) {
-                    this.read({
-                        callback: function(response) {
-                            if (storage.numberOfFeatures === undefined) {
-                                storage.numberOfFeatures = 0;
-                            }
-                            storage.numberOfFeatures += response.numberOfFeatures;
-                            done();
-                        }
-                    });
-                };
-                dispatchQueue.push(func.createDelegate(protocol));
-            }
-        }
-        gxp.util.dispatch(dispatchQueue, function(storage) {
-            if (storage.numberOfFeatures <= this.maxFeatures) {
-                this.timelineContainer.el.unmask(true);
-                for (key in this.layerLookup) {
-                    layer = this.layerLookup[key].layer;
-                    if (layer && layer.strategies !== null) {
-                        if (clearWhenInvisible === true) {
-                            this.clearInvisibleEvents(key);
-                        } else {
-                            this.clearEventsForKey(key);
-                        }
-                        var schema = this.schemaCache[key];
-                        var propertyNames = this.propertyNamesCache[key];
-                        if (!propertyNames) {
-                            propertyNames = [];
-                            schema.each(function(r) {
-                                var name = r.get("name");
-                                var type = r.get("type");
-                                if (!type.match(/^[^:]*:?((Multi)?(Point|Line|Polygon|Curve|Surface|Geometry))/)) {
-                                    propertyNames.push(name);
-                                }
-                            });
-                            this.propertyNamesCache[key] = propertyNames;
-                        }
-                        options = options || {};
-                        options.propertyNames = propertyNames;
-                        layer.strategies[0].activate();
-                        layer.strategies[0].update(options);
-                    }
-                }
-            } else {
-                // clear the timeline and show instruction text
-                for (key in this.layerLookup) {
-                    layer = this.layerLookup[key].layer;
-                    if (layer && layer.strategies !== null) {
-                        layer.strategies[0].deactivate();
-                    }
-                }
-                var msg;
-                if (isNaN(storage.numberOfFeatures)) {
-                    msg = this.errorText;
-                } else {
-                    var tpl = new Ext.Template(this.instructionText);
-                    msg = tpl.applyTemplate({count: storage.numberOfFeatures, max: this.maxFeatures});
-                }
-                this.timelineContainer.el.mask(msg, '');
-                this.eventSource.clear();
-            }
-        }, this);
-    },
-
-    /** private: method[clearEventsForKey]
-     *  :arg key: ``String`` 
-     *
-     *  Clear the events from the timeline for a certain layer.
-     */
-    clearEventsForKey: function(key) {
-        var iterator = this.eventSource.getAllEventIterator();
-        var eventIds = [];
-        while (iterator.hasNext()) {
-            var evt = iterator.next();
-            if (evt.getProperty('key') === key) {
-                eventIds.push(evt.getID());
-            }
-        }
-        for (var i=0, len=eventIds.length; i<len; ++i) {
-            this.eventSource.remove(eventIds[i]);
-        }
-        this.timeline && this.timeline.layout();
-    },
-
-    /** private: method[clearInvisibleEvents]
-     *  :arg key: ``String`` 
-     *
-     *  Clear the events from the timeline for a certain layer but only clear
-     *  the events that are outside of the visible range.
-     */
-    clearInvisibleEvents: function(key) {
-        if (this.timeline) {
-            var band = this.timeline.getBand(0);
-            var min = band.getMinVisibleDate();
-            var max = band.getMaxVisibleDate();
-            var iterator = this.eventSource.getAllEventIterator();
-            var eventIds = [];
-            while (iterator.hasNext()) {
-                var evt = iterator.next();
-                var start = evt.getProperty('start');
-                var visible = start >= min && start <= max;
-                if (evt.getProperty('key') === key && !visible) {
-                    eventIds.push(evt.getID());
-                }
-            }
-            for (var i=0, len=eventIds.length; i<len; ++i) {
-                this.eventSource.remove(eventIds[i]);
-            }
-            this.timeline.layout();
-        }
-    },
-
-    /** private: method[clearEventsForRange]
-     *  :arg key: ``String`` 
-     *  :arg range: ``Array``
-     *
-     *  Clear the events from the timeline for a certain layer for dates that
-     *  are within the supplied range.
-     */
-    clearEventsForRange: function(key, range) {
-        var iterator = this.eventSource.getAllEventIterator();
-        var eventIds = [];
-        while (iterator.hasNext()) {
-            var evt = iterator.next();
-            var start = evt.getProperty('start');
-            // only clear if in range
-            if (evt.getProperty('key') === key && start >= range[0] && start <= range[1]) {
-                eventIds.push(evt.getID());
-            }
-        }
-        for (var i=0, len=eventIds.length; i<len; ++i) {
-            this.eventSource.remove(eventIds[i]);
-        }
-        this.timeline && this.timeline.layout();
-    },
-
-    /** private: method[clearEventsForFid]
-     *  :arg key: ``String``
-     *  :arg fid:  ``String``
-     *
-     *  Clear the events from the timeline for a certain feature.
-     */
-    clearEventsForFid: function(key, fid) {
-        var iterator = this.eventSource.getAllEventIterator();
-        var eventIds = [];
-        while (iterator.hasNext()) {
-            var evt = iterator.next();
-            if (evt.getProperty('key') === key && evt.getProperty('fid') === fid) {
-                eventIds.push(evt.getID());
-            }
-        }   
-        for (var i=0, len=eventIds.length; i<len; ++i) {
-            this.eventSource.remove(eventIds[i]);
-        }
-        this.timeline && this.timeline.layout();
-    },
-
-    /** private: method[onFeaturesRemoved]
-     *  :arg event: ``Object`` 
-     *
-     *  Memory management for when features get removed.
-     */
-    onFeaturesRemoved: function(event) {
-        // clean up
-        for (var i=0, len=event.features.length; i<len; i++) {
-            event.features[i].destroy();
-        }
     },
 
     /** private: method[addFeatures]
@@ -1405,7 +870,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                     }
                 }
             }
-        }       
+        }
         var feed = {
             dateTimeFormat: "javascriptnative", //"iso8601",
             events: events
@@ -1427,49 +892,14 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      */
     beforeDestroy : function(){
         gxp.TimelinePanel.superclass.beforeDestroy.call(this);
-        for (var key in this.layerLookup) {
-            var layer = this.layerLookup[key].layer;
-            if (layer) {
-                layer.destroy();
-            }
-        }
-        this.annotationsRecord = null;
         this.annotationsLayer = null;
-        this.destroyPopup();
         this.unbindViewer();
-        this.unbindFeatureEditor();
         this.unbindPlaybackTool();
-        if (this.rendered){
-            Ext.destroy(this.busyMask);
-        }
         this.eventSource = null;
         if (this.timeline) {
             this.timeline.dispose();
             this.timeline = null;
         }
-        this.busyMask = null;
-    },
-
-    /** api: method[getState]
-     *  :returns {Object} - user configured settings
-     *  
-     *  Widget specific implementation of the getState function
-     */
-    getState: function() {
-        var result = {
-            layerLookup: {}
-        };
-        for (var key in this.layerLookup) {
-            var info = this.layerLookup[key];
-            result.layerLookup[key] = {
-                titleAttr: info.titleAttr,
-                timeAttr: info.timeAttr,
-                endTimeAttr: info.endTimeAttr,
-                visible: info.visible,
-                clientSideFilter: info.clientSideFilter
-            };
-        }
-        return result;
     }
 
 });
