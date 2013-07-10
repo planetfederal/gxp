@@ -515,10 +515,23 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                     name: 'followLine', 
                     geometryTypes: ["LINE"],
                     xtype: 'checkbox', 
+                    listeners: {
+                        'check': function(cb, checked) {
+                            if (!checked) {
+                                this.maxAngleDelta.hide();
+                                delete this.symbolizer.vendorOptions["followLine"];
+                            } else {
+                                this.maxAngleDelta.show();
+                            }
+                        },
+                        scope: this
+                    },
                     fieldLabel: this.followLineText
                 }),
                 this.createVendorSpecificField({
                     name: 'maxAngleDelta',
+                    ref: "../maxAngleDelta",
+                    hidden: (this.symbolizer.vendorOptions["followLine"] == null),
                     geometryTypes: ["LINE"],
                     fieldLabel: this.maxAngleDeltaText
                 }),
