@@ -126,6 +126,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
 
         this.haloCache = {};
 
+        this.attributes.on('load', this.showHideGeometryOptions, this);
         this.attributes.load();
 
         var defAttributesComboConfig = {
@@ -554,6 +555,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                 }),
                 this.createVendorSpecificField({
                     name: 'polygonAlign',
+                    geometryTypes: ['POLYGON'],
                     xtype: "combo",
                     store: ["manual", "ortho", "mbr"],
                     fieldLabel: this.polygonAlignText
@@ -605,7 +607,38 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
         }));
         field.on("change", listener, this);
         field.on("check", listener, this);
+        if (config.geometryTypes) {
+            this.on('geometrytype', function(type) {
+                if (config.geometryTypes.indexOf(type) === -1) {
+                    field.hide();
+                }
+            });
+        }
         return field;
+    },
+
+    showHideGeometryOptions: function() {
+        var geomRegex = /gml:((Multi)?(Point|Line|Polygon|Curve|Surface|Geometry)).*/;
+        var polygonRegex = /gml:((Multi)?(Polygon|Surface)).*/;
+        var pointRegex = /gml:((Multi)?(Point)).*/;
+        var lineRegex = /gml:((Multi)?(Line|Curve|Surface)).*/;
+        var geomType = null;
+        this.attributes.each(function(r) {
+            var type = r.get("type");
+            var match = geomRegex.exec(type);
+            if (match) {
+                if (polygonRegex.exec(type)) {
+                    geomType = "POLYGON";
+                } else if (pointRegex.exec(type)) {
+                    geomType = "POINT";
+                } else if (lineRegex.exec(type)) {
+                    geomType = "LINE";
+                }
+            }
+        }, this);
+        if (geomType !== null) {
+            this.fireEvent('geometrytype', geomType);
+        }
     }
 
 });
