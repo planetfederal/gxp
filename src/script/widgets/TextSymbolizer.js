@@ -81,6 +81,13 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
     maxDisplacementText: "Maximum displacement",
     repeatText: "Repeat",
     forceLeftToRightText: "Force left to right",
+    groupText: "Grouping",
+    spaceAroundText: "Space around",
+    labelAllGroupText: "Label all segments in line group",
+    maxAngleDeltaText: "Maximum angle delta",
+    conflictResolutionText: "Conflict resolution",
+    goodnessOfFitText: "Goodness of fit",
+    polygonAlignText: "Polygon alignment",
     graphicResizeText: "Graphic resize",
     graphicMarginText: "Graphic margin",
     graphicTitle: "Graphic",
@@ -96,7 +103,14 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
     maxDisplacementHelp: "Maximum displacement in pixels if label position is busy",
     repeatHelp: "Repeat labels after a certain number of pixels",
     forceLeftToRightHelp: "Labels are usually flipped to make them readable. If the character happens to be a directional arrow then this is not desirable",
+    groupHelp: "Grouping works by collecting all features with the same label text, then choosing a representative geometry for the group. Road data is a classic example to show why grouping is useful. It is usually desirable to display only a single label for all of 'Main Street', not a label for every block of 'Main Street.'",
+    spaceAroundHelp: "Overlapping and Separating Labels. By default GeoServer will not render labels 'on top of each other'. By using the spaceAround option you can either allow labels to overlap, or add extra space around labels. The value supplied for the option is a positive or negative size in pixels. Using the default value of 0, the bounding box of a label cannot overlap the bounding box of another label.",
+    labelAllGroupHelp: "The labelAllGroup option makes sure that all of the segments in a line group are labeled instead of just the longest one.",
+    conflictResolutionHelp: "By default labels are subjected to conflict resolution, meaning the renderer will not allow any label to overlap with a label that has been drawn already. Setting this parameter to false pull the label out of the conflict resolution game, meaning the label will be drawn even if it overlaps with other labels, and other labels drawn after it won’t mind overlapping with it.",
+    goodnessOfFitHelp: "Geoserver will remove labels if they are a particularly bad fit for the geometry they are labeling. For Polygons: the label is sampled approximately at every letter. The distance from these points to the polygon is determined and each sample votes based on how close it is to the polygon. The default value is 0.5.",
     graphic_resizeHelp: "Specifies a mode for resizing label graphics (such as highway shields) to fit the text of the label. The default mode, ‘none’, never modifies the label graphic. In stretch mode, GeoServer will resize the graphic to exactly surround the label text, possibly modifying the image’s aspect ratio. In proportional mode, GeoServer will expand the image to be large enough to surround the text while preserving its original aspect ratio.",
+    maxAngleDeltaHelp: "Designed to use used in conjuection with followLine, the maxAngleDelta option sets the maximum angle, in degrees, between two subsequent characters in a curved label. Large angles create either visually disconnected words or overlapping characters. It is advised not to use angles larger than 30.",
+    polygonAlignHelp: "GeoServer normally tries to place horizontal labels within a polygon, and give up in case the label position is busy or if the label does not fit enough in the polygon. This options allows GeoServer to try alternate rotations for the labels. Possible options: the default value, only the rotation manually specified in the <Rotation> tag will be used (manual), If the label does not fit horizontally and the polygon is taller than wider the vertical alignement will also be tried (ortho), If the label does not fit horizontally the minimum bounding rectangle will be computed and a label aligned to it will be tried out as well (mbr).",
     graphic_marginHelp: "Similar to the margin shorthand property in CSS for HTML, its interpretation varies depending on how many margin values are provided: 1 = use that margin length on all sides of the label 2 = use the first for top & bottom margins and the second for left & right margins. 3 = use the first for the top margin, second for left & right margins, third for the bottom margin. 4 = use the first for the top margin, second for the right margin, third for the bottom margin, and fourth for the left margin.",
 
     initComponent: function() {
@@ -112,6 +126,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
 
         this.haloCache = {};
 
+        this.attributes.on('load', this.showHideGeometryOptions, this);
         this.attributes.load();
 
         var defAttributesComboConfig = {
@@ -224,7 +239,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
             title: this.graphicTitle,
             checkboxToggle: true,
             hideMode: 'offsets',
-            collapsed: !(this.symbolizer.fillColor || this.symbolizer.fillOpacity),
+            collapsed: !(this.symbolizer.fillColor || this.symbolizer.fillOpacity || this.symbolizer.vendorOptions["graphic-resize"] || this.symbolizer.vendorOptions["graphic-margin"]),
             labelWidth: 70,
             items: [{
                 xtype: "gxp_pointsymbolizer",
@@ -382,16 +397,17 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
             }
         }, {
             xtype: "fieldset",
+            collapsed: !(this.symbolizer.labelAlign || this.symbolizer.labelXOffset || this.symbolizer.labelYOffset || this.symbolizer.labelPerpendicularOffset),
             title: this.positioningText,
             checkboxToggle: true,
-            collapsed: true,
             autoHeight: true,
             labelWidth: 75,
             defaults: {
                 width: 100
             },
-            items: [Ext.applyIf({
+            items: [this.createField(Ext.applyIf({
                 fieldLabel: this.anchorPointText,
+                geometryTypes: ["POINT"],
                 value: this.symbolizer.labelAlign || "lb",
                 store: [
                     ['lt', 'Left-top'], 
@@ -413,8 +429,9 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                     },
                     scope: this
                 }
-            }, this.attributesComboConfig), {
+            }, this.attributesComboConfig)), this.createField({
                 xtype: "numberfield",
+                geometryTypes: ["POINT"],
                 fieldLabel: this.displacementXText,
                 value: this.symbolizer.labelXOffset,
                 listeners: {
@@ -424,8 +441,9 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                     },
                     scope: this
                 }
-            }, {
+            }), this.createField({
                 xtype: "numberfield",
+                geometryTypes: ["POINT"],
                 fieldLabel: this.displacementYText,
                 value: this.symbolizer.labelYOffset,
                 listeners: {
@@ -435,8 +453,9 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                     },
                     scope: this
                 }
-            }, {
+            }), this.createField({
                 xtype: "numberfield",
+                geometryTypes: ["LINE"],
                 fieldLabel: this.perpendicularOffsetText,
                 value: this.symbolizer.labelPerpendicularOffset,
                 listeners: {
@@ -450,12 +469,12 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                     },
                     scope: this
                 }
-            }]
+            })]
         }, {
             xtype: "fieldset",
             title: this.priorityText,
             checkboxToggle: true,
-            collapsed: true,
+            collapsed: !(this.symbolizer.priority),
             autoHeight: true,
             labelWidth: 50,
             items: [Ext.applyIf({
@@ -480,7 +499,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
             xtype: "fieldset",
             title: this.labelOptionsText,
             checkboxToggle: true,
-            collapsed: true,
+            collapsed: !(this.symbolizer.vendorOptions['autoWrap'] || this.symbolizer.vendorOptions['followLine'] || this.symbolizer.vendorOptions['maxAngleDelta'] || this.symbolizer.vendorOptions['maxDisplacement'] || this.symbolizer.vendorOptions['repeat'] || this.symbolizer.vendorOptions['forceLeftToRight'] || this.symbolizer.vendorOptions['group'] || this.symbolizer.vendorOptions['spaceAround'] || this.symbolizer.vendorOptions['labelAllGroup'] || this.symbolizer.vendorOptions['conflictResolution'] || this.symbolizer.vendorOptions['goodnessOfFit'] || this.symbolizer.vendorOptions['polygonAlign']),
             autoHeight: true,
             labelWidth: 80,
             defaults: {
@@ -494,8 +513,14 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                 }),
                 this.createVendorSpecificField({
                     name: 'followLine', 
+                    geometryTypes: ["LINE"],
                     xtype: 'checkbox', 
                     fieldLabel: this.followLineText
+                }),
+                this.createVendorSpecificField({
+                    name: 'maxAngleDelta',
+                    geometryTypes: ["LINE"],
+                    fieldLabel: this.maxAngleDeltaText
                 }),
                 this.createVendorSpecificField({
                     name: 'maxDisplacement',
@@ -503,12 +528,46 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                 }),
                 this.createVendorSpecificField({
                     name: 'repeat',
+                    geometryTypes: ["LINE"],
                     fieldLabel: this.repeatText
                 }),
                 this.createVendorSpecificField({
                     name: 'forceLeftToRight',
                     xtype: "checkbox",
+                    geometryTypes: ["LINE"],
                     fieldLabel: this.forceLeftToRightText
+                }),
+                this.createVendorSpecificField({
+                    name: 'group',
+                    xtype: "combo",
+                    store: ["yes", "no"],
+                    fieldLabel: this.groupText
+                }),
+                this.createVendorSpecificField({
+                    name: 'spaceAround',
+                    fieldLabel: this.spaceAroundText
+                }),
+                this.createVendorSpecificField({
+                    name: 'labelAllGroup',
+                    xtype: "checkbox",
+                    fieldLabel: this.labelAllGroupText
+                }),
+                this.createVendorSpecificField({
+                    name: 'conflictResolution',
+                    xtype: "checkbox",
+                    fieldLabel: this.conflictResolutionText
+                }),
+                this.createVendorSpecificField({
+                    name: 'goodnessOfFit',
+                    geometryTypes: ['POLYGON'],
+                    fieldLabel: this.goodnessOfFitText
+                }),
+                this.createVendorSpecificField({
+                    name: 'polygonAlign',
+                    geometryTypes: ['POLYGON'],
+                    xtype: "combo",
+                    store: ["manual", "ortho", "mbr"],
+                    fieldLabel: this.polygonAlignText
                 })
             ]
         }];
@@ -527,6 +586,18 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
  
         gxp.TextSymbolizer.superclass.initComponent.call(this);
         
+    },
+
+    createField: function(config) {
+        var field = Ext.ComponentMgr.create(config);
+        if (config.geometryTypes) {
+            this.on('geometrytype', function(type) {
+                if (config.geometryTypes.indexOf(type) === -1) {
+                    field.hide();
+                }
+            });
+        }
+        return field;
     },
 
     /**
@@ -557,7 +628,38 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
         }));
         field.on("change", listener, this);
         field.on("check", listener, this);
+        if (config.geometryTypes) {
+            this.on('geometrytype', function(type) {
+                if (config.geometryTypes.indexOf(type) === -1) {
+                    field.hide();
+                }
+            });
+        }
         return field;
+    },
+
+    showHideGeometryOptions: function() {
+        var geomRegex = /gml:((Multi)?(Point|Line|Polygon|Curve|Surface|Geometry)).*/;
+        var polygonRegex = /gml:((Multi)?(Polygon|Surface)).*/;
+        var pointRegex = /gml:((Multi)?(Point)).*/;
+        var lineRegex = /gml:((Multi)?(Line|Curve|Surface)).*/;
+        var geomType = null;
+        this.attributes.each(function(r) {
+            var type = r.get("type");
+            var match = geomRegex.exec(type);
+            if (match) {
+                if (polygonRegex.exec(type)) {
+                    geomType = "POLYGON";
+                } else if (pointRegex.exec(type)) {
+                    geomType = "POINT";
+                } else if (lineRegex.exec(type)) {
+                    geomType = "LINE";
+                }
+            }
+        }, this);
+        if (geomType !== null) {
+            this.fireEvent('geometrytype', geomType);
+        }
     }
 
 });
