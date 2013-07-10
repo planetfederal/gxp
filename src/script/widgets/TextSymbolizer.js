@@ -405,8 +405,9 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
             defaults: {
                 width: 100
             },
-            items: [Ext.applyIf({
+            items: [this.createField(Ext.applyIf({
                 fieldLabel: this.anchorPointText,
+                geometryTypes: ["POINT"],
                 value: this.symbolizer.labelAlign || "lb",
                 store: [
                     ['lt', 'Left-top'], 
@@ -428,8 +429,9 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                     },
                     scope: this
                 }
-            }, this.attributesComboConfig), {
+            }, this.attributesComboConfig)), this.createField({
                 xtype: "numberfield",
+                geometryTypes: ["POINT"],
                 fieldLabel: this.displacementXText,
                 value: this.symbolizer.labelXOffset,
                 listeners: {
@@ -439,8 +441,9 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                     },
                     scope: this
                 }
-            }, {
+            }), this.createField({
                 xtype: "numberfield",
+                geometryTypes: ["POINT"],
                 fieldLabel: this.displacementYText,
                 value: this.symbolizer.labelYOffset,
                 listeners: {
@@ -450,8 +453,9 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                     },
                     scope: this
                 }
-            }, {
+            }), this.createField({
                 xtype: "numberfield",
+                geometryTypes: ["LINE"],
                 fieldLabel: this.perpendicularOffsetText,
                 value: this.symbolizer.labelPerpendicularOffset,
                 listeners: {
@@ -465,7 +469,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                     },
                     scope: this
                 }
-            }]
+            })]
         }, {
             xtype: "fieldset",
             title: this.priorityText,
@@ -509,11 +513,13 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                 }),
                 this.createVendorSpecificField({
                     name: 'followLine', 
+                    geometryTypes: ["LINE"],
                     xtype: 'checkbox', 
                     fieldLabel: this.followLineText
                 }),
                 this.createVendorSpecificField({
                     name: 'maxAngleDelta',
+                    geometryTypes: ["LINE"],
                     fieldLabel: this.maxAngleDeltaText
                 }),
                 this.createVendorSpecificField({
@@ -522,11 +528,13 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                 }),
                 this.createVendorSpecificField({
                     name: 'repeat',
+                    geometryTypes: ["LINE"],
                     fieldLabel: this.repeatText
                 }),
                 this.createVendorSpecificField({
                     name: 'forceLeftToRight',
                     xtype: "checkbox",
+                    geometryTypes: ["LINE"],
                     fieldLabel: this.forceLeftToRightText
                 }),
                 this.createVendorSpecificField({
@@ -551,6 +559,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                 }),
                 this.createVendorSpecificField({
                     name: 'goodnessOfFit',
+                    geometryTypes: ['POLYGON'],
                     fieldLabel: this.goodnessOfFitText
                 }),
                 this.createVendorSpecificField({
@@ -577,6 +586,18 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
  
         gxp.TextSymbolizer.superclass.initComponent.call(this);
         
+    },
+
+    createField: function(config) {
+        var field = Ext.ComponentMgr.create(config);
+        if (config.geometryTypes) {
+            this.on('geometrytype', function(type) {
+                if (config.geometryTypes.indexOf(type) === -1) {
+                    field.hide();
+                }
+            });
+        }
+        return field;
     },
 
     /**
