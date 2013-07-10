@@ -239,7 +239,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
             title: this.graphicTitle,
             checkboxToggle: true,
             hideMode: 'offsets',
-            collapsed: !(this.symbolizer.fillColor || this.symbolizer.fillOpacity),
+            collapsed: !(this.symbolizer.fillColor || this.symbolizer.fillOpacity || this.symbolizer.vendorOptions["graphic-resize"] || this.symbolizer.vendorOptions["graphic-margin"]),
             labelWidth: 70,
             items: [{
                 xtype: "gxp_pointsymbolizer",
@@ -397,9 +397,9 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
             }
         }, {
             xtype: "fieldset",
+            collapsed: !(this.symbolizer.labelAlign || this.symbolizer.labelXOffset || this.symbolizer.labelYOffset || this.symbolizer.labelPerpendicularOffset),
             title: this.positioningText,
             checkboxToggle: true,
-            collapsed: true,
             autoHeight: true,
             labelWidth: 75,
             defaults: {
@@ -474,7 +474,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
             xtype: "fieldset",
             title: this.priorityText,
             checkboxToggle: true,
-            collapsed: true,
+            collapsed: !(this.symbolizer.priority),
             autoHeight: true,
             labelWidth: 50,
             items: [Ext.applyIf({
@@ -499,7 +499,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
             xtype: "fieldset",
             title: this.labelOptionsText,
             checkboxToggle: true,
-            collapsed: true,
+            collapsed: !(this.symbolizer.vendorOptions['autoWrap'] || this.symbolizer.vendorOptions['followLine'] || this.symbolizer.vendorOptions['maxAngleDelta'] || this.symbolizer.vendorOptions['maxDisplacement'] || this.symbolizer.vendorOptions['repeat'] || this.symbolizer.vendorOptions['forceLeftToRight'] || this.symbolizer.vendorOptions['group'] || this.symbolizer.vendorOptions['spaceAround'] || this.symbolizer.vendorOptions['labelAllGroup'] || this.symbolizer.vendorOptions['conflictResolution'] || this.symbolizer.vendorOptions['goodnessOfFit'] || this.symbolizer.vendorOptions['polygonAlign']),
             autoHeight: true,
             labelWidth: 80,
             defaults: {
