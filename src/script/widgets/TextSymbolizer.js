@@ -395,10 +395,11 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                 },
                 scope: this
             }
-        }, {
+        }, this.createField({
             xtype: "fieldset",
             collapsed: !(this.symbolizer.labelAlign || this.symbolizer.labelXOffset || this.symbolizer.labelYOffset || this.symbolizer.labelPerpendicularOffset),
             title: this.positioningText,
+            geometryTypes: ["POINT", "LINE"],
             checkboxToggle: true,
             autoHeight: true,
             labelWidth: 75,
@@ -470,7 +471,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                     scope: this
                 }
             })]
-        }, {
+        }), {
             xtype: "fieldset",
             title: this.priorityText,
             checkboxToggle: true,
