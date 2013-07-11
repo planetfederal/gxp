@@ -598,6 +598,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                 }),
                 this.createVendorSpecificField({
                     name: 'spaceAround',
+                    allowNegative: true,
                     ref: "../spaceAround",
                     fieldLabel: this.spaceAroundText
                 }),
