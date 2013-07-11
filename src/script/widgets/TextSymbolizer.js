@@ -553,9 +553,9 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                 this.createVendorSpecificField({
                     name: 'group',
                     listeners: {
-                        'change': function(field, newValue) {
+                        'check': function(cb, value) {
                             if (this.geometryType === 'LINE') {
-                                if (newValue === 'no') {
+                                if (value === false) {
                                     this.labelAllGroup.hide();
                                 } else {
                                     this.labelAllGroup.show();
@@ -564,8 +564,8 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                         },
                         scope: this
                     },
-                    xtype: "combo",
-                    store: ["yes", "no"],
+                    xtype: 'checkbox',
+                    yesno: true,
                     fieldLabel: this.groupText
                 }),
                 this.createVendorSpecificField({
@@ -650,7 +650,11 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
             if (Ext.isEmpty(value)) {
                 delete this.symbolizer.vendorOptions[config.name];
             } else {
-                this.symbolizer.vendorOptions[config.name] = value;
+               if (config.yesno === true) {
+                   this.symbolizer.vendorOptions[config.name] = (value == true) ? 'yes': 'no';
+               } else {
+                   this.symbolizer.vendorOptions[config.name] = value;
+               }
             }
             this.fireEvent("change", this.symbolizer);
         };
