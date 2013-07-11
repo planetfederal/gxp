@@ -569,10 +569,6 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                     fieldLabel: this.groupText
                 }),
                 this.createVendorSpecificField({
-                    name: 'spaceAround',
-                    fieldLabel: this.spaceAroundText
-                }),
-                this.createVendorSpecificField({
                     name: 'labelAllGroup',
                     ref: "../labelAllGroup",
                     geometryTypes: ["LINE"],
@@ -582,7 +578,22 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                 this.createVendorSpecificField({
                     name: 'conflictResolution',
                     xtype: "checkbox",
+                    listeners: {
+                        'check': function(cb, checked) {
+                            if (!checked) {
+                                this.spaceAround.hide();
+                            } else {
+                                this.spaceAround.show();
+                            }
+                        },
+                        scope: this
+                    },
                     fieldLabel: this.conflictResolutionText
+                }),
+                this.createVendorSpecificField({
+                    name: 'spaceAround',
+                    ref: "../spaceAround",
+                    fieldLabel: this.spaceAroundText
                 }),
                 this.createVendorSpecificField({
                     name: 'goodnessOfFit',
