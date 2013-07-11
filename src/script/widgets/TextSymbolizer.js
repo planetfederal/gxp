@@ -634,6 +634,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
             xtype: "numberfield",
             allowNegative: false,
             value: this.symbolizer.vendorOptions[config.name],
+            checked: this.symbolizer.vendorOptions[config.name],
             plugins: [{
                 ptype: 'gxp_formfieldhelp',
                 dismissDelay: 20000,
