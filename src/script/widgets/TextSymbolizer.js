@@ -520,7 +520,6 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                         'check': function(cb, checked) {
                             if (!checked) {
                                 this.maxAngleDelta.hide();
-                                delete this.symbolizer.vendorOptions["followLine"];
                             } else {
                                 this.maxAngleDelta.show();
                             }
@@ -553,6 +552,18 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                 }),
                 this.createVendorSpecificField({
                     name: 'group',
+                    listeners: {
+                        'change': function(field, newValue) {
+                            if (this.geometryType === 'LINE') {
+                                if (newValue === 'no') {
+                                    this.labelAllGroup.hide();
+                                } else {
+                                    this.labelAllGroup.show();
+                                }
+                            }
+                        },
+                        scope: this
+                    },
                     xtype: "combo",
                     store: ["yes", "no"],
                     fieldLabel: this.groupText
@@ -563,6 +574,8 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                 }),
                 this.createVendorSpecificField({
                     name: 'labelAllGroup',
+                    ref: "../labelAllGroup",
+                    geometryTypes: ["LINE"],
                     xtype: "checkbox",
                     fieldLabel: this.labelAllGroupText
                 }),
@@ -673,6 +686,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
             }
         }, this);
         if (geomType !== null) {
+            this.geometryType = geomType;
             this.fireEvent('geometrytype', geomType);
         }
     }
