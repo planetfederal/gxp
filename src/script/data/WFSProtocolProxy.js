@@ -121,14 +121,6 @@ gxp.data.WFSProtocolProxy = Ext.extend(GeoExt.data.ProtocolProxy, {
                         r.modified
                     )
                 });
-                // r.modified can contain undefined values, which will be
-                // ignored by OpenLayers in the WFS-T transaction request.
-                for (var key in feature.modified.attributes) {
-                    if (feature.modified.attributes.hasOwnProperty(key) &&
-                      feature.modified.attributes[key] === undefined) {
-                        feature.modified.attributes[key] = null;
-                    }
-                }
             }, this);
 
             
