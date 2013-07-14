@@ -578,6 +578,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                     name: 'labelAllGroup',
                     ref: "../labelAllGroup",
                     geometryTypes: ["LINE"],
+                    hidden: (this.symbolizer.vendorOptions['group'] !== 'yes'),
                     xtype: "checkbox",
                     fieldLabel: this.labelAllGroupText
                 }),
@@ -598,6 +599,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                 }),
                 this.createVendorSpecificField({
                     name: 'spaceAround',
+                    hidden: (this.symbolizer.vendorOptions['conflictResolution'] !== true),
                     allowNegative: true,
                     ref: "../spaceAround",
                     fieldLabel: this.spaceAroundText
