@@ -110,7 +110,7 @@ gxp.plugins.GeoRowEditor = Ext.extend(Ext.ux.grid.RowEditor, {
         }
 
         // bartvde, additional check if geometry has been modified
-        hasChange = hasChange || this.feature.state === OpenLayers.State.UPDATE;
+        hasChange = hasChange || (this.feature && this.feature.state === OpenLayers.State.UPDATE);
 
         if(hasChange && this.fireEvent('validateedit', this, changes, r, this.rowIndex) !== false){
             r.beginEdit();
