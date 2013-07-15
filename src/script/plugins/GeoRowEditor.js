@@ -195,7 +195,6 @@ gxp.plugins.GeoRowEditor = Ext.extend(Ext.ux.grid.RowEditor, {
             }, {
                 xtype: 'button',
                 text: this.addPointGeometryText,
-                iconCls: "gxp-icon-addfeature",
                 tooltip: this.addGeometryTooltip,
                 handler: this.handleAddPointGeometry,
                 scope: this,
@@ -204,7 +203,6 @@ gxp.plugins.GeoRowEditor = Ext.extend(Ext.ux.grid.RowEditor, {
             }, {
                 xtype: 'button',
                 text: this.addLineGeometryText,
-                iconCls: "gxp-icon-addfeature",
                 tooltip: this.addGeometryTooltip,
                 handler: this.handleAddLineGeometry,
                 scope: this,
@@ -213,7 +211,6 @@ gxp.plugins.GeoRowEditor = Ext.extend(Ext.ux.grid.RowEditor, {
             }, {
                 xtype: 'button',
                 text: this.addPolygonGeometryText,
-                iconCls: "gxp-icon-addfeature",
                 tooltip: this.addGeometryTooltip,
                 handler: this.handleAddPolygonGeometry,
                 scope: this,
@@ -222,7 +219,6 @@ gxp.plugins.GeoRowEditor = Ext.extend(Ext.ux.grid.RowEditor, {
             }, {
                 xtype: 'button',
                 text: this.modifyGeometryText,
-                iconCls: "gxp-icon-modifyfeature",
                 tooltip: this.modifyGeometryTooltip,
                 handler: this.handleModifyGeometry,
                 scope: this,
