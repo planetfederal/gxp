@@ -118,6 +118,10 @@ gxp.form.ExtendedDateField = Ext.extend(Ext.form.DateField, {
         return Ext.form.DateField.superclass.setValue.call(this, str);
     },
 
+    getPickerDate: function() {
+        return new Date();
+    },
+
     onTriggerClick : function(){
         if(this.disabled){
             return;
@@ -146,7 +150,7 @@ gxp.form.ExtendedDateField = Ext.extend(Ext.form.DateField, {
         var d;
         var v = this.getValue();
         if (v === null) {
-            d = new Date();
+            d = this.getPickerDate();
         } else {
             d = new Date(v*1000);
         }
