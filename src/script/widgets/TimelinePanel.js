@@ -583,7 +583,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         if (!this.tooltips) {
             this.tooltips = {};
         }
-        var fid = record.getFeature().fid;
+        var fid = record.getFeature().fid || record.getFeature().id;
         var content = record.get('content') || '';
         var youtubeContent = content.indexOf('[youtube=') !== -1;
         var listeners = {
@@ -678,7 +678,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  Hide the tooltip associated with the record.
      */
     hideTooltip: function(record) {
-        var fid = record.getFeature().fid;
+        var fid = record.getFeature().fid || record.getFeature().id;
         if (this.tooltips && this.tooltips[fid]) {
             this.tooltips[fid]._inTimeRange = false;
             this.tooltips[fid].hide();
