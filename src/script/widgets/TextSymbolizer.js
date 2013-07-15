@@ -397,7 +397,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
             }
         }, {
             xtype: "fieldset",
-            collapsed: !(this.symbolizer.labelAlign || this.symbolizer.labelXOffset || this.symbolizer.labelYOffset || this.symbolizer.labelPerpendicularOffset),
+            collapsed: !(this.symbolizer.labelAlign || this.symbolizer.vendorOptions['polygonAlign'] || this.symbolizer.labelXOffset || this.symbolizer.labelYOffset || this.symbolizer.labelPerpendicularOffset),
             title: this.positioningText,
             checkboxToggle: true,
             autoHeight: true,
@@ -474,6 +474,9 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                 name: 'polygonAlign',
                 geometryTypes: ['POLYGON'],
                 xtype: "combo",
+                mode: 'local',
+                value: this.symbolizer.vendorOptions['polygonAlign'] || 'manual',
+                triggerAction: 'all',
                 store: ["manual", "ortho", "mbr"],
                 fieldLabel: this.polygonAlignText
             })]
@@ -663,7 +666,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
         var field = Ext.ComponentMgr.create(Ext.applyIf(config, {
             xtype: "numberfield",
             allowNegative: false,
-            value: this.symbolizer.vendorOptions[config.name],
+            value: config.value || this.symbolizer.vendorOptions[config.name],
             checked: (config.yesno === true) ? (this.symbolizer.vendorOptions[config.name] === 'yes') : this.symbolizer.vendorOptions[config.name],
             plugins: [{
                 ptype: 'gxp_formfieldhelp',
