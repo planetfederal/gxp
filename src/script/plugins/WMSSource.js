@@ -122,6 +122,12 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      *  ``String`` WMS service URL for this source
      */
 
+    /** api: config[skipPing]
+     *  ``Boolean`` When dealing with a lazy source, should we skip the ping
+     *  request to see if the WMS is alive? Defaults to false.
+     */
+    skipPing: false,
+
     /** private: config[restUrl]
      *  ``String`` Optional URL for rest configuration endpoint.  Note that this
      *  property is being added for a specific GeoNode case and it may be 
@@ -362,27 +368,32 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         });
         if (lazy) {
             this.lazy = true;
-            // ping server of lazy source with an incomplete request, to see if
-            // it is available
-            Ext.Ajax.request({
-                method: "GET",
-                url: this.url,
-                params: {SERVICE: "WMS"},
-                callback: function(options, success, response) {
-                    var status = response.status;
-                    // responseText should not be empty (OGCException)
-                    if (status >= 200 && status < 403 && response.responseText) {
-                        this.ready = true;
-                        this.fireEvent("ready", this);
-                    } else {
-                        this.fireEvent("failure", this,
-                            "Layer source not available.",
-                            "Unable to contact WMS service."
-                        );
-                    }
-                },
-                scope: this
-            });
+            if (this.skipPing !== true) {
+                // ping server of lazy source with an incomplete request, to see if
+                // it is available
+                Ext.Ajax.request({
+                    method: "GET",
+                    url: this.url,
+                    params: {SERVICE: "WMS"},
+                    callback: function(options, success, response) {
+                        var status = response.status;
+                        // responseText should not be empty (OGCException)
+                        if (status >= 200 && status < 403 && response.responseText) {
+                            this.ready = true;
+                            this.fireEvent("ready", this);
+                        } else {
+                            this.fireEvent("failure", this,
+                                "Layer source not available.",
+                                "Unable to contact WMS service."
+                            );
+                        }
+                    },
+                    scope: this
+                });
+            } else {
+                this.ready = true;
+                this.fireEvent("ready", this);
+            }
         }
     },
     
