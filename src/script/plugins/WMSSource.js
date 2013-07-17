@@ -361,28 +361,8 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             }
         });
         if (lazy) {
-            this.lazy = true;
-            // ping server of lazy source with an incomplete request, to see if
-            // it is available
-            Ext.Ajax.request({
-                method: "GET",
-                url: this.url,
-                params: {SERVICE: "WMS"},
-                callback: function(options, success, response) {
-                    var status = response.status;
-                    // responseText should not be empty (OGCException)
-                    if (status >= 200 && status < 403 && response.responseText) {
-                        this.ready = true;
-                        this.fireEvent("ready", this);
-                    } else {
-                        this.fireEvent("failure", this,
-                            "Layer source not available.",
-                            "Unable to contact WMS service."
-                        );
-                    }
-                },
-                scope: this
-            });
+            this.lazy = lazy;
+            this.fireEvent("ready", this);
         }
     },
     
@@ -442,13 +422,40 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 cql_filter: config.cql_filter,
                 format: config.format
             }, {
-                projection: srs
+                projection: srs,
+                eventListeners: {
+                  tileloaded: this.countAlive,
+                  tileerror: this.countAlive,
+                  scope: this
+                }
             }
         ));
         record.json = config;
         return record;
     },
-     
+
+    countAlive: function(evt) {
+        if (!('_alive' in evt.object.metadata)) {
+            evt.object.metadata._alive = 0;
+            evt.object.events.register('loadend', this, this.removeDeadLayer);
+        }
+        evt.object.metadata._alive += (evt.type == 'tileerror' ? -1 : 1);
+    },
+
+    removeDeadLayer: function(evt) {
+        evt.object.events.un({
+            'tileloaded': this.countAlive,
+            'tileerror': this.countAlive,
+            'loadend': this.removeDeadLayer,
+            scope: this
+        });
+        if (evt.object.metadata._alive === 0) {
+            this.target.mapPanel.map.removeLayer(evt.object);
+            this.fireEvent('failure', this, 'Layer unavailable', 'Could not load ' + evt.object.name);
+        }
+        delete evt.object.metadata.alive_;
+    },
+
     /** api: method[createLayerRecord]
      *  :arg config:  ``Object``  The application config for this layer.
      *  :returns: ``GeoExt.data.LayerRecord`` or null when the source is lazy.
