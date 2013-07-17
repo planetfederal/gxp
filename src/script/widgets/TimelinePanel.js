@@ -560,7 +560,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             var params = OpenLayers.Util.getParameters(url);
             var width = params.w || 250;
             var height = params.h || 250;
-            url = 'http://www.youtube.com/embed/' + params.v;
+            var v = params.v;
+            if (v === undefined) {
+                v = url.substr(url.lastIndexOf('/')+1, (url.indexOf('?') !== -1 ? (url.indexOf('?') - (url.lastIndexOf('/')+1)) : undefined));
+            }
+            url = 'http://www.youtube.com/embed/' + v;
             var fid = record.getFeature().fid;
             var id = 'player_' + fid;
             return header + '<br/>' + '<iframe id="' + id + 
