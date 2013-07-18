@@ -456,7 +456,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
               console.debug('Unavailable layer ' + evt.object.name + ' removed.');
             }
         }
-        delete evt.object.metadata.alive_;
+        delete evt.object.metadata._alive;
     },
 
     /** api: method[createLayerRecord]
