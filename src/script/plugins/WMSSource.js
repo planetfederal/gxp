@@ -451,7 +451,9 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         });
         if (evt.object.metadata._alive === 0) {
             this.target.mapPanel.map.removeLayer(evt.object);
-            this.fireEvent('failure', this, 'Layer unavailable', 'Could not load ' + evt.object.name);
+            window.setTimeout(function() {
+              throw new Error('Unavailable layer ' + evt.object.name + ' removed.');
+            }, 0);
         }
         delete evt.object.metadata.alive_;
     },
