@@ -362,6 +362,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         });
         if (lazy) {
             this.lazy = lazy;
+            this.ready = true;
             this.fireEvent("ready", this);
         }
     },
