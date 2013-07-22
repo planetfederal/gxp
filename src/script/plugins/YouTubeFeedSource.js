@@ -53,6 +53,11 @@ gxp.plugins.YouTubeFeedSource = Ext.extend(gxp.plugins.FeedSource, {
      **/
     popupTemplate:  '<tpl for="."><a target="_blank" href="{link}"><img height="180"  width="240" title="{title}" src="{thumbnail}"/></a></tpl>',
 
+    /** api: config[fixed]
+     * ``Boolean`` Use OpenLayers.Strategy.Fixed if true, BBOX if false
+     **/    
+    fixed: false,    
+    
     /**
      * Create a YouTube layer record
      * @param config

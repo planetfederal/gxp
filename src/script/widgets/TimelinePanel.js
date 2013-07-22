@@ -1093,8 +1093,10 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 if (gxp.plugins.WMSSource && (source instanceof gxp.plugins.WMSSource)) {
                     source.getWFSProtocol(record, function(protocol, schema, record) {
                         if (!protocol) {
-                            // TODO: add logging to viewer
-                            throw new Error("Failed to get protocol for record: " + record.get("name"));
+                            if (window.console) {
+                                console.warn("Failed to get WFS protocol for record: " + record.get("name"));
+                            }
+                            return;
                         }
                         var key = this.getKey(record);
                         this.schemaCache[key] = schema;
@@ -1217,7 +1219,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
 
     buildHTML: function(record) {
         var content = record.get('content');
-        var start = content.indexOf('[youtube=');
+        var start = content ? content.indexOf('[youtube=') : -1;
         if (start !== -1) {
             var header = content.substr(0, start);
             var end = content.indexOf(']', start);

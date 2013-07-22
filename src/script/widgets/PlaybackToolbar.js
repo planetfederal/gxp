@@ -51,6 +51,10 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
     autoPlay:false,
     /* should the time slider be aggressive or not */
     aggressive: null,
+    /* should we prebuffer the time series or not */
+    prebuffer: null,
+    /* how many frames should we prebuffer at maximum */
+    maxframes: null,
     //api config ->timeDisplayConfig:null,
     //api property
     optionsWindow:null,
@@ -98,6 +102,8 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
         if(!this.control){
             this.controlConfig = Ext.applyIf(this.controlConfig || {}, {
                 dimension: 'time',
+                prebuffer: this.prebuffer,
+                maxframes: this.maxframes,
                 autoSync: true
             });
             this.control = this.buildTimeManager();
@@ -525,6 +531,15 @@ gxp.PlaybackToolbar = Ext.extend(Ext.Toolbar, {
     }
 });
 
+
+gxp.PlaybackToolbar.timeFormats = {
+   'Minutes': 'l, F d, Y g:i A',
+   'Hours': 'l, F d, Y g A',
+   'Days': 'l, F d, Y',
+   'Months': 'F, Y',
+   'Years': 'Y'
+};
+
 /**
  * Static Methods
  */
@@ -532,22 +547,8 @@ gxp.PlaybackToolbar.guessTimeFormat = function(increment){
     if (increment) {
         var resolution = gxp.PlaybackToolbar.smartIntervalFormat(increment).units;
         var format = this.timeFormat;
-        switch (resolution) {
-            case 'Minutes':
-                format = 'l, F d, Y g:i A';
-                break;
-            case 'Hours':
-                format = 'l, F d, Y g A';
-                break;
-            case 'Days':
-                format = 'l, F d, Y';
-                break;
-            case 'Months':
-                format = 'F, Y';
-                break;
-            case 'Years':
-                format = 'Y';
-                break;
+        if (gxp.PlaybackToolbar.timeFormats[resolution]) {
+            format = gxp.PlaybackToolbar.timeFormats[resolution];
         }
         return format;
     }

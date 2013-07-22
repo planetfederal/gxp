@@ -145,8 +145,6 @@
       <SRS>EPSG:4326</SRS>
       <SRS>EPSG:900913</SRS>
       <SRS>EPSG:3857</SRS>
-      <SRS>EPSG:102113</SRS>
-      <SRS>EPSG:102100</SRS>
       <LatLonBoundingBox minx="-180.0" miny="-157.323" maxx="180.0" maxy="90.0"/>
       <Layer queryable="1">
         <Name>medford:bikelanes</Name>

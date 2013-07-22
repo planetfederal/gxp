@@ -74,7 +74,31 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
             };
             //set an appropiate time format if one was not specified
             if(!this.initialConfig.timeFormat){
-                this.setTimeFormat(gxp.PlaybackToolbar.guessTimeFormat(sliderInfo.interval));
+                if (sliderInfo.interval) {
+                    var interval = sliderInfo.interval*OpenLayers.TimeStep[this.timeManager.timeUnits];
+                    this.setTimeFormat(gxp.PlaybackToolbar.guessTimeFormat(interval));
+                } else if (this.model.values) {
+                    var allUnits = ['Seconds', 'Minutes', 'Hours', 'Days', 'Months', 'Years'];
+                    var units = {};
+                    for (var i = 1, ii = this.model.values.length; i<ii; ++i) {
+                        diff = this.model.values[i] - this.model.values[i-1];
+                        info = gxp.PlaybackToolbar.smartIntervalFormat(diff);
+                        units[info.units] = true;
+                    }
+                    var unit = null;
+                    for (i = 0, ii = allUnits.length; i < ii; ++i) {
+                        if (units[allUnits[i]] === true) {
+                            unit = allUnits[i];
+                            break;
+                        }
+                    }
+                    if (unit !== null) {
+                        var format = gxp.PlaybackToolbar.timeFormats[unit];
+                        if (format) {
+                            this.setTimeFormat(format);
+                        }
+                    }
+                }
             }
             //modify initialConfig so that it properly
             //reflects the initial state of this component
