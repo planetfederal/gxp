@@ -339,6 +339,7 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
     getFilter: function() {
         var attributeFilter = this.attributeQuery && this.filterBuilder.getFilter();
 
+        // If LIKE comparison substrings are enabled, wrap their string literals in wildcards
         if (attributeFilter && this.likeSubstring) {
             attributeFilter = this.wrapWildCards(attributeFilter);
         }
