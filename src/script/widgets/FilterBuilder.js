@@ -331,7 +331,7 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
         }
         return filter;
     },
-    
+
     createDefaultFilter: function() {
         return new OpenLayers.Filter.Comparison({
                             matchCase: !this.caseInsensitiveMatch});
