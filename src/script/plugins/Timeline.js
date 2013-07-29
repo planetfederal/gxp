@@ -37,12 +37,6 @@ gxp.plugins.Timeline = Ext.extend(gxp.plugins.Tool, {
      */
     playbackTool: null,
 
-    /** api: config[featureEditor]
-     *  ``String``
-     *  Id of the feature editor tool to which the timeline has to bind.
-     */
-    featureEditor: null,
-    
     /** api: config[menuText]
      *  ``String``
      *  Text for legend menu item (i18n).
@@ -94,7 +88,13 @@ gxp.plugins.Timeline = Ext.extend(gxp.plugins.Tool, {
         return gxp.plugins.Timeline.superclass.addOutput.call(this, Ext.apply({
             xtype: "gxp_timelinepanel",
             viewer: this.target,
-            featureEditor: this.target.tools[this.featureEditor],
+            listeners: {
+                'click': function(fid) {
+                    this.fireEvent('click', fid);
+                },
+                scope: this
+            },
+            annotationsStore: this.annotationsStore,
             playbackTool: this.target.tools[this.playbackTool]
         }, this.outputConfig));
     },
@@ -117,7 +117,12 @@ gxp.plugins.Timeline = Ext.extend(gxp.plugins.Tool, {
         var config = gxp.plugins.Timeline.superclass.getState.call(this);
         config.outputConfig = Ext.apply(config.outputConfig || {}, this.getTimelinePanel().getState());
         return config;
+    },
+
+    setAnnotationsStore: function(store) {
+        this.annotationsStore = store;
     }
+
 });
 
 Ext.preg(gxp.plugins.Timeline.prototype.ptype, gxp.plugins.Timeline);
