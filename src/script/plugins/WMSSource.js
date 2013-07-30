@@ -511,13 +511,11 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             } else {
                 var llbbox = original.get("llbbox");
                 if (llbbox) {
-                    var extent = OpenLayers.Bounds.fromArray(llbbox).transform("EPSG:4326", projection);
-                    // make sure maxExtent is valid (transform does not succeed for all llbbox)
-                    if ((1 / extent.getHeight() > 0) && (1 / extent.getWidth() > 0)) {
-                        // maxExtent has infinite or non-numeric width or height
-                        // in this case, the map maxExtent must be specified in the config
-                        maxExtent = extent;
-                    }
+                    llbbox[0] = Math.max(llbbox[0], -180);
+                    llbbox[1] = Math.max(llbbox[1], -90);
+                    llbbox[2] = Math.min(llbbox[2], 180);
+                    llbbox[3] = Math.min(llbbox[3], 90);
+                    maxExtent = OpenLayers.Bounds.fromArray(llbbox).transform("EPSG:4326", projection);
                 }
             }
             
