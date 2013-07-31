@@ -587,7 +587,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         if (!this.tooltips) {
             this.tooltips = {};
         }
-        var fid = record.getFeature().fid || record.getFeature().id;
+        var fid = record.getFeature().fid;
         var content = record.get('content') || '';
         var youtubeContent = content.indexOf('[youtube=') !== -1;
         var listeners = {
@@ -670,6 +670,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             tooltip.showBy(this.viewer.mapPanel.body, record.get("appearance"), [10, 10]);
             tooltip.showBy(this.viewer.mapPanel.body, record.get("appearance"), [10, 10]);
         } else {
+            this.annotationsLayer.addFeatures([record.getFeature()]);
             if (!tooltip.isVisible()) {
                 tooltip.show();
             }
@@ -682,10 +683,14 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  Hide the tooltip associated with the record.
      */
     hideTooltip: function(record) {
-        var fid = record.getFeature().fid || record.getFeature().id;
+        var fid = record.getFeature().fid;
+        var hasGeometry = (record.getFeature().geometry !== null);
         if (this.tooltips && this.tooltips[fid]) {
             this.tooltips[fid]._inTimeRange = false;
             this.tooltips[fid].hide();
+            if (hasGeometry) {
+                this.annotationsLayer.removeFeatures([record.getFeature()]);
+            }
         }
     },
 
@@ -697,17 +702,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         var time = this.playbackTool.playbackToolbar.control.currentValue;
         if (!this.annotationsLayer) {
             this.annotationsLayer = new OpenLayers.Layer.Vector(null, {
-                displayInLayerSwitcher: false,
-                styleMap: new OpenLayers.StyleMap({'default':{
-                    label: "${title}\n${content}",
-                    fontColor: "black",
-                    fontSize: "12px",
-                    fontFamily: "Courier New, monospace",
-                    fontWeight: "bold",
-                    labelOutlineColor: "white",
-                    labelAlign: "middle",
-                    labelOutlineWidth: 3
-                }})
+                displayInLayerSwitcher: false
             });
             this.viewer && this.viewer.mapPanel.map.addLayer(this.annotationsLayer);
         }
