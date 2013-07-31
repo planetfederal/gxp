@@ -37,8 +37,10 @@ gxp.plugins.GeoRowEditor = Ext.extend(Ext.ux.grid.RowEditor, {
                         feature.modified = Ext.apply(feature.modified || {}, {
                             geometry: null});
                         feature.geometry = evt.feature.geometry.clone();
-                        feature.state =  OpenLayers.State.UPDATE;
-                        this.record.set("state", feature.state);
+                        if (feature.state !== OpenLayers.State.INSERT) {
+                            feature.state =  OpenLayers.State.UPDATE;
+                            this.record.set("state", feature.state);
+                        }
                     },
                     scope: this
                 }
