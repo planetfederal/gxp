@@ -47,8 +47,9 @@ gxp.plugins.GeoRowEditor = Ext.extend(Ext.ux.grid.RowEditor, {
             });
             this.feature.layer.map.addControl(this.drawControl);
         } else {
-            this.drawControl.handler.destroy();
-            this.drawControl.handler = new handler();
+            var ctrl = this.drawControl;
+            ctrl.handler.destroy();
+            ctrl.handler = new handler(ctrl, ctrl.callbacks, ctrl.handlerOptions);
         }
         this.drawControl.activate();
     },
