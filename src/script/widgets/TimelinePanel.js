@@ -26,6 +26,9 @@ Ext.namespace("gxp");
 // showBy does not allow offsets
 Ext.override(Ext.Tip, {
     showBy: function(el, pos, offsets){
+        if (Ext.isEmpty(pos)) {
+            pos = this.defaultAlign;
+        }
         var offsetX = offsets[0];
         var offsetY = offsets[1];
         if (pos.charAt(0) === 'b') {
