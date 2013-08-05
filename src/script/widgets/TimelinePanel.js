@@ -340,6 +340,53 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 this.ownerCt.expand();
             }
         }, this, {single: true});
+        store.on('write', this.onSave, this);
+    },
+
+    unbindAnnotationsStore: function() {
+        if (this.annotationsStore) {
+            this.annotationsStore.un('write', this.onSave, this);
+        }
+    },
+
+    /** private: method[clearEventsForFid]
+     *  :arg key: ``String``
+     *  :arg fid:  ``String``
+     *
+     *  Clear the events from the timeline for a certain feature.
+     */
+    clearEventsForFid: function(key, fid) {
+        var iterator = this.eventSource.getAllEventIterator();
+        var eventIds = [];
+        while (iterator.hasNext()) {
+            var evt = iterator.next();
+            if (evt.getProperty('key') === key && evt.getProperty('fid') === fid) {
+                eventIds.push(evt.getID());
+            }
+        }   
+        for (var i=0, len=eventIds.length; i<len; ++i) {
+            this.eventSource.remove(eventIds[i]);
+        }
+        this.timeline && this.timeline.layout();
+    },
+
+    onSave: function(store, action, data) {
+        var key = 'annotations';
+        var features = [];
+        for (var i=0, ii=data.length; i<ii; i++) {
+            var feature = data[i].feature;
+            features.push(feature);
+            var fid = feature.fid;
+            this.clearEventsForFid(key, fid);
+            if (this.tooltips && this.tooltips[fid]) {
+                this.tooltips[fid].destroy();
+                this.tooltips[fid] = null;
+            }
+        }
+        if (action !== Ext.data.Api.actions.destroy) {
+            this.addFeatures(key, features);
+        }
+        this.showAnnotations();
     },
 
     /**
@@ -727,7 +774,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                         var diff = (startTime-compare);
                         var percentage = Math.abs((diff/startTime)*100);
                         // we need to take a margin for the feature to have a chance to show up
-                        if (percentage <= 2.5) {
+                        if (percentage <= 0.1) {
                             this.displayTooltip(record);
                         } else {
                             this.hideTooltip(record);
@@ -893,6 +940,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         gxp.TimelinePanel.superclass.beforeDestroy.call(this);
         this.annotationsLayer = null;
         this.unbindViewer();
+        this.unbindAnnotationsStore();
         this.unbindPlaybackTool();
         this.eventSource = null;
         if (this.timeline) {
