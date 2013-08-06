@@ -121,6 +121,9 @@ gxp.plugins.Timeline = Ext.extend(gxp.plugins.Tool, {
 
     setAnnotationsStore: function(store) {
         this.annotationsStore = store;
+        if (this.output && this.output[0]) {
+            this.output[0].bindAnnotationsStore(store);
+        }
     }
 
 });

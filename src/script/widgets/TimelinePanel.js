@@ -326,6 +326,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  Bind with a feature store to have notes show up in the timeline.
      */
     bindAnnotationsStore: function(store) {
+        this.annotationsStore = store;
         store.on('load', function(store, rs, options) {
             var key = 'annotations';
             this.layerLookup[key] = Ext.apply({
