@@ -80,6 +80,16 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
     constructor: function(config) {
         gxp.plugins.Playback.superclass.constructor.apply(this, arguments);
     },
+
+    init: function(target) {
+        target.on('saved', function() {
+            if (this.output) {
+                this.output[0].optionsWindow.optionsPanel.readOnly = false;
+            }
+        }, this, {single: true});
+        gxp.plugins.Playback.superclass.init.call(this, target);
+    },
+
     /** private: method[addOutput]
      *  :arg config: ``Object``
      */
@@ -100,7 +110,12 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
                 width: 350,
                 height: 435,
                 layout: 'fit',
-                items: [{xtype: 'gxp_playbackoptions'}],
+                items: [{xtype: 'gxp_playbackoptions', readOnly: (!this.target.isAuthorized() || !(this.target.id || this.target.mapID)), listeners: {
+                    'save': function() {
+                        this.target.save();
+                    },
+                    scope: this
+                }}],
                 closeable: true,
                 closeAction: 'hide',
                 renderTo: Ext.getBody(),
