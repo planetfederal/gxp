@@ -690,7 +690,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             scope: this
         };
         if (!this.tooltips[fid]) {
-            if (!hasGeometry) {
+            if (!hasGeometry || (hasGeometry && record.get('appearance') !== 'geom' && !Ext.isEmpty(record.get('appearance')))) {
                 this.tooltips[fid] = new Ext.Tip({
                     cls: 'gxp-annotations-tip',
                     maxWidth: 500,
@@ -715,15 +715,17 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         }
         var tooltip = this.tooltips[fid];
         tooltip._inTimeRange = true;
-        if (!hasGeometry) {
+        if (!hasGeometry || (hasGeometry && record.get('appearance') !== 'geom' && !Ext.isEmpty(record.get('appearance')))) {
             // http://www.sencha.com/forum/showthread.php?101593-OPEN-1054-Tooltip-anchoring-problem
             tooltip.showBy(this.viewer.mapPanel.body, record.get("appearance"), [10, 10]);
             tooltip.showBy(this.viewer.mapPanel.body, record.get("appearance"), [10, 10]);
         } else {
-            this.annotationsLayer.addFeatures([record.getFeature()]);
             if (!tooltip.isVisible()) {
                 tooltip.show();
             }
+        }
+        if (hasGeometry) {
+            this.annotationsLayer.addFeatures([record.getFeature()]);
         }
     },
 
