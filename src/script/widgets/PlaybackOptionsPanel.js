@@ -171,7 +171,7 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
                 }]
             }
             ],
-            bbar: [{text: "Save", ref: '../saveBtn', hidden: this.readOnly, handler: function() { this.fireEvent('save'); }, scope: this}]
+            bbar: [{text: "Save", ref: '../saveBtn', hidden: this.readOnly, handler: function() { this.fireEvent('save', this); }, scope: this}]
         });
         Ext.apply(this,config);
         this.on('show', this.populateForm, this);

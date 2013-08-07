@@ -111,7 +111,10 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
                 height: 435,
                 layout: 'fit',
                 items: [{xtype: 'gxp_playbackoptions', readOnly: (!this.target.isAuthorized() || !(this.target.id || this.target.mapID)), listeners: {
-                    'save': function() {
+                    'save': function(cmp) {
+                        this.target.on('saved', function() {
+                            cmp.ownerCt.close();
+                        }, this, {single: true});
                         this.target.save();
                     },
                     scope: this
