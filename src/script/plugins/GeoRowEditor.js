@@ -229,6 +229,7 @@ gxp.plugins.GeoRowEditor = Ext.extend(Ext.ux.grid.RowEditor, {
                 width: this.minButtonWidth*1.5
             }]
         });
+        this.fireEvent('buttonrender', this, this.btns);
         this.btns.render(this.bwrap);
     }
 });
