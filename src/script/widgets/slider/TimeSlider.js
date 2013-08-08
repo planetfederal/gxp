@@ -332,7 +332,9 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
 
     getThumbText: function(thumb) {
         if(thumb.slider.indexMap[thumb.index] != 'tail') {
-            return (new Date(thumb.value).format(thumb.slider.timeFormat));
+            var d = new Date(thumb.value);
+            d.setTime( d.getTime() + d.getTimezoneOffset()*60*1000 );
+            return (d.format(thumb.slider.timeFormat));
         }
         else {
             var formatInfo = gxp.PlaybackToolbar.smartIntervalFormat.call(thumb, thumb.slider.thumbs[0].value - thumb.value);
