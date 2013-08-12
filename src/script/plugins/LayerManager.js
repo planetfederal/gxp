@@ -112,6 +112,7 @@ gxp.plugins.LayerManager = Ext.extend(gxp.plugins.LayerTree, {
                     // TODO these baseParams were only tested with GeoServer,
                     // so maybe they should be configurable - and they are
                     // only relevant for gx_wmslegend.
+                    hidden: !attr.layer.getVisibility(),
                     baseParams: Ext.apply({
                         transparent: true,
                         format: "image/png",
