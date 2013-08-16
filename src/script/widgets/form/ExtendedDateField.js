@@ -24,6 +24,8 @@ gxp.form.ExtendedDateTimeField = Ext.extend(Ext.form.CompositeField, {
         this.items = [{
             xtype: 'gxp_datefield',
             allowBlank: (this.initialConfig.allowBlank !== false),
+            todayText: this.initialConfig.todayText,
+            selectToday: this.initialConfig.selectToday,
             ref: "date"
         }, {
             xtype: 'timefield',
@@ -135,6 +137,8 @@ gxp.form.ExtendedDateField = Ext.extend(Ext.form.DateField, {
         this.onFocus();
         Ext.apply(this.menu.picker,  {
             minDate : this.minValue,
+            todayText: this.todayText ? this.todayText: Ext.DatePicker.prototype.todayText,
+            selectToday: this.selectToday ? this.selectToday: Ext.DatePicker.prototype.selectToday,
             maxDate : this.maxValue,
             disabledDatesRE : this.disabledDatesRE,
             disabledDatesText : this.disabledDatesText,
