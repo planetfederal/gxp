@@ -113,7 +113,7 @@ gxp.slider.TimeSlider = Ext.extend(Ext.slider.MultiSlider, {
         });
         
         this.plugins = (this.plugins || []).concat(
-            [new Ext.slider.Tip({getText:this.getThumbText})]);
+            [new Ext.slider.Tip({cls: 'gxp-timeslider-tip', getText:this.getThumbText})]);
 
         this.listeners = Ext.applyIf(this.listeners || {}, {
             'dragstart' : function() {
