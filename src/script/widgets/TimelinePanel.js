@@ -343,6 +343,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             if (rs.length > 0) {
                 this.ownerCt.expand();
             }
+            this.showAnnotations();
         }, this, {single: true});
         store.on('write', this.onSave, this);
     },
