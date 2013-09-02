@@ -102,6 +102,7 @@ gxp.form.ExtendedDateField = Ext.extend(Ext.form.DateField, {
         var d = v;
         if (Ext.isNumber(parseFloat(v))) {
             d = new Date(parseFloat(v)*1000);
+            d.setTime( d.getTime() + d.getTimezoneOffset()*60*1000 );
         }
         var str = this.formatDate(d);
         if (str) {
