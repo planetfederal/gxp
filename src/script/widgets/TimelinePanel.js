@@ -180,7 +180,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  ``Number`` Threshold value for comparing unranged annotations if the
      *  annotation's time does not exactly match the playback time.
      */
-    compare: 0.002,
+    compare: 0.001,
 
     /** api: config[scrollInterval]
      *  ``Integer`` The Simile scroll event listener will only be handled
