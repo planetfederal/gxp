@@ -9,6 +9,8 @@ gxp.plugins.GeoRowEditor = Ext.extend(Ext.ux.grid.RowEditor, {
     addLineGeometryText: 'Add line',
     addPolygonGeometryText: 'Add polygon',
     modifyGeometryText: 'Modify geometry',
+    deleteGeometryText: 'Delete geometry',
+    deleteGeometryTooltip: 'Delete the existing geometry',
     addGeometryTooltip: 'Add a new geometry by clicking in the map',
     modifyGeometryTooltip: 'Modify an existing geometry',
 
@@ -64,6 +66,19 @@ gxp.plugins.GeoRowEditor = Ext.extend(Ext.ux.grid.RowEditor, {
 
     handleAddPolygonGeometry: function() {
         this.handleAddGeometry(OpenLayers.Handler.Polygon);
+    },
+
+    handleDeleteGeometry: function() {
+        this.feature = this.record.get("feature");
+        this.feature.layer.eraseFeatures([this.feature]);
+        this.feature.geometry.destroy();
+        this.feature.geometry = null;
+        this.feature.state = OpenLayers.State.UPDATE;
+        this.btns.items.get(2).show();
+        this.btns.items.get(3).show();
+        this.btns.items.get(4).show();    
+        this.btns.items.get(5).hide();
+        this.btns.items.get(6).hide();
     },
 
     /** private: method[handleModifyGeometry]
@@ -141,7 +156,9 @@ gxp.plugins.GeoRowEditor = Ext.extend(Ext.ux.grid.RowEditor, {
                 this.grid.store.rejectChanges();
                 // restore the original geometry
                 if (this.feature) {
-                    this.feature.layer.eraseFeatures([this.feature]);
+                    if (this.feature.geometry) {
+                        this.feature.layer.eraseFeatures([this.feature]);
+                    }
                     this.feature.geometry = this.geometry;
                     this.feature.layer.drawFeature(this.feature);
                 }
@@ -158,6 +175,7 @@ gxp.plugins.GeoRowEditor = Ext.extend(Ext.ux.grid.RowEditor, {
                 this.geometry = record.get("feature").geometry && record.get("feature").geometry.clone();
                 if (this.btns) {
                     if (record.get("feature").geometry === null) {
+                        this.btns.items.get(6).hide();
                         this.btns.items.get(5).hide();
                         this.btns.items.get(2).show();
                         this.btns.items.get(3).show();
@@ -167,6 +185,7 @@ gxp.plugins.GeoRowEditor = Ext.extend(Ext.ux.grid.RowEditor, {
                         this.btns.items.get(3).hide();
                         this.btns.items.get(4).hide();
                         this.btns.items.get(5).show();
+                        this.btns.items.get(6).show();
                     }
                 }
                 return true;
@@ -224,6 +243,14 @@ gxp.plugins.GeoRowEditor = Ext.extend(Ext.ux.grid.RowEditor, {
                 text: this.modifyGeometryText,
                 tooltip: this.modifyGeometryTooltip,
                 handler: this.handleModifyGeometry,
+                scope: this,
+                hidden: (this.record.get("feature").geometry === null),
+                width: this.minButtonWidth*1.5
+            }, {
+                xtype: 'button',
+                text: this.deleteGeometryText,
+                tooltip: this.deleteGeometryTooltip,
+                handler: this.handleDeleteGeometry,
                 scope: this,
                 hidden: (this.record.get("feature").geometry === null),
                 width: this.minButtonWidth*1.5
