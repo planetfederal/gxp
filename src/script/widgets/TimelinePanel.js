@@ -176,6 +176,12 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
 
     youtubePlayers: {},
 
+    /** api config[compare]
+     *  ``Number`` Threshold value for comparing unranged annotations if the
+     *  annotation's time does not exactly match the playback time.
+     */
+    compare: 0.002,
+
     /** api: config[scrollInterval]
      *  ``Integer`` The Simile scroll event listener will only be handled
      *  upon every scrollInterval milliseconds. Defaults to 500.
@@ -236,25 +242,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  
      */
     
-    /** private: property[rangeInfo]
-     *  ``Object`` An object with 2 properties: current and original.
-     *  Current contains the original range with a fraction on both sides.
-     */
-
-    /**
-     * api: config[maxFeatures]
-     * ``Integer``
-     * The maximum number of features in total for the timeline.
-     */
-    maxFeatures: 500,
-
-    /**
-     * api: config[bufferFraction]
-     * ``Float``
-     * The fraction to take around on both sides of a time filter. Defaults to 1.
-     */
-    bufferFraction: 1,
-
     layout: "border",
 
     /** private: method[initComponent]
@@ -781,9 +768,10 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                         }
                     } else {
                         var diff = (startTime-compare);
-                        var percentage = Math.abs((diff/startTime)*100);
+                        var range = this.playbackTool.playbackToolbar.control.animationRange;
+                        var percentage = Math.abs(diff/(range[1] - range[0])*100);
                         // we need to take a margin for the feature to have a chance to show up
-                        if (percentage <= 0.1) {
+                        if (percentage <= this.compare) {
                             this.displayTooltip(record);
                         } else {
                             this.hideTooltip(record);
@@ -807,36 +795,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             this.timeline.getBand(0)._decorators[0]._date = time;
             this.timeline.getBand(0)._decorators[0].paint();
             this.timeline.getBand(0).setCenterVisibleDate(time);
-            if (this.rangeInfo && this.rangeInfo.current) {
-                var currentRange = this.rangeInfo.current;
-                var originalRange = this.rangeInfo.original;
-                // update once the time gets out of the original range
-                if (time < originalRange[0] || time > originalRange[1]) {
-                    var span = currentRange[1] - currentRange[0];
-                    var start = new Date(time.getTime() - span/2);
-                    var end = new Date(time.getTime() + span/2);
-                    // don't go beyond the original range
-                    start = new Date(Math.max(this.originalRange[0], start));
-                    end = new Date(Math.min(this.originalRange[1], end));
-                    this.rangeInfo.current = [start, end];
-                    // calculate back the original extent
-                    var startOriginal = new Date(time.getTime() - span/4);
-                    var endOriginal = new Date(time.getTime() + span/4);
-                    this.rangeInfo.original = [startOriginal, endOriginal];
-                    // we have moved ahead in time, and we have not moved so far that 
-                    // all our data is invalid
-                    if (start > currentRange[0] && start < currentRange[1]) {
-                        // only request the slice of data that we need
-                        start = currentRange[1];
-                    }
-                    // we have moved back in time
-                    if (start < currentRange[0] && end > currentRange[0]) {
-                        end = currentRange[0];
-                    }
-                    // TODO if we need paging on annotations, we should create the
-                    // time filter here
-                }
-            }
         }
         this.showAnnotations();
     },
