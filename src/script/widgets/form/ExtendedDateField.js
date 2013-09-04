@@ -52,7 +52,17 @@ gxp.form.ExtendedDateTimeField = Ext.extend(Ext.form.CompositeField, {
         this.date.setValue(v);
         var value = new Date(parseFloat(v)*1000);
         if (value) {
-            this.time.setValue(value.getHours() + ":" + value.getMinutes () + " " + (value.getHours() > 12 ? "PM" : "AM"));
+            var hours = value.getHours();
+            if (hours > 12) {
+                hours -= 12;
+            } else if (hours === 0) {
+                hours = 12;
+            }
+            var minutes = value.getMinutes();
+            if (minutes < 10) {
+                minutes = '0' + minutes;
+            }
+            this.time.setValue(hours + ":" + minutes + " " + (value.getHours() > 12 ? "PM" : "AM"));
         }
     }
 
