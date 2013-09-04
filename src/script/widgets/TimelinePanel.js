@@ -176,12 +176,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
 
     youtubePlayers: {},
 
-    /** api config[compare]
-     *  ``Number`` Threshold value for comparing unranged annotations if the
-     *  annotation's time does not exactly match the playback time.
-     */
-    compare: 0.001,
-
     /** api: config[scrollInterval]
      *  ``Integer`` The Simile scroll event listener will only be handled
      *  upon every scrollInterval milliseconds. Defaults to 500.
@@ -742,14 +736,15 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
      *  Show annotations in the map.
      */
     showAnnotations: function() {
-        var time = this.playbackTool.playbackToolbar.control.currentValue;
         if (!this.annotationsLayer) {
             this.annotationsLayer = new OpenLayers.Layer.Vector(null, {
                 displayInLayerSwitcher: false
             });
             this.viewer && this.viewer.mapPanel.map.addLayer(this.annotationsLayer);
         }
-        var compare = time/1000;
+        var d = new Date(this.playbackTool.playbackToolbar.control.currentValue);
+        d.setTime( d.getTime() + d.getTimezoneOffset()*60*1000 );
+        var compare = d.getTime()/1000;
         if (this.annotationsStore) {
             this.annotationsStore.each(function(record) {
                 var mapFilterAttr = this.annotationConfig.mapFilterAttr;
@@ -768,10 +763,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                         }
                     } else {
                         var diff = (startTime-compare);
-                        var range = this.playbackTool.playbackToolbar.control.animationRange;
-                        var percentage = Math.abs(diff/(range[1] - range[0])*100);
-                        // we need to take a margin for the feature to have a chance to show up
-                        if (percentage <= this.compare) {
+                        if (diff === 0) {
                             this.displayTooltip(record);
                         } else {
                             this.hideTooltip(record);
