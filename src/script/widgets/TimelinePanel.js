@@ -677,6 +677,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                 this.tooltips[fid] = new Ext.Tip({
                     cls: 'gxp-annotations-tip',
                     maxWidth: 500,
+                    bodyCssClass: 'gxp-annotations-tip-body',
                     listeners: listeners,
                     title: record.get("title"),
                     html: this.buildHTML(record)
@@ -689,6 +690,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                         return (this._inTimeRange === true);
                     },
                     cls: 'gxp-annotations-tip',
+                    bodyCssClass: 'gxp-annotations-tip-body',
                     maxWidth: 500,
                     title: record.get("title"),
                     listeners: listeners,
