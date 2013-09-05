@@ -624,6 +624,11 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
         var content = record.get('content') || '';
         var youtubeContent = content.indexOf('[youtube=') !== -1;
         var listeners = {
+            'hide': function(cmp) {
+                if (youtubeContent === true) {
+                    this.youtubePlayers[fid].stopVideo();
+                }
+            },
             'show': function(cmp) {
                 if (youtubeContent === true) {
                     if (this.youtubePlayers[fid]._ready && 
