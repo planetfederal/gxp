@@ -748,7 +748,6 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
             this.viewer && this.viewer.mapPanel.map.addLayer(this.annotationsLayer);
         }
         var d = new Date(this.playbackTool.playbackToolbar.control.currentValue);
-        d.setTime( d.getTime() + d.getTimezoneOffset()*60*1000 );
         var compare = d.getTime()/1000;
         if (this.annotationsStore) {
             this.annotationsStore.each(function(record) {
