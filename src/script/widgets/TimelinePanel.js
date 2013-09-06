@@ -48,6 +48,9 @@ Ext.override(Ext.Tip, {
             this.render(Ext.getBody());
         }
         var position = this.el.getAlignToXY(el, pos || this.defaultAlign, [offsetX, offsetY]);
+        if (document.body.scrollTop > 0 && document.body.scrollTop > el.getTop()) {
+            position[1] += (el.getTop() - document.body.scrollTop);
+        }
         if (!this.isVisible()) {
             this.showAt(position);
         } else {
