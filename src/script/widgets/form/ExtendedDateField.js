@@ -42,7 +42,8 @@ gxp.form.ExtendedDateTimeField = Ext.extend(Ext.form.CompositeField, {
             var dateTimeCurrent = this.time.parseDate(this.time.getValue());
             var dateTimeOriginal = new Date(this.time.initDate);
             var diff = (dateTimeCurrent.getTime()/1000) - (dateTimeOriginal.getTime()/1000);
-            return dateValue + diff;
+            // we should always return times as UTC
+            return dateValue + diff - (new Date().getTimezoneOffset()*60);
         } else {
             return dateValue;
         }
@@ -51,6 +52,7 @@ gxp.form.ExtendedDateTimeField = Ext.extend(Ext.form.CompositeField, {
     setValue: function(v) {
         this.date.setValue(v);
         var value = new Date(parseFloat(v)*1000);
+        value.setTime( value.getTime() + value.getTimezoneOffset()*60*1000 );
         if (value) {
             var hours = value.getHours();
             if (hours > 12) {
