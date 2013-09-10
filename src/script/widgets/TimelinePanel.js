@@ -647,7 +647,7 @@ gxp.TimelinePanel = Ext.extend(Ext.Panel, {
                         // stop immediately, if we wait for PLAYING we might be too late already
                         if (me.playbackTool.playbackToolbar.playing) {
                             me.playbackTool.playbackToolbar._weStopped = true;
-                            me.playbackTool.playbackToolbar.control.stop();
+                            window.setTimeout(function() { me.playbackTool.playbackToolbar.control.stop(); }, 0);
                         }
                         var id = 'player_' + fid;
                         this.youtubePlayers[fid] = new YT.Player(id, {
