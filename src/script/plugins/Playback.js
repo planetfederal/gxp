@@ -108,7 +108,7 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
             optionsWindow: new Ext.Window({
                 title: gxp.PlaybackOptionsPanel.prototype.titleText,
                 width: 350,
-                height: 435,
+                height: 400,
                 layout: 'fit',
                 items: [{xtype: 'gxp_playbackoptions', readOnly: (!this.target.isAuthorized() || !(this.target.id || this.target.mapID)), listeners: {
                     'save': function(cmp) {
