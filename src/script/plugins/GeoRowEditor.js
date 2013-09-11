@@ -260,4 +260,5 @@ gxp.plugins.GeoRowEditor = Ext.ux && Ext.ux.grid && Ext.ux.grid.RowEditor && Ext
         this.btns.render(this.bwrap);
     }
 });
-Ext.preg('gxp_georoweditor', gxp.plugins.GeoRowEditor);
+
+gxp.plugins.GeoRowEditor && Ext.preg('gxp_georoweditor', gxp.plugins.GeoRowEditor);
