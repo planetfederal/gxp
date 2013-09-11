@@ -1,6 +1,6 @@
 Ext.ns('gxp.plugins');
 
-gxp.plugins.GeoRowEditor = Ext.extend(Ext.ux.grid.RowEditor, {
+gxp.plugins.GeoRowEditor = Ext.ux && Ext.ux.grid && Ext.ux.grid.RowEditor && Ext.extend(Ext.ux.grid.RowEditor, {
 
     drawControl: null,
     modifyControl: null,
