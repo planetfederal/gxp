@@ -54,7 +54,6 @@
         "widgets/form/PlaybackModeComboBox.js",
         "widgets/PlaybackOptionsPanel.js",
         "widgets/slider/ClassBreakSlider.js",
-        "widgets/tips/RangeSliderTip.js",
         "widgets/TimelinePanel.js",
         "widgets/form/CSWFilterField.js",
         "widgets/CatalogueSearchPanel.js",
