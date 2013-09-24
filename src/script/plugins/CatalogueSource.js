@@ -32,6 +32,13 @@ gxp.plugins.CatalogueSource = Ext.extend(gxp.plugins.WMSSource, {
      */
     url: null,
 
+    /** api: config[yx]
+     *  ``Object`` Members in the yx object are used to determine if a CRS URN
+     *     corresponds to a CRS with y,x axis order.  Member names are CRS URNs
+     *     and values are boolean.
+     */
+    yx: null,
+
     /** api: config[title]
      *  ``String`` Optional title for this source.
      */

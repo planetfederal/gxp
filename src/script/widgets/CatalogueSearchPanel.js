@@ -447,7 +447,8 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
             this.fireEvent("addlayer", this, this.selectedSource, Ext.apply({
                 title: record.get('title')[0],
                 bbox: [left, bottom, right, top],
-                srs: "EPSG:4326"
+                srs: "EPSG:4326",
+                projection: record.get('projection')
             }, wmsInfo));
         }
     }
