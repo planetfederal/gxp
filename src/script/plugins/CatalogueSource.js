@@ -94,6 +94,12 @@ gxp.plugins.CatalogueSource = Ext.extend(gxp.plugins.WMSSource, {
         gxp.plugins.CatalogueSource.superclass.destroy.apply(this, arguments);
     }
 
+    /** api: method[getPagingStart]
+     *  :return: ``Integer`` Where does paging start at?
+     *
+     *  To be implemented by subclasses
+     */
+
     /** api: method[getPagingParamNames]
      *  :return: ``Object`` with keys start and limit.
      *
