@@ -402,8 +402,9 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
         if (url === null) {
             for (i=0, ii=links.length; i<ii; ++i) {
                 link = links[i];
-                if (link.value && link.value.toLowerCase().indexOf('service=wms') > 0) {
-                    var obj = OpenLayers.Util.createUrlObject(link.value);
+                var value = link.value ? link.value : link;
+                if (value.toLowerCase().indexOf('service=wms') > 0) {
+                    var obj = OpenLayers.Util.createUrlObject(value);
                     url = obj.protocol + "//" + obj.host + ":" + obj.port + obj.pathname;
                     name = obj.args.layers;
                     break;
