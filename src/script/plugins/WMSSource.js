@@ -539,7 +539,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
 
             layer.setName(config.title || layer.name);
             layer.addOptions({
-                attribution: layer.attribution,
+                attribution: layer.attribution || config.attribution,
                 maxExtent: maxExtent,
                 restrictedExtent: maxExtent,
                 singleTile: singleTile,
