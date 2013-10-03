@@ -879,7 +879,8 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             cql_filter: params.CQL_FILTER,
             minscale: options.minScale,
             maxscale: options.maxScale,
-            infoFormat: record.get("infoFormat")
+            infoFormat: record.get("infoFormat"),
+            attribution: layer.attribution
         });
     },
     

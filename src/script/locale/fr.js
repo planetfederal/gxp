@@ -274,6 +274,7 @@ GeoExt.Lang.add("fr", {
     },
     
     "gxp.WMSLayerPanel.prototype": {
+        attributionText: "Attribution",
         aboutText: "A propos",
         titleText: "Titre",
         nameText: "Nom",

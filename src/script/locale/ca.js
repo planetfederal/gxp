@@ -312,6 +312,7 @@ GeoExt.Lang.add("ca", {
     },
     
     "gxp.WMSLayerPanel.prototype": {
+        attributionText: "Attribution",
         aboutText: "Quant a",
         titleText: "Títol",
         nameText: "Nom",
