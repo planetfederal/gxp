@@ -265,12 +265,24 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 scope: this
             })];
             if (this.initialConfig.search) {
-                items.push(new Ext.menu.Item({
-                    iconCls: 'gxp-icon-addlayers', 
+                var search = new Ext.menu.Item({
+                    iconCls: 'gxp-icon-addlayers',
                     text: this.findActionMenuText,
                     handler: this.showCatalogueSearch,
                     scope: this
-                }));
+                });
+                items.push(search);
+                if (this.initialConfig.search.selectedSource) {
+                    Ext.Ajax.request({
+                        method: "GET",
+                        url: this.target.sources[this.initialConfig.search.selectedSource].url,
+                        callback: function(options, success, response) {
+                            if (success === false) {
+                                search.hide();
+                            }
+                        }
+                   });
+               }
             }
             if (this.initialConfig.feeds) {
                 items.push(new Ext.menu.Item({
@@ -324,13 +336,21 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
     showCatalogueSearch: function() {
         var selectedSource = this.initialConfig.search.selectedSource;
         var sources = {};
+        var found = false;
         for (var key in this.target.layerSources) {
             var source = this.target.layerSources[key];
             if (source instanceof gxp.plugins.CatalogueSource) {
                 var obj = {};
                 obj[key] = source;
                 Ext.apply(sources, obj);
+                found = true;
             }
+        }
+        if (found === false) {
+            if (window.console) {
+                window.console.debug('No catalogue source specified');
+            }
+            return;
         }
         var output = gxp.plugins.AddLayers.superclass.addOutput.apply(this, [{
             sources: sources,

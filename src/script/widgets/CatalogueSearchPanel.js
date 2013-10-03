@@ -95,12 +95,14 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
             filterOptions.push(['csw', 'data source']);
         }
         this.sources[this.selectedSource].store.on('loadexception', function(proxy, o, response, e) {
-            Ext.Msg.show({
-                title: e.message,
-                msg: gxp.util.getOGCExceptionText(e.arg.exceptionReport),
-                icon: Ext.MessageBox.ERROR,
-                buttons: Ext.MessageBox.OK
-            });
+            if (response.success()) {
+                Ext.Msg.show({
+                    title: e.message,
+                    msg: gxp.util.getOGCExceptionText(e.arg.exceptionReport),
+                    icon: Ext.MessageBox.ERROR,
+                    buttons: Ext.MessageBox.OK
+                });
+            }
         });
         this.items = [{
             xtype: 'form',
