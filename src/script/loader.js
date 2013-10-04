@@ -2,7 +2,6 @@
 
     var jsfiles = new Array(
         "util.js",
-        "ColorManager.js",
         "util/color.js",
         "util/style.js",
         "data/AutoCompleteProxy.js",
@@ -114,6 +113,7 @@
         "plugins/Print.js",
         "plugins/LoadingIndicator.js",
         "plugins/Playback.js",
+        "ColorManager.js",
         "locale/es.js",
         "locale/ca.js"
     );
