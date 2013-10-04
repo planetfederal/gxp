@@ -2,6 +2,7 @@
 
     var jsfiles = new Array(
         "util.js",
+        "ColorManager.js",
         "util/color.js",
         "util/style.js",
         "data/AutoCompleteProxy.js",
