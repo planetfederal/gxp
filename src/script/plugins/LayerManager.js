@@ -94,14 +94,10 @@ gxp.plugins.LayerManager = Ext.extend(gxp.plugins.LayerTree, {
     /** private: method[configureLayerNode] */
     configureLayerNode: function(loader, attr) {
         gxp.plugins.LayerManager.superclass.configureLayerNode.apply(this, arguments);
-        var legendXType, baseWMSParams = {transparent: true};
+        var legendXType;
         // add a WMS legend to each node created
         if (OpenLayers.Layer.WMS && attr.layer instanceof OpenLayers.Layer.WMS) {
             legendXType = "gx_wmslegend";
-            if (attr.layer.url.indexOf('geoserver') !== -1) {
-                baseWMSParams.format = "image/png";
-                baseWMSParams.legend_options = "fontAntiAliasing:true;fontSize:11;fontName:Arial";
-            }
         } else if (OpenLayers.Layer.Vector && attr.layer instanceof OpenLayers.Layer.Vector) {
             legendXType = "gx_vectorlegend";
         }
@@ -117,7 +113,11 @@ gxp.plugins.LayerManager = Ext.extend(gxp.plugins.LayerTree, {
                     // so maybe they should be configurable - and they are
                     // only relevant for gx_wmslegend.
                     hidden: !attr.layer.getVisibility(),
-                    baseParams: Ext.apply(baseWMSParams, baseParams),
+                    baseParams: Ext.apply({
+                        transparent: true,
+                        format: "image/png",
+                        legend_options: "fontAntiAliasing:true;fontSize:11;fontName:Arial"
+                    }, baseParams),
                     layerRecord: this.target.mapPanel.layers.getByLayer(attr.layer),
                     showTitle: false,
                     // custom class for css positioning
