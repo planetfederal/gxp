@@ -371,7 +371,7 @@ div.olMap div.gx-overlay-playback {
     top: 22px;
     left: 65px;
 }
-.gx-overlay-playback.x-toolbar {
+.gx-overlay-playback .x-toolbar {
     background: none;
     border: none;
 }
