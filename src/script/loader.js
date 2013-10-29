@@ -112,6 +112,7 @@
         "plugins/Print.js",
         "plugins/LoadingIndicator.js",
         "plugins/Playback.js",
+        "ColorManager.js",
         "locale/es.js",
         "locale/ca.js"
     );
