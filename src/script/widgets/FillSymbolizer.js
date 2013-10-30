@@ -63,7 +63,7 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
      *  ``String`` Default background color for the Color field. This
      *  color will be displayed when no fillColor value for the symbolizer
      *  is available. Defaults to the ``fillColor`` property of
-     *  ``OpenLayers.Renderer.defaultSymbolizer``.
+     *  ``OpenLayers.Renderer.defaultSymbolizerGXP``.
      */
     defaultColor: null,
 
@@ -89,8 +89,8 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
         if (this.opacityProperty in this.symbolizer) {
             sliderValue = this.symbolizer[this.opacityProperty]*100;
         }
-        else if (OpenLayers.Renderer.defaultSymbolizer[this.opacityProperty]) {
-            sliderValue = OpenLayers.Renderer.defaultSymbolizer[this.opacityProperty]*100;
+        else if (OpenLayers.Renderer.defaultSymbolizerGXP[this.opacityProperty]) {
+            sliderValue = OpenLayers.Renderer.defaultSymbolizerGXP[this.opacityProperty]*100;
         }
         
         this.items = [{
@@ -108,10 +108,10 @@ gxp.FillSymbolizer = Ext.extend(Ext.FormPanel, {
                 xtype: "gxp_colorfield",
                 fieldLabel: this.colorText,
                 name: "color",
-                emptyText: OpenLayers.Renderer.defaultSymbolizer[this.colorProperty],
+                emptyText: OpenLayers.Renderer.defaultSymbolizerGXP[this.colorProperty],
                 value: this.symbolizer[this.colorProperty],
                 defaultBackground: this.defaultColor ||
-                    OpenLayers.Renderer.defaultSymbolizer[this.colorProperty],
+                    OpenLayers.Renderer.defaultSymbolizerGXP[this.colorProperty],
                 plugins: colorFieldPlugins,
                 listeners: {
                     valid: function(field) {

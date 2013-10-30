@@ -37,7 +37,7 @@ Ext.namespace("gxp");
  *      and call the ``saveStyles`` method.
  *
  *      Note: when this component is included in a build,
- *      ``OpenLayers.Renderer.defaultSymbolizer`` will be set to the SLD
+ *      ``OpenLayers.Renderer.defaultSymbolizerGXP`` will be set to the SLD
  *      defaults.  In addition, the OpenLayers SLD v1 parser will be patched
  *      to support vendor specific extensions added to SLD by GeoTools.
  */
@@ -1205,7 +1205,7 @@ gxp.WMSStylesDialog.createGeoServerStylerConfig = function(layerRecord, url) {
 };
 
 // set SLD defaults for symbolizer
-OpenLayers.Renderer.defaultSymbolizer = {
+OpenLayers.Renderer.defaultSymbolizerGXP = {
     fillColor: "#808080",
     fillOpacity: 1,
     strokeColor: "#000000",
