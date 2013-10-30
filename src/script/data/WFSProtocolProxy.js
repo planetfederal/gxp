@@ -74,7 +74,6 @@ gxp.data.WFSProtocolProxy = Ext.extend(GeoExt.data.ProtocolProxy, {
                 schema: config.schema,
                 filter: config.filter,
                 maxFeatures: config.maxFeatures,
-                outputFormat: config.url.indexOf('nationaalgeoregister') > 0 ? 'GML2' : undefined,
                 multi: config.multi
             }, config.protocol));
         }
