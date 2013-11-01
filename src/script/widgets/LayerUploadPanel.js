@@ -382,7 +382,7 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
                         if (!task) {
                             success = false;
                             msg = "Unknown upload error";
-                        } else if (!task.items.length) {
+                        } else if (!task.items || !task.items.length) {
                             success = false;
                             msg = "Upload contains no items that can be imported.";
                         } else if (task.state !== "READY") {
