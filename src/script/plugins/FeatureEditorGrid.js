@@ -122,7 +122,13 @@ gxp.plugins.FeatureEditorGrid = Ext.extend(Ext.grid.PropertyGrid, {
                 if (annotations && annotations.label) {
                     this.propertyNames = this.propertyNames || {};
                     this.propertyNames[name] = annotations.label;
-                }
+                } else {
+					var label = r.get("label");
+					if (!Ext.isEmpty(label)) {
+						this.propertyNames = this.propertyNames || {};
+						this.propertyNames[name] = label;
+					}
+				}
                 var listeners;
                 if (typeof value == "string") {
                     var format;
