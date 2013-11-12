@@ -59,7 +59,7 @@ GeoExt.Lang.add("fr", {
 
     "gxp.plugins.LayerProperties.prototype": {
         menuText: "Propriétés de la couche",
-        toolTip: "Propriétés de la couche"
+        toolTip: "Afficher les propriétés de la couche"
     },
     
     "gxp.plugins.LayerTree.prototype": {
@@ -75,28 +75,28 @@ GeoExt.Lang.add("fr", {
 
     "gxp.plugins.Legend.prototype": { 
         menuText: "Légende",
-        tooltip: "Légende"
+        tooltip: "Afficher la légende"
     },
 
     "gxp.plugins.Measure.prototype": {
         buttonText: "Mesure",
         lengthMenuText: "Longueur",
         areaMenuText: "Surface",
-        lengthTooltip: "Mesure de longueur",
-        areaTooltip: "Mesure de surface",
-        measureTooltip: "Mesure"
+        lengthTooltip: "Mesurer une longueur",
+        areaTooltip: "Mesurer une surface",
+        measureTooltip: "Mesurer"
     },
 
     "gxp.plugins.Navigation.prototype": {
-        menuText: "Panner la carte",
-        tooltip: "Panner la carte"
+        menuText: "Panner",
+        tooltip: "Faire glisser la carte"
     },
 
     "gxp.plugins.NavigationHistory.prototype": {
         previousMenuText: "Position précédente",
         nextMenuText: "Position suivante",
-        previousTooltip: "Position précédente",
-        nextTooltip: "Position suivante"
+        previousTooltip: "Retourner à la position précédente",
+        nextTooltip: "Aller à la position suivante"
     },
 
     "gxp.plugins.LoadingIndicator.prototype": {
@@ -166,9 +166,9 @@ GeoExt.Lang.add("fr", {
         zoomMenuText: "Zoom Box",
         zoomInMenuText: "Zoom avant",
         zoomOutMenuText: "Zoom arrière",
-        zoomTooltip: "Zoom by dragging a box",
-        zoomInTooltip: "Zoom avant",
-        zoomOutTooltip: "Zoom arrière"
+        zoomTooltip: "Zoomer en dessinant un rectangle",
+        zoomInTooltip: "Zoomer",
+        zoomOutTooltip: "Dézoomer"
     },
     
     "gxp.plugins.ZoomToExtent.prototype": {
