@@ -124,8 +124,8 @@ GeoExt.Lang.add("de", {
     "gxp.plugins.NavigationHistory.prototype": {
         previousMenuText: "Kartenausschnitt zurück",
         nextMenuText: "Kartenausschnitt vorwärts",
-        previousTooltip: "Vorheriger Kartenausschnitt anzeigen",
-        nextTooltip: "Nächster Kartenausschnit anzeigen"
+        previousTooltip: "Vorherigen Kartenausschnitt anzeigen",
+        nextTooltip: "Nächsten Kartenausschnit anzeigen"
     },
 
     "gxp.plugins.OSMSource.prototype": {
