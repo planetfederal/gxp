@@ -824,17 +824,21 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                             },
                             listeners: {
                                 uploadcomplete: function(panel, detail) {
-                                    var layers = detail["import"].tasks[0].items;
+                                    var layers = detail["import"].tasks;
                                     var item, names = {}, resource, layer;
                                     for (var i=0, len=layers.length; i<len; ++i) {
                                         item = layers[i];
                                         if (item.state === "ERROR") {
-                                            Ext.Msg.alert(item.originalName, item.errorMessage);
+                                            Ext.Msg.alert(item.layer.originalName, item.errorMessage);
                                             return;
                                         }
-                                        resource = item.resource;
-                                        layer = resource.featureType || resource.coverage;
-                                        names[layer.namespace.name + ":" + layer.name] = true;
+                                        var ws;
+                                        if (item.target.dataStore) {
+                                            ws = item.target.dataStore.workspace.name;
+                                        } else if (item.target.coverageStore) {
+                                            ws = item.target.coverageStore.workspace.name;
+                                        }
+                                        names[ws + ":" + item.layer.name] = true;
                                     }
                                     this.selectedSource.store.load({
                                         callback: function(records, options, success) {
