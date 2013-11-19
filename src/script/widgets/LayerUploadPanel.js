@@ -172,7 +172,7 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
                             this._import = response.getResponseHeader("Location");
                             this.optionsFieldset.expand();
                             form.submit({
-                                url: this._import + "/tasks",
+                                url: this._import + "/tasks?expand=all",
                                 waitMsg: this.waitMsgText,
                                 waitMsgTarget: true,
                                 reset: true,
@@ -382,15 +382,12 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
                         if (!task) {
                             success = false;
                             msg = "Unknown upload error";
-                        } else if (!task.items || !task.items.length) {
+                        } else if (task.state === 'NO_FORMAT') {
                             success = false;
-                            msg = "Upload contains no items that can be imported.";
-                        } else if (task.state !== "READY") {
-                            if (!(task.state === "INCOMPLETE" && task.items[0].state === "NO_CRS" && formData.nativeCRS)) {
-                                success = false;
-                                msg = "Source " + task.source.file + " is " + task.state + ": " + task.items[0].state;
-                                break;
-                            }
+                            msg = "Upload contains no suitable files.";
+                        } else if (task.state === 'NO_CRS' && !formData.nativeCRS) {
+                            success = false;
+                            msg = "Coordinate Reference System (CRS) of source file " + task.data.file + " could not be determined. Please specify manually.";
                         }
                     }
                 }
@@ -400,27 +397,26 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
             // mark the file field as invlid
             records = [{data: {id: "file", msg: msg || this.uploadFailedText}}];
         } else {
-            var itemModified = !!(formData.title || formData["abstract"] || formData.nativeCRS),
-                queue = [];
-            if (itemModified) {
+            var itemModified = !!(formData.title || formData["abstract"] || formData.nativeCRS);
+            // do not do this for coverages see https://github.com/boundlessgeo/suite/issues/184
+            if (itemModified && tasks[0].target.dataStore) {
                 this.waitMsg = new Ext.LoadMask((this.ownerCt || this).getEl(), {msg: this.processingUploadText});
                 this.waitMsg.show();
-                // for now we only support a single item (items[0])
-                var resource = task.items[0].resource,
-                    layer = resource.featureType ? "featureType" : "coverage",
-                    item = {id: task.items[0].id, resource: {}};
-                item.resource[layer] = {
+                // for now we only support a single task
+                var payload = {
                     title: formData.title || undefined,
                     "abstract": formData["abstract"] || undefined,
                     srs: formData.nativeCRS || undefined
                 };
                 Ext.Ajax.request({
                     method: "PUT",
-                    url: tasks[0].items[0].href,
-                    jsonData: item,
+                    url: tasks[0].layer.href,
+                    jsonData: payload,
                     success: this.finishUpload,
                     failure: function(response) {
-                        this.waitMsg.hide();
+                        if (this.waitMsg) {
+                            this.waitMsg.hide();
+                        }
                         var errors = [];
                         try {
                             var json = Ext.decode(response.responseText);
@@ -490,10 +486,12 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
     handleUploadSuccess: function(response) {
         Ext.Ajax.request({
             method: "GET",
-            url: this._import,
+            url: this._import + '?expand=all',
             failure: this.handleFailure,
             success: function(response) {
-                this.waitMsg.hide();
+                if (this.waitMsg) {
+                    this.waitMsg.hide();
+                }
                 this.getForm().reset();
                 var details = Ext.decode(response.responseText);
                 this.fireEvent("uploadcomplete", this, details);
@@ -506,7 +504,9 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
     /** private: method[handleFailure]
      */
     handleFailure: function() {
-        this.waitMsg.hide();
+        if (this.waitMsg) {
+            this.waitMsg.hide();
+        }
         this.getForm().markInvalid([{file: this.uploadFailedText}]);
     }
 
