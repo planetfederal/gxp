@@ -893,7 +893,7 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
                 callback: function(request) {
                     this.handleSave(request);
                     if (callback) {
-                        callback.call(scope || this);
+                        callback.call(scope || this, request);
                     }
                 },
                 scope: this
