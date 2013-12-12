@@ -293,10 +293,22 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
                 store.proxy = new Ext.data.HttpProxy({
                     url: workspaceUrl.split(".json").shift() + "/datastores.json"
                 });
+                store.proxy.on('loadexception', addDefault, this);
                 store.load();
             },
             scope: this
         });
+
+        var addDefault = function() {
+            var defaultData = {
+                name: this.dataStoreEmptyText
+            };
+            var r = new store.recordType(defaultData);
+            store.insert(0, r);
+            store.proxy && store.proxy.un('loadexception', addDefault, this);
+        };
+
+        store.on('load', addDefault, this);
 
         var combo = new Ext.form.ComboBox({
             name: "store",
