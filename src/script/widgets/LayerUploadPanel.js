@@ -36,8 +36,8 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
     workspaceLabel: "Workspace",
     workspaceEmptyText: "Default workspace",
     dataStoreLabel: "Store",
-    dataStoreEmptyText: "Create new store",
-    defaultDataStoreEmptyText: "Default data store",
+    dataStoreEmptyText: "Choose a store",
+    dataStoreNewText: "Create new store",
     crsLabel: "CRS",
     crsEmptyText: "Coordinate Reference System ID",
     invalidCrsText: "CRS identifier should be an EPSG code (e.g. EPSG:4326)",
@@ -59,7 +59,7 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
      *  ``String``
      *  URL for GeoServer RESTConfig root.  E.g. "http://example.com/geoserver/rest".
      */
-    
+
     /** private: property[defaultDataStore]
      *  ``string``
      */
@@ -159,10 +159,10 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
                     if (fields.workspace) {
                         jsonData["import"].targetWorkspace = {workspace: {name: fields.workspace}};
                     }
-                    if (fields.store) {
-                        jsonData["import"].targetStore = {dataStore: {name: fields.store}}
-                    } else if (this.defaultDataStore) {
-                        jsonData["import"].targetStore = {dataStore: {name: this.defaultDataStore}}                        
+                    if (Ext.isEmpty(fields.store) && this.defaultDataStore) {
+                        jsonData["import"].targetStore = {dataStore: {name: this.defaultDataStore}};
+                    } else if (!Ext.isEmpty(fields.store) && fields.store !== this.dataStoreNewText) {
+                        jsonData["import"].targetStore = {dataStore: {name: fields.store}};
                     }
                     Ext.Ajax.request({
                         url: this.getUploadUrl(),
@@ -252,7 +252,6 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
             name: "workspace",
             ref: "../workspace",
             fieldLabel: this.workspaceLabel,
-            emptyText: this.workspaceEmptyText,
             store: new Ext.data.JsonStore({
                 url: this.getWorkspacesUrl(),
                 autoLoad: true,
@@ -301,7 +300,7 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
 
         var addDefault = function() {
             var defaultData = {
-                name: this.dataStoreEmptyText
+                name: this.dataStoreNewText
             };
             var r = new store.recordType(defaultData);
             store.insert(0, r);
@@ -313,8 +312,8 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
         var combo = new Ext.form.ComboBox({
             name: "store",
             ref: "../dataStore",
-            fieldLabel: this.dataStoreLabel,
             emptyText: this.dataStoreEmptyText,
+            fieldLabel: this.dataStoreLabel,
             store: store,
             displayField: "name",
             valueField: "name",
@@ -338,18 +337,24 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
             url: this.url + '/workspaces/' + workspace + '/datastores/default.json',
             callback: function(options, success, response) {
                 this.defaultDataStore = null;
-                this.dataStore.emptyText = this.dataStoreEmptyText;
-                this.dataStore.setValue('');
                 if (response.status === 200) {
                     var json = Ext.decode(response.responseText);
+                    if (workspace === 'default' && json.dataStore && json.dataStore.workspace) {
+                        this.workspace.setValue(json.dataStore.workspace.name);
+                        var store = this.workspace.store;
+                        var data = {
+                            name: json.dataStore.workspace.name,
+                            href: json.dataStore.workspace.href
+                        };
+                        var r = new store.recordType(data);
+                        this.fireEvent("workspaceselected", this, r);
+                    }
                     //TODO Revisit this logic - currently we assume that stores
                     // with the substring "file" in the type are file based,
                     // and for file-based data stores we want to crate a new
                     // store.
                     if (json.dataStore && json.dataStore.enabled === true && !/file/i.test(json.dataStore.type)) {
                         this.defaultDataStore = json.dataStore.name;
-                        this.dataStore.emptyText = this.defaultDataStoreEmptyText;
-                        this.workspace.setValue(json.dataStore.workspace.name);
                         this.dataStore.setValue(this.defaultDataStore);
                     }
                 }
