@@ -264,7 +264,8 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 handler: this.showCapabilitiesGrid, 
                 scope: this
             })];
-            if (this.initialConfig.search) {
+            if (this.initialConfig.search && this.initialConfig.search.selectedSource &&
+              this.target.sources[this.initialConfig.search.selectedSource]) {
                 var search = new Ext.menu.Item({
                     iconCls: 'gxp-icon-addlayers',
                     text: this.findActionMenuText,
@@ -272,17 +273,15 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     scope: this
                 });
                 items.push(search);
-                if (this.initialConfig.search.selectedSource) {
-                    Ext.Ajax.request({
-                        method: "GET",
-                        url: this.target.sources[this.initialConfig.search.selectedSource].url,
-                        callback: function(options, success, response) {
-                            if (success === false) {
-                                search.hide();
-                            }
+                Ext.Ajax.request({
+                    method: "GET",
+                    url: this.target.sources[this.initialConfig.search.selectedSource].url,
+                    callback: function(options, success, response) {
+                        if (success === false) {
+                            search.hide();
                         }
-                   });
-               }
+                    }
+                });
             }
             if (this.initialConfig.feeds) {
                 items.push(new Ext.menu.Item({
