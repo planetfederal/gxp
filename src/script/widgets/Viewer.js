@@ -231,6 +231,11 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
              *  Fires when application is ready for user interaction.
              */
             "ready",
+
+            /** api: event[beforecreateportal]
+             *  Fires before the portal is created by the Ext ComponentManager.
+             */
+            "beforecreateportal",
             
             /** api: event[portalready]
              *  Fires after the portal is initialized.
@@ -551,6 +556,8 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
             this.mapPanel.region = "center";
             this.portalItems.push(this.mapPanel);
         }
+
+        this.fireEvent("beforecreateportal");
         
         this.portal = Ext.ComponentMgr.create(Ext.applyIf(config, {
             layout: "fit",
