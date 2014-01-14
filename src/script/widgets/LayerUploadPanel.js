@@ -520,11 +520,16 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
     
     /** private: method[handleFailure]
      */
-    handleFailure: function() {
-        if (this.waitMsg) {
-            this.waitMsg.hide();
+    handleFailure: function(response) {
+        // see http://stackoverflow.com/questions/10046972/msie-returns-status-code-of-1223-for-ajax-request
+        if (response && response.status === 1223) {
+            this.handleUploadSuccess(response);
+        } else {
+            if (this.waitMsg) {
+                this.waitMsg.hide();
+            }
+            this.getForm().markInvalid([{file: this.uploadFailedText}]);
         }
-        this.getForm().markInvalid([{file: this.uploadFailedText}]);
     }
 
 });
