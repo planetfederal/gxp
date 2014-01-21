@@ -34,7 +34,7 @@ Ext.namespace("gxp");
  *      Extend the GXP WMSStylesDialog to work with Vector Layers
  *      that originate from a WFS or local OpenLayers Features from upload or drawing.
  */
-gxp.VectorStylesDialog = Ext.extend(gxp.WMSStylesDialog, {
+gxp.VectorStylesDialog = Ext.extend(gxp.StylesDialog, {
 
     /** private: method[initComponent]
      */
@@ -44,6 +44,7 @@ gxp.VectorStylesDialog = Ext.extend(gxp.WMSStylesDialog, {
         // We cannot create/delete new styles for Vector Layers (StyleMap restriction)
         // this.items.removeAt(1);
         this.initialConfig.styleName = 'default';
+//        this.items.get(0).setDisabled(true);
         this.items.get(1).setDisabled(true);
 
         this.on({
@@ -108,8 +109,10 @@ gxp.VectorStylesDialog = Ext.extend(gxp.WMSStylesDialog, {
                 // explicitly create reader
                 // id for each record will be the first element}
                 reader: new Ext.data.ArrayReader(
-                        {idIndex: 0},
-                        Ext.data.Record.create([{name: 'name'}])
+                    {idIndex: 0},
+                    Ext.data.Record.create([
+                        {name: 'name'}
+                    ])
                 )
             });
 
@@ -124,12 +127,13 @@ gxp.VectorStylesDialog = Ext.extend(gxp.WMSStylesDialog, {
             }
             attributeStore.loadData(myData);
             // Silence the proxy (must be better way...)
-            attributeStore.proxy = {request: function () {}};
+            attributeStore.proxy = {request: function () {
+            }};
         }
 
         var ruleDlg = new this.dialogCls({
             title: String.format(this.ruleWindowTitle,
-                    rule.title || rule.name || this.newRuleText),
+                rule.title || rule.name || this.newRuleText),
             shortTitle: rule.title || rule.name || this.newRuleText,
             layout: "fit",
             width: 320,
@@ -138,7 +142,7 @@ gxp.VectorStylesDialog = Ext.extend(gxp.WMSStylesDialog, {
             pageY: 100,
             modal: true,
             listeners: {
-                hide: function() {
+                hide: function () {
                     if (gxp.ColorManager.pickerWin) {
                         gxp.ColorManager.pickerWin.hide();
                     }
@@ -149,7 +153,7 @@ gxp.VectorStylesDialog = Ext.extend(gxp.WMSStylesDialog, {
                 {
                     xtype: "gxp_rulepanel",
                     ref: "rulePanel",
-                    symbolType: this.symbolType,
+                    symbolType: rule.symbolType ? rule.symbolType : this.symbolType,
                     rule: rule,
                     attributes: attributeStore,
                     autoScroll: true,
@@ -188,53 +192,81 @@ gxp.VectorStylesDialog = Ext.extend(gxp.WMSStylesDialog, {
         this.showDlg(ruleDlg);
     },
 
+    /** private: method[createSymbolizer]
+     *  Create OpenLayers Symbolizer object.
+     *  :arg symbol: ``String`` symbolizer type: 'Point', 'Line' or 'Polygon'.
+     *  :arg styleHash: ``Object`` object with OpenLayers Style properties.
+     */
+    createSymbolizer: function (symbol, styleHash) {
+        var Type = eval('OpenLayers.Symbolizer.' + symbol);
+        return new Type(styleHash);
+    },
 
     /** private: method[prepareStyle]
      *  :arg style: ``Style`` object to be cloned and prepared for GXP editing.
      */
-    prepareStyle: function (layer, style, name) {
-        style = style.clone();
-        style.isDefault = name === 'default';
+    prepareStyle: function (layer, styl, name) {
+        // Makes deep copy
+        var style = styl.clone();
+        style.isDefault = (name === 'default');
         style.name = name;
         style.title = name + ' style';
         style.description = name + ' style for this layer';
         style.layerName = layer.name;
 
+        var symbolizers = [], symbolizer, symbol, rule;
         if (style.rules && style.rules.length > 0) {
-            for (var i = 0, len = style.rules.length; i < len; i++) {
-                var rule = style.rules[i];
-                rule.symbolizers = [];
+            for (var i = 0; i < style.rules.length; i++) {
+                rule = style.rules[i];
+                symbolizers = [];
 
-                for (var symbol in rule.symbolizer) {
-                    var symbolizer = rule.symbolizer[symbol];
-                    if (symbolizer.CLASS_NAME && symbolizer.CLASS_NAME.indexOf('OpenLayers.Symbolizer.') > 0) {
-                        ;
-                    } else if (symbolizer instanceof Object) {
+                // GXP Style Editing needs symbolizers array in Rule object
+                // while Vector/Style drawing needs symbolizer hash, so convert for GXP here.
+                for (symbol in rule.symbolizer) {
+                    symbolizer = rule.symbolizer[symbol];
+                    if (!symbolizer.CLASS_NAME) {
                         // In some cases the symbolizer may be a hash: create corresponding class object
-                        symbolizer = Heron.Utils.createOLObject(['OpenLayers.Symbolizer.' + symbol, symbolizer]);
+                        symbolizer = this.createSymbolizer(symbol, symbolizer);
+                    } else {
+                        symbolizer = symbolizer.clone();
                     }
-                    rule.symbolizers.push(symbolizer);
+                    symbolizers.push(symbolizer);
                 }
+                rule.symbolizers = symbolizers;
                 rule.symbolizer = undefined;
             }
+            // style.defaultsPerSymbolizer = true;
 
-        } else {
+        } else if (layer.customStyling) {
+            // One rule per symbol for custom styling, also for Layers with more geom-types
+            var symbols = ['Point', 'Line', 'Polygon'];
+            style.rules = [];
+            var symbolizerStyle = style.defaultStyle;
+            for (var s = 0; s < symbols.length; s++) {
+                symbol = symbols[s];
+                rule = new OpenLayers.Rule({title: symbol, symbolType: symbol, symbolizers: [this.createSymbolizer(symbol, symbolizerStyle)]});
+                style.rules.push(rule);
+            }
+            style.defaultsPerSymbolizer = false;
+        }
+        else {
             // GXP Style Editing needs symbolizers array in Rule object
             // while Vector/Style drawing needs symbolizer hash...
-            var symbolizer = new OpenLayers.Symbolizer.Polygon(style.defaultStyle);
+            symbol = 'Polygon';
             if (layer && layer.features && layer.features.length > 0) {
-                 var geom = layer.features[0].geometry;
-                 if (geom) {
-                     if (geom.CLASS_NAME.indexOf('Point') > 0) {
-                         symbolizer = new OpenLayers.Symbolizer.Point(style.defaultStyle);
-                     } else if (geom.CLASS_NAME.indexOf('Line') > 0) {
-                         symbolizer = new OpenLayers.Symbolizer.Line(style.defaultStyle);
-                     }
-                 }
-             }
-            var symbolizers = [symbolizer];
+                var geom = layer.features[0].geometry;
+                if (geom) {
+                    if (geom.CLASS_NAME.indexOf('Point') > 0) {
+                        symbol = 'Point';
+                    } else if (geom.CLASS_NAME.indexOf('Line') > 0) {
+                        symbol = 'Line';
+                    }
+                }
+            }
+            symbolizer = this.createSymbolizer(symbol, style.defaultStyle);
+            symbolizers = [symbolizer];
             style.rules = [new OpenLayers.Rule({title: style.name, symbolizers: symbolizers})];
-            style.defaultsPerSymbolizer = true;
+            // style.defaultsPerSymbolizer = true;
         }
         return style;
     },
@@ -292,7 +324,7 @@ gxp.VectorStylesDialog = Ext.extend(gxp.WMSStylesDialog, {
                     this.stylesStore.add(record);
                     // set the default style if no STYLES param is set on the layer
                     if (!this.selectedStyle && (initialStyle === userStyle.name ||
-                            (!initialStyle && userStyle.isDefault === true))) {
+                        (!initialStyle && userStyle.isDefault === true))) {
                         this.selectedStyle = record;
                     }
                 }
@@ -408,7 +440,7 @@ gxp.VectorStylesDialog.createVectorStylerConfig = function (layerRecord) {
         layerRecord: layerRecord,
         listeners: {
             hide: function () {
-                alert('hode');
+                alert('hide');
             }
         },
         plugins: [
@@ -482,13 +514,72 @@ Ext.override(Ext.ColorPalette, {
     ]
 });
 
-(function() {
+Ext.override(gxp.form.ColorField, {
+
+    /** private: method[expand3DigitHex]
+     *  :returns: ``String`` A RGB 6-digit hex color string.
+     *
+     *  Return the 6-digit RGB hex representation for a shorthand 3-digit hex color.
+     *  See http://en.wikipedia.org/wiki/Web_colors
+     *
+     */
+    expand3DigitHex: function (color) {
+        if (color && color.length == 4 && color.indexOf('#') == 0) {
+            // For example #37f becomes #3377ff
+            color = '#' + color[1] + color[1] + color[2] + color[2] + color[3] + color[3];
+        }
+        return color;
+    },
+
+    /** private: method[colorToHex]
+     *  :returns: ``String`` A RGB hex color string or null if none found.
+     *
+     *  Return the RGB hex representation of a color string.  If a CSS supported
+     *  named color is supplied, the hex representation will be returned.
+     *  If a non-CSS supported named color is supplied, null will be
+     *  returned.  If a RGB hex string is supplied, the same will be returned.
+     *  Shorthand (3-digit) hexcodes will be expanded to 6-digits.
+     */
+    colorToHex: function (color) {
+        if (!color) {
+            return color;
+        }
+        color = this.expand3DigitHex(color);
+        var hex;
+        if (color.match(/^#[0-9a-f]{6}$/i)) {
+            hex = color;
+        } else {
+            hex = this.cssColors[color.toLowerCase()] || null;
+        }
+        return hex;
+    },
+
+    /** private: method[hexToColor]
+     */
+    hexToColor: function (hex) {
+        if (!hex) {
+            return hex;
+        }
+
+        // Added by Just: in some cases a 3-digit hexcolor may be used
+        hex = this.expand3DigitHex(hex);
+        var color = hex;
+        for (var c in this.cssColors) {
+            if (this.cssColors[c] == color.toUpperCase()) {
+                color = c;
+                break;
+            }
+        }
+        return color;
+    }});
+
+(function () {
     // register the color manager with every color field
     Ext.util.Observable.observeClass(Ext.ColorPalette);
     Ext.ColorPalette.on({
-        render: function() {
+        render: function () {
             if (gxp.ColorManager.pickerWin) {
-                gxp.ColorManager.pickerWin.setPagePosition(200,100);
+                gxp.ColorManager.pickerWin.setPagePosition(200, 100);
             }
         }
     });

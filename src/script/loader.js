@@ -19,6 +19,7 @@
         "widgets/QueryPanel.js",
         "widgets/StylePropertiesDialog.js",
         "widgets/WMSLayerPanel.js",
+        "widgets/StylesDialog.js",
         "widgets/WMSStylesDialog.js",
         "widgets/VectorStylesDialog.js",
         "widgets/NewSourceDialog.js",

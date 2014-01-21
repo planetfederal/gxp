@@ -22,26 +22,17 @@
 
 /** api: (define)
  *  module = gxp
- *  class = WMSStylesDialog
+ *  class = StylesDialog
  *  base_link = `Ext.Container <http://extjs.com/deploy/dev/docs/?class=Ext.Container>`_
  */
 Ext.namespace("gxp");
 
 /** api: constructor
- *  .. class:: WMSStylesDialog(config)
+ *  .. class:: StylesDialog(config)
  *
- *      Create a dialog for selecting and layer styles. If the WMS supports
- *      GetStyles, styles can also be edited. The dialog does not provide any
- *      means of writing modified styles back to the server. To save styles,
- *      configure the dialog with a :class:`gxp.plugins.StyleWriter` plugin
- *      and call the ``saveStyles`` method.
- *
- *      Note: when this component is included in a build,
- *      ``OpenLayers.Renderer.defaultSymbolizerGXP`` will be set to the SLD
- *      defaults.  In addition, the OpenLayers SLD v1 parser will be patched
- *      to support vendor specific extensions added to SLD by GeoTools.
+ *  Abstract base class for specific Styling (Vector, WMS) dialog containers.
  */
-gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
+gxp.StylesDialog = Ext.extend(Ext.Container, {
 
     /** api: config[addStyleText] (i18n) */
      addStyleText: "Add",
@@ -201,7 +192,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
              *
              *  Listener arguments:
              *
-             *  * :class:`gxp.WMSStylesDialog` this component
+             *  * :class:`gxp.StylesDialog` this component
              *  * ``String`` the name of the modified style
              */
             "modified",
@@ -212,7 +203,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
              *
              *  Listener arguments:
              *
-             *  * :class:`gxp.WMSStylesDialog` this component
+             *  * :class:`gxp.StylesDialog` this component
              *  * ``String`` the name of the selected style
              */
             "styleselected",
@@ -223,7 +214,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
              *
              *  Listener arguments:
              *
-             *  * :class:`gxp.WMSStylesDialog` this component
+             *  * :class:`gxp.StylesDialog` this component
              *  * ``Object`` options for the ``write`` method of the
              *    :class:`gxp.plugins.StyleWriter`
              */
@@ -236,7 +227,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
              *
              *  Listener arguments:
              *
-             *  * :class:`gxp.WMSStylesDialog` this component
+             *  * :class:`gxp.StylesDialog` this component
              *  * ``String`` the name of the currently selected style
              */
             "saved"
@@ -328,7 +319,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
             scope: this
         });
 
-        gxp.WMSStylesDialog.superclass.initComponent.apply(this, arguments);
+        gxp.StylesDialog.superclass.initComponent.apply(this, arguments);
     },
 
     /** api: method[addStyle]
@@ -766,7 +757,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         }
         catch(e) {
             if (window.console) {
-                console.warn(e.message);
+                console.warn(e.msg);
             }
             this.setupNonEditable();
         }
@@ -1088,7 +1079,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         if (!this.symbolType) {
             var typeHierarchy = ["Point", "Line", "Polygon"];
             // use the highest symbolizer type of the 1st rule
-            highest = 0;
+            var highest = 0;
             var symbolizers = rules[0].symbolizers, symbolType;
             for (var i=symbolizers.length-1; i>=0; i--) {
                 symbolType = symbolizers[i].CLASS_NAME.split(".").pop();
@@ -1113,6 +1104,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     this.updateRuleRemoveButton();
                     tbItems.get(2).enable();
                     tbItems.get(3).enable();
+                    // cmp.items.get(0).focus();
                 },
                 "ruleunselected": function(cmp, rule) {
                     this.selectedRule = null;
@@ -1164,12 +1156,12 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
  *  :arg url: ``String`` Optional. Custaom URL for the GeoServer REST endpoint
  *      for writing styles.
  *
- *  Creates a configuration object for a :class:`gxp.WMSStylesDialog` with a
+ *  Creates a configuration object for a :class:`gxp.StylesDialog` with a
  *  :class:`gxp.plugins.GeoServerStyleWriter` plugin and listeners for the
  *  "styleselected", "modified" and "saved" events that take care of saving
  *  styles and keeping the layer view updated.
  */
-gxp.WMSStylesDialog.createGeoServerStylerConfig = function(layerRecord, url) {
+gxp.StylesDialog.createGeoServerStylerConfig = function(layerRecord, url) {
     var layer = layerRecord.getLayer();
     if (!url) {
         url = layerRecord.get("restUrl");
@@ -1178,7 +1170,7 @@ gxp.WMSStylesDialog.createGeoServerStylerConfig = function(layerRecord, url) {
         url = layer.url.split("?").shift().replace(/\/(wms|ows)\/?$/, "/rest");
     }
     return {
-        xtype: "gxp_wmsstylesdialog",
+        xtype: "gxp_stylesdialog",
         layerRecord: layerRecord,
         plugins: [{
             ptype: "gxp_geoserverstylewriter",
@@ -1222,5 +1214,5 @@ OpenLayers.Renderer.defaultSymbolizerGXP = {
     labelAlign: 'cm'
 };
 
-/** api: xtype = gxp_wmsstylesdialog */
-Ext.reg('gxp_wmsstylesdialog', gxp.WMSStylesDialog);
+/** api: xtype = gxp_stylesdialog */
+Ext.reg('gxp_stylesdialog', gxp.StylesDialog);
