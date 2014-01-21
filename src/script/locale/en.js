@@ -393,8 +393,11 @@ GeoExt.Lang.add("en", {
         workspaceLabel: "Workspace",
         workspaceEmptyText: "Default workspace",
         dataStoreLabel: "Store",
-        dataStoreEmptyText: "Create new store",
-        defaultDataStoreEmptyText: "Default data store"
+        dataStoreEmptyText: "Choose a store",
+        dataStoreNewText: "Create new store",
+        crsLabel: "CRS",
+        crsEmptyText: "Coordinate Reference System ID",
+        invalidCrsText: "CRS identifier should be an EPSG code (e.g. EPSG:4326)"
     },
     
     "gxp.NewSourceDialog.prototype": {

@@ -766,7 +766,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         }
         catch(e) {
             if (window.console) {
-                console.warn(e.msg);
+                console.warn(e.message);
             }
             this.setupNonEditable();
         }
