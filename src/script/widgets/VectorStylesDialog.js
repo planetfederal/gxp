@@ -35,6 +35,7 @@ Ext.namespace("gxp");
  *      that originate from a WFS or local OpenLayers Features from upload or drawing.
  */
 gxp.VectorStylesDialog = Ext.extend(gxp.StylesDialog, {
+    attributeStore: null,
 
     /** private: method[initComponent]
      */
@@ -46,6 +47,7 @@ gxp.VectorStylesDialog = Ext.extend(gxp.StylesDialog, {
         this.initialConfig.styleName = 'default';
 //        this.items.get(0).setDisabled(true);
         this.items.get(1).setDisabled(true);
+
 
         this.on({
             "styleselected": function (cmp, style) {
@@ -89,55 +91,13 @@ gxp.VectorStylesDialog = Ext.extend(gxp.StylesDialog, {
         var rule = this.selectedRule;
         var origRule = rule.clone();
 
-        // Attribute types: either from WFS or local features
-        var attributeStore;
-        if (this.layerDescription) {
-            // WFS Layer: use DescribeFeatureType to get attribute-names/types
-            attributeStore = new GeoExt.data.AttributeStore({
-                url: this.layerDescription.owsURL,
-                baseParams: {
-                    "SERVICE": "WFS",
-                    "REQUEST": "DescribeFeatureType",
-                    "TYPENAME": this.layerDescription.typeName
-                },
-                method: "GET",
-                disableCaching: false
-            });
-        } else {
-            // Attribute store will be derived from local features
-            attributeStore = new Ext.data.Store({
-                // explicitly create reader
-                // id for each record will be the first element}
-                reader: new Ext.data.ArrayReader(
-                    {idIndex: 0},
-                    Ext.data.Record.create([
-                        {name: 'name'}
-                    ])
-                )
-            });
-
-            // Create attribute meta data from feature-attributes
-            var myData = [];
-            var layer = this.layerRecord.data.layer;
-            if (layer && layer.features && layer.features.length > 0) {
-                var attrs = layer.features[0].attributes;
-                for (var attr in attrs) {
-                    myData.push([attr]);
-                }
-            }
-            attributeStore.loadData(myData);
-            // Silence the proxy (must be better way...)
-            attributeStore.proxy = {request: function () {
-            }};
-        }
-
         var ruleDlg = new this.dialogCls({
             title: String.format(this.ruleWindowTitle,
                 rule.title || rule.name || this.newRuleText),
             shortTitle: rule.title || rule.name || this.newRuleText,
             layout: "fit",
             width: 320,
-            height: 450,
+            height: 490,
             pageX: 150,
             pageY: 100,
             modal: true,
@@ -155,7 +115,7 @@ gxp.VectorStylesDialog = Ext.extend(gxp.StylesDialog, {
                     ref: "rulePanel",
                     symbolType: rule.symbolType ? rule.symbolType : this.symbolType,
                     rule: rule,
-                    attributes: attributeStore,
+                    attributes: this.attributeStore,
                     autoScroll: true,
                     border: false,
                     defaults: {
@@ -189,6 +149,28 @@ gxp.VectorStylesDialog = Ext.extend(gxp.StylesDialog, {
                 }
             }]
         });
+
+        // Remove all text symbolizer-related tabs when no attributes exist
+        var removeItems, i;
+        if (this.attributeStore.data.getCount() == 0) {
+            var rulePanel = ruleDlg.findByType('gxp_rulepanel')[0];
+            removeItems = rulePanel.items.getRange(1, 2);
+            for (i = 0; i < removeItems.length; i++) {
+                rulePanel.remove(removeItems[i]);
+            }
+
+        }
+
+        // Remove advanced Label symbolizer widget
+        // items not or hard to support via OL Symbolizers and Printing
+        var textSymbolizers = ruleDlg.findByType('gxp_textsymbolizer');
+        if (textSymbolizers && textSymbolizers.length == 1) {
+            var textSymbolizer = textSymbolizers[0];
+            removeItems = textSymbolizer.items.getRange(3, 7);
+            for (i = 0; i < removeItems.length; i++) {
+                textSymbolizer.remove(removeItems[i]);
+            }
+        }
         this.showDlg(ruleDlg);
     },
 
@@ -351,14 +333,77 @@ gxp.VectorStylesDialog = Ext.extend(gxp.StylesDialog, {
      */
     describeLayer: function (callback) {
 
+        if (this.layerDescription) {
+            // always return before calling callback
+            callback.call(this);
+        }
+
         var layer = this.layerRecord.getLayer();
         if (layer.protocol && layer.protocol.CLASS_NAME.indexOf('.WFS') > 0) {
-            this.layerDescription = {};
-            this.layerDescription.owsURL = layer.protocol.url.replace('?', '');
-            this.layerDescription.owsType = 'WFS';
-            this.layerDescription.typeName = layer.protocol.featureType;
+            this.wfsLayer = {};
+            this.wfsLayer.owsURL = layer.protocol.url.replace('?', '');
+            this.wfsLayer.owsType = 'WFS';
+            this.wfsLayer.typeName = layer.protocol.featureType;
         }
-        this.editRule();
+
+        // Attribute types: either from WFS or local features
+        var self = this;
+        if (this.wfsLayer) {
+            // WFS Layer: use DescribeFeatureType to get attribute-names/types
+            this.attributeStore = new GeoExt.data.AttributeStore({
+                url: this.wfsLayer.owsURL,
+                baseParams: {
+                    "SERVICE": "WFS",
+                    "VERSION": "1.1.0",
+                    "REQUEST": "DescribeFeatureType",
+                    "TYPENAME": this.wfsLayer.typeName
+                },
+                // method: "GET",
+                // disableCaching: false,
+                autoLoad: true,
+                listeners: {
+                    'load': function (store) {
+                        self.layerDescription = self.attributeStore;
+                         // The TextSymbolizer calls load() as well, leading to loop
+                        // when we would call editRule() again...
+                        // prevent by makin load() function empty...
+                        // We should fix this in TextSymbolizer but there is a risk to break other stuff...
+                        store.load = function() {};
+                        callback.call(self);
+                    },
+                    scope: this
+                }
+            });
+        } else {
+            // Attribute store will be derived from local features
+            this.attributeStore = new Ext.data.Store({
+                // explicitly create reader
+                // id for each record will be the first element}
+                reader: new Ext.data.ArrayReader(
+                    {idIndex: 0},
+                    Ext.data.Record.create([
+                        {name: 'name'}
+                    ])
+                )
+            });
+
+            // Create attribute meta data from feature-attributes
+            var myData = [];
+            if (layer && layer.features && layer.features.length > 0) {
+                var attrs = layer.features[0].attributes;
+                for (var attr in attrs) {
+                    myData.push([attr]);
+                }
+            }
+            this.attributeStore.loadData(myData);
+            // Silence the proxy (must be better way...)
+            this.attributeStore.proxy = {request: function () {
+            }};
+            this.layerDescription = this.attributeStore;
+
+            callback.call(this);
+        }
+
     },
 
     /** private: method[addStylesCombo]

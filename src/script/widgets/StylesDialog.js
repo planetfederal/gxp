@@ -30,7 +30,7 @@ Ext.namespace("gxp");
 /** api: constructor
  *  .. class:: StylesDialog(config)
  *
- *  Abstract base class for specific Styling (Vector, WMS) dialog containers.
+ *  Abstract base class for specific Styling (Vector, WMS)  dialog widgets.
  */
 gxp.StylesDialog = Ext.extend(Ext.Container, {
 
@@ -922,38 +922,7 @@ gxp.StylesDialog = Ext.extend(Ext.Container, {
      *      request result was returned.
      */
     describeLayer: function(callback) {
-        if (this.layerDescription) {
-            // always return before calling callback
-            window.setTimeout(function() {
-                callback.call(this);
-            }, 0);
-        } else {
-            var layer = this.layerRecord.getLayer();
-            var version = layer.params["VERSION"];
-            if (parseFloat(version) > 1.1) {
-                //TODO don't force 1.1.1, fall back instead
-                version = "1.1.1";
-            }
-            Ext.Ajax.request({
-                url: layer.url,
-                params: {
-                    "SERVICE": "WMS",
-                    "VERSION": version,
-                    "REQUEST": "DescribeLayer",
-                    "LAYERS": [layer.params["LAYERS"]].join(",")
-                },
-                method: "GET",
-                disableCaching: false,
-                success: function(response) {
-                    var result = new OpenLayers.Format.WMSDescribeLayer().read(
-                        response.responseXML && response.responseXML.documentElement ?
-                            response.responseXML : response.responseText);
-                    this.layerDescription = result[0];
-                },
-                callback: callback,
-                scope: this
-            });
-        }
+      // To be implemented in subclass, e.g. DescribeLayer or DescribeFeatureType (WFS)
     },
 
     /** private: method[addStylesCombo]
