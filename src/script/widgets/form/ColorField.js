@@ -104,6 +104,21 @@ gxp.form.ColorField = Ext.extend(Ext.form.TextField,  {
         });
     },
     
+    /** private: method[expand3DigitHex]
+     *  :returns: ``String`` A RGB 6-digit hex color string.
+     *
+     *  Return the 6-digit RGB hex representation for a shorthand 3-digit hex color.
+     *  See http://en.wikipedia.org/wiki/Web_colors
+     *
+     */
+    expand3DigitHex: function (color) {
+        if (color && color.length == 4 && color.indexOf('#') == 0) {
+            // For example #37f becomes #3377ff
+            color = '#' + color[1] + color[1] + color[2] + color[2] + color[3] + color[3];
+        }
+        return color;
+    },
+
     /** api: method[getHexValue]
      *  :returns: ``String`` The RGB hex string for the field's value (prefixed
      *      with '#').
@@ -148,16 +163,18 @@ gxp.form.ColorField = Ext.extend(Ext.form.TextField,  {
     
     /** private: method[colorToHex]
      *  :returns: ``String`` A RGB hex color string or null if none found.
-     *  
+     *
      *  Return the RGB hex representation of a color string.  If a CSS supported
      *  named color is supplied, the hex representation will be returned.
      *  If a non-CSS supported named color is supplied, null will be
      *  returned.  If a RGB hex string is supplied, the same will be returned.
+     *  Shorthand (3-digit) hexcodes will be expanded to 6-digits.
      */
-    colorToHex: function(color) {
+    colorToHex: function (color) {
         if (!color) {
             return color;
         }
+        color = this.expand3DigitHex(color);
         var hex;
         if (color.match(/^#[0-9a-f]{6}$/i)) {
             hex = color;
@@ -169,10 +186,13 @@ gxp.form.ColorField = Ext.extend(Ext.form.TextField,  {
     
     /** private: method[hexToColor]
      */
-    hexToColor: function(hex) {
+    hexToColor: function (hex) {
         if (!hex) {
             return hex;
         }
+
+        // Added by Just: in some cases a 3-digit hexcolor may be used
+        hex = this.expand3DigitHex(hex);
         var color = hex;
         for (var c in this.cssColors) {
             if (this.cssColors[c] == color.toUpperCase()) {
@@ -182,7 +202,6 @@ gxp.form.ColorField = Ext.extend(Ext.form.TextField,  {
         }
         return color;
     }
-    
 });
 
 Ext.reg("gxp_colorfield", gxp.form.ColorField);
