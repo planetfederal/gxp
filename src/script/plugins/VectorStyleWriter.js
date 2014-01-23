@@ -180,7 +180,10 @@ gxp.plugins.VectorStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
                 layer.drawFeature(feature);
             }
 
-            // layerRecord.store.fireEvent("update", layerRecord.store, layerRecord, Ext.data.Record.EDIT)
+            // Emit this proprietary event, for example to have VectorLegend update itself
+            // Note: the GeoExt 1.1 VectorLegend does not listen to this event. See Heron
+            // geoext-override.js for VectorLegend methods how to implement.
+            layer.events.triggerEvent("stylechanged", newStyle);
         }
     },
 
