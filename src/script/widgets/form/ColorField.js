@@ -114,7 +114,7 @@ gxp.form.ColorField = Ext.extend(Ext.form.TextField,  {
     expand3DigitHex: function (color) {
         if (color && color.length == 4 && color.indexOf('#') == 0) {
             // For example #37f becomes #3377ff
-            color = '#' + color[1] + color[1] + color[2] + color[2] + color[3] + color[3];
+            color = '#' + color.charAt(1) + color.charAt(1) + color.charAt(2) + color.charAt(2) + color.charAt(3) + color.charAt(3);
         }
         return color;
     },
