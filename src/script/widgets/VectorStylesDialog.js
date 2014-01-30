@@ -14,11 +14,9 @@
  * @requires OpenLayers/Renderer/VML.js
  * @requires OpenLayers/Renderer/Canvas.js
  * @require OpenLayers/Style2.js
- * @require OpenLayers/Format/SLD/v1_0_0_GeoServer.js
  * @require GeoExt/data/AttributeStore.js
- * @require GeoExt/widgets/WMSLegend.js
  * @require GeoExt/widgets/VectorLegend.js
- * @require widgets/WMSStylesDialog.js
+ * @require widgets/StylesDialog.js
  */
 
 /** api: (define)

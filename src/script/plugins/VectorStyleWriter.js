@@ -120,6 +120,29 @@ gxp.plugins.VectorStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
         var layerRecord = this.target.layerRecord;
         var layer = layerRecord.getLayer();
         var layerStyles = layer.styleMap;
+        var controls = layer.map.getControlsByClass("OpenLayers.Control.SelectFeature");
+
+ /*       if (controls && controls.length > 0 && layerSelectStyle) {
+            var layerDefaultStyle = layerStyles.styles['default'].clone();
+            var layerSelectStyle = layerStyles.styles['select'];
+            var selectStyleHash = OpenLayers.Util.extend(layerDefaultStyle.defaultStyle, layerSelectStyle.defaultStyle);
+            var selectStyle = selectStyleHash; // new OpenLayers.Style(selectStyleHash);
+            for (var index = 0; index < controls.length; index++) {
+                var control = controls[index];
+                if (control.layers && control.layers.length > 0) {
+                    for (var l = 0; l < control.layers.length; l++) {
+                        if (control.layers[l].id == layer.id) {
+
+                            control.selectStyle = selectStyle;
+                            break;
+                        }
+                    }
+                } else if (control.layer && control.layer.id == layer.id) {
+                    control.selectStyle = selectStyle;
+                    break;
+                }
+            }
+        }      */
         var styleRec = this.target.selectedStyle;
         if (styleRec) {
             // var oldStyleName = styleRec.get("userStyle").name;
@@ -168,7 +191,19 @@ gxp.plugins.VectorStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
             for (var f = 0; f < features.length; f++) {
                 feature = features[f];
 
-                var changeFeatureStyle = !layer.customStyling || (layer.customStyling && ((layer.selectedFeatures && layer.selectedFeatures.length > 0) || !feature.style) && !(feature.renderIntent && feature.renderIntent != 'default'));
+                // Find out if feature is selected (feature.renderIntent is somehow not a good criterium!)
+                var featureSelected = false;
+                if (layer.selectedFeatures) {
+                    for (var sf = 0; sf < layer.selectedFeatures.length; sf++) {
+                        if (layer.selectedFeatures[sf].id == feature.id) {
+                            featureSelected = true;
+                            break;
+                        }
+                    }
+
+                }
+                // Change feature style when no custom styling or in case of custom styling if selected
+                var changeFeatureStyle = layer.customStyling && (featureSelected || !feature.style);
                 if (changeFeatureStyle) {
                     // Some features still may have local style object
                     if (feature.style) {
