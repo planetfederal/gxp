@@ -169,9 +169,9 @@ gxp.plugins.VectorStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
                             textStyle.fontWeight = symbolizer.fontWeight;
                             textStyle.fontStyle = symbolizer.fontStyle;
                             textStyle.fontColor = symbolizer.fontColor;
+                            textStyle.fontOpacity = symbolizer.fontOpacity;
                         }
                         rule.symbolizer[symbolType] = rule.symbolizers[j].clone();
-                        // newStyle.label = rule.symbolizer[symbolType].label;
                     }
                     rule.symbolizers = undefined;
                 }

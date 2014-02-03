@@ -87,6 +87,11 @@ gxp.VectorStylesDialog = Ext.extend(gxp.StylesDialog, {
      */
     editRule: function () {
         var rule = this.selectedRule;
+        // May need TextSymbolizer if here first time and feature has data attrs
+        if (!this.textSym && this.attributeStore && this.attributeStore.data.getCount() > 0) {
+            rule.symbolizers.push(this.createSymbolizer('Text', {}));
+            this.textSym = true;
+        }
         var origRule = rule.clone();
 
         var ruleDlg = new this.dialogCls({
@@ -165,6 +170,8 @@ gxp.VectorStylesDialog = Ext.extend(gxp.StylesDialog, {
         if (textSymbolizers && textSymbolizers.length == 1) {
             var textSymbolizer = textSymbolizers[0];
             removeItems = textSymbolizer.items.getRange(3, 7);
+
+            // Remove all from range
             for (i = 0; i < removeItems.length; i++) {
                 textSymbolizer.remove(removeItems[i]);
             }
@@ -245,6 +252,7 @@ gxp.VectorStylesDialog = Ext.extend(gxp.StylesDialog, {
             }
             symbolizer = this.createSymbolizer(symbol, style.defaultStyle);
             symbolizers = [symbolizer];
+
             style.rules = [new OpenLayers.Rule({title: style.name, symbolizers: symbolizers})];
             // style.defaultsPerSymbolizer = true;
         }
@@ -362,11 +370,12 @@ gxp.VectorStylesDialog = Ext.extend(gxp.StylesDialog, {
                 listeners: {
                     'load': function (store) {
                         self.layerDescription = self.attributeStore;
-                         // The TextSymbolizer calls load() as well, leading to loop
+                        // The TextSymbolizer calls load() as well, leading to loop
                         // when we would call editRule() again...
                         // prevent by makin load() function empty...
                         // We should fix this in TextSymbolizer but there is a risk to break other stuff...
-                        store.load = function() {};
+                        store.load = function () {
+                        };
                         callback.call(self);
                     },
                     scope: this
