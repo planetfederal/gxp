@@ -217,7 +217,11 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      */
     onAuthorizationChange: function() {
         if (this.store && this.url.charAt(0) === "/") {
-            this.store.reload();
+            var lastOptions = this.store.lastOptions || {params: {}};
+            Ext.apply(lastOptions.params, {
+                '_dc': Math.random()
+            });
+            this.store.reload(lastOptions);
         }
     },
 
