@@ -122,27 +122,27 @@ gxp.plugins.VectorStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
         var layerStyles = layer.styleMap;
         var controls = layer.map.getControlsByClass("OpenLayers.Control.SelectFeature");
 
- /*       if (controls && controls.length > 0 && layerSelectStyle) {
-            var layerDefaultStyle = layerStyles.styles['default'].clone();
-            var layerSelectStyle = layerStyles.styles['select'];
-            var selectStyleHash = OpenLayers.Util.extend(layerDefaultStyle.defaultStyle, layerSelectStyle.defaultStyle);
-            var selectStyle = selectStyleHash; // new OpenLayers.Style(selectStyleHash);
-            for (var index = 0; index < controls.length; index++) {
-                var control = controls[index];
-                if (control.layers && control.layers.length > 0) {
-                    for (var l = 0; l < control.layers.length; l++) {
-                        if (control.layers[l].id == layer.id) {
+        /*       if (controls && controls.length > 0 && layerSelectStyle) {
+         var layerDefaultStyle = layerStyles.styles['default'].clone();
+         var layerSelectStyle = layerStyles.styles['select'];
+         var selectStyleHash = OpenLayers.Util.extend(layerDefaultStyle.defaultStyle, layerSelectStyle.defaultStyle);
+         var selectStyle = selectStyleHash; // new OpenLayers.Style(selectStyleHash);
+         for (var index = 0; index < controls.length; index++) {
+         var control = controls[index];
+         if (control.layers && control.layers.length > 0) {
+         for (var l = 0; l < control.layers.length; l++) {
+         if (control.layers[l].id == layer.id) {
 
-                            control.selectStyle = selectStyle;
-                            break;
-                        }
-                    }
-                } else if (control.layer && control.layer.id == layer.id) {
-                    control.selectStyle = selectStyle;
-                    break;
-                }
-            }
-        }      */
+         control.selectStyle = selectStyle;
+         break;
+         }
+         }
+         } else if (control.layer && control.layer.id == layer.id) {
+         control.selectStyle = selectStyle;
+         break;
+         }
+         }
+         }      */
         var styleRec = this.target.selectedStyle;
         if (styleRec) {
             // var oldStyleName = styleRec.get("userStyle").name;
@@ -210,9 +210,11 @@ gxp.plugins.VectorStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
                         delete feature.style;
                     }
                     feature.style = newStyle.createSymbolizer(feature);
+                    layer.drawFeature(feature);
+                } else {
+                    layer.drawFeature(feature, newStyle.createSymbolizer(feature));
                 }
 
-                layer.drawFeature(feature);
             }
 
             // Emit this proprietary event, for example to have VectorLegend update itself
