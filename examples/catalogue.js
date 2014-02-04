@@ -48,7 +48,7 @@ Ext.onReady(function() {
         }, {
             ptype: "gxp_addlayers",
             actionTarget: "tree.tbar",
-            search: {selectedSource: "geonode"}
+            search: {selectedSource: "pycsw"}
         }, {
             ptype: "gxp_removelayer",
             actionTarget: ["tree.tbar", "tree.contextMenu"]
@@ -111,11 +111,6 @@ Ext.onReady(function() {
             },
             google: {
                 ptype: "gxp_googlesource"
-            },
-            geonode: {
-                ptype: "gxp_cataloguesource",
-                url: "http://gxp.opengeo.org/geonetwork/srv/en/csw",
-                title: "Geonode"
             },
             pycsw: {
                 ptype: "gxp_cataloguesource",

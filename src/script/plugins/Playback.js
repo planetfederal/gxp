@@ -80,6 +80,16 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
     constructor: function(config) {
         gxp.plugins.Playback.superclass.constructor.apply(this, arguments);
     },
+
+    init: function(target) {
+        target.on('saved', function() {
+            if (this.output) {
+                this.output[0].optionsWindow.optionsPanel.readOnly = false;
+            }
+        }, this, {single: true});
+        gxp.plugins.Playback.superclass.init.call(this, target);
+    },
+
     /** private: method[addOutput]
      *  :arg config: ``Object``
      */
@@ -91,14 +101,24 @@ gxp.plugins.Playback = Ext.extend(gxp.plugins.Tool, {
             xtype: 'gxp_playbacktoolbar',
             mapPanel:this.target.mapPanel,
             playbackMode:this.playbackMode,
+            prebuffer: this.target.prebuffer,
+            maxframes: this.target.maxframes,
             looped:this.looped,
             autoPlay:this.autoStart,
             optionsWindow: new Ext.Window({
                 title: gxp.PlaybackOptionsPanel.prototype.titleText,
                 width: 350,
-                height: 425,
+                height: 400,
                 layout: 'fit',
-                items: [{xtype: 'gxp_playbackoptions'}],
+                items: [{xtype: 'gxp_playbackoptions', readOnly: (!this.target.isAuthorized() || !(this.target.id || this.target.mapID)), listeners: {
+                    'save': function(cmp) {
+                        this.target.on('saved', function() {
+                            cmp.ownerCt.close();
+                        }, this, {single: true});
+                        this.target.save();
+                    },
+                    scope: this
+                }}],
                 closeable: true,
                 closeAction: 'hide',
                 renderTo: Ext.getBody(),

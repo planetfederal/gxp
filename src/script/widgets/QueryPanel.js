@@ -70,7 +70,26 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
      *  Query by attributes.
      */
     attributeQuery: true,
-    
+
+    /** api: config[caseInsensitiveMatch]
+     *  ``Boolean``
+     *  Should Comparison Filters for Strings do case insensitive matching?  Default is ``"false"``.
+     */
+    caseInsensitiveMatch: false,
+
+    /** api: config[likeSubstring]
+     *  ``Boolean``
+     *  Allow substrings to be entered with LIKE comparisons? These strings will be wrapped in wildcards.
+     *  Default is ``"false"``.
+     */
+    likeSubstring: false,
+
+    /** api: config[wildCardString]
+     *  ``String``
+     *  String to be pre- and postfixed for substrings in LIKE Comparison Filters.
+     */
+    wildCardString: '.*',
+
     /** private: property[selectedLayer]
      *  ``Ext.data.Record``
      *  The currently selected record in the layers combo.
@@ -292,7 +311,8 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
         this.filterBuilder = new gxp.FilterBuilder({
             //anchor: "-8px",
             attributes: this.attributeStore,
-            allowGroups: false
+            allowGroups: false,
+            caseInsensitiveMatch: this.caseInsensitiveMatch
         });
         
         if(owner) {
@@ -318,6 +338,12 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
      */
     getFilter: function() {
         var attributeFilter = this.attributeQuery && this.filterBuilder.getFilter();
+
+        // If LIKE comparison substrings are enabled, wrap their string literals in wildcards
+        if (attributeFilter && this.likeSubstring) {
+            attributeFilter = this.wrapWildCards(attributeFilter);
+        }
+
         var spatialFilter = this.spatialQuery && new OpenLayers.Filter.Spatial({
             type: OpenLayers.Filter.Spatial.BBOX,
             value: this.map.getExtent()
@@ -334,6 +360,27 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
         return filter;
     },
     
+    /** private: method[wrapWildCards]
+     *  :return: ``OpenLayers.Filter``
+     *
+     *  Returns the same (Composite) Filter with string literals wrapped with wildcard symbols
+     *  for all Comparison LIKE Filters.
+     */
+    wrapWildCards: function (filter) {
+
+        if (filter instanceof OpenLayers.Filter.Logical) {
+            // Go recursively through composite filter
+            for (var i = 0, len = filter.filters.length; i < len; ++i) {
+                filter = this.wrapWildCards(filter.filters[i]);
+            }
+        } else if (filter.type === OpenLayers.Filter.Comparison.LIKE) {
+            // Wrap the value in Wildcard strings.
+            filter.value = this.wildCardString + filter.value + this.wildCardString;
+        }
+
+        return filter;
+    },
+
     /** private: method[getFieldType]
      *  :arg attrType: ``String`` Attribute type.
      *  :returns: ``String`` Field type

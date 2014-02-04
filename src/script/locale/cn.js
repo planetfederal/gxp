@@ -309,6 +309,7 @@ GeoExt.Lang.add("en", {
     },
     
     "gxp.WMSLayerPanel.prototype": {
+        attributionText: "Attribution",
         aboutText: "关于",
         titleText: "标题",
         nameText: "名字",

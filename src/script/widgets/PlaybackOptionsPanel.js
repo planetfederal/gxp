@@ -171,18 +171,10 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
                 }]
             }
             ],
-            listeners:{'show':this.populateForm,scope:this},
-            bbar: [{
-                text: 'Save',
-                handler: this.saveValues,
-                scope: this
-            }, {
-                text: 'Cancel',
-                handler: this.cancelChanges,
-                scope: this
-            }]
+            bbar: [{text: "Save", ref: '../saveBtn', hidden: this.readOnly, handler: function() { this.fireEvent('save', this); }, scope: this}]
         });
         Ext.apply(this,config);
+        this.on('show', this.populateForm, this);
         gxp.PlaybackOptionsPanel.superclass.initComponent.call(this);
     },
     destroy:function(){
@@ -252,6 +244,8 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
         this.timeManager.step *= -1;
     },
     populateForm: function(cmp){
+        this.readOnly ? this.saveBtn.hide() : this.saveBtn.show();
+        this.doLayout();
         if (this.timeManager) {
             var start = new Date(this.timeManager.animationRange[0]),
             end = new Date(this.timeManager.animationRange[1]),
@@ -284,12 +278,6 @@ gxp.PlaybackOptionsPanel = Ext.extend(Ext.Panel, {
         if(this.ownerCt && this.ownerCt.close){
             this.ownerCt[this.ownerCt.closeAction]();
         }
-    },
-    cancelChanges: function(btn){
-        this.form.getForm().items.each(function(field){
-            field.setValue(field.originalValue);
-        });
-        this.close(btn);
     }
 });
 

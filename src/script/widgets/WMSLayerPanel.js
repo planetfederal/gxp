@@ -100,6 +100,7 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
     /** i18n */
     aboutText: "About",
     titleText: "Title",
+    attributionText: "Attribution",
     nameText: "Name",
     descriptionText: "Description",
     displayText: "Display",
@@ -292,6 +293,22 @@ gxp.WMSLayerPanel = Ext.extend(Ext.TabPanel, {
                     anchor: "99%",
                     value: this.layerRecord.get("name"),
                     readOnly: true
+                }, {
+                    xtype: "textfield",
+                    fieldLabel: this.attributionText,
+                    anchor: "99%",
+                    listeners: {
+                        change: function(field) {
+                            var layer = this.layerRecord.getLayer();
+                            layer.attribution = field.getValue();
+                            layer.map.events.triggerEvent("changelayer", {
+                                layer: layer, property: "attribution"
+                            });
+                            this.fireEvent("change");
+                        },
+                        scope: this
+                    },
+                    value: this.layerRecord.getLayer().attribution
                 }]
             }, {
                 layout: "form",

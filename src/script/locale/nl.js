@@ -277,6 +277,7 @@ GeoExt.Lang.add("nl", {
     },
     
     "gxp.WMSLayerPanel.prototype": {
+        attributionText: "Bronvermelding",
         aboutText: "Informatie",
         titleText: "Titel",
         nameText: "Naam",

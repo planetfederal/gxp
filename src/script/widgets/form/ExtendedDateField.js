@@ -24,6 +24,8 @@ gxp.form.ExtendedDateTimeField = Ext.extend(Ext.form.CompositeField, {
         this.items = [{
             xtype: 'gxp_datefield',
             allowBlank: (this.initialConfig.allowBlank !== false),
+            todayText: this.initialConfig.todayText,
+            selectToday: this.initialConfig.selectToday,
             ref: "date"
         }, {
             xtype: 'timefield',
@@ -36,11 +38,15 @@ gxp.form.ExtendedDateTimeField = Ext.extend(Ext.form.CompositeField, {
     getValue : function() {
         var dateValue = this.date.getValue();
         var timeValue = this.time.getValue();
+        if (dateValue !== null && timeValue === "") {
+            timeValue = "12:00 AM";
+        }
         if (timeValue !== "") {
-            var dateTimeCurrent = this.time.parseDate(this.time.getValue());
+            var dateTimeCurrent = this.time.parseDate(timeValue);
             var dateTimeOriginal = new Date(this.time.initDate);
             var diff = (dateTimeCurrent.getTime()/1000) - (dateTimeOriginal.getTime()/1000);
-            return dateValue + diff;
+            // we should always return times as UTC
+            return dateValue + diff - (new Date(dateValue*1000).getTimezoneOffset()*60);
         } else {
             return dateValue;
         }
@@ -49,8 +55,19 @@ gxp.form.ExtendedDateTimeField = Ext.extend(Ext.form.CompositeField, {
     setValue: function(v) {
         this.date.setValue(v);
         var value = new Date(parseFloat(v)*1000);
+        value.setTime( value.getTime() + value.getTimezoneOffset()*60*1000 );
         if (value) {
-            this.time.setValue(value.getHours() + ":" + value.getMinutes () + " " + (value.getHours() > 12 ? "PM" : "AM"));
+            var hours = value.getHours();
+            if (hours > 12) {
+                hours -= 12;
+            } else if (hours === 0) {
+                hours = 12;
+            }
+            var minutes = value.getMinutes();
+            if (minutes < 10) {
+                minutes = '0' + minutes;
+            }
+            this.time.setValue(hours + ":" + minutes + " " + (value.getHours() > 12 ? "PM" : "AM"));
         }
     }
 
@@ -100,6 +117,7 @@ gxp.form.ExtendedDateField = Ext.extend(Ext.form.DateField, {
         var d = v;
         if (Ext.isNumber(parseFloat(v))) {
             d = new Date(parseFloat(v)*1000);
+            d.setTime( d.getTime() + d.getTimezoneOffset()*60*1000 );
         }
         var str = this.formatDate(d);
         if (str) {
@@ -118,6 +136,10 @@ gxp.form.ExtendedDateField = Ext.extend(Ext.form.DateField, {
         return Ext.form.DateField.superclass.setValue.call(this, str);
     },
 
+    getPickerDate: function() {
+        return new Date();
+    },
+
     onTriggerClick : function(){
         if(this.disabled){
             return;
@@ -131,6 +153,8 @@ gxp.form.ExtendedDateField = Ext.extend(Ext.form.DateField, {
         this.onFocus();
         Ext.apply(this.menu.picker,  {
             minDate : this.minValue,
+            todayText: this.todayText ? this.todayText: Ext.DatePicker.prototype.todayText,
+            selectToday: this.selectToday ? this.selectToday: Ext.DatePicker.prototype.selectToday,
             maxDate : this.maxValue,
             disabledDatesRE : this.disabledDatesRE,
             disabledDatesText : this.disabledDatesText,
@@ -146,7 +170,7 @@ gxp.form.ExtendedDateField = Ext.extend(Ext.form.DateField, {
         var d;
         var v = this.getValue();
         if (v === null) {
-            d = new Date();
+            d = this.getPickerDate();
         } else {
             d = new Date(v*1000);
         }

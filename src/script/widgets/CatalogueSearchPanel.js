@@ -69,6 +69,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
      *  Initializes the catalogue search panel.
      */
     initComponent: function() {
+        var me = this;
         this.addEvents(
             /** api: event[addlayer]
              *  Fires when a layer needs to be added to the map.
@@ -93,6 +94,16 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
         if (sourceComboData.length > 1) {
             filterOptions.push(['csw', 'data source']);
         }
+        this.sources[this.selectedSource].store.on('loadexception', function(proxy, o, response, e) {
+            if (response.success()) {
+                Ext.Msg.show({
+                    title: e.message,
+                    msg: gxp.util.getOGCExceptionText(e.arg.exceptionReport),
+                    icon: Ext.MessageBox.ERROR,
+                    buttons: Ext.MessageBox.OK
+                });
+            }
+        });
         this.items = [{
             xtype: 'form',
             border: false,
@@ -258,6 +269,34 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                 border: false,
                 ref: "../grid",
                 bbar: new Ext.PagingToolbar({
+                    listeners: {
+                        'beforechange': function(tb, params) {
+                            var delta = me.sources[me.selectedSource].getPagingStart();
+                            if (params.startPosition) {
+                                params.startPosition += delta;
+                            }
+                        }
+                    },
+                    /* override to support having a different value than 0 for the start */
+                    onLoad : function(store, r, o) {
+                        var delta = me.sources[me.selectedSource].getPagingStart();
+                        if(!this.rendered){
+                            this.dsLoaded = [store, r, o];
+                            return;
+                        }
+                        var p = this.getParams();
+                        this.cursor = (o.params && o.params[p.start]) ? o.params[p.start]-delta : 0;
+                        var d = this.getPageData(), ap = d.activePage, ps = d.pages;
+                        this.afterTextItem.setText(String.format(this.afterPageText, d.pages));
+                        this.inputItem.setValue(ap);
+                        this.first.setDisabled(ap == 1);
+                        this.prev.setDisabled(ap == 1);
+                        this.next.setDisabled(ap == ps);
+                        this.last.setDisabled(ap == ps);
+                        this.refresh.enable();
+                        this.updateInfo();
+                        this.fireEvent('change', this, d);
+                    },
                     paramNames: this.sources[this.selectedSource].getPagingParamNames(),
                     store: this.sources[this.selectedSource].store,
                     pageSize: this.maxRecords
@@ -373,8 +412,9 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
         if (url === null) {
             for (i=0, ii=links.length; i<ii; ++i) {
                 link = links[i];
-                if (link.value && link.value.toLowerCase().indexOf('service=wms') > 0) {
-                    var obj = OpenLayers.Util.createUrlObject(link.value);
+                var value = link.value ? link.value : link;
+                if (value.toLowerCase().indexOf('service=wms') > 0) {
+                    var obj = OpenLayers.Util.createUrlObject(value);
                     url = obj.protocol + "//" + obj.host + ":" + obj.port + obj.pathname;
                     name = obj.args.layers;
                     break;
@@ -417,7 +457,8 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
             this.fireEvent("addlayer", this, this.selectedSource, Ext.apply({
                 title: record.get('title')[0],
                 bbox: [left, bottom, right, top],
-                srs: "EPSG:4326"
+                srs: "EPSG:4326",
+                projection: record.get('projection')
             }, wmsInfo));
         }
     }

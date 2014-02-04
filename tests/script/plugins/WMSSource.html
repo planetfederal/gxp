@@ -93,6 +93,49 @@
             });
         }
 
+        function test_createLayerRecord_102113(t) {
+
+            /**
+                This test confirms that when a viewer is configured with
+                EPSG:102113 but the server doesn't advertise the same, the
+                layer projection will be set to an equivalent projection.
+             */
+
+            t.plan(1);
+
+            var viewer = new gxp.Viewer({
+                sources: {
+                    local: {
+                        ptype: "gxp_wmssource",
+                        url: "wms_caps.xml"
+                    }
+                },
+                map: {
+                    projection: "EPSG:102113",
+                    center: [0, 0],
+                    zoom: 1,
+                    layers: [{
+                        source: "local",
+                        name: "usa:states"
+                    }]
+                }
+            });
+
+
+            t.delay_call(1, function() {
+                var source = viewer.layerSources.local,
+                    record = source.createLayerRecord({name: "world:borders"}),
+                    projection = record.getLayer().projection;
+
+                if (projection) {
+                    var code = projection.getCode();
+                    t.ok(code === 'EPSG:900913' || code === 'EPSG:3857', 'mercator');
+                } else {
+                    t.fail('layer has no projection')
+                }
+            });
+        }
+
         function test_createLayerRecord_restUrl(t) {
             t.plan(1);
 

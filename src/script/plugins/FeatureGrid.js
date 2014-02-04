@@ -320,11 +320,13 @@ gxp.plugins.FeatureGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
             featureGrid.setStore(featureManager.featureStore, schema);
             if (!featureManager.featureStore) {
                 // not a feature layer, reset toolbar
-                featureGrid.lastPageButton.disable();
-                featureGrid.nextPageButton.disable();
-                featureGrid.firstPageButton.disable();
-                featureGrid.prevPageButton.disable();
-                featureGrid.zoomToPageButton.disable();
+                if (featureManager.paging) {
+                    featureGrid.lastPageButton.disable();
+                    featureGrid.nextPageButton.disable();
+                    featureGrid.firstPageButton.disable();
+                    featureGrid.prevPageButton.disable();
+                    featureGrid.zoomToPageButton.disable();
+                }
                 this.displayTotalResults();
             }
         }

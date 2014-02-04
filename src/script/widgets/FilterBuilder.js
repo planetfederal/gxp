@@ -46,6 +46,12 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
      */
     allowBlank: false,
     
+    /** api: config[caseInsensitiveMatch]
+     *  ``Boolean``
+     *  Should Comparison Filters for Strings do case insensitive matching?  Default is ``"false"``.
+     */
+    caseInsensitiveMatch: false,
+
     /** api: config[preComboText]
      *  ``String``
      *  String to display before filter type combo.  Default is ``"Match"``.
@@ -325,9 +331,10 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
         }
         return filter;
     },
-    
+
     createDefaultFilter: function() {
-        return new OpenLayers.Filter.Comparison();
+        return new OpenLayers.Filter.Comparison({
+                            matchCase: !this.caseInsensitiveMatch});
     },
     
     /** private: method[wrapFilter]
@@ -375,6 +382,7 @@ gxp.FilterBuilder = Ext.extend(Ext.Container, {
             attributes: this.attributes,
             allowBlank: group ? undefined : this.allowBlank,
             customizeFilterOnInit: group && false,
+            caseInsensitiveMatch: this.caseInsensitiveMatch,
             listeners: {
                 change: function() {
                     this.fireEvent("change", this);

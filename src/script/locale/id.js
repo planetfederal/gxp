@@ -313,6 +313,7 @@ GeoExt.Lang.add("id", {
     },
     
     "gxp.WMSLayerPanel.prototype": {
+        attributionText: "Attribution",
         aboutText: "Tentang Program",
         titleText: "Judul",
         nameText: "Nama",

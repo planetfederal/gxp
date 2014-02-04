@@ -124,8 +124,8 @@ GeoExt.Lang.add("de", {
     "gxp.plugins.NavigationHistory.prototype": {
         previousMenuText: "Kartenausschnitt zurück",
         nextMenuText: "Kartenausschnitt vorwärts",
-        previousTooltip: "Kartenausschnitt zurück",
-        nextTooltip: "Kartenausschnitt vorwärts"
+        previousTooltip: "Vorherigen Kartenausschnitt anzeigen",
+        nextTooltip: "Nächsten Kartenausschnit anzeigen"
     },
 
     "gxp.plugins.OSMSource.prototype": {
@@ -184,14 +184,14 @@ GeoExt.Lang.add("de", {
         zoomMenuText: "Zoom Box",
         zoomInMenuText: "Vergrössern",
         zoomOutMenuText: "Verkleinern",
-        zoomTooltip: "Zoom durch Aufziehen einer Box",
+        zoomTooltip: "Box aufziehen zum Zoomen",
         zoomInTooltip: "Vergrössern",
         zoomOutTooltip: "Verkleinern"
     },
     
     "gxp.plugins.ZoomToExtent.prototype": {
         menuText: "Maximale Ausdehnung",
-        tooltip: "Maximale Ausdehnung"
+        tooltip: "Maximale Ausdehnung anzeigen"
     },
     
     "gxp.plugins.ZoomToDataExtent.prototype": {
@@ -313,6 +313,7 @@ GeoExt.Lang.add("de", {
     },
     
     "gxp.WMSLayerPanel.prototype": {
+        attributionText: "Attribution",
         aboutText: "Über",
         titleText: "Titel",
         nameText: "Name",

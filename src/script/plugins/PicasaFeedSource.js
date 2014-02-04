@@ -52,7 +52,11 @@ gxp.plugins.PicasaFeedSource = Ext.extend(gxp.plugins.FeedSource, {
      **/
     popupTemplate:  '<tpl for="."><a target="_blank" href="{link}"><img  title="{title}" src="{thumbnail}"/></a></tpl>',
 
-
+    /** api: config[fixed]
+     * ``Boolean`` Use OpenLayers.Strategy.Fixed if true, BBOX if false
+     **/    
+    fixed: false,
+    
     /**
      * Create a Picasa layer record
      * @param config

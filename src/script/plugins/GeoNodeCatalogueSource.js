@@ -90,6 +90,13 @@ gxp.plugins.GeoNodeCatalogueSource = Ext.extend(gxp.plugins.CatalogueSource, {
         gxp.plugins.LayerSource.prototype.createStore.apply(this, arguments);
     },
 
+    /** api: method[getPagingStart]
+     *  :return: ``Integer`` Where does paging start at?
+     */
+    getPagingStart: function() {
+        return 0;
+    },
+
     /** api: method[getPagingParamNames]
      *  :return: ``Object`` with keys start and limit.
      *
