@@ -176,13 +176,15 @@ gxp.plugins.VectorStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
 
                 }
                 // Change feature style when no custom styling or in case of custom styling if selected
-                var changeFeatureStyle = layer.customStyling && (featureSelected || !feature.style);
-                if (changeFeatureStyle) {
-                    // Some features still may have local style object
-                    if (feature.style) {
-                        delete feature.style;
+                if (layer.customStyling) {
+                    // Assign individual Feature style if selected or not yet a Style assigned
+                    if (featureSelected || !feature.style) {
+                        // Some features still may have local style object
+                        if (feature.style) {
+                            delete feature.style;
+                        }
+                        feature.style = newStyle.createSymbolizer(feature);
                     }
-                    feature.style = newStyle.createSymbolizer(feature);
                     layer.drawFeature(feature);
                 } else {
                     // Redraw feature with Layer Style
