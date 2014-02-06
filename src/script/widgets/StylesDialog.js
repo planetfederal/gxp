@@ -1067,21 +1067,10 @@ gxp.StylesDialog = Ext.extend(Ext.Container, {
             enableDD: options.enableDD,
             listeners: {
                 "ruleselected": function(cmp, rule) {
-                    this.selectedRule = rule;
-                    // enable the Remove, Edit and Duplicate buttons
-                    var tbItems = this.items.get(3).items;
-                    this.updateRuleRemoveButton();
-                    tbItems.get(2).enable();
-                    tbItems.get(3).enable();
-                    // cmp.items.get(0).focus();
+                    this.onRuleSelected(cmp, rule);
                 },
                 "ruleunselected": function(cmp, rule) {
-                    this.selectedRule = null;
-                    // disable the Remove, Edit and Duplicate buttons
-                    var tbItems = this.items.get(3).items;
-                    tbItems.get(1).disable();
-                    tbItems.get(2).disable();
-                    tbItems.get(3).disable();
+                    this.onRuleUnselected(cmp, rule);
                 },
                 "rulemoved": function() {
                     this.markModified();
@@ -1106,6 +1095,25 @@ gxp.StylesDialog = Ext.extend(Ext.Container, {
         var layerName = this.layerRecord.get("name");
         return layerName.split(":").pop() + "_" +
             gxp.util.md5(layerName + new Date() + Math.random()).substr(0, 8);
+    },
+
+    onRuleSelected: function(cmp, rule) {
+        this.selectedRule = rule;
+        // enable the Remove, Edit and Duplicate buttons
+        var tbItems = this.items.get(3).items;
+        this.updateRuleRemoveButton();
+        tbItems.get(2).enable();
+        tbItems.get(3).enable();
+        // cmp.items.get(0).focus();
+    },
+
+    onRuleUnselected: function(cmp, rule) {
+        this.selectedRule = null;
+        // disable the Remove, Edit and Duplicate buttons
+        var tbItems = this.items.get(3).items;
+        tbItems.get(1).disable();
+        tbItems.get(2).disable();
+        tbItems.get(3).disable();
     },
 
     /** private: method[showDlg]

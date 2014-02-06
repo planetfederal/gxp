@@ -83,6 +83,40 @@ gxp.VectorStylesDialog = Ext.extend(gxp.StylesDialog, {
     },
 
 
+    /** private: method[addRulesFieldSet]
+     *  :return: ``Ext.form.FieldSet``
+     *
+     *  Creates the rules fieldSet and adds it to this container.
+     */
+    addRulesFieldSet: function() {
+        var rulesFieldSet = gxp.VectorStylesDialog.superclass.addRulesFieldSet.apply(this, arguments);
+        // Disable Add for now: it does not work well.
+        this.items.get(3).get(0).disable();
+        return rulesFieldSet;
+    },
+
+    /** private: method[disableConditional]
+     *
+     *  Disable item, like in Rule toolbar when customStyling is enabled.
+     */
+    disableConditional: function(item) {
+        var layer = this.layerRecord.getLayer();
+        if (item && layer.customStyling) {
+            item.disable();
+        }
+    },
+
+    onRuleSelected: function(cmp, rule) {
+        gxp.VectorStylesDialog.superclass.onRuleSelected.call(this, cmp, rule);
+        // enable the Remove, Edit and Duplicate buttons
+        var tbItems = this.items.get(3).items;
+        // Edit button
+        // tbItems.get(2).enable();
+        // Duplicate button
+        this.disableConditional(tbItems.get(3));
+        // cmp.items.get(0).focus();
+    },
+
     /** private: method[editRule]
      */
     editRule: function () {
@@ -465,13 +499,21 @@ gxp.VectorStylesDialog = Ext.extend(gxp.StylesDialog, {
         });
     },
 
+    /** private: method[updateRuleRemoveButton]
+     *  Enable/disable the "Remove" button to make sure that we don't delete
+     *  the last rule.
+     */
+    updateRuleRemoveButton: function() {
+        gxp.VectorStylesDialog.superclass.updateRuleRemoveButton.apply(this, arguments);
+        this.disableConditional(this.items.get(3).items.get(1));
+    },
+
     /** private: method[updateStyleRemoveButton]
      *  We cannot remove styles for Vector styles so always disable remove.
      */
     updateStyleRemoveButton: function () {
         this.items.get(1).items.get(1).setDisabled(true);
     }
-
 
 });
 

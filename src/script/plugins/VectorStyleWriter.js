@@ -120,29 +120,6 @@ gxp.plugins.VectorStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
         var layerRecord = this.target.layerRecord;
         var layer = layerRecord.getLayer();
         var layerStyles = layer.styleMap;
-        var controls = layer.map.getControlsByClass("OpenLayers.Control.SelectFeature");
-
-        /*       if (controls && controls.length > 0 && layerSelectStyle) {
-         var layerDefaultStyle = layerStyles.styles['default'].clone();
-         var layerSelectStyle = layerStyles.styles['select'];
-         var selectStyleHash = OpenLayers.Util.extend(layerDefaultStyle.defaultStyle, layerSelectStyle.defaultStyle);
-         var selectStyle = selectStyleHash; // new OpenLayers.Style(selectStyleHash);
-         for (var index = 0; index < controls.length; index++) {
-         var control = controls[index];
-         if (control.layers && control.layers.length > 0) {
-         for (var l = 0; l < control.layers.length; l++) {
-         if (control.layers[l].id == layer.id) {
-
-         control.selectStyle = selectStyle;
-         break;
-         }
-         }
-         } else if (control.layer && control.layer.id == layer.id) {
-         control.selectStyle = selectStyle;
-         break;
-         }
-         }
-         }      */
         var styleRec = this.target.selectedStyle;
         if (styleRec) {
             // var oldStyleName = styleRec.get("userStyle").name;
@@ -152,8 +129,7 @@ gxp.plugins.VectorStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
 
             // GXP Style Editing needs symbolizers array in Rule object
             // while Vector/Style drawing needs symbolizer hash...
-            var textStyle = {};
-            var symbolizer;
+            var textStyle = {}, symbolizer;
             if (newStyle.rules) {
                 for (var i = 0, len = newStyle.rules.length; i < len; i++) {
                     var rule = newStyle.rules[i];
@@ -180,14 +156,11 @@ gxp.plugins.VectorStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
 
             newStyle.propertyStyles = newStyle.findPropertyStyles();
             layerStyles.styles[styleName] = newStyle;
-            // newStyle.defaultStyle = undefined;
-            var feature;
-//            if (layer.customStyling === true && (!layer.selectedFeatures || layer.selectedFeatures.length == 0)) {
-//                return;
-//            }
+
             // Assign Style to all or, if features selected, to individual Layer features
             var features = (layer.selectedFeatures && layer.selectedFeatures.length > 0) ? layer.selectedFeatures : layer.features;
             layer.eraseFeatures(features);
+            var feature;
             for (var f = 0; f < features.length; f++) {
                 feature = features[f];
 
@@ -212,9 +185,10 @@ gxp.plugins.VectorStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
                     feature.style = newStyle.createSymbolizer(feature);
                     layer.drawFeature(feature);
                 } else {
-                    layer.drawFeature(feature, newStyle.createSymbolizer(feature));
+                    // Redraw feature with Layer Style
+                    feature.style = null;
+                    layer.drawFeature(feature);
                 }
-
             }
 
             // Emit this proprietary event, for example to have VectorLegend update itself
