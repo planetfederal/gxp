@@ -25,13 +25,13 @@ Ext.namespace("gxp");
 gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
     
     /* i18n */
-    solidStrokeName: "solid",
-    dashStrokeName: "dash",
-    dotStrokeName: "dot",
+    solidStrokeName: "Solid",
+    dashStrokeName: "Dash",
+    dotStrokeName: "Dot",
     titleText: "Stroke",
     styleText: "Style",
     colorText: "Color",
-    widthText: "Width",
+    widthText: "Width (pixels)",
     opacityText: "Opacity",
     /* ~i18n */
     

@@ -183,7 +183,13 @@ gxp.plugins.VectorStyleWriter = Ext.extend(gxp.plugins.StyleWriter, {
                         if (feature.style) {
                             delete feature.style;
                         }
-                        feature.style = newStyle.createSymbolizer(feature);
+                        if (feature.featureType == 'text') {
+                            // nasty fix for OL-Editor Labels (DrawText control)
+                            feature.style = layer.styleMap.styles.defaultLabel.createSymbolizer(feature);
+
+                        } else {
+                            feature.style = newStyle.createSymbolizer(feature);
+                        }
                     }
                     layer.drawFeature(feature);
                 } else {

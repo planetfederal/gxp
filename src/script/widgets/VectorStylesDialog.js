@@ -285,6 +285,7 @@ gxp.VectorStylesDialog = Ext.extend(gxp.StylesDialog, {
                 }
             }
             symbolizer = this.createSymbolizer(symbol, style.defaultStyle);
+//            delete style.defaultStyle;
             symbolizers = [symbolizer];
 
             style.rules = [new OpenLayers.Rule({title: style.name, symbolizers: symbolizers})];
