@@ -235,6 +235,18 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      */
     layerGridHeight: 300,
 
+    /** api: config[layerCardLegendWidth]
+     *  ``Number``
+     *  Width of the legend image inside the Layer card (``templatedLayerGrid`` must be true).
+     */
+    layerCardLegendWidth: 20,
+
+    /** api: config[layerCardLegendHeight]
+     *  ``Number``
+     *  Height of the legend image inside the Layer card (``templatedLayerGrid`` must be true).
+     */
+    layerCardLegendHeight: 20,
+
     /** private: property[selectedSource]
      *  :class:`gxp.plugins.LayerSource`
      *  The currently selected layer source.
@@ -457,8 +469,9 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         // http://localhost:8080/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=topp:states
         // '<td><img class="align-left thumbnail" caption="thumbnail" src="http://geo.zaanstad.nl/geonetwork/srv/nl/resources.get?id=480&fname=bruggen_s.png&access=public"></td>' +
         // {layer.url.params.LAYERS}
-        var tplLayerURL='<tpl for="."><tpl for="layer">{url}</tpl></tpl>';
-        var tplLayerName='<tpl for="."><tpl for="layer"><tpl for="params">{LAYERS}</tpl></tpl></tpl>';
+        var tplLayerURL ='<tpl for="."><tpl for="layer">{url}</tpl></tpl>';
+        var tplLayerName ='<tpl for="."><tpl for="layer"><tpl for="params">{LAYERS}</tpl></tpl></tpl>';
+        var tplReqURL = tplLayerURL +'REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH='+ this.layerCardLegendWidth +'&HEIGHT='+ this.layerCardLegendHeight +'&LAYER=' + tplLayerName;
 
         var tpl = '<div class="layercard">' +
             '<div class="meta_title">{title}' +
@@ -488,9 +501,12 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             '</div>' +
             '<table cellspacing="2" cellpadding="2">' +
             '<tr>' +
-            '<td><img class="align-left thumbnail" caption="thumbnail" src="' + tplLayerURL +'REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=' + tplLayerName +'"></td>' +
-            '<td style="white-space: normal!important;"><p style="margin-top:12px;"><strong>Name: </strong>{name}<br><strong>Abstract: </strong>{abstract}</p></td>' +
+            '<td style="vertical-align:middle;">' +
+            '<img class="layerpreview" width="'+ this.layerCardLegendWidth +'" height="'+ this.layerCardLegendHeight + '" src="' + tplReqURL +'">' +
+            '</td>' +
+            '<td style="vertical-align:top; white-space: normal!important;"><p style="margin-top:4px;"><strong>Name: </strong>{name}<br><strong>Abstract: </strong>{abstract}</p></td>' +
             '</tr>' +
+
             '</table>' +
             '<div class="btn_add" title="Add this layer to the map">' +
                 '<table name="addlayer" cellspacing="0" class="x-btn  x-btn-text-icon" style="width: auto;">' +
@@ -598,6 +614,8 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 autoScroll: true,
                 autoExpandColumn: "title",
                 hideHeaders: true,
+                bodyCssClass: 'layercardgrid',
+                stripeRows: false,
                 // plugins: [expander],
                 loadMask: true,
                 colModel: this.createColumnModel(),
