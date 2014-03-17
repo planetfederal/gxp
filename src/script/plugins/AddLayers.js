@@ -235,17 +235,17 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      */
     layerGridHeight: 300,
 
-    /** api: config[layerCardLegendWidth]
+    /** api: config[layerPreviewWidth]
      *  ``Number``
      *  Width of the legend image inside the Layer card (``templatedLayerGrid`` must be true).
      */
-    layerCardLegendWidth: 20,
+    layerPreviewWidth: 20,
 
-    /** api: config[layerCardLegendHeight]
+    /** api: config[layerPreviewHeight]
      *  ``Number``
      *  Height of the legend image inside the Layer card (``templatedLayerGrid`` must be true).
      */
-    layerCardLegendHeight: 20,
+    layerPreviewHeight: 20,
 
     /** private: property[selectedSource]
      *  :class:`gxp.plugins.LayerSource`
@@ -471,7 +471,11 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         // {layer.url.params.LAYERS}
         var tplLayerURL ='<tpl for="."><tpl for="layer">{url}</tpl></tpl>';
         var tplLayerName ='<tpl for="."><tpl for="layer"><tpl for="params">{LAYERS}</tpl></tpl></tpl>';
-        var tplReqURL = tplLayerURL +'REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH='+ this.layerCardLegendWidth +'&HEIGHT='+ this.layerCardLegendHeight +'&LAYER=' + tplLayerName;
+        var tplReqURL = tplLayerURL +'REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH='+ this.layerPreviewWidth +'&HEIGHT='+ this.layerPreviewHeight +'&LAYER=' + tplLayerName;
+//        var previewImage = '<img class="layerpreview" width="'+ this.layerPreviewWidth +'" height="'+ this.layerPreviewHeight + '" src="' + tplReqURL +'">';
+        var previewImage = '<img class="layerpreview" width="'+ this.layerPreviewWidth +'" height="'+ this.layerPreviewHeight + '" src="{previewImage}">';
+        var layerPreviewWidth = this.layerPreviewWidth, layerPreviewHeight = this.layerPreviewHeight;
+        var self = this;
 
         var tpl = '<div class="layercard">' +
             '<div class="meta_title">{title}' +
@@ -502,7 +506,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             '<table cellspacing="2" cellpadding="2">' +
             '<tr>' +
             '<td style="vertical-align:middle;">' +
-            '<img class="layerpreview" width="'+ this.layerCardLegendWidth +'" height="'+ this.layerCardLegendHeight + '" src="' + tplReqURL +'">' +
+                 '{previewImage}' +
             '</td>' +
             '<td style="vertical-align:top; white-space: normal!important;"><p style="margin-top:4px;"><strong>Name: </strong>{name}<br><strong>Abstract: </strong>{abstract}</p></td>' +
             '</tr>' +
@@ -531,7 +535,6 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     '</tbody>' +
                 '</table>' +
             '</div>' +
-            '<p></p>' +
         '</div>';
         tpl = new Ext.XTemplate(tpl);
         tpl.compile();
@@ -544,6 +547,13 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 renderer: function (value, metaData, record, rowIndex, colIndex, view) {
                     var data = record.data;
                     data.id = record.id;
+                    var source = self.target.layerSources[record.store.sourceId];
+                    var previewImageURL = source.getPreviewImageURL(record, layerPreviewWidth, layerPreviewHeight);
+                    if (previewImageURL) {
+                        data.previewImage = '<img class="layerpreview" onerror="this.style.display=\'none\'" width="'+ layerPreviewWidth +'" height="'+ layerPreviewHeight + '" src="' + previewImageURL + '">';
+                    } else {
+                        data.previewImage = '<div style="width:' + layerPreviewHeight + 'px; height:'+ layerPreviewHeight + 'px" class="preview-notavailable">&nbsp;</div>';
+                    }
                     data.rowIndex = rowIndex;
                     return tpl.apply(data);
                 }}

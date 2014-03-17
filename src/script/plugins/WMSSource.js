@@ -212,6 +212,22 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         this.target.on("authorizationchange", this.onAuthorizationChange, this);
     },
 
+    /** api: method[getPreviewImageURL]
+     *  :arg record: :class:`GeoExt.data.LayerRecord`
+     *  :arg width: :Number:image width
+     *  :arg height: :Number:image height
+     *  :returns: ``String``
+     *
+     *  Create a preview image URL or encoded image for given record.
+     */
+    getPreviewImageURL: function (record, width, height) {
+        var layerURL = record.data.layer.url;
+        var layerName = record.data.name;
+
+        var url = layerURL + 'REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=' + width + '&HEIGHT=' + height + '&LAYER=' + layerName;
+        return url;
+    },
+
     /** private: method[onAuthorizationChange]
      *  Reload the store when the authorization changes.
      */
@@ -531,15 +547,16 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 CQL_FILTER: config.cql_filter
             });
 
-            var singleTile = false;
+            // JvdB: default singleTile is true makes sense for most WMS Layers
+            var singleTile = true;
             if ("tiled" in config) {
                 singleTile = !config.tiled;
-            } else {
+            } /* else {
                 // for now, if layer has a time dimension, use single tile
                 if (original.data.dimensions && original.data.dimensions.time) {
                     singleTile = true;
                 }
-            }
+            }  */
 
             layer.setName(config.title || layer.name);
             layer.addOptions({

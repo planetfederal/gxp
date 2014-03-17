@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
- * 
+ *
  * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
@@ -80,7 +80,7 @@ gxp.data.TMSCapabilitiesReader = Ext.extend(Ext.data.DataReader, {
                         var layername = url.substring(url.indexOf(this.meta.version + '/') + 6);
                         records.push(new this.recordType({
                             layer: new OpenLayers.Layer.TMS(
-                                tileMap.title, 
+                                tileMap.title,
                                 (this.meta.baseUrl.indexOf(this.meta.version) !== -1) ? this.meta.baseUrl.replace(this.meta.version + '/', '') : this.meta.baseUrl, {
                                     layername: layername
                                 }
@@ -92,6 +92,9 @@ gxp.data.TMSCapabilitiesReader = Ext.extend(Ext.data.DataReader, {
                     }
                 }
             }
+        }
+        if (records.length == 0) {
+            alert('No suitable TMS layers found, maybe a mismatch with your Map projection?')
         }
         return {
             totalRecords: records.length,
@@ -169,8 +172,8 @@ gxp.plugins.TMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 method: "GET"
             }),
             reader: new gxp.data.TMSCapabilitiesReader({
-                baseUrl: this.url, 
-                version: this.version, 
+                baseUrl: this.url,
+                version: this.version,
                 mapProjection: this.getMapProjection()
             })
         });
@@ -211,6 +214,22 @@ gxp.plugins.TMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 });
             }
         }
+    },
+
+    /** api: method[getPreviewImageURL]
+     *  :arg record: :class:`GeoExt.data.LayerRecord`
+     *  :arg width: :Number:image width
+     *  :arg height: :Number:image height
+     *  :returns: ``String``
+     *
+     *  Create a preview image URL or encoded image for given record.
+     */
+    getPreviewImageURL: function (record, width, height) {
+        var layerURL = record.data.tileMapUrl;
+        var tile = '/0/0/0.png';
+
+        var url = layerURL + tile;
+        return url;
     }
 
 });
