@@ -166,8 +166,9 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
     /** api: config[version]
      *  ``String``
      *  If specified, the version string will be included in WMS GetCapabilities
-     *  requests.  By default, no version is set.
+     *  requests.  By default, no version 1.1.1 (JvdB, to ensure some MD works and no axis ordering issues) is set.
      */
+     version: "1.1.1",
 
     /** api: config[requiredProperties]
      *  ``Array(String)`` List of config properties that are required for each
@@ -223,8 +224,18 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
     getPreviewImageURL: function (record, width, height) {
         var layerURL = record.data.layer.url;
         var layerName = record.data.name;
-
+        var layerFormat = record.data.formats && record.data.formats.length > 0 ? record.data.formats[0] : 'image/png';
+        // the minimum scale value at which the layer should display, e.g. 50000000
+        var layerMinScale = record.data.minScale;
+        // the maximum scale value at which the layer should display, e.g. 10000000
+        var layerMaxScale = record.data.maxScale;
+        var mapProjection = this.target.map.projection;
+        var bounds = OpenLayers.Bounds.fromArray(record.data.llbbox);
+        var scaledBounds = bounds.scale(0.5);
+        var bbox = scaledBounds.toString();
+        // var bounds =
         var url = layerURL + 'REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=' + width + '&HEIGHT=' + height + '&LAYER=' + layerName;
+//        var url = layerURL + 'REQUEST=GetMap&VERSION=1.1.1&SRS=EPSG:4326&BBOX=' + bbox + '&FORMAT=' + layerFormat + '&WIDTH=' + width + '&HEIGHT=' + height + '&LAYERS=' + layerName;
         return url;
     },
 

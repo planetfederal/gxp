@@ -132,6 +132,24 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      */
     doneText: "Done",
 
+    /** api: config[layerNameText]
+     *  ``String``
+     *  Text for Layer Name in the Layer Card (i18n).
+     */
+    layerNameText: "Name",
+
+    /** api: config[layerAbstractText]
+     *  ``String``
+     *  Text for Layer Abstract in the Layer Card (i18n).
+     */
+    layerAbstractText: "Abstract",
+
+    /** api: config[layerQueryableText]
+     *  ``String``
+     *  Text for Layer "isQuerable" in the Layer Card (i18n).
+     */
+    layerQueryableText: "Queryable",
+
     /** api: config[search]
      *  ``Object | Boolean``
      *  If provided, a :class:`gxp.CatalogueSearchPanel` will be added as a
@@ -466,14 +484,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
     },
 
     createColumnModel: function() {
-        // http://localhost:8080/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=topp:states
-        // '<td><img class="align-left thumbnail" caption="thumbnail" src="http://geo.zaanstad.nl/geonetwork/srv/nl/resources.get?id=480&fname=bruggen_s.png&access=public"></td>' +
-        // {layer.url.params.LAYERS}
-        var tplLayerURL ='<tpl for="."><tpl for="layer">{url}</tpl></tpl>';
-        var tplLayerName ='<tpl for="."><tpl for="layer"><tpl for="params">{LAYERS}</tpl></tpl></tpl>';
-        var tplReqURL = tplLayerURL +'REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH='+ this.layerPreviewWidth +'&HEIGHT='+ this.layerPreviewHeight +'&LAYER=' + tplLayerName;
-//        var previewImage = '<img class="layerpreview" width="'+ this.layerPreviewWidth +'" height="'+ this.layerPreviewHeight + '" src="' + tplReqURL +'">';
-        var previewImage = '<img class="layerpreview" width="'+ this.layerPreviewWidth +'" height="'+ this.layerPreviewHeight + '" src="{previewImage}">';
+        // For use in previewImage.
         var layerPreviewWidth = this.layerPreviewWidth, layerPreviewHeight = this.layerPreviewHeight;
         var self = this;
 
@@ -508,7 +519,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             '<td style="vertical-align:middle;">' +
                  '{previewImage}' +
             '</td>' +
-            '<td style="vertical-align:top; white-space: normal!important;"><p style="margin-top:4px;"><strong>Name: </strong>{name}<br><strong>Abstract: </strong>{abstract}</p></td>' +
+            '<td style="vertical-align:top; white-space: normal!important;"><p style="margin-top:4px;"><strong>' + this.layerNameText + ': </strong>{name}<br/><strong>' + this.layerAbstractText + ': </strong>{abstract}<br/><strong>' + this.layerQueryableText + ': </strong>{queryable}</p></td>' +
             '</tr>' +
 
             '</table>' +
@@ -548,9 +559,12 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     var data = record.data;
                     data.id = record.id;
                     var source = self.target.layerSources[record.store.sourceId];
+
+                    // Let LayerSource provide a URL to a preview image, if none use 'preview-notavailable' CSS.
                     var previewImageURL = source.getPreviewImageURL(record, layerPreviewWidth, layerPreviewHeight);
                     if (previewImageURL) {
-                        data.previewImage = '<img class="layerpreview" onerror="this.style.display=\'none\'" width="'+ layerPreviewWidth +'" height="'+ layerPreviewHeight + '" src="' + previewImageURL + '">';
+                        data.previewImage = '<div style="width:' + layerPreviewWidth + 'px; height:'+ layerPreviewHeight + 'px; background-image: url(' + previewImageURL + '); background-size:' + layerPreviewWidth + 'px '+ layerPreviewHeight + 'px;background-repeat: no-repeat;" >&nbsp;</div>';
+                        // data.previewImage = '<img class="layerpreview"  width="'+ layerPreviewWidth +'" height="'+ layerPreviewHeight + '" src="' + previewImageURL + '"/>';
                     } else {
                         data.previewImage = '<div style="width:' + layerPreviewHeight + 'px; height:'+ layerPreviewHeight + 'px" class="preview-notavailable">&nbsp;</div>';
                     }
@@ -745,6 +759,9 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     	case 'REST':
                     		ptype = 'gxp_arcrestsource';
                     		break;
+                        case 'WMS':
+                       		ptype = 'gxp_wmssource';
+                       		break;
                     	default:
                     		ptype = 'gxp_wmscsource';
                     }

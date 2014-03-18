@@ -25,6 +25,8 @@ gxp.data.TMSCapabilitiesReader = Ext.extend(Ext.data.DataReader, {
                 recordType || meta.fields || [
                     {name: "name", type: "string"},
                     {name: "title", type: "string"},
+                    // JvdB: Added abstract, was returned but not in record def+data.
+                    {name: "abstract", type: "string"},
                     {name: "tileMapUrl", type: "string"}
                 ]);
         }
@@ -67,6 +69,8 @@ gxp.data.TMSCapabilitiesReader = Ext.extend(Ext.data.DataReader, {
                             ),
                             title: data.title,
                             name: data.title,
+                            // JvdB: Added abstract, was returned but not in record def+data.
+                            abstract: data.abstract,
                             tileMapUrl: this.meta.baseUrl
                         }));
                     }
@@ -87,6 +91,8 @@ gxp.data.TMSCapabilitiesReader = Ext.extend(Ext.data.DataReader, {
                             ),
                             title: tileMap.title,
                             name: tileMap.title,
+                            // JvdB: Added abstract, was returned but not in record def+data.
+                            abstract: data.abstract,
                             tileMapUrl: url
                         }));
                     }
