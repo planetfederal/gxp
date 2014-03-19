@@ -51,7 +51,7 @@ gxp.plugins.WMSRasterStylesDialog = {
     /** private: method[addRule]
      */
     addRule: function() {
-        var legend = this.items.get(2).items.get(0);
+        var legend = this.getComponent("rulesfieldset").items.get(0);
         if (this.isRaster) {
             legend.rules.push(this.createPseudoRule());
             // we need either zero or at least two rules
@@ -73,7 +73,7 @@ gxp.plugins.WMSRasterStylesDialog = {
      */
     removeRule: function() {
         if (this.isRaster) {
-            var legend = this.items.get(2).items.get(0);
+            var legend = this.getComponent("rulesfieldset").items.get(0);
             var rule = this.selectedRule;
             legend.unselect();
             legend.rules.remove(rule);
@@ -88,7 +88,7 @@ gxp.plugins.WMSRasterStylesDialog = {
     /** private: method[duplicateRule]
      */
     duplicateRule: function() {
-        var legend = this.items.get(2).items.get(0);
+        var legend = this.getComponent("rulesfieldset").items.get(0);
         if (this.isRaster) {
             legend.rules.push(this.createPseudoRule({
                 quantity: this.selectedRule.name,
@@ -156,7 +156,7 @@ gxp.plugins.WMSRasterStylesDialog = {
                                 allowBlank: false,
                                 fieldLabel: "Quantity",
                                 validator: function(value) {
-                                    var rules = me.items.get(2).items.get(0).rules;
+                                    var rules = this.getComponent("rulesfieldset").items.get(0).rules;
                                     for (var i=rules.length-1; i>=0; i--) {
                                         if (rule !== rules[i] && rules[i].name == value) {
                                             return "Quantity " + value + " is already defined";
@@ -235,7 +235,7 @@ gxp.plugins.WMSRasterStylesDialog = {
      */
     savePseudoRules: function() {
         var style = this.selectedStyle;
-        var legend = this.items.get(2).items.get(0);
+        var legend = this.getComponent("rulesfieldset").items.get(0);
         var userStyle = style.get("userStyle");
         
         var pseudoRules = legend.rules;
@@ -319,7 +319,7 @@ gxp.plugins.WMSRasterStylesDialog = {
     createPseudoRule: function(colorMapEntry) {
         var quantity = -1;
         if (!colorMapEntry) {
-            var fieldset = this.items.get(2);
+            var fieldset = this.getComponent("rulesfieldset");
             if (fieldset.items) {
                 rules = fieldset.items.get(0).rules;
                 for (var i=rules.length-1; i>=0; i--) {
@@ -349,9 +349,9 @@ gxp.plugins.WMSRasterStylesDialog = {
      *  the last rule.
      */
     updateRuleRemoveButton: function() {
-        this.items.get(3).items.get(1).setDisabled(!this.selectedRule ||
+        this.getComponent("rulestoolbar").items.get(1).setDisabled(!this.selectedRule ||
             (this.isRaster === false &&
-            this.items.get(2).items.get(0).rules.length <= 1));
+                this.getComponent("rulesfieldset").items.get(0).rules.length <= 1));
     }
     
 };
