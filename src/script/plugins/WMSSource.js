@@ -186,6 +186,12 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      */
     requiredProperties: ["title", "bbox"],
 
+    /** api: config[owsPreviewStrategies]
+      *  ``Array``
+      *  String array with the order of strategies to obtain preview images for OWS services, default is ['attributionlogo', 'getlegendgraphic'].
+      */
+    owsPreviewStrategies: ['attributionlogo', 'getlegendgraphic'],
+
     /** private: method[constructor]
      */
     constructor: function(config) {
@@ -222,20 +228,55 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      *  Create a preview image URL or encoded image for given record.
      */
     getPreviewImageURL: function (record, width, height) {
-        var layerURL = record.data.layer.url;
-        var layerName = record.data.name;
-        var layerFormat = record.data.formats && record.data.formats.length > 0 ? record.data.formats[0] : 'image/png';
+        // Old stuff we may someday use when being able to request via a GetMap
+//        var layerFormat = record.data.formats && record.data.formats.length > 0 ? record.data.formats[0] : 'image/png';
         // the minimum scale value at which the layer should display, e.g. 50000000
-        var layerMinScale = record.data.minScale;
+//        var layerMinScale = record.data.minScale;
         // the maximum scale value at which the layer should display, e.g. 10000000
-        var layerMaxScale = record.data.maxScale;
-        var mapProjection = this.target.map.projection;
-        var bounds = OpenLayers.Bounds.fromArray(record.data.llbbox);
-        var scaledBounds = bounds.scale(0.5);
-        var bbox = scaledBounds.toString();
-        // var bounds =
-        var url = layerURL + 'REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=' + width + '&HEIGHT=' + height + '&LAYER=' + layerName;
-//        var url = layerURL + 'REQUEST=GetMap&VERSION=1.1.1&SRS=EPSG:4326&BBOX=' + bbox + '&FORMAT=' + layerFormat + '&WIDTH=' + width + '&HEIGHT=' + height + '&LAYERS=' + layerName;
+//        var layerMaxScale = record.data.maxScale;
+//        var mapProjection = this.target.map.projection;
+//        var bounds = OpenLayers.Bounds.fromArray(record.data.llbbox);
+        //      var layerScale = layerMinScale;
+        //       if (layerMinScale > 0 ) {
+        /*
+         As an example, suppose that a map is to be rendered on to a display with a known actual resolution of 100 dots per inch (square)
+         and the linear distance of the coordinate system of the map is 200 meters per pixel. The actual scale (denominator)
+         of the map to be rendered is computed as:
+         100dpi = 1/100 inches
+         1/100 inches × 25.4mm/inch = 0.254mm
+         0.254mm × 1000mm/m = 0.000254m
+         200m ÷ 0.000254m = 787401.5748
+         (actual pixel size in inches) (actual pixel size)
+         (actual pixel size in meters) (actual scale denominator)
+         The actual scale denominator is translated into the “standard” scale denominator as:
+         0.28mm ÷ 0.254mm = 1.102362205 (multiplier for scale conversion)
+         787401.5748×1.102362205=868001.736 (standardscaledenominator)
+
+         */
+        //layerScale = (layerMinScale + layerMaxScale) / 2;
+        //var distance = OpenLayers.Util.distVincenty();
+        //var bounds = bounds.scale(0.25);
+        //layerScale = (layerMinScale > 0 ? '&SCALE=' + (layerMinScale + layerMaxScale)/2 : '');
+
+        //       }
+        //       var layerScaleStr = (layerMinScale > 0 ? '&SCALE=' + (layerMinScale + layerMaxScale)/2 : '');
+         // var bounds =
+        // var url = layerURL + 'REQUEST=GetMap&VERSION=1.1.1&SRS=EPSG:4326&BBOX=' + bbox + '&FORMAT=' + layerFormat + '&WIDTH=' + width + '&HEIGHT=' + height + '&LAYERS=' + layerName+layerScaleStr;
+
+        var url;
+        if (this.owsPreviewStrategies.indexOf('attributionlogo') >= 0 && record.data.attribution && record.data.attribution.logo && record.data.attribution.logo.href) {
+            // Use attribution logo a preview image
+            url = record.data.attribution.logo.href;
+        }
+
+        if (!url && this.owsPreviewStrategies.indexOf('getlegendgraphic') >= 0 ) {
+            // Use getlegend graphic as preview image
+            var layerURL = record.data.layer.url;
+            var layerName = record.data.name;
+            url = layerURL + 'REQUEST=GetLegendGraphic&VERSION=1.1.1&FORMAT=image/png&WIDTH=' + width + '&HEIGHT=' + height + '&LAYER=' + layerName;
+        }
+
+        // May be null: i.e. show no preview image
         return url;
     },
 

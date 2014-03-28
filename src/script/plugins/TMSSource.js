@@ -69,8 +69,6 @@ gxp.data.TMSCapabilitiesReader = Ext.extend(Ext.data.DataReader, {
                             ),
                             title: data.title,
                             name: data.title,
-                            // JvdB: Added abstract, was returned but not in record def+data.
-                            abstract: data.abstract,
                             tileMapUrl: this.meta.baseUrl
                         }));
                     }
@@ -91,8 +89,6 @@ gxp.data.TMSCapabilitiesReader = Ext.extend(Ext.data.DataReader, {
                             ),
                             title: tileMap.title,
                             name: tileMap.title,
-                            // JvdB: Added abstract, was returned but not in record def+data.
-                            abstract: data.abstract,
                             tileMapUrl: url
                         }));
                     }

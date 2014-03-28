@@ -265,6 +265,13 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      */
     layerPreviewHeight: 20,
 
+    /** api: config[owsPreviewStrategies]
+      *  ``Array``
+      *  String array with the order of strategies to obtain preview images for OWS services, default is ['attributionlogo', 'getlegendgraphic'].
+      */
+    owsPreviewStrategies: ['attributionlogo', 'getlegendgraphic'],
+
+
     /** private: property[selectedSource]
      *  :class:`gxp.plugins.LayerSource`
      *  The currently selected layer source.
@@ -563,7 +570,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     // Let LayerSource provide a URL to a preview image, if none use 'preview-notavailable' CSS.
                     var previewImageURL = source.getPreviewImageURL(record, layerPreviewWidth, layerPreviewHeight);
                     if (previewImageURL) {
-                        data.previewImage = '<div style="width:' + layerPreviewWidth + 'px; height:'+ layerPreviewHeight + 'px; background-image: url(' + previewImageURL + '); background-size:' + layerPreviewWidth + 'px '+ layerPreviewHeight + 'px;background-repeat: no-repeat;" >&nbsp;</div>';
+                        data.previewImage = '<div style="width:' + layerPreviewWidth + 'px; height:'+ layerPreviewHeight + 'px; background-image: url(' + previewImageURL + '); background-repeat: no-repeat;" >&nbsp;</div>';
                         // data.previewImage = '<img class="layerpreview"  width="'+ layerPreviewWidth +'" height="'+ layerPreviewHeight + '" src="' + previewImageURL + '"/>';
                     } else {
                         data.previewImage = '<div style="width:' + layerPreviewHeight + 'px; height:'+ layerPreviewHeight + 'px" class="preview-notavailable">&nbsp;</div>';
@@ -751,22 +758,24 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 },
                 "urlselected": function(newSourceDialog, url, type) {
                     newSourceDialog.setLoading();
-                    var ptype;
+                    var config = {url: url};
                     switch (type) {
                     	case 'TMS':
-                    		ptype = "gxp_tmssource";
+                            config.ptype = "gxp_tmssource";
                     		break;
                     	case 'REST':
-                    		ptype = 'gxp_arcrestsource';
+                            config.ptype = 'gxp_arcrestsource';
                     		break;
                         case 'WMS':
-                       		ptype = 'gxp_wmssource';
+                            config.ptype = 'gxp_wmssource';
+                            config.owsPreviewStrategies = this.owsPreviewStrategies;
                        		break;
                     	default:
-                    		ptype = 'gxp_wmscsource';
+                            config.ptype = 'gxp_wmscsource';
                     }
+
                     this.target.addLayerSource({
-                        config: {url: url, ptype: ptype},
+                        config: config,
                         callback: function(id) {
                             // add to combo and select
                             var record = new sources.recordType({
