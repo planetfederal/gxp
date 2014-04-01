@@ -659,7 +659,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                             capGridPanel.getSelectionModel().selectRow(rowIndex);
                             var record = capGridPanel.getSelectionModel().getSelections()[0];
                             self.selectedSource  = self.target.layerSources[record.store.sourceId];
-                            addLayers.apply(self);
+                            self.addLayers([record], false);
                         }
                     },
                     scope: this
@@ -768,6 +768,10 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     		break;
                         case 'WMS':
                             config.ptype = 'gxp_wmssource';
+                            config.owsPreviewStrategies = this.owsPreviewStrategies;
+                       		break;
+                        case 'WFS':
+                            config.ptype = 'gxp_wfssource';
                             config.owsPreviewStrategies = this.owsPreviewStrategies;
                        		break;
                     	default:
@@ -900,7 +904,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
     addLayers: function(records, isUpload) {
         var source = this.selectedSource;
         var layerStore = this.target.mapPanel.layers,
-            extent, record, layer;
+            extent, record, layer, isVisible;
         for (var i=0, ii=records.length; i<ii; ++i) {
             // If the source is lazy, then createLayerRecord will not return
             // a record, and we take the preconfigured record.
@@ -910,6 +914,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             }) || records[i];
             if (record) {
                 layer = record.getLayer();
+                isVisible = layer.getVisibility();
                 if (layer.maxExtent) {
                     if (!extent) {
                         extent = record.getLayer().maxExtent.clone();
@@ -926,7 +931,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 }
             }
         }
-        if (extent) {
+        if (extent && isVisible) {
             this.target.mapPanel.map.zoomToExtent(extent);
         }
         if (records.length === 1 && record) {
