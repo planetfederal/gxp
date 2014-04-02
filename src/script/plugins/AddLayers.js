@@ -570,7 +570,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     // Let LayerSource provide a URL to a preview image, if none use 'preview-notavailable' CSS.
                     var previewImageURL = source.getPreviewImageURL(record, layerPreviewWidth, layerPreviewHeight);
                     if (previewImageURL) {
-                        data.previewImage = '<div style="width:' + layerPreviewWidth + 'px; height:'+ layerPreviewHeight + 'px; background-image: url(' + previewImageURL + '); background-repeat: no-repeat;" >&nbsp;</div>';
+                        data.previewImage = '<div style="width:' + layerPreviewWidth + 'px; height:'+ layerPreviewHeight + 'px; background-image: url(\'' + previewImageURL + '\'); background-repeat: repeat;" >&nbsp;</div>';
                         // data.previewImage = '<img class="layerpreview"  width="'+ layerPreviewWidth +'" height="'+ layerPreviewHeight + '" src="' + previewImageURL + '"/>';
                     } else {
                         data.previewImage = '<div style="width:' + layerPreviewHeight + 'px; height:'+ layerPreviewHeight + 'px" class="preview-notavailable">&nbsp;</div>';

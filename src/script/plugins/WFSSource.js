@@ -193,14 +193,44 @@ gxp.plugins.WFSSource = Ext.extend(gxp.plugins.LayerSource, {
      *  Create a preview image URL or encoded image for given record.
      */
     getPreviewImageURL: function (record, width, height) {
-        var url;
-        if (this.owsPreviewStrategies.indexOf('attributionlogo') >= 0 && record.data.attribution && record.data.attribution.logo && record.data.attribution.logo.href) {
-            // Use attribution logo a preview image
-            url = record.data.attribution.logo.href;
+        // For now we only support a random color, or no preview image
+        if (!this.owsPreviewStrategies.indexOf('randomcolor')) {
+            return null;
         }
 
-        // May be null: i.e. show no preview image
-        return url;
+
+        // Generate functions for encoded CSS image
+        // we generate a 1-pixel GIF with a random color
+        // See http://micheljansen.org/blog/entry/1238
+        function encodeColor(color) {
+            // TODO: make more efficient!!
+            var rHex = '0x' + color.charAt(1) + color.charAt(2);
+            var gHex = '0x' + color.charAt(3) + color.charAt(4);
+            var bHex = '0x' + color.charAt(5) + color.charAt(6);
+            return encodeRGB(rHex, gHex, bHex)
+        }
+
+        function encodeRGB(r, g, b) {
+            return encode_triplet(0, r, g) + encode_triplet(b, 255, 255);
+        }
+
+        function encode_triplet(e1, e2, e3) {
+            var keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+            var enc1 = e1 >> 2;
+            var enc2 = ((e1 & 3) << 4) | (e2 >> 4);
+            var enc3 = ((e2 & 15) << 2) | (e3 >> 6);
+            var enc4 = e3 & 63;
+            return keyStr.charAt(enc1) + keyStr.charAt(enc2) + keyStr.charAt(enc3) + keyStr.charAt(enc4);
+        }
+
+        // Generate a random color (thanks to Mark Prins)
+        var colour = '#' + ('000000' + Math.round(0xffffff * Math.random()).toString(16)).substr(-6);
+
+        // Save color in record to generate StyleMap later
+        record.data.colour = colour;
+        // Red pixel test
+        // return 'data:image/gif;base64,R0lGODlhAQABAPAA' +  'AP8AAP//' + '/yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==';
+        return 'data:image/gif;base64,R0lGODlhAQABAPAA' + encodeColor(colour) + '/yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==';
     },
 
     /** private: method[onAuthorizationChange]
@@ -440,30 +470,31 @@ gxp.plugins.WFSSource = Ext.extend(gxp.plugins.LayerSource, {
             // Determine maxExtent in map projection
             var maxExtent = (projCode != 'EPSG:4326') ? llBounds.transform("EPSG:4326", projection) : llBounds;
 
-            // random color
-            var colour = '#'
-                + ('000000' + Math.round(0xffffff * Math.random()).toString(16))
-                .substr(-6);
+            // Style: first assume default style
+            var styleMap = original.data.layer.styleMap;
 
-            var styleMap = new OpenLayers.StyleMap({
-                'default': new OpenLayers.Style({
-                    fillColor: colour,
-                    fillOpacity: 0.4,
-                    strokeColor: colour,
-                    strokeOpacity: 0.7,
-                    strokeWidth: 1,
-                    pointRadius: 4,
-                    graphicName: "circle"
-                }),
-                'select': new OpenLayers.Style({
-                    fillColor: '#0000ee',
-                    fillOpacity: 0.4,
-                    strokeColor: '#0000ee',
-                    strokeOpacity: 1,
-                    strokeWidth: 1,
-                    pointRadius: 6,
-                    graphicName: 'circle'
-                })});
+            // Based on strategy we may have a (random) color
+            if (original.data.colour) {
+                styleMap = new OpenLayers.StyleMap({
+                    'default': new OpenLayers.Style({
+                        fillColor: original.data.colour,
+                        fillOpacity: 0.6,
+                        strokeColor: original.data.colour,
+                        strokeOpacity: 0.8,
+                        strokeWidth: 1,
+                        pointRadius: 4,
+                        graphicName: "circle"
+                    }),
+                    'select': new OpenLayers.Style({
+                        fillColor: '#0000ee',
+                        fillOpacity: 0.4,
+                        strokeColor: '#0000ee',
+                        strokeOpacity: 1,
+                        strokeWidth: 1,
+                        pointRadius: 6,
+                        graphicName: 'circle'
+                    })});
+            }
 
             // Layer Record from Capabilites FeatureType
             var capsLayer = original.getLayer();
