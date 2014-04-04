@@ -305,6 +305,11 @@ li.commit div {
    background-image: url(img/silk/palette.png);
 }
 
+/* gxp sort layers */
+.x-btn .gxp-icon-book-open {
+    background-image: url(img/silk/book_open.png);
+}
+
 /* fixes textarea scrollbar issue in FF on OSX */
 .ext-gecko.ext-mac textarea.x-form-field {
     padding: 1px 2px;
