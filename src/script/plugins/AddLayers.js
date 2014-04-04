@@ -150,6 +150,26 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      */
     layerQueryableText: "Queryable",
 
+
+    /** api: config[searchLayersEmptyText]
+      *  ``String``
+      *  Text for source layers search box when empty (i18n).
+      */
+     searchLayersEmptyText: 'Search layers',
+
+
+    /** api: config[searchLayersSearchText]
+      *  ``String``
+      *  Text for source layers search button (i18n).
+      */
+     searchLayersSearchText: 'Search',
+
+    /** api: config[sortLayersText]
+     *  ``String``
+     *  Text for source layers sort button (i18n).
+     */
+    sortLayersText: 'Sort alphabetically',
+
     /** api: config[search]
      *  ``Object | Boolean``
      *  If provided, a :class:`gxp.CatalogueSearchPanel` will be added as a
@@ -267,9 +287,10 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
 
     /** api: config[owsPreviewStrategies]
       *  ``Array``
-      *  String array with the order of strategies to obtain preview images for OWS services, default is ['attributionlogo', 'getlegendgraphic'].
+      *  String array with the order of strategies to obtain preview images for OWS services, default is ['attributionlogo', 'getlegendgraphic', 'randomcolor'].
+      *  'randomcolor' only applies to WFSSources. 'attributionlogo' and 'getlegendgraphic' only to WMSSources. TMSSources take the first top tile.
       */
-    owsPreviewStrategies: ['attributionlogo', 'getlegendgraphic'],
+    owsPreviewStrategies: ['attributionlogo', 'getlegendgraphic', 'randomcolor'],
 
 
     /** private: property[selectedSource]
@@ -685,7 +706,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         }
 
         var sourceComboBox = new Ext.form.ComboBox({
-            ref: "../../sourceComboBox",
+            ref: "../sourceComboBox",
             width: 165,
             store: sources,
             valueField: "id",
@@ -728,19 +749,71 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             }
         });
 
+        var sourceToolsItems = [
+            {
+                xtype: 'tbspacer',
+                width: 14
+            },
+            {
+                id: 'txtSearch',
+                xtype: 'textfield',
+                emptyText: this.searchLayersEmptyText,
+                selectOnFocus: true,
+                minWidth: 180,
+                listeners: {
+                    scope: this,
+                    specialkey: function (f, e) {
+                        if (e.getKey() == e.ENTER) {
+                            this.sourceTextSearch(Ext.getDom('txtSearch').value);
+                        }
+                    }
+                }
+            },
+            {
+                id: 'btnSearch',
+                xtype: 'button',
+                iconCls: 'gxp-icon-find',
+                text: this.searchLayersSearchText,
+                tooltip: 'Search within the Layer text fields, click again to reset search',
+                handler: function () {
+                    this.sourceTextSearch(Ext.getDom('txtSearch').value);
+                },
+                scope: this
+            },
+            {
+                xtype: 'tbfill'
+            },
+            {
+                id: 'btnList',
+                xtype: 'button',
+                iconCls: 'gxp-icon-book-open',
+                text: this.sortLayersText,
+                tooltip: 'Sort the layers alphabetically by title, toggle to sort asc/descending',
+                handler: function (f, e) {
+                    this.sourceSort();
+                },
+                scope: this
+            },
+            {
+                xtype: 'tbspacer',
+                width: 16
+            }
+        ];
+
         var capGridToolbar = null,
             container;
 
         if (this.target.proxy || data.length > 1) {
-            container = new Ext.Container({
+/*            container = new Ext.Container({
                 cls: 'gxp-addlayers-sourceselect',
-                items: [
-                    new Ext.Toolbar.TextItem({text: this.layerSelectionText}),
-                    sourceComboBox
+                items: [sourceComboBox, new Ext.Toolbar.TextItem({text: this.layerSelectionText})
                 ]
             });
-            capGridToolbar = [container];
+            capGridToolbar = [container];  */
+            // JvdB : simplified (also changed ref for  sourceComboBox)
+            capGridToolbar = [new Ext.Toolbar.TextItem({text: this.layerSelectionText}), sourceComboBox];
         }
+
 
         if (this.target.proxy) {
             this.addServerId = Ext.id();
@@ -816,14 +889,19 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             }
         }
 
-
         var items = {
-            xtype: "container",
+            xtype: "panel",
             region: "center",
             layout: "fit",
             hideBorders: true,
+            border: false,
+            margins: {
+                top: 8
+            },
+            tbar: sourceToolsItems,
             items: [capGridPanel]
         };
+
         if (this.instructionsText) {
             items.items.push({
                 xtype: "box",
@@ -895,6 +973,61 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             this.addOutput(this.capGrid);
         }
 
+    },
+
+    /** private: method[sourceSort]
+     * Sort the records in the selected Source Store.
+     */
+    sourceSort: function () {
+        if (!this.selectedSource || !this.selectedSource.store) {
+            alert('No source active');
+            return;
+        }
+
+        this.selectedSource.store.sort('title');
+    },
+
+    /** private: method[sourceTextSearch]
+     *  :arg text: ``String`` search text
+     *  :arg message: ``String`` message to display while searching
+     */
+    sourceTextSearch: function (text, message) {
+        if (!this.selectedSource || !this.selectedSource.store) {
+            alert('No source active');
+            return;
+        }
+
+        var store = this.selectedSource.store;
+        if (!text || text == '' || text == this.searchLayersEmptyText || text == store.lastSearchText) {
+            store.clearFilter(false);
+            return;
+        }
+        store.clearFilter(true);
+
+        // Not all source types may support or have values in all fields
+        var tryFields = ['name', 'title', 'abstract', 'attribution'];
+
+        var filter = [
+            {
+                fn: function (record) {
+                    var result = false;
+                    var value;
+                    var textLower = text.toLowerCase();
+                    for (var i=0; i <  tryFields.length && !result; i++) {
+                        value = record.get(tryFields[i]);
+                        if (!value || value == '' || !(typeof(value) === 'string' || value instanceof String)) {
+                            continue;
+                        }
+
+                        result = value.toLowerCase().indexOf(textLower) > -1;
+                    }
+                    return result;
+                },
+                scope: this
+            }
+        ];
+        store.filter(filter);
+        store.lastSearchText = text;
     },
 
     /** private: method[addLayers]
