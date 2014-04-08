@@ -153,9 +153,15 @@ gxp.plugins.WFSSource = Ext.extend(gxp.plugins.LayerSource, {
 
     /** api: config[owsPreviewStrategies]
      *  ``Array``
-     *  String array with the order of strategies to obtain preview images for OWS services, default is ['attributionlogo', 'getlegendgraphic'].
+     *  String array with the order of strategies to obtain preview images for OWS services, default is ['attributionlogo', 'randomcolor'].
      */
-    owsPreviewStrategies: ['attributionlogo'],
+    owsPreviewStrategies: ['randomcolor'],
+
+    /** api: config[defaultSrs]
+     *  ``String``
+      *  String specifying the default SRS for a WFS layer if it does not map the map projection, use Layer SRS if null.
+      */
+    defaultSrs: 'EPSG:4326',
 
     /** private: method[constructor]
      */
@@ -444,15 +450,20 @@ gxp.plugins.WFSSource = Ext.extend(gxp.plugins.LayerSource, {
         }
         if (original) {
 
-
             /**
              * TODO: The WFSCapabilitiesReader should allow for creation
              * of layers in different SRS.
              */
-            var projection, layerProjection;
-            projection = layerProjection = this.getMapProjection();
-            var srs = original.get("srs");
+            // Determine layer projection, 4 options:
+            // 1. Use the same coordinate system as the project (Map) if matching WFS "DefaultCRS".
+            // 2. if defaultSrs NOT configured: use default value EPSG:4326
+            // 3. if defaultSrs configured: then use that SRS
+            // 4. if defaultSrs explicitly configured to null use record SRS, i.e. WFS "DefaultCRS"
+            var mapProjection, layerProjection;
 
+            // See if there is a (default) SRS
+            mapProjection = layerProjection = this.getMapProjection();
+            var srs = original.get("srs");
             if (srs) {
                 // If stupid code like: "urn:x-ogc:def:crs:EPSG:4326"
                 if (srs.indexOf('urn') >= 0) {
@@ -460,15 +471,16 @@ gxp.plugins.WFSSource = Ext.extend(gxp.plugins.LayerSource, {
                 }
                 layerProjection = new OpenLayers.Projection(srs)
             }
-
-            var projCode = (layerProjection || projection).getCode();
+            if (!layerProjection.equals(mapProjection) && this.defaultSrs) {
+                layerProjection = new OpenLayers.Projection(this.defaultSrs);
+            }
             var llBounds = original.get("bounds");
             if (!llBounds) {
                 llBounds = new OpenLayers.Bounds(-180, -90, 180, 90);
             }
 
             // Determine maxExtent in map projection
-            var maxExtent = (projCode != 'EPSG:4326') ? llBounds.transform("EPSG:4326", projection) : llBounds;
+            var maxExtent = llBounds.transform("EPSG:4326", mapProjection);
 
             // Style: first assume default style
             var styleMap = original.data.layer.styleMap;

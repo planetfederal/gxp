@@ -774,7 +774,10 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 xtype: 'button',
                 iconCls: 'gxp-icon-find',
                 text: this.searchLayersSearchText,
-                tooltip: 'Search within the Layer text fields, click again to reset search',
+                tooltip: {
+                    text: 'Search within the Layer text fields. Click again to reset search results.',
+                    width: 360
+                },
                 handler: function () {
                     this.sourceTextSearch(Ext.getDom('txtSearch').value);
                 },
@@ -788,7 +791,10 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 xtype: 'button',
                 iconCls: 'gxp-icon-book-open',
                 text: this.sortLayersText,
-                tooltip: 'Sort the layers alphabetically by title, toggle to sort asc/descending',
+                tooltip: {
+                    text: 'Sort the layers alphabetically by title. Toggle to sort asc/descending.',
+                    width: 360
+                 },
                 handler: function (f, e) {
                     this.sourceSort();
                 },
@@ -846,6 +852,9 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                         case 'WFS':
                             config.ptype = 'gxp_wfssource';
                             config.owsPreviewStrategies = this.owsPreviewStrategies;
+                            if (this.defaultSrs !== undefined)  {
+                                config.defaultSrs = this.defaultSrs;
+                            }
                        		break;
                     	default:
                             config.ptype = 'gxp_wmscsource';
@@ -1000,6 +1009,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         var store = this.selectedSource.store;
         if (!text || text == '' || text == this.searchLayersEmptyText || text == store.lastSearchText) {
             store.clearFilter(false);
+            store.lastSearchText = null;
             return;
         }
         store.clearFilter(true);
