@@ -269,8 +269,8 @@ gxp.plugins.Tool = Ext.extend(Ext.util.Observable, {
         actions = actions || this.actions;
         if (!actions || this.actionTarget === null) {
             // add output immediately if we have no actions to trigger it
-			this.removeOutput();
-        	this.addOutput(this.outputConfig);
+            this.removeOutput();
+            this.addOutput(this.outputConfig);
             return;
         }
         
