@@ -318,7 +318,7 @@ gxp.plugins.WFSSource = Ext.extend(gxp.plugins.LayerSource, {
             baseParams.VERSION = this.version;
         }
 
-        var lazy = this.isLazy();
+        var lazy = false; // this.isLazy();
 
         this.store = new GeoExt.data.WFSCapabilitiesStore({
             // Since we want our parameters (e.g. VERSION) to override any in the
@@ -384,6 +384,7 @@ gxp.plugins.WFSSource = Ext.extend(gxp.plugins.LayerSource, {
                     }
                     // TODO: decide on signature for failure listeners
                     this.fireEvent("failure", this, msg, details);
+
                     // clean up data stored on format after parsing is complete
                     delete this.format.data;
                 },

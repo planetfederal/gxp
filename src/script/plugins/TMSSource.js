@@ -69,6 +69,7 @@ gxp.data.TMSCapabilitiesReader = Ext.extend(Ext.data.DataReader, {
                             ),
                             title: data.title,
                             name: data.title,
+                            abstract: data.abstract,
                             tileMapUrl: this.meta.baseUrl
                         }));
                     }
@@ -89,6 +90,7 @@ gxp.data.TMSCapabilitiesReader = Ext.extend(Ext.data.DataReader, {
                             ),
                             title: tileMap.title,
                             name: tileMap.title,
+                            abstract: data.abstract,
                             tileMapUrl: url
                         }));
                     }
@@ -96,7 +98,7 @@ gxp.data.TMSCapabilitiesReader = Ext.extend(Ext.data.DataReader, {
             }
         }
         if (records.length == 0) {
-            alert('No suitable TMS layers found, maybe a mismatch with your Map projection?')
+            this.error = "No compatible layers found. Mismatched coordinate system.";
         }
         return {
             totalRecords: records.length,
@@ -159,6 +161,11 @@ gxp.plugins.TMSSource = Ext.extend(gxp.plugins.LayerSource, {
             listeners: {
                 load: function() {
                     this.title = this.store.reader.raw.title;
+                    if (this.store.reader.error) {
+                        this.fireEvent("failure", this, this.store.reader.error);
+                        return;
+                    }
+
                     this.fireEvent("ready", this);
                 },
                 exception: function() {

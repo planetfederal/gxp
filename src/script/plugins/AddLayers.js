@@ -863,10 +863,18 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     this.target.addLayerSource({
                         config: config,
                         callback: function(id) {
+                            // First check if Source did not bump on any error loading.
+                            var source = this.target.layerSources[id];
+                            if (source.error) {
+                                newSourceDialog.setError(
+                                     new Ext.Template(this.addLayerSourceErrorText).apply({type: type, msg: source.error})
+                                 );
+                                return;
+                            }
                             // add to combo and select
                             var record = new sources.recordType({
                                 id: id,
-                                title: this.target.layerSources[id].title || this.untitledText
+                                title: source.title || this.untitledText
                             });
                             sources.insert(0, [record]);
                             sourceComboBox.onSelect(record, 0);
