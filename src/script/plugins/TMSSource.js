@@ -20,12 +20,12 @@ gxp.data.TMSCapabilitiesReader = Ext.extend(Ext.data.DataReader, {
         if (!meta.format) {
             meta.format = new OpenLayers.Format.TMSCapabilities();
         }
+        // JvdB: Added abstract, was returned but not in record def+data.
         if(typeof recordType !== "function") {
             recordType = GeoExt.data.LayerRecord.create(
                 recordType || meta.fields || [
                     {name: "name", type: "string"},
                     {name: "title", type: "string"},
-                    // JvdB: Added abstract, was returned but not in record def+data.
                     {name: "abstract", type: "string"},
                     {name: "tileMapUrl", type: "string"}
                 ]);
@@ -45,6 +45,9 @@ gxp.data.TMSCapabilitiesReader = Ext.extend(Ext.data.DataReader, {
         if (typeof data === "string" || data.nodeType) {
             data = this.meta.format.read(data);
             this.raw = data;
+            // JvdB: Closure compiler chokes over 'abstract' (reserved keyword)
+            var abstrct = data['abstract'];
+
             // a single tileMap, someone supplied a url to a TileMap
             if (!data.tileMaps) {
                 if (data.tileSets) {
@@ -69,7 +72,7 @@ gxp.data.TMSCapabilitiesReader = Ext.extend(Ext.data.DataReader, {
                             ),
                             title: data.title,
                             name: data.title,
-                            abstract: data.abstract,
+                            "abstract": abstrct,
                             tileMapUrl: this.meta.baseUrl
                         }));
                     }
@@ -90,7 +93,7 @@ gxp.data.TMSCapabilitiesReader = Ext.extend(Ext.data.DataReader, {
                             ),
                             title: tileMap.title,
                             name: tileMap.title,
-                            abstract: data.abstract,
+                            "abstract": abstrct,
                             tileMapUrl: url
                         }));
                     }
