@@ -292,6 +292,17 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
       */
     owsPreviewStrategies: ['attributionlogo', 'getlegendgraphic', 'randomcolor'],
 
+    /** api: config[minTextSearchLength]
+     *  ``Number``
+     *  Minimal string length in text autosearch box.
+     */
+    minTextSearchLength: 2,
+
+    /** api: config[textSearchQueryDelay]
+     *  ``Number``
+     *  `Delay before the search in the grid occurs, defaults to 500 ms.
+     */
+    textSearchQueryDelay: 500,
 
     /** private: property[selectedSource]
      *  :class:`gxp.plugins.LayerSource`
@@ -685,6 +696,15 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     },
                     scope: this
                 }
+//                ,bbar: new Ext.PagingToolbar({
+//                        store: source.store,
+//                        displayInfo: true,
+//                        pageSize: 5,
+//                        prependButtons: true,
+//                        items: [
+//                            'text 1'
+//                        ]
+//                    })
             });
         } else {
             capGridPanel = new Ext.grid.GridPanel({
@@ -749,6 +769,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             }
         });
 
+
         var sourceToolsItems = [
             {
                 xtype: 'tbspacer',
@@ -760,29 +781,42 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 emptyText: this.searchLayersEmptyText,
                 selectOnFocus: true,
                 minWidth: 180,
+                enableKeyEvents : true,
                 listeners: {
                     scope: this,
-                    specialkey: function (f, e) {
-                        if (e.getKey() == e.ENTER) {
-                            this.sourceTextSearch(Ext.getDom('txtSearch').value);
+                    keyup: function (e) {
+                        var text = Ext.getDom('txtSearch').value;
+                        // Only do search when minimum chars reached
+                        if (text && text.length < this.minTextSearchLength) {
+                            return;
                         }
+                        if (!this.dqTask) {
+                            this.dqTask = new Ext.util.DelayedTask(this.sourceTextSearch, this);
+                        }
+                        this.dqTask.delay(this.textSearchQueryDelay, null, null, [text]);
+                        // this.sourceTextSearch(text)
                     }
+//                    specialkey: function (f, e) {
+//                        if (e.getKey() == e.ENTER) {
+//                            this.sourceTextSearch(Ext.getDom('txtSearch').value);
+//                        }
+//                    }
                 }
             },
-            {
-                id: 'btnSearch',
-                xtype: 'button',
-                iconCls: 'gxp-icon-find',
-                text: this.searchLayersSearchText,
-                tooltip: {
-                    text: 'Search within the Layer text fields. Click again to reset search results.',
-                    width: 360
-                },
-                handler: function () {
-                    this.sourceTextSearch(Ext.getDom('txtSearch').value);
-                },
-                scope: this
-            },
+//            {
+//                id: 'btnSearch',
+//                xtype: 'button',
+//                iconCls: 'gxp-icon-find',
+//                text: this.searchLayersSearchText,
+//                tooltip: {
+//                    text: 'Search within the Layer text fields. Click again to reset search results.',
+//                    width: 360
+//                },
+//                handler: function () {
+//                    this.sourceTextSearch(Ext.getDom('txtSearch').value);
+//                },
+//                scope: this
+//            },
             {
                 xtype: 'tbfill'
             },
@@ -973,10 +1007,20 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             tbar: capGridToolbar,
             bbar: bbarItems,
             listeners: {
-                hide: function(win) {
+                destroy: function () {
+                    if (this.dqTask) {
+                        this.dqTask.cancel();
+                        this.dqTask = null;
+                    }
+                },
+                hide: function (win) {
+                    if (this.dqTask) {
+                        this.dqTask.cancel();
+                        this.dqTask = null;
+                    }
                     capGridPanel.getSelectionModel().clearSelections();
                 },
-                show: function(win) {
+                show: function (win) {
                     if (this.selectedSource === null) {
                         this.setSelectedSource(this.target.layerSources[data[idx][0]]);
                     } else {
@@ -1015,9 +1059,8 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         }
 
         var store = this.selectedSource.store;
-        if (!text || text == '' || text == this.searchLayersEmptyText || text == store.lastSearchText) {
+        if (!text || text == '' || text == this.searchLayersEmptyText) {
             store.clearFilter(false);
-            store.lastSearchText = null;
             return;
         }
         store.clearFilter(true);
