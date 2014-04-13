@@ -589,10 +589,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         tpl = new Ext.XTemplate(tpl);
         tpl.compile();
         return new Ext.grid.ColumnModel([
-            // expander,
-            // {id: "title", xtype: 'templatecolumn', header: this.panelTitleText, dataIndex: "title", sortable: true}
-            // {header: "Id", dataIndex: "name", width: 120, sortable: true}
-            // , tpl: tpl, 'xtype: 'templatecolumn
+            // Just one column, styled with the ExtJS template
             {id: "title", dataIndex: "title", sortable: true,
                 renderer: function (value, metaData, record, rowIndex, colIndex, view) {
                     var data = record.data;
@@ -600,6 +597,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     var source = self.target.layerSources[record.store.sourceId];
 
                     // Let LayerSource provide a URL to a preview image, if none use 'preview-notavailable' CSS.
+                    // TODO: background image loading, and loading only once
                     var previewImageURL = source.getPreviewImageURL(record, layerPreviewWidth, layerPreviewHeight);
                     if (previewImageURL) {
                         data.previewImage = '<div style="width:' + layerPreviewWidth + 'px; height:'+ layerPreviewHeight + 'px; background-image: url(\'' + previewImageURL + '\'); background-repeat: repeat;" >&nbsp;</div>';
@@ -633,6 +631,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
 
         var expander = this.createExpander();
 
+        // Allows async record loading for layers that need to consult a server via Ajax (e.g. TMS)
         function addLayers() {
             var source = this.selectedSource;
             var records = capGridPanel.getSelectionModel().getSelections();
@@ -672,6 +671,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         var capGridPanel;
         var self = this;
         if (this.templatedLayerGrid) {
+            // Nice layout using ExtJS Template
             capGridPanel = new Ext.grid.GridPanel({
                 store: source.store,
                 autoScroll: true,
@@ -687,15 +687,21 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     click: function (e) {
                         var target = e.getTarget();
                         if (target.name == "addlayer") {
+                            // Get selected row id from target element
                             var rowIndex = target.id.slice(target.id.lastIndexOf('-')+1);
+
+                            // Explicit row and source selection
                             capGridPanel.getSelectionModel().selectRow(rowIndex);
                             var record = capGridPanel.getSelectionModel().getSelections()[0];
                             self.selectedSource  = self.target.layerSources[record.store.sourceId];
-                            self.addLayers([record], false);
+
+                            // Cannot call this.addLayers directly: LayerSource.createLayerRecord could be async e.g. TMSSource
+                            addLayers.apply(this);
                         }
                     },
                     scope: this
                 }
+// Not yet: for a Paging Toolbar we need a paging Store....
 //                ,bbar: new Ext.PagingToolbar({
 //                        store: source.store,
 //                        displayInfo: true,
@@ -707,6 +713,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
 //                    })
             });
         } else {
+            // Ordinary Layout with row expander
             capGridPanel = new Ext.grid.GridPanel({
                 store: source.store,
                 autoScroll: true,
@@ -785,38 +792,24 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 listeners: {
                     scope: this,
                     keyup: function (e) {
+                        // Get typed text from element directly
                         var text = Ext.getDom('txtSearch').value;
+
                         // Only do search when minimum chars reached
                         if (text && text.length < this.minTextSearchLength) {
                             return;
                         }
+
+                        // Use a delayed task as not to start search immediately for each typed char
                         if (!this.dqTask) {
                             this.dqTask = new Ext.util.DelayedTask(this.sourceTextSearch, this);
                         }
+
+                        // Perform delayed text search
                         this.dqTask.delay(this.textSearchQueryDelay, null, null, [text]);
-                        // this.sourceTextSearch(text)
                     }
-//                    specialkey: function (f, e) {
-//                        if (e.getKey() == e.ENTER) {
-//                            this.sourceTextSearch(Ext.getDom('txtSearch').value);
-//                        }
-//                    }
                 }
             },
-//            {
-//                id: 'btnSearch',
-//                xtype: 'button',
-//                iconCls: 'gxp-icon-find',
-//                text: this.searchLayersSearchText,
-//                tooltip: {
-//                    text: 'Search within the Layer text fields. Click again to reset search results.',
-//                    width: 360
-//                },
-//                handler: function () {
-//                    this.sourceTextSearch(Ext.getDom('txtSearch').value);
-//                },
-//                scope: this
-//            },
             {
                 xtype: 'tbfill'
             },
@@ -829,7 +822,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     text: 'Sort the layers alphabetically by title. Toggle to sort asc/descending.',
                     width: 360
                  },
-                handler: function (f, e) {
+                handler: function () {
                     this.sourceSort();
                 },
                 scope: this

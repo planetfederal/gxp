@@ -27,7 +27,8 @@ gxp.data.TMSCapabilitiesReader = Ext.extend(Ext.data.DataReader, {
                     {name: "name", type: "string"},
                     {name: "title", type: "string"},
                     {name: "abstract", type: "string"},
-                    {name: "tileMapUrl", type: "string"}
+                    {name: "tileMapUrl", type: "string"},
+                    {name: "group", type: "string"}
                 ]);
         }
         gxp.data.TMSCapabilitiesReader.superclass.constructor.call(
@@ -67,13 +68,15 @@ gxp.data.TMSCapabilitiesReader = Ext.extend(Ext.data.DataReader, {
                                 data.tileMapService.replace("/" + this.meta.version, ""), {
                                     serverResolutions: serverResolutions,
                                     type: data.tileFormat.extension,
-                                    layername: layerName
+                                    layername: layerName,
+                                    isBaseLayer: this.meta.isBaseLayer
                                 }
                             ),
                             title: data.title,
                             name: data.title,
                             "abstract": abstrct,
-                            tileMapUrl: this.meta.baseUrl
+                            tileMapUrl: this.meta.baseUrl,
+                            group: this.meta.group
                         }));
                     }
                 }
@@ -88,13 +91,15 @@ gxp.data.TMSCapabilitiesReader = Ext.extend(Ext.data.DataReader, {
                             layer: new OpenLayers.Layer.TMS(
                                 tileMap.title,
                                 (this.meta.baseUrl.indexOf(this.meta.version) !== -1) ? this.meta.baseUrl.replace(this.meta.version + '/', '') : this.meta.baseUrl, {
-                                    layername: layername
+                                    layername: layername,
+                                    isBaseLayer: this.meta.isBaseLayer
                                 }
                             ),
                             title: tileMap.title,
                             name: tileMap.title,
                             "abstract": abstrct,
-                            tileMapUrl: url
+                            tileMapUrl: url,
+                            group: this.meta.group
                         }));
                     }
                 }
@@ -143,9 +148,16 @@ gxp.plugins.TMSSource = Ext.extend(gxp.plugins.LayerSource, {
      */
     version: "1.0.0",
 
+    /** api: config[defaultGroup]
+     *  ``String``  layer group name if no "group" property present in initial config.
+     */
+    defaultGroup: "background",
+
     /** private: method[constructor]
      */
     constructor: function(config) {
+        config.group = config.group ? config.group : this.defaultGroup;
+        config.isBaseLayer = config.isBaseLayer === undefined ? true : config.isBaseLayer;
         gxp.plugins.TMSSource.superclass.constructor.apply(this, arguments);
         this.format = new OpenLayers.Format.TMSCapabilities();
         if (this.url.slice(-1) !== '/') {
@@ -186,6 +198,8 @@ gxp.plugins.TMSSource = Ext.extend(gxp.plugins.LayerSource, {
             reader: new gxp.data.TMSCapabilitiesReader({
                 baseUrl: this.url,
                 version: this.version,
+                group: this.initialConfig.group,
+                isBaseLayer: this.initialConfig.isBaseLayer,
                 mapProjection: this.getMapProjection()
             })
         });

@@ -200,7 +200,7 @@ gxp.plugins.WFSSource = Ext.extend(gxp.plugins.LayerSource, {
      */
     getPreviewImageURL: function (record, width, height) {
         // For now we only support a random color, or no preview image
-        if (!this.owsPreviewStrategies.indexOf('randomcolor')) {
+        if (this.owsPreviewStrategies.indexOf('randomcolor') == -1) {
             return null;
         }
 
