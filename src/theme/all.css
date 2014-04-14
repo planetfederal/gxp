@@ -305,6 +305,11 @@ li.commit div {
    background-image: url(img/silk/palette.png);
 }
 
+/* gxp_opacityslider */
+.x-btn .gxp-icon-opacity, .x-menu-item .gxp-icon-opacity, .x-tree-node .gxp-icon-opacity {
+   background-image: url(img/silk/layers.png);
+}
+
 /* gxp sort layers */
 .x-btn .gxp-icon-book-open {
     background-image: url(img/silk/book_open.png);
