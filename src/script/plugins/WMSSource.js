@@ -264,9 +264,11 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         // var url = layerURL + 'REQUEST=GetMap&VERSION=1.1.1&SRS=EPSG:4326&BBOX=' + bbox + '&FORMAT=' + layerFormat + '&WIDTH=' + width + '&HEIGHT=' + height + '&LAYERS=' + layerName+layerScaleStr;
 
         var url;
+        record.data.scalePreviewImage = false;
         if (this.owsPreviewStrategies.indexOf('attributionlogo') >= 0 && record.data.attribution && record.data.attribution.logo && record.data.attribution.logo.href) {
             // Use attribution logo a preview image
             url = record.data.attribution.logo.href;
+            record.data.scalePreviewImage = true;
         }
 
         if (!url && this.owsPreviewStrategies.indexOf('getlegendgraphic') >= 0 ) {

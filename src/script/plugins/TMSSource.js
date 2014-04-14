@@ -76,6 +76,7 @@ gxp.data.TMSCapabilitiesReader = Ext.extend(Ext.data.DataReader, {
                             name: data.title,
                             "abstract": abstrct,
                             tileMapUrl: this.meta.baseUrl,
+                            scalePreviewImage: true,
                             group: this.meta.group
                         }));
                     }
@@ -99,6 +100,7 @@ gxp.data.TMSCapabilitiesReader = Ext.extend(Ext.data.DataReader, {
                             name: tileMap.title,
                             "abstract": abstrct,
                             tileMapUrl: url,
+                            scalePreviewImage: true,
                             group: this.meta.group
                         }));
                     }
@@ -233,7 +235,8 @@ gxp.plugins.TMSSource = Ext.extend(gxp.plugins.LayerSource, {
                         });
                         this.target.createLayerRecord({
                             source: this.id,
-                            name: config.name
+                            name: config.name,
+                            scalePreviewImage: true
                         }, callback, scope);
                     },
                     scope: this

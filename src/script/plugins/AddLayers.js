@@ -600,7 +600,10 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     // TODO: background image loading, and loading only once
                     var previewImageURL = source.getPreviewImageURL(record, layerPreviewWidth, layerPreviewHeight);
                     if (previewImageURL) {
-                        data.previewImage = '<div style="width:' + layerPreviewWidth + 'px; height:'+ layerPreviewHeight + 'px; background-image: url(\'' + previewImageURL + '\'); background-repeat: repeat;" >&nbsp;</div>';
+                        // Only resize TMS preview images. TODO: make smarter an request from Source
+                        var backgroundSize = record.data.scalePreviewImage === true ? 'background-size:' + layerPreviewWidth + 'px ' + layerPreviewHeight + 'px;' : ' ';
+
+                        data.previewImage = '<div style="width:' + layerPreviewWidth + 'px; height:'+ layerPreviewHeight + 'px; background-image: url(\'' + previewImageURL + '\'); ' + backgroundSize + ' background-repeat: repeat;" >&nbsp;</div>';
                         // data.previewImage = '<img class="layerpreview"  width="'+ layerPreviewWidth +'" height="'+ layerPreviewHeight + '" src="' + previewImageURL + '"/>';
                     } else {
                         data.previewImage = '<div style="width:' + layerPreviewHeight + 'px; height:'+ layerPreviewHeight + 'px" class="preview-notavailable">&nbsp;</div>';
