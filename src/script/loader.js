@@ -116,6 +116,7 @@
         "plugins/LoadingIndicator.js",
         "plugins/Playback.js",
         "plugins/OpacitySlider.js",
+        "plugins/WFSSource.js",
         "ColorManager.js",
         "locale/es.js",
         "locale/ca.js"
