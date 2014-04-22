@@ -340,8 +340,9 @@ gxp.plugins.WFSSource = Ext.extend(gxp.plugins.LayerSource, {
                     if (!this.store.reader.raw || !(this.store.reader.raw.service || this.store.reader.raw.serviceIdentification)) {
                         this.fireEvent("failure", this, "Invalid capabilities document.");
                     } else {
-                        if (!this.title) {
-                            this.title = this.store.reader.raw.service ? this.store.reader.raw.service.title : this.store.reader.raw.serviceIdentification.title;
+                        this.serviceTitle = this.store.reader.raw.service ? this.store.reader.raw.service.title : this.store.reader.raw.serviceIdentification.title;
+                        if (!this.title || this.title.length == 0) {
+                            this.title = this.serviceTitle;
                         }
                         if (!this.ready) {
                             this.ready = true;

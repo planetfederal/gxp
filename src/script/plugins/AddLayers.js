@@ -255,6 +255,18 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      */
     catalogSourceKey: null,
 
+    /** api: config[catalogPanelWidth]
+     *  ``Number``
+     *  Initial width of the CSW catalog panel.
+     */
+    catalogPanelWidth: 440,
+
+    /** api: config[catalogPanelHeight]
+     *  ``Number``
+     *  Initial height of the CSW catalog panel.
+     */
+    catalogPanelHeight: 300,
+
     /** api: config[templatedLayerGrid]
      *  ``Boolean``
      *  Show the layer grid as single-column and using an ExtJS Template from ``layerGridTemplate``.  Default is ``false``.
@@ -441,8 +453,8 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         var output = gxp.plugins.AddLayers.superclass.addOutput.apply(this, [{
             sources: sources,
             title: this.searchText,
-            height: 300,
-            width: 315,
+            height: this.catalogPanelHeight,
+            width: this.catalogPanelWidth,
             selectedSource: selectedSource,
             xtype: 'gxp_cataloguesearchpanel',
             map: this.target.mapPanel.map
@@ -649,7 +661,8 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     this.addLayers(recordsToAdd);
                 }
             }
-            for (var i=0, ii=records.length; i<ii; ++i) {
+
+            for (var i = 0, ii = records.length; i < ii; ++i) {
                 var record = source.createLayerRecord({
                     name: records[i].get("name"),
                     source: source.id
@@ -737,7 +750,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
 
         var sourceComboBox = new Ext.form.ComboBox({
             ref: "../sourceComboBox",
-            width: 165,
+            width: 240,
             store: sources,
             valueField: "id",
             displayField: "title",
@@ -936,7 +949,34 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             }
         }
 
-        var items = {
+        var panelItems = [];
+        panelItems.push(capGridPanel);
+
+        var serverInfoItem = {
+            xtype: "box",
+            region: "north",
+            height: 24,
+            autoWidth: true,
+            tpl: new Ext.Template('<div style="margin-left:6px; margin-top:2px; margin-bottom: 2px"><span style="font-weight: bold">{serverTitle}</span><br><span style="color: #aaaaaa">{serverUrl}</span></div>'),
+            listeners: {
+                'afterrender': function (e) {
+                    var box = this;
+                    if (sources) {
+                        var sourceRec = sources.getAt(0);
+                        box.update({serverTitle: sourceRec.data.title, serverUrl: sourceRec.data.url});
+
+                    }
+                    sourceComboBox.on('select',
+                        function (obj) {
+                            var title = self.selectedSource.serviceTitle ? self.selectedSource.serviceTitle : self.selectedSource.title;
+                            box.update({serverTitle: title, serverUrl: self.selectedSource.url});
+                        }
+                        );
+                }
+            }
+        };
+
+        var items = [serverInfoItem, {
             xtype: "panel",
             region: "center",
             layout: "fit",
@@ -946,8 +986,8 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 top: 8
             },
             tbar: sourceToolsItems,
-            items: [capGridPanel]
-        };
+            items: panelItems
+        }];
 
         if (this.instructionsText) {
             items.items.push({

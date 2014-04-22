@@ -52,11 +52,18 @@ gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
      */
     title: "",
 
+    /** private: property[serviceTitle]
+     *  ``String``
+     *  The title returned by the service.
+     */
+    serviceTitle: "",
+
     /** private: method[constructor]
      */
     constructor: function(config) {
         this.initialConfig = config;
         Ext.apply(this, config);
+        this.serviceTitle = this.title;
 
         this.addEvents(
             /** api: event[ready]

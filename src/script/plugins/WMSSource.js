@@ -384,9 +384,11 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                     if (!this.store.reader.raw || !this.store.reader.raw.service) {
                         this.fireEvent("failure", this, "Invalid capabilities document.");
                     } else {
-                        if (!this.title) {
-                            this.title = this.store.reader.raw.service.title;
+                        this.serviceTitle = this.store.reader.raw.service.title;
+                        if (!this.title || this.title.length == 0) {
+                            this.title = this.serviceTitle;
                         }
+
                         if (!this.ready) {
                             this.ready = true;
                             this.fireEvent("ready", this);
