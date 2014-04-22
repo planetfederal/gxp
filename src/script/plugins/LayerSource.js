@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
- * 
+ *
  * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
@@ -21,9 +21,9 @@ Ext.namespace("gxp.plugins");
  *    there, the viewer will create layers from it by looking at objects in
  *    the ``layers`` array of its ``map`` config option, calling the source's
  *    ``createLayerRecord`` method.
- */   
+ */
 gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
-    
+
     /** api: property[store]
      *  ``GeoExt.data.LayerStore``
      */
@@ -33,7 +33,7 @@ gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
      *  ``Object``
      *  The object that this plugin is plugged into.
      */
-    
+
     /** api: property[lazy]
      *  ``Boolean``. true when the source is ready, but its store hasn't
      *  been loaded yet (i.e. lazy source). Read-only.
@@ -45,19 +45,26 @@ gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
      *  up in the AddLayers dialog. Defaults to false.
      */
     hidden: false,
-     
+
     /** api: property[title]
      *  ``String``
      *  A descriptive title for this layer source.
      */
     title: "",
-    
+
+    /** private: property[serviceTitle]
+     *  ``String``
+     *  The title returned by the service.
+     */
+    serviceTitle: "",
+
     /** private: method[constructor]
      */
     constructor: function(config) {
         this.initialConfig = config;
         Ext.apply(this, config);
-        
+        this.serviceTitle = this.title;
+
         this.addEvents(
             /** api: event[ready]
              *  Fires when the layer source is ready for action.
@@ -70,7 +77,7 @@ gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
         );
         gxp.plugins.LayerSource.superclass.constructor.apply(this, arguments);
     },
-    
+
     /** api: method[init]
      *  :arg target: ``Object`` The object initializing this plugin.
      *
@@ -80,7 +87,7 @@ gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
         this.target = target;
         this.createStore();
     },
-    
+
     /** private: method[getMapProjection]
      *  :returns: ``OpenLayers.Projection``
      */
@@ -90,7 +97,7 @@ gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
             (projConfig && new OpenLayers.Projection(projConfig)) ||
             new OpenLayers.Projection("EPSG:4326");
     },
-    
+
     /** api: method[getProjection]
      *  :arg layerRecord: ``GeoExt.data.LayerRecord`` a record from this
      *      source's store
@@ -114,7 +121,7 @@ gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
             mapProj;
         return proj.equals(mapProj) ? mapProj : null;
     },
-    
+
     /** api: method[createStore]
      *
      *  Creates a store of layer records.  Fires "ready" when store is loaded.
@@ -151,7 +158,19 @@ gxp.plugins.LayerSource = Ext.extend(Ext.util.Observable, {
             selected: record.get("selected")
         };
     },
-    
+
+    /** api: method[getPreviewImageURL]
+     *  :arg record: :class:`GeoExt.data.LayerRecord`
+     *  :arg width: :Number:image width
+     *  :arg height: :Number:image height
+     *  :returns: ``String``
+     *
+     *  Create a preview image URL or encoded image for given record.
+     */
+    getPreviewImageURL: function(record, width, height) {
+        return null;
+    },
+
     /** api: method[getState]
      *  :returns: ``Object``
      *

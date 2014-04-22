@@ -177,7 +177,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
             }, {
                 xtype: "numberfield",
                 allowNegative: false,
-                emptyText: OpenLayers.Renderer.defaultSymbolizer.fontSize,
+                emptyText: OpenLayers.Renderer.defaultSymbolizerGXP.fontSize,
                 value: this.symbolizer.fontSize,
                 width: 30,
                 listeners: {
@@ -334,7 +334,7 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
                 fieldLabel: this.sizeText,
                 anchor: "89%",
                 allowNegative: false,
-                emptyText: OpenLayers.Renderer.defaultSymbolizer.haloRadius,
+                emptyText: OpenLayers.Renderer.defaultSymbolizerGXP.haloRadius,
                 value: this.symbolizer.haloRadius,
                 listeners: {
                     change: function(field, value) {
@@ -351,10 +351,10 @@ gxp.TextSymbolizer = Ext.extend(Ext.Panel, {
             }, {
                 xtype: "gxp_fillsymbolizer",
                 symbolizer: {
-                    fillColor: ("haloColor" in this.symbolizer) ? this.symbolizer.haloColor : OpenLayers.Renderer.defaultSymbolizer.haloColor,
-                    fillOpacity: ("haloOpacity" in this.symbolizer) ? this.symbolizer.haloOpacity : OpenLayers.Renderer.defaultSymbolizer.haloOpacity*100
+                    fillColor: ("haloColor" in this.symbolizer) ? this.symbolizer.haloColor : OpenLayers.Renderer.defaultSymbolizerGXP.haloColor,
+                    fillOpacity: ("haloOpacity" in this.symbolizer) ? this.symbolizer.haloOpacity : OpenLayers.Renderer.defaultSymbolizerGXP.haloOpacity*100
                 },
-                defaultColor: OpenLayers.Renderer.defaultSymbolizer.haloColor,
+                defaultColor: OpenLayers.Renderer.defaultSymbolizerGXP.haloColor,
                 checkboxToggle: false,
                 width: 190,
                 labelWidth: 60,

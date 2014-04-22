@@ -25,13 +25,13 @@ Ext.namespace("gxp");
 gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
     
     /* i18n */
-    solidStrokeName: "solid",
-    dashStrokeName: "dash",
-    dotStrokeName: "dot",
+    solidStrokeName: "Solid",
+    dashStrokeName: "Dash",
+    dotStrokeName: "Dot",
     titleText: "Stroke",
     styleText: "Style",
     colorText: "Color",
-    widthText: "Width",
+    widthText: "Width (pixels)",
     opacityText: "Opacity",
     /* ~i18n */
     
@@ -60,7 +60,7 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
      *  ``String`` Default background color for the Color field. This
      *  color will be displayed when no strokeColor value for the symbolizer
      *  is available. Defaults to the ``strokeColor`` property of
-     *  ``OpenLayers.Renderer.defaultSymbolizer``.
+     *  ``OpenLayers.Renderer.defaultSymbolizerGXP``.
      */
     defaultColor: null,
 
@@ -109,7 +109,7 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
                 }),
                 displayField: "display",
                 valueField: "value",
-                value: this.getDashArray(this.symbolizer.strokeDashstyle) || OpenLayers.Renderer.defaultSymbolizer.strokeDashstyle,
+                value: this.getDashArray(this.symbolizer.strokeDashstyle) || OpenLayers.Renderer.defaultSymbolizerGXP.strokeDashstyle,
                 mode: "local",
                 allowBlank: true,
                 triggerAction: "all",
@@ -125,10 +125,10 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
                 xtype: "gxp_colorfield",
                 name: "color",
                 fieldLabel: this.colorText,
-                emptyText: OpenLayers.Renderer.defaultSymbolizer.strokeColor,
+                emptyText: OpenLayers.Renderer.defaultSymbolizerGXP.strokeColor,
                 value: this.symbolizer.strokeColor,
                 defaultBackground: this.defaultColor ||
-                    OpenLayers.Renderer.defaultSymbolizer.strokeColor,
+                    OpenLayers.Renderer.defaultSymbolizerGXP.strokeColor,
                 plugins: colorFieldPlugins,
                 listeners: {
                     valid: function(field) {
@@ -144,7 +144,7 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
                 name: "width",
                 fieldLabel: this.widthText,
                 allowNegative: false,
-                emptyText: OpenLayers.Renderer.defaultSymbolizer.strokeWidth,
+                emptyText: OpenLayers.Renderer.defaultSymbolizerGXP.strokeWidth,
                 value: this.symbolizer.strokeWidth,
                 listeners: {
                     change: function(field, value) {
@@ -162,7 +162,7 @@ gxp.StrokeSymbolizer = Ext.extend(Ext.FormPanel, {
                 xtype: "slider",
                 name: "opacity",
                 fieldLabel: this.opacityText,
-                values: [(("strokeOpacity" in this.symbolizer) ? this.symbolizer.strokeOpacity : OpenLayers.Renderer.defaultSymbolizer.strokeOpacity) * 100],
+                values: [(("strokeOpacity" in this.symbolizer) ? this.symbolizer.strokeOpacity : OpenLayers.Renderer.defaultSymbolizerGXP.strokeOpacity) * 100],
                 isFormField: true,
                 listeners: {
                     changecomplete: function(slider, value) {

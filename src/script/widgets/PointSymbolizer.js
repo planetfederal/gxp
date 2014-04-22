@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
- * 
+ *
  * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
  */
 
-/** 
+/**
  * @include widgets/FillSymbolizer.js
  * @include widgets/StrokeSymbolizer.js
  */
@@ -20,7 +20,7 @@ Ext.namespace("gxp");
 
 /** api: constructor
  *  .. class:: PointSymbolizer(config)
- *   
+ *
  *      Form for configuring a point symbolizer.
  */
 gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
@@ -32,21 +32,21 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
      *  you do not want your symbolizer modified.
      */
     symbolizer: null,
-    
+
     /** i18n */
-    graphicCircleText: "circle",
-    graphicSquareText: "square",
-    graphicTriangleText: "triangle",
-    graphicStarText: "star",
-    graphicCrossText: "cross",
-    graphicXText: "x",
-    graphicExternalText: "external",
+    graphicCircleText: "Circle",
+    graphicSquareText: "Square",
+    graphicTriangleText: "Triangle",
+    graphicStarText: "Star",
+    graphicCrossText: "Cross",
+    graphicXText: "X",
+    graphicExternalText: "External",
     urlText: "URL",
     opacityText: "opacity",
     symbolText: "Symbol",
     sizeText: "Size",
     rotationText: "Rotation",
-    
+
     /** api: config[pointGraphics]
      *  ``Array``
      *  A list of objects to be used as the root of the data for a
@@ -67,31 +67,39 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
      *      ``false``, the value will be assumed to be a url for an external graphic.
      */
     pointGraphics: null,
-    
+
    /** api: config[colorManager]
      *  ``Function``
      *  Optional color manager constructor to be used as a plugin for the color
      *  field.
      */
     colorManager: null,
-    
+
     /** private: property[external]
      *  ``Boolean``
      *  Currently using an external graphic.
      */
     external: null,
-    
+
     /** private: config[layout]
      *  ``String``
      */
     layout: "form",
 
     initComponent: function() {
-        
+
         if(!this.symbolizer) {
             this.symbolizer = {};
-        }   
-        
+        }
+
+        // JvdB Use defaults when not set, otherwise fields in form are empty
+        if (!this.symbolizer["graphicName"]) {
+            this.symbolizer["graphicName"] = 'circle';
+        }
+        if (!this.symbolizer["rotation"]) {
+            this.symbolizer["rotation"] = 0;
+        }
+
         if (!this.pointGraphics) {
             this.pointGraphics = [
                 {display: this.graphicCircleText, value: "circle", mark: true},
@@ -103,7 +111,7 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
                 {display: this.graphicExternalText}
             ];
         }
-        
+
         this.external = !!this.symbolizer["externalGraphic"];
 
         this.markPanel = new Ext.Panel({
@@ -136,7 +144,7 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
                 }
             }]
         });
-        
+
         this.urlField = new Ext.form.TextField({
             name: "url",
             fieldLabel: this.urlText,
@@ -151,7 +159,7 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
             },
             width: 100 // TODO: push this to css
         });
-        
+
         this.graphicPanel = new Ext.Panel({
             border: false,
             collapsed: !this.external,
@@ -176,7 +184,7 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
                         }
                     })
                 ],
-                width: 100 // TODO: push this to css                
+                width: 100 // TODO: push this to css
             }]
         });
 
@@ -277,12 +285,12 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
              *     updated.
              */
             "change"
-        ); 
+        );
 
         gxp.PointSymbolizer.superclass.initComponent.call(this);
 
     },
-    
+
     updateGraphicDisplay: function() {
         if(this.external) {
             this.markPanel.collapse();
@@ -293,8 +301,8 @@ gxp.PointSymbolizer = Ext.extend(Ext.Panel, {
         }
         // TODO: window shadow fails to sync
     }
-    
-    
+
+
 });
 
 /** api: xtype = gxp_pointsymbolizer */

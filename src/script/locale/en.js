@@ -249,15 +249,15 @@ GeoExt.Lang.add("en", {
     },
     
     "gxp.PointSymbolizer.prototype": {
-        graphicCircleText: "circle",
-        graphicSquareText: "square",
-        graphicTriangleText: "triangle",
-        graphicStarText: "star",
-        graphicCrossText: "cross",
-        graphicXText: "x",
-        graphicExternalText: "external",
+        graphicCircleText: "Circle",
+        graphicSquareText: "Square",
+        graphicTriangleText: "Triangle",
+        graphicStarText: "Star",
+        graphicCrossText: "Cross",
+        graphicXText: "X",
+        graphicExternalText: "External",
         urlText: "URL",
-        opacityText: "opacity",
+        opacityText: "Opacity",
         symbolText: "Symbol",
         sizeText: "Size",
         rotationText: "Rotation"
@@ -289,13 +289,13 @@ GeoExt.Lang.add("en", {
     },
     
     "gxp.StrokeSymbolizer.prototype": {
-        solidStrokeName: "solid",
-        dashStrokeName: "dash",
-        dotStrokeName: "dot",
+        solidStrokeName: "Solid",
+        dashStrokeName: "Dash",
+        dotStrokeName: "Dot",
         titleText: "Stroke",
         styleText: "Style",
         colorText: "Color",
-        widthText: "Width",
+        widthText: "Width (px)",
         opacityText: "Opacity"
     },
     
@@ -350,7 +350,7 @@ GeoExt.Lang.add("en", {
         largeSizeLabel: 'Large'
     },
     
-    "gxp.WMSStylesDialog.prototype": {
+    "gxp.StylesDialog.prototype": {
          addStyleText: "Add",
          addStyleTip: "Add a new style",
          chooseStyleText: "Choose style",

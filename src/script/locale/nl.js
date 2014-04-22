@@ -314,7 +314,7 @@ GeoExt.Lang.add("nl", {
         largeSizeLabel: 'Groot'
     },
     
-    "gxp.WMSStylesDialog.prototype": {
+    "gxp.StylesDialog.prototype": {
          addStyleText: "Voeg toe",
          addStyleTip: "Voeg een nieuwe stijl toe",
          deleteStyleText: "Verwijder",

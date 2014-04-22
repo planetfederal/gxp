@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
- * 
+ *
  * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
@@ -20,12 +20,15 @@ gxp.data.TMSCapabilitiesReader = Ext.extend(Ext.data.DataReader, {
         if (!meta.format) {
             meta.format = new OpenLayers.Format.TMSCapabilities();
         }
+        // JvdB: Added abstract, was returned but not in record def+data.
         if(typeof recordType !== "function") {
             recordType = GeoExt.data.LayerRecord.create(
                 recordType || meta.fields || [
                     {name: "name", type: "string"},
                     {name: "title", type: "string"},
-                    {name: "tileMapUrl", type: "string"}
+                    {name: "abstract", type: "string"},
+                    {name: "tileMapUrl", type: "string"},
+                    {name: "group", type: "string"}
                 ]);
         }
         gxp.data.TMSCapabilitiesReader.superclass.constructor.call(
@@ -43,6 +46,9 @@ gxp.data.TMSCapabilitiesReader = Ext.extend(Ext.data.DataReader, {
         if (typeof data === "string" || data.nodeType) {
             data = this.meta.format.read(data);
             this.raw = data;
+            // JvdB: Closure compiler chokes over 'abstract' (reserved keyword)
+            var abstrct = data['abstract'];
+
             // a single tileMap, someone supplied a url to a TileMap
             if (!data.tileMaps) {
                 if (data.tileSets) {
@@ -62,12 +68,16 @@ gxp.data.TMSCapabilitiesReader = Ext.extend(Ext.data.DataReader, {
                                 data.tileMapService.replace("/" + this.meta.version, ""), {
                                     serverResolutions: serverResolutions,
                                     type: data.tileFormat.extension,
-                                    layername: layerName
+                                    layername: layerName,
+                                    isBaseLayer: this.meta.isBaseLayer
                                 }
                             ),
                             title: data.title,
                             name: data.title,
-                            tileMapUrl: this.meta.baseUrl
+                            "abstract": abstrct,
+                            tileMapUrl: this.meta.baseUrl,
+                            scalePreviewImage: true,
+                            group: this.meta.group
                         }));
                     }
                 }
@@ -80,18 +90,25 @@ gxp.data.TMSCapabilitiesReader = Ext.extend(Ext.data.DataReader, {
                         var layername = url.substring(url.indexOf(this.meta.version + '/') + 6);
                         records.push(new this.recordType({
                             layer: new OpenLayers.Layer.TMS(
-                                tileMap.title, 
+                                tileMap.title,
                                 (this.meta.baseUrl.indexOf(this.meta.version) !== -1) ? this.meta.baseUrl.replace(this.meta.version + '/', '') : this.meta.baseUrl, {
-                                    layername: layername
+                                    layername: layername,
+                                    isBaseLayer: this.meta.isBaseLayer
                                 }
                             ),
                             title: tileMap.title,
                             name: tileMap.title,
-                            tileMapUrl: url
+                            "abstract": abstrct,
+                            tileMapUrl: url,
+                            scalePreviewImage: true,
+                            group: this.meta.group
                         }));
                     }
                 }
             }
+        }
+        if (records.length == 0) {
+            this.error = "No compatible layers found. Mismatched coordinate system.";
         }
         return {
             totalRecords: records.length,
@@ -133,9 +150,16 @@ gxp.plugins.TMSSource = Ext.extend(gxp.plugins.LayerSource, {
      */
     version: "1.0.0",
 
+    /** api: config[defaultGroup]
+     *  ``String``  layer group name if no "group" property present in initial config.
+     */
+    defaultGroup: "background",
+
     /** private: method[constructor]
      */
     constructor: function(config) {
+        config.group = config.group ? config.group : this.defaultGroup;
+        config.isBaseLayer = config.isBaseLayer === undefined ? true : config.isBaseLayer;
         gxp.plugins.TMSSource.superclass.constructor.apply(this, arguments);
         this.format = new OpenLayers.Format.TMSCapabilities();
         if (this.url.slice(-1) !== '/') {
@@ -154,6 +178,11 @@ gxp.plugins.TMSSource = Ext.extend(gxp.plugins.LayerSource, {
             listeners: {
                 load: function() {
                     this.title = this.store.reader.raw.title;
+                    if (this.store.reader.error) {
+                        this.fireEvent("failure", this, this.store.reader.error);
+                        return;
+                    }
+
                     this.fireEvent("ready", this);
                 },
                 exception: function() {
@@ -169,8 +198,10 @@ gxp.plugins.TMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 method: "GET"
             }),
             reader: new gxp.data.TMSCapabilitiesReader({
-                baseUrl: this.url, 
-                version: this.version, 
+                baseUrl: this.url,
+                version: this.version,
+                group: this.initialConfig.group,
+                isBaseLayer: this.initialConfig.isBaseLayer,
                 mapProjection: this.getMapProjection()
             })
         });
@@ -204,13 +235,30 @@ gxp.plugins.TMSSource = Ext.extend(gxp.plugins.LayerSource, {
                         });
                         this.target.createLayerRecord({
                             source: this.id,
-                            name: config.name
+                            name: config.name,
+                            scalePreviewImage: true
                         }, callback, scope);
                     },
                     scope: this
                 });
             }
         }
+    },
+
+    /** api: method[getPreviewImageURL]
+     *  :arg record: :class:`GeoExt.data.LayerRecord`
+     *  :arg width: :Number:image width
+     *  :arg height: :Number:image height
+     *  :returns: ``String``
+     *
+     *  Create a preview image URL or encoded image for given record.
+     */
+    getPreviewImageURL: function (record, width, height) {
+        var layerURL = record.data.tileMapUrl;
+        var tile = '/0/0/0.png';
+
+        var url = layerURL + tile;
+        return url;
     }
 
 });

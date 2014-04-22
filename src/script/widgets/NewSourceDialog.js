@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
- * 
+ *
  * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
@@ -16,7 +16,7 @@ Ext.namespace("gxp");
 /** api: constructor
  * .. class:: gxp.NewSourceDialog(config)
  *
- *     An Ext.Panel with some defaults that better lend themselves toward use 
+ *     An Ext.Panel with some defaults that better lend themselves toward use
  *     as a quick query to get a service URL from a user.
  *
  */
@@ -33,25 +33,25 @@ gxp.NewSourceDialog = Ext.extend(Ext.Panel, {
      *  Text for cancel button (i18n).
      */
     cancelText: "Cancel",
-    
+
     /** api: config[addServerText]
      *  ``String``
      *  Text for add server button (i18n).
      */
     addServerText: "Add Server",
-    
+
     /** api: config[invalidURLText]
      *  ``String``
      *  Message to display when an invalid URL is entered (i18n).
      */
-    invalidURLText: "Enter a valid URL to a WMS/TMS/REST endpoint (e.g. http://example.com/geoserver/wms)",
+    invalidURLText: "Enter a valid URL to a WMS/WFS/TMS/REST endpoint (e.g. http://example.com/geoserver/wms)",
 
     /** api: config[contactingServerText]
      *  ``String``
      *  Text for server contact (i18n).
      */
     contactingServerText: "Contacting Server...",
-    
+
     /** api: config[bodyStyle]
      * The default bodyStyle sets the padding to 0px
      */
@@ -66,8 +66,8 @@ gxp.NewSourceDialog = Ext.extend(Ext.Panel, {
     /** api: event[urlselected]
      *  Fired with a reference to this instance, the URL that the user
      *  provided and the type of service  as a parameters when the form is submitted.
-     */     
-     
+     */
+
     /** private: method[initComponent]
      */
     initComponent: function() {
@@ -100,9 +100,10 @@ gxp.NewSourceDialog = Ext.extend(Ext.Panel, {
                 mode: 'local',
                 triggerAction: 'all',
                 store: [
-                    ['WMS', 'Web Map Service (WMS)'], 
+                    ['WMS', 'Web Map Service (WMS)'],
+                    ['WFS', 'Web Feature Service (WFS)'],
                     ['TMS', 'Tiled Map Service (TMS)'],
-                    ['REST', 'ArcGIS REST Service (REST)']    
+                    ['REST', 'ArcGIS REST Service (REST)']
                 ]
             }, this.urlTextField],
             border: false,
@@ -158,7 +159,7 @@ gxp.NewSourceDialog = Ext.extend(Ext.Panel, {
         }, this);
 
     },
-    
+
     /** private: method[addServer]
      */
     addServer: function() {
@@ -169,7 +170,7 @@ gxp.NewSourceDialog = Ext.extend(Ext.Panel, {
                 this.form.getForm().findField('type').getValue());
         }
     },
-    
+
     /** API: method[reset]
      *  Resets the form and hides any load mask.
      */
@@ -179,12 +180,12 @@ gxp.NewSourceDialog = Ext.extend(Ext.Panel, {
         this.urlTextField.reset();
         this.loadMask.hide();
     },
-    
+
     /** private: property[urlRegExp]
      *  `RegExp`
      *
-     *  We want to allow protocol or scheme relative URL  
-     *  (e.g. //example.com/).  We also want to allow username and 
+     *  We want to allow protocol or scheme relative URL
+     *  (e.g. //example.com/).  We also want to allow username and
      *  password in the URL (e.g. http://user:pass@example.com/).
      *  We also want to support virtual host names without a top
      *  level domain (e.g. http://localhost:9080/).  It also makes sense
@@ -194,11 +195,11 @@ gxp.NewSourceDialog = Ext.extend(Ext.Panel, {
      *  the user avoid typos.
      */
     urlRegExp: /^(http(s)?:)?\/\/([\w%]+:[\w%]+@)?([^@\/:]+)(:\d+)?\//i,
-    
+
     /** private: method[urlValidator]
      *  :arg url: `String`
      *  :returns: `Boolean` The url looks valid.
-     *  
+     *
      *  This method checks to see that a user entered URL looks valid.  It also
      *  does form validation based on the `error` property set when a response
      *  is parsed.
@@ -216,14 +217,14 @@ gxp.NewSourceDialog = Ext.extend(Ext.Panel, {
     },
 
     /** private: method[setLoading]
-     * Visually signify to the user that we're trying to load the service they 
+     * Visually signify to the user that we're trying to load the service they
      * requested, for example, by activating a loadmask.
      */
     setLoading: function() {
         this.loadMask.show();
     },
 
-    /** private: method[setError] 
+    /** private: method[setError]
      * :param: error the message to display
      *
      * Display an error message to the user indicating a failure occurred while
@@ -236,7 +237,7 @@ gxp.NewSourceDialog = Ext.extend(Ext.Panel, {
     },
 
     /** api: config[addSource]
-     * A callback function to be called when the user submits the form in the 
+     * A callback function to be called when the user submits the form in the
      * NewSourceDialog.
      *
      * TODO this can probably be extracted to an event handler

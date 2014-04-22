@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
- * 
+ *
  * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
@@ -9,6 +9,7 @@
 /**
  * @requires plugins/Tool.js
  * @requires widgets/WMSStylesDialog.js
+ * @requires widgets/VectorStylesDialog.js
  * @requires plugins/GeoServerStyleWriter.js
  * @requires plugins/WMSRasterStylesDialog.js
  */
@@ -29,10 +30,10 @@ Ext.namespace("gxp.plugins");
  *    Plugin providing a styles editing dialog for geoserver layers.
  */
 gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
-    
+
     /** api: ptype = gxp_styler */
     ptype: "gxp_styler",
-    
+
     /** api: config[menuText]
      *  ``String``
      *  Text for layer properties menu item (i18n).
@@ -44,28 +45,28 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
      *  Text for layer properties action tooltip (i18n).
      */
     tooltip: "Manage layer styles",
-    
+
     /** api: config[roles]
      *  ``Array`` Roles authorized to style layers. Default is
      *  ["ROLE_ADMINISTRATOR"]
      */
     roles: ["ROLE_ADMINISTRATOR"],
-    
+
     /** api: config[sameOriginStyling]
      *  ``Boolean``
      *  Only allow editing of styles for layers whose sources have a URL that
-     *  matches the origin of this applicaiton.  It is strongly discouraged to 
+     *  matches the origin of this applicaiton.  It is strongly discouraged to
      *  do styling through commonly used proxies as all authorization headers
      *  and cookies are shared with all remote sources.  Default is ``true``.
      */
     sameOriginStyling: true,
-    
+
     /** api: config[rasterStyling]
      *  ``Boolean`` If set to true, single-band raster styling will be
      *  supported. Default is ``false``.
      */
     rasterStyling: false,
-    
+
     /** api: config[requireDescribeLayer]
      *  ``Boolean`` If set to false, styling will be enabled for all WMS layers
      *  that have "/ows" or "/wms" at the end of their base url in case the WMS
@@ -73,10 +74,10 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
      *  set to true. Default is true.
      */
     requireDescribeLayer: true,
-    
+
     constructor: function(config) {
         gxp.plugins.Styler.superclass.constructor.apply(this, arguments);
-        
+
         if (!this.outputConfig) {
             this.outputConfig = {
                 autoHeight: true,
@@ -111,7 +112,23 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
             this.handleLayerChange(this.target.selectedLayer);
         }
     },
-    
+
+    /** api: method[isVectorLayer]
+     *  :param layer: ``Layer`` LayerRecord to check.
+     *
+     *  Check if the LayerRecord is a Vector Layer (like from WFS).
+     *  We allow local Style editing for  Vector Layers like from WFS
+     */
+    isVectorLayer: function(record) {
+        var result = false;
+        try {
+            result = record.data.layer.CLASS_NAME.indexOf('Vector') > -1;
+        } catch (err) {
+            // ignore
+        }
+        return result;
+    },
+
     /** api: method[addActions]
      */
     addActions: function() {
@@ -122,20 +139,25 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
             disabled: true,
             tooltip: this.tooltip,
             handler: function() {
-                this.target.doAuthorized(this.roles, this.addOutput, this);
+                if (this.isVectorLayer(this.target.selectedLayer)) {
+                    this.addOutput();
+                } else {
+                    // WMS Styling: needs Authorization, GeoServer-specific
+                    this.target.doAuthorized(this.roles, this.addOutput, this);
+                }
             },
             scope: this
         }]);
-        
+
         this.launchAction = actions[0];
         this.target.on({
             layerselectionchange: this.handleLayerChange,
             scope: this
         });
-        
+
         return actions;
     },
-    
+
     /** private: method[handleLayerChange]
      *  :arg record: ``GeoExt.data.LayerRecord``
      *
@@ -149,17 +171,19 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
                 source.describeLayer(record, function(describeRec) {
                     this.checkIfStyleable(record, describeRec);
                 }, this);
+            } else if (source instanceof gxp.plugins.WFSSource) {
+                this.launchAction.enable();
             }
         }
     },
 
     /** private: method[checkIfStyleable]
      *  :arg layerRec: ``GeoExt.data.LayerRecord``
-     *  :arg describeRec: ``Ext.data.Record`` Record from a 
+     *  :arg describeRec: ``Ext.data.Record`` Record from a
      *      `GeoExt.data.DescribeLayerStore``.
      *
-     *  Given a layer record and the corresponding describe layer record, 
-     *  determine if the target layer can be styled.  If so, enable the launch 
+     *  Given a layer record and the corresponding describe layer record,
+     *  determine if the target layer can be styled.  If so, enable the launch
      *  action.
      */
     checkIfStyleable: function(layerRec, describeRec) {
@@ -204,10 +228,10 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
             }
         }
     },
-    
+
     /** private: method[enableActionIfAvailable]
      *  :arg url: ``String`` URL of style service
-     * 
+     *
      *  Enable the launch action if the service is available.
      */
     enableActionIfAvailable: function(url) {
@@ -217,13 +241,13 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
             callback: function(options, success, response) {
                 // we expect a 405 error code here if we are dealing
                 // with GeoServer and have write access.
-                this.launchAction.setDisabled(response.status !== 405);                        
+                this.launchAction.setDisabled(response.status !== 405);
             },
             scope: this
         });
     },
-    
-    addOutput: function(config) {
+
+    addOutput: function (config) {
         config = config || {};
         var record = this.target.selectedLayer;
 
@@ -232,30 +256,49 @@ gxp.plugins.Styler = Ext.extend(gxp.plugins.Tool, {
             this.menuText + ": " + record.get("title");
         this.outputConfig.shortTitle = record.get("title");
 
-        Ext.apply(config, gxp.WMSStylesDialog.createGeoServerStylerConfig(record));
-        if (this.rasterStyling === true) {
-            config.plugins.push({
-                ptype: "gxp_wmsrasterstylesdialog"
+        if (this.isVectorLayer(record)) {
+            // Use VectorStylesDialog for local Vector Layer Styling
+            new Ext.Window({
+                 layout: 'auto',
+                 resizable: false,
+                 autoHeight: true,
+                 pageX: 100,
+                 pageY: 200,
+                 width: 400,
+                 // height: options.formHeight,
+                 closeAction: 'hide',
+                 title: __('Style Editor (Vector)'),
+                 items: [
+                     gxp.VectorStylesDialog.createVectorStylerConfig(record)
+                 ]
+             }).show();
+        } else {
+            // WMS Styling
+            Ext.apply(config, gxp.WMSStylesDialog.createGeoServerStylerConfig(record));
+            if (this.rasterStyling === true) {
+                config.plugins.push({
+                    ptype: "gxp_wmsrasterstylesdialog"
+                });
+            }
+            Ext.applyIf(config, {style: "padding: 10px"});
+
+            var output = gxp.plugins.Styler.superclass.addOutput.call(this, config);
+            if (!(output.ownerCt.ownerCt instanceof Ext.Window)) {
+                output.dialogCls = Ext.Panel;
+                output.showDlg = function (dlg) {
+                    dlg.layout = "fit";
+                    dlg.autoHeight = false;
+                    output.ownerCt.add(dlg);
+                };
+            }
+            output.stylesStore.on("load", function () {
+                if (!this.outputTarget && output.ownerCt.ownerCt instanceof Ext.Window) {
+                    output.ownerCt.ownerCt.center();
+                }
             });
         }
-        Ext.applyIf(config, {style: "padding: 10px"});
-        
-        var output = gxp.plugins.Styler.superclass.addOutput.call(this, config);
-        if (!(output.ownerCt.ownerCt instanceof Ext.Window)) {
-            output.dialogCls = Ext.Panel;
-            output.showDlg = function(dlg) {
-                dlg.layout = "fit";
-                dlg.autoHeight = false;
-                output.ownerCt.add(dlg);
-            };
-        }
-        output.stylesStore.on("load", function() {
-            if (!this.outputTarget && output.ownerCt.ownerCt instanceof Ext.Window) {
-                output.ownerCt.ownerCt.center();
-            }
-        });
     }
-        
+
 });
 
 Ext.preg(gxp.plugins.Styler.prototype.ptype, gxp.plugins.Styler);
