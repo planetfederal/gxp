@@ -216,7 +216,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
      *  Reload the store when the authorization changes.
      */
     onAuthorizationChange: function() {
-        if (this.store && this.url.charAt(0) === "/") {
+        if (this.disabled !== true && this.store && this.url.charAt(0) === "/") {
             var lastOptions = this.store.lastOptions || {params: {}};
             Ext.apply(lastOptions.params, {
                 '_dc': Math.random()
@@ -886,6 +886,10 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             infoFormat: record.get("infoFormat"),
             attribution: layer.attribution
         });
+    },
+
+    disable: function() {
+        this.disabled = true;
     },
     
     /** private: method[getState] */
