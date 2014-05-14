@@ -278,9 +278,11 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     url: this.target.sources[this.initialConfig.search.selectedSource].url,
                     callback: function(options, success, response) {
                         if (success === false) {
+                            this.target.layerSources[this.initialConfig.search.selectedSource].disable();
                             search.hide();
                         }
-                    }
+                    },
+                    scope: this
                 });
             }
             if (this.initialConfig.feeds) {
