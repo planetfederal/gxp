@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
- * 
+ *
  * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
@@ -20,7 +20,7 @@ Ext.namespace("gxp");
 
 /** api: constructor
  *  .. class:: QueryPanel(config)
- *   
+ *
  *      Create a panel for assembling and issuing feature requests.
  */
 gxp.QueryPanel = Ext.extend(Ext.Panel, {
@@ -31,7 +31,7 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
      *  must have ``title``, ``name`` (feature type), ``namespace`` (namespace
      *  URI), ``url`` (wfs url), and ``schema`` (schema url) fields.
      */
-    
+
     /** api: config[map]
      *  ``OpenLayers.MapPanel`` The map to take the spatial extent for the
      *  spatialQuery from. Required.
@@ -42,29 +42,29 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
      *  Optional limit for number of features requested in a query.  No limit
      *  set by default.
      */
-    
+
     /** api: config[layout]
      *  ``String``
      *  Defaults to "form."
      */
     layout: "form",
-    
+
     /** api: config[spatialQuery]
      *  ``Boolean``
      *  Initial state of "query by location" checkbox.  Default is true.
      */
-    
+
     /** api: property[spatialQuery]
      *  ``Boolean``
      *  Query by extent.
      */
     spatialQuery: true,
-    
+
     /** api: config[attributeQuery]
      *  ``Boolean``
      *  Initial state of "query by attribute" checkbox.  Default is false.
      */
-    
+
     /** api: property[attributeQuery]
      *  ``Boolean``
      *  Query by attributes.
@@ -95,20 +95,20 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
      *  The currently selected record in the layers combo.
      */
     selectedLayer: null,
-    
+
     /** private: property[featureStore]
      *  ``GeoExt.data.FeatureStore``
      *  After a query has been issued, this will be a store with records based
      *  on the return from the query.
      */
     featureStore: null,
-    
+
     /** api: property[attributeStore]
      *  ``GeoExt.data.AttributeStore``
      *  The attributes associated with the currently selected layer.
      */
     attributeStore: null,
-    
+
     /** api: property[geometryType]
      *  ``String`` (Multi)?(Point|Line|Polygon|Curve|Surface|Geometry) The
      *  geometry type of features of the selected layer. If the layer has
@@ -133,9 +133,9 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
     /** private: method[initComponent]
      */
     initComponent: function() {
-        
+
         this.addEvents(
-            
+
             /** api: events[ready]
              *  Fires when the panel is ready to issue queries (after the
              *  internal attribute store has loaded).
@@ -198,8 +198,8 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
              */
             "storeload"
 
-        );        
-        
+        );
+
         this.mapExtentField = new Ext.form.TextField({
             fieldLabel: this.currentTextText,
             readOnly: true,
@@ -210,9 +210,9 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
             moveend: this.updateMapExtent,
             scope: this
         });
-        
+
         this.createFilterBuilder(this.layerStore.getAt(0));
-        
+
         this.items = [{
             xtype: "combo",
             name: "layer",
@@ -265,17 +265,17 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
                     this.attributeQuery = true;
                 },
                 scope: this
-            }            
+            }
         }];
-        
+
         gxp.QueryPanel.superclass.initComponent.apply(this, arguments);
 
     },
-    
+
     /** private: method[createFilterBuilder]
      *  :arg record: ``Ext.data.Record``  A record representing the feature
      *      type.
-     *  
+     *
      *  Remove any existing filter builder and create a new one.  This method
      *  also sets the currently selected layer and stores the name for the
      *  first geometry attribute found when the attribute store loads.
@@ -314,24 +314,24 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
             allowGroups: false,
             caseInsensitiveMatch: this.caseInsensitiveMatch
         });
-        
+
         if(owner) {
             owner.add(this.filterBuilder);
             owner.doLayout();
         }
-        
+
     },
-    
+
     getFormattedMapExtent: function() {
         return this.map &&
             this.map.getExtent() &&
             this.map.getExtent().toBBOX().replace(/\.(\d)\d*/g, ".$1").replace(/,/g, ", ");
     },
-    
+
     updateMapExtent: function() {
         this.mapExtentField.setValue(this.getFormattedMapExtent());
     },
-    
+
     /** api: method[getFilter]
      *  Get the filter representing the conditions in the panel.  Returns false
      *  if neither spatial nor attribute query is checked.
@@ -359,7 +359,7 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
         }
         return filter;
     },
-    
+
     /** private: method[wrapWildCards]
      *  :return: ``OpenLayers.Filter``
      *
@@ -369,10 +369,19 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
     wrapWildCards: function (filter) {
 
         if (filter instanceof OpenLayers.Filter.Logical) {
-            // Go recursively through composite filter
-            for (var i = 0, len = filter.filters.length; i < len; ++i) {
-                filter = this.wrapWildCards(filter.filters[i]);
+            // JvdB: fix for Heron issue: 377
+            // https://code.google.com/p/geoext-viewer/issues/detail?id=377
+            // Fegyi's hack: check first if filter.filters is defined
+            if (!typeof filter.filters === "undefined") {
+                // Go recursively through composite filter
+                for (var i = 0; i < filter.filters.length; i++) {
+                    filter = this.wrapWildCards(filter.filters[i]);
+                }
             }
+            // OLD Go recursively through composite filter
+            //for (var i = 0, len = filter.filters.length; i < len; ++i) {
+            //    filter = this.wrapWildCards(filter.filters[i]);
+            //}
         } else if (filter.type === OpenLayers.Filter.Comparison.LIKE) {
             // Wrap the value in Wildcard strings.
             filter.value = this.wildCardString + filter.value + this.wildCardString;
@@ -387,7 +396,7 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
      *
      *  Given a feature attribute type, return an Ext field type if possible.
      *  Note that there are many unhandled xsd types here.
-     *  
+     *
      *  TODO: this should go elsewhere (AttributeReader)
      */
     getFieldType: function(attrType) {
@@ -403,7 +412,7 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
             "xsd:double": "float"
         })[attrType];
     },
-    
+
     /** private: method[createFeatureStore]
      *  Create the feature store for the selected layer.  Queries cannot be
      *  issued until this store has been created.  This method is called
@@ -417,9 +426,9 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
                 type: this.getFieldType(record.get("type"))
             });
         }, this);
-        
+
         var layer = this.selectedLayer;
-        
+
         this.featureStore = new gxp.data.WFSFeatureStore({
             fields: fields,
             srsName: this.map.getProjection(),
@@ -440,7 +449,7 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
         });
         this.fireEvent("ready", this, this.featureStore);
     },
-    
+
     /** api: method[query]
      *  Issue a request for features.  Should not be called until the "ready"
      *  event has fired.  If called before ready, no query will be issued.
@@ -471,4 +480,4 @@ gxp.QueryPanel = Ext.extend(Ext.Panel, {
 });
 
 /** api: xtype = gxp_querypanel */
-Ext.reg('gxp_querypanel', gxp.QueryPanel); 
+Ext.reg('gxp_querypanel', gxp.QueryPanel);
