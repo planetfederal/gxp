@@ -27,6 +27,7 @@ detail on methods and properties provided by these objects, see the
 .. toctree::
     :maxdepth: 1
 
+    self
     lib/util
     lib/util/style
     lib/util/color
