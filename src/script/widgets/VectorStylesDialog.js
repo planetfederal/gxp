@@ -385,20 +385,29 @@ gxp.VectorStylesDialog = Ext.extend(gxp.StylesDialog, {
             this.wfsLayer.owsURL = layer.protocol.url.replace('?', '');
             this.wfsLayer.owsType = 'WFS';
             this.wfsLayer.typeName = layer.protocol.featureType;
+            this.wfsLayer.featureNS = layer.protocol.featureNS;
         }
 
         // Attribute types: either from WFS or local features
         var self = this;
         if (this.wfsLayer) {
+            var baseParams = {
+                "SERVICE": "WFS",
+                "VERSION": "1.1.0",
+                "REQUEST": "DescribeFeatureType",
+                "TYPENAME": this.wfsLayer.typeName
+            };
+
+            // NS for feature type available use it: we cannot rely on default NSs
+            if (this.wfsLayer.featureNS) {
+                baseParams["TYPENAME"] = "ns1:" + this.wfsLayer.typeName;
+                baseParams["NAMESPACE"] = "xmlns(ns1=" + this.wfsLayer.featureNS + ")";
+            }
+
             // WFS Layer: use DescribeFeatureType to get attribute-names/types
             this.attributeStore = new GeoExt.data.AttributeStore({
                 url: this.wfsLayer.owsURL,
-                baseParams: {
-                    "SERVICE": "WFS",
-                    "VERSION": "1.1.0",
-                    "REQUEST": "DescribeFeatureType",
-                    "TYPENAME": this.wfsLayer.typeName
-                },
+                baseParams: baseParams,
                 // method: "GET",
                 // disableCaching: false,
                 autoLoad: true,
