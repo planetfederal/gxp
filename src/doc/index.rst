@@ -3,7 +3,7 @@
 Boundless SDK Client API Reference
 ==================================
 
-For information about **how to use** the Boundless SDK please refer to the Suite User Manual section on **webapps** located at `<http://localhost:8080/opengeo-docs/webapps/>`_  or our `online Suite documentation<http://suite.opengeo.org/opengeo-docs/webapps/>`_.
+For information about **how to use** the Boundless SDK please refer to the Suite User Manual section on **webapps** located at `Suite > Building complete web applications <http://localhost:8080/opengeo-docs/webapps/>`_  or visit our `online Suite documentation <http://suite.opengeo.org/opengeo-docs/webapps/>`_.
 
 The gxp components and data utility classes extend map related functionality to
 equivalent classes in Ext.  The API reference here documents the properties,
