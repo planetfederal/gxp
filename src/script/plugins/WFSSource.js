@@ -229,8 +229,11 @@ gxp.plugins.WFSSource = Ext.extend(gxp.plugins.LayerSource, {
             return keyStr.charAt(enc1) + keyStr.charAt(enc2) + keyStr.charAt(enc3) + keyStr.charAt(enc4);
         }
 
-        // Generate a random color (thanks to Mark Prins)
-        var colour = '#' + ('000000' + Math.round(0xffffff * Math.random()).toString(16)).substr(-6);
+        // Generate a random color (thanks to Mark Prins) - not working in IE8...
+        // var colour = '#' + Math.round(0xffffff * Math.random()).toString(16);
+        
+        // better (IE compat): http://www.paulirish.com/2009/random-hex-color-code-snippets/
+        var colour = '#'+('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6);
 
         // Save color in record to generate StyleMap later
         record.data.colour = colour;
