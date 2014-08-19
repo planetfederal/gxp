@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
- * 
+ *
  * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
@@ -35,6 +35,11 @@ gxp.plugins.CSWCatalogueSource = Ext.extend(gxp.plugins.CatalogueSource, {
 
     /** api: ptype = gxp_cataloguesource */
     ptype: "gxp_cataloguesource",
+
+    /** api: config[outputSchema]
+     *  ``String`` The XML schema to be used for response records. Default is "CSW Summary".
+     */
+    outputSchema : 'http://www.opengis.net/cat/csw/2.0.2',
 
     /** api: method[createStore]
      *  Create the store that will be used for the CS-W searches.
@@ -74,7 +79,7 @@ gxp.plugins.CSWCatalogueSource = Ext.extend(gxp.plugins.CatalogueSource, {
     },
 
     /** private: method[getFullFilter]
-     *  :arg filter: ``OpenLayers.Filter`` The filter to add to the other existing 
+     *  :arg filter: ``OpenLayers.Filter`` The filter to add to the other existing
      *  filters. This is normally the free text search filter.
      *  :arg otherFilters: ``Array``
      *  :returns: ``OpenLayers.Filter`` The combined filter.
@@ -103,10 +108,10 @@ gxp.plugins.CSWCatalogueSource = Ext.extend(gxp.plugins.CatalogueSource, {
      *
      * .. list-table::
      *     :widths: 20 80
-     * 
+     *
      *     * - ``queryString``
      *       - the search string
-     *     * - ``limit`` 
+     *     * - ``limit``
      *       - the maximum number of records to retrieve
      *     * - ``filters``
      *       - additional filters to include in the query
@@ -124,6 +129,7 @@ gxp.plugins.CSWCatalogueSource = Ext.extend(gxp.plugins.CatalogueSource, {
         var data = {
             "resultType": "results",
             "maxRecords": options.limit,
+            "outputSchema": this.outputSchema,
             "Query": {
                 "typeNames": "gmd:MD_Metadata",
                 "ElementSetName": {

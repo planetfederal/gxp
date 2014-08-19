@@ -104,6 +104,55 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                 });
             }
         });
+
+        var recordRenderer = function (value, metadata, record) {
+            // Line Splitter Function
+            // copyright Stephen Chapman, 19th April 2006
+            // you may copy this code but please keep the copyright notice as well
+            function splitLine(st, n) {
+                var b = '';
+                var s = st;
+                while (s.length > n) {
+                    var c = s.substring(0, n);
+                    var d = c.lastIndexOf(' ');
+                    var e = c.lastIndexOf('\n');
+                    if (e != -1) d = e;
+                    if (d == -1) d = n;
+                    b += c.substring(0, d) + '\n';
+                    s = s.substring(d + 1);
+                }
+                return b + s;
+            }
+
+            function htmlEscape(str) {
+                return String(str)
+                        .replace(/&/g, '&amp;')
+                        .replace(/"/g, '&quot;')
+                        .replace(/'/g, '&#39;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;');
+            }
+            // tooltip template
+            var qtipTpl = new Ext.XTemplate(
+                '<h3>Abstract</h3>'
+                , '<tpl for=".">'
+                , '<div>{abstract}</div>'
+                , '</tpl>'
+            );
+            var qtipStr = qtipTpl.apply({abstract: 'Unavailable'});
+            var abstr = record.data.abstract;
+            if (abstr.length > 0) {
+                abstr = abstr[0];
+                abstr = htmlEscape(abstr);
+                abstr = splitLine(abstr, 50);
+                abstr = abstr.replace(/\r?\n/g, '<br/>');
+                qtipStr = qtipTpl.apply({abstract: abstr});
+            }
+            abstr = abstr.split('<br/>')[0] + '...';
+            var tplStr = new Ext.XTemplate('<b>{title}</b><br/>{abstract}').apply({title: value, abstract: abstr});
+            return '<div ext:qtip=\'' + qtipStr + '\'>' + tplStr + '</div>';
+        };
+
         this.items = [{
             xtype: 'form',
             border: false,
@@ -306,17 +355,21 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                 store: this.sources[this.selectedSource].store,
                 columns: [{
                     id: 'title',
-                    xtype: "templatecolumn", 
-                    tpl: new Ext.XTemplate('<b>{title}</b><br/>{abstract}'), 
-                    sortable: true
+                    // xtype: "templatecolumn",
+                    // tpl: '<div ext:qtip="{abstract}"><b>{title}</b><br/>{abstract}</div>',
+
+                    // tpl: new Ext.XTemplate('<div ext:qtip="{abstract}"><b>{title}</b><br/>{abstract}</div>'),
+                    sortable: true,
+                    dataIndex: 'title',
+                    renderer: recordRenderer
                 }, {
                     xtype: "actioncolumn",
                     width: 30,
                     items: [{
                         getClass: function(v, meta, rec) {
-                            if (this.findWMS(rec.get("URI")) !== false || 
-                                this.findWMS(rec.get("references")) !== false) {
-                                    return "gxp-icon-addlayers";
+                            var ows = this.findWMS(rec.get("URI")) || this.findWMS(rec.get("references"));
+                            if (ows !== false) {
+                                return "gxp-icon-addlayers";
                             }
                         },
                         tooltip: this.addMapTooltip,
@@ -421,7 +474,8 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                 }
             }
         }
-        if (url !== null && name !== null) {
+        if (url !== null && name !== null && name.length > 0) {
+            url = url.split('?')[0];
             return {
                 url: url,
                 name: name
@@ -433,33 +487,48 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
 
     /** private: method[addLayer]
      *  :arg record: ``GeoExt.data.LayerRecord`` The layer record to add.
-     *      
-     *  Add a WMS layer coming from a catalogue search.
+     *
+     *  Add WMS layers coming from a catalogue search.
      */
-    addLayer: function(record) {
-        var uri = record.get("URI");
+    addLayer: function (record) {
+
         var bounds = record.get("bounds");
-        var bLeft = bounds.left,
-            bRight = bounds.right,
-            bBottom = bounds.bottom,
-            bTop = bounds.top;
-        var left = Math.min(bLeft, bRight),
-            right = Math.max(bLeft, bRight),
-            bottom = Math.min(bBottom, bTop),
-            top = Math.max(bBottom, bTop);
-        var wmsInfo = this.findWMS(uri);
-        if (wmsInfo === false) {
-            // fallback to dct:references
-            var references = record.get("references");
-            wmsInfo = this.findWMS(references);
+
+        // Bounds may be empty
+        var bbox;
+        if (bounds && bounds != '') {
+            var bLeft = bounds.left,
+                bRight = bounds.right,
+                bBottom = bounds.bottom,
+                bTop = bounds.top;
+            var left = Math.min(bLeft, bRight),
+                right = Math.max(bLeft, bRight),
+                bottom = Math.min(bBottom, bTop),
+                top = Math.max(bBottom, bTop);
+            bbox = [left, bottom, right, top];
         }
-        if (wmsInfo !== false) {
-            this.fireEvent("addlayer", this, this.selectedSource, Ext.apply({
-                title: record.get('title')[0],
-                bbox: [left, bottom, right, top],
-                srs: "EPSG:4326",
-                projection: record.get('projection')
-            }, wmsInfo));
+
+        // There may be multiple WMS layers!
+        var uris = record.get("URI"), i, refsChecked=false;
+        for (i = 0; i < uris.length; ++i) {
+
+            var wmsInfo = this.findWMS([uris[i]]);
+            if (wmsInfo === false && refsChecked === false) {
+                // fallback to dct:references
+                var references = record.get("references");
+                wmsInfo = this.findWMS(references);
+                // Do this only once TODO: make elegant
+                refsChecked = true;
+            }
+            if (wmsInfo !== false) {
+                this.fireEvent("addlayer", this, this.selectedSource, Ext.apply({
+                    title: record.get('title')[0],
+                    bbox: bbox,
+                    srs: "EPSG:4326",
+                    projection: record.get('projection'),
+                    queryable: true
+                }, wmsInfo));
+            }
         }
     }
 

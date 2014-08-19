@@ -462,14 +462,21 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
         output.on({
             'addlayer': function(cmp, sourceKey, layerConfig) {
                 var source = this.target.layerSources[sourceKey];
-                var bounds = OpenLayers.Bounds.fromArray(layerConfig.bbox,
-                    (source.yx && source.yx[layerConfig.projection] === true));
-                var mapProjection = this.target.mapPanel.map.getProjection();
-                var bbox = bounds.transform(layerConfig.srs, mapProjection);
+                var map = this.target.mapPanel.map;
+                var mapProjection = map.getProjection();
+
+                // Bounds may be empty!
+                var bbox;
+                if (layerConfig.bbox) {
+                    var bounds = OpenLayers.Bounds.fromArray(layerConfig.bbox,
+                        (source.yx && source.yx[layerConfig.projection] === true));
+                    bbox = bounds.transform(layerConfig.srs, mapProjection);
+                    layerConfig.bbox = bbox.toArray();
+                }
                 layerConfig.srs = mapProjection;
-                layerConfig.bbox = bbox.toArray();
                 layerConfig.source = this.initialConfig.catalogSourceKey !== null ?
                     this.initialConfig.catalogSourceKey : sourceKey;
+
                 var record = source.createLayerRecord(layerConfig);
                 this.target.mapPanel.layers.add(record);
                 if (bbox) {

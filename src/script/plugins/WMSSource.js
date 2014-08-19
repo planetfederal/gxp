@@ -182,9 +182,9 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
 
     /** api: property[requiredProperties]
      *  ``Array(String)`` List of config properties that are required for a
-     *  complete layer configuration, in addition to ``name``.
+     *  complete layer configuration, in addition to ``name``. Note: bbox may not be present.
      */
-    requiredProperties: ["title", "bbox"],
+    requiredProperties: ["title"],
 
     /** api: config[owsPreviewStrategies]
       *  ``Array``
@@ -617,8 +617,6 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             layer.setName(config.title || layer.name);
             layer.addOptions({
                 attribution: layer.attribution || config.attribution,
-                maxExtent: maxExtent,
-                restrictedExtent: maxExtent,
                 singleTile: singleTile,
                 ratio: config.ratio || 1,
                 visibility: ("visibility" in config) ? config.visibility : true,
@@ -629,8 +627,16 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 minScale: config.minscale,
                 maxScale: config.maxscale,
                 // JvdB add: to let Feature info widgets know this layer is querable
-                queryable: original.get("queryable")
+                queryable: original.get("queryable") || config.queryable
             });
+
+            if (maxExtent && maxExtent.top) {
+                layer.addOptions({
+                        maxExtent: maxExtent,
+                        restrictedExtent: maxExtent
+                    }
+                );
+            }
 
             // data for the new record
             var data = Ext.applyIf({
