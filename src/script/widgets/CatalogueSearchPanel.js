@@ -63,6 +63,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
     datasourceLabel: "Data source",
     filterLabel: "Filter search by",
     removeSourceTooltip: "Switch back to original source",
+    showMetaDataTooltip: "Show full metadata",
     /* end i18n */
 
     /** private: method[initComponent]
@@ -353,33 +354,68 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                 loadMask: true,
                 hideHeaders: true,
                 store: this.sources[this.selectedSource].store,
-                columns: [{
-                    id: 'title',
-                    // xtype: "templatecolumn",
-                    // tpl: '<div ext:qtip="{abstract}"><b>{title}</b><br/>{abstract}</div>',
+                columns: [
+                    {
+                        id: 'title',
+                        // xtype: "templatecolumn",
+                        // tpl: '<div ext:qtip="{abstract}"><b>{title}</b><br/>{abstract}</div>',
 
-                    // tpl: new Ext.XTemplate('<div ext:qtip="{abstract}"><b>{title}</b><br/>{abstract}</div>'),
-                    sortable: true,
-                    dataIndex: 'title',
-                    renderer: recordRenderer
-                }, {
-                    xtype: "actioncolumn",
-                    width: 30,
-                    items: [{
-                        getClass: function(v, meta, rec) {
-                            var ows = this.findWMS(rec.get("URI")) || this.findWMS(rec.get("references"));
-                            if (ows !== false) {
-                                return "gxp-icon-addlayers";
+                        // tpl: new Ext.XTemplate('<div ext:qtip="{abstract}"><b>{title}</b><br/>{abstract}</div>'),
+                        sortable: true,
+                        dataIndex: 'title',
+                        renderer: recordRenderer
+                    },
+                    {
+                        xtype: "actioncolumn",
+                        width: 15,
+                        items: [
+                            {
+                                getClass: function (v, meta, rec) {
+                                    if (this.sources[this.selectedSource].fullMetadataUrlTpl) {
+                                        return "gxp-icon-metadata";
+                                    }
+                                },
+                                tooltip: this.showMetaDataTooltip,
+                                handler: function (grid, rowIndex, colIndex) {
+                                    var rec = this.grid.store.getAt(rowIndex);
+                                    var id = rec.get("identifier")[0];
+
+                                    // GeoNetwork cases where id is embedded in capitals but id should be lowercase
+                                    // e.g. "{0FECD83D-66DF-49AB-8406-DB3EF00709C5}"
+                                    if (id.indexOf('{') > -1) {
+                                        id = id.toLowerCase();
+                                    }
+                                    var urlTemplate = this.sources[this.selectedSource].fullMetadataUrlTpl;
+                                    if (urlTemplate) {
+                                        var url = urlTemplate.apply({id: id});
+                                        window.open(url, "MDWindow", "width=800, height=600");
+                                    }
+                                },
+                                scope: this
                             }
-                        },
-                        tooltip: this.addMapTooltip,
-                        handler: function(grid, rowIndex, colIndex) {
-                            var rec = this.grid.store.getAt(rowIndex);
-                            this.addLayer(rec);
-                        },
-                        scope: this
-                    }]
-                }],
+                        ]
+                    },
+                    {
+                        xtype: "actioncolumn",
+                        width: 15,
+                        items: [
+                            {
+                                getClass: function (v, meta, rec) {
+                                    var ows = this.findWMS(rec.get("URI")) || this.findWMS(rec.get("references"));
+                                    if (ows !== false) {
+                                        return "gxp-icon-addlayers";
+                                    }
+                                },
+                                tooltip: this.addMapTooltip,
+                                handler: function (grid, rowIndex, colIndex) {
+                                    var rec = this.grid.store.getAt(rowIndex);
+                                    this.addLayer(rec);
+                                },
+                                scope: this
+                            }
+                        ]
+                    }
+                ],
                 autoExpandColumn: 'title',
                 autoHeight: true
             }] 

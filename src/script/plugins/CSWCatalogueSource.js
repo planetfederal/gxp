@@ -53,7 +53,7 @@ gxp.plugins.CSWCatalogueSource = Ext.extend(gxp.plugins.CatalogueSource, {
                 })
             }, this.proxyOptions || {})),
             reader: new GeoExt.data.CSWRecordsReader({
-                fields: ['title', 'abstract', 'URI', 'bounds', 'projection', 'references']
+                fields: ['identifier', 'title', 'abstract', 'URI', 'bounds', 'projection', 'references']
             })
         });
         gxp.plugins.LayerSource.prototype.createStore.apply(this, arguments);
