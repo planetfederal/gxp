@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
- * 
+ *
  * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
@@ -32,6 +32,13 @@ gxp.plugins.CatalogueSource = Ext.extend(gxp.plugins.WMSSource, {
      */
     url: null,
 
+    /** api: config[fullMetadataUrlTpl]
+      *  ``String`` Ext XTemplate String with 'id' as parameter for URL to full metadata,
+      *  e.g. custom URL to website for CSW.
+      *  Example: 'http://www.nationaalgeoregister.nl/geonetwork/srv/dut/search?uuid={id}'
+      */
+    fullMetadataUrlTpl: null,
+
     /** api: config[yx]
      *  ``Object`` Members in the yx object are used to determine if a CRS URN
      *     corresponds to a CRS with y,x axis order.  Member names are CRS URNs
@@ -51,7 +58,7 @@ gxp.plugins.CatalogueSource = Ext.extend(gxp.plugins.WMSSource, {
 
     /** api: config[hidden]
      *  ``Boolean`` Normally we do not want these sources to show up in the
-     *  AddLayers dialog for the source combobox. Set to false for a certain 
+     *  AddLayers dialog for the source combobox. Set to false for a certain
      *  source to show up anyway whenever that makes sense, e.g. by using a
      *  catalogue source to retrieve all the layers for a capabilities grid.
      */
@@ -63,6 +70,17 @@ gxp.plugins.CatalogueSource = Ext.extend(gxp.plugins.WMSSource, {
      *  This can be used e.g. to set listeners.
      */
     proxyOptions: null,
+
+    /** private: method[constructor]
+     */
+    constructor: function(config) {
+        gxp.plugins.CatalogueSource.superclass.constructor.apply(this, arguments);
+
+        // Possible full catalog MD record URL
+        if (config && config.fullMetadataUrlTpl) {
+            this.fullMetadataUrlTpl = new Ext.XTemplate(config.fullMetadataUrlTpl);
+        }
+    },
 
     /** api: method[describeLayer]
      *  :arg rec: ``GeoExt.data.LayerRecord`` the layer to issue a WMS
@@ -121,10 +139,10 @@ gxp.plugins.CatalogueSource = Ext.extend(gxp.plugins.WMSSource, {
      *
      * .. list-table::
      *     :widths: 20 80
-     * 
+     *
      *     * - ``queryString``
      *       - the search string
-     *     * - ``limit`` 
+     *     * - ``limit``
      *       - the maximum number of records to retrieve
      *     * - ``filters``
      *       - additional filters to include in the query
