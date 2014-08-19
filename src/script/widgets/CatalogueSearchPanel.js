@@ -136,20 +136,20 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
             var qtipTpl = new Ext.XTemplate(
                 '<h3>Abstract</h3>'
                 , '<tpl for=".">'
-                , '<div>{abstract}</div>'
+                , '<div>{abstr}</div>'
                 , '</tpl>'
             );
-            var qtipStr = qtipTpl.apply({abstract: 'Unavailable'});
-            var abstr = record.data.abstract;
+            var qtipStr = qtipTpl.apply({abstr: 'Unavailable'});
+            var abstr = record.data['abstract'];
             if (abstr.length > 0) {
                 abstr = abstr[0];
                 abstr = htmlEscape(abstr);
                 abstr = splitLine(abstr, 50);
                 abstr = abstr.replace(/\r?\n/g, '<br/>');
-                qtipStr = qtipTpl.apply({abstract: abstr});
+                qtipStr = qtipTpl.apply({abstr: abstr});
             }
             abstr = abstr.split('<br/>')[0] + '...';
-            var tplStr = new Ext.XTemplate('<b>{title}</b><br/>{abstract}').apply({title: value, abstract: abstr});
+            var tplStr = new Ext.XTemplate('<b>{title}</b><br/>{abstr}').apply({title: value, abstr: abstr});
             return '<div ext:qtip=\'' + qtipStr + '\'>' + tplStr + '</div>';
         };
 
