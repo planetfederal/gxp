@@ -22,7 +22,9 @@ GeoExt.Lang.add("en", {
         doneText: "Done",
         uploadText: "Upload layers",
         addFeedActionMenuText: "Add feeds",
-        searchText: "Search for layers"
+        searchText: "Search for layers",
+        findActionMenuText: "Find layers",
+        findActionTip: "Find layers in catalogue"
     },
     
     "gxp.plugins.BingSource.prototype": {

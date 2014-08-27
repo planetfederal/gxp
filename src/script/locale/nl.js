@@ -13,7 +13,9 @@ GeoExt.Lang.add("nl", {
         availableLayersText: "Beschikbare kaartlagen",
         doneText: "Klaar",
         addFeedActionMenuText: "Add feeds",
-        searchText: "Zoek naar kaartlagen"
+        searchText: "Zoek naar kaartlagen",
+        findActionMenuText: "Zoek in catalogus",
+        findActionTip: "Zoek kaarten via CSW in catalogus metadata server"
     },
     
     "gxp.plugins.BingSource.prototype": {

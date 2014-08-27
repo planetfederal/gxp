@@ -61,6 +61,12 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      */
     addActionTip: "Add layers",
 
+    /** api: config[findActionTip]
+     *  ``String``
+     *  Text for find action tooltip (i18n).
+     */
+    findActionTip: "Find layers",
+
     /** api: config[addActionText]
      *  ``String``
      *  Text for the Add action. None by default.
@@ -367,6 +373,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
               this.target.sources[this.initialConfig.search.selectedSource]) {
                 var search = new Ext.menu.Item({
                     iconCls: 'gxp-icon-addlayers',
+                    tooltip : this.findActionTip,
                     text: this.findActionMenuText,
                     handler: this.showCatalogueSearch,
                     scope: this
@@ -474,7 +481,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     layerConfig.bbox = bbox.toArray();
                 }
                 layerConfig.srs = mapProjection;
-                layerConfig.source = this.initialConfig.catalogSourceKey !== null ?
+                layerConfig.source = this.initialConfig.catalogSourceKey ?
                     this.initialConfig.catalogSourceKey : sourceKey;
 
                 var record = source.createLayerRecord(layerConfig);
