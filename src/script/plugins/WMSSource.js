@@ -274,6 +274,9 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         if (!url && this.owsPreviewStrategies.indexOf('getlegendgraphic') >= 0 ) {
             // Use getlegend graphic as preview image
             var layerURL = record.data.layer.url;
+            if (layerURL.lastIndexOf('?') != layerURL.length-1) {
+                layerURL += '?';
+            }
             var layerName = record.data.name;
             url = layerURL + 'REQUEST=GetLegendGraphic&VERSION=1.1.1&FORMAT=image/png&WIDTH=' + width + '&HEIGHT=' + height + '&LAYER=' + layerName;
         }
