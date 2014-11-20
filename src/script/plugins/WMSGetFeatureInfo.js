@@ -11,6 +11,7 @@
  * @requires plugins/FeatureEditorGrid.js
  * @requires GeoExt/widgets/Popup.js
  * @requires OpenLayers/Control/WMSGetFeatureInfo.js
+ * @requires OpenLayers/Format/GeoJSON.js
  * @requires OpenLayers/Format/WMSGetFeatureInfo.js
  */
 
@@ -95,6 +96,13 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
      *      html: text, // responseText from server - only for "html" format
      */
 
+    /** private: method[constructor]
+     */
+    constructor: function(config) {
+        this.geoJSONFormat = new OpenLayers.Format.GeoJSON();
+        gxp.plugins.WMSGetFeatureInfo.superclass.constructor.apply(this, arguments);
+    },
+
     /** api: method[addActions]
      */
     addActions: function() {
@@ -167,6 +175,11 @@ gxp.plugins.WMSGetFeatureInfo = Ext.extend(gxp.plugins.Tool, {
                                 this.displayPopup(evt, title, '<pre>' + evt.text + '</pre>');
                             } else if (evt.features && evt.features.length > 0) {
                                 this.displayPopup(evt, title, null,  x.get("getFeatureInfo"));
+                            } else if (infoFormat === 'application/json' && evt.text) {
+                                evt.features = this.geoJSONFormat.read(evt.text);
+                                if (evt.features && evt.features.length > 0) {
+                                    this.displayPopup(evt, title, null,  x.get("getFeatureInfo"));
+                                }
                             }
                         },
                         scope: this
