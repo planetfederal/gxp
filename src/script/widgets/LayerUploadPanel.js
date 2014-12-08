@@ -511,8 +511,11 @@ gxp.LayerUploadPanel = Ext.extend(Ext.FormPanel, {
                 }
                 this.getForm().reset();
                 var details = Ext.decode(response.responseText);
-                this.fireEvent("uploadcomplete", this, details);
-                delete this._import;
+                // wait 250 ms for GeoServer to settle after the upload
+                window.setTimeout(function() {
+                  this.fireEvent("uploadcomplete", this, details);
+                  delete this._import;
+                }.bind(this), 250);
             },
             scope: this
         });
