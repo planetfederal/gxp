@@ -459,6 +459,8 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         var mapConfig = {};
         var baseLayerConfig = {
             wrapDateLine: config.wrapDateLine !== undefined ? config.wrapDateLine : true,
+            minZoomLevel: config.minZoomLevel,
+            maxZoomLevel: config.maxZoomLevel,
             maxResolution: config.maxResolution,
             numZoomLevels: config.numZoomLevels,
             displayInLayerSwitcher: false
