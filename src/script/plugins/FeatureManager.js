@@ -470,9 +470,10 @@ gxp.plugins.FeatureManager = Ext.extend(gxp.plugins.Tool, {
         var change = this.fireEvent("beforelayerchange", this, layerRecord);
         if (change !== false) {
             if (layerRecord) {
-                // do not use getProjection here since we never want to use the 
-                // map's projection on the feature layer
-                this.featureLayer.projection = layerRecord.getLayer().projection;
+                // do not use getProjection here
+                var layerProj = layerRecord.getLayer().projection;
+                this.featureLayer.projection = (layerProj !== null) ? layerProj :
+                    this.target.mapPanel.map.getProjectionObject();
             }
             if (layerRecord !== this.layerRecord) {
                 this.clearFeatureStore();
