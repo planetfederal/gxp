@@ -425,6 +425,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 layers: config.name,
                 transparent: "transparent" in config ? config.transparent : true,
                 cql_filter: config.cql_filter,
+                viewparams: config.viewparams,
                 format: config.format
             }, {
                 projection: srs,
@@ -528,7 +529,8 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 STYLES: config.styles,
                 FORMAT: config.format,
                 TRANSPARENT: config.transparent,
-                CQL_FILTER: config.cql_filter
+                CQL_FILTER: config.cql_filter,
+                VIEWPARAMS: config.viewparams
             });
             
             var singleTile = false;
@@ -881,6 +883,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             tiled: !options.singleTile,
             transparent: params.TRANSPARENT,
             cql_filter: params.CQL_FILTER,
+            viewparams: params.VIEWPARAMS,
             minscale: options.minScale,
             maxscale: options.maxScale,
             infoFormat: record.get("infoFormat"),
