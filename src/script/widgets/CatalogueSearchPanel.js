@@ -388,7 +388,7 @@ gxp.CatalogueSearchPanel = Ext.extend(Ext.Panel, {
                                     var urlTemplate = this.sources[this.selectedSource].fullMetadataUrlTpl;
                                     if (urlTemplate) {
                                         var url = urlTemplate.apply({id: id});
-                                        window.open(url, "MDWindow", "width=800, height=600");
+                                        window.open(url, "MDWindow", "width=800, height=600, scrollbars=1, resizable=1");
                                     }
                                 },
                                 scope: this
