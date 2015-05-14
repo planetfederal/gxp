@@ -143,10 +143,10 @@ gxp.plugins.MapBoxSource = Ext.extend(gxp.plugins.LayerSource, {
             layers[i] = new OpenLayers.Layer.TMS(
                 this[OpenLayers.String.camelize(config.name) + "Title"],
                 [
-                    "http://a.tiles.mapbox.com/mapbox/",
-                    "http://b.tiles.mapbox.com/mapbox/",
-                    "http://c.tiles.mapbox.com/mapbox/",
-                    "http://d.tiles.mapbox.com/mapbox/"
+                    "//a.tiles.mapbox.com/mapbox/",
+                    "//b.tiles.mapbox.com/mapbox/",
+                    "//c.tiles.mapbox.com/mapbox/",
+                    "//d.tiles.mapbox.com/mapbox/"
                 ],
                 OpenLayers.Util.applyDefaults({
                     attribution: /^world/.test(name) ?

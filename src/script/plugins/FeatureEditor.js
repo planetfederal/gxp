@@ -156,6 +156,12 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
      *  modify tool, i.e. there is no option to add new features.
      */
     modifyOnly: false,
+
+    /** api: config[createOnly]
+     *  ``Boolean`` Set to true to use the FeatureEditor merely as a feature
+     *  creation tool, i.e. there is no option to modify existing features.
+     */
+    createOnly: false,
     
     /** api: config[showSelectedOnly]
      *  ``Boolean`` If set to true, only selected features will be displayed
@@ -726,6 +732,7 @@ gxp.plugins.FeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
             //TODO Tool.js sets group, but this doesn't work for GeoExt.Action
             group: toggleGroup,
             groupClass: null,
+            hidden: this.createOnly,
             enableToggle: true,
             allowDepress: true,
             control: this.selectControl,
