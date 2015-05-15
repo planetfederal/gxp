@@ -19,7 +19,7 @@
  Build date: 2013-04-03 15:07:25
  */
 
-Ext.namespace("gxp");
+Ext.ns('Ext.ux.form');
 
 /**
  * @class Ext.ux.form.SpinnerField
@@ -27,7 +27,7 @@ Ext.namespace("gxp");
  * Creates a field utilizing Ext.ux.Spinner
  * @xtype spinnerfield
  */
-gxp.SpinnerField = Ext.extend(Ext.form.NumberField, {
+Ext.ux.form.SpinnerField = Ext.extend(Ext.form.NumberField, {
     actionMode: 'wrap',
     deferHeight: true,
     autoSize: Ext.emptyFn,
@@ -37,7 +37,7 @@ gxp.SpinnerField = Ext.extend(Ext.form.NumberField, {
 	constructor: function(config) {
 		var spinnerConfig = Ext.copyTo({}, config, 'incrementValue,alternateIncrementValue,accelerate,defaultValue,triggerClass,splitterClass');
 
-		var spl = this.spinner = new gxp.Spinner(spinnerConfig);
+		var spl = this.spinner = new Ext.ux.Spinner(spinnerConfig);
 
 		var plugins = config.plugins
 			? (Ext.isArray(config.plugins)
@@ -45,7 +45,7 @@ gxp.SpinnerField = Ext.extend(Ext.form.NumberField, {
 				: [config.plugins, spl])
 			: spl;
 
-		gxp.SpinnerField.superclass.constructor.call(this, Ext.apply(config, {plugins: plugins}));
+		Ext.ux.form.SpinnerField.superclass.constructor.call(this, Ext.apply(config, {plugins: plugins}));
 	},
 
     // private
@@ -70,5 +70,5 @@ gxp.SpinnerField = Ext.extend(Ext.form.NumberField, {
     }
 });
 
-Ext.reg('spinnerfield', gxp.SpinnerField);
+Ext.reg('spinnerfield', Ext.ux.form.SpinnerField);
 

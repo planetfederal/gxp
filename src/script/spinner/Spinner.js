@@ -19,14 +19,14 @@
  Build date: 2013-04-03 15:07:25
  */
 
-Ext.namespace("gxp");
+Ext.ns('Ext.ux');
 
 /**
- * @class gxp.Spinner
+ * @class Ext.ux.Spinner
  * @extends Ext.util.Observable
- * Creates a Spinner control utilized by gxp.SpinnerField
+ * Creates a Spinner control utilized by Ext.ux.form.SpinnerField
  */
-gxp.Spinner = Ext.extend(Ext.util.Observable, {
+Ext.ux.Spinner = Ext.extend(Ext.util.Observable, {
     incrementValue: 1,
     alternateIncrementValue: 5,
     triggerClass: 'x-form-spinner-trigger',
@@ -36,7 +36,7 @@ gxp.Spinner = Ext.extend(Ext.util.Observable, {
     accelerate: false,
 
     constructor: function(config){
-        gxp.Spinner.superclass.constructor.call(this, config);
+        Ext.ux.Spinner.superclass.constructor.call(this, config);
         Ext.apply(this, config);
         this.mimicing = false;
     },

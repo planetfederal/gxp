@@ -94,7 +94,7 @@ gxp.ClassificationPanel = Ext.extend(Ext.Panel, {
 
 
 
-        var classNumSelector = new gxp.SpinnerField({
+        var classNumSelector = new Ext.ux.form.SpinnerField({
             fieldLabel: 'Classes',
             id: "choropleth_classes",
             minValue: 2,
