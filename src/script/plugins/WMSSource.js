@@ -524,12 +524,12 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
             }
             
             // update params from config
-            layer.mergeNewParams({
+            layer.mergeNewParams(Ext.applyIf({
                 STYLES: config.styles,
                 FORMAT: config.format,
                 TRANSPARENT: config.transparent,
                 CQL_FILTER: config.cql_filter
-            });
+            }, config.params));
             
             var singleTile = false;
             if ("tiled" in config) {
