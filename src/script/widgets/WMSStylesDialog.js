@@ -18,6 +18,7 @@
  * @require GeoExt/data/AttributeStore.js
  * @require GeoExt/widgets/WMSLegend.js
  * @require GeoExt/widgets/VectorLegend.js
+ * @require OpenLayers/Format/Filter/v1_1_0.js
  */
 
 
@@ -406,8 +407,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 iconCls: "save",
                 handler: function() {
                     styleProperties.destroy();
-                },
-                scope: this
+                }
             }]
         };
         var styleProperties = new this.dialogCls(Ext.apply(buttonCfg, {
@@ -440,11 +440,21 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         }));
         this.showDlg(styleProperties);
     },
-    
+
+    getAttributeStore: function() {
+        return new GeoExt.data.AttributeStore({
+                    url: this.layerDescription.owsURL,
+                    baseParams: {
+                        "SERVICE": this.layerDescription.owsType,
+                        "REQUEST": "DescribeFeatureType",
+                        "TYPENAME": this.layerDescription.typeName
+                    },
+                    method: "GET",
+                    disableCaching: false
+                });
+    },
 
     /** api: method[classifyStyleRules]
-     *  :arg prevStyle: ``Ext.data.Record``
-     *
      *  Edit the currently selected style with classification options enabled.
      */
     classifyStyleRules:function () {
@@ -452,7 +462,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
 
         var rule = userStyle.rules[0];
         var origRules = [];
-        for (var i=0; i < userStyle.rules.length; i++){
+        for (var i= 0, ii = userStyle.rules.length; i < ii; i++){
             origRules[i] = userStyle.rules[i].clone();
         }
 
@@ -471,16 +481,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 rule: rule,
                 fonts:this.fonts,
                 classifyEnabled: true,
-                attributes: new GeoExt.data.AttributeStore({
-                    url: this.layerDescription.owsURL,
-                    baseParams: {
-                        "SERVICE": this.layerDescription.owsType,
-                        "REQUEST": "DescribeFeatureType",
-                        "TYPENAME": this.layerDescription.typeName
-                    },
-                    method: "GET",
-                    disableCaching: false
-                }),
+                attributes: this.getAttributeStore(),
                 autoScroll: true,
                 border: false,
                 defaults: {
@@ -708,16 +709,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                 ref: "rulePanel",
                 symbolType: this.symbolType,
                 rule: rule,
-                attributes: new GeoExt.data.AttributeStore({
-                    url: this.layerDescription.owsURL,
-                    baseParams: {
-                        "SERVICE": this.layerDescription.owsType,
-                        "REQUEST": "DescribeFeatureType",
-                        "TYPENAME": this.layerDescription.typeName
-                    },
-                    method: "GET",
-                    disableCaching: false
-                }),
+                attributes: this.getAttributeStore(),
                 autoScroll: true,
                 border: false,
                 defaults: {
@@ -787,7 +779,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
                     var xmlParser = new OpenLayers.Format.XML();
 
                     var xmlRules = xmlParser.getElementsByTagNameNS(xmlParser.read(result.responseText).documentElement, "*", "Rule");
-                    for (var i = 0; i < xmlRules.length; i++) {
+                    for (var i = 0, ii = xmlRules.length; i < ii; i++) {
                         var new_rule = rule.clone();
                         var ruleTitle =   xmlParser.getElementsByTagNameNS(xmlRules[i], "*", "Title")[0];
                         new_rule.title = ruleTitle.textContent || ruleTitle.text;
@@ -1105,13 +1097,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
         }
 
         var layer = this.layerRecord.getLayer();
-        var url = this.layerRecord.get("restUrl");
-        if (!url) {
-            url = layerRecord.get("restUrl");
-        }
-        if (!url) {
-            url = layer.url.split("?").shift().replace(/\/(wms|ows)\/?$/, "/rest");
-        }
+        var url = this.getLayerRestUrl(this.layerRecord);
 
         Ext.Ajax.request({
             url: url + "/sldservice/" + layer.params["LAYERS"] + "/attributes.xml",
@@ -1382,7 +1368,24 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
      */
     showDlg: function(dlg) {
         dlg.show();
+    },
+
+    /** private: method[getLayerRestUrl]
+     *  :arg layerRecord ``Object``
+     *  :arg url ``String``
+     *  :return: ``String`` the layer's REST URL
+     */
+    getLayerRestUrl: function(layerRecord, url) {
+        if (!url) {
+            url = layerRecord.get("restUrl");
+        }
+        if (!url) {
+            var layer = layerRecord.getLayer();
+            url = layer.url.split("?").shift().replace(/\/(wms|ows)\/?$/, "/rest");
+        }
+        return url;
     }
+
     
 });
 
@@ -1399,12 +1402,7 @@ gxp.WMSStylesDialog = Ext.extend(Ext.Container, {
  */
 gxp.WMSStylesDialog.createGeoServerStylerConfig = function(layerRecord, url) {
     var layer = layerRecord.getLayer();
-    if (!url) {
-        url = layerRecord.get("restUrl");
-    }
-    if (!url) {
-        url = layer.url.split("?").shift().replace(/\/(wms|ows)\/?$/, "/rest");
-    }
+    url = this.prototype.getLayerRestUrl(layerRecord, url);
     return {
         xtype: "gxp_wmsstylesdialog",
         layerRecord: layerRecord,

@@ -374,7 +374,9 @@ GeoExt.Lang.add("de", {
          styleWindowTitle: "User Style: {0}",
          ruleWindowTitle: "Style Regel: {0}",
          stylesFieldsetTitle: "Styles",
-         rulesFieldsetTitle: "Regeln"
+         rulesFieldsetTitle: "Regeln",
+         classifyStyleText: "Classify",
+         classifyStyleTip: "Classify the layer based on attributes"
     },
 
     "gxp.LayerUploadPanel.prototype": {

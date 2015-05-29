@@ -13,6 +13,7 @@
  * @include widgets/LineSymbolizer.js
  * @include widgets/PointSymbolizer.js
  * @include widgets/FilterBuilder.js
+ * @include widgets/ClassificationPanel.js
  */
 
 /** api: (define)
@@ -125,7 +126,13 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
      *  are available to the <scaleSliderTemplate>.
      */
     modifyScaleTipContext: Ext.emptyFn,
-    
+
+    /** private: property[classifyEnabled]
+     *  ``Boolean`` Enable the ClassificationPanel widget
+     *  Default is false.
+     */
+    classifyEnabled: false,
+
     /** i18n */
     labelFeaturesText: "Label Features",
     labelsText: "Labels",

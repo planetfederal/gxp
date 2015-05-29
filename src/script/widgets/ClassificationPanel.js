@@ -6,14 +6,34 @@
  * of the license.
  */
 
+
+/**
+ * @require OpenLayers/Renderer.js
+ * @require
+ */
+
+
+/** api: (define)
+ *  module = gxp
+ *  class = ClassificationPanel
+ *  base_link = `Ext.TabPanel <http://extjs.com/deploy/dev/docs/?class=Ext.TabPanel>`_
+ */
 Ext.namespace("gxp");
 
+
+/** api: constructor
+ *  .. class:: ClassificationPanel(config)
+ *
+ *      Create a dialog for generating a classified styling for a layer,
+ *      with options for specifying the number of classes,
+ *      classification method, and choice of color ramps.
+ */
 gxp.ClassificationPanel = Ext.extend(Ext.Panel, {
 
     hidden: false,
 
     rulePanel: null,
-
+    classNumberText: 'Classes',
     classifyText: "Classify",
     rampBlueText: "Blue",
     rampRedText: "Red",
@@ -25,10 +45,13 @@ gxp.ClassificationPanel = Ext.extend(Ext.Panel, {
     selectColorText: "Select colors",
     colorStartText: "Start Color",
     colorEndText: "End Color",
+    colorRampText: 'Color Ramp',
+    methodText: "Method",
     methodUniqueText: "Unique Values",
     methodQuantileText: "Quantile",
     methodEqualText: "Equal Intervals",
     methodJenksText: "Jenks Natural Breaks",
+    selectMethodText: "Select method",
     standardDeviationText: "Standard Deviations",
     attributeText: "Attribute",
     selectAttributeText: "Select attribute",
@@ -66,7 +89,6 @@ gxp.ClassificationPanel = Ext.extend(Ext.Panel, {
                     listeners: {
                         valid: function(field) {
                             this.rulePanel.rule[field.name] = field.getValue();
-                            //this.rulePanel.fireEvent("change", this.rulePanel, this.rulePanel.rule);
                         },
                         scope: this
                     }
@@ -82,20 +104,15 @@ gxp.ClassificationPanel = Ext.extend(Ext.Panel, {
                     listeners: {
                         valid: function(field) {
                             this.rulePanel.rule[field.name] = field.getValue();
-                            //this.rulePanel.fireEvent("change", this.rulePanel, this.rulePanel.rule);
                         },
                         scope: this
-                    },
-                    scope: this
+                    }
                 }
-
             ]
         });
 
-
-
         var classNumSelector = new Ext.ux.form.SpinnerField({
-            fieldLabel: 'Classes',
+            fieldLabel: this.classNumberText,
             id: "choropleth_classes",
             minValue: 2,
             name: 'intervals',
@@ -103,19 +120,18 @@ gxp.ClassificationPanel = Ext.extend(Ext.Panel, {
             width: 110,
             listeners: {
                 'change':function(spinner, value){
-                    this.rulePanel.rule['intervals'] = value;
-                    //this.rulePanel.fireEvent("change", this.rulePanel, this.rulePanel.rule);
+                    this.rulePanel.rule[classNumSelector.name] = value;
                 },
                 scope: this
             }
         });
 
-        this.rulePanel.rule["intervals"] = classNumSelector.defaultValue;
+        this.rulePanel.rule[classNumSelector.name] = classNumSelector.defaultValue;
 
         var colorDropdown = new Ext.form.ComboBox({
             id: 'choropleth_colorramp',
             name: 'ramp',
-            fieldLabel: 'Color Ramp',
+            fieldLabel: this.colorRampText,
             store:  new Ext.data.ArrayStore({
                 id: 0,
                 fields: [
@@ -148,25 +164,19 @@ gxp.ClassificationPanel = Ext.extend(Ext.Panel, {
                         case "Blue":
                             this.rulePanel.rule["color_start"] = "#f7fbff";
                             this.rulePanel.rule["color_end"] = "#08306b";
-                            //this.rulePanel.rule["color_mid"] = "#fd8d3c";
                             this.rulePanel.rule[cmb.name] = "Custom";
                             break;
                         case "Red":
                             this.rulePanel.rule["color_start"] = "#fff5f0";
                             this.rulePanel.rule["color_end"] = "#67000d";
-                            //this.rulePanel.rule["color_mid"] = "";
                             this.rulePanel.rule[cmb.name] = "Custom";
                             break;
                         case "Orange":
                             this.rulePanel.rule["color_start"] = "#fff5eb";
                             this.rulePanel.rule["color_end"] = "#f16913";
-                            //this.rulePanel.rule["color_mid"] = "";
                             this.rulePanel.rule[cmb.name] = "Custom";
                             break;
                         case "Jet":
-                            //this.rulePanel.rule["color_start"] = "#5e4fa2";
-                            //this.rulePanel.rule["color_end"] = "#9e0142";
-                            //this.rulePanel.rule["color_mid"] = "#ffffbf";
                             this.rulePanel.rule[cmb.name] = "Jet";
                             break;
                         default:
@@ -179,11 +189,10 @@ gxp.ClassificationPanel = Ext.extend(Ext.Panel, {
             }
         });
 
-
         var methodDropdown = new Ext.form.ComboBox({
             id: 'choropleth_method',
             name: 'method',
-            fieldLabel: 'Method',
+            fieldLabel: this.methodText,
             store:  new Ext.data.ArrayStore({
                 id: 0,
                 mode: 'local',
@@ -204,7 +213,7 @@ gxp.ClassificationPanel = Ext.extend(Ext.Panel, {
             mode: 'local',
             width: 110,
             editable: false,
-            emptyText: 'Select method',
+            emptyText: this.selectMethodText,
             triggerAction: 'all',
             disabled: false,
             listeners: {
@@ -213,8 +222,6 @@ gxp.ClassificationPanel = Ext.extend(Ext.Panel, {
                     //If uniqueInterval: disable # classes
                     classNumSelector.setDisabled(cmb.value == "uniqueInterval");
                     this.rulePanel.rule[cmb.name] = cmb.value;
-                    //this.rulePanel.fireEvent("change", this.rulePanel, this.rulePanel.rule);
-
                 },
                 scope: this
             }
@@ -236,14 +243,11 @@ gxp.ClassificationPanel = Ext.extend(Ext.Panel, {
             listeners: {
                 'select': function(cmb, data, idx) {
                     this.rulePanel.rule[cmb.name] = cmb.value;
-
-
                     methodDropdown.clearValue();
                     var methodStore =   methodDropdown.getStore();
-                    for (var i = 0; i < methodStore.data.length; i++) {
+                    for (var i = 0, ii=methodStore.data.length; i <ii ; i++) {
                         methodStore.getAt(i).disabled = (cmb.getStore().getAt(idx).get("type") == "xsd:string" ? methodStore.getAt(i).get("value") != "uniqueInterval": false);
                     }
-
                     methodStore.loadData(cmb.getStore().getAt(idx).get("type") == "xsd:string" ?
                         [['uniqueInterval',this.methodUniqueText]]
                         :[['uniqueInterval',this.methodUniqueText],
@@ -251,8 +255,6 @@ gxp.ClassificationPanel = Ext.extend(Ext.Panel, {
                         ['equalInterval',this.methodEqualText],
                         ['jenks', this.methodJenksText]]
                     );
-
-                    //this.rulePanel.fireEvent("change", this.rulePanel, this.rulePanel.rule);
                 },
                 scope: this
             }
@@ -286,7 +288,6 @@ gxp.ClassificationPanel = Ext.extend(Ext.Panel, {
                         handler: function(item, e)
                         {
                             this.rulePanel.rule['reverse'] = item.checked;
-                            //this.rulePanel.fireEvent("change", this.rulePanel, this.rulePanel.rule);
                         },
                         scope: this
                     },
@@ -307,7 +308,6 @@ gxp.ClassificationPanel = Ext.extend(Ext.Panel, {
                 ]
             }
         ]
-
         gxp.ClassificationPanel.superclass.initComponent.call(this);
     }
 
