@@ -31,8 +31,9 @@ Ext.namespace("gxp");
 gxp.ClassificationPanel = Ext.extend(Ext.Panel, {
 
     hidden: false,
-
     rulePanel: null,
+    customRamp: "Custom",
+
     classNumberText: 'Classes',
     classifyText: "Classify",
     rampBlueText: "Blue",
@@ -158,23 +159,23 @@ gxp.ClassificationPanel = Ext.extend(Ext.Panel, {
             listeners: {
                 'select': function(cmb, data, idx) {
                     //If Custom: display start, end, middle color picker;
-                    colorPanel.setVisible(cmb.value == "Custom");
+                    colorPanel.setVisible(cmb.value == this.customRamp);
 
                     switch(cmb.value) {
                         case "Blue":
                             this.rulePanel.rule["color_start"] = "#f7fbff";
                             this.rulePanel.rule["color_end"] = "#08306b";
-                            this.rulePanel.rule[cmb.name] = "Custom";
+                            this.rulePanel.rule[cmb.name] = this.customRamp;
                             break;
                         case "Red":
                             this.rulePanel.rule["color_start"] = "#fff5f0";
                             this.rulePanel.rule["color_end"] = "#67000d";
-                            this.rulePanel.rule[cmb.name] = "Custom";
+                            this.rulePanel.rule[cmb.name] = this.customRamp;
                             break;
                         case "Orange":
                             this.rulePanel.rule["color_start"] = "#fff5eb";
                             this.rulePanel.rule["color_end"] = "#f16913";
-                            this.rulePanel.rule[cmb.name] = "Custom";
+                            this.rulePanel.rule[cmb.name] = this.customRamp;
                             break;
                         case "Jet":
                             this.rulePanel.rule[cmb.name] = "Jet";
@@ -313,5 +314,5 @@ gxp.ClassificationPanel = Ext.extend(Ext.Panel, {
 
 });
 
-/** api: xtype = gxp_linesymbolizer */
+/** api: xtype = gxp_classificationpanel */
 Ext.reg('gxp_classificationpanel', gxp.ClassificationPanel);
