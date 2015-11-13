@@ -13,6 +13,7 @@
  * @include widgets/LineSymbolizer.js
  * @include widgets/PointSymbolizer.js
  * @include widgets/FilterBuilder.js
+ * @include widgets/ClassificationPanel.js
  */
 
 /** api: (define)
@@ -125,7 +126,13 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
      *  are available to the <scaleSliderTemplate>.
      */
     modifyScaleTipContext: Ext.emptyFn,
-    
+
+    /** private: property[classifyEnabled]
+     *  ``Boolean`` Enable the ClassificationPanel widget
+     *  Default is false.
+     */
+    classifyEnabled: false,
+
     /** i18n */
     labelFeaturesText: "Label Features",
     labelsText: "Labels",
@@ -238,7 +245,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
             this.items = [{
                 title: this.basicText,
                 autoScroll: true,
-                items: [this.createHeaderPanel(), this.createSymbolizerPanel()]
+                items: [this.createHeaderPanel(), this.createSymbolizerPanel(), this.createClassificationPanel()]
             }, this.items[0], {
                 title: this.advancedText,
                 defaults: {
@@ -291,6 +298,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                     xtype: "fieldset",
                     title: this.limitByConditionText,
                     checkboxToggle: true,
+                    hidden: this.classifyEnabled,
                     collapsed: !(this.rule && this.rule.filter),
                     autoHeight: true,
                     items: [this.filterBuilder],
@@ -325,6 +333,15 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
         this.on({
             tabchange: function(panel, tab) {
                 tab.doLayout();
+            },
+            afterRender: function() {
+                if (this.classifyEnabled) {
+                    var symbolizer = this.items.items[0].items.items[1];
+
+                    //Hide fill color
+                    var element = Ext.getCmp(Ext.get(symbolizer.id).child('[name=color]').id);
+                    element.setVisible(false);
+                }
             },
             scope: this
         });
@@ -413,6 +430,7 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
                     width: 150,
                     items: [{
                         xtype: "textfield",
+                        hidden: this.classifyEnabled,
                         fieldLabel: this.nameText,
                         anchor: "95%",
                         value: this.rule && (this.rule.title || this.rule.name || ""),
@@ -487,6 +505,29 @@ gxp.RulePanel = Ext.extend(Ext.TabPanel, {
         }
         return cfg;
         
+    },
+
+    /** private: method[createClassificationPanel]
+     * Interface for specifying classification criteria,
+     * Only displays if GeoServer sldService community module
+     * is installed.
+     */
+    createClassificationPanel: function() {
+
+        if (this.classifyEnabled)  {
+            this.rule["classify"] = true;
+        }
+
+        return new gxp.ClassificationPanel({
+            bodyStyle: {padding: "10px"},
+            border: false,
+            labelWidth: 70,
+            defaults: {
+                labelWidth: 70
+            },
+            hidden: !this.classifyEnabled,
+            rulePanel: this
+        });
     },
 
     /** private: method[getSymbolTypeFromRule]

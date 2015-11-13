@@ -374,7 +374,9 @@ GeoExt.Lang.add("no", {
          styleWindowTitle: "Bruker Stil: {0}",
          ruleWindowTitle: "Stil regel: {0}",
          stylesFieldsetTitle: "Stiler",
-         rulesFieldsetTitle: "Regler"
+         rulesFieldsetTitle: "Regler",
+         classifyStyleText: "Classify",
+         classifyStyleTip: "Classify the layer based on attributes"
     },
  
     "gxp.LayerUploadPanel.prototype": {
@@ -427,6 +429,35 @@ GeoExt.Lang.add("no", {
         doneText: "Ferdig",
         titleText: "Legg til Feeds",
         maxResultsText: "Max elementer"
+    },
+
+    "gxp.ClassificationPanel.prototype": {
+        classNumberText: 'Classes',
+        classifyText: "Classify",
+        rampBlueText: "Blue",
+        rampRedText: "Red",
+        rampOrangeText: "Orange",
+        rampJetText: "Blue-Red",
+        rampGrayText: "Gray",
+        rampRandomText: "Random",
+        rampCustomText: "Custom",
+        selectColorText: "Select colors",
+        colorStartText: "Start Color",
+        colorEndText: "End Color",
+        colorRampText: 'Color Ramp',
+        methodText: "Method",
+        methodUniqueText: "Unique Values",
+        methodQuantileText: "Quantile",
+        methodEqualText: "Equal Intervals",
+        methodJenksText: "Jenks Natural Breaks",
+        selectMethodText: "Select method",
+        standardDeviationText: "Standard Deviations",
+        attributeText: "Attribute",
+        selectAttributeText: "Select attribute",
+        startColor: "#FEE5D9",
+        endColor: "#A50F15",
+        generateRulesText: "Apply",
+        reverseColorsText: "Reverse colors"
     }
  
 });

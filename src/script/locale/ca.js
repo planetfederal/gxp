@@ -373,7 +373,10 @@ GeoExt.Lang.add("ca", {
         styleWindowTitle: "Estil: {0}",
         ruleWindowTitle: "Regla: {0}",
         stylesFieldsetTitle: "Estils",
-        rulesFieldsetTitle: "Regles"
+        rulesFieldsetTitle: "Regles",
+        classifyStyleText: "Classify",
+        classifyStyleTip: "Classify the layer based on attributes"
+
     },
 
     "gxp.LayerUploadPanel.prototype": {
