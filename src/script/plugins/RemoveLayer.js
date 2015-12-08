@@ -31,11 +31,6 @@ gxp.plugins.RemoveLayer = Ext.extend(gxp.plugins.Tool, {
     /** api: ptype = gxp_removelayer */
     ptype: "gxp_removelayer",
 
-    /** api: config[removeActionText]
-     *  ``String``
-     *  Text for the Remove action. None by default.
-     */
-
     /** api: config[removeMenuText]
      *  ``String``
      *  Text for remove menu item (i18n).
@@ -57,7 +52,6 @@ gxp.plugins.RemoveLayer = Ext.extend(gxp.plugins.Tool, {
             iconCls: "gxp-icon-removelayers",
             disabled: true,
             tooltip: this.removeActionTip,
-            text: this.removeActionText,
             handler: function() {
                 var record = selectedLayer;
                 if(record) {
@@ -71,17 +65,27 @@ gxp.plugins.RemoveLayer = Ext.extend(gxp.plugins.Tool, {
         this.target.on("layerselectionchange", function(record) {
             selectedLayer = record;
             removeLayerAction.setDisabled(
-                this.target.mapPanel.layers.getCount() <= 1 || !record
+                this.target.mapPanel.layers.getCount() <= 1 || !record || !record.get('source')
             );
         }, this);
         var enforceOne = function(store) {
             removeLayerAction.setDisabled(
-                !selectedLayer || store.getCount() <= 1
+                !selectedLayer || !selectedLayer.get('source') || store.getCount() <= 1
             );
+        };
+        var enforceOneRemove = function (store) {
+            enforceOne(store);
+            var index = store.findBy(function filter(record) {
+                return selectedLayer.get('source');
+            });
+
+            if (index >= 0) {
+                removeLayerAction.setDisabled(true);
+            }
         };
         this.target.mapPanel.layers.on({
             "add": enforceOne,
-            "remove": enforceOne
+            "remove": enforceOneRemove
         });
 
         return actions;
