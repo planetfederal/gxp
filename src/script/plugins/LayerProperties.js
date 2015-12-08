@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2008-2011 The Open Planning Project
- * 
+ *
  * Published under the GPL license.
  * See https://github.com/opengeo/gxp/raw/master/license.txt for the full text
  * of the license.
@@ -26,10 +26,10 @@ Ext.namespace("gxp.plugins");
  *    Plugin for showing the properties of a selected layer from the map.
  */
 gxp.plugins.LayerProperties = Ext.extend(gxp.plugins.Tool, {
-    
+
     /** api: ptype = gxp_layerproperties */
     ptype: "gxp_layerproperties",
-    
+
     /** api: config[menuText]
      *  ``String``
      *  Text for layer properties menu item (i18n).
@@ -41,7 +41,7 @@ gxp.plugins.LayerProperties = Ext.extend(gxp.plugins.Tool, {
      *  Text for layer properties action tooltip (i18n).
      */
     toolTip: "Layer Properties",
-    
+
     /** api: config[layerPanelConfig]
      *  ``Object`` Additional configuration options for the layer type specific
      *  properties panels, keyed by xtype, e.g.:
@@ -52,10 +52,10 @@ gxp.plugins.LayerProperties = Ext.extend(gxp.plugins.Tool, {
      *          "gxp_wmslayerpanel": {rasterStyling: true}
      *      }
      */
-    
+
     constructor: function(config) {
         gxp.plugins.LayerProperties.superclass.constructor.apply(this, arguments);
-        
+
         if (!this.outputConfig) {
             this.outputConfig = {
                 width: 325,
@@ -63,10 +63,11 @@ gxp.plugins.LayerProperties = Ext.extend(gxp.plugins.Tool, {
             };
         }
     },
-        
+
     /** api: method[addActions]
      */
     addActions: function() {
+        var selectedLayer;
         var actions = gxp.plugins.LayerProperties.superclass.addActions.apply(this, [{
             menuText: this.menuText,
             iconCls: "gxp-icon-layerproperties",
@@ -81,13 +82,35 @@ gxp.plugins.LayerProperties = Ext.extend(gxp.plugins.Tool, {
         var layerPropertiesAction = actions[0];
 
         this.target.on("layerselectionchange", function(record) {
+            selectedLayer = record;
             layerPropertiesAction.setDisabled(
                 !record || !record.get("properties")
             );
         }, this);
+
+        var enforceOne = function(store) {
+            layerPropertiesAction.setDisabled(
+                !selectedLayer || !selectedLayer.get('source') || store.getCount() <= 1
+            );
+        };
+        var enforceOneRemove = function (store) {
+            enforceOne(store);
+            var index = store.findBy(function filter(record) {
+                return selectedLayer.get('source');
+            });
+
+            if (index >= 0) {
+                layerPropertiesAction.setDisabled(true);
+            }
+        };
+        this.target.mapPanel.layers.on({
+            "add": enforceOne,
+            "remove": enforceOneRemove
+        });
+
         return actions;
     },
-    
+
     addOutput: function(config) {
         config = config || {};
         var record = this.target.selectedLayer;
@@ -95,7 +118,7 @@ gxp.plugins.LayerProperties = Ext.extend(gxp.plugins.Tool, {
         this.outputConfig.title = origCfg.title ||
             this.menuText + ": " + record.get("title");
         this.outputConfig.shortTitle = record.get("title");
-        
+
         //TODO create generic gxp_layerpanel
         var xtype = record.get("properties") || "gxp_layerpanel";
         var panelConfig = this.layerPanelConfig;
@@ -124,7 +147,7 @@ gxp.plugins.LayerProperties = Ext.extend(gxp.plugins.Tool, {
         });
         return output;
     }
-        
+
 });
 
 Ext.preg(gxp.plugins.LayerProperties.prototype.ptype, gxp.plugins.LayerProperties);
