@@ -56,6 +56,7 @@ gxp.plugins.OpacitySlider = Ext.extend(gxp.plugins.Tool, {
     /** api: method[addActions]
      */
     addActions: function() {
+        var selectedLayer;
         var actions = gxp.plugins.OpacitySlider.superclass.addActions.apply(this, [{
             menuText: this.menuText,
             iconCls: "gxp-icon-opacity",
@@ -70,8 +71,30 @@ gxp.plugins.OpacitySlider = Ext.extend(gxp.plugins.Tool, {
         var layerPropertiesAction = actions[0];
 
         this.target.on("layerselectionchange", function(record) {
+            selectedLayer = record;
             layerPropertiesAction.setDisabled(false);
         }, this);
+
+        var enforceOne = function(store) {
+            layerPropertiesAction.setDisabled(
+                !selectedLayer || !selectedLayer.get('source') || store.getCount() <= 1
+            );
+        };
+        var enforceOneRemove = function (store) {
+            enforceOne(store);
+            var index = store.findBy(function filter(record) {
+                return selectedLayer.get('source');
+            });
+
+            if (index >= 0) {
+                layerPropertiesAction.setDisabled(true);
+            }
+        };
+        this.target.mapPanel.layers.on({
+            "add": enforceOne,
+            "remove": enforceOneRemove
+        });
+
         return actions;
     },
 
