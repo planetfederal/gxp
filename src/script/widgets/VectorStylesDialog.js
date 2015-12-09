@@ -402,7 +402,7 @@ gxp.VectorStylesDialog = Ext.extend(gxp.StylesDialog, {
             // NS for feature type available use it: we cannot rely on default NSs
             if (this.wfsLayer.featureNS) {
                 baseParams["TYPENAME"] = "ns1:" + this.wfsLayer.typeName;
-                baseParams["NAMESPACE"] = "xmlns(ns1=" + this.wfsLayer.featureNS + ")";
+                baseParams["NAMESPACE"] = "xmlns(ns1:" + this.wfsLayer.featureNS + ")";
             }
 
             // WFS Layer: use DescribeFeatureType to get attribute-names/types
