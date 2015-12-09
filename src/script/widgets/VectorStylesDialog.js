@@ -31,6 +31,7 @@ Ext.namespace("gxp");
  *
  *      Extend the GXP WMSStylesDialog to work with Vector Layers
  *      that originate from a WFS or local OpenLayers Features from upload or drawing.
+ *      created by: Just van den Broecke
  */
 gxp.VectorStylesDialog = Ext.extend(gxp.StylesDialog, {
     attributeStore: null,
