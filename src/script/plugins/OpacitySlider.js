@@ -83,7 +83,7 @@ gxp.plugins.OpacitySlider = Ext.extend(gxp.plugins.Tool, {
         var enforceOneRemove = function (store) {
             enforceOne(store);
             var index = store.findBy(function filter(record) {
-                return selectedLayer.get('source');
+                return !selectedLayer ? -1 : selectedLayer.get('source');
             });
 
             if (index >= 0) {
