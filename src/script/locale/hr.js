@@ -397,7 +397,7 @@ GeoExt.Lang.add("hr", {
         workspaceEmptyText: "Zadani radni prostor",
         dataStoreLabel: "Mjesto pohrane",
         dataStoreEmptyText: "Stvori novo mjesto pohrane",
-        defaultDataStoreEmptyText: "Zadano mjesto pohrane"
+        defaultDataStoreEmptyText: "Zadano mjesto pohrane",
         dataStoreNewText: "Stvori novo mjesto pohrane",
         crsLabel: "CRS",
         crsEmptyText: "ID koordinatnog referentnog sustava",
