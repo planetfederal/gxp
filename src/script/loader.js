@@ -118,6 +118,7 @@
         "plugins/OpacitySlider.js",
         "plugins/WFSSource.js",
         "ColorManager.js",
+        "plugins/OverviewMap.js",
         "locale/es.js",
         "locale/ca.js"
     );
