@@ -353,7 +353,7 @@ GeoExt.Lang.add("hr", {
         largeSizeLabel: 'Veliki'
     },
     
-    "gxp.WMSStylesDialog.prototype": {
+    "gxp.StylesDialog.prototype": {
          addStyleText: "Dodaj",
          addStyleTip: "Dodaj novi stil",
          chooseStyleText: "Odaberi stil",
