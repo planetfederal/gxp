@@ -350,7 +350,7 @@ GeoExt.Lang.add("hu", {
         largeSizeLabel: 'Nagy'
     },
     
-    "gxp.WMSStylesDialog.prototype": {
+    "gxp.StylesDialog.prototype": {
          addStyleText: "Hozzáad",
          addStyleTip: "Új stílus hozzáadása",
          chooseStyleText: "Válasszon stílust",

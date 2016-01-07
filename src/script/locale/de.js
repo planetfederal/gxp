@@ -350,7 +350,7 @@ GeoExt.Lang.add("de", {
         largeSizeLabel: 'Gross'
     },
     
-    "gxp.WMSStylesDialog.prototype": {
+    "gxp.StylesDialog.prototype": {
          addStyleText: "Hinzufügen",
          addStyleTip: "neuen Style hinzufügen",
          chooseStyleText: "Style auswählen",

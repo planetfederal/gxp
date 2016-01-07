@@ -350,7 +350,7 @@ GeoExt.Lang.add("id", {
         largeSizeLabel: 'Besar'
     },
     
-    "gxp.WMSStylesDialog.prototype": {
+    "gxp.StylesDialog.prototype": {
          addStyleText: "Tambah",
          addStyleTip: "Tambah style baru",
          chooseStyleText: "Choose style",

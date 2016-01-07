@@ -350,7 +350,7 @@ GeoExt.Lang.add("no", {
         largeSizeLabel: 'Stor'
     },
    
-    "gxp.WMSStylesDialog.prototype": {
+    "gxp.StylesDialog.prototype": {
          addStyleText: "Legg til",
          addStyleTip: "Legg til en ny stil",
          chooseStyleText: "Velg en stil",
