@@ -437,6 +437,21 @@ GeoExt.Lang.add("hr", {
         doneText: "Gotovo",
         titleText: "Dodaj feed-ove",
         maxResultsText: "Maksimalno objekata"
+    },
+    
+    "gxp.CatalogueSearchPanel.prototype": {
+        searchFieldEmptyText: "Pretraži",
+        searchButtonText: "Pretraži",
+        addTooltip: "Kreiraj filter",
+        addMapTooltip: "dodaj na kartu",
+        advancedTitle: "Napredno",
+        datatypeLabel: "Tip podatlka",
+        extentLabel: "Prostorni obuhvat",
+        categoryLabel: "Kategorija",
+        datasourceLabel: "Izvor podatka",
+        filterLabel: "Filtriraj po",
+        removeSourceTooltip: "Povratak na početni izvor",
+        showMetaDataTooltip: "Prikaži kompletne metapodatke"
     }
 
 });

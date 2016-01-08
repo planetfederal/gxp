@@ -435,6 +435,21 @@ GeoExt.Lang.add("en", {
         doneText: "Done",
         titleText: "Add Feeds",
         maxResultsText: "Max Items"
+    },
+
+    "gxp.CatalogueSearchPanel.prototype": {
+        searchFieldEmptyText: "Search",
+        searchButtonText: "Search",
+        addTooltip: "Create filter",
+        addMapTooltip: "Add to map",
+        advancedTitle: "Advanced",
+        datatypeLabel: "Data type",
+        extentLabel: "Spatial extent",
+        categoryLabel: "Category",
+        datasourceLabel: "Data source",
+        filterLabel: "Filter search by",
+        removeSourceTooltip: "Switch back to original source",
+        showMetaDataTooltip: "Show full metadata"
     }
 
 });
