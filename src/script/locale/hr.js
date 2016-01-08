@@ -20,7 +20,7 @@ GeoExt.Lang.add("hr", {
         panelTitleText: "Naziv",
         layerSelectionText: "Pregledaj dostupne podatke iz:",
         doneText: "Gotovo",
-        layerNameText: 'Name',
+        layerNameText: 'Naziv',
         layerAbstractText: 'Sažetak',
         layerQueryableText: 'Pretraživo',
         searchLayersEmptyText: 'Pretraži slojeve',
