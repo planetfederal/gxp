@@ -349,7 +349,7 @@ GeoExt.Lang.add("ca", {
         largeSizeLabel: 'Gran'
    },
     
-    "gxp.WMSStylesDialog.prototype": {
+    "gxp.StylesDialog.prototype": {
         addStyleText: "Afegeix",
         addStyleTip: "Afegeix nou estil",
         chooseStyleText: "Escull estil",

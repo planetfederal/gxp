@@ -20,6 +20,12 @@ GeoExt.Lang.add("hr", {
         panelTitleText: "Naziv",
         layerSelectionText: "Pregledaj dostupne podatke iz:",
         doneText: "Gotovo",
+        layerNameText: 'Name',
+        layerAbstractText: 'Sažetak',
+        layerQueryableText: 'Pretraživo',
+        searchLayersEmptyText: 'Pretraži slojeve',
+        searchLayersSearchText: 'Traži',
+        sortLayersText: 'Poredaj po abecedi',
         uploadText: "Podizanje slojeva",
         addFeedActionMenuText: "Dodaj feed",
         searchText: "pretraži slojeve",
@@ -353,7 +359,7 @@ GeoExt.Lang.add("hr", {
         largeSizeLabel: 'Veliki'
     },
     
-    "gxp.WMSStylesDialog.prototype": {
+    "gxp.StylesDialog.prototype": {
          addStyleText: "Dodaj",
          addStyleTip: "Dodaj novi stil",
          chooseStyleText: "Odaberi stil",
@@ -431,6 +437,21 @@ GeoExt.Lang.add("hr", {
         doneText: "Gotovo",
         titleText: "Dodaj feed-ove",
         maxResultsText: "Maksimalno objekata"
+    },
+    
+    "gxp.CatalogueSearchPanel.prototype": {
+        searchFieldEmptyText: "Pretraži",
+        searchButtonText: "Pretraži",
+        addTooltip: "Kreiraj filter",
+        addMapTooltip: "dodaj na kartu",
+        advancedTitle: "Napredno",
+        datatypeLabel: "Tip podatlka",
+        extentLabel: "Prostorni obuhvat",
+        categoryLabel: "Kategorija",
+        datasourceLabel: "Izvor podatka",
+        filterLabel: "Filtriraj po",
+        removeSourceTooltip: "Povratak na početni izvor",
+        showMetaDataTooltip: "Prikaži kompletne metapodatke"
     }
 
 });
