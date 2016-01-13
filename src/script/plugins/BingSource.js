@@ -88,13 +88,22 @@ gxp.plugins.BingSource = Ext.extend(gxp.plugins.LayerSource, {
      *  ``String``
      *  API key generated from http://bingmapsportal.com/ for your domain.
      */
-    apiKey: "AqTGBsziZHIJYYxgivLBf0hVdrAk9mWO5cQcb8Yux8sW5M8c8opEC2lZqKR1ZZXf",
+    apiKey: null,
     
     /** api: method[createStore]
      *
      *  Creates a store of layer records.  Fires "ready" when store is loaded.
      */
     createStore: function() {
+
+        if (!this.apiKey) {
+          this.fireEvent(
+            "failure",
+            this,
+            "No apiKey configured for the Bing source."
+          );
+          throw new Error("You need to provide an apiKey for the Bing source to work.");
+        }
         
         var layers = [
             new OpenLayers.Layer.Bing({
