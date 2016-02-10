@@ -724,7 +724,8 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         var sources = {};
         this.mapPanel.layers.each(function(record){
             var layer = record.getLayer();
-            if (layer.displayInLayerSwitcher && !(layer instanceof OpenLayers.Layer.Vector) ) {
+            if (layer.displayInLayerSwitcher && !(layer instanceof OpenLayers.Layer.Vector)
+				&& !(layer instanceof OpenLayers.Layer.Markers)) {
                 var id = record.get("source");
                 var source = this.layerSources[id];
                 if (!source) {
