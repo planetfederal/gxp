@@ -333,6 +333,12 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      *  add a new source.
      */
     addServerId: null,
+	
+	/** api: config[zoomToLayer]
+     *  ``Boolean``
+     *  Zooms to the extent of the layer after adding it to the map.  Default is ``true``.
+     */
+    zoomToLayer: true,
 
     /** private: method[constructor]
      */
@@ -1176,7 +1182,9 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             }
         }
         if (extent && isVisible) {
-            this.target.mapPanel.map.zoomToExtent(extent);
+			if (this.zoomToLayer) {
+				this.target.mapPanel.map.zoomToExtent(extent);
+			}
         }
         if (records.length === 1 && record) {
             // select the added layer
@@ -1414,3 +1422,4 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
 });
 
 Ext.preg(gxp.plugins.AddLayers.prototype.ptype, gxp.plugins.AddLayers);
+
