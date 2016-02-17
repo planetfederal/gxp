@@ -6,6 +6,10 @@
  * of the license.
  */
 
+/**
+ * @requires plugins/Tool.js
+ */
+
 /** api: (define)
  *  module = gxp.plugins
  *  class = LoadingIndicator
