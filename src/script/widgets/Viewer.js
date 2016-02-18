@@ -726,16 +726,21 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         var sources = {};
         this.mapPanel.layers.each(function(record){
             var layer = record.getLayer();
-            if (layer.displayInLayerSwitcher && !(layer instanceof OpenLayers.Layer.Vector) ) {
+            if ( layer.displayInLayerSwitcher ) {
                 var id = record.get("source");
                 var source = this.layerSources[id];
                 if (!source) {
-                    throw new Error("Could not find source for record '" + record.get("name") + " and layer " + layer.name + "'");
-                }
-                // add layer
-                state.map.layers.push(source.getConfigForRecord(record));
-                if (!sources[id]) {
-                    sources[id] = source.getState();
+                    // Either the layer has no source (id=null) or this layer has a layerSources which isnt defined 
+                    // Provide a plugin source if the layer should be included in getState()
+                    if (window.console) {
+                        console.warn("Could not find source type (e.g gxp_wmssource) for layer '" + layer.name  + "' and layer id '" + layer.id + "'.");
+                    }
+                } else {
+                    // add layer
+                    state.map.layers.push(source.getConfigForRecord(record));
+                    if (!sources[id]) {
+                        sources[id] = source.getState();
+                    }
                 }
             }
         }, this);
