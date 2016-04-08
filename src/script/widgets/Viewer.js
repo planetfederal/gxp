@@ -295,6 +295,19 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
              */
             "beforesave",
 
+            /** api: event[beforedelete]
+             *  Fires before application deletes a map. If the listener returns
+             *  false, the delete is cancelled.
+             *
+             *  Listeners arguments:
+             *
+             *  * requestConfig - ``Object`` configuration object for the request,
+             *    which has the following properties: method and url.
+             *  * callback - ``Function`` Optional callback function which was
+             *    passed on to the deleteMap function.
+             */
+            "beforedelete",
+
             /** api: event[save]
              *  Fires when the map has been saved.
              *
@@ -311,7 +324,15 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
              *  * hash - ``String`` The hash which will be set as 
              *    window.location.hash
              */
-            "beforehashchange"
+            "beforehashchange",
+
+            /** api: event[delete]
+             *  Fires when the map has been deleted.
+             *
+             *  Listener arguments:
+             *  * id - ``Integer`` The identifier of the deleted map
+             */
+            "delete"
         );
         
         Ext.apply(this, {
@@ -915,20 +936,50 @@ gxp.Viewer = Ext.extend(Ext.util.Observable, {
         }
     },
 
+    deleteMap: function(callback, scope) {
+        if (this.id) {
+            var method = "DELETE";
+            var url = "../maps/" + this.id;
+            var requestConfig = {
+                method: method,
+                url: url
+            };
+            if (this.fireEvent("beforedelete", requestConfig, callback) !== false) {
+                OpenLayers.Request.issue(Ext.apply(requestConfig, {
+                    callback: function(request) {
+                        this.handleSave(request, true);
+                        if (callback) {
+                            callback.call(scope || this, request);
+                        }
+                    },
+                    scope: this
+                }));
+            }
+        }
+    },
+
     /** private: method[handleSave]
      *  :arg: ``XMLHttpRequest``
      */
-    handleSave: function(request) {
+    handleSave: function(request, isDelete) {
         if (request.status == 200) {
             var config = Ext.util.JSON.decode(request.responseText);
             var mapId = config.id;
-            if (mapId) {
+            if (mapId && !isDelete) {
                 this.id = mapId;
                 var hash = "#maps/" + mapId;
                 if (this.fireEvent("beforehashchange", hash) !== false) {
                     window.location.hash = hash;
                 }
                 this.fireEvent("save", this.id);
+            }
+            if (isDelete) {
+                var id = this.id;
+                delete this.id;
+                if (this.fireEvent("beforehashchange", hash) !== false) {
+                    window.location.hash = '';
+                }
+                this.fireEvent("delete", id);
             }
         } else {
             if (window.console) {
