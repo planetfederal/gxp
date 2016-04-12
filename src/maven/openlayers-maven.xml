@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.osgeo</groupId>
+  <artifactId>openlayers-maven</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>javascript</packaging>
+  
+  <!-- Project Information -->
+  <name>Openlayers library</name>
+  <url>http://openlayers.org</url>
+  <inceptionYear>2011</inceptionYear>
+  <!-- Project Information -->
+
+
+  <!-- Environment Information -->
+  <scm>
+	<connection>scm:git://github.com/opengeo/gxp/raw/master</connection>
+	<developerConnection>scm:git://github.com/opengeo/gxp/raw/master</developerConnection>
+	<url>https://github.com/opengeo/gxp/raw/master</url>
+  </scm>
+
+  <build>
+    <outputDirectory>target/scripts</outputDirectory>
+    <testOutputDirectory>target/test-scripts</testOutputDirectory>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo.javascript</groupId>
+        <artifactId>javascript-maven-plugin</artifactId>
+        <extensions>true</extensions>
+        <executions>
+            <execution>
+                <goals>
+                    <goal>war-package</goal>
+                </goals>
+            </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  
+  <profiles>
+	<profile>
+		<id>javascript</id>
+		<build>
+			<plugins>
+				<plugin>
+			        <groupId>org.codehaus.mojo.javascript</groupId>
+			        <artifactId>javascript-maven-plugin</artifactId>
+			        <extensions>true</extensions>
+			        <executions>
+			            <execution>
+			                <goals>
+			                    <goal>war-package</goal>
+			                </goals>
+			            </execution>
+			        </executions>
+		      </plugin>
+			</plugins>
+		</build>
+	</profile>
+	<profile>
+		<id>release</id>
+		<build>
+			<plugins>
+				<plugin>
+			        <groupId>org.codehaus.mojo.javascript</groupId>
+			        <artifactId>javascript-maven-plugin</artifactId>
+			        <extensions>true</extensions>
+			        <executions>
+			            <execution>
+			                <goals>
+			                    <goal>war-package</goal>
+			                    <goal>prepare-tests</goal>
+			                    <goal>jsunit</goal>
+			                    <goal>compress</goal>
+			                </goals>
+			            </execution>
+			        </executions>
+		      </plugin>
+			</plugins>
+		</build>
+	</profile>
+  </profiles>
+
+  <pluginRepositories>
+	<!-- Needed to get a valid alpha version of maven pluggin. -->
+	<pluginRepository>
+		<id>nexus.snapshot</id>
+		<name>Nexus Public Snapshots</name>
+		<url>http://nexus.emergya.es/nexus/content/groups/public-snapshots/</url>
+		<snapshots>
+		         <enabled>true</enabled>
+   	        </snapshots>
+      		<releases>
+		         <enabled>false</enabled>
+	        </releases>
+	</pluginRepository>
+	<!-- Change when the plugin be released -->
+	<pluginRepository>
+	      <id>codehaus.snapshot</id>
+    	      <name>Codehaus Snapshots</name>
+ 	      <url>http://snapshots.repository.codehaus.org/</url>
+	      <snapshots>
+		<enabled>true</enabled>
+	      </snapshots>
+	      <releases>
+		<updatePolicy>never</updatePolicy>
+	      </releases>
+	</pluginRepository>
+  </pluginRepositories>
+	
+</project>

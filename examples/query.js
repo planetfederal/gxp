@@ -20,6 +20,9 @@ Ext.onReady(function() {
     var vector = new OpenLayers.Layer.Vector();    
     map.addLayers([wms, vector]);
     map.setCenter(new OpenLayers.LonLat(-120, 45), 5);
+    
+    //Init ext quicktips
+    Ext.QuickTips.init();
 
     panel = new gxp.QueryPanel({
         title: "Query Panel",

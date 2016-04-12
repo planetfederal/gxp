@@ -105,12 +105,69 @@
         </copy>
     </target>
     
-    <target name="dist" depends="clean, init, doc, buildjs, examples" description="prepare lib for distribution">
+    <target name="dist" depends="clean, init, buildjs, examples, doc, maven-install" description="prepare lib for distribution">
         <echo>Preparing for distribution.</echo>
     </target>
 
     <target name="clean" description="remove previous build">
         <delete dir="${build}"/>
+    </target>
+
+    <!-- Maven packaging and install -->
+    <target name ="maven-install" depends="maven-dist">
+        <exec executable="mvn" failonerror="true"  dir="${build}/maven-packages">
+            <arg line="install"/>
+        </exec>
+    </target>
+
+    <target name="maven-dist" depends="openlayers-maven-dist, geoext-maven-dist, gxp-maven-dist" description="prepare lib for distribution">
+        <echo>Preparing for maven distribution.</echo>
+	<copy file="${src}/maven/all.xml" tofile="${build}/maven-packages/pom.xml"/>
+    </target>
+
+    <target name="openlayers-maven-dist" description="prepare lib for distribution">
+        <echo>Preparing openlayers for maven distribution.</echo>
+	<mkdir dir="${build}/maven-packages/openlayers-maven"/>
+	<copy file="${src}/maven/openlayers-maven.xml" tofile="${build}/maven-packages/openlayers-maven/pom.xml"/>
+	<mkdir dir="${build}/maven-packages/openlayers-maven/src/test/resources/"/>
+	<mkdir dir="${build}/maven-packages/openlayers-maven/src/test/javascript/"/>
+ 	<copy todir="${build}/maven-packages/openlayers-maven/src/main/resources/theme">
+            <fileset dir="externals/openlayers/theme"/>
+        </copy>
+ 	<copy todir="${build}/maven-packages/openlayers-maven/src/main/resources/img">
+            <fileset dir="externals/openlayers/img"/>
+        </copy>
+	<copy todir="${build}/maven-packages/openlayers-maven/src/main/javascript/openlayers">
+            <fileset dir="externals/openlayers/lib"/>
+        </copy>
+    </target>
+
+    <target name="geoext-maven-dist" description="prepare lib for distribution">
+        <echo>Preparing geoext for maven distribution.</echo>
+	<mkdir dir="${build}/maven-packages/geoext-maven"/>
+	<copy file="${src}/maven/geoext-maven.xml" tofile="${build}/maven-packages/geoext-maven/pom.xml"/>
+	<mkdir dir="${build}/maven-packages/geoext-maven/src/test/resources/"/>
+	<mkdir dir="${build}/maven-packages/geoext-maven/src/test/javascript/"/>
+ 	<copy todir="${build}/maven-packages/geoext-maven/src/main/resources">
+            <fileset dir="externals/geoext/resources"/>
+        </copy>
+	<copy todir="${build}/maven-packages/geoext-maven/src/main/javascript/geoext">
+            <fileset dir="externals/geoext/lib"/>
+        </copy>
+    </target>
+
+    <target name="gxp-maven-dist" description="prepare lib for distribution">
+        <echo>Preparing gxp for maven distribution.</echo>
+	<mkdir dir="${build}/maven-packages/gxp-maven"/>
+	<copy file="${src}/maven/gxp-maven.xml" tofile="${build}/maven-packages/gxp-maven/pom.xml"/>
+	<mkdir dir="${build}/maven-packages/gxp-maven/src/test/resources/"/>
+	<mkdir dir="${build}/maven-packages/gxp-maven/src/test/javascript/"/>
+ 	<copy todir="${build}/maven-packages/gxp-maven/src/main/resources/theme/gxp">
+            <fileset dir="${src}/theme"/>
+        </copy>
+	<copy todir="${build}/maven-packages/gxp-maven/src/main/javascript/gxp">
+            <fileset dir="${src}/script"/>
+        </copy>
     </target>
 
 </project>
