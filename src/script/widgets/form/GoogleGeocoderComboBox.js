@@ -6,10 +6,14 @@
  * of the license.
  */
 
+/**
+ * @requires GeoExt/widgets/form/GeocoderComboBox.js
+ */
+
 /** api: (define)
  *  module = gxp.form
  *  class = GoogleGeocoderComboBox
- *  base_link = `Ext.form.ComboBox <http://extjs.com/deploy/dev/docs/?class=Ext.form.ComboBox>`_
+ *  base_link = `GeoExt.form.GeocoderComboBox <http://dev.geoext.org/docs/lib/GeoExt/widgets/form/GeocoderComboBox.html>`_
  */
 Ext.namespace("gxp.form");
 
@@ -26,16 +30,11 @@ Ext.namespace("gxp.form");
  *  * viewport - ``OpenLayers.Bounds`` Recommended viewing bounds.
  *
  */   
-gxp.form.GoogleGeocoderComboBox = Ext.extend(Ext.form.ComboBox, {
+gxp.form.GoogleGeocoderComboBox = Ext.extend(GeoExt.form.GeocoderComboBox, {
     
     /** api: xtype = gxp_googlegeocodercombo */
     xtype: "gxp_googlegeocodercombo",
 
-    /** api: config[queryDelay]
-     *  ``Number`` Delay before the search occurs.  Default is 100ms.
-     */
-    queryDelay: 100,
-    
     /** api: config[bounds]
      *  ``OpenLayers.Bounds | Array`` Optional bounds (in geographic coordinates)
      *  for restricting search.
@@ -44,18 +43,25 @@ gxp.form.GoogleGeocoderComboBox = Ext.extend(Ext.form.ComboBox, {
     /** api: config[valueField]
      *  ``String``
      *  Field from selected record to use when the combo's ``getValue`` method
-     *  is called.  Default is "location".  Possible value's are "location",
-     *  "viewport", or "address".  The location value will be an 
-     * ``OpenLayers.LonLat`` object that corresponds to the geocoded address.
-     *  The viewport value will be an ``OpenLayers.Bounds`` object that is 
-     *  the recommended viewport for viewing the resulting location.  The
-     *  address value will be a string that is the formatted address.
+     *  is called.  Default is "location".  Possible values are "location",
+     *  "viewport", or "address".  The location value will be an ``Array`` with 2
+     *  items that corresponds to the geocoded address.
+     *  The viewport value will be an ``Array`` with 4 values that is 
+     *  the recommended viewport for viewing the resulting location. The
+     *  address value will be a string that is the formatted address. If
+     *  valueField is set to "location" or "viewport" the map will center / 
+     *  zoom when an item from the combobox is selected. If valueField is set 
+     *  to "address" instead, no zooming will occur.
      */
-    valueField: "viewport",
+    valueField: "location",
 
     /** private: config[displayField]
      */
     displayField: "address",
+
+    /** private: config[locationField]
+     */
+    locationField: "location",
 
     /** private: method[initComponent]
      *  Override
@@ -84,23 +90,41 @@ gxp.form.GoogleGeocoderComboBox = Ext.extend(Ext.form.ComboBox, {
             }).createDelegate(this), 0);
         }
 
+        var me = this;
+
         this.store = new Ext.data.JsonStore({
-            root: "results",
+            root: null,
             fields: [
-                {name: "address", type: "string"},
-                {name: "location"}, // OpenLayers.LonLat
-                {name: "viewport"} // OpenLayers.Bounds
+                {name: "address", mapping: "formatted_address"},
+                {name: "location", convert: function(v, rec) {
+                    var latLng = rec.geometry.location;
+                    return [latLng.lng(), latLng.lat()];
+                }},
+                {name: "viewport", convert: function(v, rec) {
+                    var ne = rec.geometry.viewport.getNorthEast(),
+                        sw = rec.geometry.viewport.getSouthWest();
+                    return [sw.lng(), sw.lat(), ne.lng(), ne.lat()];
+                }}
             ],
-            autoLoad: false
+            proxy: new (Ext.extend(Ext.data.DataProxy, {
+                doRequest: function(action, rs, params, reader, callback, scope, options) {
+                    var bounds = null;
+                    if (me.bounds) {
+                        var boundsArray = (me.bounds instanceof OpenLayers.Bounds) ?
+                            me.bounds.toArray() : me.bounds;
+                        bounds = new google.maps.LatLngBounds(
+                            new google.maps.LatLng(boundsArray[1], boundsArray[0]),
+                            new google.maps.LatLng(boundsArray[3], boundsArray[2])
+                        );
+                    }
+                    me.geocoder.geocode({address: params.q, bounds: bounds}, function(results, status) {
+                        var readerResult = reader.readRecords(results);
+                        callback.call(scope, readerResult, options, !!readerResult);
+                    });
+                }
+            }))({api: {read: true}})
         });
-        
-        this.on({
-            focus: function() {
-                this.clearValue();
-            },
-            scope: this
-        });
-        
+
         return gxp.form.GoogleGeocoderComboBox.superclass.initComponent.apply(this, arguments);
 
     },
@@ -108,83 +132,10 @@ gxp.form.GoogleGeocoderComboBox = Ext.extend(Ext.form.ComboBox, {
     /** private: method[prepGeocoder]
      */
     prepGeocoder: function() {
-        var geocoder = new google.maps.Geocoder();
-        
-
-        // create an async proxy for getting geocoder results
-        var api = {};
-        api[Ext.data.Api.actions.read] = true;
-        var proxy = new Ext.data.DataProxy({api: api});
-        var combo = this;
-        
-        // TODO: unhack this - this is due to the the tool output being generated too early
-        var getBounds = (function() {
-            // optional bounds for restricting search
-            var bounds = this.bounds;
-            if (bounds) {
-                if (bounds instanceof OpenLayers.Bounds) {
-                    bounds = bounds.toArray();
-                }
-                bounds = new google.maps.LatLngBounds(
-                    new google.maps.LatLng(bounds[1], bounds[0]),
-                    new google.maps.LatLng(bounds[3], bounds[2])
-                );
-            }
-            return bounds;
-        }).createDelegate(this);
-        
-        proxy.doRequest = function(action, rs, params, reader, callback, scope, options) {
-            // Assumes all actions read.
-            geocoder.geocode(
-                {address: params.query, bounds: getBounds()},
-                function(results, status) {
-                    var readerResult;
-                    if (status === google.maps.GeocoderStatus.OK || 
-                        status === google.maps.GeocoderStatus.ZERO_RESULTS) {
-                        try {
-                            results = combo.transformResults(results);
-                            readerResult = reader.readRecords({results: results});
-                        } catch (err) {
-                            combo.fireEvent("exception", combo, "response", action, options, status, err);
-                        }
-                    } else {
-                        combo.fireEvent("exception", combo, "remote", action, options, status, null);
-                    }
-                    if (readerResult) {
-                        callback.call(scope, readerResult, options, true);                        
-                    } else {
-                        callback.call(scope, null, options, false);                        
-                    }
-                }
-            );
-        };
-        
-        this.store.proxy = proxy;
+        this.geocoder = new google.maps.Geocoder();
         if (this.initialConfig.disabled != true) {
             this.enable();
         }
-    },
-        
-    /** private: method[transformResults]
-     *  Transform an array of results so values are OpenLayers objects.
-     */
-    transformResults: function(gResults) {
-        var num = gResults.length;
-        var olResults = new Array(num);
-        var item, latLng, bounds, ne, sw;
-        for (i=0; i<num; ++i) {
-            item = gResults[i];
-            latLng = item.geometry.location;
-            bounds = item.geometry.viewport;
-            ne = bounds.getNorthEast();
-            sw = bounds.getSouthWest();
-            olResults[i] = {
-                address: item.formatted_address,
-                location: new OpenLayers.LonLat(latLng.lng(), latLng.lat()),
-                viewport: new OpenLayers.Bounds(sw.lng(), sw.lat(), ne.lng(), ne.lat())
-            };
-        }
-        return olResults;
     }
 
 });

@@ -12,7 +12,7 @@
         function test_GoogleGeocoderComboBox(t) {
             t.plan(1);
             
-            var instance = new gxp.form.GoogleGeocoderComboBox();
+            var instance = new gxp.form.GoogleGeocoderComboBox({map: new OpenLayers.Map()});
             
             t.ok(instance instanceof gxp.form.GoogleGeocoderComboBox, "Instance created successfully");
             
