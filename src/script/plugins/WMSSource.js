@@ -552,7 +552,7 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
                 opacity: ("opacity" in config) ? config.opacity : 1,
                 buffer: ("buffer" in config) ? config.buffer : 1,
                 dimensions: original.data.dimensions,
-                transitionEffect: singleTile ? 'resize' : null,
+                transitionEffect: ("transitionEffect" in config) ? config.transitionEffect : (singleTile ? 'resize' : null),
                 minScale: config.minscale,
                 maxScale: config.maxscale
             });
