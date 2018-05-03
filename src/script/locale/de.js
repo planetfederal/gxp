@@ -11,18 +11,28 @@ GeoExt.Lang.add("de", {
     "gxp.plugins.AddLayers.prototype": {
         addActionMenuText: "Layer hinzufügen",
         addActionTip: "Layer hinzufügen",
-        addServerText: "Server hinzufügen",
+        addServerText: "Neuen Server hinzufügen",
         addButtonText: "Layer hinzufügen",
+        addButtonTextTip: "Diesen Layer zur Karte hinzufügen",
         untitledText: "ohne Titel",
         addLayerSourceErrorText: "Fehler beim Abfragen der WMS Capabilities ({msg}).\nBitte URL prüfen und erneut versuchen.",
-        availableLayersText: "verfügbare Layer",
+        availableLayersText: "Verfügbare Layer",
         expanderTemplateText: "<p><b>Kurzbeschreibung:</b> {abstract}</p>",
         panelTitleText: "Titel",
-        layerSelectionText: "Verfügbare Daten anzeigen von:",
+        layerSelectionText: "Verfügbare Daten anzeigen von&nbsp;&nbsp;",
         doneText: "Fertig",
-        uploadText: "Daten hochladen",
-        addFeedActionMenuText: "Add feeds",
-        searchText: "Search for layers"
+        layerNameText: "Name",
+        layerAbstractText: "Beschreibung",
+        layerQueryableText: "Abfragbar",
+        searchLayersEmptyText: 'Layer suchen...',
+        searchLayersSearchText: 'Suchen',
+        sortLayersText: 'Alphabetisch sortieren',
+        sortLayersTextTip: 'Layer alphabetisch (auf-/absteigend) nach Name sortieren.',
+        uploadText: "Layer hochladen",
+        addFeedActionMenuText: "Feeds hinzufügen",
+        searchText: "Nach Layer suchen",
+        findActionMenuText: "Layer finden",
+        findActionTip: "Layer im Katalog finden"
     },
     
     "gxp.plugins.BingSource.prototype": {
@@ -36,10 +46,10 @@ GeoExt.Lang.add("de", {
         splitButtonText: "Editieren",
         createFeatureActionText: "Erzeugen",
         editFeatureActionText: "Bearbeiten",
-        createFeatureActionTip: "neues Objekt erstellen",
-        editFeatureActionTip: "bestehendes Objekt bearbeiten",
-        commitTitle: "Commit message",
-        commitText: "Please enter a commit message for this edit:"
+        createFeatureActionTip: "Neues Objekt erstellen",
+        editFeatureActionTip: "Bestehendes Objekt bearbeiten",
+        commitTitle: "Nachricht verfassen",
+        commitText: "Bitte geben Sie eine Bestätigungsnachricht f�r diese Änderung ein:"
     },
     
     "gxp.plugins.FeatureGrid.prototype": {
@@ -68,6 +78,11 @@ GeoExt.Lang.add("de", {
     "gxp.plugins.LayerProperties.prototype": {
         menuText: "Layer Eigenschaften",
         toolTip: "Layer Eigenschaften"
+    },
+
+    "gxp.plugins.OpacitySlider.prototype": {
+        menuText: "Tranzparenz ändern",
+        toolTip: "Layer Tranzparenz ändern"
     },
     
     "gxp.plugins.LayerTree.prototype": {
@@ -154,12 +169,12 @@ GeoExt.Lang.add("de", {
     "gxp.plugins.QueryForm.prototype": {
         queryActionText: "Abfrage",
         queryMenuText: "Abfrage Layer",
-        queryActionTip: "selektierten Layer abfragen",
-        queryByLocationText: "Abfrage nach aktuellem Kartenauscchnitt",
+        queryActionTip: "Selektierten Layer abfragen",
+        queryByLocationText: "Abfrage nach aktuellem Kartenausschnitt",
         queryByAttributesText: "Attributabfrage",
         queryMsg: "Abfrage wird ausgeführt",
         cancelButtonText: "Abbrechen",
-        noFeaturesTitle: "keine Übereinstimmung",
+        noFeaturesTitle: "Keine Übereinstimmung",
         noFeaturesMessage: "Ihre Abfrage liefert keine Resultate."
     },
 
@@ -169,9 +184,8 @@ GeoExt.Lang.add("de", {
     },
     
     "gxp.plugins.Styler.prototype": {
-        menuText: "Style bearbeiten",
-        tooltip: "Layer Styles verwalten"
-
+        menuText: "Stile bearbeiten",
+        tooltip: "Layer Stile verwalten"
     },
 
     "gxp.plugins.WMSGetFeatureInfo.prototype": {
@@ -232,8 +246,8 @@ GeoExt.Lang.add("de", {
     
     "gxp.FilterBuilder.prototype": {
         builderTypeNames: ["beliebige", "alle", "keine", "nicht alle"],
-        preComboText: "Match",
-        postComboText: "der folgenden:",
+        preComboText: "Übereinstimmung ",
+        postComboText: "der Bedingung(en):",
         addConditionText: "Bedingung hinzufügen",
         addGroupText: "Gruppe hinzufügen",
         removeConditionText: "Bedingung entfernen"
@@ -264,28 +278,28 @@ GeoExt.Lang.add("de", {
     },
 
     "gxp.QueryPanel.prototype": {
-        queryByLocationText: "lagebezogene Abfrage",
-        currentTextText: "aktuelle Ausdehnung",
+        queryByLocationText: "Lagebezogene Abfrage",
+        currentTextText: "Aktuelle Ausdehnung",
         queryByAttributesText: "Attributabfrage",
         layerText: "Layer"
     },
     
     "gxp.RulePanel.prototype": {
-        scaleSliderTemplate: "{scaleType} Massstab 1:{scale}",
+        scaleSliderTemplate: "{scaleType} Ma&#223;stab 1:{scale}",
         labelFeaturesText: "Objekte beschriften",
         labelsText: "Beschriftung",
-        basicText: "Basic",
+        basicText: "Basis",
         advancedText: "Erweitert",
-        limitByScaleText: "Massstabsbeschränkung",
-        limitByConditionText: "Einschränkung durch Bedingung",
+        limitByScaleText: "Einschränkung durch Ma&#223;stab",
+        limitByConditionText: "Einschränkung durch Filter",
         symbolText: "Symbol",
         nameText: "Name"
     },
     
     "gxp.ScaleLimitPanel.prototype": {
-        scaleSliderTemplate: "{scaleType} Massstab 1:{scale}",
-        minScaleLimitText: "Minimale Massstabsgrenze",
-        maxScaleLimitText: "Maximale Massstabsgrenze"
+        scaleSliderTemplate: "{scaleType} Ma&#223;stab 1:{scale}",
+        minScaleLimitText: "Min. Ma&#223;stab",
+        maxScaleLimitText: "Max. Ma&#223;stab"
     },
     
     "gxp.StrokeSymbolizer.prototype": {
@@ -293,7 +307,7 @@ GeoExt.Lang.add("de", {
         dashStrokeName: "gestrichelt",
         dotStrokeName: "gepunktet",
         titleText: "Linie",
-        styleText: "Style",
+        styleText: "Stil",
         colorText: "Farbe",
         widthText: "Breite",
         opacityText: "Transparenz"
@@ -307,36 +321,80 @@ GeoExt.Lang.add("de", {
     },
     
     "gxp.TextSymbolizer.prototype": {
-        labelValuesText: "Label values",
-        haloText: "Halo",
-        sizeText: "Grösse"
+        labelValuesText: "Feld",
+        haloText: "Umrahmung",
+        sizeText: "&nbsp;Grö&#223;e",
+        priorityText: "Priorität",
+        labelOptionsText: "Textoptionen",
+        autoWrapText: "Zeilenumbruch",
+        followLineText: "Linie folgend",
+        maxDisplacementText: "Max. Verschiebung",
+        repeatText: "Wiederholen",
+        forceLeftToRightText: "Links nach Rechts",
+        groupText: "Gruppieren",
+        spaceAroundText: "Puffer",
+        labelAllGroupText: "Alle Segmente in der Gruppe beschriften",
+        maxAngleDeltaText: "Max. delta Winkel",
+        conflictResolutionText: "Konfliktlösung",
+        goodnessOfFitText: "Goodness of fit",
+        polygonAlignText: "Polygonausrichtung",
+        graphicResizeText: "Grafikgrö&#223;e",
+        graphicMarginText: "Grafikrand",
+        graphicTitle: "Grafik",
+        fontColorTitle: "Textfarbe und Transparenz",
+        positioningText: "Textplatzierung",
+        anchorPointText: "Ankerpunkt",
+        displacementXText: "Verschiebung (X-Richtung)",
+        displacementYText: "Verschiebung (Y-Richtung)",
+        perpendicularOffsetText: "Senkrechter Offset",
+        priorityHelp: "The higher the value of the specified field, the sooner the label will be drawn (which makes it win in the conflict resolution game)",
+        autoWrapHelp: "Wrap labels that exceed a certain length in pixels",
+        followLineHelp: "Should the label follow the geometry of the line?",
+        maxDisplacementHelp: "Maximum displacement in pixels if label position is busy",
+        repeatHelp: "Repeat labels after a certain number of pixels",
+        forceLeftToRightHelp: "Labels are usually flipped to make them readable. If the character happens to be a directional arrow then this is not desirable",
+        groupHelp: "Grouping works by collecting all features with the same label text, then choosing a representative geometry for the group. Road data is a classic example to show why grouping is useful. It is usually desirable to display only a single label for all of 'Main Street', not a label for every block of 'Main Street.'",
+        spaceAroundHelp: "Overlapping and Separating Labels. By default GeoServer will not render labels 'on top of each other'. By using the spaceAround option you can either allow labels to overlap, or add extra space around labels. The value supplied for the option is a positive or negative size in pixels. Using the default value of 0, the bounding box of a label cannot overlap the bounding box of another label.",
+        labelAllGroupHelp: "The labelAllGroup option makes sure that all of the segments in a line group are labeled instead of just the longest one.",
+        conflictResolutionHelp: "By default labels are subjected to conflict resolution, meaning the renderer will not allow any label to overlap with a label that has been drawn already. Setting this parameter to false pull the label out of the conflict resolution game, meaning the label will be drawn even if it overlaps with other labels, and other labels drawn after it won’t mind overlapping with it.",
+        goodnessOfFitHelp: "Geoserver will remove labels if they are a particularly bad fit for the geometry they are labeling. For Polygons: the label is sampled approximately at every letter. The distance from these points to the polygon is determined and each sample votes based on how close it is to the polygon. The default value is 0.5.",
+        graphic_resizeHelp: "Specifies a mode for resizing label graphics (such as highway shields) to fit the text of the label. The default mode, ‘none’, never modifies the label graphic. In stretch mode, GeoServer will resize the graphic to exactly surround the label text, possibly modifying the image’s aspect ratio. In proportional mode, GeoServer will expand the image to be large enough to surround the text while preserving its original aspect ratio.",
+        maxAngleDeltaHelp: "Designed to use used in conjuection with followLine, the maxAngleDelta option sets the maximum angle, in degrees, between two subsequent characters in a curved label. Large angles create either visually disconnected words or overlapping characters. It is advised not to use angles larger than 30.",
+        polygonAlignHelp: "GeoServer normally tries to place horizontal labels within a polygon, and give up in case the label position is busy or if the label does not fit enough in the polygon. This options allows GeoServer to try alternate rotations for the labels. Possible options: the default value, only the rotation manually specified in the <Rotation> tag will be used (manual), If the label does not fit horizontally and the polygon is taller than wider the vertical alignement will also be tried (ortho), If the label does not fit horizontally the minimum bounding rectangle will be computed and a label aligned to it will be tried out as well (mbr).",
+        graphic_marginHelp: "Similar to the margin shorthand property in CSS for HTML, its interpretation varies depending on how many margin values are provided: 1 = use that margin length on all sides of the label 2 = use the first for top & bottom margins and the second for left & right margins. 3 = use the first for the top margin, second for left & right margins, third for the bottom margin. 4 = use the first for the top margin, second for the right margin, third for the bottom margin, and fourth for the left margin.",
     },
     
     "gxp.WMSLayerPanel.prototype": {
-        attributionText: "Attribution",
+        attributionText: "Zuordnung",
         aboutText: "Über",
         titleText: "Titel",
         nameText: "Name",
         descriptionText: "Beschreibung",
         displayText: "Anzeige",
         opacityText: "Transparenz",
-        formatText: "Format",
+        formatText: "Bild-Format",
         transparentText: "transparent",
         cacheText: "Cache",
         cacheFieldText: "Version aus dem Cache benützen",
-        stylesText: "Verfügbare Styles",
-        infoFormatText: "Info Format",
+        stylesText: "Verfügbare Stile",
+        infoFormatText: "Info-Format",
         infoFormatEmptyText: "Format auswählen",
-        displayOptionsText: "Display options",
-        queryText: "Limit with filters",
-        scaleText: "Limit by scale",
-        minScaleText: "Min scale",
-        maxScaleText: "Max scale",
-        switchToFilterBuilderText: "Switch back to filter builder",
-        cqlPrefixText: "or ",
-        cqlText: "use CQL filter instead",
-        singleTileText: "Single tile",
-        singleTileFieldText: "Use a single tile"
+        displayOptionsText: "Anzeigeoptionen",
+        queryText: "Einschränkung durch Filter",
+        scaleText: "Einschränkung durch Ma&#223;stab",
+        minScaleText: "Minimal",
+        maxScaleText: "Maximal",
+        switchToFilterBuilderText: "Zurück zur Filter-Auswahl",
+        cqlPrefixText: "&nbsp;&nbsp;ODER&nbsp;&nbsp;",
+        cqlText: "CQL Filter eingeben",
+        singleTileText: "Kachel",
+        singleTileFieldText: "einzelne Kachel nutzen"
+    },
+
+    "gxp.WMSStylesDialog.prototype": {
+         chooseStyleText: "Stil wählen",
+         stylesFieldsetTitle: "Stile",
+         rulesFieldsetTitle: "Regeln"
     },
 
     "gxp.EmbedMapDialog.prototype": {
@@ -352,28 +410,28 @@ GeoExt.Lang.add("de", {
     
     "gxp.StylesDialog.prototype": {
          addStyleText: "Hinzufügen",
-         addStyleTip: "neuen Style hinzufügen",
-         chooseStyleText: "Style auswählen",
+         addStyleTip: "Neuen Stil hinzufügen",
+         chooseStyleText: "Stil wählen",
          deleteStyleText: "Löschen",
-         deleteStyleTip: "selektierten Style löschen",
+         deleteStyleTip: "Selektierten Stil löschen",
          editStyleText: "Bearbeiten",
-         editStyleTip: "selektierten Style bearbeiten",
+         editStyleTip: "Selektierten Stil bearbeiten",
          duplicateStyleText: "Duplizieren",
-         duplicateStyleTip: "selektierten Style duplizieren",
+         duplicateStyleTip: "Selektierten Stil duplizieren",
          addRuleText: "Hinzufügen",
-         addRuleTip: "neue Regel hinzufügen",
-         newRuleText: "neue Regel",
+         addRuleTip: "Neue Regel hinzufügen",
+         newRuleText: "Neue Regel",
          deleteRuleText: "Entfernen",
-         deleteRuleTip: "selektierte Regel löschen",
+         deleteRuleTip: "Selektierte Regel löschen",
          editRuleText: "Bearbeiten",
-         editRuleTip: "selektierte Regel bearbeiten",
+         editRuleTip: "Selektierte Regel bearbeiten",
          duplicateRuleText: "Duplizieren",
-         duplicateRuleTip: "selektierte Regel duplizieren",
+         duplicateRuleTip: "Selektierte Regel duplizieren",
          cancelText: "Abbrechen",
          saveText: "Speichern",
-         styleWindowTitle: "User Style: {0}",
-         ruleWindowTitle: "Style Regel: {0}",
-         stylesFieldsetTitle: "Styles",
+         styleWindowTitle: "User Stil: {0}",
+         ruleWindowTitle: "Stil Regel: {0}",
+         stylesFieldsetTitle: "Stile",
          rulesFieldsetTitle: "Regeln"
     },
 
@@ -398,10 +456,10 @@ GeoExt.Lang.add("de", {
     },
     
     "gxp.NewSourceDialog.prototype": {
-        title: "neuen Server hinzufügen...",
+        title: "Neuen Server hinzufügen...",
         cancelText: "Abbrechen",
         addServerText: "Server hinzufügen",
-        invalidURLText: "Fügen Sie eine gültige URL zu einem WMS ein (z.B. http://example.com/geoserver/wms)",
+        invalidURLText: "Fügen Sie eine gültige URL zu einem WMS Service ein (z.B. http://example.com/geoserver/wms)",
         contactingServerText: "Server wird kontaktiert..."
     },
 
@@ -418,7 +476,7 @@ GeoExt.Lang.add("de", {
         addPicasaText: "Picasa Fotos",
         addYouTubeText: "YouTube Videos",
         addRSSText: "Andere GeoRSS Feed",
-        addFeedText: "zur Karte hinzufügen",
+        addFeedText: "Zur Karte hinzufügen",
         addTitleText: "Titel",
         keywordText: "Keyword",
         doneText: "Fertig",

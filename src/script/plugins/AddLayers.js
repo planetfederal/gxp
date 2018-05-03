@@ -84,6 +84,12 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      */
     addButtonText: "Add layers",
 
+    /** api: config[addButtonTextTip]
+     *  ``String``
+     *  Text for add layers button tooltip (i18n).
+     */
+    addButtonTextTip: "Add this layer to the map",
+
     /** api: config[untitledText]
      *  ``String``
      *  Text for an untitled layer (i18n).
@@ -156,13 +162,11 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      */
     layerQueryableText: "Queryable",
 
-
     /** api: config[searchLayersEmptyText]
       *  ``String``
       *  Text for source layers search box when empty (i18n).
       */
      searchLayersEmptyText: 'Search layers',
-
 
     /** api: config[searchLayersSearchText]
       *  ``String``
@@ -175,6 +179,12 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      *  Text for source layers sort button (i18n).
      */
     sortLayersText: 'Sort alphabetically',
+
+    /** api: config[sortLayersTextTip]
+     *  ``String``
+     *  Text for source layers sort button tooltip (i18n).
+     */
+    sortLayersTextTip: 'Sort the layers alphabetically (asc/descending) by title.',
 
     /** api: config[search]
      *  ``Object | Boolean``
@@ -594,7 +604,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
             '</tr>' +
 
             '</table>' +
-            '<div class="btn_add" title="Add this layer to the map">' +
+            '<div class="btn_add" title="' + this.addButtonTextTip + '">' +
                 '<table name="addlayer" cellspacing="0" class="x-btn  x-btn-text-icon" style="width: auto;">' +
                     '<tbody class="x-btn-small x-btn-icon-small-left">' +
                     '<tr>' +
@@ -605,7 +615,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                     '<tr>' +
                         '<td class="x-btn-ml"><i>&nbsp;</i></td>' +
                         '<td class="x-btn-mc"><em class=" x-selectable">' +
-                            '<button name="addlayer" type="button" id="but-{id}-{rowIndex}" class=" x-btn-text gxp-icon-addlayers">Add layer</button>' +
+                            '<button name="addlayer" type="button" id="but-{id}-{rowIndex}" class=" x-btn-text gxp-icon-addlayers">' + this.addButtonText + '</button>' +
                         '</em></td>' +
                         '<td class="x-btn-mr"><i>&nbsp;</i></td>' +
                     '</tr>' +
@@ -855,8 +865,9 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
                 iconCls: 'gxp-icon-book-open',
                 text: this.sortLayersText,
                 tooltip: {
-                    text: 'Sort the layers alphabetically by title. Toggle to sort asc/descending.',
-                    width: 360
+                    // text: 'Sort the layers alphabetically by title. Toggle to sort asc/descending.',
+                    // width: 360
+                    text: this.sortLayersTextTip
                  },
                 handler: function () {
                     this.sourceSort();
