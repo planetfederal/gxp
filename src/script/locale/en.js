@@ -14,6 +14,7 @@ GeoExt.Lang.add("en", {
         addServerText: "Add a New Server",
         addButtonText: "Add layers",
         addButtonTextTip: "Add this layer to the map",
+        addButtonInfo: "Show metadata for this Layer",
         untitledText: "Untitled",
         addLayerSourceErrorText: "Error getting WMS capabilities ({msg}).\nPlease check the url and try again.",
         availableLayersText: "Available Layers",
@@ -186,7 +187,6 @@ GeoExt.Lang.add("en", {
     "gxp.plugins.Styler.prototype": {
         menuText: "Layer Styles",
         tooltip: "Layer Styles"
-
     },
 
     "gxp.plugins.WMSGetFeatureInfo.prototype": {
@@ -223,7 +223,7 @@ GeoExt.Lang.add("en", {
         menuText: "Zoom to selected features",
         tooltip: "Zoom to selected features"
     },
-
+    
     "gxp.FeatureEditPopup.prototype": {
         closeMsgTitle: "Save Changes?",
         closeMsg: "This feature has unsaved changes. Would you like to save your changes?",

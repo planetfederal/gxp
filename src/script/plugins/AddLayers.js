@@ -90,6 +90,12 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
      */
     addButtonTextTip: "Add this layer to the map",
 
+    /** api: config[addButtonInfo]
+     *  ``String``
+     *  Info for add layers button (i18n).
+     */
+    addButtonInfo: "Show metadata for this Layer",
+
     /** api: config[untitledText]
      *  ``String``
      *  Text for an untitled layer (i18n).
@@ -571,7 +577,7 @@ gxp.plugins.AddLayers = Ext.extend(gxp.plugins.Tool, {
 
         var tpl = '<div class="layercard">' +
             '<div class="meta_title">{title}' +
-                '<!-- <div class="btn_info" id="{id}" title="Show metadata for this Layer">' +
+                '<!-- <div class="btn_info" id="{id}" title="' + this.addButtonInfo + '">' +
                     '<table cellspacing="0" class="x-btn x-btn-text-icon" style="width: auto;">' +
                         '<tbody class="x-btn-small x-btn-icon-small-left">' +
                         '<tr>' +

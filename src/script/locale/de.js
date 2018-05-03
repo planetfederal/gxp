@@ -14,6 +14,7 @@ GeoExt.Lang.add("de", {
         addServerText: "Neuen Server hinzufügen",
         addButtonText: "Layer hinzufügen",
         addButtonTextTip: "Diesen Layer zur Karte hinzufügen",
+        addButtonInfo: "Metadaten für diesen Layer anzeigen",
         untitledText: "ohne Titel",
         addLayerSourceErrorText: "Fehler beim Abfragen der WMS Capabilities ({msg}).\nBitte URL prüfen und erneut versuchen.",
         availableLayersText: "Verfügbare Layer",
@@ -452,7 +453,10 @@ GeoExt.Lang.add("de", {
         workspaceEmptyText: "Standard Workspace",
         dataStoreLabel: "Store",
         dataStoreEmptyText: "Neuen Store erzeugen",
-        defaultDataStoreEmptyText: "Default Datastore"
+        dataStoreNewText: "Neuen Store erzeugen",
+        crsLabel: "CRS",
+        crsEmptyText: "Koordinaten Referenz System Kennung",
+        invalidCrsText: "CRS Kennung sollte ein EPSG-Code sein (z.B. EPSG:4326)"
     },
     
     "gxp.NewSourceDialog.prototype": {
@@ -472,16 +476,31 @@ GeoExt.Lang.add("de", {
     },
 
     "gxp.FeedSourceDialog.prototype": {
-        feedTypeText: "Source",
+        feedTypeText: "Quelle",
         addPicasaText: "Picasa Fotos",
         addYouTubeText: "YouTube Videos",
-        addRSSText: "Andere GeoRSS Feed",
+        addRSSText: "Anderer GeoRSS Feed",
         addFeedText: "Zur Karte hinzufügen",
         addTitleText: "Titel",
-        keywordText: "Keyword",
+        keywordText: "Schlüsselwort",
         doneText: "Fertig",
-        titleText: "Add-Feeds",
-        maxResultsText: "Max Items"
+        titleText: "Feeds hinzufügen",
+        maxResultsText: "Max. Anzahl"
+    },
+
+    "gxp.CatalogueSearchPanel.prototype": {
+        searchFieldEmptyText: "Suchen nach...",
+        searchButtonText: "Suchen",
+        addTooltip: "Filter anlegen",
+        addMapTooltip: "Zur Karte hinzufügen",
+        advancedTitle: "Erweitert",
+        datatypeLabel: "Datentyp",
+        extentLabel: "Räumliche Ausdehnung",
+        categoryLabel: "Kategorie",
+        datasourceLabel: "Datenquelle",
+        filterLabel: "Filtersuche mit",
+        removeSourceTooltip: "Zurück zur Originalquelle",
+        showMetaDataTooltip: "Alle Metadaten zeigen"
     }
 
 });
